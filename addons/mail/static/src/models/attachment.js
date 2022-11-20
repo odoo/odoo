@@ -1,19 +1,19 @@
 /** @odoo-module **/
 
-import { attr, clear, many, one, Model } from '@mail/model';
+import { attr, clear, many, one, Model } from "@mail/model";
 
 Model({
-    name: 'Attachment',
+    name: "Attachment",
     recordMethods: {
         /**
          * Send the attachment for the browser to download.
          */
         download() {
-            const downloadLink = document.createElement('a');
-            downloadLink.setAttribute('href', this.downloadUrl);
+            const downloadLink = document.createElement("a");
+            downloadLink.setAttribute("href", this.downloadUrl);
             // Adding 'download' attribute into a link prevents open a new tab or change the current location of the window.
             // This avoids interrupting the activity in the page such as rtc call.
-            downloadLink.setAttribute('download', '');
+            downloadLink.setAttribute("download", "");
             downloadLink.click();
         },
         /**
@@ -35,13 +35,16 @@ Model({
             if (!this.isUploading) {
                 this.update({ isUnlinkPending: true });
                 try {
-                    await this.messaging.rpc({
-                        route: `/mail/attachment/delete`,
-                        params: {
-                            access_token: this.accessToken,
-                            attachment_id: this.id,
+                    await this.messaging.rpc(
+                        {
+                            route: `/mail/attachment/delete`,
+                            params: {
+                                access_token: this.accessToken,
+                                attachment_id: this.id,
+                            },
                         },
-                    }, { shadow: true });
+                        { shadow: true }
+                    );
                 } finally {
                     if (this.exists()) {
                         this.update({ isUnlinkPending: false });
@@ -53,24 +56,24 @@ Model({
             if (!this.exists()) {
                 return;
             }
-            this.messaging.messagingBus.trigger('o-attachment-deleted', { attachment: this });
+            this.messaging.messagingBus.trigger("o-attachment-deleted", { attachment: this });
             this.delete();
         },
     },
     fields: {
         accessToken: attr(),
-        activities: many('Activity', { inverse: 'attachments' }),
-        allThreads: many('Thread', { inverse: 'allAttachments', readonly: true }),
+        activities: many("Activity", { inverse: "attachments" }),
+        allThreads: many("Thread", { inverse: "allAttachments", readonly: true }),
         /**
          * States the attachment lists that are displaying this attachment.
          */
-        attachmentLists: many('AttachmentList', { inverse: 'attachments' }),
-        attachmentViewerViewable: one('AttachmentViewerViewable', { inverse: 'attachmentOwner' }),
+        attachmentLists: many("AttachmentList", { inverse: "attachments" }),
+        attachmentViewerViewable: one("AttachmentViewerViewable", { inverse: "attachmentOwner" }),
         checksum: attr(),
         /**
          * States on which composer this attachment is currently being created.
          */
-        composer: one('Composer', { inverse: 'attachments' }),
+        composer: one("Composer", { inverse: "attachments" }),
         defaultSource: attr({
             compute() {
                 if (this.isImage) {
@@ -78,28 +81,38 @@ Model({
                 }
                 if (this.isPdf) {
                     const pdf_lib = `/web/static/lib/pdfjs/web/viewer.html?file=`;
-                    if (!this.accessToken && this.originThread && this.originThread.model === 'mail.channel') {
+                    if (
+                        !this.accessToken &&
+                        this.originThread &&
+                        this.originThread.model === "mail.channel"
+                    ) {
                         return `${pdf_lib}/mail/channel/${this.originThread.id}/attachment/${this.id}`;
                     }
-                    const accessToken = this.accessToken ? `?access_token%3D${this.accessToken}` : '';
+                    const accessToken = this.accessToken
+                        ? `?access_token%3D${this.accessToken}`
+                        : "";
                     return `${pdf_lib}/web/content/${this.id}${accessToken}`;
                 }
                 if (this.isUrlYoutube) {
-                    const urlArr = this.url.split('/');
+                    const urlArr = this.url.split("/");
                     let token = urlArr[urlArr.length - 1];
-                    if (token.includes('watch')) {
-                        token = token.split('v=')[1];
-                        const amp = token.indexOf('&');
+                    if (token.includes("watch")) {
+                        token = token.split("v=")[1];
+                        const amp = token.indexOf("&");
                         if (amp !== -1) {
                             token = token.substring(0, amp);
                         }
                     }
                     return `https://www.youtube.com/embed/${token}`;
                 }
-                if (!this.accessToken && this.originThread && this.originThread.model === 'mail.channel') {
+                if (
+                    !this.accessToken &&
+                    this.originThread &&
+                    this.originThread.model === "mail.channel"
+                ) {
                     return `/mail/channel/${this.originThread.id}/attachment/${this.id}`;
                 }
-                const accessToken = this.accessToken ? `?access_token=${this.accessToken}` : '';
+                const accessToken = this.accessToken ? `?access_token=${this.accessToken}` : "";
                 return `/web/content/${this.id}${accessToken}`;
             },
         }),
@@ -118,16 +131,20 @@ Model({
         }),
         downloadUrl: attr({
             compute() {
-                if (!this.accessToken && this.originThread && this.originThread.model === 'mail.channel') {
+                if (
+                    !this.accessToken &&
+                    this.originThread &&
+                    this.originThread.model === "mail.channel"
+                ) {
                     return `/mail/channel/${this.originThread.id}/attachment/${this.id}?download=true`;
                 }
-                const accessToken = this.accessToken ? `access_token=${this.accessToken}&` : '';
+                const accessToken = this.accessToken ? `access_token=${this.accessToken}&` : "";
                 return `/web/content/ir.attachment/${this.id}/datas?${accessToken}download=true`;
             },
         }),
         extension: attr({
             compute() {
-                const extension = this.filename && this.filename.split('.').pop();
+                const extension = this.filename && this.filename.split(".").pop();
                 if (extension) {
                     return extension;
                 }
@@ -145,12 +162,18 @@ Model({
                     return false;
                 }
 
-                if (this.messages.length && this.originThread && this.originThread.model === 'mail.channel') {
-                    return this.messages.some(message => (
-                        message.canBeDeleted ||
-                        (message.author && message.author === this.messaging.currentPartner) ||
-                        (message.guestAuthor && message.guestAuthor === this.messaging.currentGuest)
-                    ));
+                if (
+                    this.messages.length &&
+                    this.originThread &&
+                    this.originThread.model === "mail.channel"
+                ) {
+                    return this.messages.some(
+                        (message) =>
+                            message.canBeDeleted ||
+                            (message.author && message.author === this.messaging.currentPartner) ||
+                            (message.guestAuthor &&
+                                message.guestAuthor === this.messaging.currentGuest)
+                    );
                 }
                 return true;
             },
@@ -161,13 +184,13 @@ Model({
         isImage: attr({
             compute() {
                 const imageMimetypes = [
-                    'image/bmp',
-                    'image/gif',
-                    'image/jpeg',
-                    'image/png',
-                    'image/svg+xml',
-                    'image/tiff',
-                    'image/x-icon',
+                    "image/bmp",
+                    "image/gif",
+                    "image/jpeg",
+                    "image/png",
+                    "image/svg+xml",
+                    "image/tiff",
+                    "image/x-icon",
                 ];
                 return imageMimetypes.includes(this.mimetype);
             },
@@ -177,7 +200,7 @@ Model({
          */
         isPdf: attr({
             compute() {
-                return this.mimetype === 'application/pdf';
+                return this.mimetype === "application/pdf";
             },
         }),
         /**
@@ -186,11 +209,11 @@ Model({
         isText: attr({
             compute() {
                 const textMimeType = [
-                    'application/javascript',
-                    'application/json',
-                    'text/css',
-                    'text/html',
-                    'text/plain',
+                    "application/javascript",
+                    "application/json",
+                    "text/css",
+                    "text/html",
+                    "text/plain",
                 ];
                 return textMimeType.includes(this.mimetype);
             },
@@ -205,7 +228,7 @@ Model({
          */
         isUrl: attr({
             compute() {
-                return this.type === 'url' && this.url;
+                return this.type === "url" && this.url;
             },
         }),
         /**
@@ -213,7 +236,7 @@ Model({
          */
         isUrlYoutube: attr({
             compute() {
-                return !!this.url && this.url.includes('youtu');
+                return !!this.url && this.url.includes("youtu");
             },
         }),
         /**
@@ -222,17 +245,19 @@ Model({
         isVideo: attr({
             compute() {
                 const videoMimeTypes = [
-                    'audio/mpeg',
-                    'video/x-matroska',
-                    'video/mp4',
-                    'video/webm',
+                    "audio/mpeg",
+                    "video/x-matroska",
+                    "video/mp4",
+                    "video/webm",
                 ];
                 return videoMimeTypes.includes(this.mimetype);
             },
         }),
         isViewable: attr({
             compute() {
-                return this.isText || this.isImage || this.isVideo || this.isPdf || this.isUrlYoutube;
+                return (
+                    this.isText || this.isImage || this.isVideo || this.isPdf || this.isUrlYoutube
+                );
             },
         }),
         /**
@@ -240,17 +265,20 @@ Model({
          */
         mediaType: attr({
             compute() {
-                return this.mimetype && this.mimetype.split('/').shift();
+                return this.mimetype && this.mimetype.split("/").shift();
             },
         }),
-        messages: many('Message', { inverse: 'attachments' }),
-        mimetype: attr({ default: '' }),
+        messages: many("Message", { inverse: "attachments" }),
+        mimetype: attr({ default: "" }),
         name: attr(),
-        originThread: one('Thread', { inverse: 'originThreadAttachments' }),
+        originThread: one("Thread", { inverse: "originThreadAttachments" }),
         size: attr(),
-        threadsAsAttachmentsInWebClientView: many('Thread', { inverse: 'attachmentsInWebClientView',
+        threadsAsAttachmentsInWebClientView: many("Thread", {
+            inverse: "attachmentsInWebClientView",
             compute() {
-                return (this.isPdf || this.isImage) && !this.isUploading ? this.allThreads : clear();
+                return (this.isPdf || this.isImage) && !this.isUploading
+                    ? this.allThreads
+                    : clear();
             },
         }),
         type: attr(),
@@ -264,8 +292,8 @@ Model({
                     if (!this.uploadingAbortController) {
                         const abortController = new AbortController();
                         abortController.signal.onabort = () => {
-                            this.messaging.messagingBus.trigger('o-attachment-upload-abort', {
-                                attachment: this
+                            this.messaging.messagingBus.trigger("o-attachment-upload-abort", {
+                                attachment: this,
                             });
                         };
                         return abortController;

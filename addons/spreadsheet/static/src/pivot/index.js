@@ -25,17 +25,22 @@ coreTypes.add("UPDATE_ODOO_PIVOT_DOMAIN");
 
 invalidateEvaluationCommands.add("UPDATE_ODOO_PIVOT_DOMAIN");
 invalidateEvaluationCommands.add("REMOVE_PIVOT");
+invalidateEvaluationCommands.add("INSERT_PIVOT");
 
 cellMenuRegistry.add("pivot_see_records", {
     name: _lt("See records"),
     sequence: 175,
     action: async (env) => {
-        const cell = env.model.getters.getActiveCell();
-        await SEE_RECORDS_PIVOT(cell, env);
+        const sheetId = env.model.getters.getActiveSheetId();
+        const { col, row } = env.model.getters.getPosition();
+        const position = env.model.getters.getMainCellPosition(sheetId, col, row);
+        await SEE_RECORDS_PIVOT({ sheetId, ...position }, env);
     },
     isVisible: (env) => {
-        const cell = env.model.getters.getActiveCell();
-        return SEE_RECORDS_PIVOT_VISIBLE(cell);
+        const sheetId = env.model.getters.getActiveSheetId();
+        const { col, row } = env.model.getters.getPosition();
+        const position = env.model.getters.getMainCellPosition(sheetId, col, row);
+        return SEE_RECORDS_PIVOT_VISIBLE({ sheetId, ...position }, env);
     },
 });
 

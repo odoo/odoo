@@ -154,7 +154,7 @@ export default class ListUIPlugin extends spreadsheet.UIPlugin {
      */
     getListIdFromPosition(sheetId, col, row) {
         const cell = this.getters.getCell(sheetId, col, row);
-        if (cell && cell.isFormula()) {
+        if (cell && cell.isFormula) {
             const listFunction = getFirstListFunction(cell.content);
             if (listFunction) {
                 const content = astToFormula(listFunction.args[0]);

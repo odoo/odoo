@@ -18,36 +18,38 @@ function compileChatter(node, params) {
     let isAttachmentBoxVisibleInitially = false;
     for (const childNode of node.children) {
         const options = evaluateExpr(childNode.getAttribute("options") || "{}");
-        switch (childNode.getAttribute('name')) {
-            case 'activity_ids':
+        switch (childNode.getAttribute("name")) {
+            case "activity_ids":
                 hasActivities = true;
                 break;
-            case 'message_follower_ids':
+            case "message_follower_ids":
                 hasFollowers = true;
-                hasParentReloadOnFollowersUpdate = Boolean(options['post_refresh']);
-                isAttachmentBoxVisibleInitially = isAttachmentBoxVisibleInitially || Boolean(options['open_attachments']);
+                hasParentReloadOnFollowersUpdate = Boolean(options["post_refresh"]);
+                isAttachmentBoxVisibleInitially =
+                    isAttachmentBoxVisibleInitially || Boolean(options["open_attachments"]);
                 break;
-            case 'message_ids':
+            case "message_ids":
                 hasMessageList = true;
-                hasParentReloadOnAttachmentsChanged = options['post_refresh'] === 'always';
-                hasParentReloadOnMessagePosted = Boolean(options['post_refresh']);
-                isAttachmentBoxVisibleInitially = isAttachmentBoxVisibleInitially || Boolean(options['open_attachments']);
+                hasParentReloadOnAttachmentsChanged = options["post_refresh"] === "always";
+                hasParentReloadOnMessagePosted = Boolean(options["post_refresh"]);
+                isAttachmentBoxVisibleInitially =
+                    isAttachmentBoxVisibleInitially || Boolean(options["open_attachments"]);
                 break;
         }
     }
     const chatterContainerXml = createElement("ChatterContainer");
     setAttributes(chatterContainerXml, {
-        "chatter": params.chatter,
-        "hasActivities": hasActivities,
-        "hasFollowers": hasFollowers,
-        "hasMessageList": hasMessageList,
-        "hasParentReloadOnAttachmentsChanged": hasParentReloadOnAttachmentsChanged,
-        "hasParentReloadOnFollowersUpdate": hasParentReloadOnFollowersUpdate,
-        "hasParentReloadOnMessagePosted": hasParentReloadOnMessagePosted,
-        "isAttachmentBoxVisibleInitially": isAttachmentBoxVisibleInitially,
-        "threadId": params.threadId,
-        "threadModel": params.threadModel,
-        "webRecord": params.webRecord,
+        chatter: params.chatter,
+        hasActivities: hasActivities,
+        hasFollowers: hasFollowers,
+        hasMessageList: hasMessageList,
+        hasParentReloadOnAttachmentsChanged: hasParentReloadOnAttachmentsChanged,
+        hasParentReloadOnFollowersUpdate: hasParentReloadOnFollowersUpdate,
+        hasParentReloadOnMessagePosted: hasParentReloadOnMessagePosted,
+        isAttachmentBoxVisibleInitially: isAttachmentBoxVisibleInitially,
+        threadId: params.threadId,
+        threadModel: params.threadModel,
+        webRecord: params.webRecord,
     });
     const chatterContainerHookXml = createElement("div");
     chatterContainerHookXml.classList.add("o_FormRenderer_chatterContainer");
@@ -57,11 +59,13 @@ function compileChatter(node, params) {
 
 function compileAttachmentPreview(node, params) {
     const webClientViewAttachmentViewContainerHookXml = createElement("div");
-    webClientViewAttachmentViewContainerHookXml.classList.add('o_attachment_preview');
-    const webClientViewAttachmentViewContainerXml = createElement("WebClientViewAttachmentViewContainer");
+    webClientViewAttachmentViewContainerHookXml.classList.add("o_attachment_preview");
+    const webClientViewAttachmentViewContainerXml = createElement(
+        "WebClientViewAttachmentViewContainer"
+    );
     setAttributes(webClientViewAttachmentViewContainerXml, {
-        "threadId": params.threadId,
-        "threadModel": params.threadModel,
+        threadId: params.threadId,
+        threadModel: params.threadModel,
     });
     append(webClientViewAttachmentViewContainerHookXml, webClientViewAttachmentViewContainerXml);
     return webClientViewAttachmentViewContainerHookXml;
@@ -85,11 +89,11 @@ export class MailFormCompiler extends ViewCompiler {
                 "t-if": `!hasAttachmentViewer() and uiService.size >= ${SIZES.XXL}`,
                 "t-attf-class": "o-aside",
             });
-            const chatterContainerXml = chatterContainerHookXml.querySelector('ChatterContainer');
+            const chatterContainerXml = chatterContainerHookXml.querySelector("ChatterContainer");
             setAttributes(chatterContainerXml, {
-                "hasExternalBorder": "false",
-                "hasMessageListScrollAdjust": "true",
-                "isInFormSheetBg": "false",
+                hasExternalBorder: "false",
+                hasMessageListScrollAdjust: "true",
+                isInFormSheetBg: "false",
             });
         }
         const attachmentViewHookXml = res.querySelector(".o_attachment_preview");
@@ -152,24 +156,24 @@ registry.category("form_compilers").add("attachment_preview_compiler", {
         }),
 });
 
-patch(FormCompiler.prototype, 'mail', {
+patch(FormCompiler.prototype, "mail", {
     compile(node, params) {
         // TODO no chatter if in dialog?
         const res = this._super(node, params);
-        const chatterContainerHookXml = res.querySelector('.o_FormRenderer_chatterContainer');
+        const chatterContainerHookXml = res.querySelector(".o_FormRenderer_chatterContainer");
         if (!chatterContainerHookXml) {
             return res; // no chatter, keep the result as it is
         }
-        const chatterContainerXml = chatterContainerHookXml.querySelector('ChatterContainer');
+        const chatterContainerXml = chatterContainerHookXml.querySelector("ChatterContainer");
         setAttributes(chatterContainerXml, {
-            "hasExternalBorder": "true",
-            "hasMessageListScrollAdjust": "false",
-            "isInFormSheetBg": "false",
+            hasExternalBorder: "true",
+            hasMessageListScrollAdjust: "false",
+            isInFormSheetBg: "false",
         });
-        if (chatterContainerHookXml.parentNode.classList.contains('o_form_sheet')) {
+        if (chatterContainerHookXml.parentNode.classList.contains("o_form_sheet")) {
             return res; // if chatter is inside sheet, keep it there
         }
-        const formSheetBgXml = res.querySelector('.o_form_sheet_bg');
+        const formSheetBgXml = res.querySelector(".o_form_sheet_bg");
         const parentXml = formSheetBgXml && formSheetBgXml.parentNode;
         if (!parentXml) {
             return res; // miss-config: a sheet-bg is required for the rest
@@ -177,19 +181,21 @@ patch(FormCompiler.prototype, 'mail', {
         if (params.hasAttachmentViewerInArch) {
             // in sheet bg (attachment viewer present)
             const sheetBgChatterContainerHookXml = chatterContainerHookXml.cloneNode(true);
-            sheetBgChatterContainerHookXml.classList.add('o-isInFormSheetBg');
+            sheetBgChatterContainerHookXml.classList.add("o-isInFormSheetBg");
             setAttributes(sheetBgChatterContainerHookXml, {
-                't-if': `this.props.hasAttachmentViewer`,
+                "t-if": `this.props.hasAttachmentViewer`,
             });
             append(formSheetBgXml, sheetBgChatterContainerHookXml);
-            const sheetBgChatterContainerXml = sheetBgChatterContainerHookXml.querySelector('ChatterContainer');
+            const sheetBgChatterContainerXml = sheetBgChatterContainerHookXml.querySelector(
+                "ChatterContainer"
+            );
             setAttributes(sheetBgChatterContainerXml, {
-                "isInFormSheetBg": "true",
+                isInFormSheetBg: "true",
             });
         }
         // after sheet bg (standard position, below form)
         setAttributes(chatterContainerHookXml, {
-            't-if': `!this.props.hasAttachmentViewer and uiService.size < ${SIZES.XXL}`,
+            "t-if": `!this.props.hasAttachmentViewer and uiService.size < ${SIZES.XXL}`,
         });
         append(parentXml, chatterContainerHookXml);
         return res;

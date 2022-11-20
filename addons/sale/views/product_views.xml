@@ -61,7 +61,7 @@
                 <t groups="sales_team.group_sale_salesman">
                     <group string="Warning when Selling this Product" groups="sale.group_warning_sale">
                         <field name="sale_line_warn" nolabel="1" colspan="2"/>
-                        <field name="sale_line_warn_msg" colspan="2" nolabel="1"
+                        <field name="sale_line_warn_msg" colspan="2" nolabel="1" placeholder="Type a message..."
                                 attrs="{'required':[('sale_line_warn','!=','no-message')],'readonly':[('sale_line_warn','=','no-message')]}"/>
                     </group>
                 </t>

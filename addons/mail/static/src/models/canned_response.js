@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { attr, one, Model } from '@mail/model';
-import { cleanSearchTerm } from '@mail/utils/utils';
+import { attr, one, Model } from "@mail/model";
+import { cleanSearchTerm } from "@mail/utils/utils";
 
 Model({
-    name: 'CannedResponse',
+    name: "CannedResponse",
     modelMethods: {
         /**
          * Fetches canned responses matching the given search term to extend the
@@ -32,12 +32,18 @@ Model({
         getSuggestionSortFunction(searchTerm, { thread } = {}) {
             const cleanedSearchTerm = cleanSearchTerm(searchTerm);
             return (a, b) => {
-                const cleanedAName = cleanSearchTerm(a.source || '');
-                const cleanedBName = cleanSearchTerm(b.source || '');
-                if (cleanedAName.startsWith(cleanedSearchTerm) && !cleanedBName.startsWith(cleanedSearchTerm)) {
+                const cleanedAName = cleanSearchTerm(a.source || "");
+                const cleanedBName = cleanSearchTerm(b.source || "");
+                if (
+                    cleanedAName.startsWith(cleanedSearchTerm) &&
+                    !cleanedBName.startsWith(cleanedSearchTerm)
+                ) {
                     return -1;
                 }
-                if (!cleanedAName.startsWith(cleanedSearchTerm) && cleanedBName.startsWith(cleanedSearchTerm)) {
+                if (
+                    !cleanedAName.startsWith(cleanedSearchTerm) &&
+                    cleanedBName.startsWith(cleanedSearchTerm)
+                ) {
                     return 1;
                 }
                 if (cleanedAName < cleanedBName) {
@@ -61,9 +67,11 @@ Model({
          */
         searchSuggestions(searchTerm, { thread } = {}) {
             const cleanedSearchTerm = cleanSearchTerm(searchTerm);
-            return [this.messaging.cannedResponses.filter(cannedResponse =>
-                cleanSearchTerm(cannedResponse.source).includes(cleanedSearchTerm)
-            )];
+            return [
+                this.messaging.cannedResponses.filter((cannedResponse) =>
+                    cleanSearchTerm(cannedResponse.source).includes(cleanedSearchTerm)
+                ),
+            ];
         },
     },
     fields: {
@@ -77,6 +85,11 @@ Model({
          * entered.
          */
         substitution: attr(),
-        suggestable: one('ComposerSuggestable', { default: {}, inverse: 'cannedResponse', readonly: true, required: true }),
+        suggestable: one("ComposerSuggestable", {
+            default: {},
+            inverse: "cannedResponse",
+            readonly: true,
+            required: true,
+        }),
     },
 });

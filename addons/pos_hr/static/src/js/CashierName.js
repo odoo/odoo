@@ -20,6 +20,14 @@ odoo.define('pos_hr.CashierName', function (require) {
                 }
                 return super.avatar;
             }
+            //@Override
+            get cssClass() {
+                if (this.env.pos.config.module_pos_hr) {
+                    return {'oe_status': true};
+                }
+                return super.cssClass;
+
+            }
         };
 
     Registries.Component.extend(CashierName, PosHrCashierName);

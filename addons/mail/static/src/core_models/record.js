@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { one, Model } from '@mail/model';
+import { one, Model } from "@mail/model";
 
 /**
  * The object below defines a model. Instances of such model (or inherited
@@ -13,7 +13,7 @@ Model({
      * Name of the model. Important to refer to appropriate model like in
      * relational fields. Name of models must be unique.
      */
-    name: 'Record',
+    name: "Record",
     lifecycleHooks: {
         /**
          * This function is called after the record has been created, more
@@ -178,6 +178,11 @@ Model({
          * States the messaging singleton. Automatically assigned by the model
          * manager at creation.
          */
-        messaging: one('Messaging', { default: {}, inverse: 'allRecords', readonly: true, required: true }),
+        messaging: one("Messaging", {
+            default: {},
+            inverse: "allRecords",
+            readonly: true,
+            required: true,
+        }),
     },
 });

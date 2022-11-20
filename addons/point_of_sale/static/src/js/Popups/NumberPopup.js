@@ -65,8 +65,8 @@ odoo.define('point_of_sale.NumberPopup', function(require) {
     }
     NumberPopup.template = 'NumberPopup';
     NumberPopup.defaultProps = {
-        confirmText: _t('Ok'),
-        cancelText: _t('Cancel'),
+        confirmText: _t('Confirm'),
+        cancelText: _t('Discard'),
         title: _t('Confirm ?'),
         body: '',
         cheap: false,

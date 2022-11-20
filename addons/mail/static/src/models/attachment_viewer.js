@@ -1,18 +1,18 @@
 /** @odoo-module **/
 
-import { attr, clear, increment, many, one, Model } from '@mail/model';
+import { attr, clear, increment, many, one, Model } from "@mail/model";
 
-import { hidePDFJSButtons } from '@web/legacy/js/libs/pdfjs';
+import { hidePDFJSButtons } from "@web/legacy/js/libs/pdfjs";
 
 Model({
-    name: 'AttachmentViewer',
-    identifyingMode: 'xor',
+    name: "AttachmentViewer",
+    identifyingMode: "xor",
     lifecycleHooks: {
         _created() {
-            document.addEventListener('click', this._onClickGlobal);
+            document.addEventListener("click", this._onClickGlobal);
         },
         _willDelete() {
-            document.removeEventListener('click', this._onClickGlobal);
+            document.removeEventListener("click", this._onClickGlobal);
         },
     },
     recordMethods: {
@@ -29,7 +29,9 @@ Model({
          * @returns {boolean}
          */
         containsElement(element) {
-            return Boolean(this.component && this.component.root.el && this.component.root.el.contains(element));
+            return Boolean(
+                this.component && this.component.root.el && this.component.root.el.contains(element)
+            );
         },
         /**
          * Determine whether the current image is rendered for the 1st time, and if
@@ -106,7 +108,7 @@ Model({
          * Called when clicking on image. Stop propagation of event to prevent
          * closing the dialog.
          *
-         * @param {MouseEvent} ev 
+         * @param {MouseEvent} ev
          */
         onClickImage(ev) {
             if (this.isDragging) {
@@ -192,28 +194,28 @@ Model({
          */
         onKeydown(ev) {
             switch (ev.key) {
-                case 'ArrowRight':
+                case "ArrowRight":
                     this.next();
                     break;
-                case 'ArrowLeft':
+                case "ArrowLeft":
                     this.previous();
                     break;
-                case 'Escape':
+                case "Escape":
                     this.close();
                     break;
-                case 'q':
+                case "q":
                     this.close();
                     break;
-                case 'r':
+                case "r":
                     this.rotate();
                     break;
-                case '+':
+                case "+":
                     this.zoomIn();
                     break;
-                case '-':
+                case "-":
                     this.zoomOut();
                     break;
-                case '0':
+                case "0":
                     this.resetZoom();
                     break;
                 default:
@@ -296,7 +298,7 @@ Model({
          * Prompt the browser print of this attachment.
          */
         print() {
-            const printWindow = window.open('about:blank', '_new');
+            const printWindow = window.open("about:blank", "_new");
             printWindow.document.open();
             printWindow.document.write(`
                 <html>
@@ -349,20 +351,21 @@ Model({
          * defining them in the template, for performance reasons.
          */
         updateZoomerStyle() {
-            const tx = this.imageRef.offsetWidth * this.scale > this.zoomerRef.el.offsetWidth
-                ? this.translate.x + this.translate.dx
-                : 0;
-            const ty = this.imageRef.offsetHeight * this.scale > this.zoomerRef.el.offsetHeight
-                ? this.translate.y + this.translate.dy
-                : 0;
+            const tx =
+                this.imageRef.offsetWidth * this.scale > this.zoomerRef.el.offsetWidth
+                    ? this.translate.x + this.translate.dx
+                    : 0;
+            const ty =
+                this.imageRef.offsetHeight * this.scale > this.zoomerRef.el.offsetHeight
+                    ? this.translate.y + this.translate.dy
+                    : 0;
             if (tx === 0) {
                 this.translate.update({ x: 0 });
             }
             if (ty === 0) {
                 this.translate.update({ y: 0 });
             }
-            this.zoomerRef.el.style = `transform: ` +
-                `translate(${tx}px, ${ty}px)`;
+            this.zoomerRef.el.style = `transform: ` + `translate(${tx}px, ${ty}px)`;
         },
         /**
          * Zoom in the image.
@@ -384,7 +387,8 @@ Model({
             if (this.scale === this.minScale) {
                 return;
             }
-            const unflooredAdaptedScale = this.scale - (scroll ? this.scrollZoomStep : this.zoomStep);
+            const unflooredAdaptedScale =
+                this.scale - (scroll ? this.scrollZoomStep : this.zoomStep);
             this.update({
                 scale: Math.max(this.minScale, unflooredAdaptedScale),
             });
@@ -410,7 +414,9 @@ Model({
          * Angle of the image. Changes when the user rotates it.
          */
         angle: attr({ default: 0 }),
-        attachmentList: one('AttachmentList', { related: 'dialogOwner.attachmentListOwnerAsAttachmentView' }),
+        attachmentList: one("AttachmentList", {
+            related: "dialogOwner.attachmentListOwnerAsAttachmentView",
+        }),
         attachmentViewerViewable: one("AttachmentViewerViewable", {
             compute() {
                 if (this.attachmentList) {
@@ -424,7 +430,7 @@ Model({
         attachmentViewerViewables: many("AttachmentViewerViewable", {
             compute() {
                 if (this.attachmentList) {
-                    return this.attachmentList.viewableAttachments.map(attachment => {
+                    return this.attachmentList.viewableAttachments.map((attachment) => {
                         return { attachmentOwner: attachment };
                     });
                 }
@@ -438,7 +444,11 @@ Model({
         /**
          * Determines the dialog displaying this attachment viewer.
          */
-        dialogOwner: one('Dialog', { identifying: true, inverse: 'attachmentViewer', isCausal: true }),
+        dialogOwner: one("Dialog", {
+            identifying: true,
+            inverse: "attachmentViewer",
+            isCausal: true,
+        }),
         dragStartX: attr({ default: 0 }),
         dragStartY: attr({ default: 0 }),
         /**
@@ -451,18 +461,18 @@ Model({
          */
         imageStyle: attr({
             compute() {
-                let style = `transform: ` +
+                let style =
+                    `transform: ` +
                     `scale3d(${this.scale}, ${this.scale}, 1) ` +
                     `rotate(${this.angle}deg);`;
 
                 if (this.angle % 180 !== 0) {
-                    style += `` +
+                    style +=
+                        `` +
                         `max-height: ${window.innerWidth}px; ` +
                         `max-width: ${window.innerHeight}px;`;
                 } else {
-                    style += `` +
-                        `max-height: 100%; ` +
-                        `max-width: 100%;`;
+                    style += `` + `max-height: 100%; ` + `max-width: 100%;`;
                 }
                 return style;
             },
@@ -484,7 +494,7 @@ Model({
          */
         scale: attr({ default: 1 }),
         scrollZoomStep: attr({ default: 0.1, readonly: true }),
-        translate: one('AttachmentViewer.Translate', { default: {}, inverse: 'owner' }),
+        translate: one("AttachmentViewer.Translate", { default: {}, inverse: "owner" }),
         /**
          * Reference of the zoomer node. Useful to apply translate
          * transformation on image visualisation.

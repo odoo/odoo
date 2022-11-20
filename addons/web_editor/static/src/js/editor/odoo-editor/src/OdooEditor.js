@@ -152,9 +152,10 @@ export const CLIPBOARD_WHITELISTS = {
         // Odoo colors
         /^text-o-/,
         /^bg-o-/,
-        // Odoo checklists
+        // Odoo lists
         'o_checked',
         'o_checklist',
+        'oe-nested',
         // Miscellaneous
         /^btn/,
         /^fa/,
@@ -443,7 +444,7 @@ export class OdooEditor extends EventTarget {
                     category: this.options._t('Structure'),
                     name: this.options._t('Bulleted list'),
                     priority: 110,
-                    description: this.options._t('Create a simple bulleted list.'),
+                    description: this.options._t('Create a simple bulleted list'),
                     fontawesome: 'fa-list-ul',
                     callback: () => {
                         this.execCommand('toggleList', 'UL');
@@ -453,7 +454,7 @@ export class OdooEditor extends EventTarget {
                     category: this.options._t('Structure'),
                     name: this.options._t('Numbered list'),
                     priority: 100,
-                    description: this.options._t('Create a list with numbering.'),
+                    description: this.options._t('Create a list with numbering'),
                     fontawesome: 'fa-list-ol',
                     callback: () => {
                         this.execCommand('toggleList', 'OL');
@@ -463,7 +464,7 @@ export class OdooEditor extends EventTarget {
                     category: this.options._t('Structure'),
                     name: this.options._t('Checklist'),
                     priority: 90,
-                    description: this.options._t('Track tasks with a checklist.'),
+                    description: this.options._t('Track tasks with a checklist'),
                     fontawesome: 'fa-check-square-o',
                     callback: () => {
                         this.execCommand('toggleList', 'CL');
@@ -473,7 +474,7 @@ export class OdooEditor extends EventTarget {
                     category: this.options._t('Structure'),
                     name: this.options._t('Table'),
                     priority: 80,
-                    description: this.options._t('Insert a table.'),
+                    description: this.options._t('Insert a table'),
                     fontawesome: 'fa-table',
                     callback: () => {
                         this.powerboxTablePicker.show();
@@ -483,7 +484,7 @@ export class OdooEditor extends EventTarget {
                     category: this.options._t('Structure'),
                     name: this.options._t('Separator'),
                     priority: 40,
-                    description: this.options._t('Insert an horizontal rule separator.'),
+                    description: this.options._t('Insert an horizontal rule separator'),
                     fontawesome: 'fa-minus',
                     callback: () => {
                         this.execCommand('insertHorizontalRule');
@@ -493,7 +494,7 @@ export class OdooEditor extends EventTarget {
                     category: this.options._t('Format'),
                     name: this.options._t('Heading 1'),
                     priority: 50,
-                    description: this.options._t('Big section heading.'),
+                    description: this.options._t('Big section heading'),
                     fontawesome: 'fa-header',
                     callback: () => {
                         this.execCommand('setTag', 'H1');
@@ -503,7 +504,7 @@ export class OdooEditor extends EventTarget {
                     category: this.options._t('Format'),
                     name: this.options._t('Heading 2'),
                     priority: 40,
-                    description: this.options._t('Medium section heading.'),
+                    description: this.options._t('Medium section heading'),
                     fontawesome: 'fa-header',
                     callback: () => {
                         this.execCommand('setTag', 'H2');
@@ -513,7 +514,7 @@ export class OdooEditor extends EventTarget {
                     category: this.options._t('Format'),
                     name: this.options._t('Heading 3'),
                     priority: 30,
-                    description: this.options._t('Small section heading.'),
+                    description: this.options._t('Small section heading'),
                     fontawesome: 'fa-header',
                     callback: () => {
                         this.execCommand('setTag', 'H3');
@@ -523,7 +524,7 @@ export class OdooEditor extends EventTarget {
                     category: this.options._t('Format'),
                     name: this.options._t('Switch direction'),
                     priority: 20,
-                    description: this.options._t('Switch the text\'s direction.'),
+                    description: this.options._t('Switch the text\'s direction'),
                     fontawesome: 'fa-exchange',
                     callback: () => {
                         this.execCommand('switchDirection');
@@ -533,7 +534,7 @@ export class OdooEditor extends EventTarget {
                     category: this.options._t('Format'),
                     name: this.options._t('Text'),
                     priority: 10,
-                    description: this.options._t('Paragraph block.'),
+                    description: this.options._t('Paragraph block'),
                     fontawesome: 'fa-paragraph',
                     callback: () => {
                         this.execCommand('setTag', 'P');
@@ -543,7 +544,7 @@ export class OdooEditor extends EventTarget {
                     category: this.options._t('Widgets'),
                     name: this.options._t('3 Stars'),
                     priority: 20,
-                    description: this.options._t('Insert a rating over 3 stars.'),
+                    description: this.options._t('Insert a rating over 3 stars'),
                     fontawesome: 'fa-star-o',
                     callback: () => {
                         let html = '\u200B<span contenteditable="false" class="o_stars o_three_stars">';
@@ -556,7 +557,7 @@ export class OdooEditor extends EventTarget {
                     category: this.options._t('Widgets'),
                     name: this.options._t('5 Stars'),
                     priority: 10,
-                    description: this.options._t('Insert a rating over 5 stars.'),
+                    description: this.options._t('Insert a rating over 5 stars'),
                     fontawesome: 'fa-star',
                     callback: () => {
                         let html = '\u200B<span contenteditable="false" class="o_stars o_five_stars">';
@@ -586,6 +587,7 @@ export class OdooEditor extends EventTarget {
         this.addDomListener(this.editable, 'drop', this._onDrop);
 
         this.addDomListener(this.document, 'copy', this._onClipboardCopy);
+        this.addDomListener(this.document, 'cut', this._onClipboardCut);
         this.addDomListener(this.document, 'selectionchange', this._onSelectionChange);
         this.addDomListener(this.document, 'selectionchange', this._handleCommandHint);
         this.addDomListener(this.document, 'keydown', this._onDocumentKeydown);
@@ -1801,7 +1803,7 @@ export class OdooEditor extends EventTarget {
         // If the end container was fully selected, extractContents may have
         // emptied it without removing it. Ensure it's gone.
         const isRemovableInvisible = (node, noBlocks = true) =>
-            !isVisible(node, noBlocks) && !isUnremovable(node) && node.nodeName !== 'A';
+            !isVisible(node, noBlocks) && !isUnremovable(node);
         const endIsStart = end === start;
         while (end && isRemovableInvisible(end, false) && !end.contains(range.endContainer)) {
             const parent = end.parentNode;
@@ -3181,12 +3183,23 @@ export class OdooEditor extends EventTarget {
         }
     }
 
+    _onClipboardCut(clipboardEvent) {
+        this._onClipboardCopy(clipboardEvent);
+        this.deleteRange();
+    }
     _onClipboardCopy(clipboardEvent) {
         if (this.isSelectionInEditable()) {
             clipboardEvent.preventDefault();
             const selection = this.document.getSelection();
             const range = selection.getRangeAt(0);
-            const rangeContent = range.cloneContents();
+            let rangeContent = range.cloneContents();
+
+            // Repair the copied range.
+            if (rangeContent.firstChild.nodeName === 'LI') {
+                const list = range.commonAncestorContainer.cloneNode();
+                list.replaceChildren(...rangeContent.childNodes);
+                rangeContent = list;
+            }
 
             const dataHtmlElement = document.createElement('data');
             dataHtmlElement.append(rangeContent);
@@ -4030,7 +4043,7 @@ export class OdooEditor extends EventTarget {
                         {
                             category: this.options._t('Paste'),
                             name: this.options._t('Paste as URL'),
-                            description: this.options._t('Create an URL.'),
+                            description: this.options._t('Create an URL'),
                             fontawesome: 'fa-link',
                             callback: () => {
                                 this.historyUndo();
@@ -4053,7 +4066,7 @@ export class OdooEditor extends EventTarget {
                         {
                             category: this.options._t('Paste'),
                             name: this.options._t('Paste as text'),
-                            description: this.options._t('Simple text paste.'),
+                            description: this.options._t('Simple text paste'),
                             fontawesome: 'fa-font',
                             callback: () => {},
                         },
@@ -4076,7 +4089,7 @@ export class OdooEditor extends EventTarget {
                             {
                                 category: this.options._t('Embed'),
                                 name: this.options._t('Embed Image'),
-                                description: this.options._t('Embed the image in the document.'),
+                                description: this.options._t('Embed the image in the document'),
                                 fontawesome: 'fa-image',
                                 callback: () => {
                                     execCommandAtStepIndex(stepIndexBeforeInsert, () => {
@@ -4102,7 +4115,7 @@ export class OdooEditor extends EventTarget {
                             {
                                 category: this.options._t('Embed'),
                                 name: this.options._t('Embed Youtube Video'),
-                                description: this.options._t('Embed the youtube video in the document.'),
+                                description: this.options._t('Embed the youtube video in the document'),
                                 fontawesome: 'fa-youtube-play',
                                 callback: async () => {
                                     let videoElement;

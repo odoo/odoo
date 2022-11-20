@@ -139,6 +139,12 @@ class ProjectTaskType(models.Model):
             self.env['project.task'].search([('stage_id', 'in', self.ids)]).write({'active': False})
         return super(ProjectTaskType, self).write(vals)
 
+    def copy(self, default=None):
+        default = dict(default or {})
+        if not default.get('name'):
+            default['name'] = _("%s (copy)") % (self.name)
+        return super().copy(default)
+
     def toggle_active(self):
         res = super().toggle_active()
         stage_active = self.filtered('active')
@@ -494,11 +500,11 @@ class Project(models.Model):
         for project in self:
             project.milestone_count_reached = mapped_count.get(project.id, 0)
 
-    @api.depends('milestone_ids', 'milestone_ids.is_reached', 'milestone_ids.deadline')
+    @api.depends('milestone_ids', 'milestone_ids.is_reached', 'milestone_ids.deadline', 'allow_milestones')
     def _compute_is_milestone_exceeded(self):
         today = fields.Date.context_today(self)
         read_group = self.env['project.milestone']._read_group([
-            ('project_id', 'in', self.ids),
+            ('project_id', 'in', self.filtered('allow_milestones').ids),
             ('is_reached', '=', False),
             ('deadline', '<', today)], ['project_id'], ['project_id'])
         mapped_count = {group['project_id'][0]: group['project_id_count'] for group in read_group}
@@ -517,6 +523,7 @@ class Project(models.Model):
               FROM project_project P
          LEFT JOIN project_milestone M ON P.id = M.project_id
              WHERE M.is_reached IS false
+               AND P.allow_milestones IS true
                AND M.deadline < CAST(now() AS date)
         """
         if (operator == '=' and value is True) or (operator == '!=' and value is False):
@@ -603,7 +610,8 @@ class Project(models.Model):
             default = {}
         if not default.get('name'):
             default['name'] = _("%s (copy)") % (self.name)
-        project = super(Project, self).copy(default)
+        self_with_mail_context = self.with_context(mail_auto_subscribe_no_notify=True, mail_create_nosubscribe=True)
+        project = super(Project, self_with_mail_context).copy(default)
         for follower in self.message_follower_ids:
             project.message_subscribe(partner_ids=follower.partner_id.ids, subtype_ids=follower.subtype_ids.ids)
         if 'tasks' not in default:
@@ -935,18 +943,6 @@ class Project(models.Model):
                 'show': True,
                 'sequence': 60,
             })
-            buttons.append({
-                'icon': 'users',
-                'text': _lt('Collaborators'),
-                'number': self.collaborator_count,
-                'action_type': 'action',
-                'action': 'project.project_collaborator_action',
-                'additional_context': json.dumps({
-                    'active_id': self.id,
-                }),
-                'show': self.privacy_visibility == "portal",
-                'sequence': 66,
-            })
         return buttons
 
     # ---------------------------------------------------
@@ -1109,7 +1105,7 @@ class Task(models.Model):
         ('normal', 'In Progress'),
         ('done', 'Ready'),
         ('blocked', 'Blocked')], string='Status',
-        copy=False, default='normal', required=True)
+        copy=False, default='normal', required=True, compute='_compute_kanban_state', readonly=False, store=True)
     kanban_state_label = fields.Char(compute='_compute_kanban_state_label', string='Kanban State Label', tracking=True, task_dependency_tracking=True)
     create_date = fields.Datetime("Created On", readonly=True)
     write_date = fields.Datetime("Last Updated On", readonly=True)
@@ -1216,7 +1212,8 @@ class Task(models.Model):
         compute='_compute_has_late_and_unreached_milestone',
         search='_search_has_late_and_unreached_milestone',
     )
-
+    #used to display the stage of the task in the tree view (if the project is private will return the personnal_stage_id, else will return the stage_id)
+    stage_display = fields.Char(compute='_compute_stage_display', string='Stage Display')
     # Task Dependencies fields
     allow_task_dependencies = fields.Boolean(related='project_id.allow_task_dependencies')
     # Tracking of this field is done in the write function
@@ -1367,6 +1364,10 @@ class Task(models.Model):
             for node in arch.xpath("//filter[@name='message_needaction']"):
                 node.set('invisible', '1')
         return arch, view
+
+    @api.depends('stage_id', 'project_id')
+    def _compute_kanban_state(self):
+        self.kanban_state = 'normal'
 
     @api.depends('parent_id.ancestor_id')
     def _compute_ancestor_id(self):
@@ -1677,6 +1678,11 @@ class Task(models.Model):
             else:
                 task.stage_id = False
 
+    @api.depends('project_id', 'stage_id', 'personal_stage_id')
+    def _compute_stage_display(self):
+        for task in self:
+            task.stage_display = task.stage_id.name if task.project_id else task.personal_stage_id.stage_id.name
+
     @api.depends('user_ids')
     def _compute_portal_user_names(self):
         """ This compute method allows to see all the names of assigned users to each task contained in `self`.
@@ -1725,7 +1731,8 @@ class Task(models.Model):
             default['recurrence_id'] = self.recurrence_id.copy().id
         if self.allow_subtasks:
             default['child_ids'] = [child.copy({'name': child.name} if has_default_name else None).id for child in self.child_ids]
-        task_copy = super(Task, self).copy(default)
+        self_with_mail_context = self.with_context(mail_auto_subscribe_no_notify=True, mail_create_nosubscribe=True)
+        task_copy = super(Task, self_with_mail_context).copy(default)
         if self.allow_task_dependencies:
             task_mapping = self.env.context.get('task_mapping')
             task_mapping[self.id] = task_copy.id
@@ -2017,6 +2024,8 @@ class Task(models.Model):
         for task in tasks:
             if task.project_id.privacy_visibility == 'portal':
                 task._portal_ensure_token()
+            for follower in task.parent_id.message_follower_ids:
+                task.message_subscribe(follower.partner_id.ids, follower.subtype_ids.ids)
             if current_partner not in task.message_partner_ids:
                 task.message_subscribe(current_partner.ids)
         return tasks
@@ -2044,9 +2053,6 @@ class Task(models.Model):
 
             vals.update(self.update_date_end(vals['stage_id']))
             vals['date_last_stage_update'] = now
-            # reset kanban state when changing stage
-            if 'kanban_state' not in vals:
-                vals['kanban_state'] = 'normal'
         task_ids_without_user_set = set()
         if 'user_ids' in vals and 'date_assign' not in vals:
             # prepare update of date_assign after super call
@@ -2204,6 +2210,8 @@ class Task(models.Model):
 
     @api.model
     def _task_message_auto_subscribe_notify(self, users_per_task):
+        if self.env.context.get('mail_auto_subscribe_no_notify'):
+            return
         # Utility method to send assignation notification upon writing/creation.
         template_id = self.env['ir.model.data']._xmlid_to_res_id('project.project_message_user_assigned', raise_if_not_found=False)
         if not template_id:

@@ -17,7 +17,9 @@ cellMenuRegistry.add("move_lines_see_records", {
     name: _lt("See records"),
     sequence: 176,
     async action(env) {
-        const cell = env.model.getters.getActiveCell();
+        const sheetId = env.model.getters.getActiveSheetId();
+        const { col, row } = env.model.getters.getPosition();
+        const cell = env.model.getters.getCell(sheetId, col, row);
         const { args } = getFirstAccountFunction(cell.content);
         let [code, date_range, offset, companyId, includeUnposted] = args
             .map(astToFormula)
@@ -36,10 +38,16 @@ cellMenuRegistry.add("move_lines_see_records", {
         await env.services.action.doAction(action);
     },
     isVisible: (env) => {
-        const cell = env.model.getters.getActiveCell();
+        const sheetId = env.model.getters.getActiveSheetId();
+        const { col, row } = env.model.getters.getPosition();
+        const position = env.model.getters.getMainCellPosition(sheetId, col, row);
+        const evaluatedCell = env.model.getters.getEvaluatedCell({ sheetId, ...position });
+        const cell = env.model.getters.getCell(sheetId, position.col, position.row);
         return (
-            cell && !cell.evaluated.error &&
-            cell.evaluated.value !== "" && getNumberOfAccountFormulas(cell.content) === 1
+            !evaluatedCell.error &&
+            evaluatedCell.value !== "" &&
+            cell &&
+            getNumberOfAccountFormulas(cell.content) === 1
         );
     },
 });

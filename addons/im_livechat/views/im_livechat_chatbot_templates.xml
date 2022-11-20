@@ -2,13 +2,15 @@
 <odoo>
     <data>
         <template id="chatbot_test_script_page">
-            <script>
-                <t t-call="im_livechat.loader">
-                    <t t-set="info" t-value="{ 'available': True, 'options': { 'isTestChatbot': True, 'testChatbotChannelData': channel_data, 'testChatbotData': chatbot_data }, 'server_url': server_url }"/>
-                </t>
-            </script>
             <t t-call="web.frontend_layout">
                 <t t-set="no_livechat" t-value="True"/>
+                <t t-set="head">
+                    <script>
+                        <t t-call="im_livechat.loader">
+                            <t t-set="info" t-value="{ 'available': True, 'options': { 'isTestChatbot': True, 'testChatbotChannelData': channel_data, 'testChatbotData': chatbot_data }, 'server_url': server_url }"/>
+                        </t>
+                    </script>
+                </t>
                 <t t-set="title" t-value="chatbot_data['chatbot_name']"/>
 
                 <div id="wrap">

@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
-import { ChatterContainer } from '@mail/components/chatter_container/chatter_container';
-import { WebClientViewAttachmentViewContainer } from '@mail/components/web_client_view_attachment_view_container/web_client_view_attachment_view_container';
-import { Listener } from '@mail/model/model_listener';
+import { ChatterContainer } from "@mail/components/chatter_container/chatter_container";
+import { WebClientViewAttachmentViewContainer } from "@mail/components/web_client_view_attachment_view_container/web_client_view_attachment_view_container";
+import { Listener } from "@mail/model/model_listener";
 
-import dom from 'web.dom';
-import FormRenderer from 'web.FormRenderer';
-import { ComponentWrapper } from 'web.OwlCompatibility';
+import dom from "web.dom";
+import FormRenderer from "web.FormRenderer";
+import { ComponentWrapper } from "web.OwlCompatibility";
 
 class ChatterContainerWrapperComponent extends ComponentWrapper {}
 
@@ -25,7 +25,7 @@ FormRenderer.include({
     init(parent, state, params) {
         this._super(...arguments);
         this.modelsListener = new Listener({
-            name: 'interchangeChatter',
+            name: "interchangeChatter",
             onChange: () => this._interchangeChatter(),
         });
         this.hasChatter = params.hasChatter && !params.isFromFormViewDialog;
@@ -35,7 +35,9 @@ FormRenderer.include({
         this.mailFields = params.mailFields;
         this.messaging = undefined;
         if (owl.Component.env.services.messaging) {
-            owl.Component.env.services.messaging.get().then(messaging => this.messaging = messaging);
+            owl.Component.env.services.messaging
+                .get()
+                .then((messaging) => (this.messaging = messaging));
         }
         this._chatterContainerComponent = undefined;
         /**
@@ -59,7 +61,11 @@ FormRenderer.include({
         if (this.hasAttachmentViewerFeature) {
             this.attachmentViewerTarget = document.createElement("div");
             this.attachmentViewerTarget.classList.add("o_attachment_preview");
-            this.webClientViewAttachmentViewContainer = new ComponentWrapper(this, WebClientViewAttachmentViewContainer, this._makeWebClientViewAttachmentViewContainerProps());
+            this.webClientViewAttachmentViewContainer = new ComponentWrapper(
+                this,
+                WebClientViewAttachmentViewContainer,
+                this._makeWebClientViewAttachmentViewContainerProps()
+            );
             this.webClientViewAttachmentViewContainer.mount(this.attachmentViewerTarget);
         }
         this.attachmentViewerTargetPlaceholder = undefined;
@@ -68,7 +74,7 @@ FormRenderer.include({
         this._chatterContainerComponent = new ChatterContainerWrapperComponent(
             this,
             ChatterContainer,
-            this._makeChatterContainerProps(),
+            this._makeChatterContainerProps()
         );
         await this._chatterContainerComponent.mount(this._chatterContainerTarget);
     },
@@ -76,14 +82,14 @@ FormRenderer.include({
      * @override
      */
     _renderNode(node) {
-        if (node.tag === 'div' && node.attrs.class === 'oe_chatter') {
+        if (node.tag === "div" && node.attrs.class === "oe_chatter") {
             if (!this.hasChatter) {
                 return document.createElement("div");
             }
             this.chatterContainerTargetPlaceholder = this._chatterContainerTarget.cloneNode(false);
             return this.chatterContainerTargetPlaceholder;
         }
-        if (node.tag === 'div' && node.attrs.class === 'o_attachment_preview') {
+        if (node.tag === "div" && node.attrs.class === "o_attachment_preview") {
             if (!this.hasAttachmentViewerFeature) {
                 return document.createElement("div");
             }
@@ -135,7 +141,9 @@ FormRenderer.include({
             // isChatterInSheet can only be written from this specific life-cycle method because the
             // parentNode is not accessible before the target node is actually in DOM. Ideally this
             // should be determined statically in `_processNode` but the parent is not provided.
-            this.isChatterInSheet = this._chatterContainerTarget.parentNode.classList.contains('o_form_sheet');
+            this.isChatterInSheet = this._chatterContainerTarget.parentNode.classList.contains(
+                "o_form_sheet"
+            );
             this._interchangeChatter();
         }
     },
@@ -166,24 +174,27 @@ FormRenderer.include({
      * @private
      */
     _interchangeChatter() {
-        const $sheetBg = this.$('.o_form_sheet_bg');
-        this._chatterContainerTarget.classList.remove('o-aside');
-        this._chatterContainerTarget.classList.remove('o-isInFormSheetBg');
-        if (this.isChatterInSheet) { // in sheet
-            const $sheet = this.$('.o_form_sheet');
+        const $sheetBg = this.$(".o_form_sheet_bg");
+        this._chatterContainerTarget.classList.remove("o-aside");
+        this._chatterContainerTarget.classList.remove("o-isInFormSheetBg");
+        if (this.isChatterInSheet) {
+            // in sheet
+            const $sheet = this.$(".o_form_sheet");
             dom.append($sheet, $(this._chatterContainerTarget), {
                 callbacks: [],
                 in_DOM: this._isInDom,
             });
-        } else if (this.hasAttachmentViewer()) { // in sheet-bg
-            this._chatterContainerTarget.classList.add('o-isInFormSheetBg');
+        } else if (this.hasAttachmentViewer()) {
+            // in sheet-bg
+            this._chatterContainerTarget.classList.add("o-isInFormSheetBg");
             dom.append($sheetBg, $(this._chatterContainerTarget), {
                 callbacks: [],
                 in_DOM: this._isInDom,
             });
-        } else { // after sheet-bg
+        } else {
+            // after sheet-bg
             if (this._isChatterAside()) {
-                this._chatterContainerTarget.classList.add('o-aside');
+                this._chatterContainerTarget.classList.add("o-aside");
             }
             $(this._chatterContainerTarget).insertAfter($sheetBg);
         }
@@ -216,7 +227,8 @@ FormRenderer.include({
             hasFollowers: this.chatterFields.hasMessageFollowerIds,
             hasMessageList: this.chatterFields.hasMessageIds,
             hasMessageListScrollAdjust: isChatterAside,
-            hasParentReloadOnAttachmentsChanged: this.chatterFields.hasRecordReloadOnAttachmentsChanged,
+            hasParentReloadOnAttachmentsChanged: this.chatterFields
+                .hasRecordReloadOnAttachmentsChanged,
             hasParentReloadOnFollowersUpdate: this.chatterFields.hasRecordReloadOnFollowersUpdate,
             hasParentReloadOnMessagePosted: this.chatterFields.hasRecordReloadOnMessagePosted,
             isAttachmentBoxVisibleInitially: this.chatterFields.isAttachmentBoxVisibleInitially,

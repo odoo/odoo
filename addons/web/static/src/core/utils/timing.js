@@ -9,14 +9,16 @@ import { onWillUnmount, useComponent } from "@odoo/owl";
  * animation frames is executed before the browser's next repaint. This
  * effectively throttles the function to the display's refresh rate.
  *
- * @param {Function} func the function to throttle
- * @returns {{ (...args): void, cancel: () => void }} the throttled function
+ * @template {Function} T
+ * @param {T} func the function to throttle
+ * @returns {T & { cancel: () => void }} the throttled function
  */
 export function throttleForAnimation(func) {
     let handle = null;
     const funcName = func.name ? `${func.name} (throttleForAnimation)` : "throttleForAnimation";
     return Object.assign(
         {
+            /** @type {any} */
             [funcName](...args) {
                 browser.cancelAnimationFrame(handle);
                 handle = browser.requestAnimationFrame(() => {
@@ -68,14 +70,14 @@ export function throttle(func, delay) {
  * has been fully executed. If `immediate` is passed, trigger the function
  * on the leading edge, instead of the trailing.
  *
- * @template T the return type of the original function
- * @param {(...args) => T} func the function to debounce
+ * @template {Function} T the return type of the original function
+ * @param {T} func the function to debounce
  * @param {number | "animationFrame"} delay how long should elapse before the function
  *      is called. If 'animationFrame' is given instead of a number, 'requestAnimationFrame'
  *      will be used instead of 'setTimeout'.
  * @param {boolean} [immediate=false] whether the function should be called on
  *      the leading edge instead of the trailing edge.
- * @returns {{ (...args): Promise<T>, cancel: () => void }} the debounced function
+ * @returns {T & { cancel: () => void }} the debounced function
  */
 export function debounce(func, delay, immediate = false) {
     let handle;
@@ -85,6 +87,7 @@ export function debounce(func, delay, immediate = false) {
     const clearFnName = useAnimationFrame ? "cancelAnimationFrame" : "clearTimeout";
     return Object.assign(
         {
+            /** @type {any} */
             [funcName](...args) {
                 return new Promise((resolve) => {
                     const callNow = immediate && !handle;
@@ -113,6 +116,10 @@ export function debounce(func, delay, immediate = false) {
  * Hook that returns a debounced version of the given function, and cancels
  * the potential pending execution on willUnmount.
  * @see debounce
+ * @template {Function} T
+ * @param {T} callback
+ * @param {number | "animationFrame"} delay
+ * @returns {T & { cancel: () => void }}
  */
 export function useDebounced(callback, delay) {
     const component = useComponent();
@@ -125,7 +132,7 @@ export function useDebounced(callback, delay) {
  * Function that calls recursively a request to an animation frame.
  * Useful to call a function repetitively, until asked to stop, that needs constant rerendering.
  * The provided callback gets as argument the time the last frame took.
- * @param {(deltaTime: number) => any} callback
+ * @param {(deltaTime: number) => void} callback
  * @returns {() => void} stop function
  */
 export function setRecurringAnimationFrame(callback) {

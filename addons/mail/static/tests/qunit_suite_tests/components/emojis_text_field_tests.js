@@ -13,11 +13,11 @@ QUnit.module("Field text emojis", (hooks) => {
             models: {
                 partner: {
                     fields: {
-                        foo: { type: "char" }
+                        foo: { type: "char" },
                     },
-                    records: [{ id: 1 }]
-                }
-            }
+                    records: [{ id: 1 }],
+                },
+            },
         };
 
         setupViewRegistries();
@@ -29,7 +29,7 @@ QUnit.module("Field text emojis", (hooks) => {
             resId: 1,
             resModel: "partner",
             arch: `<form><field name="foo" widget="text_emojis" /></form>`,
-            serverData
+            serverData,
         });
 
         assert.containsOnce(target, ".o_field_text_emojis");

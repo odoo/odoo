@@ -3,30 +3,33 @@
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-import { datetime_to_str } from 'web.time';
+import { datetime_to_str } from "web.time";
 
-patch(MockServer.prototype, 'mail/models/mail_thread', {
+patch(MockServer.prototype, "mail/models/mail_thread", {
     async _performRPC(route, args) {
-        if (args.method === 'message_subscribe') {
+        if (args.method === "message_subscribe") {
             const ids = args.args[0];
             const partner_ids = args.args[1] || args.kwargs.partner_ids;
             const subtype_ids = args.args[2] || args.kwargs.subtype_ids;
             return this._mockMailThreadMessageSubscribe(args.model, ids, partner_ids, subtype_ids);
         }
-        if (args.method === 'message_unsubscribe') {
+        if (args.method === "message_unsubscribe") {
             const ids = args.args[0];
             const partner_ids = args.args[1] || args.kwargs.partner_ids;
             return this._mockMailThreadMessageUnsubscribe(args.model, ids, partner_ids);
         }
-        if (args.method === 'message_post') {
+        if (args.method === "message_post") {
             const id = args.args[0];
             const kwargs = args.kwargs;
             const context = kwargs.context;
             delete kwargs.context;
             return this._mockMailThreadMessagePost(args.model, [id], kwargs, context);
         }
-        if (args.method === 'notify_cancel_by_type') {
-            return this._mockMailThreadNotifyCancelByType(args.model, args.kwargs.notification_type);
+        if (args.method === "notify_cancel_by_type") {
+            return this._mockMailThreadNotifyCancelByType(
+                args.model,
+                args.kwargs.notification_type
+            );
         }
         return this._super(route, args);
     },
@@ -44,35 +47,27 @@ patch(MockServer.prototype, 'mail/models/mail_thread', {
             // For simplicity partner is not guessed from email_from here, but
             // that would be the first step on the server.
             let user_id;
-            if ('mockedUserId' in context) {
+            if ("mockedUserId" in context) {
                 // can be falsy to simulate not being logged in
-                user_id = context.mockedUserId
-                    ? context.mockedUserId
-                    : this.publicUserId;
+                user_id = context.mockedUserId ? context.mockedUserId : this.publicUserId;
             } else {
                 user_id = this.currentUserId;
             }
-            const user = this.getRecords(
-                'res.users',
-                [['id', '=', user_id]],
-                { active_test: false },
-            )[0];
-            const author = this.getRecords(
-                'res.partner',
-                [['id', '=', user.partner_id]],
-                { active_test: false },
-            )[0];
+            const user = this.getRecords("res.users", [["id", "=", user_id]], {
+                active_test: false,
+            })[0];
+            const author = this.getRecords("res.partner", [["id", "=", user.partner_id]], {
+                active_test: false,
+            })[0];
             author_id = author.id;
             email_from = `${author.display_name} <${author.email}>`;
         }
 
         if (email_from === undefined) {
             if (author_id) {
-                const author = this.getRecords(
-                    'res.partner',
-                    [['id', '=', author_id]],
-                    { active_test: false },
-                )[0];
+                const author = this.getRecords("res.partner", [["id", "=", author_id]], {
+                    active_test: false,
+                })[0];
                 email_from = `${author.display_name} <${author.email}>`;
             }
         }
@@ -96,8 +91,13 @@ patch(MockServer.prototype, 'mail/models/mail_thread', {
      * @param {string} [param3.reason]
      * @returns {Object}
      */
-    _mockMailThread_MessageAddSuggestedRecipient(model, ids, result, { email, partner, reason = '' } = {}) {
-        const record = this.getRecords(model, [['id', 'in', 'ids']])[0];
+    _mockMailThread_MessageAddSuggestedRecipient(
+        model,
+        ids,
+        result,
+        { email, partner, reason = "" } = {}
+    ) {
+        const record = this.getRecords(model, [["id", "in", "ids"]])[0];
         // for simplicity
         result[record.id].push([partner, email, reason]);
         return result;
@@ -111,17 +111,21 @@ patch(MockServer.prototype, 'mail/models/mail_thread', {
      * @returns {Object}
      */
     _mockMailThread_MessageGetSuggestedRecipients(model, ids) {
-        if (model === 'res.fake') {
+        if (model === "res.fake") {
             return this._mockResFake_MessageGetSuggestedRecipients(model, ids);
         }
-        const result = ids.reduce((result, id) => result[id] = [], {});
-        const records = this.getRecords(model, [['id', 'in', ids]]);
+        const result = ids.reduce((result, id) => (result[id] = []), {});
+        const records = this.getRecords(model, [["id", "in", ids]]);
         for (const record in records) {
             if (record.user_id) {
-                const user = this.getRecords('res.users', [['id', '=', record.user_id]]);
+                const user = this.getRecords("res.users", [["id", "=", record.user_id]]);
                 if (user.partner_id) {
-                    const reason = this.models[model].fields['user_id'].string;
-                    this._mockMailThread_MessageAddSuggestedRecipient(result, user.partner_id, reason);
+                    const reason = this.models[model].fields["user_id"].string;
+                    this._mockMailThread_MessageAddSuggestedRecipient(
+                        result,
+                        user.partner_id,
+                        reason
+                    );
                 }
             }
         }
@@ -140,38 +144,36 @@ patch(MockServer.prototype, 'mail/models/mail_thread', {
     _mockMailThreadMessagePost(model, ids, kwargs, context) {
         const id = ids[0]; // ensure_one
         if (kwargs.attachment_ids) {
-            const attachments = this.getRecords('ir.attachment', [
-                ['id', 'in', kwargs.attachment_ids],
-                ['res_model', '=', 'mail.compose.message'],
-                ['res_id', '=', 0],
+            const attachments = this.getRecords("ir.attachment", [
+                ["id", "in", kwargs.attachment_ids],
+                ["res_model", "=", "mail.compose.message"],
+                ["res_id", "=", 0],
             ]);
-            const attachmentIds = attachments.map(attachment => attachment.id);
-            this.pyEnv['ir.attachment'].write(
-                attachmentIds,
-                {
-                    res_id: id,
-                    res_model: model,
-                },
-            );
-            kwargs.attachment_ids = attachmentIds.map(attachmentId => [4, attachmentId]);
+            const attachmentIds = attachments.map((attachment) => attachment.id);
+            this.pyEnv["ir.attachment"].write(attachmentIds, {
+                res_id: id,
+                res_model: model,
+            });
+            kwargs.attachment_ids = attachmentIds.map((attachmentId) => [4, attachmentId]);
         }
-        const subtype_xmlid = kwargs.subtype_xmlid || 'mail.mt_note';
+        const subtype_xmlid = kwargs.subtype_xmlid || "mail.mt_note";
         const [author_id, email_from] = this._MockMailThread_MessageComputeAuthor(
             model,
             ids,
             kwargs.author_id,
-            kwargs.email_from, context,
+            kwargs.email_from,
+            context
         );
         const values = Object.assign({}, kwargs, {
             author_id,
             email_from,
-            is_discussion: subtype_xmlid === 'mail.mt_comment',
-            is_note: subtype_xmlid === 'mail.mt_note',
+            is_discussion: subtype_xmlid === "mail.mt_comment",
+            is_note: subtype_xmlid === "mail.mt_note",
             model,
             res_id: id,
         });
         delete values.subtype_xmlid;
-        const messageId = this.pyEnv['mail.message'].create(values);
+        const messageId = this.pyEnv["mail.message"].create(values);
         this._mockMailThread_NotifyThread(model, ids, messageId);
         return this._mockMailMessageMessageFormat([messageId])[0];
     },
@@ -188,14 +190,14 @@ patch(MockServer.prototype, 'mail/models/mail_thread', {
     _mockMailThreadMessageSubscribe(model, ids, partner_ids, subtype_ids) {
         for (const id of ids) {
             for (const partner_id of partner_ids) {
-                const followerId = this.pyEnv['mail.followers'].create({
+                const followerId = this.pyEnv["mail.followers"].create({
                     is_active: true,
                     partner_id,
                     res_id: id,
                     res_model: model,
                     subtype_ids: subtype_ids,
                 });
-                this.pyEnv['res.partner'].write([partner_id], {
+                this.pyEnv["res.partner"].write([partner_id], {
                     message_follower_ids: [followerId],
                 });
             }
@@ -212,34 +214,44 @@ patch(MockServer.prototype, 'mail/models/mail_thread', {
      * @returns {boolean}
      */
     _mockMailThread_NotifyThread(model, ids, messageId) {
-        const message = this.getRecords('mail.message', [['id', '=', messageId]])[0];
+        const message = this.getRecords("mail.message", [["id", "=", messageId]])[0];
         const messageFormat = this._mockMailMessageMessageFormat([messageId])[0];
         const notifications = [];
-        if (model === 'mail.channel') {
+        if (model === "mail.channel") {
             // members
-            const channels = this.getRecords('mail.channel', [['id', '=', message.res_id]]);
+            const channels = this.getRecords("mail.channel", [["id", "=", message.res_id]]);
             for (const channel of channels) {
-                notifications.push([channel, 'mail.channel/new_message', {
-                    'id': channel.id,
-                    'message': messageFormat,
-                }]);
+                notifications.push([
+                    channel,
+                    "mail.channel/new_message",
+                    {
+                        id: channel.id,
+                        message: messageFormat,
+                    },
+                ]);
                 // notify update of last_interest_dt
                 const now = datetime_to_str(new Date());
-                const members = this.getRecords('mail.channel.member', [['id', 'in', channel.channel_member_ids]]);
-                this.pyEnv['mail.channel.member'].write(
-                    members.map(member => member.id),
-                    { last_interest_dt: now },
+                const members = this.getRecords("mail.channel.member", [
+                    ["id", "in", channel.channel_member_ids],
+                ]);
+                this.pyEnv["mail.channel.member"].write(
+                    members.map((member) => member.id),
+                    { last_interest_dt: now }
                 );
                 for (const member of members) {
                     // simplification, send everything on the current user "test" bus, but it should send to each member instead
-                    notifications.push([member, 'mail.channel/last_interest_dt_changed', {
-                        'id': channel.id,
-                        'last_interest_dt': member.last_interest_dt,
-                    }]);
+                    notifications.push([
+                        member,
+                        "mail.channel/last_interest_dt_changed",
+                        {
+                            id: channel.id,
+                            last_interest_dt: member.last_interest_dt,
+                        },
+                    ]);
                 }
             }
         }
-        this.pyEnv['bus.bus']._sendmany(notifications);
+        this.pyEnv["bus.bus"]._sendmany(notifications);
     },
     /**
      * Simulates `message_unsubscribe` on `mail.thread`.
@@ -254,22 +266,31 @@ patch(MockServer.prototype, 'mail/models/mail_thread', {
         if (!partner_ids) {
             return true;
         }
-        const followers = this.getRecords('mail.followers', [
-            ['res_model', '=', model],
-            ['res_id', 'in', ids],
-            ['partner_id', 'in', partner_ids || []],
+        const followers = this.getRecords("mail.followers", [
+            ["res_model", "=", model],
+            ["res_id", "in", ids],
+            ["partner_id", "in", partner_ids || []],
         ]);
-        this.pyEnv['mail.followers'].unlink(followers.map(follower => follower.id));
+        this.pyEnv["mail.followers"].unlink(followers.map((follower) => follower.id));
     },
     /**
      * Simulates `_message_track` on `mail.thread`
      */
-    _mockMailThread_MessageTrack(modelName, trackedFieldNames, initialTrackedFieldValuesByRecordId) {
+    _mockMailThread_MessageTrack(
+        modelName,
+        trackedFieldNames,
+        initialTrackedFieldValuesByRecordId
+    ) {
         const trackFieldNamesToField = this.mockFieldsGet(modelName, trackedFieldNames);
         const tracking = {};
         const records = this.models[modelName].records;
         for (const record of records) {
-            tracking[record.id] = this._mockMailBaseModel__MailTrack(modelName, trackFieldNamesToField, initialTrackedFieldValuesByRecordId[record.id], record);
+            tracking[record.id] = this._mockMailBaseModel__MailTrack(
+                modelName,
+                trackFieldNamesToField,
+                initialTrackedFieldValuesByRecordId[record.id],
+                record
+            );
         }
         for (const record of records) {
             const { trackingValueIds, changedFieldNames } = tracking[record.id] || {};
@@ -296,7 +317,7 @@ patch(MockServer.prototype, 'mail/models/mail_thread', {
         this._mockMailThread_MessageTrack(
             model,
             this._mockMailThread_TrackGetFields(model),
-            initialTrackedFieldValuesByRecordId,
+            initialTrackedFieldValuesByRecordId
         );
     },
     /**
@@ -340,23 +361,29 @@ patch(MockServer.prototype, 'mail/models/mail_thread', {
      */
     _mockMailThreadNotifyCancelByType(model, notificationType) {
         // Query matching notifications
-        const notifications = this.getRecords('mail.notification', [
-            ['notification_type', '=', notificationType],
-            ['notification_status', 'in', ['bounce', 'exception']],
-        ]).filter(notification => {
-            const message = this.getRecords('mail.message', [['id', '=', notification.mail_message_id]])[0];
+        const notifications = this.getRecords("mail.notification", [
+            ["notification_type", "=", notificationType],
+            ["notification_status", "in", ["bounce", "exception"]],
+        ]).filter((notification) => {
+            const message = this.getRecords("mail.message", [
+                ["id", "=", notification.mail_message_id],
+            ])[0];
             return message.model === model && message.author_id === this.currentPartnerId;
         });
         // Update notification status
-        this.pyEnv['mail.notification'].write(
-            notifications.map(notification => notification.id),
-            { notification_status: 'canceled' },
+        this.pyEnv["mail.notification"].write(
+            notifications.map((notification) => notification.id),
+            { notification_status: "canceled" }
         );
         // Send bus notifications to update status of notifications in the web client
-        this.pyEnv['bus.bus']._sendone(this.pyEnv.currentPartner, 'mail.message/notification_update', {
-            'elements': this._mockMailMessage_MessageNotificationFormat(
-                notifications.map(notification => notification.mail_message_id)
-            ),
-        });
+        this.pyEnv["bus.bus"]._sendone(
+            this.pyEnv.currentPartner,
+            "mail.message/notification_update",
+            {
+                elements: this._mockMailMessage_MessageNotificationFormat(
+                    notifications.map((notification) => notification.mail_message_id)
+                ),
+            }
+        );
     },
 });

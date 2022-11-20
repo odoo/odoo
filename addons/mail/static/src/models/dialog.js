@@ -1,19 +1,19 @@
 /** @odoo-module **/
 
-import { attr, clear, one, Model } from '@mail/model';
+import { attr, clear, one, Model } from "@mail/model";
 
 Model({
-    name: 'Dialog',
-    identifyingMode: 'xor',
-    template: 'mail.Dialog',
+    name: "Dialog",
+    identifyingMode: "xor",
+    template: "mail.Dialog",
     lifecycleHooks: {
         _created() {
-            document.addEventListener('click', this._onClickGlobal, true);
-            document.addEventListener('keydown', this._onKeydownGlobal);
+            document.addEventListener("click", this._onClickGlobal, true);
+            document.addEventListener("keydown", this._onKeydownGlobal);
         },
         _willDelete() {
-            document.removeEventListener('click', this._onClickGlobal, true);
-            document.removeEventListener('keydown', this._onKeydownGlobal);
+            document.removeEventListener("click", this._onClickGlobal, true);
+            document.removeEventListener("keydown", this._onKeydownGlobal);
         },
     },
     recordMethods: {
@@ -45,14 +45,18 @@ Model({
          * @param {KeyboardEvent} ev
          */
         _onKeydownGlobal(ev) {
-            if (ev.key === 'Escape') {
+            if (ev.key === "Escape") {
                 this.delete();
             }
         },
     },
     fields: {
-        attachmentCardOwnerAsAttachmentDeleteConfirm: one('AttachmentCard', { identifying: true, inverse: 'attachmentDeleteConfirmDialog' }),
-        attachmentDeleteConfirmView: one('AttachmentDeleteConfirmView', { inverse: 'dialogOwner',
+        attachmentCardOwnerAsAttachmentDeleteConfirm: one("AttachmentCard", {
+            identifying: true,
+            inverse: "attachmentDeleteConfirmDialog",
+        }),
+        attachmentDeleteConfirmView: one("AttachmentDeleteConfirmView", {
+            inverse: "dialogOwner",
             compute() {
                 if (this.attachmentCardOwnerAsAttachmentDeleteConfirm) {
                     return {};
@@ -63,9 +67,16 @@ Model({
                 return clear();
             },
         }),
-        attachmentImageOwnerAsAttachmentDeleteConfirm: one('AttachmentImage', { identifying: true, inverse: 'attachmentDeleteConfirmDialog' }),
-        attachmentListOwnerAsAttachmentView: one('AttachmentList', { identifying: true, inverse: 'attachmentListViewDialog' }),
-        attachmentViewer: one('AttachmentViewer', { inverse: 'dialogOwner',
+        attachmentImageOwnerAsAttachmentDeleteConfirm: one("AttachmentImage", {
+            identifying: true,
+            inverse: "attachmentDeleteConfirmDialog",
+        }),
+        attachmentListOwnerAsAttachmentView: one("AttachmentList", {
+            identifying: true,
+            inverse: "attachmentListViewDialog",
+        }),
+        attachmentViewer: one("AttachmentViewer", {
+            inverse: "dialogOwner",
             compute() {
                 if (this.attachmentListOwnerAsAttachmentView) {
                     return {};
@@ -84,55 +95,66 @@ Model({
         componentClassName: attr({
             compute() {
                 if (this.attachmentDeleteConfirmView) {
-                    return 'o_Dialog_componentMediumSize align-self-start mt-5';
+                    return "o_Dialog_componentMediumSize align-self-start mt-5";
                 }
                 if (this.deleteMessageConfirmView) {
-                    return 'o_Dialog_componentLargeSize align-self-start mt-5';
+                    return "o_Dialog_componentLargeSize align-self-start mt-5";
                 }
                 if (this.linkPreviewDeleteConfirmView) {
-                    return 'o_Dialog_componentMediumSize align-self-start mt-5';
+                    return "o_Dialog_componentMediumSize align-self-start mt-5";
                 }
-                return '';
+                return "";
             },
         }),
-        componentName: attr({ required: true,
+        componentName: attr({
+            required: true,
             compute() {
                 if (this.attachmentViewer) {
-                    return 'AttachmentViewer';
+                    return "AttachmentViewer";
                 }
                 if (this.attachmentDeleteConfirmView) {
-                    return 'AttachmentDeleteConfirmView';
+                    return "AttachmentDeleteConfirmView";
                 }
                 if (this.deleteMessageConfirmView) {
-                    return 'DeleteMessageConfirmView';
+                    return "DeleteMessageConfirmView";
                 }
                 if (this.followerSubtypeList) {
-                    return 'FollowerSubtypeList';
+                    return "FollowerSubtypeList";
                 }
                 if (this.linkPreviewDeleteConfirmView) {
-                    return 'LinkPreviewDeleteConfirmView';
+                    return "LinkPreviewDeleteConfirmView";
                 }
                 return clear();
             },
         }),
-        deleteMessageConfirmView: one('DeleteMessageConfirmView', { inverse: 'dialogOwner',
+        deleteMessageConfirmView: one("DeleteMessageConfirmView", {
+            inverse: "dialogOwner",
             compute() {
                 return this.messageActionViewOwnerAsDeleteConfirm ? {} : clear();
             },
         }),
-        linkPreviewAsideViewOwnerAsLinkPreviewDeleteConfirm: one('LinkPreviewAsideView', { inverse: 'linkPreviewDeleteConfirmDialog', readonly: true }),
-        linkPreviewDeleteConfirmView: one('LinkPreviewDeleteConfirmView', { inverse: 'dialogOwner',
+        linkPreviewAsideViewOwnerAsLinkPreviewDeleteConfirm: one("LinkPreviewAsideView", {
+            inverse: "linkPreviewDeleteConfirmDialog",
+            readonly: true,
+        }),
+        linkPreviewDeleteConfirmView: one("LinkPreviewDeleteConfirmView", {
+            inverse: "dialogOwner",
             compute() {
                 return this.linkPreviewAsideViewOwnerAsLinkPreviewDeleteConfirm ? {} : clear();
             },
         }),
-        followerOwnerAsSubtypeList: one('Follower', { identifying: true, inverse: 'followerSubtypeListDialog' }),
-        followerSubtypeList: one('FollowerSubtypeList', { inverse: 'dialogOwner',
+        followerOwnerAsSubtypeList: one("Follower", {
+            identifying: true,
+            inverse: "followerSubtypeListDialog",
+        }),
+        followerSubtypeList: one("FollowerSubtypeList", {
+            inverse: "dialogOwner",
             compute() {
                 return this.followerOwnerAsSubtypeList ? {} : clear();
             },
         }),
-        isCloseable: attr({ default: true,
+        isCloseable: attr({
+            default: true,
             compute() {
                 if (this.attachmentViewer) {
                     /**
@@ -144,7 +166,8 @@ Model({
                 return true;
             },
         }),
-        manager: one('DialogManager', { inverse: 'dialogs',
+        manager: one("DialogManager", {
+            inverse: "dialogs",
             compute() {
                 if (this.messaging.dialogManager) {
                     return this.messaging.dialogManager;
@@ -152,13 +175,18 @@ Model({
                 return clear();
             },
         }),
-        messageActionViewOwnerAsDeleteConfirm: one('MessageActionView', { identifying: true, inverse: 'deleteConfirmDialog' }),
+        messageActionViewOwnerAsDeleteConfirm: one("MessageActionView", {
+            identifying: true,
+            inverse: "deleteConfirmDialog",
+        }),
         /**
          * Content of dialog that is directly linked to a record that models
          * a UI component, such as AttachmentViewer. These records must be
          * created from @see `DialogManager:open()`.
          */
-        record: one('Record', { isCausal: true, required: true,
+        record: one("Record", {
+            isCausal: true,
+            required: true,
             compute() {
                 if (this.attachmentViewer) {
                     return this.attachmentViewer;

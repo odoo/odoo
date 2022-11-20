@@ -20,6 +20,7 @@ from odoo.addons.mail.models.mail_message import Message
 from odoo.addons.mail.models.mail_notification import MailNotification
 from odoo.tests import common, new_test_user
 from odoo.tools import formataddr, pycompat
+from odoo.tools.translate import code_translations
 
 mail_new_test_user = partial(new_test_user, context={'mail_create_nolog': True,
                                                      'mail_create_nosubscribe': True,
@@ -1119,9 +1120,16 @@ class MailCommon(common.TransactionCase, MailCase):
         if test_record:
             cls.env['ir.model']._get(test_record._name).with_context(lang=lang_code).name = 'Spanish description'
 
+        # Translate some code strings used in mailing
+        code_translations.python_translations[('test_mail', 'es_ES')] = {'TestStuff': 'TestSpanishStuff'}
+        cls.addClassCleanup(code_translations.python_translations.pop, ('test_mail', 'es_ES'))
+        code_translations.python_translations[('mail', 'es_ES')] = {'View %s': 'SpanishView %s'}
+        cls.addClassCleanup(code_translations.python_translations.pop, ('mail', 'es_ES'))
+
         # Prepare some translated value for template if given
-        test_template.with_context(lang=lang_code).subject = 'SpanishSubject for {{ object.name }}'
-        test_template.with_context(lang=lang_code).body_html = '<p>SpanishBody for <t t-out="object.name" /></p>'
+        if test_template:
+            test_template.with_context(lang=lang_code).subject = 'SpanishSubject for {{ object.name }}'
+            test_template.with_context(lang=lang_code).body_html = '<p>SpanishBody for <t t-out="object.name" /></p>'
 
         # create a custom layout for email notification
         if not layout_arch_db:

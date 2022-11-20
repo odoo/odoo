@@ -27,7 +27,9 @@ export class KanbanMany2OneAvatarUserField extends Many2OneAvatarUserField {
      * we add a new one, we need to filter it out.
      */
     get m2oFieldProps() {
-        return Object.fromEntries(Object.entries(this.props).filter(([key, _val]) => key in Many2OneAvatarField.props));
+        return Object.fromEntries(
+            Object.entries(this.props).filter(([key, _val]) => key in Many2OneAvatarField.props)
+        );
     }
 }
 KanbanMany2OneAvatarUserField.template = "mail.KanbanMany2OneAvatarUserField";

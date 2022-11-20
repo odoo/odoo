@@ -701,6 +701,8 @@
                     <field name="analytic_account_id" optional="hide" groups="analytic.group_analytic_accounting"/>
                     <field name="date_start" string="Start Date" widget="daterange" options="{'related_end_date': 'date'}"/>
                     <field name="date" string="End Date" widget="daterange" options="{'related_start_date': 'date_start'}"/>
+                    <field name="activity_ids" string="Next Activity" widget="list_activity" optional="hide"/>
+                    <field name="my_activity_date_deadline" string="My Deadline" widget="remaining_days" optional="hide"/>
                     <field name="user_id" optional="show" string="Project Manager" widget="many2one_avatar_user" options="{'no_open':True, 'no_create': True, 'no_create_edit': True}"/>
                     <field name="last_update_color" invisible="1"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
@@ -866,7 +868,7 @@
                                                 <div role="menuitem">
                                                     <a name="action_view_tasks" type="object">Tasks</a>
                                                 </div>
-                                                <div role="menuitem" groups="project.group_project_milestone">
+                                                <div role="menuitem" groups="project.group_project_milestone" t-if="record.allow_milestones.raw_value">
                                                     <a name="action_get_list_view" type="object">Milestones</a>
                                                 </div>
                                             </div>
@@ -1090,7 +1092,7 @@
                         <button name="action_assign_to_me" string="Assign to Me" type="object" attrs="{'invisible': &quot;['|', ('user_ids', 'in', uid), ('user_ids', '=', [])]&quot;}" data-hotkey="q"/>
                         <button name="action_assign_to_me" string="Assign to Me" type="object" class="oe_highlight" attrs="{'invisible' : &quot;['|', ('user_ids', 'in', uid), ('user_ids', '!=', [])]&quot;}" data-hotkey="q"/>
                         <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('project_id', '=', False), ('stage_id', '=', False)]}"/>
-                        <field name="personal_stage_type_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('project_id', '!=', False)]}" domain="[('user_id', '=', uid)]"/>
+                        <field name="personal_stage_type_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('project_id', '!=', False)]}" domain="[('user_id', '=', uid)]" string="Personal Stage"/>
                     </header>
                     <div class="alert alert-info oe_edit_only mb-0" role="status" attrs="{'invisible': ['|', ('recurring_task', '=', False), ('recurrence_id', '=', False)]}" groups="project.group_project_recurring_tasks">
                         <p>Edit recurring task</p>
@@ -1151,7 +1153,7 @@
                     <div class="oe_title pe-0">
                         <h1 class="d-flex justify-content-between align-items-center">
                             <div class="d-flex w-100">
-                                <field name="priority" widget="priority" class="me-3"/>
+                                <field name="priority" widget="priority_switch" class="me-3"/>
                                 <field name="name" class="o_task_name text-truncate" placeholder="Task Title..."/>
                             </div>
                             <field name="kanban_state" widget="state_selection" class=""/>
@@ -1197,7 +1199,7 @@
                         <page name="sub_tasks_page" string="Sub-tasks" attrs="{'invisible': [('allow_subtasks', '=', False)]}">
                             <field name="child_ids"
                                    context="{'search_view_ref' : 'project.view_task_search_form_extended', 'default_project_id': project_id if not parent_id or not display_project_id else display_project_id, 'default_user_ids': user_ids, 'default_parent_id': id,
-                                    'default_partner_id': partner_id, 'default_milestone_id': allow_milestones and milestone_id, 'search_default_display_project_id': project_id }"
+                                    'default_partner_id': partner_id, 'default_milestone_id': allow_milestones and milestone_id, 'search_default_display_project_id': project_id, 'search_default_open_tasks': 1 }"
                                    widget="many2many"
                                    domain="['!', ('id', 'parent_of', id)]">
                                 <tree editable="bottom" decoration-muted="is_closed == True">
@@ -1327,7 +1329,7 @@
                             <group>
                                 <group>
                                     <field name="is_analytic_account_id_changed" invisible="1"/>
-                                    <field name="parent_id" attrs="{'invisible': [('allow_subtasks', '=', False)]}" groups="base.group_no_one"/>
+                                    <field name="parent_id" attrs="{'invisible': [('allow_subtasks', '=', False)]}" groups="base.group_no_one" context="{'search_view_ref' : 'project.view_task_search_form_extended','search_default_display_project_id': project_id}"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" context="{'default_partner_id': partner_id}"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                     <field name="sequence" groups="base.group_no_one"/>
@@ -1518,7 +1520,10 @@
                     <field name="user_ids" optional="show" widget="many2many_avatar_user" domain="[('share', '=', False), ('active', '=', True)]" options='{"no_quick_create": True}'/>
                     <field name="company_id" groups="base.group_multi_company" optional="show" readonly="True"/>
                     <field name="company_id" invisible="1"/>
+                    <field name="create_date" optional="hide"/>
+                    <field name="date_last_stage_update" optional="hide"/>
                     <field name="activity_ids" string="Next Activity" widget="list_activity" optional="show"/>
+                    <field name="my_activity_date_deadline" string="My Deadline" widget="remaining_days" optional="hide"/>
                     <field name="date_deadline" optional="hide" widget="remaining_days" attrs="{'invisible': [('is_closed', '=', True)]}"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show" context="{'project_id': project_id}"/>
                     <field name="rating_active" invisible="1"/>
@@ -1662,6 +1667,18 @@
             </field>
         </record>
 
+        <record id="open_view_my_tasks_list_view" model="ir.ui.view">
+            <field name="name">open.view.my.tasks.list.view</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="view_task_tree2"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <field name="stage_id" position="replace">
+                    <field name="stage_display" optional="show"/>
+                </field>
+            </field>
+        </record>
+
         <record id="open_view_task_list_kanban" model="ir.actions.act_window.view">
             <field name="sequence" eval="0"/>
             <field name="view_mode">kanban</field>
@@ -1682,6 +1699,7 @@
         <record id="open_view_all_task_list_tree" model="ir.actions.act_window.view">
             <field name="sequence" eval="20"/>
             <field name="view_mode">tree</field>
+            <field name="view_id" ref="open_view_my_tasks_list_view"/>
             <field name="act_window_id" ref="action_view_all_task"/>
         </record>
         <record id="open_view_all_task_list_calendar" model="ir.actions.act_window.view">

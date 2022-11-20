@@ -844,11 +844,17 @@ class ProductTemplate(models.Model):
         if 'type' in vals and vals['type'] != 'product' and sum(self.mapped('nbr_reordering_rules')) != 0:
             raise UserError(_('You still have some active reordering rules on this product. Please archive or delete them first.'))
         if any('type' in vals and vals['type'] != prod_tmpl.type for prod_tmpl in self):
-            existing_move_lines = self.env['stock.move.line'].search([
+            existing_done_move_lines = self.env['stock.move.line'].search([
+                ('product_id', 'in', self.mapped('product_variant_ids').ids),
+                ('state', '=', 'done'),
+            ], limit=1)
+            if existing_done_move_lines:
+                raise UserError(_("You can not change the type of a product that was already used."))
+            existing_reserved_move_lines = self.env['stock.move.line'].search([
                 ('product_id', 'in', self.mapped('product_variant_ids').ids),
                 ('state', 'in', ['partially_available', 'assigned']),
             ])
-            if existing_move_lines:
+            if existing_reserved_move_lines:
                 raise UserError(_("You can not change the type of a product that is currently reserved on a stock move. If you need to change the type, you should first unreserve the stock move."))
         if 'type' in vals and vals['type'] != 'product' and any(p.type == 'product' and not float_is_zero(p.qty_available, precision_rounding=p.uom_id.rounding) for p in self):
             raise UserError(_("Available quantity should be set to zero before changing type"))

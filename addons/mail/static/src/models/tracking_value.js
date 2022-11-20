@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { attr, one, Model } from '@mail/model';
-import { sprintf } from '@web/core/utils/strings';
+import { attr, one, Model } from "@mail/model";
+import { sprintf } from "@web/core/utils/strings";
 
 Model({
-    name: 'TrackingValue',
+    name: "TrackingValue",
     fields: {
         /**
          * States the original field of changed tracking value, such as "Status", "Date".
@@ -19,8 +19,8 @@ Model({
             },
         }),
         id: attr({ identifying: true }),
-        messageOwner: one('Message', { inverse: 'trackingValues', readonly: true, required: true }),
-        newValue: one('TrackingValueItem', { inverse: 'trackingValueAsNewValue' }),
-        oldValue: one('TrackingValueItem', { inverse: 'trackingValueAsOldValue' }),
+        messageOwner: one("Message", { inverse: "trackingValues", readonly: true, required: true }),
+        newValue: one("TrackingValueItem", { inverse: "trackingValueAsNewValue" }),
+        oldValue: one("TrackingValueItem", { inverse: "trackingValueAsOldValue" }),
     },
 });

@@ -1,11 +1,10 @@
 /** @odoo-module **/
 
-import { useMessagingContainer } from '@mail/component_hooks/use_messaging_container';
+import { useMessagingContainer } from "@mail/component_hooks/use_messaging_container";
 
-import { Component } from '@odoo/owl';
+import { Component } from "@odoo/owl";
 
 export class MessagingMenuContainer extends Component {
-
     /**
      * @override
      */
@@ -20,5 +19,5 @@ export class MessagingMenuContainer extends Component {
 MessagingMenuContainer.props = {};
 
 Object.assign(MessagingMenuContainer, {
-    template: 'mail.MessagingMenuContainer',
+    template: "mail.MessagingMenuContainer",
 });

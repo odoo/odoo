@@ -10,8 +10,6 @@ import {QWebPlugin} from '@web_editor/js/backend/QWebPlugin';
 import {
     getAdjacentPreviousSiblings,
     getAdjacentNextSiblings,
-    setSelection,
-    rightPos,
     getRangePosition
 } from '../editor/odoo-editor/src/utils/utils';
 // must wait for web/ to add the default html widget, otherwise it would override the web_editor one
@@ -21,7 +19,6 @@ import "@web/views/fields/html/html_field"; // make sure the html field file has
 var _lt = core._lt;
 var _t = core._t;
 var TranslatableFieldMixin = basic_fields.TranslatableFieldMixin;
-var DynamicPlaceholderFieldMixin = basic_fields.DynamicPlaceholderFieldMixin;
 var QWeb = core.qweb;
 
 /**
@@ -39,7 +36,7 @@ var QWeb = core.qweb;
  *  - resizable
  *  - codeview
  */
-var FieldHtml = basic_fields.DebouncedField.extend(DynamicPlaceholderFieldMixin).extend(TranslatableFieldMixin, {
+var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
     description: _lt("Html"),
     className: 'oe_form_field oe_form_field_html',
     supportedFieldTypes: ['html'],
@@ -85,45 +82,6 @@ var FieldHtml = basic_fields.DebouncedField.extend(DynamicPlaceholderFieldMixin)
         modelSelector.el.style.top = topPosition + 'px';
         modelSelector.el.style.left = leftPosition + 'px';
     },
-    /**
-     * Open a Model Field Selector which can select fields
-     * to create a dynamic placeholder <t-out> Element in the field HTML
-     * with or without a default text value.
-     *
-     * @override
-     * @public
-     * @param {String} baseModel
-     * @param {Array} chain
-     *
-     */
-    openDynamicPlaceholder: async function (baseModel, chain = []) {
-        let modelSelector;
-        const onFieldChanged = (ev) => {
-            this.wysiwyg.odooEditor.editable.focus();
-            if (ev.data.chain.length) {
-                let dynamicPlaceholder = "object." + ev.data.chain.join('.');
-                const defaultValue = ev.data.defaultValue;
-                dynamicPlaceholder += defaultValue && defaultValue !== '' ? ` or '''${defaultValue}'''` : '';
-
-                const t = document.createElement('T');
-                t.setAttribute('t-out', dynamicPlaceholder);
-                this.wysiwyg.odooEditor.execCommand('insert', t);
-                setSelection(...rightPos(t));
-                this.wysiwyg.odooEditor.editable.focus();
-            }
-            modelSelector.destroy();
-        };
-
-        const onFieldCancel = () => {
-            this.wysiwyg.odooEditor.editable.focus();
-            modelSelector.destroy();
-        };
-
-        modelSelector = await this._openNewModelSelector(
-            baseModel, chain, onFieldChanged, onFieldCancel
-        );
-    },
-
     /**
      * @override
      */

@@ -49,6 +49,9 @@ Help your customers with this chat, and analyse their feedback.
         'mail.assets_discuss_public': [
             'im_livechat/static/src/components/*/*',
         ],
+        'web._assets_primary_variables': [
+            'im_livechat/static/src/primary_variables.scss',
+        ],
         'web.assets_frontend': [
             ('include', 'im_livechat.assets_public_livechat'),
             'im_livechat/static/src/public/main.js',
@@ -84,6 +87,7 @@ Help your customers with this chat, and analyse their feedback.
         ],
         'im_livechat.assets_public_livechat': [
             ('include', 'mail.assets_core_messaging'),
+            'im_livechat/static/src/livechat_data.js',
             'im_livechat/static/src/legacy/models/*',
             'im_livechat/static/src/legacy/widgets/*',
             'im_livechat/static/src/legacy/widgets/*/*',

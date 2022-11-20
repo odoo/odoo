@@ -150,18 +150,16 @@
   </t>
 
   <t t-name="o-spreadsheet-TextValueProvider" owl="1">
-    <div
-      t-att-class="{'o-autocomplete-dropdown':state.values.length}"
-      t-att-style="state.values.length > 0 ? props.borderStyle : null">
-      <t t-foreach="state.values" t-as="v" t-key="v.text">
+    <div t-att-class="{'o-autocomplete-dropdown':props.values.length}">
+      <t t-foreach="props.values" t-as="v" t-key="v.text">
         <div
-          t-att-class="{'o-autocomplete-value-focus': state.selectedIndex === v_index}"
-          t-on-click.stop.prevent="() => this.fillValue(v_index)">
+          t-att-class="{'o-autocomplete-value-focus': props.selectedIndex === v_index}"
+          t-on-click.stop.prevent="() => this.props.onValueSelected(v.text)">
           <div class="o-autocomplete-value" t-esc="v.text"/>
           <div
             class="o-autocomplete-description"
             t-esc="v.description"
-            t-if="state.selectedIndex === v_index"
+            t-if="props.selectedIndex === v_index"
           />
         </div>
       </t>
@@ -183,6 +181,7 @@
         t-on-keyup="onKeyup"
         t-on-click.stop="onClick"
         t-on-blur="onBlur"
+        t-on-paste.stop=""
       />
 
       <div
@@ -191,18 +190,15 @@
         t-att-style="assistantStyle">
         <TextValueProvider
           t-if="autoCompleteState.showProvider"
-          exposeAPI="(api) => this.autocompleteAPI = api"
-          search="autoCompleteState.search"
-          provider="autoCompleteState.provider"
-          onCompleted="(text) => this.onCompleted(text)"
-          borderStyle="borderStyle"
+          values="autoCompleteState.values"
+          selectedIndex="autoCompleteState.selectedIndex"
+          onValueSelected.bind="this.autoComplete"
         />
         <FunctionDescriptionProvider
           t-if="functionDescriptionState.showDescription"
           functionName="functionDescriptionState.functionName"
           functionDescription="functionDescriptionState.functionDescription"
           argToFocus="functionDescriptionState.argToFocus"
-          borderStyle="borderStyle"
         />
       </div>
     </div>
@@ -211,7 +207,6 @@
   <t t-name="o-spreadsheet-FunctionDescriptionProvider" owl="1">
     <div
       class="o-formula-assistant-container"
-      t-att-style="props.borderStyle"
       t-att-class="{
           'o-formula-assistant-event-none': assistantState.allowCellSelectionBehind,
           'o-formula-assistant-event-auto': !assistantState.allowCellSelectionBehind
@@ -300,7 +295,7 @@
         <div
           t-foreach="getClickableCells()"
           t-as="clickableCell"
-          t-key="clickableCell.cell.id"
+          t-key="clickableCell.tKey"
           class="o-dashboard-clickable-cell"
           t-on-click="() => this.selectClickableCell(clickableCell)"
           t-on-contextmenu.prevent=""
@@ -366,7 +361,7 @@
           t-att-class="{active: isSelected, 'o-dragging': dnd.isActive}"
           t-ref="figure"
           tabindex="0"
-          t-on-keydown.stop="(ev) => this.onKeyDown(ev)"
+          t-on-keydown="(ev) => this.onKeyDown(ev)"
           t-on-keyup.stop="">
           <t
             t-component="figureRegistry.get(this.props.figure.tag).Component"
@@ -506,7 +501,7 @@
           type="text"
           t-model="state.textFilter"
           placeholder="Search..."
-          t-on-keydown="(ev) => this.onKeyDown(ev)"
+          t-on-keydown="onKeyDown"
         />
         <i class="o-search-icon position-absolute">
           <t t-call="o-spreadsheet-Icon.SEARCH"/>
@@ -590,6 +585,14 @@
           onComposerUnmounted="() => this.focus()"
           onComposerContentFocused="props.onComposerContentFocused"
           focus="props.focusComposer"
+        />
+      </t>
+      <t else="1">
+        <input
+          class="position-absolute"
+          style="z-index:-1000;"
+          t-on-input="onInput"
+          t-ref="hiddenInput"
         />
       </t>
       <canvas t-ref="canvas"/>
@@ -1353,7 +1356,6 @@
 
   <t t-name="o-spreadsheet-LinkDisplay" owl="1">
     <div class="o-link-tool">
-      <t t-set="link" t-value="cell.link"/>
       <!-- t-key to prevent owl from re-using the previous img element when the link changes.
     The wrong/previous image would be displayed while the new one loads -->
       <img
@@ -1368,14 +1370,14 @@
         target="_blank"
         t-on-click.prevent="openLink"
         t-att-title="link.url">
-        <t t-esc="cell.urlRepresentation"/>
+        <t t-esc="getUrlRepresentation(link)"/>
       </a>
       <a
         t-else=""
         class="o-link"
         t-on-click.prevent="openLink"
-        t-att-title="cell.urlRepresentation">
-        <t t-esc="cell.urlRepresentation"/>
+        t-att-title="getUrlRepresentation(link)">
+        <t t-esc="getUrlRepresentation(link)"/>
       </a>
       <span
         t-if="!env.model.getters.isReadonly()"
@@ -1398,24 +1400,24 @@
     <div
       class="o-link-editor"
       t-on-click.stop="() => this.menu.isOpen=false"
-      t-on-keydown.stop="onKeyDown"
+      t-on-keydown="onKeyDown"
       t-ref="linkEditor">
       <div class="o-section">
         <div class="o-section-title">Text</div>
         <div class="d-flex">
-          <input type="text" class="o-input flex-grow-1" t-model="state.link.label"/>
+          <input type="text" class="o-input flex-grow-1" t-model="link.label"/>
         </div>
 
         <div class="o-section-title mt-3">Link</div>
         <div class="o-link-url">
-          <t t-if="state.isUrlEditable">
-            <input type="text" t-ref="urlInput" t-model="state.link.url"/>
+          <t t-if="link.isUrlEditable">
+            <input type="text" t-ref="urlInput" t-model="link.url"/>
           </t>
           <t t-else="">
-            <input type="text" t-att-value="state.urlRepresentation" disabled="1"/>
+            <input type="text" t-att-value="getUrlRepresentation(link)" disabled="1"/>
           </t>
-          <button t-if="state.link.url" t-on-click="removeLink" class="o-remove-url">✖</button>
-          <button t-if="!state.link.url" t-on-click.stop="openMenu" class="o-special-link">
+          <button t-if="link.url" t-on-click="removeLink" class="o-remove-url">✖</button>
+          <button t-if="!link.url" t-on-click.stop="openMenu" class="o-special-link">
             <t t-call="o-spreadsheet-Icon.LIST"/>
           </button>
         </div>
@@ -1429,7 +1431,7 @@
       />
       <div class="o-buttons">
         <button t-on-click="cancel" class="o-button o-cancel">Cancel</button>
-        <button t-on-click="save" class="o-button o-save" t-att-disabled="!state.link.url">
+        <button t-on-click="save" class="o-button o-save" t-att-disabled="!link.url">
           Confirm
         </button>
       </div>
@@ -1517,6 +1519,7 @@
           spellcheck="false"
           t-on-change="(ev) => this.onInputChanged(range.id, ev)"
           t-on-focus="() => this.focus(range.id)"
+          t-on-keydown="onKeydown"
           t-att-value="range.xc"
           t-att-style="getColor(range)"
           t-att-class="{
@@ -1524,6 +1527,7 @@
             'o-required': props.required,
             'o-optional': !props.required,
             'o-invalid': isInvalid || !range.isValidRange,
+            'text-decoration-underline': range.isFocused and state.mode === 'select-range'
           }"
         />
         <button
@@ -2781,6 +2785,7 @@
             /
             <t t-esc="env.model.getters.getSearchMatches().length"/>
           </div>
+          <div t-elif="!pendingSearch and state.toSearch !== ''" class="o-input-count">0 / 0</div>
         </div>
         <div>
           <!-- TODO: go through this css, the group misses a padding and could profit from BootStrap -->

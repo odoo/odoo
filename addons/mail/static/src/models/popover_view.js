@@ -1,31 +1,28 @@
 /** @odoo-module **/
 
-import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
-import { attr, clear, one, Model } from '@mail/model';
+import { useComponentToModel } from "@mail/component_hooks/use_component_to_model";
+import { attr, clear, one, Model } from "@mail/model";
 
-import { usePosition } from '@web/core/position_hook';
+import { usePosition } from "@web/core/position_hook";
 
 Model({
-    name: 'PopoverView',
-    template: 'mail.PopoverView',
+    name: "PopoverView",
+    template: "mail.PopoverView",
     componentSetup() {
-        useComponentToModel({ fieldName: 'component' });
-        usePosition(
-            () => this.anchorRef && this.anchorRef.el,
-            {
-                popper: "root",
-                margin: 16,
-                position: this.position,
-            }
-        );
+        useComponentToModel({ fieldName: "component" });
+        usePosition(() => this.anchorRef && this.anchorRef.el, {
+            popper: "root",
+            margin: 16,
+            position: this.position,
+        });
     },
-    identifyingMode: 'xor',
+    identifyingMode: "xor",
     lifecycleHooks: {
         _created() {
-            document.addEventListener('click', this._onClickCaptureGlobal, true);
+            document.addEventListener("click", this._onClickCaptureGlobal, true);
         },
         _willDelete() {
-            document.removeEventListener('click', this._onClickCaptureGlobal, true);
+            document.removeEventListener("click", this._onClickCaptureGlobal, true);
         },
     },
     recordMethods: {
@@ -37,7 +34,9 @@ Model({
          * @returns {boolean}
          */
         contains(element) {
-            return Boolean(this.component && this.component.root.el && this.component.root.el.contains(element));
+            return Boolean(
+                this.component && this.component.root.el && this.component.root.el.contains(element)
+            );
         },
         /**
          * Closes the popover when clicking outside, if appropriate.
@@ -59,14 +58,25 @@ Model({
         },
     },
     fields: {
-        activityButtonViewOwnerAsActivityList: one('ActivityButtonView', { identifying: true, inverse: 'activityListPopoverView' }),
-        activityCellViewOwnerAsActivityList: one('ActivityCellView', { identifying: true, inverse: 'activityListPopoverView' }),
-        activityListView: one('ActivityListView', { inverse: 'popoverViewOwner',
+        activityButtonViewOwnerAsActivityList: one("ActivityButtonView", {
+            identifying: true,
+            inverse: "activityListPopoverView",
+        }),
+        activityCellViewOwnerAsActivityList: one("ActivityCellView", {
+            identifying: true,
+            inverse: "activityListPopoverView",
+        }),
+        activityListView: one("ActivityListView", {
+            inverse: "popoverViewOwner",
             compute() {
-                return this.activityButtonViewOwnerAsActivityList || this.activityCellViewOwnerAsActivityList ? {} : clear();
+                return this.activityButtonViewOwnerAsActivityList ||
+                    this.activityCellViewOwnerAsActivityList
+                    ? {}
+                    : clear();
             },
         }),
-        activityMarkDonePopoverContentView: one('ActivityMarkDonePopoverContentView', { inverse: 'popoverViewOwner',
+        activityMarkDonePopoverContentView: one("ActivityMarkDonePopoverContentView", {
+            inverse: "popoverViewOwner",
             compute() {
                 if (this.activityViewOwnerAsMarkDone) {
                     return {};
@@ -74,11 +84,15 @@ Model({
                 return clear();
             },
         }),
-        activityViewOwnerAsMarkDone: one('ActivityView', { identifying: true, inverse: 'markDonePopoverView' }),
+        activityViewOwnerAsMarkDone: one("ActivityView", {
+            identifying: true,
+            inverse: "markDonePopoverView",
+        }),
         /**
          * HTML element that is used as anchor position for this popover view.
          */
-        anchorRef: attr({ required: true,
+        anchorRef: attr({
+            required: true,
             compute() {
                 if (this.activityViewOwnerAsMarkDone) {
                     return this.activityViewOwnerAsMarkDone.markDoneButtonRef;
@@ -110,8 +124,12 @@ Model({
                 return clear();
             },
         }),
-        callActionListViewOwnerAsMoreMenu: one('CallActionListView', { identifying: true, inverse: 'moreMenuPopoverView' }),
-        callOptionMenuView: one('CallOptionMenu', { inverse: 'popoverViewOwner',
+        callActionListViewOwnerAsMoreMenu: one("CallActionListView", {
+            identifying: true,
+            inverse: "moreMenuPopoverView",
+        }),
+        callOptionMenuView: one("CallOptionMenu", {
+            inverse: "popoverViewOwner",
             compute() {
                 if (this.callActionListViewOwnerAsMoreMenu) {
                     return {};
@@ -119,8 +137,12 @@ Model({
                 return clear();
             },
         }),
-        callParticipantCardOwner: one('CallParticipantCard', { identifying: true, inverse: 'callParticipantCardPopoverView' }),
-        callParticipantCardPopoverContentView: one('CallParticipantCardPopoverContentView', { inverse: 'popoverViewOwner',
+        callParticipantCardOwner: one("CallParticipantCard", {
+            identifying: true,
+            inverse: "callParticipantCardPopoverView",
+        }),
+        callParticipantCardPopoverContentView: one("CallParticipantCardPopoverContentView", {
+            inverse: "popoverViewOwner",
             compute() {
                 if (this.callParticipantCardOwner) {
                     return {};
@@ -131,7 +153,8 @@ Model({
         /**
          * The record that represents the content inside the popover view.
          */
-        channelInvitationForm: one('ChannelInvitationForm', { inverse: 'popoverViewOwner',
+        channelInvitationForm: one("ChannelInvitationForm", {
+            inverse: "popoverViewOwner",
             compute() {
                 if (this.threadViewTopbarOwnerAsInvite) {
                     return {};
@@ -146,11 +169,15 @@ Model({
         /**
          * If set, this popover view is owned by a composer view.
          */
-        composerViewOwnerAsEmoji: one('ComposerView', { identifying: true, inverse: 'emojisPopoverView' }),
+        composerViewOwnerAsEmoji: one("ComposerView", {
+            identifying: true,
+            inverse: "emojisPopoverView",
+        }),
         /**
          * Determines the record that is content of this popover view.
          */
-        content: one('Record', { required: true,
+        content: one("Record", {
+            required: true,
             compute() {
                 if (this.activityMarkDonePopoverContentView) {
                     return this.activityMarkDonePopoverContentView;
@@ -167,7 +194,10 @@ Model({
                 if (this.emojiPickerView) {
                     return this.emojiPickerView;
                 }
-                if (this.activityButtonViewOwnerAsActivityList || this.activityCellViewOwnerAsActivityList) {
+                if (
+                    this.activityButtonViewOwnerAsActivityList ||
+                    this.activityCellViewOwnerAsActivityList
+                ) {
                     return this.activityListView;
                 }
                 if (this.messageNotificationPopoverContentView) {
@@ -180,13 +210,14 @@ Model({
          * Determines the class name for the component
          * that is content of this popover view.
          */
-        contentClassName: attr({ default: '',
+        contentClassName: attr({
+            default: "",
             compute() {
                 if (this.channelInvitationForm) {
-                    return 'o_PopoverView_channelInvitationForm';
+                    return "o_PopoverView_channelInvitationForm";
                 }
                 if (this.emojiPickerView) {
-                    return 'o_PopoverView_emojiPickerView';
+                    return "o_PopoverView_emojiPickerView";
                 }
                 return clear();
             },
@@ -194,28 +225,33 @@ Model({
         /**
          * Determines the component name of the content.
          */
-        contentComponentName: attr({ default: '', required: true,
+        contentComponentName: attr({
+            default: "",
+            required: true,
             compute() {
                 if (this.activityMarkDonePopoverContentView) {
-                    return 'ActivityMarkDonePopoverContentView';
+                    return "ActivityMarkDonePopoverContentView";
                 }
                 if (this.callOptionMenuView) {
-                    return 'CallOptionMenu';
+                    return "CallOptionMenu";
                 }
                 if (this.callParticipantCardPopoverContentView) {
-                    return 'CallParticipantCardPopoverContentView';
+                    return "CallParticipantCardPopoverContentView";
                 }
                 if (this.channelInvitationForm) {
-                    return 'ChannelInvitationForm';
+                    return "ChannelInvitationForm";
                 }
                 if (this.emojiPickerView) {
-                    return 'EmojiPickerView';
+                    return "EmojiPickerView";
                 }
-                if (this.activityButtonViewOwnerAsActivityList || this.activityCellViewOwnerAsActivityList) {
-                    return 'ActivityListView';
+                if (
+                    this.activityButtonViewOwnerAsActivityList ||
+                    this.activityCellViewOwnerAsActivityList
+                ) {
+                    return "ActivityListView";
                 }
                 if (this.messageNotificationPopoverContentView) {
-                    return 'MessageNotificationPopoverContentView';
+                    return "MessageNotificationPopoverContentView";
                 }
                 return clear();
             },
@@ -223,7 +259,8 @@ Model({
         /**
          * If set, the content of this popover view is a list of emojis.
          */
-        emojiPickerView: one('EmojiPickerView', { inverse: 'popoverViewOwner',
+        emojiPickerView: one("EmojiPickerView", {
+            inverse: "popoverViewOwner",
             compute() {
                 if (this.composerViewOwnerAsEmoji) {
                     return {};
@@ -234,7 +271,8 @@ Model({
                 return clear();
             },
         }),
-        manager: one('PopoverManager', { inverse: 'popoverViews',
+        manager: one("PopoverManager", {
+            inverse: "popoverViews",
             compute() {
                 if (this.messaging.popoverManager) {
                     return this.messaging.popoverManager;
@@ -245,8 +283,12 @@ Model({
         /**
          * If set, this popover view is owned by a message action view.
          */
-        messageActionViewOwnerAsReaction: one('MessageActionView', { identifying: true, inverse: 'reactionPopoverView' }),
-        messageNotificationPopoverContentView: one('MessageNotificationPopoverContentView', { inverse: 'popoverViewOwner',
+        messageActionViewOwnerAsReaction: one("MessageActionView", {
+            identifying: true,
+            inverse: "reactionPopoverView",
+        }),
+        messageNotificationPopoverContentView: one("MessageNotificationPopoverContentView", {
+            inverse: "popoverViewOwner",
             compute() {
                 if (this.messageViewOwnerAsNotificationContent) {
                     return {};
@@ -254,36 +296,40 @@ Model({
                 return clear();
             },
         }),
-        messageViewOwnerAsNotificationContent: one('MessageView', { identifying: true, inverse: 'notificationPopoverView' }),
+        messageViewOwnerAsNotificationContent: one("MessageView", {
+            identifying: true,
+            inverse: "notificationPopoverView",
+        }),
         /**
          * Position of the popover view relative to its anchor point.
          * Valid values: 'top', 'right', 'bottom', 'left'
          */
-        position: attr({ default: 'top',
+        position: attr({
+            default: "top",
             compute() {
                 if (this.activityViewOwnerAsMarkDone) {
-                    return 'right';
+                    return "right";
                 }
                 if (this.callActionListViewOwnerAsMoreMenu) {
-                    return 'top';
+                    return "top";
                 }
                 if (this.callParticipantCardOwner) {
-                    return 'bottom';
+                    return "bottom";
                 }
                 if (this.threadViewTopbarOwnerAsInvite) {
-                    return 'bottom';
+                    return "bottom";
                 }
                 if (this.composerViewOwnerAsEmoji) {
-                    return 'top';
+                    return "top";
                 }
                 if (this.activityButtonViewOwnerAsActivityList) {
-                    return 'bottom-start';
+                    return "bottom-start";
                 }
                 if (this.activityCellViewOwnerAsActivityList) {
-                    return 'bottom-start';
+                    return "bottom-start";
                 }
                 if (this.messageActionViewOwnerAsReaction) {
-                    return 'top';
+                    return "top";
                 }
                 return clear();
             },
@@ -291,6 +337,9 @@ Model({
         /**
          * If set, this popover view is owned by a thread view topbar record.
          */
-        threadViewTopbarOwnerAsInvite: one('ThreadViewTopbar', { identifying: true, inverse: 'invitePopoverView' }),
+        threadViewTopbarOwnerAsInvite: one("ThreadViewTopbar", {
+            identifying: true,
+            inverse: "invitePopoverView",
+        }),
     },
 });

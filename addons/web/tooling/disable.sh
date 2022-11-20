@@ -5,9 +5,8 @@ disableInDir () {
     cd "$1"
     git config --unset core.hooksPath
     rm .eslintignore
-    rm .prettierignore
     rm .eslintrc.json
-    rm .prettierrc.json
+    rm jsconfig.json
     rm package.json
     rm package-lock.json
     rm -r node_modules

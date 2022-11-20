@@ -2011,7 +2011,7 @@ const Wysiwyg = Widget.extend({
                 category: _t('Structure'),
                 name: _t('Quote'),
                 priority: 30,
-                description: _t('Add a blockquote section.'),
+                description: _t('Add a blockquote section'),
                 fontawesome: 'fa-quote-right',
                 callback: () => {
                     this.odooEditor.execCommand('setTag', 'blockquote');
@@ -2021,7 +2021,7 @@ const Wysiwyg = Widget.extend({
                 category: _t('Structure'),
                 name: _t('Code'),
                 priority: 20,
-                description: _t('Add a code section.'),
+                description: _t('Add a code section'),
                 fontawesome: 'fa-code',
                 callback: () => {
                     this.odooEditor.execCommand('setTag', 'pre');
@@ -2030,7 +2030,7 @@ const Wysiwyg = Widget.extend({
             {
                 category: _t('Basic blocks'),
                 name: _t('Signature'),
-                description: _t('Insert your signature.'),
+                description: _t('Insert your signature'),
                 fontawesome: 'fa-pencil-square-o',
                 callback: async () => {
                     const res = await this._rpc({
@@ -2047,7 +2047,7 @@ const Wysiwyg = Widget.extend({
                 category: _t('Structure'),
                 name: _t('2 columns'),
                 priority: 13,
-                description: _t('Convert into 2 columns.'),
+                description: _t('Convert into 2 columns'),
                 fontawesome: 'fa-columns',
                 callback: () => this.odooEditor.execCommand('columnize', 2, editorOptions.insertParagraphAfterColumns),
                 isDisabled: () => {
@@ -2060,7 +2060,7 @@ const Wysiwyg = Widget.extend({
                 category: _t('Structure'),
                 name: _t('3 columns'),
                 priority: 12,
-                description: _t('Convert into 3 columns.'),
+                description: _t('Convert into 3 columns'),
                 fontawesome: 'fa-columns',
                 callback: () => this.odooEditor.execCommand('columnize', 3, editorOptions.insertParagraphAfterColumns),
                 isDisabled: () => {
@@ -2073,7 +2073,7 @@ const Wysiwyg = Widget.extend({
                 category: _t('Structure'),
                 name: _t('4 columns'),
                 priority: 11,
-                description: _t('Convert into 4 columns.'),
+                description: _t('Convert into 4 columns'),
                 fontawesome: 'fa-columns',
                 callback: () => this.odooEditor.execCommand('columnize', 4, editorOptions.insertParagraphAfterColumns),
                 isDisabled: () => {
@@ -2086,7 +2086,7 @@ const Wysiwyg = Widget.extend({
                 category: _t('Structure'),
                 name: _t('Remove columns'),
                 priority: 10,
-                description: _t('Back to one column.'),
+                description: _t('Back to one column'),
                 fontawesome: 'fa-columns',
                 callback: () => this.odooEditor.execCommand('columnize', 0),
                 isDisabled: () => {
@@ -2103,7 +2103,7 @@ const Wysiwyg = Widget.extend({
                     category: _t('Navigation'),
                     name: _t('Link'),
                     priority: 40,
-                    description: _t('Add a link.'),
+                    description: _t('Add a link'),
                     fontawesome: 'fa-link',
                     callback: () => {
                         this.toggleLinkTools({forceDialog: true});
@@ -2113,7 +2113,7 @@ const Wysiwyg = Widget.extend({
                     category: _t('Navigation'),
                     name: _t('Button'),
                     priority: 30,
-                    description: _t('Add a button.'),
+                    description: _t('Add a button'),
                     fontawesome: 'fa-link',
                     callback: () => {
                         this.toggleLinkTools({forceDialog: true});
@@ -2133,7 +2133,7 @@ const Wysiwyg = Widget.extend({
                 category: _t('Media'),
                 name: _t('Image'),
                 priority: 40,
-                description: _t('Insert an image.'),
+                description: _t('Insert an image'),
                 fontawesome: 'fa-file-image-o',
                 callback: () => {
                     this.openMediaDialog();
@@ -2145,7 +2145,7 @@ const Wysiwyg = Widget.extend({
                 category: _t('Media'),
                 name: _t('Video'),
                 priority: 30,
-                description: _t('Insert a video.'),
+                description: _t('Insert a video'),
                 fontawesome: 'fa-file-video-o',
                 callback: () => {
                     this.openMediaDialog({noVideos: false, noImages: true, noIcons: true, noDocuments: true});
@@ -2399,7 +2399,6 @@ const Wysiwyg = Widget.extend({
         }
         this._isOnline = false;
 
-        this.ptp.stop();
         this.preSavePromise = new Promise((resolve, reject) => {
             this.preSavePromiseResolve = resolve;
             this.preSavePromiseReject = reject;

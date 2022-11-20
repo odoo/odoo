@@ -635,6 +635,7 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
 
 publicWidget.registry.HeaderMainCollapse = publicWidget.Widget.extend({
     selector: 'header#top',
+    disabledInEditableMode: false,
     events: {
         'show.bs.collapse #top_menu_collapse': '_onCollapseShow',
         'hidden.bs.collapse #top_menu_collapse': '_onCollapseHidden',

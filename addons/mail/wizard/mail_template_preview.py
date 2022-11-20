@@ -8,8 +8,15 @@ from odoo.exceptions import UserError
 class MailTemplatePreview(models.TransientModel):
     _name = 'mail.template.preview'
     _description = 'Email Template Preview'
-    _MAIL_TEMPLATE_FIELDS = ['subject', 'body_html', 'email_from', 'email_to',
-                             'email_cc', 'reply_to', 'scheduled_date', 'attachment_ids']
+    _MAIL_TEMPLATE_FIELDS = ['attachment_ids',
+                             'body_html',
+                             'subject',
+                             'email_cc',
+                             'email_from',
+                             'email_to',
+                             'reply_to',
+                             'scheduled_date',
+                            ]
 
     @api.model
     def _selection_target_model(self):
@@ -70,7 +77,9 @@ class MailTemplatePreview(models.TransientModel):
             else:
                 copy_depends_values['resource_ref'] = '%s,%s' % (self.resource_ref._name, self.resource_ref.id)
                 mail_values = mail_template.with_context(template_preview_lang=self.lang).generate_email(
-                    self.resource_ref.id, self._MAIL_TEMPLATE_FIELDS)
+                    self.resource_ref.id,
+                    self._MAIL_TEMPLATE_FIELDS
+                )
                 self._set_mail_attributes(values=mail_values)
             self.error_msg = False
         except UserError as user_error:

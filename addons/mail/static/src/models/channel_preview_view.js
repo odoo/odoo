@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import { attr, clear, one, Model } from '@mail/model';
-import { htmlToTextContentInline } from '@mail/js/utils';
+import { attr, clear, one, Model } from "@mail/model";
+import { htmlToTextContentInline } from "@mail/js/utils";
 
 Model({
-    name: 'ChannelPreviewView',
-    template: 'mail.ChannelPreviewView',
+    name: "ChannelPreviewView",
+    template: "mail.ChannelPreviewView",
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -34,7 +34,7 @@ Model({
         },
     },
     fields: {
-        channel: one('Channel', { identifying: true, inverse: 'channelPreviewViews' }),
+        channel: one("Channel", { identifying: true, inverse: "channelPreviewViews" }),
         imageUrl: attr({
             compute() {
                 if (this.channel.correspondent) {
@@ -43,7 +43,8 @@ Model({
                 return `/web/image/mail.channel/${this.channel.id}/avatar_128?unique=${this.channel.avatarCacheKey}`;
             },
         }),
-        inlineLastMessageBody: attr({ default: "",
+        inlineLastMessageBody: attr({
+            default: "",
             compute() {
                 if (!this.thread || !this.thread.lastMessage) {
                     return clear();
@@ -56,9 +57,13 @@ Model({
                 return !this.inlineLastMessageBody && !this.lastTrackingValue;
             },
         }),
-        lastTrackingValue: one('TrackingValue', {
+        lastTrackingValue: one("TrackingValue", {
             compute() {
-                if (this.thread && this.thread.lastMessage && this.thread.lastMessage.lastTrackingValue) {
+                if (
+                    this.thread &&
+                    this.thread.lastMessage &&
+                    this.thread.lastMessage.lastTrackingValue
+                ) {
                     return this.thread.lastMessage.lastTrackingValue;
                 }
                 return clear();
@@ -68,21 +73,22 @@ Model({
          * Reference of the "mark as read" button. Useful to disable the
          * top-level click handler when clicking on this specific button.
          */
-        markAsReadRef: attr({ ref: 'markAsRead' }),
-        messageAuthorPrefixView: one('MessageAuthorPrefixView', { inverse: 'channelPreviewViewOwner',
+        markAsReadRef: attr({ ref: "markAsRead" }),
+        messageAuthorPrefixView: one("MessageAuthorPrefixView", {
+            inverse: "channelPreviewViewOwner",
             compute() {
-                if (
-                    this.thread &&
-                    this.thread.lastMessage &&
-                    this.thread.lastMessage.author
-                ) {
+                if (this.thread && this.thread.lastMessage && this.thread.lastMessage.author) {
                     return {};
                 }
                 return clear();
             },
         }),
-        notificationListViewOwner: one('NotificationListView', { identifying: true, inverse: 'channelPreviewViews' }),
-        personaImStatusIconView: one('PersonaImStatusIconView', { inverse: 'channelPreviewViewOwner',
+        notificationListViewOwner: one("NotificationListView", {
+            identifying: true,
+            inverse: "channelPreviewViews",
+        }),
+        personaImStatusIconView: one("PersonaImStatusIconView", {
+            inverse: "channelPreviewViewOwner",
             compute() {
                 if (!this.channel.correspondent) {
                     return clear();
@@ -93,6 +99,6 @@ Model({
                 return clear();
             },
         }),
-        thread: one('Thread', { related: 'channel.thread' }),
+        thread: one("Thread", { related: "channel.thread" }),
     },
 });

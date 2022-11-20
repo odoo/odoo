@@ -404,9 +404,7 @@
     const FORBIDDEN_SHEET_CHARS = ["'", "*", "?", "/", "\\", "[", "]"];
     const FORBIDDEN_IN_EXCEL_REGEX = /'|\*|\?|\/|\\|\[|\]/;
     // Cells
-    const NULL_FORMAT = undefined;
     const FORMULA_REF_IDENTIFIER = "|";
-    const LOADING = "Loading...";
     const DEFAULT_ERROR_MESSAGE = _lt("Invalid expression");
     // Components
     var ComponentsImportance;
@@ -1008,11 +1006,7 @@
         };
     }
     const O_SPREADSHEET_LINK_PREFIX = "o-spreadsheet://";
-    function isMarkdownSheetLink(str) {
-        if (!isMarkdownLink(str)) {
-            return false;
-        }
-        const { url } = parseMarkdownLink(str);
+    function isSheetUrl(url) {
         return url.startsWith(O_SPREADSHEET_LINK_PREFIX);
     }
     function buildSheetLink(sheetId) {
@@ -1021,7 +1015,7 @@
     /**
      * Parse a sheet link and return the sheet id
      */
-    function parseSheetLink(sheetLink) {
+    function parseSheetUrl(sheetLink) {
         if (sheetLink.startsWith(O_SPREADSHEET_LINK_PREFIX)) {
             return sheetLink.substr(O_SPREADSHEET_LINK_PREFIX.length);
         }
@@ -1559,6 +1553,75 @@
     }
 
     /**
+     * This regexp is supposed to be as close as possible as the numberRegexp, but
+     * its purpose is to be used by the tokenizer.
+     *
+     * - it tolerates extra characters at the end. This is useful because the tokenizer
+     *   only needs to find the number at the start of a string
+     * - it does not accept "," as thousand separator, because when we tokenize a
+     *   formula, commas are used to separate arguments
+     * - it does not support % symbol, in formulas % is an operator
+     */
+    const formulaNumberRegexp = /^-?\d+(\.?\d*(e\d+)?)?|^-?\.\d+/;
+    const pIntegerAndDecimals = "(\\d+(,\\d{3,})*(\\.\\d*)?)"; // pattern that match integer number with or without decimal digits
+    const pOnlyDecimals = "(\\.\\d+)"; // pattern that match only expression with decimal digits
+    const pScientificFormat = "(e(\\+|-)?\\d+)?"; // pattern that match scientific format between zero and one time (should be placed before pPercentFormat)
+    const pPercentFormat = "(\\s*%)?"; // pattern that match percent symbol between zero and one time
+    const pNumber = "(\\s*" + pIntegerAndDecimals + "|" + pOnlyDecimals + ")" + pScientificFormat + pPercentFormat;
+    const pMinus = "(\\s*-)?"; // pattern that match negative symbol between zero and one time
+    const pCurrencyFormat = "(\\s*[\\$€])?";
+    const p1 = pMinus + pCurrencyFormat + pNumber;
+    const p2 = pMinus + pNumber + pCurrencyFormat;
+    const p3 = pCurrencyFormat + pMinus + pNumber;
+    const pNumberExp = "^((" + [p1, p2, p3].join(")|(") + "))$";
+    const numberRegexp = new RegExp(pNumberExp, "i");
+    /**
+     * Return true if the argument is a "number string".
+     *
+     * Note that "" (empty string) does not count as a number string
+     */
+    function isNumber(value) {
+        if (!value)
+            return false;
+        // TO DO: add regexp for DATE string format (ex match: "28 02 2020")
+        return numberRegexp.test(value.trim());
+    }
+    const invaluableSymbolsRegexp = /[,\$€]+/g;
+    /**
+     * Convert a string into a number. It assumes that the string actually represents
+     * a number (as determined by the isNumber function)
+     *
+     * Note that it accepts "" (empty string), even though it does not count as a
+     * number from the point of view of the isNumber function.
+     */
+    function parseNumber(str) {
+        // remove invaluable characters
+        str = str.replace(invaluableSymbolsRegexp, "");
+        let n = Number(str);
+        if (isNaN(n) && str.includes("%")) {
+            n = Number(str.split("%")[0]);
+            if (!isNaN(n)) {
+                return n / 100;
+            }
+        }
+        return n;
+    }
+    function percentile(values, percent, isInclusive) {
+        const sortedValues = [...values].sort((a, b) => a - b);
+        let percentIndex = (sortedValues.length + (isInclusive ? -1 : 1)) * percent;
+        if (!isInclusive) {
+            percentIndex--;
+        }
+        if (Number.isInteger(percentIndex)) {
+            return sortedValues[percentIndex];
+        }
+        const indexSup = Math.ceil(percentIndex);
+        const indexLow = Math.floor(percentIndex);
+        return (sortedValues[indexSup] * (percentIndex - indexLow) +
+            sortedValues[indexLow] * (indexSup - percentIndex));
+    }
+
+    /**
      *  Constant used to indicate the maximum of digits that is possible to display
      *  in a cell with standard size.
      */
@@ -1566,6 +1629,31 @@
     //from https://stackoverflow.com/questions/721304/insert-commas-into-number-string @Thomas/Alan Moore
     const thousandsGroupsRegexp = /(\d+?)(?=(\d{3})+(?!\d)|$)/g;
     const zeroRegexp = /0/g;
+    // TODO in the future : remove these constants MONTHS/DAYS, and use a library such as luxon to handle it
+    // + possibly handle automatic translation of day/month
+    const MONTHS = {
+        0: "January",
+        1: "February",
+        2: "March",
+        3: "April",
+        4: "May",
+        5: "June",
+        6: "July",
+        7: "August",
+        8: "September",
+        9: "October",
+        10: "November",
+        11: "December",
+    };
+    const DAYS$1 = {
+        0: "Sunday",
+        1: "Monday",
+        2: "Tuesday",
+        3: "Wednesday",
+        4: "Thursday",
+        5: "Friday",
+        6: "Saturday",
+    };
     // -----------------------------------------------------------------------------
     // FORMAT REPRESENTATION CACHE
     // -----------------------------------------------------------------------------
@@ -1724,8 +1812,9 @@
         return strDate + (strDate && strTime ? " " : "") + strTime;
     }
     function formatJSDate(jsDate, format) {
-        const sep = format.match(/\/|-|\s/)[0];
-        const parts = format.split(sep);
+        var _a;
+        const sep = (_a = format.match(/\/|-|\s/)) === null || _a === void 0 ? void 0 : _a[0];
+        const parts = sep ? format.split(sep) : [format];
         return parts
             .map((p) => {
             switch (p) {
@@ -1733,10 +1822,23 @@
                     return jsDate.getDate();
                 case "dd":
                     return jsDate.getDate().toString().padStart(2, "0");
+                case "ddd":
+                    return DAYS$1[jsDate.getDay()].slice(0, 3);
+                case "dddd":
+                    return DAYS$1[jsDate.getDay()];
                 case "m":
                     return jsDate.getMonth() + 1;
                 case "mm":
                     return String(jsDate.getMonth() + 1).padStart(2, "0");
+                case "mmm":
+                    return MONTHS[jsDate.getMonth()].slice(0, 3);
+                case "mmmm":
+                    return MONTHS[jsDate.getMonth()];
+                case "mmmmm":
+                    return MONTHS[jsDate.getMonth()].slice(0, 1);
+                case "yy":
+                    const fullYear = String(jsDate.getFullYear()).replace("-", "").padStart(2, "0");
+                    return fullYear.slice(fullYear.length - 2);
                 case "yyyy":
                     return jsDate.getFullYear();
                 default:
@@ -1780,6 +1882,29 @@
     function createDefaultFormat(value) {
         let { decimalDigits } = splitNumber(value, 10);
         return decimalDigits ? "0." + "0".repeat(decimalDigits.length) : "0";
+    }
+    function detectFormat(content) {
+        if (isDateTime(content)) {
+            const internalDate = parseDateTime(content);
+            return internalDate.format;
+        }
+        if (!isNumber(content)) {
+            return undefined;
+        }
+        const digitBase = content.includes(".") ? "0.00" : "0";
+        const matchedCurrencies = content.match(/[\$€]/);
+        if (matchedCurrencies) {
+            const matchedFirstDigit = content.match(/[\d]/);
+            const currency = "[$" + matchedCurrencies.values().next().value + "]";
+            if (matchedFirstDigit.index < matchedCurrencies.index) {
+                return "#,##" + digitBase + currency;
+            }
+            return currency + "#,##" + digitBase;
+        }
+        if (content.includes("%")) {
+            return digitBase + "%";
+        }
+        return undefined;
     }
     function createLargeNumberFormat(format, magnitude, postFix) {
         const internalFormat = parseFormat(format || "#,##0");
@@ -1965,75 +2090,6 @@
         return format;
     }
 
-    /**
-     * This regexp is supposed to be as close as possible as the numberRegexp, but
-     * its purpose is to be used by the tokenizer.
-     *
-     * - it tolerates extra characters at the end. This is useful because the tokenizer
-     *   only needs to find the number at the start of a string
-     * - it does not accept "," as thousand separator, because when we tokenize a
-     *   formula, commas are used to separate arguments
-     * - it does not support % symbol, in formulas % is an operator
-     */
-    const formulaNumberRegexp = /^-?\d+(\.?\d*(e\d+)?)?|^-?\.\d+/;
-    const pIntegerAndDecimals = "(\\d+(,\\d{3,})*(\\.\\d*)?)"; // pattern that match integer number with or without decimal digits
-    const pOnlyDecimals = "(\\.\\d+)"; // pattern that match only expression with decimal digits
-    const pScientificFormat = "(e(\\+|-)?\\d+)?"; // pattern that match scientific format between zero and one time (should be placed before pPercentFormat)
-    const pPercentFormat = "(\\s*%)?"; // pattern that match percent symbol between zero and one time
-    const pNumber = "(\\s*" + pIntegerAndDecimals + "|" + pOnlyDecimals + ")" + pScientificFormat + pPercentFormat;
-    const pMinus = "(\\s*-)?"; // pattern that match negative symbol between zero and one time
-    const pCurrencyFormat = "(\\s*[\\$€])?";
-    const p1 = pMinus + pCurrencyFormat + pNumber;
-    const p2 = pMinus + pNumber + pCurrencyFormat;
-    const p3 = pCurrencyFormat + pMinus + pNumber;
-    const pNumberExp = "^((" + [p1, p2, p3].join(")|(") + "))$";
-    const numberRegexp = new RegExp(pNumberExp, "i");
-    /**
-     * Return true if the argument is a "number string".
-     *
-     * Note that "" (empty string) does not count as a number string
-     */
-    function isNumber(value) {
-        if (!value)
-            return false;
-        // TO DO: add regexp for DATE string format (ex match: "28 02 2020")
-        return numberRegexp.test(value.trim());
-    }
-    const invaluableSymbolsRegexp = /[,\$€]+/g;
-    /**
-     * Convert a string into a number. It assumes that the string actually represents
-     * a number (as determined by the isNumber function)
-     *
-     * Note that it accepts "" (empty string), even though it does not count as a
-     * number from the point of view of the isNumber function.
-     */
-    function parseNumber(str) {
-        // remove invaluable characters
-        str = str.replace(invaluableSymbolsRegexp, "");
-        let n = Number(str);
-        if (isNaN(n) && str.includes("%")) {
-            n = Number(str.split("%")[0]);
-            if (!isNaN(n)) {
-                return n / 100;
-            }
-        }
-        return n;
-    }
-    function percentile(values, percent, isInclusive) {
-        const sortedValues = [...values].sort((a, b) => a - b);
-        let percentIndex = (sortedValues.length + (isInclusive ? -1 : 1)) * percent;
-        if (!isInclusive) {
-            percentIndex--;
-        }
-        if (Number.isInteger(percentIndex)) {
-            return sortedValues[percentIndex];
-        }
-        const indexSup = Math.ceil(percentIndex);
-        const indexLow = Math.floor(percentIndex);
-        return (sortedValues[indexSup] * (percentIndex - indexLow) +
-            sortedValues[indexLow] * (indexSup - percentIndex));
-    }
-
     class RangeImpl {
         constructor(args, getSheetSize) {
             this.getSheetSize = getSheetSize;
@@ -2110,25 +2166,42 @@
          * Check that a zone is valid regarding the order of top-bottom and left-right.
          * Left should be smaller than right, top should be smaller than bottom.
          * If it's not the case, simply invert them, and invert the linked parts
-         * (in place!)
          */
         orderZone() {
-            if (this._zone.right !== undefined && this._zone.right < this._zone.left) {
-                let right = this._zone.right;
-                this._zone.right = this._zone.left;
-                this._zone.left = right;
-                let rightFixed = this.parts[1].colFixed;
-                this.parts[1].colFixed = this.parts[0].colFixed;
-                this.parts[0].colFixed = rightFixed;
+            var _a, _b, _c, _d, _e, _f, _g, _h;
+            const zone = { ...this._zone };
+            let parts = this.parts;
+            if (zone.right !== undefined && zone.right < zone.left) {
+                let right = zone.right;
+                zone.right = zone.left;
+                zone.left = right;
+                parts = [
+                    {
+                        colFixed: ((_a = parts[1]) === null || _a === void 0 ? void 0 : _a.colFixed) || false,
+                        rowFixed: ((_b = parts[0]) === null || _b === void 0 ? void 0 : _b.rowFixed) || false,
+                    },
+                    {
+                        colFixed: ((_c = parts[0]) === null || _c === void 0 ? void 0 : _c.colFixed) || false,
+                        rowFixed: ((_d = parts[1]) === null || _d === void 0 ? void 0 : _d.rowFixed) || false,
+                    },
+                ];
             }
-            if (this._zone.bottom !== undefined && this._zone.bottom < this._zone.top) {
-                let bottom = this._zone.bottom;
-                this._zone.bottom = this._zone.top;
-                this._zone.top = bottom;
-                let bottomFixed = this.parts[1].rowFixed;
-                this.parts[1].rowFixed = this.parts[0].rowFixed;
-                this.parts[0].rowFixed = bottomFixed;
+            if (zone.bottom !== undefined && zone.bottom < zone.top) {
+                let bottom = zone.bottom;
+                zone.bottom = zone.top;
+                zone.top = bottom;
+                parts = [
+                    {
+                        colFixed: ((_e = parts[0]) === null || _e === void 0 ? void 0 : _e.colFixed) || false,
+                        rowFixed: ((_f = parts[1]) === null || _f === void 0 ? void 0 : _f.rowFixed) || false,
+                    },
+                    {
+                        colFixed: ((_g = parts[1]) === null || _g === void 0 ? void 0 : _g.colFixed) || false,
+                        rowFixed: ((_h = parts[0]) === null || _h === void 0 ? void 0 : _h.rowFixed) || false,
+                    },
+                ];
             }
+            return this.clone({ zone, parts });
         }
         /**
          *
@@ -2770,7 +2843,7 @@
      * This function will compare the modifications of selection to determine
      * a cell that is part of the new zone and not the previous one.
      */
-    function findCellInNewZone(oldZone, currentZone) {
+    function findCellInNewZone(oldZone, currentZone, viewport) {
         let col, row;
         const { left: oldLeft, right: oldRight, top: oldTop, bottom: oldBottom } = oldZone;
         const { left, right, top, bottom } = currentZone;
@@ -2781,7 +2854,8 @@
             col = right;
         }
         else {
-            col = left;
+            // left and right don't change
+            col = viewport.left > left || left > viewport.right ? viewport.left : left;
         }
         if (top != oldTop) {
             row = top;
@@ -2790,7 +2864,8 @@
             row = bottom;
         }
         else {
-            row = top;
+            // top and bottom don't change
+            row = viewport.top > top || top > viewport.bottom ? viewport.top : top;
         }
         return { col, row };
     }
@@ -2846,83 +2921,608 @@
     }
 
     /**
-     * An AutofillModifierImplementation is used to describe how to handle a
-     * AutofillModifier.
+     * Add the `https` prefix to the url if it's missing
      */
-    const autofillModifiersRegistry = new Registry();
-    autofillModifiersRegistry
-        .add("INCREMENT_MODIFIER", {
-        apply: (rule, data) => {
-            var _a;
-            rule.current += rule.increment;
-            const content = rule.current.toString();
-            const tooltipValue = formatValue(rule.current, (_a = data.cell) === null || _a === void 0 ? void 0 : _a.format);
+    function withHttps(url) {
+        return !/^https?:\/\//i.test(url) ? `https://${url}` : url;
+    }
+    const urlRegistry = new Registry();
+    function createWebLink(url, label) {
+        url = withHttps(url);
+        return {
+            url,
+            label: label || url,
+            isExternal: true,
+            isUrlEditable: true,
+        };
+    }
+    urlRegistry.add("sheet_URL", {
+        match: (url) => isSheetUrl(url),
+        createLink: (url, label) => {
             return {
-                cellData: {
-                    border: data.border,
-                    style: data.cell && data.cell.style,
-                    format: data.cell && data.cell.format,
-                    content,
-                },
-                tooltip: content ? { props: { content: tooltipValue } } : undefined,
+                label,
+                url,
+                isExternal: false,
+                isUrlEditable: false,
             };
         },
-    })
-        .add("COPY_MODIFIER", {
-        apply: (rule, data, getters) => {
-            var _a, _b;
-            const content = ((_a = data.cell) === null || _a === void 0 ? void 0 : _a.content) || "";
-            return {
-                cellData: {
-                    border: data.border,
-                    style: data.cell && data.cell.style,
-                    format: data.cell && data.cell.format,
-                    content,
-                },
-                tooltip: content ? { props: { content: (_b = data.cell) === null || _b === void 0 ? void 0 : _b.formattedValue } } : undefined,
-            };
+        urlRepresentation(url, getters) {
+            const sheetId = parseSheetUrl(url);
+            return getters.tryGetSheetName(sheetId) || _lt("Invalid sheet");
         },
-    })
-        .add("FORMULA_MODIFIER", {
-        apply: (rule, data, getters, direction) => {
-            rule.current += rule.increment;
-            let x = 0;
-            let y = 0;
-            switch (direction) {
-                case 0 /* DIRECTION.UP */:
-                    x = 0;
-                    y = -rule.current;
-                    break;
-                case 1 /* DIRECTION.DOWN */:
-                    x = 0;
-                    y = rule.current;
-                    break;
-                case 2 /* DIRECTION.LEFT */:
-                    x = -rule.current;
-                    y = 0;
-                    break;
-                case 3 /* DIRECTION.RIGHT */:
-                    x = rule.current;
-                    y = 0;
-                    break;
-            }
-            if (!data.cell || !data.cell.isFormula()) {
-                return { cellData: {} };
-            }
-            const sheetId = data.sheetId;
-            const ranges = getters.createAdaptedRanges(data.cell.dependencies, x, y, sheetId);
-            const content = getters.buildFormulaContent(sheetId, data.cell, ranges);
-            return {
-                cellData: {
-                    border: data.border,
-                    style: data.cell.style,
-                    format: data.cell.format,
-                    content,
-                },
-                tooltip: content ? { props: { content } } : undefined,
-            };
+        open(url, env) {
+            const sheetId = parseSheetUrl(url);
+            env.model.dispatch("ACTIVATE_SHEET", {
+                sheetIdFrom: env.model.getters.getActiveSheetId(),
+                sheetIdTo: sheetId,
+            });
         },
+        sequence: 0,
     });
+    const WebUrlSpec = {
+        createLink: createWebLink,
+        match: (url) => isWebLink(url),
+        open: (url) => window.open(url, "_blank"),
+        urlRepresentation: (url) => url,
+        sequence: 0,
+    };
+    function findMatchingSpec(url) {
+        return (urlRegistry
+            .getAll()
+            .sort((a, b) => a.sequence - b.sequence)
+            .find((urlType) => urlType.match(url)) || WebUrlSpec);
+    }
+    function urlRepresentation(link, getters) {
+        return findMatchingSpec(link.url).urlRepresentation(link.url, getters);
+    }
+    function openLink(link, env) {
+        findMatchingSpec(link.url).open(link.url, env);
+    }
+    function detectLink(value) {
+        if (typeof value !== "string") {
+            return undefined;
+        }
+        if (isMarkdownLink(value)) {
+            const { label, url } = parseMarkdownLink(value);
+            return findMatchingSpec(url).createLink(url, label);
+        }
+        else if (isWebLink(value)) {
+            return createWebLink(value);
+        }
+        return undefined;
+    }
+
+    // HELPERS
+    const SORT_TYPES_ORDER = ["number", "string", "boolean", "undefined"];
+    function assert(condition, message) {
+        if (!condition()) {
+            throw new Error(message);
+        }
+    }
+    // -----------------------------------------------------------------------------
+    // FORMAT FUNCTIONS
+    // -----------------------------------------------------------------------------
+    const expectNumberValueError = (value) => _lt("The function [[FUNCTION_NAME]] expects a number value, but '%s' is a string, and cannot be coerced to a number.", value);
+    function toNumber(value) {
+        switch (typeof value) {
+            case "number":
+                return value;
+            case "boolean":
+                return value ? 1 : 0;
+            case "string":
+                if (isNumber(value) || value === "") {
+                    return parseNumber(value);
+                }
+                const internalDate = parseDateTime(value);
+                if (internalDate) {
+                    return internalDate.value;
+                }
+                throw new Error(expectNumberValueError(value));
+            default:
+                return 0;
+        }
+    }
+    function strictToNumber(value) {
+        if (value === "") {
+            throw new Error(expectNumberValueError(value));
+        }
+        return toNumber(value);
+    }
+    function toString(value) {
+        switch (typeof value) {
+            case "string":
+                return value;
+            case "number":
+                return value.toString();
+            case "boolean":
+                return value ? "TRUE" : "FALSE";
+            default:
+                return "";
+        }
+    }
+    /** Normalize string by setting it to lowercase and replacing accent letters with plain letters */
+    function normalizeString(str) {
+        return str
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
+    }
+    /**
+     * Normalize a value.
+     * If the cell value is a string, this will set it to lowercase and replacing accent letters with plain letters
+     */
+    function normalizeValue(value) {
+        return typeof value === "string" ? normalizeString(value) : value;
+    }
+    const expectBooleanValueError = (value) => _lt("The function [[FUNCTION_NAME]] expects a boolean value, but '%s' is a text, and cannot be coerced to a number.", value);
+    function toBoolean(value) {
+        switch (typeof value) {
+            case "boolean":
+                return value;
+            case "string":
+                if (value) {
+                    let uppercaseVal = value.toUpperCase();
+                    if (uppercaseVal === "TRUE") {
+                        return true;
+                    }
+                    if (uppercaseVal === "FALSE") {
+                        return false;
+                    }
+                    throw new Error(expectBooleanValueError(value));
+                }
+                else {
+                    return false;
+                }
+            case "number":
+                return value ? true : false;
+            default:
+                return false;
+        }
+    }
+    function strictToBoolean(value) {
+        if (value === "") {
+            throw new Error(expectBooleanValueError(value));
+        }
+        return toBoolean(value);
+    }
+    function toJsDate(value) {
+        return numberToJsDate(toNumber(value));
+    }
+    // -----------------------------------------------------------------------------
+    // VISIT FUNCTIONS
+    // -----------------------------------------------------------------------------
+    function visitArgs(args, cellCb, dataCb) {
+        for (let arg of args) {
+            if (Array.isArray(arg)) {
+                // arg is ref to a Cell/Range
+                const lenRow = arg.length;
+                const lenCol = arg[0].length;
+                for (let y = 0; y < lenCol; y++) {
+                    for (let x = 0; x < lenRow; x++) {
+                        cellCb(arg[x][y]);
+                    }
+                }
+            }
+            else {
+                // arg is set directly in the formula function
+                dataCb(arg);
+            }
+        }
+    }
+    function visitAny(args, cb) {
+        visitArgs(args, cb, cb);
+    }
+    function visitNumbers(args, cb) {
+        visitArgs(args, (cellValue) => {
+            if (typeof cellValue === "number") {
+                cb(cellValue);
+            }
+        }, (argValue) => {
+            cb(strictToNumber(argValue));
+        });
+    }
+    // -----------------------------------------------------------------------------
+    // REDUCE FUNCTIONS
+    // -----------------------------------------------------------------------------
+    function reduceArgs(args, cellCb, dataCb, initialValue) {
+        let val = initialValue;
+        for (let arg of args) {
+            if (Array.isArray(arg)) {
+                // arg is ref to a Cell/Range
+                const lenRow = arg.length;
+                const lenCol = arg[0].length;
+                for (let y = 0; y < lenCol; y++) {
+                    for (let x = 0; x < lenRow; x++) {
+                        val = cellCb(val, arg[x][y]);
+                    }
+                }
+            }
+            else {
+                // arg is set directly in the formula function
+                val = dataCb(val, arg);
+            }
+        }
+        return val;
+    }
+    function reduceAny(args, cb, initialValue) {
+        return reduceArgs(args, cb, cb, initialValue);
+    }
+    function reduceNumbers(args, cb, initialValue) {
+        return reduceArgs(args, (acc, ArgValue) => {
+            if (typeof ArgValue === "number") {
+                return cb(acc, ArgValue);
+            }
+            return acc;
+        }, (acc, argValue) => {
+            return cb(acc, strictToNumber(argValue));
+        }, initialValue);
+    }
+    function reduceNumbersTextAs0(args, cb, initialValue) {
+        return reduceArgs(args, (acc, ArgValue) => {
+            if (ArgValue !== undefined && ArgValue !== null) {
+                if (typeof ArgValue === "number") {
+                    return cb(acc, ArgValue);
+                }
+                else if (typeof ArgValue === "boolean") {
+                    return cb(acc, toNumber(ArgValue));
+                }
+                else {
+                    return cb(acc, 0);
+                }
+            }
+            return acc;
+        }, (acc, argValue) => {
+            return cb(acc, toNumber(argValue));
+        }, initialValue);
+    }
+    // -----------------------------------------------------------------------------
+    // CONDITIONAL EXPLORE FUNCTIONS
+    // -----------------------------------------------------------------------------
+    /**
+     * This function allows to visit arguments and stop the visit if necessary.
+     * It is mainly used to bypass argument evaluation for functions like OR or AND.
+     */
+    function conditionalVisitArgs(args, cellCb, dataCb) {
+        for (let arg of args) {
+            if (Array.isArray(arg)) {
+                // arg is ref to a Cell/Range
+                const lenRow = arg.length;
+                const lenCol = arg[0].length;
+                for (let y = 0; y < lenCol; y++) {
+                    for (let x = 0; x < lenRow; x++) {
+                        if (!cellCb(arg[x][y]))
+                            return;
+                    }
+                }
+            }
+            else {
+                // arg is set directly in the formula function
+                if (!dataCb(arg))
+                    return;
+            }
+        }
+    }
+    function conditionalVisitBoolean(args, cb) {
+        return conditionalVisitArgs(args, (ArgValue) => {
+            if (typeof ArgValue === "boolean") {
+                return cb(ArgValue);
+            }
+            if (typeof ArgValue === "number") {
+                return cb(ArgValue ? true : false);
+            }
+            return true;
+        }, (argValue) => {
+            if (argValue !== undefined && argValue !== null) {
+                return cb(strictToBoolean(argValue));
+            }
+            return true;
+        });
+    }
+    function getPredicate(descr, isQuery) {
+        let operator;
+        let operand;
+        let subString = descr.substring(0, 2);
+        if (subString === "<=" || subString === ">=" || subString === "<>") {
+            operator = subString;
+            operand = descr.substring(2);
+        }
+        else {
+            subString = descr.substring(0, 1);
+            if (subString === "<" || subString === ">" || subString === "=") {
+                operator = subString;
+                operand = descr.substring(1);
+            }
+            else {
+                operator = "=";
+                operand = descr;
+            }
+        }
+        if (isNumber(operand)) {
+            operand = toNumber(operand);
+        }
+        else if (operand === "TRUE" || operand === "FALSE") {
+            operand = toBoolean(operand);
+        }
+        const result = { operator, operand };
+        if (typeof operand === "string") {
+            if (isQuery) {
+                operand += "*";
+            }
+            result.regexp = operandToRegExp(operand);
+        }
+        return result;
+    }
+    function operandToRegExp(operand) {
+        let exp = "";
+        let predecessor = "";
+        for (let char of operand) {
+            if (char === "?" && predecessor !== "~") {
+                exp += ".";
+            }
+            else if (char === "*" && predecessor !== "~") {
+                exp += ".*";
+            }
+            else {
+                if (char === "*" || char === "?") {
+                    //remove "~"
+                    exp = exp.slice(0, -1);
+                }
+                if (["^", ".", "[", "]", "$", "(", ")", "*", "+", "?", "|", "{", "}", "\\"].includes(char)) {
+                    exp += "\\";
+                }
+                exp += char;
+            }
+            predecessor = char;
+        }
+        return new RegExp("^" + exp + "$", "i");
+    }
+    function evaluatePredicate(value, criterion) {
+        const { operator, operand } = criterion;
+        if (value === undefined || operand === undefined) {
+            return false;
+        }
+        if (typeof operand === "number" && operator === "=") {
+            return toString(value) === toString(operand);
+        }
+        if (operator === "<>" || operator === "=") {
+            let result;
+            if (typeof value === typeof operand) {
+                if (typeof value === "string" && criterion.regexp) {
+                    result = criterion.regexp.test(value);
+                }
+                else {
+                    result = value === operand;
+                }
+            }
+            else {
+                result = false;
+            }
+            return operator === "=" ? result : !result;
+        }
+        if (typeof value === typeof operand) {
+            switch (operator) {
+                case "<":
+                    return value < operand;
+                case ">":
+                    return value > operand;
+                case "<=":
+                    return value <= operand;
+                case ">=":
+                    return value >= operand;
+            }
+        }
+        return false;
+    }
+    /**
+     * Functions used especially for predicate evaluation on ranges.
+     *
+     * Take ranges with same dimensions and take predicates, one for each range.
+     * For (i, j) coordinates, if all elements with coordinates (i, j) of each
+     * range correspond to the associated predicate, then the function uses a callback
+     * function with the parameters "i" and "j".
+     *
+     * Syntax:
+     * visitMatchingRanges([range1, predicate1, range2, predicate2, ...], cb(i,j), likeSelection)
+     *
+     * - range1 (range): The range to check against predicate1.
+     * - predicate1 (string): The pattern or test to apply to range1.
+     * - range2: (range, repeatable) ranges to check.
+     * - predicate2 (string, repeatable): Additional pattern or test to apply to range2.
+     *
+     * - cb(i: number, j: number) => void: the callback function.
+     *
+     * - isQuery (boolean) indicates if the comparison with a string should be done as a SQL-like query.
+     * (Ex1 isQuery = true, predicate = "abc", element = "abcde": predicate match the element),
+     * (Ex2 isQuery = false, predicate = "abc", element = "abcde": predicate not match the element).
+     * (Ex3 isQuery = true, predicate = "abc", element = "abc": predicate match the element),
+     * (Ex4 isQuery = false, predicate = "abc", element = "abc": predicate match the element).
+     */
+    function visitMatchingRanges(args, cb, isQuery = false) {
+        const countArg = args.length;
+        if (countArg % 2 === 1) {
+            throw new Error(_lt(`Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in pairs.`));
+        }
+        const dimRow = args[0].length;
+        const dimCol = args[0][0].length;
+        let predicates = [];
+        for (let i = 0; i < countArg - 1; i += 2) {
+            const criteriaRange = args[i];
+            if (!Array.isArray(criteriaRange) ||
+                criteriaRange.length !== dimRow ||
+                criteriaRange[0].length !== dimCol) {
+                throw new Error(_lt(`Function [[FUNCTION_NAME]] expects criteria_range to have the same dimension`));
+            }
+            const description = toString(args[i + 1]);
+            predicates.push(getPredicate(description, isQuery));
+        }
+        for (let i = 0; i < dimRow; i++) {
+            for (let j = 0; j < dimCol; j++) {
+                let validatedPredicates = true;
+                for (let k = 0; k < countArg - 1; k += 2) {
+                    const criteriaValue = args[k][i][j];
+                    const criterion = predicates[k / 2];
+                    validatedPredicates = evaluatePredicate(criteriaValue, criterion);
+                    if (!validatedPredicates) {
+                        break;
+                    }
+                }
+                if (validatedPredicates) {
+                    cb(i, j);
+                }
+            }
+        }
+    }
+    // -----------------------------------------------------------------------------
+    // COMMON FUNCTIONS
+    // -----------------------------------------------------------------------------
+    function getNormalizedValueFromColumnRange(range, index) {
+        return normalizeValue(range[0][index]);
+    }
+    function getNormalizedValueFromRowRange(range, index) {
+        return normalizeValue(range[index][0]);
+    }
+    /**
+     * Perform a dichotomic search on an array and return the index of the nearest match.
+     *
+     * The array should be sorted, if not an incorrect value might be returned. In the case where multiple
+     * element of the array match the target, the method will return the first match if the array is sorted
+     * in descending order, and the last match if the array is in ascending order.
+     *
+     *
+     * @param data the array in which to search.
+     * @param target the value to search.
+     * @param mode "nextGreater/nextSmaller" : return next greater/smaller value if no exact match is found.
+     * @param sortOrder whether the array is sorted in ascending or descending order.
+     * @param rangeLength the number of elements to consider in the search array.
+     * @param getValueInData function returning the element at index i in the search array.
+     */
+    function dichotomicSearch(data, target, mode, sortOrder, rangeLength, getValueInData) {
+        if (target === null || target === undefined) {
+            return -1;
+        }
+        const targetType = typeof target;
+        let matchVal = undefined;
+        let matchValIndex = undefined;
+        let indexLeft = 0;
+        let indexRight = rangeLength - 1;
+        let indexMedian;
+        let currentIndex;
+        let currentVal;
+        let currentType;
+        while (indexRight - indexLeft >= 0) {
+            indexMedian = Math.floor((indexLeft + indexRight) / 2);
+            currentIndex = indexMedian;
+            currentVal = getValueInData(data, currentIndex);
+            currentType = typeof currentVal;
+            // 1 - linear search to find value with the same type
+            while (indexLeft < currentIndex && targetType !== currentType) {
+                currentIndex--;
+                currentVal = getValueInData(data, currentIndex);
+                currentType = typeof currentVal;
+            }
+            if (currentType !== targetType || currentVal === undefined) {
+                indexLeft = indexMedian + 1;
+                continue;
+            }
+            // 2 - check if value match
+            if (mode === "strict" && currentVal === target) {
+                matchVal = currentVal;
+                matchValIndex = currentIndex;
+            }
+            else if (mode === "nextSmaller" && currentVal <= target) {
+                if (matchVal === undefined ||
+                    matchVal < currentVal ||
+                    (matchVal === currentVal && sortOrder === "asc" && matchValIndex < currentIndex) ||
+                    (matchVal === currentVal && sortOrder === "desc" && matchValIndex > currentIndex)) {
+                    matchVal = currentVal;
+                    matchValIndex = currentIndex;
+                }
+            }
+            else if (mode === "nextGreater" && currentVal >= target) {
+                if (matchVal === undefined ||
+                    matchVal > currentVal ||
+                    (matchVal === currentVal && sortOrder === "asc" && matchValIndex < currentIndex) ||
+                    (matchVal === currentVal && sortOrder === "desc" && matchValIndex > currentIndex)) {
+                    matchVal = currentVal;
+                    matchValIndex = currentIndex;
+                }
+            }
+            // 3 - give new indexes for the Binary search
+            if ((sortOrder === "asc" && currentVal > target) ||
+                (sortOrder === "desc" && currentVal <= target)) {
+                indexRight = currentIndex - 1;
+            }
+            else {
+                indexLeft = indexMedian + 1;
+            }
+        }
+        // note that valMinIndex could be 0
+        return matchValIndex !== undefined ? matchValIndex : -1;
+    }
+    /**
+     * Perform a linear search and return the index of the match.
+     * -1 is returned if no value is found.
+     *
+     * Example:
+     * - [3, 6, 10], 3 => 0
+     * - [3, 6, 10], 6 => 1
+     * - [3, 6, 10], 9 => -1
+     * - [3, 6, 10], 2 => -1
+     *
+     * @param data the array to search in.
+     * @param target the value to search in the array.
+     * @param mode if "strict" return exact match index. "nextGreater" returns the next greater
+     * element from the target and "nextSmaller" the next smaller
+     * @param numberOfValues the number of elements to consider in the search array.
+     * @param getValueInData function returning the element at index i in the search array.
+     * @param reverseSearch if true, search in the array starting from the end.
+
+     */
+    function linearSearch(data, target, mode, numberOfValues, getValueInData, reverseSearch = false) {
+        if (target === null || target === undefined)
+            return -1;
+        const getValue = reverseSearch
+            ? (data, i) => getValueInData(data, numberOfValues - i - 1)
+            : getValueInData;
+        let closestMatch = undefined;
+        let closestMatchIndex = -1;
+        for (let i = 0; i < numberOfValues; i++) {
+            const value = getValue(data, i);
+            if (value === target) {
+                return reverseSearch ? numberOfValues - i - 1 : i;
+            }
+            if (mode === "nextSmaller") {
+                if ((!closestMatch && compareCellValues(target, value) >= 0) ||
+                    (compareCellValues(target, value) >= 0 && compareCellValues(value, closestMatch) > 0)) {
+                    closestMatch = value;
+                    closestMatchIndex = i;
+                }
+            }
+            else if (mode === "nextGreater") {
+                if ((!closestMatch && compareCellValues(target, value) <= 0) ||
+                    (compareCellValues(target, value) <= 0 && compareCellValues(value, closestMatch) < 0)) {
+                    closestMatch = value;
+                    closestMatchIndex = i;
+                }
+            }
+        }
+        return reverseSearch ? numberOfValues - closestMatchIndex - 1 : closestMatchIndex;
+    }
+    function compareCellValues(left, right) {
+        let typeOrder = SORT_TYPES_ORDER.indexOf(typeof left) - SORT_TYPES_ORDER.indexOf(typeof right);
+        if (typeOrder === 0) {
+            if (typeof left === "string" && typeof right === "string") {
+                typeOrder = left.localeCompare(right);
+            }
+            else if (typeof left === "number" && typeof right === "number") {
+                typeOrder = left - right;
+            }
+            else if (typeof left === "boolean" && typeof right === "boolean") {
+                typeOrder = Number(left) - Number(right);
+            }
+        }
+        return typeOrder;
+    }
 
     var CellValueType;
     (function (CellValueType) {
@@ -3087,74 +3687,76 @@
         CommandResult[CommandResult["NotEnoughSheets"] = 8] = "NotEnoughSheets";
         CommandResult[CommandResult["MissingSheetName"] = 9] = "MissingSheetName";
         CommandResult[CommandResult["DuplicatedSheetName"] = 10] = "DuplicatedSheetName";
-        CommandResult[CommandResult["ForbiddenCharactersInSheetName"] = 11] = "ForbiddenCharactersInSheetName";
-        CommandResult[CommandResult["WrongSheetMove"] = 12] = "WrongSheetMove";
-        CommandResult[CommandResult["WrongSheetPosition"] = 13] = "WrongSheetPosition";
-        CommandResult[CommandResult["InvalidAnchorZone"] = 14] = "InvalidAnchorZone";
-        CommandResult[CommandResult["SelectionOutOfBound"] = 15] = "SelectionOutOfBound";
-        CommandResult[CommandResult["TargetOutOfSheet"] = 16] = "TargetOutOfSheet";
-        CommandResult[CommandResult["WrongCutSelection"] = 17] = "WrongCutSelection";
-        CommandResult[CommandResult["WrongPasteSelection"] = 18] = "WrongPasteSelection";
-        CommandResult[CommandResult["WrongPasteOption"] = 19] = "WrongPasteOption";
-        CommandResult[CommandResult["WrongFigurePasteOption"] = 20] = "WrongFigurePasteOption";
-        CommandResult[CommandResult["EmptyClipboard"] = 21] = "EmptyClipboard";
-        CommandResult[CommandResult["EmptyRange"] = 22] = "EmptyRange";
-        CommandResult[CommandResult["InvalidRange"] = 23] = "InvalidRange";
-        CommandResult[CommandResult["InvalidZones"] = 24] = "InvalidZones";
-        CommandResult[CommandResult["InvalidSheetId"] = 25] = "InvalidSheetId";
-        CommandResult[CommandResult["InputAlreadyFocused"] = 26] = "InputAlreadyFocused";
-        CommandResult[CommandResult["MaximumRangesReached"] = 27] = "MaximumRangesReached";
-        CommandResult[CommandResult["InvalidChartDefinition"] = 28] = "InvalidChartDefinition";
-        CommandResult[CommandResult["InvalidDataSet"] = 29] = "InvalidDataSet";
-        CommandResult[CommandResult["InvalidLabelRange"] = 30] = "InvalidLabelRange";
-        CommandResult[CommandResult["InvalidScorecardKeyValue"] = 31] = "InvalidScorecardKeyValue";
-        CommandResult[CommandResult["InvalidScorecardBaseline"] = 32] = "InvalidScorecardBaseline";
-        CommandResult[CommandResult["InvalidGaugeDataRange"] = 33] = "InvalidGaugeDataRange";
-        CommandResult[CommandResult["EmptyGaugeRangeMin"] = 34] = "EmptyGaugeRangeMin";
-        CommandResult[CommandResult["GaugeRangeMinNaN"] = 35] = "GaugeRangeMinNaN";
-        CommandResult[CommandResult["EmptyGaugeRangeMax"] = 36] = "EmptyGaugeRangeMax";
-        CommandResult[CommandResult["GaugeRangeMaxNaN"] = 37] = "GaugeRangeMaxNaN";
-        CommandResult[CommandResult["GaugeRangeMinBiggerThanRangeMax"] = 38] = "GaugeRangeMinBiggerThanRangeMax";
-        CommandResult[CommandResult["GaugeLowerInflectionPointNaN"] = 39] = "GaugeLowerInflectionPointNaN";
-        CommandResult[CommandResult["GaugeUpperInflectionPointNaN"] = 40] = "GaugeUpperInflectionPointNaN";
-        CommandResult[CommandResult["GaugeLowerBiggerThanUpper"] = 41] = "GaugeLowerBiggerThanUpper";
-        CommandResult[CommandResult["InvalidAutofillSelection"] = 42] = "InvalidAutofillSelection";
-        CommandResult[CommandResult["WrongComposerSelection"] = 43] = "WrongComposerSelection";
-        CommandResult[CommandResult["MinBiggerThanMax"] = 44] = "MinBiggerThanMax";
-        CommandResult[CommandResult["LowerBiggerThanUpper"] = 45] = "LowerBiggerThanUpper";
-        CommandResult[CommandResult["MidBiggerThanMax"] = 46] = "MidBiggerThanMax";
-        CommandResult[CommandResult["MinBiggerThanMid"] = 47] = "MinBiggerThanMid";
-        CommandResult[CommandResult["FirstArgMissing"] = 48] = "FirstArgMissing";
-        CommandResult[CommandResult["SecondArgMissing"] = 49] = "SecondArgMissing";
-        CommandResult[CommandResult["MinNaN"] = 50] = "MinNaN";
-        CommandResult[CommandResult["MidNaN"] = 51] = "MidNaN";
-        CommandResult[CommandResult["MaxNaN"] = 52] = "MaxNaN";
-        CommandResult[CommandResult["ValueUpperInflectionNaN"] = 53] = "ValueUpperInflectionNaN";
-        CommandResult[CommandResult["ValueLowerInflectionNaN"] = 54] = "ValueLowerInflectionNaN";
-        CommandResult[CommandResult["MinInvalidFormula"] = 55] = "MinInvalidFormula";
-        CommandResult[CommandResult["MidInvalidFormula"] = 56] = "MidInvalidFormula";
-        CommandResult[CommandResult["MaxInvalidFormula"] = 57] = "MaxInvalidFormula";
-        CommandResult[CommandResult["ValueUpperInvalidFormula"] = 58] = "ValueUpperInvalidFormula";
-        CommandResult[CommandResult["ValueLowerInvalidFormula"] = 59] = "ValueLowerInvalidFormula";
-        CommandResult[CommandResult["InvalidSortZone"] = 60] = "InvalidSortZone";
-        CommandResult[CommandResult["WaitingSessionConfirmation"] = 61] = "WaitingSessionConfirmation";
-        CommandResult[CommandResult["MergeOverlap"] = 62] = "MergeOverlap";
-        CommandResult[CommandResult["TooManyHiddenElements"] = 63] = "TooManyHiddenElements";
-        CommandResult[CommandResult["Readonly"] = 64] = "Readonly";
-        CommandResult[CommandResult["InvalidViewportSize"] = 65] = "InvalidViewportSize";
-        CommandResult[CommandResult["InvalidScrollingDirection"] = 66] = "InvalidScrollingDirection";
-        CommandResult[CommandResult["FigureDoesNotExist"] = 67] = "FigureDoesNotExist";
-        CommandResult[CommandResult["InvalidConditionalFormatId"] = 68] = "InvalidConditionalFormatId";
-        CommandResult[CommandResult["InvalidCellPopover"] = 69] = "InvalidCellPopover";
-        CommandResult[CommandResult["EmptyTarget"] = 70] = "EmptyTarget";
-        CommandResult[CommandResult["InvalidFreezeQuantity"] = 71] = "InvalidFreezeQuantity";
-        CommandResult[CommandResult["FrozenPaneOverlap"] = 72] = "FrozenPaneOverlap";
-        CommandResult[CommandResult["ValuesNotChanged"] = 73] = "ValuesNotChanged";
-        CommandResult[CommandResult["InvalidFilterZone"] = 74] = "InvalidFilterZone";
-        CommandResult[CommandResult["FilterOverlap"] = 75] = "FilterOverlap";
-        CommandResult[CommandResult["FilterNotFound"] = 76] = "FilterNotFound";
-        CommandResult[CommandResult["MergeInFilter"] = 77] = "MergeInFilter";
-        CommandResult[CommandResult["NonContinuousTargets"] = 78] = "NonContinuousTargets";
+        CommandResult[CommandResult["DuplicatedSheetId"] = 11] = "DuplicatedSheetId";
+        CommandResult[CommandResult["ForbiddenCharactersInSheetName"] = 12] = "ForbiddenCharactersInSheetName";
+        CommandResult[CommandResult["WrongSheetMove"] = 13] = "WrongSheetMove";
+        CommandResult[CommandResult["WrongSheetPosition"] = 14] = "WrongSheetPosition";
+        CommandResult[CommandResult["InvalidAnchorZone"] = 15] = "InvalidAnchorZone";
+        CommandResult[CommandResult["SelectionOutOfBound"] = 16] = "SelectionOutOfBound";
+        CommandResult[CommandResult["TargetOutOfSheet"] = 17] = "TargetOutOfSheet";
+        CommandResult[CommandResult["WrongCutSelection"] = 18] = "WrongCutSelection";
+        CommandResult[CommandResult["WrongPasteSelection"] = 19] = "WrongPasteSelection";
+        CommandResult[CommandResult["WrongPasteOption"] = 20] = "WrongPasteOption";
+        CommandResult[CommandResult["WrongFigurePasteOption"] = 21] = "WrongFigurePasteOption";
+        CommandResult[CommandResult["EmptyClipboard"] = 22] = "EmptyClipboard";
+        CommandResult[CommandResult["EmptyRange"] = 23] = "EmptyRange";
+        CommandResult[CommandResult["InvalidRange"] = 24] = "InvalidRange";
+        CommandResult[CommandResult["InvalidZones"] = 25] = "InvalidZones";
+        CommandResult[CommandResult["InvalidSheetId"] = 26] = "InvalidSheetId";
+        CommandResult[CommandResult["InputAlreadyFocused"] = 27] = "InputAlreadyFocused";
+        CommandResult[CommandResult["MaximumRangesReached"] = 28] = "MaximumRangesReached";
+        CommandResult[CommandResult["InvalidChartDefinition"] = 29] = "InvalidChartDefinition";
+        CommandResult[CommandResult["InvalidDataSet"] = 30] = "InvalidDataSet";
+        CommandResult[CommandResult["InvalidLabelRange"] = 31] = "InvalidLabelRange";
+        CommandResult[CommandResult["InvalidScorecardKeyValue"] = 32] = "InvalidScorecardKeyValue";
+        CommandResult[CommandResult["InvalidScorecardBaseline"] = 33] = "InvalidScorecardBaseline";
+        CommandResult[CommandResult["InvalidGaugeDataRange"] = 34] = "InvalidGaugeDataRange";
+        CommandResult[CommandResult["EmptyGaugeRangeMin"] = 35] = "EmptyGaugeRangeMin";
+        CommandResult[CommandResult["GaugeRangeMinNaN"] = 36] = "GaugeRangeMinNaN";
+        CommandResult[CommandResult["EmptyGaugeRangeMax"] = 37] = "EmptyGaugeRangeMax";
+        CommandResult[CommandResult["GaugeRangeMaxNaN"] = 38] = "GaugeRangeMaxNaN";
+        CommandResult[CommandResult["GaugeRangeMinBiggerThanRangeMax"] = 39] = "GaugeRangeMinBiggerThanRangeMax";
+        CommandResult[CommandResult["GaugeLowerInflectionPointNaN"] = 40] = "GaugeLowerInflectionPointNaN";
+        CommandResult[CommandResult["GaugeUpperInflectionPointNaN"] = 41] = "GaugeUpperInflectionPointNaN";
+        CommandResult[CommandResult["GaugeLowerBiggerThanUpper"] = 42] = "GaugeLowerBiggerThanUpper";
+        CommandResult[CommandResult["InvalidAutofillSelection"] = 43] = "InvalidAutofillSelection";
+        CommandResult[CommandResult["WrongComposerSelection"] = 44] = "WrongComposerSelection";
+        CommandResult[CommandResult["MinBiggerThanMax"] = 45] = "MinBiggerThanMax";
+        CommandResult[CommandResult["LowerBiggerThanUpper"] = 46] = "LowerBiggerThanUpper";
+        CommandResult[CommandResult["MidBiggerThanMax"] = 47] = "MidBiggerThanMax";
+        CommandResult[CommandResult["MinBiggerThanMid"] = 48] = "MinBiggerThanMid";
+        CommandResult[CommandResult["FirstArgMissing"] = 49] = "FirstArgMissing";
+        CommandResult[CommandResult["SecondArgMissing"] = 50] = "SecondArgMissing";
+        CommandResult[CommandResult["MinNaN"] = 51] = "MinNaN";
+        CommandResult[CommandResult["MidNaN"] = 52] = "MidNaN";
+        CommandResult[CommandResult["MaxNaN"] = 53] = "MaxNaN";
+        CommandResult[CommandResult["ValueUpperInflectionNaN"] = 54] = "ValueUpperInflectionNaN";
+        CommandResult[CommandResult["ValueLowerInflectionNaN"] = 55] = "ValueLowerInflectionNaN";
+        CommandResult[CommandResult["MinInvalidFormula"] = 56] = "MinInvalidFormula";
+        CommandResult[CommandResult["MidInvalidFormula"] = 57] = "MidInvalidFormula";
+        CommandResult[CommandResult["MaxInvalidFormula"] = 58] = "MaxInvalidFormula";
+        CommandResult[CommandResult["ValueUpperInvalidFormula"] = 59] = "ValueUpperInvalidFormula";
+        CommandResult[CommandResult["ValueLowerInvalidFormula"] = 60] = "ValueLowerInvalidFormula";
+        CommandResult[CommandResult["InvalidSortZone"] = 61] = "InvalidSortZone";
+        CommandResult[CommandResult["WaitingSessionConfirmation"] = 62] = "WaitingSessionConfirmation";
+        CommandResult[CommandResult["MergeOverlap"] = 63] = "MergeOverlap";
+        CommandResult[CommandResult["TooManyHiddenElements"] = 64] = "TooManyHiddenElements";
+        CommandResult[CommandResult["Readonly"] = 65] = "Readonly";
+        CommandResult[CommandResult["InvalidViewportSize"] = 66] = "InvalidViewportSize";
+        CommandResult[CommandResult["InvalidScrollingDirection"] = 67] = "InvalidScrollingDirection";
+        CommandResult[CommandResult["FigureDoesNotExist"] = 68] = "FigureDoesNotExist";
+        CommandResult[CommandResult["InvalidConditionalFormatId"] = 69] = "InvalidConditionalFormatId";
+        CommandResult[CommandResult["InvalidCellPopover"] = 70] = "InvalidCellPopover";
+        CommandResult[CommandResult["EmptyTarget"] = 71] = "EmptyTarget";
+        CommandResult[CommandResult["InvalidFreezeQuantity"] = 72] = "InvalidFreezeQuantity";
+        CommandResult[CommandResult["FrozenPaneOverlap"] = 73] = "FrozenPaneOverlap";
+        CommandResult[CommandResult["ValuesNotChanged"] = 74] = "ValuesNotChanged";
+        CommandResult[CommandResult["InvalidFilterZone"] = 75] = "InvalidFilterZone";
+        CommandResult[CommandResult["FilterOverlap"] = 76] = "FilterOverlap";
+        CommandResult[CommandResult["FilterNotFound"] = 77] = "FilterNotFound";
+        CommandResult[CommandResult["MergeInFilter"] = 78] = "MergeInFilter";
+        CommandResult[CommandResult["NonContinuousTargets"] = 79] = "NonContinuousTargets";
+        CommandResult[CommandResult["DuplicatedFigureId"] = 80] = "DuplicatedFigureId";
     })(exports.CommandResult || (exports.CommandResult = {}));
 
     var DIRECTION;
@@ -3177,6 +3779,235 @@
         LAYERS[LAYERS["Headers"] = 7] = "Headers";
     })(LAYERS || (LAYERS = {}));
 
+    function evaluateLiteral(content, format) {
+        return createEvaluatedCell(parseLiteral(content || ""), format);
+    }
+    function parseLiteral(content) {
+        if (content.startsWith("=")) {
+            throw new Error(`Cannot parse "${content}" because it's not a literal value. It's a formula`);
+        }
+        if (isNumber(content) || isDateTime(content)) {
+            return toNumber(content);
+        }
+        else if (isBoolean(content)) {
+            return content.toUpperCase() === "TRUE" ? true : false;
+        }
+        return content;
+    }
+    function createEvaluatedCell(value, format) {
+        const link = detectLink(value);
+        if (link) {
+            return {
+                ..._createEvaluatedCell(parseLiteral(link.label), format || detectFormat(link.label)),
+                link,
+            };
+        }
+        return _createEvaluatedCell(value, format);
+    }
+    function _createEvaluatedCell(value, format) {
+        try {
+            for (const builder of builders) {
+                const evaluateCell = builder(value, format);
+                if (evaluateCell) {
+                    return evaluateCell;
+                }
+            }
+            return textCell((value || "").toString(), format);
+        }
+        catch (error) {
+            return errorCell((value || "").toString(), new EvaluationError(CellErrorType.GenericError, error.message || DEFAULT_ERROR_MESSAGE));
+        }
+    }
+    function textCell(value, format) {
+        return {
+            type: CellValueType.text,
+            value,
+            format,
+            isAutoSummable: true,
+            defaultAlign: "left",
+            formattedValue: formatValue(value, format),
+        };
+    }
+    function numberCell(value, format) {
+        return {
+            type: CellValueType.number,
+            value: value || 0,
+            format,
+            isAutoSummable: true,
+            defaultAlign: "right",
+            formattedValue: formatValue(value, format),
+        };
+    }
+    const EMPTY_EVALUATED_CELL = {
+        type: CellValueType.empty,
+        value: "",
+        format: undefined,
+        isAutoSummable: true,
+        defaultAlign: "left",
+        formattedValue: "",
+    };
+    function emptyCell(format) {
+        if (format === undefined) {
+            // share the same object to save memory
+            return EMPTY_EVALUATED_CELL;
+        }
+        return {
+            type: CellValueType.empty,
+            value: "",
+            format,
+            isAutoSummable: true,
+            defaultAlign: "left",
+            formattedValue: "",
+        };
+    }
+    function dateTimeCell(value, format) {
+        const formattedValue = formatValue(value, format);
+        return {
+            type: CellValueType.number,
+            value,
+            format,
+            isAutoSummable: false,
+            defaultAlign: "right",
+            formattedValue,
+        };
+    }
+    function booleanCell(value, format) {
+        const formattedValue = value ? "TRUE" : "FALSE";
+        return {
+            type: CellValueType.boolean,
+            value,
+            format,
+            isAutoSummable: false,
+            defaultAlign: "center",
+            formattedValue,
+        };
+    }
+    function errorCell(content, error) {
+        return {
+            type: CellValueType.error,
+            value: error.errorType,
+            error,
+            isAutoSummable: false,
+            defaultAlign: "center",
+            formattedValue: error.errorType,
+        };
+    }
+    const builders = [
+        function createEmpty(value, format) {
+            if (value === "") {
+                return emptyCell(format);
+            }
+            return undefined;
+        },
+        function createDateTime(value, format) {
+            if (!!format && typeof value === "number" && isDateTimeFormat(format)) {
+                return dateTimeCell(value, format);
+            }
+            return undefined;
+        },
+        function createNumber(value, format) {
+            if (typeof value === "number") {
+                return numberCell(value, format);
+            }
+            else if (value === null) {
+                return numberCell(0, format);
+            }
+            return undefined;
+        },
+        function createBoolean(value, format) {
+            if (typeof value === "boolean") {
+                return booleanCell(value, format);
+            }
+            return undefined;
+        },
+    ];
+
+    /**
+     * An AutofillModifierImplementation is used to describe how to handle a
+     * AutofillModifier.
+     */
+    const autofillModifiersRegistry = new Registry();
+    autofillModifiersRegistry
+        .add("INCREMENT_MODIFIER", {
+        apply: (rule, data) => {
+            var _a;
+            rule.current += rule.increment;
+            const content = rule.current.toString();
+            const tooltipValue = formatValue(rule.current, (_a = data.cell) === null || _a === void 0 ? void 0 : _a.format);
+            return {
+                cellData: {
+                    border: data.border,
+                    style: data.cell && data.cell.style,
+                    format: data.cell && data.cell.format,
+                    content,
+                },
+                tooltip: content ? { props: { content: tooltipValue } } : undefined,
+            };
+        },
+    })
+        .add("COPY_MODIFIER", {
+        apply: (rule, data, getters) => {
+            var _a, _b, _c;
+            const content = ((_a = data.cell) === null || _a === void 0 ? void 0 : _a.content) || "";
+            return {
+                cellData: {
+                    border: data.border,
+                    style: data.cell && data.cell.style,
+                    format: data.cell && data.cell.format,
+                    content,
+                },
+                tooltip: content
+                    ? {
+                        props: {
+                            content: evaluateLiteral((_b = data.cell) === null || _b === void 0 ? void 0 : _b.content, (_c = data.cell) === null || _c === void 0 ? void 0 : _c.format).formattedValue,
+                        },
+                    }
+                    : undefined,
+            };
+        },
+    })
+        .add("FORMULA_MODIFIER", {
+        apply: (rule, data, getters, direction) => {
+            rule.current += rule.increment;
+            let x = 0;
+            let y = 0;
+            switch (direction) {
+                case 0 /* DIRECTION.UP */:
+                    x = 0;
+                    y = -rule.current;
+                    break;
+                case 1 /* DIRECTION.DOWN */:
+                    x = 0;
+                    y = rule.current;
+                    break;
+                case 2 /* DIRECTION.LEFT */:
+                    x = -rule.current;
+                    y = 0;
+                    break;
+                case 3 /* DIRECTION.RIGHT */:
+                    x = rule.current;
+                    y = 0;
+                    break;
+            }
+            const cell = data.cell;
+            if (!cell || !cell.isFormula) {
+                return { cellData: {} };
+            }
+            const sheetId = data.sheetId;
+            const ranges = getters.createAdaptedRanges(cell.dependencies, x, y, sheetId);
+            const content = getters.buildFormulaContent(sheetId, cell, ranges);
+            return {
+                cellData: {
+                    border: data.border,
+                    style: cell.style,
+                    format: cell.format,
+                    content,
+                },
+                tooltip: content ? { props: { content } } : undefined,
+            };
+        },
+    });
+
     const autofillRulesRegistry = new Registry();
     /**
      * Get the consecutive xc that are of type "number" or "date".
@@ -3189,8 +4020,9 @@
             if (x === cell) {
                 found = true;
             }
-            if ((x === null || x === void 0 ? void 0 : x.evaluated.type) === CellValueType.number) {
-                group.push(x.evaluated.value);
+            const cellValue = evaluateLiteral(x === null || x === void 0 ? void 0 : x.content);
+            if (cellValue.type === CellValueType.number) {
+                group.push(cellValue.value);
             }
             else {
                 if (found) {
@@ -3218,7 +4050,7 @@
         .add("simple_value_copy", {
         condition: (cell, cells) => {
             var _a;
-            return cells.length === 1 && !cell.isFormula() && !((_a = cell.format) === null || _a === void 0 ? void 0 : _a.match(DATETIME_FORMAT));
+            return cells.length === 1 && !cell.isFormula && !((_a = cell.format) === null || _a === void 0 ? void 0 : _a.match(DATETIME_FORMAT));
         },
         generateRule: () => {
             return { type: "COPY_MODIFIER" };
@@ -3226,21 +4058,21 @@
         sequence: 10,
     })
         .add("copy_text", {
-        condition: (cell) => !cell.isFormula() && cell.evaluated.type === CellValueType.text,
+        condition: (cell) => !cell.isFormula && evaluateLiteral(cell.content).type === CellValueType.text,
         generateRule: () => {
             return { type: "COPY_MODIFIER" };
         },
         sequence: 20,
     })
         .add("update_formula", {
-        condition: (cell) => cell.isFormula(),
+        condition: (cell) => cell.isFormula,
         generateRule: (_, cells) => {
             return { type: "FORMULA_MODIFIER", increment: cells.length, current: 0 };
         },
         sequence: 30,
     })
         .add("increment_number", {
-        condition: (cell) => cell.evaluated.type === CellValueType.number,
+        condition: (cell) => !cell.isFormula && evaluateLiteral(cell.content).type === CellValueType.number,
         generateRule: (cell, cells) => {
             const group = getGroup(cell, cells);
             let increment = 1;
@@ -3250,10 +4082,11 @@
             else if (group.length > 2) {
                 increment = getAverageIncrement(group) * group.length;
             }
+            const evaluation = evaluateLiteral(cell.content);
             return {
                 type: "INCREMENT_MODIFIER",
                 increment,
-                current: cell.evaluated.type === CellValueType.number ? cell.evaluated.value : 0,
+                current: evaluation.type === CellValueType.number ? evaluation.value : 0,
             };
         },
         sequence: 40,
@@ -3396,12 +4229,11 @@
     };
     const ErrorToolTipPopoverBuilder = {
         onHover: (position, getters) => {
-            const cell = getters.getCell(getters.getActiveSheetId(), position.col, position.row);
-            if ((cell === null || cell === void 0 ? void 0 : cell.evaluated.type) === CellValueType.error &&
-                cell.evaluated.error.logLevel > CellErrorLevel.silent) {
+            const cell = getters.getEvaluatedCell(position);
+            if (cell.type === CellValueType.error && cell.error.logLevel > CellErrorLevel.silent) {
                 return {
                     isOpen: true,
-                    props: { text: cell.evaluated.error.message },
+                    props: { text: cell.error.message },
                     Component: ErrorToolTip,
                     cellCorner: "TopRight",
                 };
@@ -3572,7 +4404,7 @@
             }
             const cellValues = (filter.filteredZone ? positions(filter.filteredZone) : [])
                 .filter(({ row }) => !this.env.model.getters.isRowHidden(sheetId, row))
-                .map(({ col, row }) => { var _a; return (_a = this.env.model.getters.getCell(sheetId, col, row)) === null || _a === void 0 ? void 0 : _a.formattedValue; });
+                .map(({ col, row }) => this.env.model.getters.getEvaluatedCell({ sheetId, col, row }).formattedValue);
             const filterValues = this.env.model.getters.getFilterValues(sheetId, position.col, position.row);
             const strValues = [...cellValues, ...filterValues];
             const normalizedFilteredValues = filterValues.map(toLowerCase);
@@ -3646,6 +4478,7 @@
                         selectedIndex = Math.min(selectedIndex + 1, displayedValues.length - 1);
                     }
                     ev.preventDefault();
+                    ev.stopPropagation();
                     break;
                 case "ArrowUp":
                     if (selectedIndex === undefined) {
@@ -3655,11 +4488,13 @@
                         selectedIndex = Math.max(selectedIndex - 1, 0);
                     }
                     ev.preventDefault();
+                    ev.stopPropagation();
                     break;
                 case "Enter":
                     if (selectedIndex !== undefined) {
                         this.checkValue(displayedValues[selectedIndex]);
                     }
+                    ev.stopPropagation();
                     ev.preventDefault();
                     break;
             }
@@ -4141,14 +4976,20 @@
         get cell() {
             const { col, row } = this.props.cellPosition;
             const sheetId = this.env.model.getters.getActiveSheetId();
-            const cell = this.env.model.getters.getCell(sheetId, col, row);
-            if (cell === null || cell === void 0 ? void 0 : cell.isLink()) {
-                return cell;
+            return this.env.model.getters.getEvaluatedCell({ sheetId, col, row });
+        }
+        get link() {
+            if (this.cell.link) {
+                return this.cell.link;
             }
+            const { col, row } = this.props.cellPosition;
             throw new Error(`LinkDisplay Component can only be used with link cells. ${toXC(col, row)} is not a link.`);
         }
+        getUrlRepresentation(link) {
+            return urlRepresentation(link, this.env.model.getters);
+        }
         openLink() {
-            this.cell.action(this.env);
+            openLink(this.link, this.env);
         }
         edit() {
             const { col, row } = this.props.cellPosition;
@@ -4161,13 +5002,13 @@
         unlink() {
             const sheetId = this.env.model.getters.getActiveSheetId();
             const { col, row } = this.props.cellPosition;
-            const style = this.cell.style;
+            const style = this.env.model.getters.getCellComputedStyle(sheetId, col, row);
             const textColor = (style === null || style === void 0 ? void 0 : style.textColor) === LINK_COLOR ? undefined : style === null || style === void 0 ? void 0 : style.textColor;
             this.env.model.dispatch("UPDATE_CELL", {
                 col,
                 row,
                 sheetId,
-                content: this.cell.link.label,
+                content: this.link.label,
                 style: { ...style, textColor, underline: undefined },
             });
         }
@@ -4178,9 +5019,9 @@
     const LinkCellPopoverBuilder = {
         onHover: (position, getters) => {
             const sheetId = getters.getActiveSheetId();
-            const cell = getters.getCell(sheetId, position.col, position.row);
+            const cell = getters.getEvaluatedCell(position);
             const shouldDisplayLink = !getters.isDashboard() &&
-                (cell === null || cell === void 0 ? void 0 : cell.isLink()) &&
+                cell.link &&
                 getters.isVisibleInViewport(sheetId, position.col, position.row);
             if (!shouldDisplayLink)
                 return { isOpen: false };
@@ -4276,11 +5117,7 @@
         return sheets.map((sheet, i) => createFullMenuItem(sheet.id, {
             name: sheet.name,
             sequence: i,
-            action: () => ({
-                link: { label: sheet.name, url: buildSheetLink(sheet.id) },
-                urlRepresentation: sheet.name,
-                isUrlEditable: false,
-            }),
+            action: () => markdownLink(sheet.name, buildSheetLink(sheet.id)),
         }));
     });
 
@@ -4364,7 +5201,7 @@
         constructor() {
             super(...arguments);
             this.menuItems = linkMenuRegistry.getAll();
-            this.state = owl.useState(this.defaultState);
+            this.link = owl.useState(this.defaultState);
             this.menu = owl.useState({
                 isOpen: false,
             });
@@ -4378,18 +5215,18 @@
         get defaultState() {
             const { col, row } = this.props.cellPosition;
             const sheetId = this.env.model.getters.getActiveSheetId();
-            const cell = this.env.model.getters.getCell(sheetId, col, row);
-            if (cell === null || cell === void 0 ? void 0 : cell.isLink()) {
+            const cell = this.env.model.getters.getEvaluatedCell({ sheetId, col, row });
+            if (cell.link) {
                 return {
-                    link: { url: cell.link.url, label: cell.formattedValue },
-                    urlRepresentation: cell.urlRepresentation,
-                    isUrlEditable: cell.isUrlEditable,
+                    url: cell.link.url,
+                    label: cell.formattedValue,
+                    isUrlEditable: cell.link.isUrlEditable,
                 };
             }
             return {
-                link: { url: "", label: (cell === null || cell === void 0 ? void 0 : cell.formattedValue) || "" },
+                label: cell.formattedValue,
+                url: "",
                 isUrlEditable: true,
-                urlRepresentation: "",
             };
         }
         get menuPosition() {
@@ -4399,29 +5236,34 @@
             };
         }
         onSpecialLink(ev) {
-            const { detail } = ev;
-            this.state.link.url = detail.link.url;
-            this.state.link.label = detail.link.label;
-            this.state.isUrlEditable = detail.isUrlEditable;
-            this.state.urlRepresentation = detail.urlRepresentation;
+            const { detail: markdownLink } = ev;
+            const link = detectLink(markdownLink);
+            if (!link) {
+                return;
+            }
+            this.link.url = link.url;
+            this.link.label = link.label;
+            this.link.isUrlEditable = link.isUrlEditable;
+        }
+        getUrlRepresentation(link) {
+            return urlRepresentation(link, this.env.model.getters);
         }
         openMenu() {
             this.menu.isOpen = true;
         }
         removeLink() {
-            this.state.link.url = "";
-            this.state.urlRepresentation = "";
-            this.state.isUrlEditable = true;
+            this.link.url = "";
+            this.link.isUrlEditable = true;
         }
         save() {
             var _a, _b;
             const { col, row } = this.props.cellPosition;
-            const label = this.state.link.label || this.state.link.url;
+            const label = this.link.label || this.link.url;
             this.env.model.dispatch("UPDATE_CELL", {
                 col: col,
                 row: row,
                 sheetId: this.env.model.getters.getActiveSheetId(),
-                content: markdownLink(label, this.state.link.url),
+                content: markdownLink(label, this.link.url),
             });
             (_b = (_a = this.props).onClosed) === null || _b === void 0 ? void 0 : _b.call(_a);
         }
@@ -4432,12 +5274,14 @@
         onKeyDown(ev) {
             switch (ev.key) {
                 case "Enter":
-                    if (this.state.link.url) {
+                    if (this.link.url) {
                         this.save();
                     }
+                    ev.stopPropagation();
                     break;
                 case "Escape":
                     this.cancel();
+                    ev.stopPropagation();
                     break;
             }
         }
@@ -4466,12 +5310,6 @@
         .add("LinkCell", LinkCellPopoverBuilder)
         .add("LinkEditor", LinkEditorPopoverBuilder)
         .add("FilterMenu", FilterMenuPopoverBuilder);
-
-    /**
-     * This registry is intended to map a cell content (raw string) to
-     * an instance of a cell.
-     */
-    const cellRegistry = new Registry();
 
     /**
      * Registry intended to support usual currencies. It is mainly used to create
@@ -4587,15 +5425,12 @@
         CellValueType.text,
         CellValueType.boolean,
     ];
-    function convertCell(cell, index) {
-        return {
-            index,
-            type: cell ? cell.evaluated.type : CellValueType.empty,
-            value: cell ? cell.evaluated.value : "",
-        };
-    }
     function sortCells(cells, sortDirection, emptyCellAsZero) {
-        const cellsWithIndex = cells.map(convertCell);
+        const cellsWithIndex = cells.map((cell, index) => ({
+            index,
+            type: cell.type,
+            value: cell.value,
+        }));
         let emptyCells = cellsWithIndex.filter((x) => x.type === CellValueType.empty);
         let nonEmptyCells = cellsWithIndex.filter((x) => x.type !== CellValueType.empty);
         if (emptyCellAsZero) {
@@ -4676,7 +5511,7 @@
                 });
             }
         }
-        if (result.isCancelledBecause(60 /* CommandResult.InvalidSortZone */)) {
+        if (result.isCancelledBecause(61 /* CommandResult.InvalidSortZone */)) {
             const { col, row } = anchor;
             env.model.selection.selectZone({ cell: { col, row }, zone });
             env.raiseError(_lt("Cannot sort. To sort, select only cells or only merges that have the same size."));
@@ -4686,7 +5521,7 @@
     function interactiveCut(env) {
         const result = env.model.dispatch("CUT");
         if (!result.isSuccessful) {
-            if (result.isCancelledBecause(17 /* CommandResult.WrongCutSelection */)) {
+            if (result.isCancelledBecause(18 /* CommandResult.WrongCutSelection */)) {
                 env.raiseError(_lt("This operation is not allowed with multiple selections."));
             }
         }
@@ -4699,13 +5534,13 @@
     };
     function interactiveAddFilter(env, sheetId, target) {
         const result = env.model.dispatch("CREATE_FILTER_TABLE", { target, sheetId });
-        if (result.isCancelledBecause(75 /* CommandResult.FilterOverlap */)) {
+        if (result.isCancelledBecause(76 /* CommandResult.FilterOverlap */)) {
             env.raiseError(AddFilterInteractiveContent.filterOverlap);
         }
-        else if (result.isCancelledBecause(77 /* CommandResult.MergeInFilter */)) {
+        else if (result.isCancelledBecause(78 /* CommandResult.MergeInFilter */)) {
             env.raiseError(AddFilterInteractiveContent.mergeInFilter);
         }
-        else if (result.isCancelledBecause(78 /* CommandResult.NonContinuousTargets */)) {
+        else if (result.isCancelledBecause(79 /* CommandResult.NonContinuousTargets */)) {
             env.raiseError(AddFilterInteractiveContent.nonContinuousTargets);
         }
     }
@@ -4718,16 +5553,16 @@
     };
     function handlePasteResult(env, result) {
         if (!result.isSuccessful) {
-            if (result.reasons.includes(18 /* CommandResult.WrongPasteSelection */)) {
+            if (result.reasons.includes(19 /* CommandResult.WrongPasteSelection */)) {
                 env.raiseError(PasteInteractiveContent.wrongPasteSelection);
             }
             else if (result.reasons.includes(2 /* CommandResult.WillRemoveExistingMerge */)) {
                 env.raiseError(PasteInteractiveContent.willRemoveExistingMerge);
             }
-            else if (result.reasons.includes(20 /* CommandResult.WrongFigurePasteOption */)) {
+            else if (result.reasons.includes(21 /* CommandResult.WrongFigurePasteOption */)) {
                 env.raiseError(PasteInteractiveContent.wrongFigurePasteOption);
             }
-            else if (result.reasons.includes(72 /* CommandResult.FrozenPaneOverlap */)) {
+            else if (result.reasons.includes(73 /* CommandResult.FrozenPaneOverlap */)) {
                 env.raiseError(PasteInteractiveContent.frozenPaneOverlap);
             }
         }
@@ -5259,19 +6094,15 @@
                 Math.max(0, (scrollableViewportHeight - DEFAULT_FIGURE_HEIGHT) / 2),
         }; // Position at the center of the scrollable viewport
         let title = "";
-        const cells = env.model.getters.getCellsInZone(sheetId, {
+        const cells = env.model.getters.getEvaluatedCellsInZone(sheetId, {
             ...dataSetZone,
             bottom: dataSetZone.top,
         });
-        const dataSetsHaveTitle = !!cells.find((cell) => cell && cell.evaluated.type !== CellValueType.number);
+        const dataSetsHaveTitle = cells.some((cell) => cell.type !== CellValueType.number && cell.type !== CellValueType.empty);
         if (dataSetsHaveTitle) {
-            const texts = cells.reduce((acc, cell) => {
-                const text = cell && cell.evaluated.type !== CellValueType.error && env.model.getters.getCellText(cell);
-                if (text) {
-                    acc.push(text);
-                }
-                return acc;
-            }, []);
+            const texts = cells
+                .filter((cell) => cell.type !== CellValueType.error && cell.type !== CellValueType.empty)
+                .map((cell) => cell.formattedValue);
             const lastElement = texts.splice(-1)[0];
             title = texts.join(", ");
             if (lastElement) {
@@ -5694,7 +6525,7 @@
                 if (result.reasons.includes(10 /* CommandResult.DuplicatedSheetName */)) {
                     interactiveRenameSheet(env, sheetId, _lt("A sheet with the name %s already exists. Please select another name.", name));
                 }
-                if (result.reasons.includes(11 /* CommandResult.ForbiddenCharactersInSheetName */)) {
+                if (result.reasons.includes(12 /* CommandResult.ForbiddenCharactersInSheetName */)) {
                     interactiveRenameSheet(env, sheetId, _lt("Some used characters are not allowed in a sheet name (Forbidden characters are %s).", FORBIDDEN_SHEET_CHARS.join(" ")));
                 }
             }
@@ -5769,24 +6600,24 @@
 
     const CfTerms = {
         Errors: {
-            [23 /* CommandResult.InvalidRange */]: _lt("The range is invalid"),
-            [48 /* CommandResult.FirstArgMissing */]: _lt("The argument is missing. Please provide a value"),
-            [49 /* CommandResult.SecondArgMissing */]: _lt("The second argument is missing. Please provide a value"),
-            [50 /* CommandResult.MinNaN */]: _lt("The minpoint must be a number"),
-            [51 /* CommandResult.MidNaN */]: _lt("The midpoint must be a number"),
-            [52 /* CommandResult.MaxNaN */]: _lt("The maxpoint must be a number"),
-            [53 /* CommandResult.ValueUpperInflectionNaN */]: _lt("The first value must be a number"),
-            [54 /* CommandResult.ValueLowerInflectionNaN */]: _lt("The second value must be a number"),
-            [44 /* CommandResult.MinBiggerThanMax */]: _lt("Minimum must be smaller then Maximum"),
-            [47 /* CommandResult.MinBiggerThanMid */]: _lt("Minimum must be smaller then Midpoint"),
-            [46 /* CommandResult.MidBiggerThanMax */]: _lt("Midpoint must be smaller then Maximum"),
-            [45 /* CommandResult.LowerBiggerThanUpper */]: _lt("Lower inflection point must be smaller than upper inflection point"),
-            [55 /* CommandResult.MinInvalidFormula */]: _lt("Invalid Minpoint formula"),
-            [57 /* CommandResult.MaxInvalidFormula */]: _lt("Invalid Maxpoint formula"),
-            [56 /* CommandResult.MidInvalidFormula */]: _lt("Invalid Midpoint formula"),
-            [58 /* CommandResult.ValueUpperInvalidFormula */]: _lt("Invalid upper inflection point formula"),
-            [59 /* CommandResult.ValueLowerInvalidFormula */]: _lt("Invalid lower inflection point formula"),
-            [22 /* CommandResult.EmptyRange */]: _lt("A range needs to be defined"),
+            [24 /* CommandResult.InvalidRange */]: _lt("The range is invalid"),
+            [49 /* CommandResult.FirstArgMissing */]: _lt("The argument is missing. Please provide a value"),
+            [50 /* CommandResult.SecondArgMissing */]: _lt("The second argument is missing. Please provide a value"),
+            [51 /* CommandResult.MinNaN */]: _lt("The minpoint must be a number"),
+            [52 /* CommandResult.MidNaN */]: _lt("The midpoint must be a number"),
+            [53 /* CommandResult.MaxNaN */]: _lt("The maxpoint must be a number"),
+            [54 /* CommandResult.ValueUpperInflectionNaN */]: _lt("The first value must be a number"),
+            [55 /* CommandResult.ValueLowerInflectionNaN */]: _lt("The second value must be a number"),
+            [45 /* CommandResult.MinBiggerThanMax */]: _lt("Minimum must be smaller then Maximum"),
+            [48 /* CommandResult.MinBiggerThanMid */]: _lt("Minimum must be smaller then Midpoint"),
+            [47 /* CommandResult.MidBiggerThanMax */]: _lt("Midpoint must be smaller then Maximum"),
+            [46 /* CommandResult.LowerBiggerThanUpper */]: _lt("Lower inflection point must be smaller than upper inflection point"),
+            [56 /* CommandResult.MinInvalidFormula */]: _lt("Invalid Minpoint formula"),
+            [58 /* CommandResult.MaxInvalidFormula */]: _lt("Invalid Maxpoint formula"),
+            [57 /* CommandResult.MidInvalidFormula */]: _lt("Invalid Midpoint formula"),
+            [59 /* CommandResult.ValueUpperInvalidFormula */]: _lt("Invalid upper inflection point formula"),
+            [60 /* CommandResult.ValueLowerInvalidFormula */]: _lt("Invalid lower inflection point formula"),
+            [23 /* CommandResult.EmptyRange */]: _lt("A range needs to be defined"),
             Unexpected: _lt("The rule is invalid for an unknown reason"),
         },
         ColorScale: _lt("Color scale"),
@@ -5813,20 +6644,20 @@
         Errors: {
             Unexpected: _lt("The chart definition is invalid for an unknown reason"),
             // BASIC CHART ERRORS (LINE | BAR | PIE)
-            [29 /* CommandResult.InvalidDataSet */]: _lt("The dataset is invalid"),
-            [30 /* CommandResult.InvalidLabelRange */]: _lt("Labels are invalid"),
+            [30 /* CommandResult.InvalidDataSet */]: _lt("The dataset is invalid"),
+            [31 /* CommandResult.InvalidLabelRange */]: _lt("Labels are invalid"),
             // SCORECARD CHART ERRORS
-            [31 /* CommandResult.InvalidScorecardKeyValue */]: _lt("The key value is invalid"),
-            [32 /* CommandResult.InvalidScorecardBaseline */]: _lt("The baseline value is invalid"),
+            [32 /* CommandResult.InvalidScorecardKeyValue */]: _lt("The key value is invalid"),
+            [33 /* CommandResult.InvalidScorecardBaseline */]: _lt("The baseline value is invalid"),
             // GAUGE CHART ERRORS
-            [33 /* CommandResult.InvalidGaugeDataRange */]: _lt("The data range is invalid"),
-            [34 /* CommandResult.EmptyGaugeRangeMin */]: _lt("A minimum range limit value is needed"),
-            [35 /* CommandResult.GaugeRangeMinNaN */]: _lt("The minimum range limit value must be a number"),
-            [36 /* CommandResult.EmptyGaugeRangeMax */]: _lt("A maximum range limit value is needed"),
-            [37 /* CommandResult.GaugeRangeMaxNaN */]: _lt("The maximum range limit value must be a number"),
-            [38 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */]: _lt("Minimum range limit must be smaller than maximum range limit"),
-            [39 /* CommandResult.GaugeLowerInflectionPointNaN */]: _lt("The lower inflection point value must be a number"),
-            [40 /* CommandResult.GaugeUpperInflectionPointNaN */]: _lt("The upper inflection point value must be a number"),
+            [34 /* CommandResult.InvalidGaugeDataRange */]: _lt("The data range is invalid"),
+            [35 /* CommandResult.EmptyGaugeRangeMin */]: _lt("A minimum range limit value is needed"),
+            [36 /* CommandResult.GaugeRangeMinNaN */]: _lt("The minimum range limit value must be a number"),
+            [37 /* CommandResult.EmptyGaugeRangeMax */]: _lt("A maximum range limit value is needed"),
+            [38 /* CommandResult.GaugeRangeMaxNaN */]: _lt("The maximum range limit value must be a number"),
+            [39 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */]: _lt("Minimum range limit must be smaller than maximum range limit"),
+            [40 /* CommandResult.GaugeLowerInflectionPointNaN */]: _lt("The lower inflection point value must be a number"),
+            [41 /* CommandResult.GaugeUpperInflectionPointNaN */]: _lt("The upper inflection point value must be a number"),
         },
     };
     const NumberFormatTerms = {
@@ -5850,7 +6681,7 @@
         const sheetId = env.model.getters.getActiveSheetId();
         const cmd = dimension === "COL" ? "FREEZE_COLUMNS" : "FREEZE_ROWS";
         const result = env.model.dispatch(cmd, { sheetId, quantity: base });
-        if (result.isCancelledBecause(62 /* CommandResult.MergeOverlap */)) {
+        if (result.isCancelledBecause(63 /* CommandResult.MergeOverlap */)) {
             env.raiseError(MergeErrorMessage);
         }
     }
@@ -6296,7 +7127,23 @@
     }
     const otRegistry = new OTRegistry();
 
-    const uuidGenerator$1 = new UuidGenerator();
+    const arrowMap = {
+        ArrowDown: "down",
+        ArrowLeft: "left",
+        ArrowRight: "right",
+        ArrowUp: "up",
+    };
+    function updateSelectionWithArrowKeys(ev, selection) {
+        const direction = arrowMap[ev.key];
+        if (ev.shiftKey) {
+            selection.resizeAnchorZone(direction, ev.ctrlKey ? "end" : "one");
+        }
+        else {
+            selection.moveAnchorCell(direction, ev.ctrlKey ? "end" : "one");
+        }
+    }
+
+    const uuidGenerator = new UuidGenerator();
     css /* scss */ `
   .o-selection {
     .o-selection-input {
@@ -6353,11 +7200,12 @@
     class SelectionInput extends owl.Component {
         constructor() {
             super(...arguments);
-            this.id = uuidGenerator$1.uuidv4();
+            this.id = uuidGenerator.uuidv4();
             this.previousRanges = this.props.ranges || [];
             this.originSheet = this.env.model.getters.getActiveSheetId();
             this.state = owl.useState({
                 isMissing: false,
+                mode: "select-range",
             });
         }
         get ranges() {
@@ -6416,8 +7264,23 @@
             (_b = (_a = this.props).onSelectionChanged) === null || _b === void 0 ? void 0 : _b.call(_a, ranges);
             this.previousRanges = ranges;
         }
+        onKeydown(ev) {
+            if (ev.key === "F2") {
+                ev.preventDefault();
+                ev.stopPropagation();
+                this.state.mode = this.state.mode === "select-range" ? "text-edit" : "select-range";
+            }
+            else if (ev.key.startsWith("Arrow")) {
+                ev.stopPropagation();
+                if (this.state.mode === "select-range") {
+                    ev.preventDefault();
+                    updateSelectionWithArrowKeys(ev, this.env.model.selection);
+                }
+            }
+        }
         focus(rangeId) {
             this.state.isMissing = false;
+            this.state.mode = "select-range";
             this.env.model.dispatch("FOCUS_RANGE", {
                 id: this.id,
                 rangeId,
@@ -6493,11 +7356,11 @@
         }
         get isDatasetInvalid() {
             var _a;
-            return !!((_a = this.state.datasetDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(29 /* CommandResult.InvalidDataSet */));
+            return !!((_a = this.state.datasetDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(30 /* CommandResult.InvalidDataSet */));
         }
         get isLabelInvalid() {
             var _a;
-            return !!((_a = this.state.labelsDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(30 /* CommandResult.InvalidLabelRange */));
+            return !!((_a = this.state.labelsDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(31 /* CommandResult.InvalidLabelRange */));
         }
         onUpdateDataSetsHaveTitle(ev) {
             this.props.updateChart({
@@ -6850,11 +7713,11 @@
         if (definition.dataSets) {
             const invalidRanges = definition.dataSets.find((range) => !rangeReference.test(range)) !== undefined;
             if (invalidRanges) {
-                return 29 /* CommandResult.InvalidDataSet */;
+                return 30 /* CommandResult.InvalidDataSet */;
             }
             const zones = definition.dataSets.map(toUnboundedZone);
             if (zones.some((zone) => zone.top !== zone.bottom && isFullRow(zone))) {
-                return 29 /* CommandResult.InvalidDataSet */;
+                return 30 /* CommandResult.InvalidDataSet */;
             }
         }
         return 0 /* CommandResult.Success */;
@@ -6863,7 +7726,7 @@
         if (definition.labelRange) {
             const invalidLabels = !rangeReference.test(definition.labelRange || "");
             if (invalidLabels) {
-                return 30 /* CommandResult.InvalidLabelRange */;
+                return 31 /* CommandResult.InvalidLabelRange */;
             }
         }
         return 0 /* CommandResult.Success */;
@@ -6872,22 +7735,21 @@
     // Scorecard
     // ---------------------------------------------------------------------------
     function getBaselineText(baseline, keyValue, baselineMode) {
-        const baselineEvaluated = baseline === null || baseline === void 0 ? void 0 : baseline.evaluated;
-        if (!baseline || baselineEvaluated === undefined) {
+        if (!baseline) {
             return "";
         }
         else if (baselineMode === "text" ||
             (keyValue === null || keyValue === void 0 ? void 0 : keyValue.type) !== CellValueType.number ||
-            baselineEvaluated.type !== CellValueType.number) {
+            baseline.type !== CellValueType.number) {
             return baseline.formattedValue;
         }
         else {
-            let diff = keyValue.value - baselineEvaluated.value;
+            let diff = keyValue.value - baseline.value;
             if (baselineMode === "percentage" && diff !== 0) {
-                diff = (diff / baselineEvaluated.value) * 100;
+                diff = (diff / baseline.value) * 100;
             }
-            if (baselineMode !== "percentage" && baselineEvaluated.format) {
-                return formatValue(diff, baselineEvaluated.format);
+            if (baselineMode !== "percentage" && baseline.format) {
+                return formatValue(diff, baseline.format);
             }
             const baselineStr = Math.abs(parseFloat(diff.toFixed(2))).toLocaleString();
             return baselineMode === "percentage" ? baselineStr + "%" : baselineStr;
@@ -6939,7 +7801,7 @@
                 return [];
             }
             const dataRange = getters.getRangeFromSheetXC(ds.dataRange.sheetId, dataXC);
-            return getters.getRangeValues(dataRange);
+            return getters.getRangeValues(dataRange).map((value) => (value === "" ? undefined : value));
         }
         return [];
     }
@@ -7015,10 +7877,13 @@
         };
     }
     function getLabelFormat(getters, range) {
-        var _a;
         if (!range)
             return undefined;
-        return (_a = getters.getCell(range.sheetId, range.zone.left, range.zone.top)) === null || _a === void 0 ? void 0 : _a.evaluated.format;
+        return getters.getEvaluatedCell({
+            sheetId: range.sheetId,
+            col: range.zone.left,
+            row: range.zone.top,
+        }).format;
     }
     function getChartLabelValues(getters, dataSets, labelRange) {
         let labels = { values: [], formattedValues: [] };
@@ -7026,9 +7891,7 @@
             if (!labelRange.invalidXc && !labelRange.invalidSheetName) {
                 labels = {
                     formattedValues: getters.getRangeFormattedValues(labelRange),
-                    values: getters
-                        .getRangeValues(labelRange)
-                        .map((val) => (val !== undefined && val !== null ? String(val) : "")),
+                    values: getters.getRangeValues(labelRange).map((val) => String(val)),
                 };
             }
         }
@@ -7056,7 +7919,11 @@
             if (ds.labelCell) {
                 const labelRange = ds.labelCell;
                 const cell = labelRange
-                    ? getters.getCell(labelRange.sheetId, labelRange.zone.left, labelRange.zone.top)
+                    ? getters.getEvaluatedCell({
+                        sheetId: labelRange.sheetId,
+                        col: labelRange.zone.left,
+                        row: labelRange.zone.top,
+                    })
                     : undefined;
                 label =
                     cell && labelRange
@@ -7321,7 +8188,7 @@
     });
     function isDataRangeValid(definition) {
         return definition.dataRange && !rangeReference.test(definition.dataRange)
-            ? 33 /* CommandResult.InvalidGaugeDataRange */
+            ? 34 /* CommandResult.InvalidGaugeDataRange */
             : 0 /* CommandResult.Success */;
     }
     function checkRangeLimits(check, batchValidations) {
@@ -7353,7 +8220,7 @@
     function checkRangeMinBiggerThanRangeMax(definition) {
         if (definition.sectionRule) {
             if (Number(definition.sectionRule.rangeMin) >= Number(definition.sectionRule.rangeMax)) {
-                return 38 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */;
+                return 39 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */;
             }
         }
         return 0 /* CommandResult.Success */;
@@ -7362,9 +8229,9 @@
         if (value === "") {
             switch (valueName) {
                 case "rangeMin":
-                    return 34 /* CommandResult.EmptyGaugeRangeMin */;
+                    return 35 /* CommandResult.EmptyGaugeRangeMin */;
                 case "rangeMax":
-                    return 36 /* CommandResult.EmptyGaugeRangeMax */;
+                    return 37 /* CommandResult.EmptyGaugeRangeMax */;
             }
         }
         return 0 /* CommandResult.Success */;
@@ -7373,13 +8240,13 @@
         if (isNaN(value)) {
             switch (valueName) {
                 case "rangeMin":
-                    return 35 /* CommandResult.GaugeRangeMinNaN */;
+                    return 36 /* CommandResult.GaugeRangeMinNaN */;
                 case "rangeMax":
-                    return 37 /* CommandResult.GaugeRangeMaxNaN */;
+                    return 38 /* CommandResult.GaugeRangeMaxNaN */;
                 case "lowerInflectionPointValue":
-                    return 39 /* CommandResult.GaugeLowerInflectionPointNaN */;
+                    return 40 /* CommandResult.GaugeLowerInflectionPointNaN */;
                 case "upperInflectionPointValue":
-                    return 40 /* CommandResult.GaugeUpperInflectionPointNaN */;
+                    return 41 /* CommandResult.GaugeUpperInflectionPointNaN */;
             }
         }
         return 0 /* CommandResult.Success */;
@@ -7555,14 +8422,18 @@
         let cellFormatter = null;
         let displayValue = false;
         if (dataRange !== undefined) {
-            const cell = getters.getCell(dataRange.sheetId, dataRange.zone.left, dataRange.zone.top);
-            if ((cell === null || cell === void 0 ? void 0 : cell.evaluated.type) === CellValueType.number) {
+            const cell = getters.getEvaluatedCell({
+                sheetId: dataRange.sheetId,
+                col: dataRange.zone.left,
+                row: dataRange.zone.top,
+            });
+            if (cell.type === CellValueType.number) {
                 // in gauge graph "datasets.value" is used to calculate the angle of the
                 // needle in the graph. To prevent the needle from making 360° turns, we
                 // clip the value between a min and a max. This min and this max are slightly
                 // smaller and slightly larger than minRange and maxRange to mark the fact
                 // that the needle is out of the range limits
-                needleValue = clip(cell === null || cell === void 0 ? void 0 : cell.evaluated.value, minNeedleValue - deltaBeyondRangeLimit, maxNeedleValue + deltaBeyondRangeLimit);
+                needleValue = clip(cell.value, minNeedleValue - deltaBeyondRangeLimit, maxNeedleValue + deltaBeyondRangeLimit);
                 cellFormatter = () => getters.getRangeFormattedValues(dataRange)[0];
                 displayValue = true;
             }
@@ -7840,11 +8711,14 @@
         return !chart.labelsAsText && canBeLinearChart(chart, getters);
     }
     function canBeDateChart(chart, getters) {
-        var _a;
         if (!chart.labelRange || !chart.dataSets || !canBeLinearChart(chart, getters)) {
             return false;
         }
-        const labelFormat = (_a = getters.getCell(chart.labelRange.sheetId, chart.labelRange.zone.left, chart.labelRange.zone.top)) === null || _a === void 0 ? void 0 : _a.evaluated.format;
+        const labelFormat = getters.getEvaluatedCell({
+            sheetId: chart.labelRange.sheetId,
+            col: chart.labelRange.zone.left,
+            row: chart.labelRange.zone.top,
+        }).format;
         return Boolean(labelFormat && timeFormatMomentCompatible.test(labelFormat));
     }
     function canBeLinearChart(chart, getters) {
@@ -8119,12 +8993,12 @@
     });
     function checkKeyValue(definition) {
         return definition.keyValue && !rangeReference.test(definition.keyValue)
-            ? 31 /* CommandResult.InvalidScorecardKeyValue */
+            ? 32 /* CommandResult.InvalidScorecardKeyValue */
             : 0 /* CommandResult.Success */;
     }
     function checkBaseline(definition) {
         return definition.baseline && !rangeReference.test(definition.baseline)
-            ? 32 /* CommandResult.InvalidScorecardBaseline */
+            ? 33 /* CommandResult.InvalidScorecardBaseline */
             : 0 /* CommandResult.Success */;
     }
     class ScorecardChart$1 extends AbstractChart {
@@ -8228,28 +9102,49 @@
         let formattedKeyValue = "";
         let keyValueCell;
         if (chart.keyValue) {
-            const keyValueZone = chart.keyValue.zone;
-            keyValueCell = getters.getCell(chart.keyValue.sheetId, keyValueZone.left, keyValueZone.top);
-            keyValue = (keyValueCell === null || keyValueCell === void 0 ? void 0 : keyValueCell.evaluated.value) ? String(keyValueCell === null || keyValueCell === void 0 ? void 0 : keyValueCell.evaluated.value) : "";
-            formattedKeyValue = (keyValueCell === null || keyValueCell === void 0 ? void 0 : keyValueCell.formattedValue) || "";
+            const keyValuePosition = {
+                sheetId: chart.keyValue.sheetId,
+                col: chart.keyValue.zone.left,
+                row: chart.keyValue.zone.top,
+            };
+            keyValueCell = getters.getEvaluatedCell(keyValuePosition);
+            keyValue = String(keyValueCell.value);
+            formattedKeyValue = keyValueCell.formattedValue;
         }
         let baselineCell;
-        if (chart.baseline) {
-            const baselineZone = chart.baseline.zone;
-            baselineCell = getters.getCell(chart.baseline.sheetId, baselineZone.left, baselineZone.top);
+        const baseline = chart.baseline;
+        if (baseline) {
+            const baselinePosition = {
+                sheetId: chart.baseline.sheetId,
+                col: chart.baseline.zone.left,
+                row: chart.baseline.zone.top,
+            };
+            baselineCell = getters.getEvaluatedCell(baselinePosition);
         }
         const background = getters.getBackgroundOfSingleCellChart(chart.background, chart.keyValue);
         return {
             title: _t(chart.title),
             keyValue: formattedKeyValue || keyValue,
-            baselineDisplay: getBaselineText(baselineCell, keyValueCell === null || keyValueCell === void 0 ? void 0 : keyValueCell.evaluated, chart.baselineMode),
-            baselineArrow: getBaselineArrowDirection(baselineCell === null || baselineCell === void 0 ? void 0 : baselineCell.evaluated, keyValueCell === null || keyValueCell === void 0 ? void 0 : keyValueCell.evaluated, chart.baselineMode),
-            baselineColor: getBaselineColor(baselineCell === null || baselineCell === void 0 ? void 0 : baselineCell.evaluated, chart.baselineMode, keyValueCell === null || keyValueCell === void 0 ? void 0 : keyValueCell.evaluated, chart.baselineColorUp, chart.baselineColorDown),
+            baselineDisplay: getBaselineText(baselineCell, keyValueCell, chart.baselineMode),
+            baselineArrow: getBaselineArrowDirection(baselineCell, keyValueCell, chart.baselineMode),
+            baselineColor: getBaselineColor(baselineCell, chart.baselineMode, keyValueCell, chart.baselineColorUp, chart.baselineColorDown),
             baselineDescr: _t(chart.baselineDescr || ""),
             fontColor: chartFontColor(background),
             background,
-            baselineStyle: chart.baselineMode !== "percentage" ? baselineCell === null || baselineCell === void 0 ? void 0 : baselineCell.style : undefined,
-            keyValueStyle: keyValueCell === null || keyValueCell === void 0 ? void 0 : keyValueCell.style,
+            baselineStyle: chart.baselineMode !== "percentage" && baseline
+                ? getters.getCellStyle({
+                    sheetId: baseline.sheetId,
+                    col: baseline.zone.left,
+                    row: baseline.zone.top,
+                })
+                : undefined,
+            keyValueStyle: chart.keyValue
+                ? getters.getCellStyle({
+                    sheetId: chart.keyValue.sheetId,
+                    col: chart.keyValue.zone.left,
+                    row: chart.keyValue.zone.top,
+                })
+                : undefined,
         };
     }
 
@@ -8536,7 +9431,7 @@
         }
         get isDataRangeInvalid() {
             var _a;
-            return !!((_a = this.state.dataRangeDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(33 /* CommandResult.InvalidGaugeDataRange */));
+            return !!((_a = this.state.dataRangeDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(34 /* CommandResult.InvalidGaugeDataRange */));
         }
         onDataRangeChanged(ranges) {
             this.dataRange = ranges[0];
@@ -8622,28 +9517,28 @@
         }
         isRangeMinInvalid() {
             var _a, _b, _c;
-            return !!(((_a = this.state.sectionRuleDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(34 /* CommandResult.EmptyGaugeRangeMin */)) ||
-                ((_b = this.state.sectionRuleDispatchResult) === null || _b === void 0 ? void 0 : _b.isCancelledBecause(35 /* CommandResult.GaugeRangeMinNaN */)) ||
-                ((_c = this.state.sectionRuleDispatchResult) === null || _c === void 0 ? void 0 : _c.isCancelledBecause(38 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */)));
+            return !!(((_a = this.state.sectionRuleDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(35 /* CommandResult.EmptyGaugeRangeMin */)) ||
+                ((_b = this.state.sectionRuleDispatchResult) === null || _b === void 0 ? void 0 : _b.isCancelledBecause(36 /* CommandResult.GaugeRangeMinNaN */)) ||
+                ((_c = this.state.sectionRuleDispatchResult) === null || _c === void 0 ? void 0 : _c.isCancelledBecause(39 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */)));
         }
         isRangeMaxInvalid() {
             var _a, _b, _c;
-            return !!(((_a = this.state.sectionRuleDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(36 /* CommandResult.EmptyGaugeRangeMax */)) ||
-                ((_b = this.state.sectionRuleDispatchResult) === null || _b === void 0 ? void 0 : _b.isCancelledBecause(37 /* CommandResult.GaugeRangeMaxNaN */)) ||
-                ((_c = this.state.sectionRuleDispatchResult) === null || _c === void 0 ? void 0 : _c.isCancelledBecause(38 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */)));
+            return !!(((_a = this.state.sectionRuleDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(37 /* CommandResult.EmptyGaugeRangeMax */)) ||
+                ((_b = this.state.sectionRuleDispatchResult) === null || _b === void 0 ? void 0 : _b.isCancelledBecause(38 /* CommandResult.GaugeRangeMaxNaN */)) ||
+                ((_c = this.state.sectionRuleDispatchResult) === null || _c === void 0 ? void 0 : _c.isCancelledBecause(39 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */)));
         }
         // ---------------------------------------------------------------------------
         // COLOR_SECTION_TEMPLATE
         // ---------------------------------------------------------------------------
         get isLowerInflectionPointInvalid() {
             var _a, _b;
-            return !!(((_a = this.state.sectionRuleDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(39 /* CommandResult.GaugeLowerInflectionPointNaN */)) ||
-                ((_b = this.state.sectionRuleDispatchResult) === null || _b === void 0 ? void 0 : _b.isCancelledBecause(41 /* CommandResult.GaugeLowerBiggerThanUpper */)));
+            return !!(((_a = this.state.sectionRuleDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(40 /* CommandResult.GaugeLowerInflectionPointNaN */)) ||
+                ((_b = this.state.sectionRuleDispatchResult) === null || _b === void 0 ? void 0 : _b.isCancelledBecause(42 /* CommandResult.GaugeLowerBiggerThanUpper */)));
         }
         get isUpperInflectionPointInvalid() {
             var _a, _b;
-            return !!(((_a = this.state.sectionRuleDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(40 /* CommandResult.GaugeUpperInflectionPointNaN */)) ||
-                ((_b = this.state.sectionRuleDispatchResult) === null || _b === void 0 ? void 0 : _b.isCancelledBecause(41 /* CommandResult.GaugeLowerBiggerThanUpper */)));
+            return !!(((_a = this.state.sectionRuleDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(41 /* CommandResult.GaugeUpperInflectionPointNaN */)) ||
+                ((_b = this.state.sectionRuleDispatchResult) === null || _b === void 0 ? void 0 : _b.isCancelledBecause(42 /* CommandResult.GaugeLowerBiggerThanUpper */)));
         }
         updateInflectionPointValue(attr, ev) {
             const sectionRule = deepCopy(this.props.definition.sectionRule);
@@ -8746,11 +9641,11 @@
         }
         get isKeyValueInvalid() {
             var _a;
-            return !!((_a = this.state.keyValueDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(31 /* CommandResult.InvalidScorecardKeyValue */));
+            return !!((_a = this.state.keyValueDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(32 /* CommandResult.InvalidScorecardKeyValue */));
         }
         get isBaselineInvalid() {
             var _a;
-            return !!((_a = this.state.keyValueDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(32 /* CommandResult.InvalidScorecardBaseline */));
+            return !!((_a = this.state.keyValueDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(33 /* CommandResult.InvalidScorecardBaseline */));
         }
         onKeyValueRangeChanged(ranges) {
             this.keyValue = ranges[0];
@@ -9390,7 +10285,7 @@
             return this.env.model.getters.getConditionalFormats(this.env.model.getters.getActiveSheetId());
         }
         get isRangeValid() {
-            return this.state.errors.includes(22 /* CommandResult.EmptyRange */);
+            return this.state.errors.includes(23 /* CommandResult.EmptyRange */);
         }
         errorMessage(error) {
             return CfTerms.Errors[error] || CfTerms.Errors.Unexpected;
@@ -9452,7 +10347,7 @@
             if (this.state.currentCF) {
                 const invalidRanges = this.state.currentCF.ranges.some((xc) => !xc.match(rangeReference));
                 if (invalidRanges) {
-                    this.state.errors = [23 /* CommandResult.InvalidRange */];
+                    this.state.errors = [24 /* CommandResult.InvalidRange */];
                     return;
                 }
                 const sheetId = this.env.model.getters.getActiveSheetId();
@@ -9608,11 +10503,11 @@
          ****************************************************************************/
         get isValue1Invalid() {
             var _a;
-            return !!((_a = this.state.errors) === null || _a === void 0 ? void 0 : _a.includes(48 /* CommandResult.FirstArgMissing */));
+            return !!((_a = this.state.errors) === null || _a === void 0 ? void 0 : _a.includes(49 /* CommandResult.FirstArgMissing */));
         }
         get isValue2Invalid() {
             var _a;
-            return !!((_a = this.state.errors) === null || _a === void 0 ? void 0 : _a.includes(49 /* CommandResult.SecondArgMissing */));
+            return !!((_a = this.state.errors) === null || _a === void 0 ? void 0 : _a.includes(50 /* CommandResult.SecondArgMissing */));
         }
         toggleStyle(tool) {
             const style = this.state.rules.cellIs.style;
@@ -9629,17 +10524,17 @@
         isValueInvalid(threshold) {
             switch (threshold) {
                 case "minimum":
-                    return (this.state.errors.includes(55 /* CommandResult.MinInvalidFormula */) ||
-                        this.state.errors.includes(47 /* CommandResult.MinBiggerThanMid */) ||
-                        this.state.errors.includes(44 /* CommandResult.MinBiggerThanMax */) ||
-                        this.state.errors.includes(50 /* CommandResult.MinNaN */));
+                    return (this.state.errors.includes(56 /* CommandResult.MinInvalidFormula */) ||
+                        this.state.errors.includes(48 /* CommandResult.MinBiggerThanMid */) ||
+                        this.state.errors.includes(45 /* CommandResult.MinBiggerThanMax */) ||
+                        this.state.errors.includes(51 /* CommandResult.MinNaN */));
                 case "midpoint":
-                    return (this.state.errors.includes(56 /* CommandResult.MidInvalidFormula */) ||
-                        this.state.errors.includes(51 /* CommandResult.MidNaN */) ||
-                        this.state.errors.includes(46 /* CommandResult.MidBiggerThanMax */));
+                    return (this.state.errors.includes(57 /* CommandResult.MidInvalidFormula */) ||
+                        this.state.errors.includes(52 /* CommandResult.MidNaN */) ||
+                        this.state.errors.includes(47 /* CommandResult.MidBiggerThanMax */));
                 case "maximum":
-                    return (this.state.errors.includes(57 /* CommandResult.MaxInvalidFormula */) ||
-                        this.state.errors.includes(52 /* CommandResult.MaxNaN */));
+                    return (this.state.errors.includes(58 /* CommandResult.MaxInvalidFormula */) ||
+                        this.state.errors.includes(53 /* CommandResult.MaxNaN */));
                 default:
                     return false;
             }
@@ -9688,13 +10583,13 @@
         isInflectionPointInvalid(inflectionPoint) {
             switch (inflectionPoint) {
                 case "lowerInflectionPoint":
-                    return (this.state.errors.includes(54 /* CommandResult.ValueLowerInflectionNaN */) ||
-                        this.state.errors.includes(59 /* CommandResult.ValueLowerInvalidFormula */) ||
-                        this.state.errors.includes(45 /* CommandResult.LowerBiggerThanUpper */));
+                    return (this.state.errors.includes(55 /* CommandResult.ValueLowerInflectionNaN */) ||
+                        this.state.errors.includes(60 /* CommandResult.ValueLowerInvalidFormula */) ||
+                        this.state.errors.includes(46 /* CommandResult.LowerBiggerThanUpper */));
                 case "upperInflectionPoint":
-                    return (this.state.errors.includes(53 /* CommandResult.ValueUpperInflectionNaN */) ||
-                        this.state.errors.includes(58 /* CommandResult.ValueUpperInvalidFormula */) ||
-                        this.state.errors.includes(45 /* CommandResult.LowerBiggerThanUpper */));
+                    return (this.state.errors.includes(54 /* CommandResult.ValueUpperInflectionNaN */) ||
+                        this.state.errors.includes(59 /* CommandResult.ValueUpperInvalidFormula */) ||
+                        this.state.errors.includes(46 /* CommandResult.LowerBiggerThanUpper */));
                 default:
                     return true;
             }
@@ -9846,14 +10741,13 @@
             };
         }
         getCommonFormat() {
-            var _a;
             const selectedZones = this.env.model.getters.getSelectedZones();
             const sheetId = this.env.model.getters.getActiveSheetId();
             const cells = selectedZones
-                .map((zone) => this.env.model.getters.getCellsInZone(sheetId, zone))
+                .map((zone) => this.env.model.getters.getEvaluatedCellsInZone(sheetId, zone))
                 .flat();
-            const firstFormat = (_a = cells[0]) === null || _a === void 0 ? void 0 : _a.format;
-            return cells.every((cell) => (cell === null || cell === void 0 ? void 0 : cell.format) === firstFormat) ? firstFormat : undefined;
+            const firstFormat = cells[0].format;
+            return cells.every((cell) => cell.format === firstFormat) ? firstFormat : undefined;
         }
         currencyDisplayName(currency) {
             return currency.name + (currency.code ? ` (${currency.code})` : "");
@@ -9908,6 +10802,9 @@
         get hasSearchResult() {
             return this.env.model.getters.getCurrentSelectedMatchIndex() !== null;
         }
+        get pendingSearch() {
+            return this.debounceTimeoutId !== undefined;
+        }
         setup() {
             this.showFormulaState = this.env.model.getters.shouldShowFormulas();
             owl.onMounted(() => this.focusInput());
@@ -9923,12 +10820,14 @@
         onKeydownSearch(ev) {
             if (ev.key === "Enter") {
                 ev.preventDefault();
+                ev.stopPropagation();
                 this.onSelectNextCell();
             }
         }
         onKeydownReplace(ev) {
             if (ev.key === "Enter") {
                 ev.preventDefault();
+                ev.stopPropagation();
                 this.replace();
             }
         }
@@ -9955,8 +10854,11 @@
             });
         }
         debouncedUpdateSearch() {
-            clearTimeout(this.inDebounce);
-            this.inDebounce = setTimeout(() => this.updateSearch.call(this), 400);
+            clearTimeout(this.debounceTimeoutId);
+            this.debounceTimeoutId = setTimeout(() => {
+                this.updateSearch();
+                this.debounceTimeoutId = undefined;
+            }, 400);
         }
         replace() {
             this.env.model.dispatch("REPLACE_SEARCH", {
@@ -10823,538 +11725,6 @@
             previousArgOptional = current.optional;
             previousArgDefault = current.default;
         }
-    }
-
-    // HELPERS
-    const SORT_TYPES_ORDER = ["number", "string", "boolean", "undefined"];
-    function assert(condition, message) {
-        if (!condition()) {
-            throw new Error(message);
-        }
-    }
-    // -----------------------------------------------------------------------------
-    // FORMAT FUNCTIONS
-    // -----------------------------------------------------------------------------
-    const expectNumberValueError = (value) => _lt("The function [[FUNCTION_NAME]] expects a number value, but '%s' is a string, and cannot be coerced to a number.", value);
-    function toNumber(value) {
-        switch (typeof value) {
-            case "number":
-                return value;
-            case "boolean":
-                return value ? 1 : 0;
-            case "string":
-                if (isNumber(value) || value === "") {
-                    return parseNumber(value);
-                }
-                const internalDate = parseDateTime(value);
-                if (internalDate) {
-                    return internalDate.value;
-                }
-                throw new Error(expectNumberValueError(value));
-            default:
-                return 0;
-        }
-    }
-    function strictToNumber(value) {
-        if (value === "") {
-            throw new Error(expectNumberValueError(value));
-        }
-        return toNumber(value);
-    }
-    function toString(value) {
-        switch (typeof value) {
-            case "string":
-                return value;
-            case "number":
-                return value.toString();
-            case "boolean":
-                return value ? "TRUE" : "FALSE";
-            default:
-                return "";
-        }
-    }
-    /** Normalize string by setting it to lowercase and replacing accent letters with plain letters */
-    function normalizeString(str) {
-        return str
-            .toLowerCase()
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "");
-    }
-    /**
-     * Normalize a value.
-     * If the cell value is a string, this will set it to lowercase and replacing accent letters with plain letters
-     */
-    function normalizeValue(value) {
-        return typeof value === "string" ? normalizeString(value) : value;
-    }
-    const expectBooleanValueError = (value) => _lt("The function [[FUNCTION_NAME]] expects a boolean value, but '%s' is a text, and cannot be coerced to a number.", value);
-    function toBoolean(value) {
-        switch (typeof value) {
-            case "boolean":
-                return value;
-            case "string":
-                if (value) {
-                    let uppercaseVal = value.toUpperCase();
-                    if (uppercaseVal === "TRUE") {
-                        return true;
-                    }
-                    if (uppercaseVal === "FALSE") {
-                        return false;
-                    }
-                    throw new Error(expectBooleanValueError(value));
-                }
-                else {
-                    return false;
-                }
-            case "number":
-                return value ? true : false;
-            default:
-                return false;
-        }
-    }
-    function strictToBoolean(value) {
-        if (value === "") {
-            throw new Error(expectBooleanValueError(value));
-        }
-        return toBoolean(value);
-    }
-    function toJsDate(value) {
-        return numberToJsDate(toNumber(value));
-    }
-    // -----------------------------------------------------------------------------
-    // VISIT FUNCTIONS
-    // -----------------------------------------------------------------------------
-    function visitArgs(args, cellCb, dataCb) {
-        for (let arg of args) {
-            if (Array.isArray(arg)) {
-                // arg is ref to a Cell/Range
-                const lenRow = arg.length;
-                const lenCol = arg[0].length;
-                for (let y = 0; y < lenCol; y++) {
-                    for (let x = 0; x < lenRow; x++) {
-                        cellCb(arg[x][y]);
-                    }
-                }
-            }
-            else {
-                // arg is set directly in the formula function
-                dataCb(arg);
-            }
-        }
-    }
-    function visitAny(args, cb) {
-        visitArgs(args, cb, cb);
-    }
-    function visitNumbers(args, cb) {
-        visitArgs(args, (cellValue) => {
-            if (typeof cellValue === "number") {
-                cb(cellValue);
-            }
-        }, (argValue) => {
-            cb(strictToNumber(argValue));
-        });
-    }
-    // -----------------------------------------------------------------------------
-    // REDUCE FUNCTIONS
-    // -----------------------------------------------------------------------------
-    function reduceArgs(args, cellCb, dataCb, initialValue) {
-        let val = initialValue;
-        for (let arg of args) {
-            if (Array.isArray(arg)) {
-                // arg is ref to a Cell/Range
-                const lenRow = arg.length;
-                const lenCol = arg[0].length;
-                for (let y = 0; y < lenCol; y++) {
-                    for (let x = 0; x < lenRow; x++) {
-                        val = cellCb(val, arg[x][y]);
-                    }
-                }
-            }
-            else {
-                // arg is set directly in the formula function
-                val = dataCb(val, arg);
-            }
-        }
-        return val;
-    }
-    function reduceAny(args, cb, initialValue) {
-        return reduceArgs(args, cb, cb, initialValue);
-    }
-    function reduceNumbers(args, cb, initialValue) {
-        return reduceArgs(args, (acc, ArgValue) => {
-            if (typeof ArgValue === "number") {
-                return cb(acc, ArgValue);
-            }
-            return acc;
-        }, (acc, argValue) => {
-            return cb(acc, strictToNumber(argValue));
-        }, initialValue);
-    }
-    function reduceNumbersTextAs0(args, cb, initialValue) {
-        return reduceArgs(args, (acc, ArgValue) => {
-            if (ArgValue !== undefined && ArgValue !== null) {
-                if (typeof ArgValue === "number") {
-                    return cb(acc, ArgValue);
-                }
-                else if (typeof ArgValue === "boolean") {
-                    return cb(acc, toNumber(ArgValue));
-                }
-                else {
-                    return cb(acc, 0);
-                }
-            }
-            return acc;
-        }, (acc, argValue) => {
-            return cb(acc, toNumber(argValue));
-        }, initialValue);
-    }
-    // -----------------------------------------------------------------------------
-    // CONDITIONAL EXPLORE FUNCTIONS
-    // -----------------------------------------------------------------------------
-    /**
-     * This function allows to visit arguments and stop the visit if necessary.
-     * It is mainly used to bypass argument evaluation for functions like OR or AND.
-     */
-    function conditionalVisitArgs(args, cellCb, dataCb) {
-        for (let arg of args) {
-            if (Array.isArray(arg)) {
-                // arg is ref to a Cell/Range
-                const lenRow = arg.length;
-                const lenCol = arg[0].length;
-                for (let y = 0; y < lenCol; y++) {
-                    for (let x = 0; x < lenRow; x++) {
-                        if (!cellCb(arg[x][y]))
-                            return;
-                    }
-                }
-            }
-            else {
-                // arg is set directly in the formula function
-                if (!dataCb(arg))
-                    return;
-            }
-        }
-    }
-    function conditionalVisitBoolean(args, cb) {
-        return conditionalVisitArgs(args, (ArgValue) => {
-            if (typeof ArgValue === "boolean") {
-                return cb(ArgValue);
-            }
-            if (typeof ArgValue === "number") {
-                return cb(ArgValue ? true : false);
-            }
-            return true;
-        }, (argValue) => {
-            if (argValue !== undefined && argValue !== null) {
-                return cb(strictToBoolean(argValue));
-            }
-            return true;
-        });
-    }
-    function getPredicate(descr, isQuery) {
-        let operator;
-        let operand;
-        let subString = descr.substring(0, 2);
-        if (subString === "<=" || subString === ">=" || subString === "<>") {
-            operator = subString;
-            operand = descr.substring(2);
-        }
-        else {
-            subString = descr.substring(0, 1);
-            if (subString === "<" || subString === ">" || subString === "=") {
-                operator = subString;
-                operand = descr.substring(1);
-            }
-            else {
-                operator = "=";
-                operand = descr;
-            }
-        }
-        if (isNumber(operand)) {
-            operand = toNumber(operand);
-        }
-        else if (operand === "TRUE" || operand === "FALSE") {
-            operand = toBoolean(operand);
-        }
-        const result = { operator, operand };
-        if (typeof operand === "string") {
-            if (isQuery) {
-                operand += "*";
-            }
-            result.regexp = operandToRegExp(operand);
-        }
-        return result;
-    }
-    function operandToRegExp(operand) {
-        let exp = "";
-        let predecessor = "";
-        for (let char of operand) {
-            if (char === "?" && predecessor !== "~") {
-                exp += ".";
-            }
-            else if (char === "*" && predecessor !== "~") {
-                exp += ".*";
-            }
-            else {
-                if (char === "*" || char === "?") {
-                    //remove "~"
-                    exp = exp.slice(0, -1);
-                }
-                if (["^", ".", "[", "]", "$", "(", ")", "*", "+", "?", "|", "{", "}", "\\"].includes(char)) {
-                    exp += "\\";
-                }
-                exp += char;
-            }
-            predecessor = char;
-        }
-        return new RegExp("^" + exp + "$", "i");
-    }
-    function evaluatePredicate(value, criterion) {
-        const { operator, operand } = criterion;
-        if (value === undefined || operand === undefined) {
-            return false;
-        }
-        if (typeof operand === "number" && operator === "=") {
-            return toString(value) === toString(operand);
-        }
-        if (operator === "<>" || operator === "=") {
-            let result;
-            if (typeof value === typeof operand) {
-                if (typeof value === "string" && criterion.regexp) {
-                    result = criterion.regexp.test(value);
-                }
-                else {
-                    result = value === operand;
-                }
-            }
-            else {
-                result = false;
-            }
-            return operator === "=" ? result : !result;
-        }
-        if (typeof value === typeof operand) {
-            switch (operator) {
-                case "<":
-                    return value < operand;
-                case ">":
-                    return value > operand;
-                case "<=":
-                    return value <= operand;
-                case ">=":
-                    return value >= operand;
-            }
-        }
-        return false;
-    }
-    /**
-     * Functions used especially for predicate evaluation on ranges.
-     *
-     * Take ranges with same dimensions and take predicates, one for each range.
-     * For (i, j) coordinates, if all elements with coordinates (i, j) of each
-     * range correspond to the associated predicate, then the function uses a callback
-     * function with the parameters "i" and "j".
-     *
-     * Syntax:
-     * visitMatchingRanges([range1, predicate1, range2, predicate2, ...], cb(i,j), likeSelection)
-     *
-     * - range1 (range): The range to check against predicate1.
-     * - predicate1 (string): The pattern or test to apply to range1.
-     * - range2: (range, repeatable) ranges to check.
-     * - predicate2 (string, repeatable): Additional pattern or test to apply to range2.
-     *
-     * - cb(i: number, j: number) => void: the callback function.
-     *
-     * - isQuery (boolean) indicates if the comparison with a string should be done as a SQL-like query.
-     * (Ex1 isQuery = true, predicate = "abc", element = "abcde": predicate match the element),
-     * (Ex2 isQuery = false, predicate = "abc", element = "abcde": predicate not match the element).
-     * (Ex3 isQuery = true, predicate = "abc", element = "abc": predicate match the element),
-     * (Ex4 isQuery = false, predicate = "abc", element = "abc": predicate match the element).
-     */
-    function visitMatchingRanges(args, cb, isQuery = false) {
-        const countArg = args.length;
-        if (countArg % 2 === 1) {
-            throw new Error(_lt(`Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in pairs.`));
-        }
-        const dimRow = args[0].length;
-        const dimCol = args[0][0].length;
-        let predicates = [];
-        for (let i = 0; i < countArg - 1; i += 2) {
-            const criteriaRange = args[i];
-            if (!Array.isArray(criteriaRange) ||
-                criteriaRange.length !== dimRow ||
-                criteriaRange[0].length !== dimCol) {
-                throw new Error(_lt(`Function [[FUNCTION_NAME]] expects criteria_range to have the same dimension`));
-            }
-            const description = toString(args[i + 1]);
-            predicates.push(getPredicate(description, isQuery));
-        }
-        for (let i = 0; i < dimRow; i++) {
-            for (let j = 0; j < dimCol; j++) {
-                let validatedPredicates = true;
-                for (let k = 0; k < countArg - 1; k += 2) {
-                    const criteriaValue = args[k][i][j];
-                    const criterion = predicates[k / 2];
-                    validatedPredicates = evaluatePredicate(criteriaValue, criterion);
-                    if (!validatedPredicates) {
-                        break;
-                    }
-                }
-                if (validatedPredicates) {
-                    cb(i, j);
-                }
-            }
-        }
-    }
-    // -----------------------------------------------------------------------------
-    // COMMON FUNCTIONS
-    // -----------------------------------------------------------------------------
-    function getNormalizedValueFromColumnRange(range, index) {
-        return normalizeValue(range[0][index]);
-    }
-    function getNormalizedValueFromRowRange(range, index) {
-        return normalizeValue(range[index][0]);
-    }
-    /**
-     * Perform a dichotomic search on an array and return the index of the nearest match.
-     *
-     * The array should be sorted, if not an incorrect value might be returned. In the case where multiple
-     * element of the array match the target, the method will return the first match if the array is sorted
-     * in descending order, and the last match if the array is in ascending order.
-     *
-     *
-     * @param data the array in which to search.
-     * @param target the value to search.
-     * @param mode "nextGreater/nextSmaller" : return next greater/smaller value if no exact match is found.
-     * @param sortOrder whether the array is sorted in ascending or descending order.
-     * @param rangeLength the number of elements to consider in the search array.
-     * @param getValueInData function returning the element at index i in the search array.
-     */
-    function dichotomicSearch(data, target, mode, sortOrder, rangeLength, getValueInData) {
-        if (target === null || target === undefined) {
-            return -1;
-        }
-        const targetType = typeof target;
-        let matchVal = undefined;
-        let matchValIndex = undefined;
-        let indexLeft = 0;
-        let indexRight = rangeLength - 1;
-        let indexMedian;
-        let currentIndex;
-        let currentVal;
-        let currentType;
-        while (indexRight - indexLeft >= 0) {
-            indexMedian = Math.floor((indexLeft + indexRight) / 2);
-            currentIndex = indexMedian;
-            currentVal = getValueInData(data, currentIndex);
-            currentType = typeof currentVal;
-            // 1 - linear search to find value with the same type
-            while (indexLeft <= currentIndex && targetType !== currentType) {
-                currentIndex--;
-                currentVal = getValueInData(data, currentIndex);
-                currentType = typeof currentVal;
-            }
-            if (currentType !== targetType || currentVal === undefined) {
-                indexLeft = indexMedian + 1;
-                continue;
-            }
-            // 2 - check if value match
-            if (mode === "strict" && currentVal === target) {
-                matchVal = currentVal;
-                matchValIndex = currentIndex;
-            }
-            else if (mode === "nextSmaller" && currentVal <= target) {
-                if (matchVal === undefined ||
-                    matchVal < currentVal ||
-                    (matchVal === currentVal && sortOrder === "asc" && matchValIndex < currentIndex) ||
-                    (matchVal === currentVal && sortOrder === "desc" && matchValIndex > currentIndex)) {
-                    matchVal = currentVal;
-                    matchValIndex = currentIndex;
-                }
-            }
-            else if (mode === "nextGreater" && currentVal >= target) {
-                if (matchVal === undefined ||
-                    matchVal > currentVal ||
-                    (matchVal === currentVal && sortOrder === "asc" && matchValIndex < currentIndex) ||
-                    (matchVal === currentVal && sortOrder === "desc" && matchValIndex > currentIndex)) {
-                    matchVal = currentVal;
-                    matchValIndex = currentIndex;
-                }
-            }
-            // 3 - give new indexes for the Binary search
-            if ((sortOrder === "asc" && currentVal > target) ||
-                (sortOrder === "desc" && currentVal <= target)) {
-                indexRight = currentIndex - 1;
-            }
-            else {
-                indexLeft = indexMedian + 1;
-            }
-        }
-        // note that valMinIndex could be 0
-        return matchValIndex !== undefined ? matchValIndex : -1;
-    }
-    /**
-     * Perform a linear search and return the index of the match.
-     * -1 is returned if no value is found.
-     *
-     * Example:
-     * - [3, 6, 10], 3 => 0
-     * - [3, 6, 10], 6 => 1
-     * - [3, 6, 10], 9 => -1
-     * - [3, 6, 10], 2 => -1
-     *
-     * @param data the array to search in.
-     * @param target the value to search in the array.
-     * @param mode if "strict" return exact match index. "nextGreater" returns the next greater
-     * element from the target and "nextSmaller" the next smaller
-     * @param numberOfValues the number of elements to consider in the search array.
-     * @param getValueInData function returning the element at index i in the search array.
-     * @param reverseSearch if true, search in the array starting from the end.
-
-     */
-    function linearSearch(data, target, mode, numberOfValues, getValueInData, reverseSearch = false) {
-        if (target === null || target === undefined)
-            return -1;
-        const getValue = reverseSearch
-            ? (data, i) => getValueInData(data, numberOfValues - i - 1)
-            : getValueInData;
-        let closestMatch = undefined;
-        let closestMatchIndex = -1;
-        for (let i = 0; i < numberOfValues; i++) {
-            const value = getValue(data, i);
-            if (value === target) {
-                return reverseSearch ? numberOfValues - i - 1 : i;
-            }
-            if (mode === "nextSmaller") {
-                if ((!closestMatch && compareCellValues(target, value) >= 0) ||
-                    (compareCellValues(target, value) >= 0 && compareCellValues(value, closestMatch) > 0)) {
-                    closestMatch = value;
-                    closestMatchIndex = i;
-                }
-            }
-            else if (mode === "nextGreater") {
-                if ((!closestMatch && compareCellValues(target, value) <= 0) ||
-                    (compareCellValues(target, value) <= 0 && compareCellValues(value, closestMatch) < 0)) {
-                    closestMatch = value;
-                    closestMatchIndex = i;
-                }
-            }
-        }
-        return reverseSearch ? numberOfValues - closestMatchIndex - 1 : closestMatchIndex;
-    }
-    function compareCellValues(left, right) {
-        let typeOrder = SORT_TYPES_ORDER.indexOf(typeof left) - SORT_TYPES_ORDER.indexOf(typeof right);
-        if (typeOrder === 0) {
-            if (typeof left === "string" && typeof right === "string") {
-                typeOrder = left.localeCompare(right);
-            }
-            else if (typeof left === "number" && typeof right === "number") {
-                typeOrder = left - right;
-            }
-            else if (typeof left === "boolean" && typeof right === "boolean") {
-                typeOrder = Number(left) - Number(right);
-            }
-        }
-        return typeOrder;
     }
 
     // -----------------------------------------------------------------------------
@@ -17820,7 +18190,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         TEXT: TEXT
     });
 
-    const functions$4 = {
+    const functions$3 = {
         database,
         date,
         financial,
@@ -17881,8 +18251,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         return arg === null || arg === void 0 ? void 0 : arg.value;
     }
     const functionRegistry = new FunctionRegistry();
-    for (let category in functions$4) {
-        const fns = functions$4[category];
+    for (let category in functions$3) {
+        const fns = functions$3[category];
         for (let name in fns) {
             const addDescr = fns[name];
             addDescr.category = category;
@@ -17907,18 +18277,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
      * is useful for the composer, which needs to be able to work with incomplete
      * formulas.
      */
-    const functions$3 = functionRegistry.content;
+    const functions$2 = functionRegistry.content;
     const POSTFIX_UNARY_OPERATORS = ["%"];
     const OPERATORS = "+,-,*,/,:,=,<>,>=,>,<=,<,^,&".split(",").concat(POSTFIX_UNARY_OPERATORS);
     function tokenize(str) {
         const chars = str.split("");
         const result = [];
-        let tokenCount = 0;
         while (chars.length) {
-            tokenCount++;
-            if (tokenCount > 100) {
-                throw new Error(_lt("This formula has over 100 parts. It can't be processed properly, consider splitting it into multiple cells"));
-            }
             let token = tokenizeSpace(chars) ||
                 tokenizeMisc(chars) ||
                 tokenizeOperator(chars) ||
@@ -18041,7 +18406,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         if (result.length) {
             const value = result;
-            const isFunction = value.toUpperCase() in functions$3;
+            const isFunction = value.toUpperCase() in functions$2;
             if (isFunction) {
                 return { type: "FUNCTION", value };
             }
@@ -18110,7 +18475,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             case "OPERATOR":
                 return OP_PRIORITY[token.value] || 15;
         }
-        throw new Error(_lt("Unknown token: %s", token.value));
+        throw new BadExpressionError(_lt("Unknown token: %s", token.value));
     }
     function parsePrefix(current, tokens) {
         var _a, _b, _c, _d;
@@ -18125,7 +18490,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 return { type: "STRING", value: removeStringQuotes(current.value) };
             case "FUNCTION":
                 if (tokens.shift().type !== "LEFT_PAREN") {
-                    throw new Error(_lt("Wrong function call"));
+                    throw new BadExpressionError(_lt("Wrong function call"));
                 }
                 else {
                     const args = [];
@@ -18153,7 +18518,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     }
                     const closingToken = tokens.shift();
                     if (!closingToken || closingToken.type !== "RIGHT_PAREN") {
-                        throw new Error(_lt("Wrong function call"));
+                        throw new BadExpressionError(_lt("Wrong function call"));
                     }
                     return { type: "FUNCALL", value: current.value, args };
                 }
@@ -18181,14 +18546,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         if (functionRegex.test(current.value) && ((_d = tokens[0]) === null || _d === void 0 ? void 0 : _d.type) === "LEFT_PAREN") {
                             throw new UnknownFunctionError(current.value);
                         }
-                        throw new Error(_lt("Invalid formula"));
+                        throw new BadExpressionError(_lt("Invalid formula"));
                     }
                     return { type: "STRING", value: current.value };
                 }
             case "LEFT_PAREN":
                 const result = parseExpression(tokens, 5);
                 if (!tokens.length || tokens[0].type !== "RIGHT_PAREN") {
-                    throw new Error(_lt("Unmatched left parenthesis"));
+                    throw new BadExpressionError(_lt("Unmatched left parenthesis"));
                 }
                 tokens.shift();
                 return result;
@@ -18200,7 +18565,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         operand: parseExpression(tokens, OP_PRIORITY[current.value]),
                     };
                 }
-                throw new Error(_lt("Unexpected token: %s", current.value));
+                throw new BadExpressionError(_lt("Unexpected token: %s", current.value));
         }
     }
     function parseInfix(left, current, tokens) {
@@ -18224,12 +18589,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 };
             }
         }
-        throw new Error(DEFAULT_ERROR_MESSAGE);
+        throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
     }
     function parseExpression(tokens, bp) {
         const token = tokens.shift();
         if (!token) {
-            throw new Error(DEFAULT_ERROR_MESSAGE);
+            throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
         }
         let expr = parsePrefix(token, tokens);
         while (tokens[0] && bindingPower(tokens[0]) > bp) {
@@ -18250,7 +18615,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         const result = parseExpression(tokens, 0);
         if (tokens.length) {
-            throw new Error(DEFAULT_ERROR_MESSAGE);
+            throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
         }
         return result;
     }
@@ -18493,7 +18858,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         return result;
     }
 
-    const functions$2 = functionRegistry.content;
+    const functions$1 = functionRegistry.content;
     const OPERATOR_MAP = {
         "=": "EQ",
         "+": "ADD",
@@ -18539,10 +18904,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const ast = parseTokens([...tokens]);
             let nextId = 1;
             if (ast.type === "BIN_OPERATION" && ast.value === ":") {
-                throw new Error(_lt("Invalid formula"));
+                throw new BadExpressionError(_lt("Invalid formula"));
             }
             if (ast.type === "UNKNOWN") {
-                throw new Error(_lt("Invalid formula"));
+                throw new BadExpressionError(_lt("Invalid formula"));
             }
             const compiledAST = compileAST(ast);
             const code = splitCodeLines([
@@ -18567,22 +18932,22 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
              * between a cell value and a non cell value.
              */
             function compileFunctionArgs(ast) {
-                const functionDefinition = functions$2[ast.value.toUpperCase()];
+                const functionDefinition = functions$1[ast.value.toUpperCase()];
                 const currentFunctionArguments = ast.args;
                 // check if arguments are supplied in the correct quantities
                 const nbrArg = currentFunctionArguments.length;
                 if (nbrArg < functionDefinition.minArgRequired) {
-                    throw new Error(_lt("Invalid number of arguments for the %s function. Expected %s minimum, but got %s instead.", ast.value.toUpperCase(), functionDefinition.minArgRequired.toString(), nbrArg.toString()));
+                    throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected %s minimum, but got %s instead.", ast.value.toUpperCase(), functionDefinition.minArgRequired.toString(), nbrArg.toString()));
                 }
                 if (nbrArg > functionDefinition.maxArgPossible) {
-                    throw new Error(_lt("Invalid number of arguments for the %s function. Expected %s maximum, but got %s instead.", ast.value.toUpperCase(), functionDefinition.maxArgPossible.toString(), nbrArg.toString()));
+                    throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected %s maximum, but got %s instead.", ast.value.toUpperCase(), functionDefinition.maxArgPossible.toString(), nbrArg.toString()));
                 }
                 const repeatingArg = functionDefinition.nbrArgRepeating;
                 if (repeatingArg > 1) {
                     const argBeforeRepeat = functionDefinition.args.length - repeatingArg;
                     const nbrRepeatingArg = nbrArg - argBeforeRepeat;
                     if (nbrRepeatingArg % repeatingArg !== 0) {
-                        throw new Error(_lt("Invalid number of arguments for the %s function. Expected all arguments after position %s to be supplied by groups of %s arguments", ast.value.toUpperCase(), argBeforeRepeat.toString(), repeatingArg.toString()));
+                        throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected all arguments after position %s to be supplied by groups of %s arguments", ast.value.toUpperCase(), argBeforeRepeat.toString(), repeatingArg.toString()));
                     }
                 }
                 let listArgs = [];
@@ -18608,7 +18973,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                             t === "RANGE<STRING>");
                         if (isRangeOnly) {
                             if (currentArg.type !== "REFERENCE") {
-                                throw new Error(_lt("Function %s expects the parameter %s to be reference to a cell or range, not a %s.", ast.value.toUpperCase(), (i + 1).toString(), currentArg.type.toLowerCase()));
+                                throw new BadExpressionError(_lt("Function %s expects the parameter %s to be reference to a cell or range, not a %s.", ast.value.toUpperCase(), (i + 1).toString(), currentArg.type.toLowerCase()));
                             }
                         }
                         const compiledAST = compileAST(currentArg, isLazy, isMeta, hasRange, {
@@ -18643,7 +19008,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 let id, fnName, statement;
                 if (ast.type !== "REFERENCE" && !(ast.type === "BIN_OPERATION" && ast.value === ":")) {
                     if (isMeta) {
-                        throw new Error(_lt(`Argument must be a reference to a cell or range.`));
+                        throw new BadExpressionError(_lt(`Argument must be a reference to a cell or range.`));
                     }
                 }
                 if (ast.debug) {
@@ -19121,8 +19486,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     }
                 case "START_EDITION":
                     if (cmd.selection) {
-                        const cell = this.getters.getActiveCell();
-                        const content = cmd.text || (cell === null || cell === void 0 ? void 0 : cell.composerContent) || "";
+                        const sheetId = this.getters.getActiveSheetId();
+                        const content = cmd.text || this.getComposerContent({ sheetId, ...this.getters.getPosition() });
                         return this.validateSelection(content.length, cmd.selection.start, cmd.selection.end);
                     }
                     else {
@@ -19171,7 +19536,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     this.colorIndexByRange = {};
                     break;
                 case "SET_CURRENT_CONTENT":
-                    this.setContent(cmd.content, cmd.selection);
+                    this.setContent(cmd.content, cmd.selection, true);
                     this.updateRangeColor();
                     break;
                 case "REPLACE_COMPOSER_CURSOR_SELECTION":
@@ -19259,8 +19624,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         getCurrentContent() {
             if (this.mode === "inactive") {
-                const cell = this.getters.getActiveCell();
-                return (cell === null || cell === void 0 ? void 0 : cell.composerContent) || "";
+                const sheetId = this.getters.getActiveSheetId();
+                return this.getComposerContent({ sheetId, ...this.getters.getPosition() });
             }
             return this.currentContent;
         }
@@ -19327,7 +19692,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         validateSelection(length, start, end) {
             return start >= 0 && start <= length && end >= 0 && end <= length
                 ? 0 /* CommandResult.Success */
-                : 43 /* CommandResult.WrongComposerSelection */;
+                : 44 /* CommandResult.WrongComposerSelection */;
         }
         onColumnsRemoved(cmd) {
             if (cmd.elements.includes(this.col) && this.mode !== "inactive") {
@@ -19379,17 +19744,18 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          */
         startEdition(str, selection) {
             var _a;
-            const cell = this.getters.getActiveCell();
-            if (str && ((_a = cell === null || cell === void 0 ? void 0 : cell.format) === null || _a === void 0 ? void 0 : _a.includes("%")) && isNumber(str)) {
+            const evaluatedCell = this.getters.getActiveCell();
+            if (str && ((_a = evaluatedCell.format) === null || _a === void 0 ? void 0 : _a.includes("%")) && isNumber(str)) {
                 selection = selection || { start: str.length, end: str.length };
                 str = `${str}%`;
             }
-            this.initialContent = (cell === null || cell === void 0 ? void 0 : cell.composerContent) || "";
-            this.mode = "editing";
+            const sheetId = this.getters.getActiveSheetId();
             const { col, row } = this.getters.getPosition();
             this.col = col;
+            this.sheetId = sheetId;
             this.row = row;
-            this.sheetId = this.getters.getActiveSheetId();
+            this.initialContent = this.getComposerContent({ sheetId, col, row });
+            this.mode = "editing";
             this.setContent(str || this.initialContent, selection);
             this.colorIndexByRange = {};
             const zone = positionToZone({ col: this.col, row: this.row });
@@ -19400,7 +19766,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         stopEdition() {
             if (this.mode !== "inactive") {
-                const activeSheetId = this.getters.getActiveSheetId();
                 this.cancelEdition();
                 const { col, row } = this.getters.getMainCellPosition(this.sheetId, this.col, this.row);
                 let content = this.currentContent;
@@ -19409,7 +19774,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     return;
                 }
                 if (content) {
-                    const cell = this.getters.getCell(activeSheetId, col, row);
+                    const sheetId = this.getters.getActiveSheetId();
+                    const cell = this.getters.getEvaluatedCell({ sheetId, col, row });
                     if (content.startsWith("=")) {
                         const left = this.currentTokens.filter((t) => t.type === "LEFT_PAREN").length;
                         const right = this.currentTokens.filter((t) => t.type === "RIGHT_PAREN").length;
@@ -19418,7 +19784,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                             content += concat(new Array(missing).fill(")"));
                         }
                     }
-                    else if (cell === null || cell === void 0 ? void 0 : cell.isLink()) {
+                    else if (cell.link) {
                         content = markdownLink(content, cell.link.url);
                     }
                     this.dispatch("UPDATE_CELL", {
@@ -19453,13 +19819,45 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 });
             }
         }
+        getComposerContent({ sheetId, col, row }) {
+            const { col: mainCol, row: mainRow } = this.getters.getMainCellPosition(sheetId, col, row);
+            const cell = this.getters.getCell(sheetId, mainCol, mainRow);
+            if (cell === null || cell === void 0 ? void 0 : cell.isFormula) {
+                return cell.content;
+            }
+            const { format, value, type, formattedValue } = this.getters.getEvaluatedCell({
+                sheetId,
+                col: mainCol,
+                row: mainRow,
+            });
+            switch (type) {
+                case CellValueType.text:
+                case CellValueType.empty:
+                    return value;
+                case CellValueType.boolean:
+                    return formattedValue;
+                case CellValueType.error:
+                    return (cell === null || cell === void 0 ? void 0 : cell.content) || "";
+                case CellValueType.number:
+                    if (format && isDateTimeFormat(format)) {
+                        return formattedValue;
+                    }
+                    return this.numberComposerContent(value, format);
+            }
+        }
+        numberComposerContent(value, format) {
+            if (format === null || format === void 0 ? void 0 : format.includes("%")) {
+                return `${value * 100}%`;
+            }
+            return formatValue(value);
+        }
         /**
          * Reset the current content to the active cell content
          */
         resetContent() {
             this.setContent(this.initialContent || "");
         }
-        setContent(text, selection) {
+        setContent(text, selection, raise) {
             const isNewCurrentContent = this.currentContent !== text;
             this.currentContent = text;
             if (selection) {
@@ -19471,6 +19869,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             if (isNewCurrentContent || this.mode !== "inactive") {
                 this.currentTokens = text.startsWith("=") ? composerTokenize(text) : [];
+                if (this.currentTokens.length > 100) {
+                    if (raise) {
+                        this.ui.notifyUI({
+                            type: "ERROR",
+                            text: _lt("This formula has over 100 parts. It can't be processed properly, consider splitting it into multiple cells"),
+                        });
+                    }
+                }
             }
             if (this.canStartComposerRangeSelection()) {
                 this.startComposerRangeSelection();
@@ -19506,13 +19912,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return selectedXc;
         }
         getRangeReference(range, fixedParts = [{ colFixed: false, rowFixed: false }]) {
+            let _fixedParts = [...fixedParts];
             if (fixedParts.length === 1 && getZoneArea(range.zone) > 1) {
-                fixedParts.push({ ...fixedParts[0] });
+                _fixedParts.push({ ...fixedParts[0] });
             }
             else if (fixedParts.length === 2 && getZoneArea(range.zone) === 1) {
-                fixedParts.pop();
+                _fixedParts.pop();
             }
-            const newRange = range.clone({ parts: this.previousRange.parts });
+            const newRange = range.clone({ parts: _fixedParts });
             return this.getters.getSelectionRangeString(newRange, this.getters.getEditionSheet());
         }
         /**
@@ -19659,19 +20066,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         "getComposerHighlights",
     ];
 
-    const functions$1 = functionRegistry.content;
-    const providerRegistry = new Registry();
-    providerRegistry.add("functions", () => {
-        return Object.keys(functions$1).map((key) => {
-            return {
-                text: key,
-                description: functions$1[key].description,
-            };
-        });
-    });
-    // -----------------------------------------------------------------------------
-    // Autocomplete DropDown component
-    // -----------------------------------------------------------------------------
     css /* scss */ `
   .o-autocomplete-dropdown {
     pointer-events: auto;
@@ -19698,69 +20092,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
   }
 `;
     class TextValueProvider extends owl.Component {
-        constructor() {
-            super(...arguments);
-            this.state = owl.useState({
-                values: [],
-                selectedIndex: 0,
-            });
-        }
-        setup() {
-            owl.onMounted(() => this.filter(this.props.search));
-            owl.onWillUpdateProps((nextProps) => this.checkUpdateProps(nextProps));
-            this.props.exposeAPI({
-                getValueToFill: () => this.getValueToFill(),
-                moveDown: () => this.moveDown(),
-                moveUp: () => this.moveUp(),
-            });
-        }
-        checkUpdateProps(nextProps) {
-            if (nextProps.search !== this.props.search) {
-                this.filter(nextProps.search);
-            }
-        }
-        async filter(searchTerm) {
-            const provider = providerRegistry.get(this.props.provider);
-            let values = provider();
-            if (this.props.filter) {
-                values = this.props.filter(searchTerm, values);
-            }
-            else {
-                values = values
-                    .filter((t) => t.text.toUpperCase().startsWith(searchTerm.toUpperCase()))
-                    .sort((l, r) => (l.text < r.text ? -1 : l.text > r.text ? 1 : 0));
-            }
-            this.state.values = values.slice(0, 10);
-            this.state.selectedIndex = 0;
-        }
-        fillValue(index) {
-            this.state.selectedIndex = index;
-            this.props.onCompleted(this.getValueToFill());
-        }
-        moveDown() {
-            this.state.selectedIndex = (this.state.selectedIndex + 1) % this.state.values.length;
-        }
-        moveUp() {
-            this.state.selectedIndex--;
-            if (this.state.selectedIndex < 0) {
-                this.state.selectedIndex = this.state.values.length - 1;
-            }
-        }
-        getValueToFill() {
-            if (this.state.values.length) {
-                return this.state.values[this.state.selectedIndex].text;
-            }
-            return undefined;
-        }
     }
     TextValueProvider.template = "o-spreadsheet-TextValueProvider";
     TextValueProvider.props = {
-        provider: String,
-        filter: { type: Function, optional: true },
-        search: String,
-        borderStyle: String,
-        exposeAPI: Function,
-        onCompleted: Function,
+        values: Array,
+        selectedIndex: Number,
+        onValueSelected: Function,
     };
 
     class ContentEditableHelper {
@@ -19989,7 +20326,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         functionName: String,
         functionDescription: Object,
         argToFocus: Number,
-        borderStyle: String,
     };
 
     const functions = functionRegistry.content;
@@ -20043,6 +20379,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
       margin: 4px;
       pointer-events: none;
     }
+
+    .o-autocomplete-dropdown,
+    .o-formula-assistant-container {
+      box-shadow: 0 1px 4px 3px rgba(60, 64, 67, 0.15);
+    }
   }
 
   /* Custom css to highlight topbar composer on focus */
@@ -20061,8 +20402,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             });
             this.autoCompleteState = owl.useState({
                 showProvider: false,
-                provider: "functions",
-                search: "",
+                values: [],
+                selectedIndex: 0,
             });
             this.functionDescriptionState = owl.useState({
                 showDescription: false,
@@ -20071,7 +20412,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 argToFocus: 0,
             });
             this.isKeyStillDown = false;
-            this.borderStyle = `box-shadow: 0 1px 4px 3px rgba(60, 64, 67, 0.15);`;
             // we can't allow input events to be triggered while we remove and add back the content of the composer in processContent
             this.shouldProcessInputEvents = false;
             this.tokens = [];
@@ -20130,9 +20470,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (this.env.model.getters.isSelectingForComposer()) {
                 this.functionDescriptionState.showDescription = false;
                 // Prevent the default content editable behavior which moves the cursor
-                // but don't stop the event and let it bubble to the grid which will
-                // update the selection accordingly
                 ev.preventDefault();
+                ev.stopPropagation();
+                updateSelectionWithArrowKeys(ev, this.env.model.selection);
                 return;
             }
             const content = this.env.model.getters.getCurrentContent();
@@ -20142,25 +20482,33 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 this.env.model.dispatch("STOP_EDITION");
                 return;
             }
+            // All arrow keys are processed: up and down should move autocomplete, left
+            // and right should move the cursor.
             ev.stopPropagation();
+            this.handleArrowKeysForAutocomplete(ev);
+        }
+        handleArrowKeysForAutocomplete(ev) {
             // only for arrow up and down
-            if (["ArrowUp", "ArrowDown"].includes(ev.key) &&
-                this.autoCompleteState.showProvider &&
-                this.autocompleteAPI) {
+            if (["ArrowUp", "ArrowDown"].includes(ev.key) && this.autoCompleteState.showProvider) {
                 ev.preventDefault();
                 if (ev.key === "ArrowUp") {
-                    this.autocompleteAPI.moveUp();
+                    this.autoCompleteState.selectedIndex--;
+                    if (this.autoCompleteState.selectedIndex < 0) {
+                        this.autoCompleteState.selectedIndex = this.autoCompleteState.values.length - 1;
+                    }
                 }
                 else {
-                    this.autocompleteAPI.moveDown();
+                    this.autoCompleteState.selectedIndex =
+                        (this.autoCompleteState.selectedIndex + 1) % this.autoCompleteState.values.length;
                 }
             }
         }
         processTabKey(ev) {
+            var _a;
             ev.preventDefault();
             ev.stopPropagation();
-            if (this.autoCompleteState.showProvider && this.autocompleteAPI) {
-                const autoCompleteValue = this.autocompleteAPI.getValueToFill();
+            if (this.autoCompleteState.showProvider) {
+                const autoCompleteValue = (_a = this.autoCompleteState.values[this.autoCompleteState.selectedIndex]) === null || _a === void 0 ? void 0 : _a.text;
                 if (autoCompleteValue) {
                     this.autoComplete(autoCompleteValue);
                     return;
@@ -20177,11 +20525,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.env.model.selection.moveAnchorCell(direction, "one");
         }
         processEnterKey(ev) {
+            var _a;
             ev.preventDefault();
             ev.stopPropagation();
             this.isKeyStillDown = false;
-            if (this.autoCompleteState.showProvider && this.autocompleteAPI) {
-                const autoCompleteValue = this.autocompleteAPI.getValueToFill();
+            if (this.autoCompleteState.showProvider) {
+                const autoCompleteValue = (_a = this.autoCompleteState.values[this.autoCompleteState.selectedIndex]) === null || _a === void 0 ? void 0 : _a.text;
                 if (autoCompleteValue) {
                     this.autoComplete(autoCompleteValue);
                     return;
@@ -20243,8 +20592,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             ev.stopPropagation();
             this.autoCompleteState.showProvider = false;
             if (ev.ctrlKey && ev.key === " ") {
-                this.autoCompleteState.search = "";
-                this.autoCompleteState.showProvider = true;
+                this.showAutocomplete("");
                 this.env.model.dispatch("STOP_COMPOSER_RANGE_SELECTION");
                 return;
             }
@@ -20255,6 +20603,20 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             this.processTokenAtCursor();
             this.processContent();
+        }
+        showAutocomplete(searchTerm) {
+            this.autoCompleteState.showProvider = true;
+            let values = Object.entries(functionRegistry.content).map(([text, { description }]) => {
+                return {
+                    text,
+                    description,
+                };
+            });
+            values = values
+                .filter((t) => t.text.toUpperCase().startsWith(searchTerm.toUpperCase()))
+                .sort((l, r) => (l.text < r.text ? -1 : l.text > r.text ? 1 : 0));
+            this.autoCompleteState.values = values.slice(0, 10);
+            this.autoCompleteState.selectedIndex = 0;
         }
         onMousedown(ev) {
             if (ev.button > 0) {
@@ -20278,9 +20640,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         onBlur() {
             this.isKeyStillDown = false;
         }
-        onCompleted(text) {
-            text && this.autoComplete(text);
-        }
         // ---------------------------------------------------------------------------
         // Private
         // ---------------------------------------------------------------------------
@@ -20303,11 +20662,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         getContent() {
             let content;
-            let value = this.env.model.getters.getCurrentContent();
+            const value = this.env.model.getters.getCurrentContent();
+            const isValidFormula = value.startsWith("=") && this.env.model.getters.getCurrentTokens().length > 0;
             if (value === "") {
                 content = [];
             }
-            else if (value.startsWith("=") && this.props.focus !== "inactive") {
+            else if (isValidFormula && this.props.focus !== "inactive") {
                 content = this.getColoredTokens();
             }
             else {
@@ -20319,8 +20679,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const tokens = this.env.model.getters.getCurrentTokens();
             const tokenAtCursor = this.env.model.getters.getTokenAtCursor();
             const result = [];
-            const { end, start } = this.env.model.getters.getComposerSelection();
-            for (let token of tokens) {
+            const { start, end } = this.env.model.getters.getComposerSelection();
+            for (const token of tokens) {
                 switch (token.type) {
                     case "OPERATOR":
                     case "NUMBER":
@@ -20400,8 +20760,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     if (tokenAtCursor.type === "FUNCTION" ||
                         (tokenAtCursor.type === "SYMBOL" && !rangeReference.test(xc))) {
                         // initialize Autocomplete Dropdown
-                        this.autoCompleteState.search = tokenAtCursor.value;
-                        this.autoCompleteState.showProvider = true;
+                        this.showAutocomplete(tokenAtCursor.value);
                     }
                     else if (tokenAtCursor.functionContext && tokenAtCursor.type !== "UNKNOWN") {
                         // initialize Formula Assistant
@@ -20428,7 +20787,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         start = tokenAtCursor.start;
                     }
                     const tokens = this.env.model.getters.getCurrentTokens();
-                    if (this.autoCompleteState.provider && tokens.length) {
+                    if (tokens.length) {
                         value += "(";
                         const currentTokenIndex = tokens.map((token) => token.start).indexOf(tokenAtCursor.start);
                         if (currentTokenIndex + 1 < tokens.length) {
@@ -20516,11 +20875,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         get containerStyle() {
             const isFormula = this.env.model.getters.getCurrentContent().startsWith("=");
             const cell = this.env.model.getters.getActiveCell();
-            let style = {};
-            if (cell) {
-                const cellPosition = this.env.model.getters.getCellPosition(cell.id);
-                style = this.env.model.getters.getCellComputedStyle(cellPosition.sheetId, cellPosition.col, cellPosition.row);
-            }
+            const position = this.env.model.getters.getPosition();
+            const sheetId = this.env.model.getters.getActiveSheetId();
+            const cellPosition = this.env.model.getters.getMainCellPosition(sheetId, position.col, position.row);
+            const style = this.env.model.getters.getCellComputedStyle(sheetId, cellPosition.col, cellPosition.row);
             // position style
             const { x: left, y: top, width, height } = this.rect;
             // color style
@@ -20534,7 +20892,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             // align style
             let textAlign = "left";
             if (!isFormula) {
-                textAlign = style.align || (cell === null || cell === void 0 ? void 0 : cell.defaultAlign) || "left";
+                textAlign = style.align || cell.defaultAlign;
             }
             return `
       left: ${left - 1}px;
@@ -20981,6 +21339,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         id: figure.id,
                     });
                     this.props.onFigureDeleted();
+                    ev.stopPropagation();
                     ev.preventDefault();
                     break;
                 case "ArrowDown":
@@ -21000,6 +21359,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         x: figure.x + delta[0],
                         y: figure.y + delta[1],
                     });
+                    ev.stopPropagation();
                     ev.preventDefault();
                     break;
             }
@@ -22262,10 +22622,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         COL: colMenuRegistry,
         CELL: cellMenuRegistry,
     };
-    // copy and paste are specific events that should not be managed by the keydown event,
-    // but they shouldn't be preventDefault and stopped (else copy and paste events will not trigger)
-    // and also should not result in typing the character C or V in the composer
-    const keyDownMappingIgnore = ["CTRL+C", "CTRL+V"];
     // -----------------------------------------------------------------------------
     // JS
     // -----------------------------------------------------------------------------
@@ -22279,7 +22635,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.keyDownMapping = {
                 ENTER: () => {
                     const cell = this.env.model.getters.getActiveCell();
-                    !cell || cell.isEmpty()
+                    cell.type === CellValueType.empty
                         ? this.props.onGridComposerCellFocused()
                         : this.props.onComposerContentFocused();
                 },
@@ -22287,7 +22643,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 "SHIFT+TAB": () => this.env.model.selection.moveAnchorCell("left", "one"),
                 F2: () => {
                     const cell = this.env.model.getters.getActiveCell();
-                    !cell || cell.isEmpty()
+                    cell.type === CellValueType.empty
                         ? this.props.onGridComposerCellFocused()
                         : this.props.onComposerContentFocused();
                 },
@@ -22380,6 +22736,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 },
                 PAGEDOWN: () => this.env.model.dispatch("SHIFT_VIEWPORT_DOWN"),
                 PAGEUP: () => this.env.model.dispatch("SHIFT_VIEWPORT_UP"),
+                "CTRL+K": () => INSERT_LINK(this.env),
             };
         }
         setup() {
@@ -22389,6 +22746,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 menuItems: [],
             });
             this.gridRef = owl.useRef("grid");
+            this.hiddenInput = owl.useRef("hiddenInput");
             this.canvasPosition = useAbsolutePosition(this.gridRef);
             this.hoveredCell = owl.useState({ col: undefined, row: undefined });
             owl.useExternalListener(document.body, "cut", this.copy.bind(this, true));
@@ -22422,7 +22780,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         focus() {
             if (!this.env.model.getters.getSelectedFigureId()) {
-                this.gridRef.el.focus();
+                this.hiddenInput.el.focus();
             }
         }
         get gridEl() {
@@ -22512,8 +22870,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         onCellDoubleClicked(col, row) {
             const sheetId = this.env.model.getters.getActiveSheetId();
-            const cell = this.env.model.getters.getCell(sheetId, col, row);
-            if (!cell || cell.isEmpty()) {
+            const cell = this.env.model.getters.getEvaluatedCell({ sheetId, col, row });
+            if (cell.type === CellValueType.empty) {
                 this.props.onGridComposerCellFocused();
             }
             else {
@@ -22530,19 +22888,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             ev.preventDefault();
             ev.stopPropagation();
             this.closeOpenedPopover();
-            const arrowMap = {
-                ArrowDown: { direction: "down", delta: [0, 1] },
-                ArrowLeft: { direction: "left", delta: [-1, 0] },
-                ArrowRight: { direction: "right", delta: [1, 0] },
-                ArrowUp: { direction: "up", delta: [0, -1] },
-            };
-            const { direction } = arrowMap[ev.key];
-            if (ev.shiftKey) {
-                this.env.model.selection.resizeAnchorZone(direction, ev.ctrlKey ? "end" : "one");
-            }
-            else {
-                this.env.model.selection.moveAnchorCell(direction, ev.ctrlKey ? "end" : "one");
-            }
+            updateSelectionWithArrowKeys(ev, this.env.model.selection);
             if (this.env.model.getters.isPaintingFormat()) {
                 this.env.model.dispatch("PASTE", {
                     target: this.env.model.getters.getSelectedZones(),
@@ -22571,14 +22917,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 handler();
                 return;
             }
-            if (!keyDownMappingIgnore.includes(keyDownString)) {
-                if (ev.key.length === 1 && !ev.ctrlKey && !ev.metaKey && !ev.altKey) {
-                    // if the user types a character on the grid, it means he wants to start composing the selected cell with that
-                    // character
-                    ev.preventDefault();
-                    ev.stopPropagation();
-                    this.props.onGridComposerCellFocused(ev.key);
-                }
+        }
+        onInput(ev) {
+            if (ev.data) {
+                // if the user types a character on the grid, it means he wants to start composing the selected cell with that
+                // character
+                ev.preventDefault();
+                ev.stopPropagation();
+                this.props.onGridComposerCellFocused(ev.data);
             }
         }
         // ---------------------------------------------------------------------------
@@ -22674,395 +23020,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         onComposerContentFocused: Function,
         onGridComposerCellFocused: Function,
     };
-
-    /**
-     * Abstract base implementation of a cell.
-     * Concrete cell classes are responsible to build the raw cell `content` based on
-     * whatever data they have (formula, string, ...).
-     */
-    class AbstractCell {
-        constructor(id, lazyEvaluated, properties) {
-            this.id = id;
-            this.style = properties.style;
-            this.format = properties.format;
-            this.lazyEvaluated = lazyEvaluated.map((evaluated) => ({
-                ...evaluated,
-                format: properties.format || evaluated.format,
-            }));
-        }
-        isFormula() {
-            return false;
-        }
-        isLink() {
-            return false;
-        }
-        isEmpty() {
-            return false;
-        }
-        get evaluated() {
-            return this.lazyEvaluated();
-        }
-        get formattedValue() {
-            return formatValue(this.evaluated.value, this.evaluated.format);
-        }
-        get composerContent() {
-            return this.content;
-        }
-        get defaultAlign() {
-            switch (this.evaluated.type) {
-                case CellValueType.number:
-                case CellValueType.empty:
-                    return "right";
-                case CellValueType.boolean:
-                case CellValueType.error:
-                    return "center";
-                case CellValueType.text:
-                    return "left";
-            }
-        }
-        /**
-         * Only empty cells, text cells and numbers are valid
-         */
-        get isAutoSummable() {
-            var _a;
-            switch (this.evaluated.type) {
-                case CellValueType.empty:
-                case CellValueType.text:
-                    return true;
-                case CellValueType.number:
-                    return !((_a = this.evaluated.format) === null || _a === void 0 ? void 0 : _a.match(DATETIME_FORMAT));
-                case CellValueType.error:
-                case CellValueType.boolean:
-                    return false;
-            }
-        }
-    }
-    class EmptyCell extends AbstractCell {
-        constructor(id, properties = {}) {
-            super(id, lazy({ value: "", type: CellValueType.empty }), properties);
-            this.content = "";
-        }
-        isEmpty() {
-            return true;
-        }
-    }
-    class NumberCell extends AbstractCell {
-        constructor(id, value, properties = {}) {
-            super(id, lazy({ value, type: CellValueType.number }), properties);
-            this.content = formatValue(this.evaluated.value);
-        }
-        get composerContent() {
-            var _a;
-            if ((_a = this.format) === null || _a === void 0 ? void 0 : _a.includes("%")) {
-                return `${this.evaluated.value * 100}%`;
-            }
-            return super.composerContent;
-        }
-    }
-    class BooleanCell extends AbstractCell {
-        constructor(id, value, properties = {}) {
-            super(id, lazy({ value, type: CellValueType.boolean }), properties);
-            this.content = this.evaluated.value ? "TRUE" : "FALSE";
-        }
-    }
-    class TextCell extends AbstractCell {
-        constructor(id, value, properties = {}) {
-            super(id, lazy({ value, type: CellValueType.text }), properties);
-            this.content = this.evaluated.value;
-        }
-    }
-    /**
-     * A date time cell is a number cell with a required
-     * date time format.
-     */
-    class DateTimeCell extends NumberCell {
-        constructor(id, value, properties) {
-            super(id, value, properties);
-            this.format = properties.format;
-        }
-        get composerContent() {
-            return formatValue(this.evaluated.value, this.format);
-        }
-    }
-    class LinkCell extends AbstractCell {
-        constructor(id, content, properties = {}) {
-            var _a;
-            const link = parseMarkdownLink(content);
-            properties = {
-                ...properties,
-                style: {
-                    ...properties.style,
-                    textColor: ((_a = properties.style) === null || _a === void 0 ? void 0 : _a.textColor) || LINK_COLOR,
-                },
-            };
-            link.label = _t(link.label);
-            super(id, lazy({ value: link.label, type: CellValueType.text }), properties);
-            this.link = link;
-            this.content = content;
-        }
-        isLink() {
-            return true;
-        }
-        get composerContent() {
-            return this.link.label;
-        }
-    }
-    /**
-     * Simple web link cell
-     */
-    class WebLinkCell extends LinkCell {
-        constructor(id, content, properties = {}) {
-            super(id, content, properties);
-            this.link.url = this.withHttp(this.link.url);
-            this.link.isExternal = true;
-            this.content = markdownLink(this.link.label, this.link.url);
-            this.urlRepresentation = this.link.url;
-            this.isUrlEditable = true;
-        }
-        action(env) {
-            window.open(this.link.url, "_blank");
-        }
-        /**
-         * Add the `https` prefix to the url if it's missing
-         */
-        withHttp(url) {
-            return !/^https?:\/\//i.test(url) ? `https://${url}` : url;
-        }
-    }
-    /**
-     * Link redirecting to a given sheet in the workbook.
-     */
-    class SheetLinkCell extends LinkCell {
-        constructor(id, content, properties = {}, sheetName) {
-            super(id, content, properties);
-            this.sheetName = sheetName;
-            this.sheetId = parseSheetLink(this.link.url);
-            this.isUrlEditable = false;
-        }
-        action(env) {
-            env.model.dispatch("ACTIVATE_SHEET", {
-                sheetIdFrom: env.model.getters.getActiveSheetId(),
-                sheetIdTo: this.sheetId,
-            });
-        }
-        get urlRepresentation() {
-            return this.sheetName(this.sheetId) || _lt("Invalid sheet");
-        }
-    }
-    class FormulaCell extends AbstractCell {
-        constructor(buildFormulaString, id, compiledFormula, dependencies, properties) {
-            super(id, lazy({ value: LOADING, type: CellValueType.text }), properties);
-            this.buildFormulaString = buildFormulaString;
-            this.compiledFormula = compiledFormula;
-            this.dependencies = dependencies;
-        }
-        get content() {
-            return this.buildFormulaString(this);
-        }
-        isFormula() {
-            return true;
-        }
-        assignEvaluation(lazyEvaluationResult) {
-            this.lazyEvaluated = lazyEvaluationResult.map((evaluationResult) => {
-                if (evaluationResult instanceof EvaluationError) {
-                    return {
-                        value: evaluationResult.errorType,
-                        type: CellValueType.error,
-                        error: evaluationResult,
-                    };
-                }
-                const { value, format } = evaluationResult;
-                switch (typeof value) {
-                    case "number":
-                        return {
-                            value: value || 0,
-                            format,
-                            type: CellValueType.number,
-                        };
-                    case "boolean":
-                        return {
-                            value,
-                            format,
-                            type: CellValueType.boolean,
-                        };
-                    case "string":
-                        return {
-                            value,
-                            format,
-                            type: CellValueType.text,
-                        };
-                    case "object": // null
-                        return {
-                            value: 0,
-                            format,
-                            type: CellValueType.number,
-                        };
-                    default:
-                        // cannot happen with Typescript compiler watching
-                        // but possible in a vanilla javascript code base
-                        return {
-                            value: "",
-                            type: CellValueType.empty,
-                        };
-                }
-            });
-        }
-    }
-    /**
-     * Cell containing a formula which could not be compiled
-     * or a content which could not be parsed.
-     */
-    class ErrorCell extends AbstractCell {
-        /**
-         * @param id
-         * @param content Invalid formula string
-         * @param error Compilation or parsing error
-         * @param properties
-         */
-        constructor(id, content, error, properties) {
-            super(id, lazy({
-                value: error.errorType,
-                type: CellValueType.error,
-                error,
-            }), properties);
-            this.content = content;
-        }
-    }
-
-    cellRegistry
-        .add("Formula", {
-        sequence: 10,
-        match: (content) => content.startsWith("="),
-        createCell: (id, content, properties, sheetId, getters) => {
-            const compiledFormula = compile(content);
-            const dependencies = compiledFormula.dependencies.map((xc) => getters.getRangeFromSheetXC(sheetId, xc));
-            return new FormulaCell((cell) => getters.buildFormulaContent(sheetId, cell), id, compiledFormula, dependencies, properties);
-        },
-    })
-        .add("Empty", {
-        sequence: 20,
-        match: (content) => content === "",
-        createCell: (id, content, properties) => new EmptyCell(id, properties),
-    })
-        .add("NumberWithDateTimeFormat", {
-        sequence: 25,
-        match: (content, format) => !!format && isNumber(content) && isDateTimeFormat(format),
-        createCell: (id, content, properties) => {
-            const format = properties.format;
-            return new DateTimeCell(id, parseNumber(content), { ...properties, format });
-        },
-    })
-        .add("Number", {
-        sequence: 30,
-        match: (content) => isNumber(content),
-        createCell: (id, content, properties) => {
-            if (!properties.format) {
-                properties.format = detectNumberFormat(content);
-            }
-            return new NumberCell(id, parseNumber(content), properties);
-        },
-    })
-        .add("Boolean", {
-        sequence: 40,
-        match: (content) => isBoolean(content),
-        createCell: (id, content, properties) => {
-            return new BooleanCell(id, content.toUpperCase() === "TRUE" ? true : false, properties);
-        },
-    })
-        .add("DateTime", {
-        sequence: 50,
-        match: (content) => isDateTime(content),
-        createCell: (id, content, properties) => {
-            const internalDate = parseDateTime(content);
-            const format = properties.format || internalDate.format;
-            return new DateTimeCell(id, internalDate.value, { ...properties, format });
-        },
-    })
-        .add("MarkdownSheetLink", {
-        sequence: 60,
-        match: (content) => isMarkdownSheetLink(content),
-        createCell: (id, content, properties, sheetId, getters) => {
-            return new SheetLinkCell(id, content, properties, (sheetId) => getters.tryGetSheetName(sheetId));
-        },
-    })
-        .add("MarkdownLink", {
-        sequence: 70,
-        match: (content) => isMarkdownLink(content),
-        createCell: (id, content, properties) => {
-            return new WebLinkCell(id, content, properties);
-        },
-    })
-        .add("WebLink", {
-        sequence: 80,
-        match: (content) => isWebLink(content),
-        createCell: (id, content, properties) => {
-            return new WebLinkCell(id, markdownLink(content, content), properties);
-        },
-    });
-    /**
-     * Return a factory function which can instantiate cells of
-     * different types, based on a raw content.
-     *
-     * ```
-     * // the createCell function can be used to instantiate new cells
-     * const createCell = cellFactory(getters);
-     * const cell = createCell(id, cellContent, cellProperties, sheetId)
-     * ```
-     */
-    function cellFactory(getters) {
-        const builders = cellRegistry.getAll().sort((a, b) => a.sequence - b.sequence);
-        return function createCell(id, content, properties, sheetId) {
-            const builder = builders.find((factory) => factory.match(content, properties.format));
-            if (!builder) {
-                return new TextCell(id, content, properties);
-            }
-            try {
-                return builder.createCell(id, content, properties, sheetId, getters);
-            }
-            catch (error) {
-                return new ErrorCell(id, content, error instanceof EvaluationError
-                    ? error
-                    : new BadExpressionError(error.message || DEFAULT_ERROR_MESSAGE), properties);
-            }
-        };
-    }
-    function detectNumberFormat(content) {
-        const digitBase = content.includes(".") ? "0.00" : "0";
-        const matchedCurrencies = content.match(/[\$€]/);
-        if (matchedCurrencies) {
-            const matchedFirstDigit = content.match(/[\d]/);
-            const currency = "[$" + matchedCurrencies.values().next().value + "]";
-            if (matchedFirstDigit.index < matchedCurrencies.index) {
-                return "#,##" + digitBase + currency;
-            }
-            return currency + "#,##" + digitBase;
-        }
-        if (content.includes("%")) {
-            return digitBase + "%";
-        }
-        return undefined;
-    }
-
-    /**
-     * Parse a string representing a primitive cell value
-     */
-    function parsePrimitiveContent(content) {
-        if (content === "") {
-            return "";
-        }
-        else if (isNumber(content)) {
-            return parseNumber(content);
-        }
-        else if (isBoolean(content)) {
-            return content.toUpperCase() === "TRUE" ? true : false;
-        }
-        else if (isDateTime(content)) {
-            return parseDateTime(content).value;
-        }
-        else {
-            return content;
-        }
-    }
 
     /**
      * Represent a raw XML string
@@ -27198,12 +27155,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             super(...arguments);
             this.nextId = 1;
             this.cells = {};
-            this.createCell = cellFactory(this.getters);
         }
         adaptRanges(applyChange, sheetId) {
             for (const sheet of Object.keys(this.cells)) {
                 for (const cell of Object.values(this.cells[sheet] || {})) {
-                    if (cell.isFormula()) {
+                    if (cell.isFormula) {
                         for (const range of cell.dependencies) {
                             if (!sheetId || range.sheetId === sheetId) {
                                 const change = applyChange(range);
@@ -27364,20 +27320,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const style = (cellData.style && normalizedStyles[cellData.style]) || undefined;
             const format = (cellData.format && normalizedFormats[cellData.format]) || undefined;
             const cellId = this.getNextUid();
-            const properties = { format, style };
-            return this.createCell(cellId, (cellData === null || cellData === void 0 ? void 0 : cellData.content) || "", properties, sheetId);
+            return this.createCell(cellId, (cellData === null || cellData === void 0 ? void 0 : cellData.content) || "", format, style, sheetId);
         }
         exportForExcel(data) {
             this.export(data);
-            for (let sheet of data.sheets) {
-                for (const xc in sheet.cells) {
-                    const { col, row } = toCartesian(xc);
-                    const cell = this.getters.getCell(sheet.id, col, row);
-                    const exportedCellData = sheet.cells[xc];
-                    exportedCellData.value = cell.evaluated.value;
-                    exportedCellData.isFormula = cell.isFormula();
-                }
-            }
         }
         // ---------------------------------------------------------------------------
         // GETTERS
@@ -27416,8 +27362,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         getFormulaCellContent(sheetId, cell) {
             return this.buildFormulaContent(sheetId, cell);
         }
-        getCellStyle(cell) {
-            return (cell && cell.style) || {};
+        getCellStyle({ sheetId, col, row }) {
+            var _a;
+            return ((_a = this.getters.getCell(sheetId, col, row)) === null || _a === void 0 ? void 0 : _a.style) || {};
         }
         /**
          * Converts a zone to a XC coordinate system
@@ -27525,7 +27472,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             else {
                 style = before ? before.style : undefined;
             }
-            let format = ("format" in after ? after.format : before && before.format) || NULL_FORMAT;
+            let format = ("format" in after ? after.format : before && before.format) || detectFormat(afterContent);
             /* Read the following IF as:
              * we need to remove the cell if it is completely empty, but we can know if it completely empty if:
              * - the command says the new content is empty and has no border/format/style
@@ -27534,7 +27481,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
              *     - or there was a cell at this place, but it's an empty cell and the command says border/format/style is empty
              *  */
             if (((hasContent && !afterContent && !after.formula) ||
-                (!hasContent && (!before || before.isEmpty()))) &&
+                (!hasContent && (!before || before.content === ""))) &&
                 !style &&
                 !format) {
                 if (before) {
@@ -27549,25 +27496,92 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 return;
             }
             const cellId = (before === null || before === void 0 ? void 0 : before.id) || this.getNextUid();
-            const didContentChange = hasContent;
-            const properties = { format, style };
-            const cell = this.createCell(cellId, afterContent, properties, sheetId);
-            if (before && !didContentChange && cell.isFormula()) {
-                // content is not re-evaluated if the content did not change => reassign the value manually
-                // TODO this plugin should not care about evaluation
-                // and evaluation should not depend on implementation details here.
-                // Task 2813749
-                cell.assignEvaluation(lazy(before.evaluated));
-            }
+            const cell = this.createCell(cellId, afterContent, format, style, sheetId);
             this.history.update("cells", sheetId, cell.id, cell);
             this.dispatch("UPDATE_CELL_POSITION", { cellId: cell.id, col, row, sheetId });
+        }
+        createCell(id, content, format, style, sheetId) {
+            if (!content.startsWith("=")) {
+                return this.createLiteralCell(id, content, format, style);
+            }
+            try {
+                return this.createFormulaCell(id, content, format, style, sheetId);
+            }
+            catch (error) {
+                return this.createErrorFormula(id, content, format, style, error);
+            }
+        }
+        createLiteralCell(id, content, format, style) {
+            return {
+                id,
+                content,
+                style,
+                format,
+                isFormula: false,
+            };
+        }
+        createFormulaCell(id, content, format, style, sheetId) {
+            const compiledFormula = compile(content);
+            if (compiledFormula.dependencies.length) {
+                return this.createFormulaCellWithDependencies(id, compiledFormula, format, style, sheetId);
+            }
+            return {
+                id,
+                content,
+                style,
+                format,
+                isFormula: true,
+                compiledFormula,
+                dependencies: [],
+            };
+        }
+        /**
+         * Create a new formula cell with the content
+         * being a computed property to rebuild the dependencies XC.
+         */
+        createFormulaCellWithDependencies(id, compiledFormula, format, style, sheetId) {
+            const dependencies = compiledFormula.dependencies.map((xc) => this.getters.getRangeFromSheetXC(sheetId, xc));
+            const buildFormulaContent = this.buildFormulaContent.bind(this);
+            // Only for formulas with dependencies because
+            // **the closure is expensive memory-wise**
+            return {
+                id,
+                get content() {
+                    return buildFormulaContent(sheetId, {
+                        dependencies: this.dependencies,
+                        compiledFormula: this.compiledFormula,
+                    });
+                },
+                style,
+                format,
+                isFormula: true,
+                compiledFormula,
+                dependencies,
+            };
+        }
+        createErrorFormula(id, content, format, style, error) {
+            return {
+                id,
+                content,
+                style,
+                format,
+                isFormula: true,
+                compiledFormula: {
+                    dependencies: [],
+                    tokens: tokenize(content),
+                    execute: function () {
+                        throw error;
+                    },
+                },
+                dependencies: [],
+            };
         }
         checkCellOutOfSheet(sheetId, col, row) {
             const sheet = this.getters.tryGetSheet(sheetId);
             if (!sheet)
-                return 25 /* CommandResult.InvalidSheetId */;
+                return 26 /* CommandResult.InvalidSheetId */;
             const sheetZone = this.getters.getSheetZone(sheetId);
-            return isInside(col, row, sheetZone) ? 0 /* CommandResult.Success */ : 16 /* CommandResult.TargetOutOfSheet */;
+            return isInside(col, row, sheetZone) ? 0 /* CommandResult.Success */ : 17 /* CommandResult.TargetOutOfSheet */;
         }
     }
     CellPlugin.getters = [
@@ -27690,6 +27704,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         // figure data should be external IMO => chart should be in sheet.chart
                         // instead of in figure.data
                         if (figure.tag === "chart") {
+                            this.history.update("nextId", this.nextId + 1);
                             this.charts[figure.id] = this.createChart(figure.id, figure.data, sheet.id);
                         }
                     }
@@ -27957,18 +27972,18 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         checkValidReordering(cfId, direction, sheetId) {
             if (!this.cfRules[sheetId])
-                return 25 /* CommandResult.InvalidSheetId */;
+                return 26 /* CommandResult.InvalidSheetId */;
             const ruleIndex = this.cfRules[sheetId].findIndex((cf) => cf.id === cfId);
             if (ruleIndex === -1)
-                return 68 /* CommandResult.InvalidConditionalFormatId */;
+                return 69 /* CommandResult.InvalidConditionalFormatId */;
             const cfIndex2 = direction === "up" ? ruleIndex - 1 : ruleIndex + 1;
             if (cfIndex2 < 0 || cfIndex2 >= this.cfRules[sheetId].length) {
-                return 68 /* CommandResult.InvalidConditionalFormatId */;
+                return 69 /* CommandResult.InvalidConditionalFormatId */;
             }
             return 0 /* CommandResult.Success */;
         }
         checkEmptyRange(cmd) {
-            return cmd.ranges.length ? 0 /* CommandResult.Success */ : 22 /* CommandResult.EmptyRange */;
+            return cmd.ranges.length ? 0 /* CommandResult.Success */ : 23 /* CommandResult.EmptyRange */;
         }
         checkCFRule(cmd) {
             const rule = cmd.cf.rule;
@@ -28004,10 +28019,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     const errors = [];
                     const isEmpty = (value) => value === undefined || value === "";
                     if (expectedNumber >= 1 && isEmpty(rule.values[0])) {
-                        errors.push(48 /* CommandResult.FirstArgMissing */);
+                        errors.push(49 /* CommandResult.FirstArgMissing */);
                     }
                     if (expectedNumber >= 2 && isEmpty(rule.values[1])) {
-                        errors.push(49 /* CommandResult.SecondArgMissing */);
+                        errors.push(50 /* CommandResult.SecondArgMissing */);
                     }
                     return errors.length ? errors : 0 /* CommandResult.Success */;
                 }
@@ -28019,15 +28034,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 (threshold.value === "" || isNaN(threshold.value))) {
                 switch (thresholdName) {
                     case "min":
-                        return 50 /* CommandResult.MinNaN */;
+                        return 51 /* CommandResult.MinNaN */;
                     case "max":
-                        return 52 /* CommandResult.MaxNaN */;
+                        return 53 /* CommandResult.MaxNaN */;
                     case "mid":
-                        return 51 /* CommandResult.MidNaN */;
+                        return 52 /* CommandResult.MidNaN */;
                     case "upperInflectionPoint":
-                        return 53 /* CommandResult.ValueUpperInflectionNaN */;
+                        return 54 /* CommandResult.ValueUpperInflectionNaN */;
                     case "lowerInflectionPoint":
-                        return 54 /* CommandResult.ValueLowerInflectionNaN */;
+                        return 55 /* CommandResult.ValueLowerInflectionNaN */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -28041,15 +28056,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             catch (error) {
                 switch (thresholdName) {
                     case "min":
-                        return 55 /* CommandResult.MinInvalidFormula */;
+                        return 56 /* CommandResult.MinInvalidFormula */;
                     case "max":
-                        return 57 /* CommandResult.MaxInvalidFormula */;
+                        return 58 /* CommandResult.MaxInvalidFormula */;
                     case "mid":
-                        return 56 /* CommandResult.MidInvalidFormula */;
+                        return 57 /* CommandResult.MidInvalidFormula */;
                     case "upperInflectionPoint":
-                        return 58 /* CommandResult.ValueUpperInvalidFormula */;
+                        return 59 /* CommandResult.ValueUpperInvalidFormula */;
                     case "lowerInflectionPoint":
-                        return 59 /* CommandResult.ValueLowerInvalidFormula */;
+                        return 60 /* CommandResult.ValueLowerInvalidFormula */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -28066,7 +28081,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (["number", "percentage", "percentile"].includes(rule.lowerInflectionPoint.type) &&
                 rule.lowerInflectionPoint.type === rule.upperInflectionPoint.type &&
                 Number(minValue) > Number(maxValue)) {
-                return 45 /* CommandResult.LowerBiggerThanUpper */;
+                return 46 /* CommandResult.LowerBiggerThanUpper */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -28076,7 +28091,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (["number", "percentage", "percentile"].includes(rule.minimum.type) &&
                 rule.minimum.type === rule.maximum.type &&
                 stringToNumber(minValue) >= stringToNumber(maxValue)) {
-                return 44 /* CommandResult.MinBiggerThanMax */;
+                return 45 /* CommandResult.MinBiggerThanMax */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -28088,7 +28103,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 ["number", "percentage", "percentile"].includes(rule.midpoint.type) &&
                 rule.midpoint.type === rule.maximum.type &&
                 stringToNumber(midValue) >= stringToNumber(maxValue)) {
-                return 46 /* CommandResult.MidBiggerThanMax */;
+                return 47 /* CommandResult.MidBiggerThanMax */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -28100,7 +28115,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 ["number", "percentage", "percentile"].includes(rule.midpoint.type) &&
                 rule.minimum.type === rule.midpoint.type &&
                 stringToNumber(minValue) >= stringToNumber(midValue)) {
-                return 47 /* CommandResult.MinBiggerThanMid */;
+                return 48 /* CommandResult.MinBiggerThanMid */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -28138,6 +28153,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         // ---------------------------------------------------------------------------
         allowDispatch(cmd) {
             switch (cmd.type) {
+                case "CREATE_FIGURE":
+                    return this.checkFigureDuplicate(cmd.figure.id);
                 case "UPDATE_FIGURE":
                 case "DELETE_FIGURE":
                     return this.checkFigureExists(cmd.sheetId, cmd.id);
@@ -28199,7 +28216,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         checkFigureExists(sheetId, figureId) {
             var _a;
             if (((_a = this.figures[sheetId]) === null || _a === void 0 ? void 0 : _a[figureId]) === undefined) {
-                return 67 /* CommandResult.FigureDoesNotExist */;
+                return 68 /* CommandResult.FigureDoesNotExist */;
+            }
+            return 0 /* CommandResult.Success */;
+        }
+        checkFigureDuplicate(figureId) {
+            if (Object.values(this.figures).find((sheet) => sheet === null || sheet === void 0 ? void 0 : sheet[figureId])) {
+                return 80 /* CommandResult.DuplicatedFigureId */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -28298,12 +28321,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             switch (cmd.type) {
                 case "CREATE_FILTER_TABLE":
                     if (!areZonesContinuous(...cmd.target)) {
-                        return 78 /* CommandResult.NonContinuousTargets */;
+                        return 79 /* CommandResult.NonContinuousTargets */;
                     }
                     const zone = union(...cmd.target);
                     const checkFilterOverlap = () => {
                         if (this.getFilterTables(cmd.sheetId).some((filter) => overlap(filter.zone, zone))) {
-                            return 75 /* CommandResult.FilterOverlap */;
+                            return 76 /* CommandResult.FilterOverlap */;
                         }
                         return 0 /* CommandResult.Success */;
                     };
@@ -28311,7 +28334,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         const mergesInTarget = this.getters.getMergesInZone(cmd.sheetId, zone);
                         for (let merge of mergesInTarget) {
                             if (overlap(zone, merge)) {
-                                return 77 /* CommandResult.MergeInFilter */;
+                                return 78 /* CommandResult.MergeInFilter */;
                             }
                         }
                         return 0 /* CommandResult.Success */;
@@ -28321,7 +28344,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     for (let merge of cmd.target) {
                         for (let filterTable of this.getFilterTables(cmd.sheetId)) {
                             if (overlap(filterTable.zone, merge)) {
-                                return 77 /* CommandResult.MergeInFilter */;
+                                return 78 /* CommandResult.MergeInFilter */;
                             }
                         }
                     }
@@ -28785,7 +28808,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             switch (cmd.type) {
                 case "HIDE_COLUMNS_ROWS": {
                     if (!this.hiddenHeaders[cmd.sheetId]) {
-                        return 25 /* CommandResult.InvalidSheetId */;
+                        return 26 /* CommandResult.InvalidSheetId */;
                     }
                     const hiddenGroup = cmd.dimension === "COL"
                         ? this.getHiddenColsGroups(cmd.sheetId)
@@ -28795,7 +28818,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         : this.getters.getNumberRows(cmd.sheetId);
                     return (hiddenGroup || []).flat().concat(cmd.elements).length < elements
                         ? 0 /* CommandResult.Success */
-                        : 63 /* CommandResult.TooManyHiddenElements */;
+                        : 64 /* CommandResult.TooManyHiddenElements */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -29152,7 +29175,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 for (let col = left; col <= right; col++) {
                     if (col !== left || row !== top) {
                         const cell = this.getters.getCell(sheetId, col, row);
-                        if (cell && !cell.isEmpty()) {
+                        if (cell && cell.content !== "") {
                             return true;
                         }
                     }
@@ -29176,7 +29199,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             for (const zone of target) {
                 for (const zone2 of target) {
                     if (zone !== zone2 && overlap(zone, zone2)) {
-                        return 62 /* CommandResult.MergeOverlap */;
+                        return 63 /* CommandResult.MergeOverlap */;
                     }
                 }
             }
@@ -29190,7 +29213,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             for (const zone of target) {
                 if ((zone.left < xSplit && zone.right >= xSplit) ||
                     (zone.top < ySplit && zone.bottom >= ySplit)) {
-                    return 72 /* CommandResult.FrozenPaneOverlap */;
+                    return 73 /* CommandResult.FrozenPaneOverlap */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -29404,7 +29427,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                             .slice(0, currentIndex)
                             .map((id) => !this.isSheetVisible(id));
                         return leftSheets.every((isHidden) => isHidden)
-                            ? 12 /* CommandResult.WrongSheetMove */
+                            ? 13 /* CommandResult.WrongSheetMove */
                             : 0 /* CommandResult.Success */;
                     }
                     else {
@@ -29412,7 +29435,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                             .slice(currentIndex + 1)
                             .map((id) => !this.isSheetVisible(id));
                         return rightSheets.every((isHidden) => isHidden)
-                            ? 12 /* CommandResult.WrongSheetMove */
+                            ? 13 /* CommandResult.WrongSheetMove */
                             : 0 /* CommandResult.Success */;
                     }
                 case "RENAME_SHEET":
@@ -29432,12 +29455,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 case "FREEZE_ROWS": {
                     return cmd.quantity >= 1 && cmd.quantity < this.getNumberRows(cmd.sheetId)
                         ? 0 /* CommandResult.Success */
-                        : 71 /* CommandResult.InvalidFreezeQuantity */;
+                        : 72 /* CommandResult.InvalidFreezeQuantity */;
                 }
                 case "FREEZE_COLUMNS": {
                     return cmd.quantity >= 1 && cmd.quantity < this.getNumberCols(cmd.sheetId)
                         ? 0 /* CommandResult.Success */
-                        : 71 /* CommandResult.InvalidFreezeQuantity */;
+                        : 72 /* CommandResult.InvalidFreezeQuantity */;
                 }
                 default:
                     return 0 /* CommandResult.Success */;
@@ -29594,9 +29617,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         getSheetName(sheetId) {
             return this.getSheet(sheetId).name;
         }
-        getCellsInZone(sheetId, zone) {
-            return positions(zone).map(({ col, row }) => this.getCell(sheetId, col, row));
-        }
         /**
          * Return the sheet name or undefined if the sheet doesn't exist.
          */
@@ -29644,16 +29664,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 return undefined;
             }
             return this.getters.getCellById(cellId);
-        }
-        /**
-         * Returns all the cells of a col
-         */
-        getColCells(sheetId, col) {
-            return this.getSheet(sheetId)
-                .rows.map((row) => row.cells[col])
-                .filter(isDefined$1)
-                .map((cellId) => this.getters.getCellById(cellId))
-                .filter(isDefined$1);
         }
         getColsZone(sheetId, start, end) {
             return {
@@ -29735,9 +29745,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * Check if a zone only contains empty cells
          */
         isEmpty(sheetId, zone) {
-            return this.getCellsInZone(sheetId, zone)
-                .flat()
-                .every((cell) => !cell || cell.isEmpty());
+            return positions(zone)
+                .map(({ col, row }) => this.getCell(sheetId, col, row))
+                .every((cell) => !cell || cell.content === "");
         }
         updateCellPosition(cmd) {
             const { sheetId, cellId, col, row } = cmd;
@@ -29853,14 +29863,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 return 10 /* CommandResult.DuplicatedSheetName */;
             }
             if (FORBIDDEN_IN_EXCEL_REGEX.test(name)) {
-                return 11 /* CommandResult.ForbiddenCharactersInSheetName */;
+                return 12 /* CommandResult.ForbiddenCharactersInSheetName */;
             }
             return 0 /* CommandResult.Success */;
         }
         checkSheetPosition(cmd) {
             const { orderedSheetIds } = this;
             if (cmd.position > orderedSheetIds.length || cmd.position < 0) {
-                return 13 /* CommandResult.WrongSheetPosition */;
+                return 14 /* CommandResult.WrongSheetPosition */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -30173,7 +30183,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          */
         checkSheetExists(cmd) {
             if (cmd.type !== "CREATE_SHEET" && "sheetId" in cmd && this.sheets[cmd.sheetId] === undefined) {
-                return 25 /* CommandResult.InvalidSheetId */;
+                return 26 /* CommandResult.InvalidSheetId */;
+            }
+            else if (cmd.type === "CREATE_SHEET" && this.sheets[cmd.sheetId] !== undefined) {
+                return 11 /* CommandResult.DuplicatedSheetId */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -30193,13 +30206,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 zones.push(...cmd.ranges.map((rangeData) => this.getters.getRangeFromRangeData(rangeData).zone));
             }
             if (!zones.every(isZoneValid)) {
-                return 23 /* CommandResult.InvalidRange */;
+                return 24 /* CommandResult.InvalidRange */;
             }
             else if (zones.length && "sheetId" in cmd) {
                 const sheetZone = this.getSheetZone(cmd.sheetId);
                 return zones.every((zone) => isZoneInside(zone, sheetZone))
                     ? 0 /* CommandResult.Success */
-                    : 16 /* CommandResult.TargetOutOfSheet */;
+                    : 17 /* CommandResult.TargetOutOfSheet */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -30216,9 +30229,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         "getEvaluationSheets",
         "doesHeaderExist",
         "getCell",
-        "getCellsInZone",
         "getCellPosition",
-        "getColCells",
         "getColsZone",
         "getRowCells",
         "getRowsZone",
@@ -30310,7 +30321,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     if (this.lastCellSelected.col !== undefined && this.lastCellSelected.row !== undefined) {
                         return 0 /* CommandResult.Success */;
                     }
-                    return 42 /* CommandResult.InvalidAutofillSelection */;
+                    return 43 /* CommandResult.InvalidAutofillSelection */;
                 case "AUTOFILL_AUTO":
                     const zone = this.getters.getSelectedZone();
                     return zone.top === zone.bottom
@@ -30465,19 +30476,19 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             let col = zone.left;
             let row = zone.bottom;
             if (col > 0) {
-                let left = this.getters.getCell(sheetId, col - 1, row);
-                while (left && !left.isEmpty()) {
+                let left = this.getters.getEvaluatedCell({ sheetId, col: col - 1, row });
+                while (left.type !== CellValueType.empty) {
                     row += 1;
-                    left = this.getters.getCell(sheetId, col - 1, row);
+                    left = this.getters.getEvaluatedCell({ sheetId, col: col - 1, row });
                 }
             }
             if (row === zone.bottom) {
                 col = zone.right;
                 if (col <= this.getters.getNumberCols(sheetId)) {
-                    let right = this.getters.getCell(sheetId, col + 1, row);
-                    while (right && !right.isEmpty()) {
+                    let right = this.getters.getEvaluatedCell({ sheetId, col: col + 1, row });
+                    while (right.type !== CellValueType.empty) {
                         row += 1;
-                        right = this.getters.getCell(sheetId, col + 1, row);
+                        right = this.getters.getEvaluatedCell({ sheetId, col: col + 1, row });
                     }
                 }
             }
@@ -30712,8 +30723,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * @see getAutomaticSumZone
          */
         findSuitableZoneToSum(sheet, col, row) {
-            const topCell = this.getters.getCell(sheet.id, col, row - 1);
-            const leftCell = this.getters.getCell(sheet.id, col - 1, row);
+            const topCell = this.getters.getEvaluatedCell({ sheetId: sheet.id, col, row: row - 1 });
+            const leftCell = this.getters.getEvaluatedCell({ sheetId: sheet.id, col: col - 1, row });
             if (this.isNumber(leftCell) && !this.isNumber(topCell)) {
                 return this.findHorizontalZone(sheet, col, row);
             }
@@ -30757,9 +30768,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * @returns the starting position of the valid zone or Infinity if the zone is not valid.
          */
         reduceZoneStart(sheet, zone, end) {
-            const cells = this.getters.getCellsInZone(sheet.id, zone);
+            const cells = this.getters.getEvaluatedCellsInZone(sheet.id, zone);
             const cellPositions = range(end, -1, -1);
-            const invalidCells = cellPositions.filter((position) => { var _a; return cells[position] && !((_a = cells[position]) === null || _a === void 0 ? void 0 : _a.isAutoSummable); });
+            const invalidCells = cellPositions.filter((position) => cells[position] && !cells[position].isAutoSummable);
             const maxValidPosition = Math.max(...invalidCells);
             const numberSequences = groupConsecutive(cellPositions.filter((position) => this.isNumber(cells[position])));
             const firstSequence = numberSequences[0] || [];
@@ -30773,8 +30784,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         isNumber(cell) {
             var _a;
-            return ((cell === null || cell === void 0 ? void 0 : cell.evaluated.type) === CellValueType.number &&
-                !((_a = cell.evaluated.format) === null || _a === void 0 ? void 0 : _a.match(DATETIME_FORMAT)));
+            return cell.type === CellValueType.number && !((_a = cell.format) === null || _a === void 0 ? void 0 : _a.match(DATETIME_FORMAT));
         }
         isZoneValid(zone) {
             return zone.bottom >= zone.top && zone.right >= zone.left;
@@ -30906,7 +30916,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         cellPopoverRegistry.get(cmd.popoverType);
                     }
                     catch (error) {
-                        return 69 /* CommandResult.InvalidCellPopover */;
+                        return 70 /* CommandResult.InvalidCellPopover */;
                     }
                     return 0 /* CommandResult.Success */;
                 default:
@@ -30937,7 +30947,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 this.getters.isVisibleInViewport(sheetId, this.persistentPopover.col, this.persistentPopover.row)) {
                 const mainPosition = this.getters.getMainCellPosition(sheetId, this.persistentPopover.col, this.persistentPopover.row);
                 const popover = (_b = (_a = cellPopoverRegistry
-                    .get(this.persistentPopover.type)).onOpen) === null || _b === void 0 ? void 0 : _b.call(_a, mainPosition, this.getters);
+                    .get(this.persistentPopover.type)).onOpen) === null || _b === void 0 ? void 0 : _b.call(_a, { sheetId, ...mainPosition }, this.getters);
                 return !(popover === null || popover === void 0 ? void 0 : popover.isOpen)
                     ? { isOpen: false }
                     : {
@@ -30953,7 +30963,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const mainPosition = this.getters.getMainCellPosition(sheetId, col, row);
             const popover = cellPopoverRegistry
                 .getAll()
-                .map((matcher) => { var _a; return (_a = matcher.onHover) === null || _a === void 0 ? void 0 : _a.call(matcher, mainPosition, this.getters); })
+                .map((matcher) => { var _a; return (_a = matcher.onHover) === null || _a === void 0 ? void 0 : _a.call(matcher, { sheetId, ...mainPosition }, this.getters); })
                 .find((popover) => popover === null || popover === void 0 ? void 0 : popover.isOpen);
             return !(popover === null || popover === void 0 ? void 0 : popover.isOpen)
                 ? { isOpen: false }
@@ -31076,6 +31086,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 for (let col of columnsIndex) {
                     cellsInRow.push({
                         cell: getters.getCell(sheetId, col, row),
+                        evaluatedCell: getters.getEvaluatedCell({ sheetId, col, row }),
                         border: getters.getCellBorder(sheetId, col, row) || undefined,
                         position: { col, row, sheetId },
                     });
@@ -31098,7 +31109,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         isCutAllowed(target) {
             if (target.length !== 1) {
-                return 17 /* CommandResult.WrongCutSelection */;
+                return 18 /* CommandResult.WrongCutSelection */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -31106,13 +31117,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const sheetId = this.getters.getActiveSheetId();
             if (this.operation === "CUT" && (clipboardOption === null || clipboardOption === void 0 ? void 0 : clipboardOption.pasteOption) !== undefined) {
                 // cannot paste only format or only value if the previous operation is a CUT
-                return 19 /* CommandResult.WrongPasteOption */;
+                return 20 /* CommandResult.WrongPasteOption */;
             }
             if (target.length > 1) {
                 // cannot paste if we have a clipped zone larger than a cell and multiple
                 // zones selected
                 if (this.cells.length > 1 || this.cells[0].length > 1) {
-                    return 18 /* CommandResult.WrongPasteSelection */;
+                    return 19 /* CommandResult.WrongPasteSelection */;
                 }
             }
             const clipboardHeight = this.cells.length;
@@ -31130,7 +31141,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             for (const zone of this.getPasteZones(target)) {
                 if ((zone.left < xSplit && zone.right >= xSplit) ||
                     (zone.top < ySplit && zone.bottom >= ySplit)) {
-                    return 72 /* CommandResult.FrozenPaneOverlap */;
+                    return 73 /* CommandResult.FrozenPaneOverlap */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -31317,7 +31328,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          */
         pasteCell(origin, target, operation, clipboardOption) {
             const { sheetId, col, row } = target;
-            const targetCell = this.getters.getCell(sheetId, col, row);
+            const targetCell = this.getters.getEvaluatedCell(target);
             if ((clipboardOption === null || clipboardOption === void 0 ? void 0 : clipboardOption.pasteOption) !== "onlyValue") {
                 const targetBorders = this.getters.getCellBorder(sheetId, col, row);
                 const originBorders = origin.border;
@@ -31334,17 +31345,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     this.dispatch("UPDATE_CELL", {
                         ...target,
                         style: origin.cell.style,
-                        format: origin.cell.evaluated.format || origin.cell.format,
+                        format: origin.evaluatedCell.format,
                     });
                     return;
                 }
                 if ((clipboardOption === null || clipboardOption === void 0 ? void 0 : clipboardOption.pasteOption) === "onlyValue") {
-                    const content = formatValue(origin.cell.evaluated.value);
+                    const content = formatValue(origin.evaluatedCell.value);
                     this.dispatch("UPDATE_CELL", { ...target, content });
                     return;
                 }
                 let content = origin.cell.content;
-                if (origin.cell.isFormula() && operation === "COPY") {
+                if (origin.cell.isFormula && operation === "COPY") {
                     const offsetX = col - origin.position.col;
                     const offsetY = row - origin.position.row;
                     content = this.getUpdatedContent(sheetId, origin.cell, offsetX, offsetY, operation);
@@ -31428,7 +31439,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return (this.cells
                 .map((cells) => {
                 return cells
-                    .map((c) => c.cell ? this.getters.getCellText(c.cell, this.getters.shouldShowFormulas()) : "")
+                    .map((c) => c.cell ? this.getters.getCellText(c.position, this.getters.shouldShowFormulas()) : "")
                     .join("\t");
             })
                 .join("\n") || "\t");
@@ -31490,10 +31501,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         isPasteAllowed(target, option) {
             if (target.length === 0) {
-                return 70 /* CommandResult.EmptyTarget */;
+                return 71 /* CommandResult.EmptyTarget */;
             }
             if ((option === null || option === void 0 ? void 0 : option.pasteOption) !== undefined) {
-                return 20 /* CommandResult.WrongFigurePasteOption */;
+                return 21 /* CommandResult.WrongFigurePasteOption */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -31613,7 +31624,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     return state.isCutAllowed(zones);
                 case "PASTE":
                     if (!this.state) {
-                        return 21 /* CommandResult.EmptyClipboard */;
+                        return 22 /* CommandResult.EmptyClipboard */;
                     }
                     const pasteOption = cmd.pasteOption || (this._isPaintingFormat ? "onlyFormat" : undefined);
                     return this.state.isPasteAllowed(cmd.target, { pasteOption });
@@ -31964,6 +31975,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         constructor(getters, state, dispatch, config, selection) {
             super(getters, state, dispatch, config, selection);
             this.isUpToDate = false;
+            this.evaluatedCells = {};
             this.evalContext = config.evalContext;
         }
         // ---------------------------------------------------------------------------
@@ -31987,6 +31999,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         finalize() {
             if (!this.isUpToDate) {
                 this.evaluate();
+                this.isUpToDate = true;
             }
         }
         // ---------------------------------------------------------------------------
@@ -31994,7 +32007,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         // ---------------------------------------------------------------------------
         evaluateFormula(formulaString, sheetId = this.getters.getActiveSheetId()) {
             const compiledFormula = compile(formulaString);
-            const params = this.getCompilationParameters(() => { });
+            const params = this.getCompilationParameters((cell) => this.getEvaluatedCell(this.getters.getCellPosition(cell.id)));
             const ranges = [];
             for (let xc of compiledFormula.dependencies) {
                 ranges.push(this.getters.getRangeFromSheetXC(sheetId, xc));
@@ -32009,8 +32022,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (sheet === undefined)
                 return [];
             return this.getters
-                .getCellsInZone(sheet.id, range.zone)
-                .map((cell) => (cell === null || cell === void 0 ? void 0 : cell.formattedValue) || "");
+                .getEvaluatedCellsInZone(sheet.id, range.zone)
+                .map((cell) => cell.formattedValue);
         }
         /**
          * Return the value of each cell in the range.
@@ -32019,11 +32032,52 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const sheet = this.getters.tryGetSheet(range.sheetId);
             if (sheet === undefined)
                 return [];
-            return this.getters.getCellsInZone(sheet.id, range.zone).map((cell) => cell === null || cell === void 0 ? void 0 : cell.evaluated.value);
+            return this.getters.getEvaluatedCellsInZone(sheet.id, range.zone).map((cell) => cell.value);
+        }
+        getEvaluatedCell({ sheetId, col, row }) {
+            var _a, _b, _c;
+            const cell = this.getters.getCell(sheetId, col, row);
+            if (cell === undefined) {
+                return createEvaluatedCell("");
+            }
+            // the cell might have been created by a command in the current
+            // dispatch but the evaluation is not done yet.
+            return ((_c = (_b = (_a = this.evaluatedCells[sheetId]) === null || _a === void 0 ? void 0 : _a[col]) === null || _b === void 0 ? void 0 : _b[row]) === null || _c === void 0 ? void 0 : _c.call(_b)) || createEvaluatedCell("");
+        }
+        getEvaluatedCells(sheetId) {
+            const rawCells = this.getters.getCells(sheetId) || {};
+            const record = {};
+            for (let cellId of Object.keys(rawCells)) {
+                const position = this.getters.getCellPosition(cellId);
+                record[cellId] = this.getEvaluatedCell(position);
+            }
+            return record;
+        }
+        /**
+         * Returns all the evaluated cells of a col
+         */
+        getColEvaluatedCells(sheetId, col) {
+            var _a;
+            return Object.values(((_a = this.evaluatedCells[sheetId]) === null || _a === void 0 ? void 0 : _a[col]) || [])
+                .filter(isDefined$1)
+                .map((lazyCell) => lazyCell());
+        }
+        getEvaluatedCellsInZone(sheetId, zone) {
+            return positions(zone).map(({ col, row }) => this.getters.getEvaluatedCell({ sheetId, col, row }));
         }
         // ---------------------------------------------------------------------------
         // Evaluator
         // ---------------------------------------------------------------------------
+        setEvaluatedCell(cellId, evaluatedCell) {
+            const { col, row, sheetId } = this.getters.getCellPosition(cellId);
+            if (!this.evaluatedCells[sheetId]) {
+                this.evaluatedCells[sheetId] = {};
+            }
+            if (!this.evaluatedCells[sheetId][col]) {
+                this.evaluatedCells[sheetId][col] = {};
+            }
+            this.evaluatedCells[sheetId][col][row] = evaluatedCell;
+        }
         *getAllCells() {
             // use a generator function to avoid re-building a new object
             for (const sheetId of this.getters.getSheetIds()) {
@@ -32034,54 +32088,62 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
         }
         evaluate() {
-            const compilationParameters = this.getCompilationParameters(computeCell);
-            const visited = {};
-            for (const cell of this.getAllCells()) {
-                computeCell(cell);
-            }
-            this.isUpToDate = true;
-            function handleError(e) {
+            this.evaluatedCells = {};
+            const cellsBeingComputed = new Set();
+            const computeCell = (cell) => {
+                var _a, _b;
+                const cellId = cell.id;
+                const { col, row, sheetId } = this.getters.getCellPosition(cellId);
+                const lazyEvaluation = (_b = (_a = this.evaluatedCells[sheetId]) === null || _a === void 0 ? void 0 : _a[col]) === null || _b === void 0 ? void 0 : _b[row];
+                if (lazyEvaluation) {
+                    return lazyEvaluation; // already computed
+                }
+                return lazy(() => {
+                    try {
+                        switch (cell.isFormula) {
+                            case true:
+                                return computeFormulaCell(cell);
+                            case false:
+                                return evaluateLiteral(cell.content, cell.format);
+                        }
+                    }
+                    catch (e) {
+                        return handleError(e, cell);
+                    }
+                });
+            };
+            const handleError = (e, cell) => {
                 if (!(e instanceof Error)) {
                     e = new Error(e);
                 }
                 const msg = (e === null || e === void 0 ? void 0 : e.errorType) || CellErrorType.GenericError;
                 // apply function name
                 const __lastFnCalled = compilationParameters[2].__lastFnCalled || "";
-                return new EvaluationError(msg, e.message.replace("[[FUNCTION_NAME]]", __lastFnCalled), e.logLevel !== undefined ? e.logLevel : CellErrorLevel.error);
-            }
-            function computeCell(cell) {
-                if (!cell.isFormula()) {
-                    return;
+                const error = new EvaluationError(msg, e.message.replace("[[FUNCTION_NAME]]", __lastFnCalled), e.logLevel !== undefined ? e.logLevel : CellErrorLevel.error);
+                return errorCell(cell.content, error);
+            };
+            const computeFormulaCell = (cellData) => {
+                const cellId = cellData.id;
+                if (cellsBeingComputed.has(cellId)) {
+                    throw new CircularDependencyError();
                 }
-                const cellId = cell.id;
-                const computedCell = lazy(() => {
-                    compilationParameters[2].__originCellXC = () => {
-                        // compute the value lazily for performance reasons
-                        const position = compilationParameters[2].getters.getCellPosition(cellId);
-                        return toXC(position.col, position.row);
-                    };
-                    if (cellId in visited) {
-                        if (visited[cellId] === null) {
-                            return new CircularDependencyError();
-                        }
-                        return cell.evaluated;
-                    }
-                    visited[cellId] = null;
-                    try {
-                        const computedCell = cell.compiledFormula.execute(cell.dependencies, ...compilationParameters);
-                        visited[cellId] = true;
-                        if (Array.isArray(computedCell.value)) {
-                            // if a value returns an array (like =A1:A3)
-                            throw new Error(_lt("This formula depends on invalid values"));
-                        }
-                        return { value: computedCell.value, format: cell.format || computedCell.format };
-                    }
-                    catch (error) {
-                        visited[cellId] = true;
-                        return handleError(error);
-                    }
-                });
-                cell.assignEvaluation(computedCell);
+                compilationParameters[2].__originCellXC = () => {
+                    // compute the value lazily for performance reasons
+                    const position = compilationParameters[2].getters.getCellPosition(cellId);
+                    return toXC(position.col, position.row);
+                };
+                cellsBeingComputed.add(cellId);
+                const computedCell = cellData.compiledFormula.execute(cellData.dependencies, ...compilationParameters);
+                cellsBeingComputed.delete(cellId);
+                if (Array.isArray(computedCell.value)) {
+                    // if a value returns an array (like =A1:A3)
+                    throw new Error(_lt("This formula depends on invalid values"));
+                }
+                return createEvaluatedCell(computedCell.value, cellData.format || computedCell.format);
+            };
+            const compilationParameters = this.getCompilationParameters((cell) => computeCell(cell)());
+            for (const cell of this.getAllCells()) {
+                this.setEvaluatedCell(cell.id, computeCell(cell));
             }
         }
         /**
@@ -32101,7 +32163,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     throw new Error(_lt("Invalid sheet name"));
                 }
                 cell = getters.getCell(range.sheetId, range.zone.left, range.zone.top);
-                if (!cell || cell.isEmpty()) {
+                if (!cell || cell.content === "") {
                     // magic "empty" value
                     // Returning {value: null} instead of undefined will ensure that we don't
                     // fall back on the default value of the argument provided to the formula's compute function
@@ -32109,12 +32171,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 }
                 return getEvaluatedCell(cell);
             }
-            function getEvaluatedCell(cell) {
-                if (cell.evaluated.type === CellValueType.error) {
-                    throw new EvaluationError(cell.evaluated.value, cell.evaluated.error.message, cell.evaluated.error.logLevel);
+            const getEvaluatedCell = (cell) => {
+                const evaluatedCell = computeCell(cell);
+                if (evaluatedCell.type === CellValueType.error) {
+                    throw evaluatedCell.error;
                 }
-                return cell.evaluated;
-            }
+                return evaluatedCell;
+            };
             /**
              * Return the values of the cell(s) used in reference, but always in the format of a range even
              * if a single cell is referenced. It is a list of col values. This is useful for the formulas that describe parameters as
@@ -32177,8 +32240,41 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             return [refFn, range, evalContext];
         }
+        // ---------------------------------------------------------------------------
+        // Export
+        // ---------------------------------------------------------------------------
+        exportForExcel(data) {
+            for (let sheet of data.sheets) {
+                for (const xc in sheet.cells) {
+                    const { col, row } = toCartesian(xc);
+                    const cell = this.getters.getCell(sheet.id, col, row);
+                    if (cell) {
+                        const exportedCellData = sheet.cells[xc];
+                        exportedCellData.value = this.getEvaluatedCell({ sheetId: sheet.id, col, row }).value;
+                        exportedCellData.isFormula = cell.isFormula && !this.isBadExpression(cell.content);
+                    }
+                }
+            }
+        }
+        isBadExpression(formula) {
+            try {
+                compile(formula);
+                return false;
+            }
+            catch (error) {
+                return true;
+            }
+        }
     }
-    EvaluationPlugin.getters = ["evaluateFormula", "getRangeFormattedValues", "getRangeValues"];
+    EvaluationPlugin.getters = [
+        "evaluateFormula",
+        "getRangeFormattedValues",
+        "getRangeValues",
+        "getEvaluatedCell",
+        "getEvaluatedCells",
+        "getColEvaluatedCells",
+        "getEvaluatedCellsInZone",
+    ];
 
     class EvaluationChartPlugin extends UIPlugin {
         constructor() {
@@ -32258,57 +32354,51 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
              */
             this.rulePredicate = {
                 CellIsRule: (cell, rule) => {
-                    if (cell && cell.evaluated.type === CellValueType.error) {
+                    if (cell.type === CellValueType.error) {
                         return false;
                     }
-                    const values = rule.values.map(parsePrimitiveContent);
+                    const values = rule.values.map(parseLiteral);
                     switch (rule.operator) {
                         case "IsEmpty":
-                            return !isDefined$1(cell) || cell.evaluated.value.toString().trim() === "";
+                            return cell.value.toString().trim() === "";
                         case "IsNotEmpty":
-                            return isDefined$1(cell) && cell.evaluated.value.toString().trim() !== "";
+                            return cell.value.toString().trim() !== "";
                         case "BeginsWith":
-                            if (!cell && values[0] === "") {
+                            if (values[0] === "") {
                                 return false;
                             }
-                            return (isDefined$1(cell) && (cell === null || cell === void 0 ? void 0 : cell.evaluated.value.toString().startsWith(values[0].toString())));
+                            return cell.value.toString().startsWith(values[0].toString());
                         case "EndsWith":
-                            if (!cell && values[0] === "") {
+                            if (values[0] === "") {
                                 return false;
                             }
-                            return isDefined$1(cell) && cell.evaluated.value.toString().endsWith(values[0].toString());
+                            return cell.value.toString().endsWith(values[0].toString());
                         case "Between":
-                            return (isDefined$1(cell) &&
-                                cell.evaluated.value >= values[0] &&
-                                cell.evaluated.value <= values[1]);
+                            return cell.value >= values[0] && cell.value <= values[1];
                         case "NotBetween":
-                            return !(isDefined$1(cell) &&
-                                cell.evaluated.value >= values[0] &&
-                                cell.evaluated.value <= values[1]);
+                            return !(cell.value >= values[0] && cell.value <= values[1]);
                         case "ContainsText":
-                            return (isDefined$1(cell) && cell.evaluated.value.toString().indexOf(values[0].toString()) > -1);
+                            return cell.value.toString().indexOf(values[0].toString()) > -1;
                         case "NotContains":
-                            return (!isDefined$1(cell) ||
-                                !cell.evaluated.value ||
-                                cell.evaluated.value.toString().indexOf(values[0].toString()) == -1);
+                            return !cell.value || cell.value.toString().indexOf(values[0].toString()) == -1;
                         case "GreaterThan":
-                            return isDefined$1(cell) && cell.evaluated.value > values[0];
+                            return cell.value > values[0];
                         case "GreaterThanOrEqual":
-                            return isDefined$1(cell) && cell.evaluated.value >= values[0];
+                            return cell.value >= values[0];
                         case "LessThan":
-                            return isDefined$1(cell) && cell.evaluated.value < values[0];
+                            return cell.value < values[0];
                         case "LessThanOrEqual":
-                            return isDefined$1(cell) && cell.evaluated.value <= values[0];
+                            return cell.value <= values[0];
                         case "NotEqual":
-                            if (!isDefined$1(cell) && values[0] === "") {
+                            if (values[0] === "") {
                                 return false;
                             }
-                            return isDefined$1(cell) && cell.evaluated.value !== values[0];
+                            return cell.value !== values[0];
                         case "Equal":
-                            if (!cell && values[0] === "") {
+                            if (values[0] === "") {
                                 return true;
                             }
-                            return isDefined$1(cell) && cell.evaluated.value === values[0];
+                            return cell.value === values[0];
                         default:
                             console.warn(_lt("Not implemented operator %s for kind of conditional formatting:  %s", rule.operator, rule.type));
                     }
@@ -32354,6 +32444,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         // ---------------------------------------------------------------------------
         getCellComputedStyle(sheetId, col, row) {
             var _a;
+            // TODO move this getter out of CF: it also depends on filters and link
             const cell = this.getters.getCell(sheetId, col, row);
             const styles = this.computedStyles[sheetId];
             const cfStyle = styles && ((_a = styles[col]) === null || _a === void 0 ? void 0 : _a[row]);
@@ -32361,6 +32452,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 ...cell === null || cell === void 0 ? void 0 : cell.style,
                 ...cfStyle,
             };
+            const evaluatedCell = this.getters.getEvaluatedCell({ sheetId, col, row });
+            if (evaluatedCell.link && !computedStyle.textColor) {
+                computedStyle.textColor = LINK_COLOR;
+            }
             if (this.getters.isFilterHeader(sheetId, col, row)) {
                 computedStyle.bold = true;
             }
@@ -32387,11 +32482,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          */
         computeStyles() {
             var _a;
-            const activeSheetId = this.getters.getActiveSheetId();
-            this.computedStyles[activeSheetId] = {};
-            this.computedIcons[activeSheetId] = {};
-            const computedStyle = this.computedStyles[activeSheetId];
-            for (let cf of this.getters.getConditionalFormats(activeSheetId).reverse()) {
+            const sheetId = this.getters.getActiveSheetId();
+            this.computedStyles[sheetId] = {};
+            this.computedIcons[sheetId] = {};
+            const computedStyle = this.computedStyles[sheetId];
+            for (let cf of this.getters.getConditionalFormats(sheetId).reverse()) {
                 try {
                     switch (cf.rule.type) {
                         case "ColorScaleRule":
@@ -32406,11 +32501,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                             break;
                         default:
                             for (let ref of cf.ranges) {
-                                const zone = this.getters.getRangeFromSheetXC(activeSheetId, ref).zone;
+                                const zone = this.getters.getRangeFromSheetXC(sheetId, ref).zone;
                                 for (let row = zone.top; row <= zone.bottom; row++) {
                                     for (let col = zone.left; col <= zone.right; col++) {
                                         const pr = this.rulePredicate[cf.rule.type];
-                                        let cell = this.getters.getCell(activeSheetId, col, row);
+                                        let cell = this.getters.getEvaluatedCell({ sheetId, col, row });
                                         if (pr && pr(cell, cf.rule)) {
                                             if (!computedStyle[col])
                                                 computedStyle[col] = [];
@@ -32431,8 +32526,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         parsePoint(range, threshold, functionName) {
             const sheetId = this.getters.getActiveSheetId();
             const rangeValues = this.getters
-                .getRangeValues(this.getters.getRangeFromSheetXC(sheetId, range))
-                .filter(this.isCellValueNumber);
+                .getEvaluatedCellsInZone(sheetId, this.getters.getRangeFromSheetXC(sheetId, range).zone)
+                .filter((cell) => cell.type === CellValueType.number)
+                .map((cell) => cell.value);
             switch (threshold.type) {
                 case "value":
                     const result = functionName === "max" ? Math.max(...rangeValues) : Math.min(...rangeValues);
@@ -32461,17 +32557,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 lowerInflectionPoint > upperInflectionPoint) {
                 return;
             }
-            const activeSheetId = this.getters.getActiveSheetId();
-            const zone = this.getters.getRangeFromSheetXC(activeSheetId, range).zone;
-            const computedIcons = this.computedIcons[activeSheetId];
+            const sheetId = this.getters.getActiveSheetId();
+            const zone = this.getters.getRangeFromSheetXC(sheetId, range).zone;
+            const computedIcons = this.computedIcons[sheetId];
             const iconSet = [rule.icons.upper, rule.icons.middle, rule.icons.lower];
             for (let row = zone.top; row <= zone.bottom; row++) {
                 for (let col = zone.left; col <= zone.right; col++) {
-                    const cell = this.getters.getCell(activeSheetId, col, row);
-                    if ((cell === null || cell === void 0 ? void 0 : cell.evaluated.type) !== CellValueType.number) {
+                    const cell = this.getters.getEvaluatedCell({ sheetId, col, row });
+                    if (cell.type !== CellValueType.number) {
                         continue;
                     }
-                    const icon = this.computeIcon(cell.evaluated.value, upperInflectionPoint, rule.upperInflectionPoint.operator, lowerInflectionPoint, rule.lowerInflectionPoint.operator, iconSet);
+                    const icon = this.computeIcon(cell.value, upperInflectionPoint, rule.upperInflectionPoint.operator, lowerInflectionPoint, rule.lowerInflectionPoint.operator, iconSet);
                     if (!computedIcons[col]) {
                         computedIcons[col] = [];
                     }
@@ -32501,9 +32597,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 (midValue && (minValue >= midValue || midValue >= maxValue))) {
                 return;
             }
-            const activeSheetId = this.getters.getActiveSheetId();
-            const zone = this.getters.getRangeFromSheetXC(activeSheetId, range).zone;
-            const computedStyle = this.computedStyles[activeSheetId];
+            const sheetId = this.getters.getActiveSheetId();
+            const zone = this.getters.getRangeFromSheetXC(sheetId, range).zone;
+            const computedStyle = this.computedStyles[sheetId];
             const colorCellArgs = [];
             if (rule.midpoint && midValue) {
                 colorCellArgs.push({
@@ -32526,9 +32622,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             for (let row = zone.top; row <= zone.bottom; row++) {
                 for (let col = zone.left; col <= zone.right; col++) {
-                    const cell = this.getters.getCell(activeSheetId, col, row);
-                    if ((cell === null || cell === void 0 ? void 0 : cell.evaluated.type) === CellValueType.number) {
-                        const value = clip(cell.evaluated.value, minValue, maxValue);
+                    const cell = this.getters.getEvaluatedCell({ sheetId, col, row });
+                    if (cell.type === CellValueType.number) {
+                        const value = clip(cell.value, minValue, maxValue);
                         let color;
                         if (colorCellArgs.length === 2 && midValue) {
                             color =
@@ -32611,9 +32707,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 }
             }
         }
-        isCellValueNumber(value) {
-            return typeof value === "number";
-        }
     }
     EvaluationConditionalFormatPlugin.getters = ["getConditionalIcon", "getCellComputedStyle"];
 
@@ -32628,7 +32721,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             switch (cmd.type) {
                 case "UPDATE_FILTER":
                     if (!this.getters.getFilterId(cmd.sheetId, cmd.col, cmd.row)) {
-                        return 76 /* CommandResult.FilterNotFound */;
+                        return 77 /* CommandResult.FilterNotFound */;
                     }
                     break;
             }
@@ -32769,12 +32862,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.hiddenRows = hiddenRows;
         }
         getCellValueAsString(sheetId, col, row) {
-            var _a;
-            const value = (_a = this.getters.getCell(sheetId, col, row)) === null || _a === void 0 ? void 0 : _a.formattedValue;
-            return (value === null || value === void 0 ? void 0 : value.toLowerCase()) || "";
+            const value = this.getters.getEvaluatedCell({ sheetId, col, row }).formattedValue;
+            return value.toLowerCase();
         }
         exportForExcel(data) {
-            var _a;
             for (const sheetData of data.sheets) {
                 for (const tableData of sheetData.filterTables) {
                     const tableZone = toZone(tableData.range);
@@ -32787,15 +32878,20 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                             continue;
                         const valuesInFilterZone = filter.filteredZone
                             ? positions(filter.filteredZone)
-                                .map((pos) => { var _a; return (_a = this.getters.getCell(sheetData.id, pos.col, pos.row)) === null || _a === void 0 ? void 0 : _a.formattedValue; })
-                                .filter(isDefined$1)
+                                .map(({ col, row }) => this.getters.getEvaluatedCell({ sheetId: sheetData.id, col, row }))
+                                .filter((cell) => cell.type !== CellValueType.empty)
+                                .map((cell) => cell.formattedValue)
                             : [];
                         // In xlsx, filtered values = values that are displayed, not values that are hidden
                         const xlsxFilteredValues = valuesInFilterZone.filter((val) => !filteredValues.includes(val));
                         filters.push({ colId: i, filteredValues: [...new Set(xlsxFilteredValues)] });
                         // In xlsx, filter header should ALWAYS be a string and should be unique
-                        const headerPosition = { col: filter.col, row: filter.zoneWithHeaders.top };
-                        const headerString = (_a = this.getters.getCell(sheetData.id, headerPosition.col, headerPosition.row)) === null || _a === void 0 ? void 0 : _a.formattedValue;
+                        const headerPosition = {
+                            col: filter.col,
+                            row: filter.zoneWithHeaders.top,
+                            sheetId: sheetData.id,
+                        };
+                        const headerString = this.getters.getEvaluatedCell(headerPosition).formattedValue;
                         const headerName = this.getUniqueColNameForExcel(i, headerString, headerNames);
                         headerNames.push(headerName);
                         sheetData.cells[toXC(headerPosition.col, headerPosition.row)] = {
@@ -32949,20 +33045,16 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * Find matches using the current regex
          */
         findMatches() {
-            const activeSheetId = this.getters.getActiveSheetId();
-            const cells = this.getters.getCells(activeSheetId);
+            const sheetId = this.getters.getActiveSheetId();
+            const cells = this.getters.getCells(sheetId);
             const matches = [];
             if (this.toSearch) {
                 for (const cell of Object.values(cells)) {
+                    const { col, row } = this.getters.getCellPosition(cell.id);
                     if (cell &&
                         this.currentSearchRegex &&
-                        this.currentSearchRegex.test(this.searchOptions.searchFormulas
-                            ? cell.isFormula()
-                                ? cell.content
-                                : String(cell.evaluated.value)
-                            : String(cell.evaluated.value))) {
-                        const position = this.getters.getCellPosition(cell.id);
-                        const match = { col: position.col, row: position.row, selected: false };
+                        this.currentSearchRegex.test(this.getSearchableString({ sheetId, col, row }))) {
+                        const match = { col, row, selected: false };
                         matches.push(match);
                     }
                 }
@@ -33030,14 +33122,18 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const matches = this.searchMatches;
             const selectedMatch = matches[this.selectedMatchIndex];
             const sheetId = this.getters.getActiveSheetId();
-            const cellToReplace = this.getters.getCell(sheetId, selectedMatch.col, selectedMatch.row);
-            const toReplace = this.toReplace(cellToReplace, sheetId);
-            if (!cellToReplace || !toReplace) {
+            const cell = this.getters.getCell(sheetId, selectedMatch.col, selectedMatch.row);
+            if ((cell === null || cell === void 0 ? void 0 : cell.isFormula) && !this.searchOptions.searchFormulas) {
                 this.selectNextCell(Direction.next);
             }
             else {
                 const replaceRegex = new RegExp(this.currentSearchRegex.source, this.currentSearchRegex.flags + "g");
-                const newContent = toReplace.toString().replace(replaceRegex, replaceWith);
+                const toReplace = this.getSearchableString({
+                    sheetId,
+                    col: selectedMatch.col,
+                    row: selectedMatch.row,
+                });
+                const newContent = toReplace.replace(replaceRegex, replaceWith);
                 this.dispatch("UPDATE_CELL", {
                     sheetId: this.getters.getActiveSheetId(),
                     col: selectedMatch.col,
@@ -33057,20 +33153,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 this.replace(replaceWith);
             }
         }
-        /**
-         * Determines if the content, the value or nothing should be replaced,
-         * based on the search and replace options
-         */
-        toReplace(cell, sheetId) {
-            if (cell) {
-                if (this.searchOptions.searchFormulas && cell.isFormula()) {
-                    return cell.content;
-                }
-                else if (this.searchOptions.searchFormulas || !cell.isFormula()) {
-                    return cell.evaluated.value.toString();
-                }
+        getSearchableString({ sheetId, col, row }) {
+            const cell = this.getters.getCell(sheetId, col, row);
+            if (this.searchOptions.searchFormulas && (cell === null || cell === void 0 ? void 0 : cell.isFormula)) {
+                return cell.content;
             }
-            return null;
+            return this.getters.getEvaluatedCell({ sheetId, col, row }).formattedValue;
         }
         // ---------------------------------------------------------------------------
         // Grid rendering
@@ -33146,11 +33234,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             for (let zone of zones) {
                 for (let row = zone.top; row <= zone.bottom; row++) {
                     for (let col = zone.left; col <= zone.right; col++) {
-                        const cell = this.getters.getCell(sheetId, col, row);
-                        if ((cell === null || cell === void 0 ? void 0 : cell.evaluated.type) === CellValueType.number &&
-                            !((_a = cell.evaluated.format) === null || _a === void 0 ? void 0 : _a.match(DATETIME_FORMAT)) // reject dates
+                        const cell = this.getters.getEvaluatedCell({ sheetId, col, row });
+                        if (cell.type === CellValueType.number &&
+                            !((_a = cell.format) === null || _a === void 0 ? void 0 : _a.match(DATETIME_FORMAT)) // reject dates
                         ) {
-                            return cell.evaluated.format || createDefaultFormat(cell.evaluated.value);
+                            return cell.format || createDefaultFormat(cell.value);
                         }
                     }
                 }
@@ -33672,34 +33760,47 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             ctx.stroke();
         }
-        hasContent(col, row) {
-            const sheetId = this.getters.getActiveSheetId();
-            const cell = this.getters.getCell(sheetId, col, row);
-            return (cell && !cell.isEmpty()) || this.getters.isInMerge(sheetId, col, row);
-        }
         findNextEmptyCol(base, max, row) {
+            const sheetId = this.getters.getActiveSheetId();
             let col = base;
-            while (col < max && !this.hasContent(col + 1, row)) {
+            while (col < max) {
+                const nextCell = this.getters.getEvaluatedCell({ sheetId, col: col + 1, row });
+                const nextCellBorder = this.getters.getCellBorderWithFilterBorder(sheetId, col + 1, row);
+                if (nextCell.type !== CellValueType.empty ||
+                    this.getters.isInMerge(sheetId, col + 1, row) ||
+                    (nextCellBorder === null || nextCellBorder === void 0 ? void 0 : nextCellBorder.left)) {
+                    return col;
+                }
                 col++;
             }
             return col;
         }
         findPreviousEmptyCol(base, min, row) {
+            const sheetId = this.getters.getActiveSheetId();
             let col = base;
-            while (col > min && !this.hasContent(col - 1, row)) {
+            while (col > min) {
+                const previousCell = this.getters.getEvaluatedCell({ sheetId, col: col - 1, row });
+                const previousCellBorder = this.getters.getCellBorderWithFilterBorder(sheetId, col - 1, row);
+                if (previousCell.type !== CellValueType.empty ||
+                    this.getters.isInMerge(sheetId, col + 1, row) ||
+                    (previousCellBorder === null || previousCellBorder === void 0 ? void 0 : previousCellBorder.right)) {
+                    return col;
+                }
                 col--;
             }
             return col;
         }
-        computeCellAlignment(cell, isOverflowing) {
-            if (cell.isFormula() && this.getters.shouldShowFormulas()) {
+        computeCellAlignment({ sheetId, col, row }, isOverflowing) {
+            const cell = this.getters.getCell(sheetId, col, row);
+            if ((cell === null || cell === void 0 ? void 0 : cell.isFormula) && this.getters.shouldShowFormulas()) {
                 return "left";
             }
-            const { align } = this.getters.getCellStyle(cell);
-            if (isOverflowing && cell.evaluated.type === CellValueType.number) {
+            const { align } = this.getters.getCellStyle({ sheetId, col, row });
+            const evaluatedCell = this.getters.getEvaluatedCell({ sheetId, col, row });
+            if (isOverflowing && evaluatedCell.type === CellValueType.number) {
                 return align !== "center" ? "left" : align;
             }
-            return align || cell.defaultAlign;
+            return align || evaluatedCell.defaultAlign;
         }
         createZoneBox(sheetId, zone) {
             const visibleCols = this.getters.getSheetViewVisibleCols();
@@ -33707,7 +33808,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const right = visibleCols[visibleCols.length - 1];
             const col = zone.left;
             const row = zone.top;
-            const cell = this.getters.getCell(sheetId, col, row);
+            const cell = this.getters.getEvaluatedCell({ sheetId, col, row });
             const showFormula = this.getters.shouldShowFormulas();
             const { x, y, width, height } = this.getters.getVisibleRect(zone);
             const box = {
@@ -33718,7 +33819,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 border: this.getters.getCellBorderWithFilterBorder(sheetId, col, row) || undefined,
                 style: this.getters.getCellComputedStyle(sheetId, col, row),
             };
-            if (!cell) {
+            if (cell.type === CellValueType.empty) {
                 return box;
             }
             /** Icon CF */
@@ -33737,23 +33838,23 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             box.isFilterHeader = this.getters.isFilterHeader(sheetId, col, row);
             const headerIconWidth = box.isFilterHeader ? ICON_EDGE_LENGTH + FILTER_ICON_MARGIN : 0;
             /** Content */
-            const text = this.getters.getCellText(cell, showFormula);
-            const textWidth = this.getters.getTextWidth(cell);
-            const wrapping = this.getters.getCellStyle(cell).wrapping || "overflow";
+            const position = { sheetId, col, row };
+            const text = this.getters.getCellText(position, showFormula);
+            const textWidth = this.getters.getTextWidth(position);
+            const wrapping = this.getters.getCellStyle(position).wrapping || "overflow";
             const multiLineText = wrapping === "wrap"
-                ? this.getters.getCellMultiLineText(cell, width - 2 * MIN_CELL_TEXT_MARGIN)
+                ? this.getters.getCellMultiLineText(position, width - 2 * MIN_CELL_TEXT_MARGIN)
                 : [text];
             const contentWidth = iconBoxWidth + textWidth + headerIconWidth;
-            const align = this.computeCellAlignment(cell, contentWidth > width);
+            const align = this.computeCellAlignment(position, contentWidth > width);
             box.content = {
                 multiLineText,
                 width: wrapping === "overflow" ? textWidth : width,
                 align,
             };
             /** Error */
-            if (cell.evaluated.type === CellValueType.error &&
-                cell.evaluated.error.logLevel > CellErrorLevel.silent) {
-                box.error = cell.evaluated.error.message;
+            if (cell.type === CellValueType.error && cell.error.logLevel > CellErrorLevel.silent) {
+                box.error = cell.error.message;
             }
             /** ClipRect */
             const isOverflowing = contentWidth > width || fontSizePX > height;
@@ -33924,7 +34025,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         break;
                     }
                     catch (error) {
-                        return 25 /* CommandResult.InvalidSheetId */;
+                        return 26 /* CommandResult.InvalidSheetId */;
                     }
                 case "MOVE_COLUMNS_ROWS":
                     return this.isMoveElementAllowed(cmd);
@@ -33950,6 +34051,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     break;
             }
             this.setSelectionMixin(event.anchor, zones);
+            /** Any change to the selection has to be  reflected in the selection processor. */
+            this.selection.resetDefaultAnchor(this, deepCopy(this.gridSelection.anchor));
             const { col, row } = this.gridSelection.anchor.cell;
             this.moveClient({
                 sheetId: this.getters.getActiveSheetId(),
@@ -33982,11 +34085,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         sheetIdTo: firstSheetId,
                         sheetIdFrom: firstSheetId,
                     });
+                    const { col, row } = this.getters.getNextVisibleCellPosition(firstSheetId, 0, 0);
+                    this.selectCell(col, row);
                     this.selection.registerAsDefault(this, this.gridSelection.anchor, {
                         handleEvent: this.handleEvent.bind(this),
                     });
-                    const { col, row } = this.getters.getNextVisibleCellPosition(firstSheetId, 0, 0);
-                    this.selectCell(col, row);
                     this.moveClient({ sheetId: firstSheetId, col: 0, row: 0 });
                     break;
                 case "ACTIVATE_SHEET": {
@@ -33999,7 +34102,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     };
                     if (cmd.sheetIdTo in this.sheetsData) {
                         Object.assign(this, this.sheetsData[cmd.sheetIdTo]);
-                        this.selection.resetDefaultAnchor(this, this.gridSelection.anchor);
+                        this.selection.resetDefaultAnchor(this, deepCopy(this.gridSelection.anchor));
                     }
                     else {
                         const { col, row } = this.getters.getNextVisibleCellPosition(cmd.sheetIdTo, 0, 0);
@@ -34085,8 +34188,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     const sheetId = this.getters.getActiveSheetId();
                     this.gridSelection.zones = this.gridSelection.zones.map((z) => this.getters.expandZone(sheetId, z));
                     this.gridSelection.anchor.zone = this.getters.expandZone(sheetId, this.gridSelection.anchor.zone);
-                    this.ensureSelectionValidity();
+                    this.setSelectionMixin(this.gridSelection.anchor, this.gridSelection.zones);
+                    break;
             }
+            /** Any change to the selection has to be  reflected in the selection processor. */
+            this.selection.resetDefaultAnchor(this, deepCopy(this.gridSelection.anchor));
         }
         // ---------------------------------------------------------------------------
         // Getters
@@ -34100,8 +34206,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         getActiveCell() {
             const sheetId = this.getters.getActiveSheetId();
             const { col, row } = this.gridSelection.anchor.cell;
-            const { col: mainCol, row: mainRow } = this.getters.getMainCellPosition(sheetId, col, row);
-            return this.getters.getCell(sheetId, mainCol, mainRow);
+            const mainPosition = this.getters.getMainCellPosition(sheetId, col, row);
+            return this.getters.getEvaluatedCell({ sheetId, ...mainPosition });
         }
         getActiveCols() {
             const activeCols = new Set();
@@ -34128,8 +34234,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return activeRows;
         }
         getCurrentStyle() {
-            const cell = this.getters.getActiveCell();
-            return cell ? this.getters.getCellStyle(cell) : {};
+            const zone = this.getters.getSelectedZone();
+            const sheetId = this.getters.getActiveSheetId();
+            return this.getters.getCellStyle({ sheetId, col: zone.left, row: zone.top });
         }
         getSelectedZones() {
             return deepCopy(this.gridSelection.zones);
@@ -34163,14 +34270,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         getStatisticFnResults() {
             // get deduplicated cells in zones
             const cells = new Set(this.gridSelection.zones
-                .map((zone) => this.getters.getCellsInZone(this.getters.getActiveSheetId(), zone))
+                .map((zone) => this.getters.getEvaluatedCellsInZone(this.getters.getActiveSheetId(), zone))
                 .flat()
-                .filter((cell) => cell !== undefined));
+                .filter((cell) => cell.type !== CellValueType.empty));
             let cellsTypes = new Set();
             let cellsValues = [];
             for (let cell of cells) {
-                cellsTypes.add(cell.evaluated.type);
-                cellsValues.push(cell.evaluated.value);
+                cellsTypes.add(cell.type);
+                cellsValues.push(cell.value);
             }
             let statisticFnResults = {};
             for (let fn of selectionStatisticFunctions) {
@@ -34193,10 +34300,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const sheetId = this.getters.getActiveSheetId();
             const cellPositions = this.gridSelection.zones.map(positions).flat();
             for (const { col, row } of cellPositions) {
-                const cell = this.getters.getCell(sheetId, col, row);
-                if ((cell === null || cell === void 0 ? void 0 : cell.evaluated.type) === CellValueType.number) {
+                const cell = this.getters.getEvaluatedCell({ sheetId, col, row });
+                if (cell.type === CellValueType.number) {
                     n++;
-                    aggregate += cell.evaluated.value;
+                    aggregate += cell.value;
                 }
             }
             return n < 2 ? null : formatValue(aggregate);
@@ -34234,11 +34341,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         // ---------------------------------------------------------------------------
         // Other
         // ---------------------------------------------------------------------------
+        /**
+         * Ensure selections are not outside sheet boundaries.
+         * They are clipped to fit inside the sheet if needed.
+         */
         setSelectionMixin(anchor, zones) {
             const { anchor: clippedAnchor, zones: clippedZones } = this.clipSelection(this.getters.getActiveSheetId(), { anchor, zones });
-            this.gridSelection.anchor.cell.col = clippedAnchor.cell.col;
-            this.gridSelection.anchor.cell.row = clippedAnchor.cell.row;
-            this.gridSelection.anchor.zone = clippedAnchor.zone;
+            this.gridSelection.anchor = clippedAnchor;
             this.gridSelection.zones = uniqueZones(clippedZones);
         }
         /**
@@ -34280,7 +34389,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 zone: selectedZone,
             };
             this.setSelectionMixin(anchor, [selectedZone]);
-            this.ensureSelectionValidity();
         }
         onRowsRemoved(cmd) {
             const { cell, zone } = this.gridSelection.anchor;
@@ -34295,7 +34403,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 zone: selectedZone,
             };
             this.setSelectionMixin(anchor, [selectedZone]);
-            this.ensureSelectionValidity();
         }
         onAddElements(cmd) {
             const selection = this.gridSelection.anchor.zone;
@@ -34376,17 +34483,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         //-------------------------------------------
         // Helpers for extensions
         // ------------------------------------------
-        /**
-         * Ensure selections are not outside sheet boundaries.
-         * They are clipped to fit inside the sheet if needed.
-         */
-        ensureSelectionValidity() {
-            let { anchor, zones } = this.clipSelection(this.getters.getActiveSheetId(), this.gridSelection);
-            this.gridSelection.zones = uniqueZones(zones);
-            this.gridSelection.anchor.cell.col = anchor.cell.col;
-            this.gridSelection.anchor.cell.row = anchor.cell.row;
-            this.gridSelection.anchor.zone = anchor.zone;
-        }
         /**
          * Clip the selection if it spans outside the sheet
          */
@@ -34483,7 +34579,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         "getElementsFromSelection",
     ];
 
-    const uuidGenerator = new UuidGenerator();
     /**
      * Selection input Plugin
      *
@@ -34512,7 +34607,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             switch (cmd.type) {
                 case "ADD_EMPTY_RANGE":
                     if (this.inputHasSingleRange && this.ranges.length === 1) {
-                        return 27 /* CommandResult.MaximumRangesReached */;
+                        return 28 /* CommandResult.MaximumRangesReached */;
                     }
                     break;
             }
@@ -34618,7 +34713,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         setContent(index, xc) {
             this.ranges[index] = {
                 ...this.ranges[index],
-                id: uuidGenerator.uuidv4(),
                 xc,
             };
         }
@@ -34731,7 +34825,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 case "FOCUS_RANGE":
                     const index = (_a = this.currentInput) === null || _a === void 0 ? void 0 : _a.getIndex(cmd.rangeId);
                     if (this.focusedInputId === cmd.id && ((_b = this.currentInput) === null || _b === void 0 ? void 0 : _b.focusedRangeIndex) === index) {
-                        return 26 /* CommandResult.InputAlreadyFocused */;
+                        return 27 /* CommandResult.InputAlreadyFocused */;
                     }
                     break;
             }
@@ -34757,11 +34851,19 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     break;
                 case "ADD_EMPTY_RANGE":
                 case "REMOVE_RANGE":
+                    if (cmd.id !== this.focusedInputId) {
+                        const input = this.inputs[cmd.id];
+                        this.selection.capture(input, { cell: { col: 0, row: 0 }, zone: positionToZone({ col: 0, row: 0 }) }, { handleEvent: input.handleEvent.bind(input) });
+                        this.focusedInputId = cmd.id;
+                    }
+                    break;
                 case "FOCUS_RANGE":
                 case "CHANGE_RANGE":
                     if (cmd.id !== this.focusedInputId) {
                         const input = this.inputs[cmd.id];
-                        this.selection.capture(input, { cell: { col: 0, row: 0 }, zone: positionToZone({ col: 0, row: 0 }) }, { handleEvent: input.handleEvent.bind(input) });
+                        const range = input.ranges.find((range) => range.id === cmd.rangeId);
+                        const zone = toZone((range === null || range === void 0 ? void 0 : range.xc) || "A1");
+                        this.selection.capture(input, { cell: { col: zone.left, row: zone.top }, zone }, { handleEvent: input.handleEvent.bind(input) });
                         this.focusedInputId = cmd.id;
                     }
                     break;
@@ -35674,7 +35776,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     const merges = this.getters.getMerges(sheetId);
                     for (let merge of merges) {
                         if (merge.left < cmd.quantity && cmd.quantity <= merge.right) {
-                            return 62 /* CommandResult.MergeOverlap */;
+                            return 63 /* CommandResult.MergeOverlap */;
                         }
                     }
                     return 0 /* CommandResult.Success */;
@@ -35684,7 +35786,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     const merges = this.getters.getMerges(sheetId);
                     for (let merge of merges) {
                         if (merge.top < cmd.quantity && cmd.quantity <= merge.bottom) {
-                            return 62 /* CommandResult.MergeOverlap */;
+                            return 63 /* CommandResult.MergeOverlap */;
                         }
                     }
                     return 0 /* CommandResult.Success */;
@@ -35701,7 +35803,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 case "ZonesSelected":
                     // altering a zone should not move the viewport
                     const sheetId = this.getters.getActiveSheetId();
-                    let { col, row } = findCellInNewZone(event.previousAnchor.zone, event.anchor.zone);
+                    let { col, row } = findCellInNewZone(event.previousAnchor.zone, event.anchor.zone, this.getters.getActiveMainViewport());
                     col = Math.min(col, this.getters.getNumberCols(sheetId) - 1);
                     row = Math.min(row, this.getters.getNumberRows(sheetId) - 1);
                     this.refreshViewport(this.getters.getActiveSheetId(), { col, row });
@@ -36003,7 +36105,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         checkPositiveDimension(cmd) {
             if (cmd.width < 0 || cmd.height < 0) {
-                return 65 /* CommandResult.InvalidViewportSize */;
+                return 66 /* CommandResult.InvalidViewportSize */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -36013,7 +36115,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 cmd.gridOffsetY === this.gridOffsetY &&
                 cmd.width === width &&
                 cmd.height === height) {
-                return 73 /* CommandResult.ValuesNotChanged */;
+                return 74 /* CommandResult.ValuesNotChanged */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -36021,7 +36123,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const pane = this.getMainInternalViewport(this.getters.getActiveSheetId());
             if ((!pane.canScrollHorizontally && offsetX > 0) ||
                 (!pane.canScrollVertically && offsetY > 0)) {
-                return 66 /* CommandResult.InvalidScrollingDirection */;
+                return 67 /* CommandResult.InvalidScrollingDirection */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -36231,7 +36333,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             for (let row = zone.top; row <= zone.bottom; row++) {
                 for (let col = zone.left; col <= zone.right; col++) {
                     if (!this.getters.isInMerge(sheetId, col, row)) {
-                        return 60 /* CommandResult.InvalidSortZone */;
+                        return 61 /* CommandResult.InvalidSortZone */;
                     }
                 }
             }
@@ -36252,7 +36354,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 ];
                 return widthCurrent === widthFirst && heightCurrent === heightFirst;
             })) {
-                return 60 /* CommandResult.InvalidSortZone */;
+                return 61 /* CommandResult.InvalidSortZone */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -36279,17 +36381,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 const { left, right, top, bottom } = expandedZone;
                 for (let c = left; c <= right; c++) {
                     for (let r = top; r <= bottom; r++) {
-                        const { col: mainCellCol, row: mainCellRow } = this.getters.getMainCellPosition(sheetId, c, r);
-                        cell = this.getters.getCell(sheetId, mainCellCol, mainCellRow);
-                        if (cell === null || cell === void 0 ? void 0 : cell.formattedValue) {
+                        const { col, row } = this.getters.getMainCellPosition(sheetId, c, r);
+                        cell = this.getters.getEvaluatedCell({ sheetId, col, row });
+                        if (cell.formattedValue) {
                             return true;
                         }
                     }
                 }
             }
             else {
-                for (let cell of this.getters.getCellsInZone(sheetId, expandedZone)) {
-                    if (cell === null || cell === void 0 ? void 0 : cell.formattedValue) {
+                for (let cell of this.getters.getEvaluatedCellsInZone(sheetId, expandedZone)) {
+                    if (cell.formattedValue) {
                         return true;
                     }
                 }
@@ -36402,10 +36504,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          *  For the second criteria, we ignore columns on which the cell below is empty.
          *
          */
-        hasHeader(items) {
+        hasHeader(sheetId, items) {
             if (items[0].length === 1)
                 return false;
-            let cells = items.map((col) => col.map((cell) => (cell === null || cell === void 0 ? void 0 : cell.evaluated.type) || CellValueType.empty));
+            let cells = items.map((col) => col.map(({ col, row }) => this.getters.getEvaluatedCell({ sheetId, col, row }).type));
             // ignore left-most column when topLeft cell is empty
             const topLeft = cells[0][0];
             if (topLeft === CellValueType.empty) {
@@ -36426,18 +36528,20 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             let sortingCol = this.getters.getMainCellPosition(sheetId, anchor.col, anchor.row).col; // fetch anchor
             let sortZone = Object.assign({}, zone);
             // Update in case of merges in the zone
-            let cells = this.mainCells(sheetId, zone);
-            if (!options.sortHeaders && this.hasHeader(cells)) {
+            let cellPositions = this.mainCells(sheetId, zone);
+            if (!options.sortHeaders && this.hasHeader(sheetId, cellPositions)) {
                 sortZone.top += stepY;
             }
-            cells = this.mainCells(sheetId, sortZone);
-            const sortingCells = cells[sortingCol - sortZone.left];
-            const sortedIndexOfSortTypeCells = sortCells(sortingCells, sortDirection, Boolean(options.emptyCellAsZero));
+            cellPositions = this.mainCells(sheetId, sortZone);
+            const sortingCells = cellPositions[sortingCol - sortZone.left];
+            const sortedIndexOfSortTypeCells = sortCells(sortingCells.map((position) => this.getters.getEvaluatedCell(position)), sortDirection, Boolean(options.emptyCellAsZero));
             const sortedIndex = sortedIndexOfSortTypeCells.map((x) => x.index);
-            const [width, height] = [cells.length, cells[0].length];
+            const [width, height] = [cellPositions.length, cellPositions[0].length];
+            const updateCellCommands = [];
             for (let c = 0; c < width; c++) {
                 for (let r = 0; r < height; r++) {
-                    let cell = cells[c][sortedIndex[r]];
+                    let { col, row, sheetId } = cellPositions[c][sortedIndex[r]];
+                    const cell = this.getters.getCell(sheetId, col, row);
                     let newCol = sortZone.left + c * stepX;
                     let newRow = sortZone.top + r * stepY;
                     let newCellValues = {
@@ -36445,11 +36549,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         col: newCol,
                         row: newRow,
                         content: "",
-                        value: "",
                     };
                     if (cell) {
                         let content = cell.content;
-                        if (cell.isFormula()) {
+                        if (cell.isFormula) {
                             const position = this.getters.getCellPosition(cell.id);
                             const offsetY = newRow - position.row;
                             // we only have a vertical offset
@@ -36459,9 +36562,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         newCellValues.style = cell.style;
                         newCellValues.content = content;
                         newCellValues.format = cell.format;
-                        newCellValues.value = cell.evaluated.value;
                     }
-                    this.dispatch("UPDATE_CELL", newCellValues);
+                    updateCellCommands.push(newCellValues);
+                }
+                for (const cmd of updateCellCommands) {
+                    this.dispatch("UPDATE_CELL", cmd);
                 }
             }
         }
@@ -36488,7 +36593,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 const colCells = [];
                 cells.push(colCells);
                 for (const row of rows) {
-                    colCells.push(this.getters.getCell(sheetId, col, row));
+                    colCells.push({ sheetId, col, row });
                 }
             }
             return cells;
@@ -36537,7 +36642,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         break;
                     }
                     catch (error) {
-                        return 25 /* CommandResult.InvalidSheetId */;
+                        return 26 /* CommandResult.InvalidSheetId */;
                     }
             }
             return 0 /* CommandResult.Success */;
@@ -36573,14 +36678,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         // Getters
         // ---------------------------------------------------------------------------
         getCellWidth(sheetId, { col, row }) {
-            const cell = this.getters.getCell(sheetId, col, row);
-            let contentWidth = 0;
-            if (cell) {
-                contentWidth += this.getTextWidth(cell);
-            }
+            const position = { sheetId, col, row };
+            let contentWidth = this.getTextWidth(position);
             const icon = this.getters.getConditionalIcon(col, row);
             if (icon) {
-                contentWidth += computeIconWidth(this.getters.getCellStyle(cell));
+                contentWidth += computeIconWidth(this.getters.getCellStyle(position));
             }
             const isFilterHeader = this.getters.isFilterHeader(sheetId, col, row);
             if (isFilterHeader) {
@@ -36588,7 +36690,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             if (contentWidth > 0) {
                 contentWidth += 2 * PADDING_AUTORESIZE_HORIZONTAL;
-                if (this.getters.getCellStyle(cell).wrapping === "wrap") {
+                if (this.getters.getCellStyle(position).wrapping === "wrap") {
                     const zone = positionToZone({ col, row });
                     const colWidth = this.getters.getColSize(this.getters.getActiveSheetId(), zone.left);
                     return Math.min(colWidth, contentWidth);
@@ -36596,22 +36698,23 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             return contentWidth;
         }
-        getTextWidth(cell) {
-            const text = this.getters.getCellText(cell, this.getters.shouldShowFormulas());
-            const { sheetId, col, row } = this.getters.getCellPosition(cell.id);
+        getTextWidth(position) {
+            const text = this.getters.getCellText(position, this.getters.shouldShowFormulas());
+            const { sheetId, col, row } = position;
             return computeTextWidth(this.ctx, text, this.getters.getCellComputedStyle(sheetId, col, row));
         }
-        getCellText(cell, showFormula = false) {
-            if (showFormula && (cell.isFormula() || cell.evaluated.type === CellValueType.error)) {
+        getCellText({ sheetId, col, row }, showFormula = false) {
+            const cell = this.getters.getCell(sheetId, col, row);
+            if (showFormula && (cell === null || cell === void 0 ? void 0 : cell.isFormula)) {
                 return cell.content;
             }
             else {
-                return cell.formattedValue;
+                return this.getters.getEvaluatedCell({ sheetId, col, row }).formattedValue;
             }
         }
-        getCellMultiLineText(cell, width) {
-            const style = this.getters.getCellStyle(cell);
-            const text = this.getters.getCellText(cell);
+        getCellMultiLineText(position, width) {
+            const style = this.getters.getCellStyle(position);
+            const text = this.getters.getCellText(position);
             const words = text.split(" ");
             const brokenText = [];
             let textLine = "";
@@ -36782,10 +36885,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
 
     const clickableCellRegistry = new Registry();
     clickableCellRegistry.add("link", {
-        condition: (cell) => cell.isLink(),
-        action: (cell, env) => {
-            cell.action(env);
-        },
+        condition: (position, env) => !!env.model.getters.getEvaluatedCell(position).link,
+        action: (position, env) => openLink(env.model.getters.getEvaluatedCell(position).link, env),
         sequence: 5,
     });
 
@@ -37013,6 +37114,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     cursor: pointer;
   }
 `;
+    let tKey = 1;
     class SpreadsheetDashboard extends owl.Component {
         setup() {
             const gridRef = owl.useRef("grid");
@@ -37062,41 +37164,42 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const sheetId = this.env.model.getters.getActiveSheetId();
             for (const col of this.env.model.getters.getSheetViewVisibleCols()) {
                 for (const row of this.env.model.getters.getSheetViewVisibleRows()) {
-                    const cell = this.env.model.getters.getCell(sheetId, col, row);
-                    if (cell) {
-                        const action = this.getClickableAction(cell);
-                        if (!action) {
-                            continue;
-                        }
-                        let zone;
-                        if (this.env.model.getters.isInMerge(sheetId, col, row)) {
-                            zone = this.env.model.getters.getMerge(sheetId, col, row);
-                        }
-                        else {
-                            zone = positionToZone({ col, row });
-                        }
-                        const rect = this.env.model.getters.getVisibleRect(zone);
-                        cells.push({
-                            coordinates: rect,
-                            cell,
-                            action,
-                        });
+                    const action = this.getClickableAction({ sheetId, col, row });
+                    if (!action) {
+                        continue;
                     }
+                    let zone;
+                    if (this.env.model.getters.isInMerge(sheetId, col, row)) {
+                        zone = this.env.model.getters.getMerge(sheetId, col, row);
+                    }
+                    else {
+                        zone = positionToZone({ col, row });
+                    }
+                    const rect = this.env.model.getters.getVisibleRect(zone);
+                    cells.push({
+                        coordinates: rect,
+                        position: { col, row },
+                        action,
+                        // we can't rely on position only because a row or a column could
+                        // be inserted at any time.
+                        tKey: `${tKey}-${col}-${row}`,
+                    });
                 }
             }
+            tKey++;
             return cells;
         }
-        getClickableAction(cell) {
+        getClickableAction(position) {
             for (const items of clickableCellRegistry.getAll().sort((a, b) => a.sequence - b.sequence)) {
-                if (items.condition(cell, this.env)) {
+                if (items.condition(position, this.env)) {
                     return items.action;
                 }
             }
             return false;
         }
         selectClickableCell(clickableCell) {
-            const { cell, action } = clickableCell;
-            action(cell, this.env);
+            const { position, action } = clickableCell;
+            action({ ...position, sheetId: this.env.model.getters.getActiveSheetId() }, this.env);
         }
         onClosePopover() {
             this.env.model.dispatch("CLOSE_CELL_POPOVER");
@@ -37402,15 +37505,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     };
     function interactiveAddMerge(env, sheetId, target) {
         const result = env.model.dispatch("ADD_MERGE", { sheetId, target });
-        if (!result.isSuccessful) {
-            if (result.isCancelledBecause(3 /* CommandResult.MergeIsDestructive */)) {
-                env.askConfirmation(AddMergeInteractiveContent.MergeIsDestructive, () => {
-                    env.model.dispatch("ADD_MERGE", { sheetId, target, force: true });
-                });
-            }
-            else if (result.isCancelledBecause(77 /* CommandResult.MergeInFilter */)) {
-                env.raiseError(AddMergeInteractiveContent.MergeInFilter);
-            }
+        if (result.isCancelledBecause(78 /* CommandResult.MergeInFilter */)) {
+            env.raiseError(AddMergeInteractiveContent.MergeInFilter);
+        }
+        else if (result.isCancelledBecause(3 /* CommandResult.MergeIsDestructive */)) {
+            env.askConfirmation(AddMergeInteractiveContent.MergeIsDestructive, () => {
+                env.model.dispatch("ADD_MERGE", { sheetId, target, force: true });
+            });
         }
     }
 
@@ -37777,7 +37878,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.redoTool = this.env.model.getters.canRedo();
             this.paintFormatTool = this.env.model.getters.isPaintingFormat();
             const cell = this.env.model.getters.getActiveCell();
-            if (cell && cell.format) {
+            if (cell.format) {
                 const currentFormat = this.commonFormats.find((f) => f.value === cell.format);
                 this.currentFormatName = currentFormat ? currentFormat.name : "";
             }
@@ -37785,7 +37886,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 this.currentFormatName = "automatic";
             }
             this.style = { ...this.env.model.getters.getCurrentStyle() };
-            this.style.align = this.style.align || (cell === null || cell === void 0 ? void 0 : cell.defaultAlign);
+            this.style.align = this.style.align || cell.defaultAlign;
             this.fillColor = this.style.fillColor || "#ffffff";
             this.textColor = this.style.textColor || "#000000";
             this.menus = topbarMenuRegistry
@@ -39285,7 +39386,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         allowDispatch(cmd) {
             if (this.isWaitingForUndoRedo) {
-                return 61 /* CommandResult.WaitingSessionConfirmation */;
+                return 62 /* CommandResult.WaitingSessionConfirmation */;
             }
             switch (cmd.type) {
                 case "REQUEST_UNDO":
@@ -39366,7 +39467,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         // ---------------------------------------------------------------------------
         allowDispatch(cmd) {
             if (cmd.type === "MOVE_RANGES") {
-                return cmd.target.length === 1 ? 0 /* CommandResult.Success */ : 24 /* CommandResult.InvalidZones */;
+                return cmd.target.length === 1 ? 0 /* CommandResult.Success */ : 25 /* CommandResult.InvalidZones */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -39571,9 +39672,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         : range.unboundedZone.bottom +
                             ((range.parts[1] || range.parts[0]).rowFixed ? 0 : offsetY),
                 };
-                range = range.clone({ sheetId: copySheetId, zone: unboundZone });
-                range.orderZone();
-                return range;
+                return range.clone({ sheetId: copySheetId, zone: unboundZone }).orderZone();
             });
         }
         /**
@@ -39604,9 +39703,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const invalidSheetName = sheetName && !this.getters.getSheetIdByName(sheetName) ? sheetName : undefined;
             const sheetId = this.getters.getSheetIdByName(sheetName) || defaultSheetId;
             const rangeInterface = { prefixSheet, zone, sheetId, invalidSheetName, parts };
-            const range = new RangeImpl(rangeInterface, this.getters.getSheetSize);
-            range.orderZone();
-            return range;
+            return new RangeImpl(rangeInterface, this.getters.getSheetSize).orderZone();
         }
         /**
          * Same as `getRangeString` but add all necessary merge to the range to make it a valid selection
@@ -39919,7 +40016,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         addCellToSelection(col, row) {
             const sheetId = this.getters.getActiveSheetId();
             ({ col, row } = this.getters.getMainCellPosition(sheetId, col, row));
-            const zone = positionToZone({ col, row });
+            const zone = this.getters.expandZone(sheetId, positionToZone({ col, row }));
             return this.processEvent({
                 type: "ZonesSelected",
                 anchor: { zone, cell: { col, row } },
@@ -40131,20 +40228,20 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         checkAnchorZone(anchor) {
             const { cell, zone } = anchor;
             if (!isInside(cell.col, cell.row, zone)) {
-                return 14 /* CommandResult.InvalidAnchorZone */;
+                return 15 /* CommandResult.InvalidAnchorZone */;
             }
             const { left, right, top, bottom } = zone;
             const sheetId = this.getters.getActiveSheetId();
             const refCol = this.getters.findVisibleHeader(sheetId, "COL", range(left, right + 1));
             const refRow = this.getters.findVisibleHeader(sheetId, "ROW", range(top, bottom + 1));
             if (refRow === undefined || refCol === undefined) {
-                return 15 /* CommandResult.SelectionOutOfBound */;
+                return 16 /* CommandResult.SelectionOutOfBound */;
             }
             return 0 /* CommandResult.Success */;
         }
         checkAnchorZoneOrThrow(anchor) {
             const result = this.checkAnchorZone(anchor);
-            if (result === 14 /* CommandResult.InvalidAnchorZone */) {
+            if (result === 15 /* CommandResult.InvalidAnchorZone */) {
                 throw new Error(_t("The provided anchor is invalid. The cell must be part of the zone."));
             }
         }
@@ -40296,8 +40393,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          */
         isCellEmpty({ col, row }, sheetId = this.getters.getActiveSheetId()) {
             const mainCellPosition = this.getters.getMainCellPosition(sheetId, col, row);
-            const cell = this.getters.getCell(sheetId, mainCellPosition.col, mainCellPosition.row);
-            return !cell || cell.isEmpty();
+            const cell = this.getters.getEvaluatedCell({ sheetId, ...mainCellPosition });
+            return cell.type === CellValueType.empty;
         }
         /** Computes the next cell position in the given direction by crossing through merges and skipping hidden cells.
          *
@@ -41528,8 +41625,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const content = (_a = cells[xc]) === null || _a === void 0 ? void 0 : _a.content;
             if (content && isMarkdownLink(content)) {
                 const { label, url } = parseMarkdownLink(content);
-                if (isMarkdownSheetLink(content)) {
-                    const sheetId = parseSheetLink(url);
+                if (isSheetUrl(url)) {
+                    const sheetId = parseSheetUrl(url);
                     const sheet = data.sheets.find((sheet) => sheet.id === sheetId);
                     const location = sheet ? `${sheet.name}!A1` : INCORRECT_RANGE_STRING;
                     linkNodes.push(escapeXml /*xml*/ `
@@ -41538,7 +41635,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 }
                 else {
                     const linkRelId = addRelsToFile(construct.relsFiles, `xl/worksheets/_rels/sheet${sheetIndex}.xml.rels`, {
-                        target: url,
+                        target: withHttps(url),
                         type: XLSX_RELATION_TYPE.hyperlink,
                         targetMode: "External",
                     });
@@ -41838,6 +41935,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.corePlugins = [];
             this.uiPlugins = [];
             /**
+             * In a collaborative context, some commands can be replayed, we have to ensure
+             * that these commands are not replayed on the UI plugins.
+             */
+            this.isReplayingCommand = false;
+            /**
              * A plugin can draw some contents on the canvas. But even better: it can do
              * so multiple times.  The order of the render calls will determine a list of
              * "layers" (i.e., earlier calls will be obviously drawn below later calls).
@@ -41867,7 +41969,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 const command = { type, ...payload };
                 let status = this.status;
                 if (this.getters.isReadonly() && !canExecuteInReadonly(command)) {
-                    return new DispatchResult(64 /* CommandResult.Readonly */);
+                    return new DispatchResult(65 /* CommandResult.Readonly */);
                 }
                 switch (status) {
                     case 0 /* Status.Ready */:
@@ -41912,7 +42014,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 const command = { type, ...payload };
                 const previousStatus = this.status;
                 this.status = 2 /* Status.RunningCore */;
-                this.dispatchToHandlers(this.handlers, command);
+                const handlers = this.isReplayingCommand ? [this.range, ...this.corePlugins] : this.handlers;
+                this.dispatchToHandlers(handlers, command);
                 this.status = previousStatus;
                 return DispatchResult.Success;
             };
@@ -42026,7 +42129,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.finalize();
         }
         setupSession(revisionId) {
-            const session = new Session(buildRevisionLog(revisionId, this.state.recordChanges.bind(this.state), (command) => this.dispatchToHandlers([this.range, ...this.corePlugins], command)), this.config.transportService, revisionId);
+            const session = new Session(buildRevisionLog(revisionId, this.state.recordChanges.bind(this.state), (command) => {
+                this.isReplayingCommand = true;
+                this.dispatchToHandlers([this.range, ...this.corePlugins], command);
+                this.isReplayingCommand = false;
+            }), this.config.transportService, revisionId);
             return session;
         }
         setupSessionEvents() {
@@ -42195,11 +42302,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         clickableCellRegistry,
         otRegistry,
         inverseCommandRegistry,
-        cellRegistry,
+        urlRegistry,
         cellPopoverRegistry,
-    };
-    const cellTypes = {
-        LinkCell,
     };
     const helpers = {
         args,
@@ -42215,9 +42319,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         UuidGenerator,
         formatValue,
         computeTextWidth,
-        isMarkdownLink,
-        parseMarkdownLink,
-        markdownLink,
         createEmptyWorkbookData,
         getDefaultChartJsRuntime,
         chartFontColor,
@@ -42229,6 +42330,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         rgbaToHex,
         colorToRGBA,
         positionToZone,
+    };
+    const links = {
+        isMarkdownLink,
+        parseMarkdownLink,
+        markdownLink,
+        openLink,
+        urlRepresentation,
     };
     const components = {
         ChartPanel,
@@ -42264,7 +42372,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     exports.__info__ = __info__;
     exports.addFunction = addFunction;
     exports.astToFormula = astToFormula;
-    exports.cellTypes = cellTypes;
     exports.compile = compile;
     exports.components = components;
     exports.convertAstNodes = convertAstNodes;
@@ -42273,6 +42380,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     exports.functionCache = functionCache;
     exports.helpers = helpers;
     exports.invalidateEvaluationCommands = invalidateEvaluationCommands;
+    exports.links = links;
     exports.load = load;
     exports.parse = parse;
     exports.readonlyAllowedCommands = readonlyAllowedCommands;
@@ -42283,8 +42391,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2022-11-03T06:57:12.461Z';
-    exports.__info__.hash = '7112f4d';
+    exports.__info__.date = '2022-11-18T08:57:24.801Z';
+    exports.__info__.hash = '9616681';
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map

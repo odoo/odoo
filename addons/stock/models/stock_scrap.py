@@ -3,7 +3,7 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import float_compare
+from odoo.tools import float_compare, float_is_zero
 
 
 class StockScrap(models.Model):
@@ -54,7 +54,7 @@ class StockScrap(models.Model):
         domain="[('scrap_location', '=', True), ('company_id', 'in', [company_id, False])]", required=True, states={'done': [('readonly', True)]}, check_company=True)
     scrap_qty = fields.Float(
         'Quantity', required=True, states={'done': [('readonly', True)]}, digits='Product Unit of Measure',
-        compute='_compute_scrap_qty', precompute=True, store=True)
+        compute='_compute_scrap_qty', precompute=True, readonly=False, store=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('done', 'Done')],
@@ -171,6 +171,9 @@ class StockScrap(models.Model):
 
     def action_validate(self):
         self.ensure_one()
+        if float_is_zero(self.scrap_qty,
+                         precision_rounding=self.product_uom_id.rounding):
+            raise UserError(_('You can only enter positive quantities.'))
         if self.product_id.type != 'product':
             return self.do_scrap()
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')

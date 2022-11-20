@@ -1962,7 +1962,11 @@ QUnit.module("Views", (hooks) => {
             });
             assert.containsOnce(target, "label.o_form_label", "Only one label should be displayed");
             assert.strictEqual(target.querySelector("label.o_form_label").textContent, "label2");
-            assert.containsOnce(target, ".o_inner_group > div", "This group should only contain one line");
+            assert.containsOnce(
+                target,
+                ".o_inner_group > div",
+                "This group should only contain one line"
+            );
         }
     );
 
@@ -12627,4 +12631,87 @@ QUnit.module("Views", (hooks) => {
             "Unable to save"
         );
     });
+
+    QUnit.test(
+        "execute an action before and after each valid save in a form view",
+        async function (assert) {
+            const formView = registry.category("views").get("form");
+            class CustomFormController extends formView.Controller {
+                async onRecordSaved(record) {
+                    assert.step(`onRecordSaved ${record.resId}`);
+                }
+
+                async onWillSaveRecord(record) {
+                    assert.step(`onWillSaveRecord ${record.resId}`);
+                }
+            }
+            registry.category("views").add("custom_form", {
+                ...formView,
+                Controller: CustomFormController,
+            });
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `<form js_class="custom_form"><field name="foo" required="1"/></form>`,
+                mockRPC(route, args) {
+                    if (args.method === "write") {
+                        assert.step(`write ${args.args[0]}`);
+                    }
+                },
+            });
+
+            await editInput(target, "[name='foo'] input", "");
+            await clickSave(target);
+            assert.verifySteps([]);
+
+            await editInput(target, "[name='foo'] input", "YOLO");
+            await clickSave(target);
+            assert.verifySteps(["onWillSaveRecord 1", "write 1", "onRecordSaved 1"]);
+        }
+    );
+
+    QUnit.test(
+        "don't exec a valid save with onWillSaveRecord in a form view",
+        async function (assert) {
+            const formView = registry.category("views").get("form");
+            class CustomFormController extends formView.Controller {
+                async onRecordSaved(record) {
+                    throw new Error("should not execute onRecordSaved");
+                }
+
+                async onWillSaveRecord(record) {
+                    assert.step(`onWillSaveRecord ${record.resId}`);
+                    return false;
+                }
+            }
+            registry.category("views").add("custom_form", {
+                ...formView,
+                Controller: CustomFormController,
+            });
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `<form js_class="custom_form"><field name="foo" required="1"/></form>`,
+                mockRPC(route, args) {
+                    if (args.method === "write") {
+                        throw new Error("should not save the record");
+                    }
+                },
+            });
+
+            await editInput(target, "[name='foo'] input", "");
+            await clickSave(target);
+            assert.verifySteps([]);
+
+            await editInput(target, "[name='foo'] input", "YOLO");
+            await clickSave(target);
+            assert.verifySteps(["onWillSaveRecord 1"]);
+        }
+    );
 });

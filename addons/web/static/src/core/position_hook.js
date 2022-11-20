@@ -5,12 +5,16 @@ import { throttleForAnimation } from "./utils/timing";
 import { onWillUnmount, useEffect, useExternalListener, useRef } from "@odoo/owl";
 
 /**
+ * @typedef {(popperElement: HTMLElement, solution: PositioningSolution) => void} PositionEventHandler
+ */
+
+/**
  * @typedef {{
  *  popper?: string;
  *  container?: HTMLElement;
  *  margin?: number;
  *  position?: Direction | Position;
- *  onPositioned?: (popperElement: HTMLElement, solution: PositioningSolution) => void;
+ *  onPositioned?: PositionEventHandler;
  * }} Options
  *
  * @typedef {keyof DirectionsData} DirectionsDataKey

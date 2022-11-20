@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields, models, _
 
 class ProjectProjectStage(models.Model):
     _name = 'project.project.stage'
@@ -15,3 +15,9 @@ class ProjectProjectStage(models.Model):
         help="If set, an email will be automatically sent to the customer when the project reaches this stage.")
     fold = fields.Boolean('Folded in Kanban',
         help="If enabled, this stage will be displayed as folded in the Kanban view of your projects. Projects in a folded stage are considered as closed.")
+
+    def copy(self, default=None):
+        default = dict(default or {})
+        if not default.get('name'):
+            default['name'] = _("%s (copy)") % (self.name)
+        return super().copy(default)

@@ -816,7 +816,10 @@ class RepairFee(models.Model):
         domain="[('type', '=', 'service'), '|', ('company_id', '=', company_id), ('company_id', '=', False)]")
     product_uom_qty = fields.Float('Quantity', digits='Product Unit of Measure', required=True, default=1.0)
     price_unit = fields.Float('Unit Price', required=True, digits='Product Price')
-    product_uom = fields.Many2one('uom.uom', 'Product Unit of Measure', required=True, domain="[('category_id', '=', product_uom_category_id)]")
+    product_uom = fields.Many2one(
+        'uom.uom', 'Product Unit of Measure',
+        compute='_compute_product_uom', store=True, readonly=False, precompute=True,
+        required=True, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     price_subtotal = fields.Float('Subtotal', compute='_compute_price_total_and_subtotal', store=True, digits=0)
     price_total = fields.Float('Total', compute='_compute_price_total_and_subtotal', store=True, digits=0)
@@ -832,6 +835,11 @@ class RepairFee(models.Model):
             taxes = fee.tax_id.compute_all(fee.price_unit, fee.repair_id.pricelist_id.currency_id, fee.product_uom_qty, fee.product_id, fee.repair_id.partner_id)
             fee.price_subtotal = taxes['total_excluded']
             fee.price_total = taxes['total_included']
+
+    @api.depends('product_id')
+    def _compute_product_uom(self):
+        for fee in self:
+            fee.product_uom = fee.product_id.uom_id
 
     @api.onchange('repair_id', 'product_id', 'product_uom_qty')
     def onchange_product_id(self):

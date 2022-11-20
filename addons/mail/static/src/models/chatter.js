@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
-import { attr, clear, insert, link, many, one, Model } from '@mail/model';
+import { useComponentToModel } from "@mail/component_hooks/use_component_to_model";
+import { attr, clear, insert, link, many, one, Model } from "@mail/model";
 
 const getThreadNextTemporaryId = (function () {
     let tmpId = 0;
@@ -20,11 +20,11 @@ const getMessageNextTemporaryId = (function () {
 })();
 
 Model({
-    name: 'Chatter',
-    template: 'mail.Chatter',
+    name: "Chatter",
+    template: "mail.Chatter",
     isLegacyComponent: true,
     componentSetup() {
-        useComponentToModel({ fieldName: 'component' });
+        useComponentToModel({ fieldName: "component" });
     },
     recordMethods: {
         focus() {
@@ -63,7 +63,7 @@ Model({
          * @param {MouseEvent} ev
          */
         onClickChatterTopbarClose(ev) {
-            this.component.trigger('o-close-chatter');
+            this.component.trigger("o-close-chatter");
         },
         /**
          * @param {MouseEvent} ev
@@ -117,7 +117,7 @@ Model({
                 return;
             }
             this.thread.unfollow();
-            this.reloadParentView({ fieldNames: ['message_follower_ids'] });
+            this.reloadParentView({ fieldNames: ["message_follower_ids"] });
         },
         /**
          * @param {MouseEvent} ev
@@ -143,7 +143,11 @@ Model({
          * @param {Event} ev
          */
         onScrollScrollPanel(ev) {
-            if (!this.threadView || !this.threadView.messageListView || !this.threadView.messageListView.component) {
+            if (
+                !this.threadView ||
+                !this.threadView.messageListView ||
+                !this.threadView.messageListView.component
+            ) {
                 return;
             }
             this.threadView.messageListView.onScroll();
@@ -156,36 +160,33 @@ Model({
          */
         promptAddPartnerFollower() {
             const action = {
-                type: 'ir.actions.act_window',
-                res_model: 'mail.wizard.invite',
-                view_mode: 'form',
-                views: [[false, 'form']],
+                type: "ir.actions.act_window",
+                res_model: "mail.wizard.invite",
+                view_mode: "form",
+                views: [[false, "form"]],
                 name: this.env._t("Invite Follower"),
-                target: 'new',
+                target: "new",
                 context: {
                     default_res_model: this.thread.model,
                     default_res_id: this.thread.id,
                 },
             };
-            this.env.services.action.doAction(
-                action,
-                {
-                    onClose: async () => {
-                        if (!this.exists() && !this.thread) {
-                            return;
-                        }
-                        await this.thread.fetchData(['followers']);
-                        if (this.exists() && this.hasParentReloadOnFollowersUpdate) {
-                            this.reloadParentView();
-                        }
-                    },
-                }
-            );
+            this.env.services.action.doAction(action, {
+                onClose: async () => {
+                    if (!this.exists() && !this.thread) {
+                        return;
+                    }
+                    await this.thread.fetchData(["followers"]);
+                    if (this.exists() && this.hasParentReloadOnFollowersUpdate) {
+                        this.reloadParentView();
+                    }
+                },
+            });
         },
         async refresh() {
-            const requestData = ['activities', 'followers', 'suggestedRecipients'];
+            const requestData = ["activities", "followers", "suggestedRecipients"];
             if (this.hasMessageList) {
-                requestData.push('attachments', 'messages');
+                requestData.push("attachments", "messages");
             }
             this.thread.fetchData(requestData);
         },
@@ -203,7 +204,7 @@ Model({
                 if (fieldNames) {
                     options.fieldNames = fieldNames;
                 }
-                this.component.trigger('reload', options);
+                this.component.trigger("reload", options);
             }
         },
         showLogNote() {
@@ -239,7 +240,7 @@ Model({
                 });
             } else if (!this.thread || !this.thread.isTemporary) {
                 const currentPartner = this.messaging.currentPartner;
-                const message = this.messaging.models['Message'].insert({
+                const message = this.messaging.models["Message"].insert({
                     author: currentPartner,
                     body: this.env._t("Creating a new record..."),
                     id: getMessageNextTemporaryId(),
@@ -282,12 +283,13 @@ Model({
         },
     },
     fields: {
-        activityViews: many('ActivityView', { inverse: 'chatterOwner',
+        activityViews: many("ActivityView", {
+            inverse: "chatterOwner",
             compute() {
                 if (!this.thread) {
                     return clear();
                 }
-                return this.thread.activities.map(activity => {
+                return this.thread.activities.map((activity) => {
                     return { activity };
                 });
             },
@@ -295,17 +297,17 @@ Model({
         /**
          * Determines the attachment list that will be used to display the attachments.
          */
-        attachmentList: one('AttachmentList', { inverse: 'chatterOwner',
+        attachmentList: one("AttachmentList", {
+            inverse: "chatterOwner",
             compute() {
-                return (this.thread && this.thread.allAttachments.length > 0)
-                    ? {}
-                    : clear();
+                return this.thread && this.thread.allAttachments.length > 0 ? {} : clear();
             },
         }),
         /**
          * Determines the label on the attachment button of the topbar.
          */
-        attachmentButtonText: attr({ default: "",
+        attachmentButtonText: attr({
+            default: "",
             compute() {
                 if (!this.thread) {
                     return clear();
@@ -317,7 +319,7 @@ Model({
                 return attachments.length;
             },
         }),
-        attachmentsLoaderTimer: one('Timer', { inverse: 'chatterOwnerAsAttachmentsLoader' }),
+        attachmentsLoaderTimer: one("Timer", { inverse: "chatterOwnerAsAttachmentsLoader" }),
         /**
          * States the OWL Chatter component of this chatter.
          */
@@ -325,9 +327,10 @@ Model({
         /**
          * Determines the composer view used to post in this chatter (if any).
          */
-        composerView: one('ComposerView', { inverse: 'chatter' }),
+        composerView: one("ComposerView", { inverse: "chatter" }),
         context: attr({ default: {} }),
-        dropZoneView: one('DropZoneView', { inverse: 'chatterOwner',
+        dropZoneView: one("DropZoneView", {
+            inverse: "chatterOwner",
             compute() {
                 if (!this.thread) {
                     return clear();
@@ -338,12 +341,14 @@ Model({
                 return clear();
             },
         }),
-        fileUploader: one('FileUploader', { inverse: 'chatterOwner',
+        fileUploader: one("FileUploader", {
+            inverse: "chatterOwner",
             compute() {
                 return this.thread ? {} : clear();
             },
         }),
-        followerListMenuView: one('FollowerListMenuView', { inverse: 'chatterOwner',
+        followerListMenuView: one("FollowerListMenuView", {
+            inverse: "chatterOwner",
             compute() {
                 if (this.hasFollowers && this.thread) {
                     return {};
@@ -363,7 +368,8 @@ Model({
          * Determines whether `this` should display an activity box.
          */
         hasActivities: attr({ default: true }),
-        hasActivityBox: attr({ default: false,
+        hasActivityBox: attr({
+            default: false,
             compute() {
                 if (this.thread && this.thread.hasActivities && this.thread.activities.length > 0) {
                     return true;
@@ -373,9 +379,14 @@ Model({
         }),
         hasAttachmentBox: attr({ default: false }),
         hasExternalBorder: attr({ default: true }),
-        hasFollowButton: attr({ default: false,
+        hasFollowButton: attr({
+            default: false,
             compute() {
-                if (this.hasFollowers && this.thread && (!this.thread.channel || this.thread.channel.channel_type !== 'chat')) {
+                if (
+                    this.hasFollowers &&
+                    this.thread &&
+                    (!this.thread.channel || this.thread.channel.channel_type !== "chat")
+                ) {
                     return true;
                 }
                 return clear();
@@ -402,7 +413,9 @@ Model({
         hasParentReloadOnMessagePosted: attr({ default: false }),
         hasReadAccess: attr({
             compute() {
-                return Boolean(this.thread && !this.thread.isTemporary && this.thread.hasReadAccess);
+                return Boolean(
+                    this.thread && !this.thread.isTemporary && this.thread.hasReadAccess
+                );
             },
         }),
         /**
@@ -413,14 +426,17 @@ Model({
                 return Boolean(this.thread && this.hasMessageList);
             },
         }),
-        hasTopBar: attr({ default: false,
+        hasTopBar: attr({
+            default: false,
             compute() {
                 return this.thread ? true : clear();
             },
         }),
         hasWriteAccess: attr({
             compute() {
-                return Boolean(this.thread && !this.thread.isTemporary && this.thread.hasWriteAccess);
+                return Boolean(
+                    this.thread && !this.thread.isTemporary && this.thread.hasWriteAccess
+                );
             },
         }),
         hasTopbarCloseButton: attr({ default: false }),
@@ -441,14 +457,15 @@ Model({
             },
         }),
         isInFormSheetBg: attr({ default: false }),
-        isPreparingAttachmentsLoading: attr({ default: false,
+        isPreparingAttachmentsLoading: attr({
+            default: false,
             compute() {
                 return Boolean(this.attachmentsLoaderTimer);
             },
         }),
         isShowingAttachmentsLoading: attr({ default: false }),
         isUnfollowButtonHighlighted: attr({ default: false }),
-        scrollPanelRef: attr({ ref: 'scrollPanel' }),
+        scrollPanelRef: attr({ ref: "scrollPanel" }),
         /**
          * Determines whether the view should reload after file changed in this chatter,
          * such as from a file upload.
@@ -461,7 +478,7 @@ Model({
         /**
          * Determines the `Thread` that should be displayed by `this`.
          */
-        thread: one('Thread'),
+        thread: one("Thread"),
         /**
          * Determines the id of the thread that will be displayed by `this`.
          */
@@ -473,18 +490,19 @@ Model({
         /**
          * States the `ThreadView` displaying `this.thread`.
          */
-        threadView: one('ThreadView', { related: 'threadViewer.threadView' }),
+        threadView: one("ThreadView", { related: "threadViewer.threadView" }),
         /**
          * Determines the `ThreadViewer` managing the display of `this.thread`.
          */
-        threadViewer: one('ThreadViewer', { inverse: 'chatter',
+        threadViewer: one("ThreadViewer", {
+            inverse: "chatter",
             compute() {
                 if (!this.thread) {
                     return clear();
                 }
                 return {
                     hasThreadView: this.hasThreadView,
-                    order: 'desc',
+                    order: "desc",
                     thread: this.thread ? this.thread : clear(),
                 };
             },
@@ -497,17 +515,22 @@ Model({
                 return this.env._t("Unfollow");
             },
         }),
-        useDragVisibleDropZone: one('UseDragVisibleDropZone', { default: {}, inverse: 'chatterOwner', readonly: true, required: true }),
+        useDragVisibleDropZone: one("UseDragVisibleDropZone", {
+            default: {},
+            inverse: "chatterOwner",
+            readonly: true,
+            required: true,
+        }),
         webRecord: attr(),
     },
     onChanges: [
         {
-            dependencies: ['threadId', 'threadModel'],
-            methodName: '_onThreadIdOrThreadModelChanged',
+            dependencies: ["threadId", "threadModel"],
+            methodName: "_onThreadIdOrThreadModelChanged",
         },
         {
-            dependencies: ['thread.isLoadingAttachments'],
-            methodName: '_onThreadIsLoadingAttachmentsChanged',
+            dependencies: ["thread.isLoadingAttachments"],
+            methodName: "_onThreadIsLoadingAttachmentsChanged",
         },
     ],
 });

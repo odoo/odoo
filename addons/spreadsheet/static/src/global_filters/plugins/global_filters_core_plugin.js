@@ -210,7 +210,7 @@ export class GlobalFiltersCorePlugin extends spreadsheet.CorePlugin {
         currentLabel = currentLabel.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
         for (const sheetId of sheetIds) {
             for (const cell of Object.values(this.getters.getCells(sheetId))) {
-                if (cell.isFormula()) {
+                if (cell.isFormula) {
                     const newContent = cell.content.replace(
                         new RegExp(`FILTER\\.VALUE\\(\\s*"${currentLabel}"\\s*\\)`, "g"),
                         `FILTER.VALUE("${newLabel}")`

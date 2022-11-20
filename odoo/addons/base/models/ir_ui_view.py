@@ -272,11 +272,19 @@ different model than this one), then this view's inheritance specs
 (<xpath/>) are applied, and the result is used as if it were this view's
 actual arch.
 """)
+
+    # The "active" field is not updated during updates if <template> is used
+    # instead of <record> to define the view in XML, see _tag_template. For
+    # qweb views, you should not rely on the active field being updated anyway
+    # as those views, if used in frontend layouts, can be duplicated (see COW)
+    # and will thus always require upgrade scripts if you really want to change
+    # the default value of their "active" field.
     active = fields.Boolean(default=True,
                             help="""If this view is inherited,
 * if True, the view always extends its parent
 * if False, the view currently does not extend its parent but can be enabled
          """)
+    model_id = fields.Many2one("ir.model", string="Model of the view", compute='_compute_model_id', inverse='_inverse_compute_model_id')
 
     @api.depends('arch_db', 'arch_fs', 'arch_updated')
     @api.depends_context('read_arch_from_file', 'lang')
@@ -369,6 +377,15 @@ actual arch.
         domain = [('model', '=', 'ir.ui.view'), (name, operator, value)]
         data = self.env['ir.model.data'].sudo().search(domain)
         return [('id', 'in', data.mapped('res_id'))]
+
+    @api.depends('model')
+    def _compute_model_id(self):
+        for record in self:
+            record.model_id = self.env['ir.model']._get(record.model)
+
+    def _inverse_compute_model_id(self):
+        for record in self:
+            record.model = record.model_id.model
 
     def _compute_xml_id(self):
         xml_ids = collections.defaultdict(list)
@@ -498,6 +515,10 @@ actual arch.
     @api.model_create_multi
     def create(self, vals_list):
         for values in vals_list:
+            if 'arch_db' in values and not values['arch_db']:
+                # delete empty arch_db to avoid triggering _check_xml before _inverse_arch_base is called
+                del values['arch_db']
+
             if not values.get('type'):
                 if values.get('inherit_id'):
                     values['type'] = self.browse(values['inherit_id']).type

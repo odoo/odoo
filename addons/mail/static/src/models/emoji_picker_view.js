@@ -1,15 +1,15 @@
 /** @odoo-module **/
 
-import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
-import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
-import { attr, clear, many, one, Model } from '@mail/model';
+import { useComponentToModel } from "@mail/component_hooks/use_component_to_model";
+import { useUpdateToModel } from "@mail/component_hooks/use_update_to_model";
+import { attr, clear, many, one, Model } from "@mail/model";
 
 Model({
-    name: 'EmojiPickerView',
-    template: 'mail.EmojiPickerView',
+    name: "EmojiPickerView",
+    template: "mail.EmojiPickerView",
     componentSetup() {
-        useComponentToModel({ fieldName: 'component' });
-        useUpdateToModel({ methodName: 'onComponentUpdate', modelName: 'EmojiPickerView' });
+        useComponentToModel({ fieldName: "component" });
+        useUpdateToModel({ methodName: "onComponentUpdate", modelName: "EmojiPickerView" });
     },
     lifecycleHooks: {
         _created() {
@@ -71,13 +71,13 @@ Model({
         },
     },
     fields: {
-        __dummyActionView: one('EmojiPickerHeaderActionView', { inverse: '__ownerAsDummy' }),
-        actionViews: many('EmojiPickerHeaderActionView', {
-            inverse: 'owner',
-            sort: [['smaller-first', 'sequence']],
+        __dummyActionView: one("EmojiPickerHeaderActionView", { inverse: "__ownerAsDummy" }),
+        actionViews: many("EmojiPickerHeaderActionView", {
+            inverse: "owner",
+            sort: [["smaller-first", "sequence"]],
         }),
-        activeCategoryByGridViewScroll: one('EmojiPickerView.Category'),
-        activeCategory: one('EmojiPickerView.Category', {
+        activeCategoryByGridViewScroll: one("EmojiPickerView.Category"),
+        activeCategory: one("EmojiPickerView.Category", {
             compute() {
                 if (this.currentSearch !== "") {
                     return clear();
@@ -90,16 +90,17 @@ Model({
                 }
                 return clear();
             },
-            inverse: 'emojiPickerViewAsActive',
+            inverse: "emojiPickerViewAsActive",
         }),
-        categories: many('EmojiPickerView.Category', { inverse: 'emojiPickerViewOwner',
+        categories: many("EmojiPickerView.Category", {
+            inverse: "emojiPickerViewOwner",
             compute() {
-                return this.messaging.emojiRegistry.allCategories.map(category => ({ category }));
+                return this.messaging.emojiRegistry.allCategories.map((category) => ({ category }));
             },
         }),
         component: attr(),
         currentSearch: attr({ default: "" }),
-        defaultActiveCategory: one('EmojiPickerView.Category', {
+        defaultActiveCategory: one("EmojiPickerView.Category", {
             compute() {
                 if (this.categories.length === 0) {
                     return clear();
@@ -107,20 +108,27 @@ Model({
                 return this.categories[0];
             },
         }),
-        emojiCategoryViews: many('EmojiCategoryView', { inverse: 'emojiPickerViewOwner',
+        emojiCategoryViews: many("EmojiCategoryView", {
+            inverse: "emojiPickerViewOwner",
             compute() {
-                return this.categories.map(category => ({ viewCategory: category }));
+                return this.categories.map((category) => ({ viewCategory: category }));
             },
         }),
-        emojiGridView: one('EmojiGridView', { default: {}, inverse: 'emojiPickerViewOwner', readonly: true, required: true }),
-        inputRef: attr({ ref: 'input' }),
+        emojiGridView: one("EmojiGridView", {
+            default: {},
+            inverse: "emojiPickerViewOwner",
+            readonly: true,
+            required: true,
+        }),
+        inputRef: attr({ ref: "input" }),
         isDoFocus: attr({ default: false }),
         isFocused: attr({ default: false }),
-        placeholder: attr({ required: true,
+        placeholder: attr({
+            required: true,
             compute() {
                 return this.env._t("Search an emoji");
             },
         }),
-        popoverViewOwner: one('PopoverView', { identifying: true, inverse: 'emojiPickerView' }),
+        popoverViewOwner: one("PopoverView", { identifying: true, inverse: "emojiPickerView" }),
     },
 });

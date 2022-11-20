@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { attr, Model } from '@mail/model';
+import { attr, Model } from "@mail/model";
 
 Model({
-    name: 'MediaStream',
+    name: "MediaStream",
     lifecycleHooks: {
         _willDelete() {
             for (const track of this.webMediaStream.getTracks()) {

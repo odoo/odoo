@@ -884,7 +884,7 @@
                                                context="{'partner_id': partner_id, 'move_type': parent.move_type}"
                                                groups="account.group_account_readonly"
                                                options="{'no_create': True}"
-                                               domain="[('deprecated', '=', False), ('account_type', 'not in', ('asset_receivable', 'liability_payable')), ('company_id', '=', parent.company_id), ('is_off_balance', '=', False)]"
+                                               domain="[('deprecated', '=', False), ('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance')), ('company_id', '=', parent.company_id)]"
                                                attrs="{'required': [('display_type', 'not in', ('line_note', 'line_section'))]}"/>
                                         <field name="analytic_distribution" widget="analytic_distribution"
                                                groups="analytic.group_analytic_accounting"
@@ -951,7 +951,7 @@
                                                                 <div class="text-muted">
                                                                     Quantity:
                                                                     <t t-out="record.quantity.value"/>
-                                                                    <t t-out="record.product_uom_id.value"/>
+                                                                    <t t-out="record.product_uom_id.value" groups="uom.group_uom"/>
                                                                 </div>
                                                                 <div class="text-muted">
                                                                     Unit Price:

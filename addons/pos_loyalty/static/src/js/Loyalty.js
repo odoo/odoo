@@ -1445,5 +1445,10 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
             Gui.showNotification(res);
         }
     }
+    isProgramsResettable() {
+        const array = [this.disabledRewards, this.codeActivatedProgramRules, this.codeActivatedCoupons,
+                       this.couponPointChanges, this._get_reward_lines()];
+        return array.some(elem => elem.length > 0);
+    }
 }
 Registries.Model.extend(Order, PosLoyaltyOrder);

@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { attr, clear, one, Model } from '@mail/model';
+import { attr, clear, one, Model } from "@mail/model";
 
 Model({
-    name: 'ThreadViewer',
-    identifyingMode: 'xor',
+    name: "ThreadViewer",
+    identifyingMode: "xor",
     recordMethods: {
         /**
          * @param {integer} scrollHeight
@@ -22,9 +22,13 @@ Model({
                 return;
             }
             this.update({
-                threadCacheInitialScrollHeights: Object.assign({}, this.threadCacheInitialScrollHeights, {
-                    [threadCache.localId]: scrollHeight,
-                }),
+                threadCacheInitialScrollHeights: Object.assign(
+                    {},
+                    this.threadCacheInitialScrollHeights,
+                    {
+                        [threadCache.localId]: scrollHeight,
+                    }
+                ),
             });
         },
         /**
@@ -43,21 +47,25 @@ Model({
                 return;
             }
             this.update({
-                threadCacheInitialScrollPositions: Object.assign({}, this.threadCacheInitialScrollPositions, {
-                    [threadCache.localId]: scrollTop,
-                }),
+                threadCacheInitialScrollPositions: Object.assign(
+                    {},
+                    this.threadCacheInitialScrollPositions,
+                    {
+                        [threadCache.localId]: scrollTop,
+                    }
+                ),
             });
         },
     },
     fields: {
-        chatter: one('Chatter', { identifying: true, inverse: 'threadViewer' }),
-        chatWindow: one('ChatWindow', { identifying: true, inverse: 'threadViewer' }),
+        chatter: one("Chatter", { identifying: true, inverse: "threadViewer" }),
+        chatWindow: one("ChatWindow", { identifying: true, inverse: "threadViewer" }),
         /**
          * true if the viewer is in a compact format, like in a chat window.
          */
         compact: attr({ default: false }),
-        discuss: one('Discuss', { identifying: true, inverse: 'threadViewer' }),
-        discussPublicView: one('DiscussPublicView', { identifying: true, inverse: 'threadViewer' }),
+        discuss: one("Discuss", { identifying: true, inverse: "threadViewer" }),
+        discussPublicView: one("DiscussPublicView", { identifying: true, inverse: "threadViewer" }),
         /**
          * Determines which extra class this thread view component should have.
          */
@@ -80,15 +88,15 @@ Model({
          * Determines the order mode of the messages on this thread viewer.
          * Either 'asc', or 'desc'.
          */
-        order: attr({ default: 'asc' }),
+        order: attr({ default: "asc" }),
         /**
          * Determines the `Thread` that should be displayed by `this`.
          */
-        thread: one('Thread'),
+        thread: one("Thread"),
         /**
          * States the `ThreadCache` that should be displayed by `this`.
          */
-        threadCache: one('ThreadCache', { related: 'thread.cache' }),
+        threadCache: one("ThreadCache", { related: "thread.cache" }),
         /**
          * Determines the initial scroll height of thread caches, which is the
          * scroll height at the time the last scroll position was saved.
@@ -107,7 +115,8 @@ Model({
         /**
          * States the `ThreadView` currently displayed and managed by `this`.
          */
-        threadView: one('ThreadView', { inverse: 'threadViewer',
+        threadView: one("ThreadView", {
+            inverse: "threadViewer",
             compute() {
                 return this.hasThreadView ? {} : clear();
             },

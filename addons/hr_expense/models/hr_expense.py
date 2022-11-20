@@ -3,6 +3,8 @@
 
 import re
 from markupsafe import Markup
+import werkzeug
+
 from odoo import api, fields, Command, models, _
 from odoo.tools import float_round
 from odoo.exceptions import UserError, ValidationError
@@ -403,17 +405,23 @@ class HrExpense(models.Model):
 
     @api.model
     def get_empty_list_help(self, help_message):
-        return super(HrExpense, self).get_empty_list_help(help_message or '' + self._get_empty_list_mail_alias())
+        return super().get_empty_list_help((help_message or '') + self._get_empty_list_mail_alias())
 
     @api.model
     def _get_empty_list_mail_alias(self):
         use_mailgateway = self.env['ir.config_parameter'].sudo().get_param('hr_expense.use_mailgateway')
-        alias_record = use_mailgateway and self.env.ref('hr_expense.mail_alias_expense') or False
-        if alias_record and alias_record.alias_domain and alias_record.alias_name:
-            return Markup("""
-<p>
-Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20customer%%3A%%20%%2412.32">%(email)s</a>.
-</p>""") % {'email': '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)}
+        expense_alias = self.env.ref('hr_expense.mail_alias_expense') if use_mailgateway else False
+        if expense_alias and expense_alias.alias_domain and expense_alias.alias_name:
+            alias_email = f'{expense_alias.alias_name}@{expense_alias.alias_domain}'
+            # encode, but force %20 encoding for space instead of a + (URL / mailto difference)
+            params = werkzeug.urls.url_encode({'subject': _("Lunch with customer $12.32")}).replace('+', '%20')
+            return Markup(
+                """<p>%(send_string)s <a href="mailto:%(alias_email)s?%(params)s">%(alias_email)s</a></p>"""
+            ) % {
+                'alias_email': alias_email,
+                'params': params,
+                'send_string': _("Or send your receipts at"),
+            }
         return ""
 
     # ----------------------------------------
@@ -681,6 +689,9 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             ('user_id.email', 'ilike', email_address)
         ], limit=1)
 
+        if not employee:
+            return super().message_new(msg_dict, custom_values=custom_values)
+
         expense_description = msg_dict.get('subject', '')
 
         if employee.user_id:
@@ -743,15 +754,16 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
         symbols_pattern = '|'.join(symbols)
         price_pattern = "((%s)?\s?%s\s?(%s)?)" % (symbols_pattern, float_pattern, symbols_pattern)
         matches = re.findall(price_pattern, expense_description)
+        currency = currencies and currencies[0]
         if matches:
             match = max(matches, key=lambda match: len([group for group in match if group])) # get the longuest match. e.g. "2 chairs 120$" -> the price is 120$, not 2
             full_str = match[0]
             currency_str = match[1] or match[3]
             price = match[2].replace(',', '.')
 
-            if currency_str:
-                currency = currencies.filtered(lambda c: currency_str in [c.symbol, c.name])[0]
-                currency = currency or currencies[0]
+            if currency_str and currencies:
+                currencies = currencies.filtered(lambda c: currency_str in [c.symbol, c.name])
+                currency = (currencies and currencies[0]) or currency
             expense_description = expense_description.replace(full_str, ' ') # remove price from description
             expense_description = re.sub(' +', ' ', expense_description.strip())
 

@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { one, Patch } from '@mail/model';
+import { one, Patch } from "@mail/model";
 
 Patch({
-    name: 'Timer',
+    name: "Timer",
     fields: {
         duration: {
             compute() {
@@ -16,13 +16,13 @@ Patch({
                 return this._super();
             },
         },
-        qunitTestOwner1: one('QUnitTest', {
+        qunitTestOwner1: one("QUnitTest", {
             identifying: true,
-            inverse: 'timer1',
+            inverse: "timer1",
         }),
-        qunitTestOwner2: one('QUnitTest', {
+        qunitTestOwner2: one("QUnitTest", {
             identifying: true,
-            inverse: 'timer2',
+            inverse: "timer2",
         }),
     },
 });

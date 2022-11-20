@@ -1,16 +1,16 @@
 /** @odoo-module **/
 
-import { useModels } from '@mail/component_hooks/use_models';
+import { useModels } from "@mail/component_hooks/use_models";
 import { componentRegistry, getMessagingComponent } from "@mail/utils/messaging_component";
 
-import { useComponent } from '@odoo/owl';
+import { useComponent } from "@odoo/owl";
 
 export function useMessagingContainer() {
     const component = useComponent();
     component.isLoaded = false;
     useModels();
     component.env.services.messaging.modelManager.messagingCreatedPromise.then(() => {
-        let components = { ...component.constructor.components };
+        const components = { ...component.constructor.components };
         for (const name in componentRegistry) {
             Object.assign(components, { [name]: getMessagingComponent(name) });
         }
