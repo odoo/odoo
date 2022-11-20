@@ -960,7 +960,7 @@ msgid ""
 msgstr ""
 "\n"
 "        Module passerelle entre point_of_sale et account_reports,\n"
-"        pour les déclarations fiscales."
+"        pour les rapports de taxes."
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_intrastat
@@ -2677,7 +2677,7 @@ msgstr ""
 "\n"
 "Rapports comptables Rappel fiscal\n"
 "===============================\n"
-"Ce module ajoute une notification lorsque la déclaration fiscale est prête à être envoyée\n"
+"Ce module ajoute une notification lorsque le rapport de taxes est prêt à être envoyé\n"
 "à l'administration"
 
 #. module: base
@@ -7914,7 +7914,7 @@ msgstr ""
 "    * Définit des modèles de TVA pour les ventes et les achats\n"
 "    * Définit des modèles de taxe\n"
 "    * Définit les situations budgétaires pour la législation fiscale espagnole\n"
-"    * Définit des modèles de déclaration de revenus 111, 115 et 303\n"
+"    * Définit des modèles de rapports de taxes 111, 115 et 303\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_studio
@@ -8640,7 +8640,7 @@ msgstr ""
 "\n"
 "Ce module se compose de :\n"
 "- Plan comptable générique d'Israël\n"
-"- Impôts et déclaration fiscale\n"
+"- Impôts et rapport de taxes\n"
 "- Plusieurs postes fiscaux\n"
 " "
 
@@ -11259,21 +11259,27 @@ msgstr "<code>dateutil</code> (module Python)"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>env</code>: Odoo Environment on which the action is triggered"
-msgstr "<code/>"
+msgstr ""
+"<code>env</code>: Environnement Odoo dans lequel l'action est déclenchée"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>log(message, level='info')</code>:logging function to record debug "
 "information in <code>ir.logging</code> table"
-msgstr "<code/><code/>"
+msgstr ""
+"<code>journal(message, level='info')</code>:fonction de journalisation pour "
+"enregistrer des informations de débogage dans le tableau "
+"<code>ir.logging</code>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>model</code>: Odoo Model of the record on which the action is "
 "triggered; is a void recordset"
-msgstr "<code/>"
+msgstr ""
+"<code>modèle</code>: Modèle Odoo de l'enregistrement sur lequel l'action est"
+" déclenchée ; est un jeu d'enregistrements nul"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -11286,7 +11292,10 @@ msgstr "<code/>"
 msgid ""
 "<code>records</code>: recordset of all records on which the action is "
 "triggered in multi mode; may be void"
-msgstr "<code/>"
+msgstr ""
+"<code>enregistrements</code>: jeu d'enregistrements de tous les "
+"enregistrements sur lesquels l'action est déclenchée en mode multi ; peut "
+"être nul"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -30668,7 +30677,7 @@ msgstr "San-Marin"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__sanitized_acc_number
 msgid "Sanitized Account Number"
-msgstr "Numéro de compte désinfecté"
+msgstr "Numéro de compte nettoyé"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__6
