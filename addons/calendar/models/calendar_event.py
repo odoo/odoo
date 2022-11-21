@@ -95,6 +95,10 @@ class Meeting(models.Model):
                 partners |= self.env['res.partner'].browse(active_id)
         return partners
 
+    @api.model
+    def _default_access_token(self):
+        return uuid.uuid4().hex
+
     # description
     name = fields.Char('Meeting Subject', required=True)
     description = fields.Html('Description')
@@ -103,7 +107,7 @@ class Meeting(models.Model):
         'res.partner', string='Scheduled by', related='user_id.partner_id', readonly=True)
     location = fields.Char('Location', tracking=True)
     videocall_location = fields.Char('Meeting URL', compute='_compute_videocall_location', store=True, copy=True)
-    access_token = fields.Char('Invitation Token', store=True, copy=False, index=True)
+    access_token = fields.Char('Invitation Token', copy=False, default=_default_access_token, readonly=True, index=True)
     videocall_source = fields.Selection([('discuss', 'Discuss'), ('custom', 'Custom')], compute='_compute_videocall_source')
     videocall_channel_id = fields.Many2one('mail.channel', 'Discuss Channel')
     # visibility
@@ -393,13 +397,22 @@ class Meeting(models.Model):
         This is done by design to prevent users not being able to join a discuss meeting because the base event of the recurrency was deleted.
         """
         if not self.access_token:
-            self.access_token = uuid.uuid4().hex
+            self.access_token = self._default_access_token()
         self.videocall_location = f"{self.get_base_url()}/{self.DISCUSS_ROUTE}/{self.access_token}"
 
     @api.model
     def get_discuss_videocall_location(self):
         access_token = uuid.uuid4().hex
         return f"{self.get_base_url()}/{self.DISCUSS_ROUTE}/{access_token}"
+
+    def _init_column(self, column_name):
+        """ Initialize the value of the given column for existing rows.
+            Overridden here because we skip generating unique access tokens
+            for potentially tons of existing event, should they be needed,
+            they will be generated on the fly.
+        """
+        if column_name != 'access_token':
+            super(Meeting, self)._init_column(column_name)
 
     # ------------------------------------------------------------
     # CRUD
