@@ -70,6 +70,7 @@
         ],
         'web.assets_tests': [
             'hr/static/tests/tours/hr_employee_flow.js',
+            'hr/static/tests/tours/user_modify_own_profile_tour.js',
         ],
     },
     'license': 'LGPL-3',
