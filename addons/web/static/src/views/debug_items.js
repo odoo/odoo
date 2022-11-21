@@ -304,6 +304,11 @@ class SetDefaultDialog extends Component {
 }
 SetDefaultDialog.template = "web.DebugMenu.SetDefaultDialog";
 SetDefaultDialog.components = { Dialog };
+SetDefaultDialog.props = {
+    resModel: { type: String },
+    component: { type: Component },
+    close: { type: Function },
+};
 
 export function setDefaults({ component, env }) {
     return {
