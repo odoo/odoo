@@ -1602,6 +1602,21 @@ ul.o_checklist > li.o_checked::after {
     display: none !important;
 }
 
+// On translation editor, inputs & textareas with translatable "placeholder" and
+// "value" will get HTML content as translation value for the attributes.
+// The goal here is to hide these values until the editor's code sets the right
+// ones on elements.
+[placeholder*="data-oe-translation-id"] {
+    &::-webkit-input-placeholder{ /* WebKit */
+        color: transparent;
+        opacity: 0;
+    }
+    &::-moz-placeholder { /* Firefox */
+        color: transparent;
+        opacity: 0;
+    }
+}
+
 //------------------------------------------------------------------------------
 // Website Animate
 //------------------------------------------------------------------------------
