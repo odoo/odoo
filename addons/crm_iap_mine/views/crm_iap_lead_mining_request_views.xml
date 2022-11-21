@@ -51,9 +51,9 @@
 
                     <group name="requests">
                         <group>
-                            <div  class="o_row">
-                                <field name="lead_number" attrs="{'readonly': [('state', '=', 'done')]}" nolabel="1" class="oe_inline col-md-2 ps-0"/>
-                                <field name="search_type" widget="selection" attrs="{'readonly': [('state', '=', 'done')]}" nolabel="1" class="oe_inline col-md-6"/>
+                            <div  class="o_row py-3">
+                                <field name="lead_number" attrs="{'readonly': [('state', '=', 'done')]}" nolabel="1" class="oe_inline pe-2 o_input_3ch"/>
+                                <field name="search_type" widget="selection" attrs="{'readonly': [('state', '=', 'done')]}" nolabel="1" class="oe_inline"/>
                             </div>
                         </group>
                     </group>
@@ -70,9 +70,9 @@
                             <label for="company_size_min" attrs="{'invisible': [('filter_on_size', '=', False)]}"/>
                             <div attrs="{'invisible': [('filter_on_size', '=', False)]}">
                                 From
-                                <field name="company_size_min" class="oe_inline col-sm-3" attrs="{'required': [('filter_on_size', '=', True)], 'readonly': [('state', '=', 'done')]}"/>
+                                <field name="company_size_min" class="oe_inline px-2 o_input_5ch" attrs="{'required': [('filter_on_size', '=', True)], 'readonly': [('state', '=', 'done')]}"/>
                                 to
-                                <field name="company_size_max" class="oe_inline col-sm-3" attrs="{'required': [('filter_on_size', '=', True)], 'readonly': [('state', '=', 'done')]}"/>
+                                <field name="company_size_max" class="oe_inline px-2 o_input_7ch" attrs="{'required': [('filter_on_size', '=', True)], 'readonly': [('state', '=', 'done')]}"/>
                                 employees
                             </div>
 
@@ -86,8 +86,8 @@
                     </group>
 
                     <group name="contacts" attrs="{'invisible': [('search_type', '!=', 'people')]}">
-                        <div>
-                            <field name="contact_number" attrs="{'readonly': [('state', '=', 'done')], 'required': [('search_type', '=', 'people')]}" nolabel="1" class="col-md-1"/>
+                        <div colspan="2" class="py-3">
+                             <field name="contact_number" attrs="{'readonly': [('state', '=', 'done')], 'required': [('search_type', '=', 'people')]}" nolabel="1" class="oe_inline pe-2 col-md-1 o_input_2ch"/>
                              <span class="col-md-6">Extra contacts per Company</span>
                         </div>
                     </group>
