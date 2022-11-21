@@ -2995,9 +2995,15 @@ class MailThread(models.AbstractModel):
             } for pid in inbox_pids]
             self.env['mail.notification'].sudo().create(notif_create_values)
 
-            message_format_values = message.message_format(msg_vals=msg_vals)[0]
+            MailMessage = self.env['mail.message']
+            messages_format_prepared = MailMessage._message_format_personalized_prepare(
+                message.message_format(msg_vals=msg_vals), partner_ids=inbox_pids)
             for partner_id in inbox_pids:
-                bus_notifications.append((self.env['res.partner'].browse(partner_id), 'mail.message/inbox', dict(message_format_values)))
+                bus_notifications.append(
+                    (self.env['res.partner'].browse(partner_id),
+                     'mail.message/inbox',
+                     MailMessage._message_format_personalize(partner_id, messages_format_prepared)[0])
+                )
         self.env['bus.bus'].sudo()._sendmany(bus_notifications)
 
     def _notify_thread_by_email(self, message, recipients_data, msg_vals=False,
@@ -3820,16 +3826,19 @@ class MailThread(models.AbstractModel):
         # not necessary for computation, but saves an access right check
         if not partner_ids:
             return True
-        if set(partner_ids) == set([self.env.user.partner_id.id]):
-            self.check_access_rights('read')
-            self.check_access_rule('read')
-        else:
+        # To support unfollowing a document in the inbox no matter the current
+        # company, we allow internal users to unsubscribe themselves without
+        # checking any rights.
+        if set(partner_ids) != {self.env.user.partner_id.id}:
             self.check_access_rights('write')
             self.check_access_rule('write')
+        elif not self.env.user._is_internal():
+            self.check_access_rights('read')
+            self.check_access_rule('read')
         self.env['mail.followers'].sudo().search([
             ('res_model', '=', self._name),
             ('res_id', 'in', self.ids),
-            ('partner_id', 'in', partner_ids or []),
+            ('partner_id', 'in', partner_ids),
         ]).unlink()
 
     def _message_auto_subscribe_followers(self, updated_values, default_subtype_ids):

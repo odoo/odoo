@@ -216,6 +216,10 @@ export class Message extends Component {
         return Boolean(!this.message.isTransient && this.message.resId);
     }
 
+    get canUnfollow() {
+        return Boolean(this.message.originThread?.followerOfSelf);
+    }
+
     /**
      * Determines whether clicking on the author's avatar opens a chat with the
      * author.

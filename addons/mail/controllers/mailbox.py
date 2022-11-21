@@ -7,8 +7,11 @@ from odoo.http import request
 class MailboxController(http.Controller):
     @http.route("/mail/inbox/messages", methods=["POST"], type="json", auth="user")
     def discuss_inbox_messages(self, before=None, after=None, limit=30, around=None):
+        partner_id = request.env.user.partner_id.id
         domain = [("needaction", "=", True)]
-        return request.env["mail.message"]._message_fetch(domain, before, after, around, limit).message_format()
+        return (request.env["mail.message"]
+                ._message_fetch(domain, before, after, around, limit)
+                ._message_format_personalize(partner_id))
 
     @http.route("/mail/history/messages", methods=["POST"], type="json", auth="user")
     def discuss_history_messages(self, before=None, after=None, limit=30):
