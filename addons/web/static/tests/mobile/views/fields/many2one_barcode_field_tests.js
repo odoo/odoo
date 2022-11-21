@@ -154,4 +154,40 @@ QUnit.module("Fields", (hooks) => {
         await click(modal, ".o_kanban_record:nth-child(1)");
         await clickSave(target);
     });
+
+    QUnit.test("many2one with barcode show all records", async function (assert) {
+        // The product selected (mock) for the barcode scanner
+        const selectedRecordTest = serverData.models[PRODUCT_PRODUCT].records[0];
+
+        patchWithCleanup(BarcodeScanner, {
+            scanBarcode: async () => selectedRecordTest.barcode,
+        });
+
+        await makeView({
+            type: "form",
+            resModel: SALE_ORDER_LINE,
+            serverData,
+            arch: `
+                <form>
+                    <field name="${PRODUCT_FIELD_NAME}" options="{'can_scan_barcode': True}"/>
+                </form>`,
+            mockRPC: barcodeMockRPC,
+        });
+
+        // Select one product
+        await click(target, ".o_barcode");
+
+        // Click on the input to show all records
+        await click(target, ".o_input_dropdown > input");
+
+        const modal = target.querySelector(".modal-dialog.modal-lg");
+        assert.containsOnce(target, modal, "there should be one modal opened in full screen");
+
+        assert.containsN(
+            modal,
+            ".o_kanban_record .oe_kanban_global_click",
+            3,
+            "there should be 3 records displayed"
+        );
+    });
 });
