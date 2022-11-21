@@ -583,9 +583,11 @@ class MailRenderMixin(models.AbstractModel):
         else:
             templates_res_ids = {self._context.get('lang'): (self, res_ids)}
 
-        # rendering options
+        # rendering options (update default defined on field by asked options)
         engine = getattr(self._fields[field], 'render_engine', engine)
-        options.update(**getattr(self._fields[field], 'render_options', {}))
+        field_options = getattr(self._fields[field], 'render_options', {})
+        if options:
+            field_options.update(**options)
 
         return dict(
             (res_id, rendered)
@@ -596,6 +598,6 @@ class MailRenderMixin(models.AbstractModel):
                 tpl_res_ids,
                 engine=engine,
                 add_context=add_context,
-                options=options,
+                options=field_options,
             ).items()
         )
