@@ -669,13 +669,13 @@ export function makeDraggableHook(hookParams) {
              */
             const updateElementPosition = () => {
                 const { containerRect, element, elementRect, offset } = ctx.current;
-                const { width: ew, height: eh } = elementRect;
+                const { width: ew } = elementRect;
                 const { x: cx, y: cy, width: cw, height: ch } = containerRect;
 
                 // Updates the position of the dragged element.
                 dom.addStyle(element, {
                     left: `${clamp(ctx.mouse.x - offset.x, cx, cx + cw - ew)}px`,
-                    top: `${clamp(ctx.mouse.y - offset.y, cy, cy + ch - eh)}px`,
+                    top: `${clamp(ctx.mouse.y - offset.y, cy, cy + ch)}px`,
                 });
             };
 
@@ -770,7 +770,7 @@ export function makeDraggableHook(hookParams) {
                             )} } and got ${type}`
                         );
                     }
-                } else if (MANDATORY_PARAMS.includes(prop)) {
+                } else if (MANDATORY_PARAMS.includes(prop) && !defaultParams[prop]) {
                     throw makeError(`missing required property "${prop}" in parameters`);
                 }
             }
