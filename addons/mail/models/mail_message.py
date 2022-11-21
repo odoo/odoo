@@ -10,7 +10,7 @@ from collections import defaultdict
 from odoo import _, api, Command, fields, models, modules, tools
 from odoo.exceptions import AccessError
 from odoo.osv import expression
-from odoo.tools.misc import clean_context
+from odoo.tools.misc import clean_context, groupby as tools_groupby
 
 _logger = logging.getLogger(__name__)
 _image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/\n]{3,}=*)\n*([\'"])(?: data-filename="([^"]*)")?', re.I)
@@ -1005,7 +1005,6 @@ class Message(models.Model):
         com_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
         note_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
 
-
         # fetch scheduled notifications once, only if msg_vals is not given to
         # avoid useless queries when notifying Inbox right after a message_post
         scheduled_dt_by_msg_id = {}
@@ -1033,6 +1032,71 @@ class Message(models.Model):
             if vals['model'] and self.env[vals['model']]._original_module:
                 vals['module_icon'] = modules.module.get_module_icon(self.env[vals['model']]._original_module)
         return vals_list
+
+    @api.model
+    def _message_format_personalized_prepare(self, messages_formatted, partner_ids=None):
+        """ Prepare message to be personalized by partner.
+
+        This method add partner information in batch to the messages so that the
+        messages could be personalized for each partner by using
+        _message_format_personalize with no or a limited number of queries.
+
+        For example, it gathers all followers of the record related to the messages
+        in one go (or limit it to the partner given in parameter), so that the method
+        _message_format_personalize could then personalize each message for each partner.
+
+        Note that followers for message related to discuss.channel are not fetched.
+
+        :param list messages_formatted: list of message formatted using the method
+            message_format
+        :param list partner_ids: (optional) limit value computation to the partners
+            of the given list; if not set, all partners are considered (all partners
+            following each record will be included in follower_id_by_partner_id).
+
+        :return: list of messages_formatted with added value:
+            'follower_id_by_partner_id': dict partner_id -> follower_id of the record
+        """
+        domain = expression.OR([
+            [('res_model', '=', model), ('res_id', 'in', list({value['res_id'] for value in values}))]
+            for model, values in tools_groupby(
+                (vals for vals in messages_formatted
+                 if vals.get("res_id") and vals.get("model") not in {None, False, '', 'discuss.channel'}),
+                key=lambda r: r["model"]
+            )
+        ])
+        if partner_ids:
+            domain = expression.AND([domain, [('partner_id', 'in', partner_ids)]])
+        records_followed = self.env['mail.followers'].sudo().search(domain)
+        followers_by_record_ref = (
+            {(res_model, res_id): {value['partner_id'][0]: value['id'] for value in values}
+             for (res_model, res_id), values in tools_groupby(
+                records_followed.read(['res_id', 'res_model', 'partner_id']),
+                key=lambda r: (r["res_model"], r['res_id'])
+            )})
+        for vals in messages_formatted:
+            vals['follower_id_by_partner_id'] = followers_by_record_ref.get((vals['model'], vals['res_id']), dict())
+        return messages_formatted
+
+    def _message_format_personalize(self, partner_id, messages_formatted=None, format_reply=True, msg_vals=None):
+        """ Personalize the messages for the partner.
+
+        :param integer partner_id: id of the partner to personalize the messages for
+        :param list messages_formatted: (optional) list of message formatted using
+            the method _message_format_personalized_prepare.
+            If not provided message_format is called on self with the 2 next parameters
+            to format the messages and then the messages are personalized.
+        :param bool format_reply: (optional) see method message_format
+        :param dict msg_vals: (optional) see method message_format
+        :return: list of messages_formatted personalized for the partner
+        """
+        if not messages_formatted:
+            messages_formatted = self.message_format(format_reply=format_reply, msg_vals=msg_vals)
+            self._message_format_personalized_prepare(messages_formatted, [partner_id])
+        for vals in messages_formatted:
+            # set value for user being a follower, fallback to False if not prepared
+            follower_id_by_pid = vals.pop('follower_id_by_partner_id', {})
+            vals['user_follower_id'] = follower_id_by_pid.get(partner_id, False)
+        return messages_formatted
 
     def _get_message_format_fields(self):
         return [
