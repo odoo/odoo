@@ -7,7 +7,8 @@
             <xpath expr="(//div[@name='duration_display']/div)[last()]" position="after">
                 <field name="overtime_deductible" invisible="1" />
                 <field name="employee_overtime" invisible="1" />
-                <div attrs="{'invisible': ['|', '|', ('employee_id', '=', False), ('overtime_deductible', '=', False), ('employee_overtime', '&lt;=', 0)]}">
+                <div attrs="{'invisible': ['|', '|', ('employee_id', '=', False), ('overtime_deductible', '=', False), ('employee_overtime', '&lt;=', 0)]}"
+                     groups="hr_attendance.group_hr_attendance_kiosk,hr_attendance.group_hr_attendance">
                     <field name="employee_overtime" nolabel="1" widget="float_time" class="text-success" /> Extra Hours Available
                 </div>
             </xpath>
