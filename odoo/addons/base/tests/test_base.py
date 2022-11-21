@@ -614,6 +614,19 @@ class TestBase(TransactionCase):
         self.assertEqual([g['title_count'] for g in groups_data], [2, 4], 'Incorrect number of results')
         self.assertEqual([g['color'] for g in groups_data], [-1, 10], 'Incorrect aggregation of int column')
 
+    def test_62_en_US_read_group(self):
+        self.env['res.lang'].with_context(active_test=False).search([('code', '=', 'fr_FR')]).active = True
+        self.env['res.users'].search([('lang', '=', 'en_US')]).lang = 'fr_FR'
+        self.env['res.partner'].search([('lang', '=', 'en_US')]).lang = 'fr_FR'
+        self.env['res.lang'].search([('code', '=', 'en_US')]).active = False
+        self.env['res.partner'].create({'name': 'test_read_group'})._write({'create_date': '2022-10-12'})
+        result = self.env['res.partner'].with_context(lang='en_US')._read_group(
+            [('create_date', '>', '2022-10-10'), ('create_date', '<', '2022-10-14')],
+            fields=['create_date'],
+            groupby=['create_date:month']
+        )
+        self.assertEqual(result[0]['create_date:month'], 'October 2022')
+
     def test_70_archive_internal_partners(self):
         test_partner = self.env['res.partner'].create({'name':'test partner'})
         test_user = self.env['res.users'].create({
