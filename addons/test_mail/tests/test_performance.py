@@ -338,7 +338,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     def test_mail_composer(self):
         test_record, _test_template = self._create_test_records()
         customer_id = self.customer.id
-        with self.assertQueryCount(admin=3, employee=3):
+        with self.assertQueryCount(admin=4, employee=4):
             composer = self.env['mail.compose.message'].with_context({
                 'default_composition_mode': 'comment',
                 'default_model': test_record._name,
@@ -348,7 +348,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
                 'partner_ids': [(4, customer_id)],
             })
 
-        with self.assertQueryCount(admin=35, employee=35):
+        with self.assertQueryCount(admin=34, employee=34):
             composer._action_send_mail()
 
     @users('admin', 'employee')
@@ -358,7 +358,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         test_record, _test_template = self._create_test_records()
         customer = self.env['res.partner'].browse(self.customer.ids)
         attachments = self.env['ir.attachment'].with_user(self.env.user).create(self.test_attachments_vals)
-        with self.assertQueryCount(admin=3, employee=3):
+        with self.assertQueryCount(admin=4, employee=4):
             composer = self.env['mail.compose.message'].with_context({
                 'default_composition_mode': 'comment',
                 'default_model': test_record._name,
@@ -369,7 +369,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
                 'partner_ids': [(4, customer.id)],
             })
 
-        with self.assertQueryCount(admin=38, employee=38):
+        with self.assertQueryCount(admin=37, employee=37):
             composer._action_send_mail()
 
     @users('admin', 'employee')
@@ -426,7 +426,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     def test_mail_composer_nodelete(self):
         test_record, _test_template = self._create_test_records()
         customer_id = self.customer.id
-        with self.assertQueryCount(admin=3, employee=3):
+        with self.assertQueryCount(admin=4, employee=4):
             composer = self.env['mail.compose.message'].with_context({
                 'default_composition_mode': 'comment',
                 'default_model': test_record._name,
@@ -437,7 +437,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
                 'partner_ids': [(4, customer_id)],
             })
 
-        with self.assertQueryCount(admin=35, employee=35):
+        with self.assertQueryCount(admin=34, employee=34):
             composer._action_send_mail()
 
     @users('admin', 'employee')
