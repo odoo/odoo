@@ -240,7 +240,8 @@ var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                     translation['textContent'] = $trans[0];
                     $node.val(match[2]);
 
-                    $node.addClass('o_translatable_text').data('translation', translation);
+                    $node.addClass('o_translatable_text').removeClass('o_text_content_invisible')
+                        .data('translation', translation);
                 });
                 $edited = $edited.add(textEdit);
 
