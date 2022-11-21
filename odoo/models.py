@@ -3055,7 +3055,7 @@ class BaseModel(metaclass=MetaModel):
                 return False
             new_translations = old_translations
             for lang, translation in translations.items():
-                old_value = new_translations.get(lang) or new_translations.get('en_US')
+                old_value = old_translations.get('en_US')
                 translation_safe = {}
                 if digest:
                     old_terms = field.get_trans_terms(old_value)
