@@ -24,11 +24,13 @@
                 <form string="Reward Employee with">
                     What are you thankful for?
                     <group>
-                        <field name="employee_id" invisible="1" />
-                        <field name="user_id" invisible="1" />
-                        <field name="badge_id" nolabel="1" colspan="4" />
-                        <field name="comment" nolabel="1" placeholder="Describe what they did and why it matters (will be public)" />
+                        <group>
+                            <field name="employee_id" invisible="1" />
+                            <field name="user_id" invisible="1" />
+                            <field name="badge_id" nolabel="1" colspan="4" />
+                        </group>
                     </group>
+                    <field name="comment" nolabel="1" placeholder="Describe what they did and why it matters (will be public)" />
                     <footer>
                         <button string="Reward Employee" type="object" name="action_grant_badge" class="btn-primary" data-hotkey="q"/>
                         <button string="Cancel" special="cancel" data-hotkey="z" class="btn-secondary"/>
