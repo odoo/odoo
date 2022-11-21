@@ -47,8 +47,8 @@ class TestMailComposerMixin(TestMailCommon, TestRecipients):
             'source_ids': [(4, source.id)],
         })
         self.assertEqual(composer.body, self.mail_template.body_html)
+        self.assertEqual(composer.lang, self.mail_template.lang)
         self.assertEqual(composer.subject, self.mail_template.subject)
-        self.assertFalse(composer.lang, 'Fixme: lang is not propagated currently')
 
         subject = composer._render_field('subject', source.ids)[source.id]
         self.assertEqual(subject, f'EnglishSubject for {source.name}')
@@ -84,7 +84,6 @@ class TestMailComposerMixin(TestMailCommon, TestRecipients):
         source = self.test_record.with_env(self.env)
         composer = self.env['mail.test.composer.mixin'].create({
             'description': '<p>Description for <t t-esc="object.name"/></p>',
-            'lang': '{{ object.customer_id.lang }}',
             'name': 'Invite',
             'template_id': self.mail_template.id,
             'source_ids': [(4, source.id)],
