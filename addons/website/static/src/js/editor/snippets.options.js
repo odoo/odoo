@@ -284,7 +284,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         }
 
         // Adapt font variable indexes to the removal
-        const style = window.getComputedStyle(document.documentElement);
+        const style = window.getComputedStyle(this.$target[0].ownerDocument.documentElement);
         _.each(FontFamilyPickerUserValueWidget.prototype.fontVariables, variable => {
             const value = weUtils.getCSSVariableValue(variable, style);
             if (value.substring(1, value.length - 1) === googleFontName) {
@@ -1474,7 +1474,7 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
      */
     async start() {
         // Checks for support of the old color system
-        const style = window.getComputedStyle(document.documentElement);
+        const style = window.getComputedStyle(this.$target[0].ownerDocument.documentElement);
         const supportOldColorSystem = weUtils.getCSSVariableValue('support-13-0-color-system', style) === 'true';
         const hasCustomizedOldColorSystem = weUtils.getCSSVariableValue('has-customized-13-0-color-system', style) === 'true';
         this._showOldColorSystemWarning = supportOldColorSystem && hasCustomizedOldColorSystem;
