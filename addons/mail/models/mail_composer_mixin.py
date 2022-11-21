@@ -26,6 +26,8 @@ class MailComposerMixin(models.AbstractModel):
         'Contents', compute='_compute_body', readonly=False, store=True,
         render_engine='qweb', render_options={'post_process': True}, sanitize=False)
     template_id = fields.Many2one('mail.template', 'Mail Template', domain="[('model', '=', render_model)]")
+    # Language: override mail.render.mixin field, copy template value
+    lang = fields.Char(compute='_compute_lang', precompute=True, readonly=False, store=True)
     # Access
     is_mail_template_editor = fields.Boolean('Is Editor', compute='_compute_is_mail_template_editor')
     can_edit_body = fields.Boolean('Can Edit Body', compute='_compute_can_edit_body')
@@ -45,6 +47,16 @@ class MailComposerMixin(models.AbstractModel):
                 composer_mixin.body = composer_mixin.template_id.body_html
             elif not composer_mixin.body:
                 composer_mixin.body = False
+
+    @api.depends('template_id')
+    def _compute_lang(self):
+        for composer_mixin in self:
+            """ Take value form template when set. When removing the template
+            reset the value to avoid keeping part of template configuration. """
+            if composer_mixin.template_id.lang:
+                composer_mixin.lang = composer_mixin.template_id.lang
+            elif not composer_mixin.template_id:
+                composer_mixin.lang = False
 
     @api.depends_context('uid')
     def _compute_is_mail_template_editor(self):
