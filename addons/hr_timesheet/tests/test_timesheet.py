@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, Form
 from odoo.exceptions import AccessError, UserError
 
 
@@ -212,35 +212,63 @@ class TestTimesheet(TestCommonTimesheet):
     def test_transfert_project(self):
         """ Transfert task with timesheet to another project. """
         Timesheet = self.env['account.analytic.line']
+
+        # create nested subtasks
+        task_child = self.env['project.task'].create({
+            'name': 'Task Child',
+            'parent_id': self.task1.id,
+        })
+
+        task_grandchild = self.env['project.task'].create({
+            'name': 'Task Grandchild',
+            'parent_id': task_child.id,
+        })
+
         # create a second project
         self.project_customer2 = self.env['project.project'].create({
             'name': 'Project NUMBER DEUX',
             'allow_timesheets': True,
         })
-        # employee 1 log some timesheet on task 1
-        Timesheet.create({
+        # employee 1 log some timesheet on task 1 and its subtasks
+        Timesheet.create([{
             'project_id': self.project_customer.id,
             'task_id': self.task1.id,
             'name': 'my first timesheet',
             'unit_amount': 4,
-        })
+            'employee_id': self.empl_employee.id,
+        }, {
+            'project_id': self.project_customer.id,
+            'task_id': task_child.id,
+            'name': 'my second timesheet',
+            'unit_amount': 4,
+            'employee_id': self.empl_employee.id,
+        }, {
+            'project_id': self.project_customer.id,
+            'task_id': task_grandchild.id,
+            'name': 'my third timesheet',
+            'unit_amount': 4,
+            'employee_id': self.empl_employee.id,
+        }])
 
         timesheet_count1 = Timesheet.search_count([('project_id', '=', self.project_customer.id)])
         timesheet_count2 = Timesheet.search_count([('project_id', '=', self.project_customer2.id)])
-        self.assertEqual(timesheet_count1, 1, "One timesheet in project 1")
-        self.assertEqual(timesheet_count2, 0, "No timesheet in project 2")
-        self.assertEqual(len(self.task1.timesheet_ids), 1, "The timesheet should be linked to task 1")
+        self.assertEqual(timesheet_count1, 3, "3 timesheets should be linked to Project1")
+        self.assertEqual(timesheet_count2, 0, "No timesheets should be linked to Project2")
+        self.assertEqual(len(self.task1.timesheet_ids), 1, "The timesheet should be linked to task1")
+        self.assertEqual(len(task_child.timesheet_ids), 1, "The timesheet should be linked to task_child")
+        self.assertEqual(len(task_grandchild.timesheet_ids), 1, "The timesheet should be linked to task_grandchild")
 
-        # change project of task 1
-        self.task1.write({
-            'project_id': self.project_customer2.id
-        })
+        # change project of task 1 from form to trigger onchange
+        with Form(self.task1) as task_form:
+            task_form.project_id = self.project_customer2
 
         timesheet_count1 = Timesheet.search_count([('project_id', '=', self.project_customer.id)])
         timesheet_count2 = Timesheet.search_count([('project_id', '=', self.project_customer2.id)])
-        self.assertEqual(timesheet_count1, 0, "No timesheet in project 1")
-        self.assertEqual(timesheet_count2, 1, "Still one timesheet in project 2")
-        self.assertEqual(len(self.task1.timesheet_ids), 1, "The timesheet still should be linked to task 1")
+        self.assertEqual(timesheet_count1, 0, "There are still timesheets linked to Project1")
+        self.assertEqual(timesheet_count2, 3, "3 timesheets should be linked to Project2")
+        self.assertEqual(len(self.task1.timesheet_ids), 1, "The timesheet still should be linked to task1")
+        self.assertEqual(len(task_child.timesheet_ids), 1, "The timesheet still should be linked to task_child")
+        self.assertEqual(len(task_grandchild.timesheet_ids), 1, "The timesheet still should be linked to task_grandchild")
 
         # it is forbidden to set a task with timesheet without project
         with self.assertRaises(UserError):
