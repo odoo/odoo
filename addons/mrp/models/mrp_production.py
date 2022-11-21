@@ -1545,8 +1545,24 @@ class MrpProduction(models.Model):
                         new_moves_vals.append(move_vals[0])
                 self.env['stock.move'].create(new_moves_vals)
             backorders |= backorder_mo
+<<<<<<< HEAD
             if backorder_mo.picking_type_id.reservation_method == 'at_confirm':
                 bo_to_assign |= backorder_mo
+||||||| parent of 7c325f728db8... temp
+            first_wo = self.env['mrp.workorder']
+            for old_wo, wo in zip(production.workorder_ids, backorder_mo.workorder_ids):
+                wo.qty_produced = max(old_wo.qty_produced - old_wo.qty_producing, 0)
+                if wo.product_tracking == 'serial':
+                    wo.qty_producing = 1
+                else:
+                    wo.qty_producing = wo.qty_remaining
+                if wo.qty_producing == 0:
+                    wo.action_cancel()
+                if not first_wo and wo.state != 'cancel':
+                    first_wo = wo
+            first_wo.state = 'ready'
+=======
+>>>>>>> 7c325f728db8... temp
 
             # We need to adapt `duration_expected` on both the original workorders and their
             # backordered workorders. To do that, we use the original `duration_expected` and the
@@ -1585,6 +1601,19 @@ class MrpProduction(models.Model):
         for wo in wo_to_update:
             wo.state = 'ready' if wo.next_work_order_id.production_availability == 'assigned' else 'waiting'
 
+        for production, backorder_mo in zip(self, backorders):
+            first_wo = self.env['mrp.workorder']
+            for old_wo, wo in zip(production.workorder_ids, backorder_mo.workorder_ids):
+                wo.qty_produced = max(old_wo.qty_produced - old_wo.qty_producing, 0)
+                if wo.product_tracking == 'serial':
+                    wo.qty_producing = 1
+                else:
+                    wo.qty_producing = wo.qty_remaining
+                if wo.qty_producing == 0:
+                    wo.action_cancel()
+                if not first_wo and wo.state != 'cancel':
+                    first_wo = wo
+            first_wo.state = 'ready'
         return backorders
 
     def _split_productions(self, amounts=False, cancel_remaning_qty=False, set_consumed_qty=False):
