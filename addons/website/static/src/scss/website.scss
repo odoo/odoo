@@ -1603,6 +1603,29 @@ ul.o_checklist > li.o_checked::after {
     display: none !important;
 }
 
+// On translation editor, inputs & textareas with translatable "placeholder" and
+// "value" will get HTML content as translation value for the attributes.
+// The goal here is to hide these values until the editor's code sets the right
+// ones on elements. The `o_text_content_invisible` class is mainly used on JS
+// to have the same behaviour for textareas, since it's not possible to target
+// them on CSS using the "value" attribute unlike inputs.
+.o_text_content_invisible {
+    color: transparent !important;
+}
+[placeholder*="data-oe-translation-id"] {
+    &::-webkit-input-placeholder{ /* WebKit */
+        color: transparent;
+        opacity: 0;
+    }
+    &::-moz-placeholder { /* Firefox */
+        color: transparent;
+        opacity: 0;
+    }
+}
+input[value*="data-oe-translation-id"] {
+    @extend .o_text_content_invisible;
+}
+
 //------------------------------------------------------------------------------
 // Website Animate
 //------------------------------------------------------------------------------
