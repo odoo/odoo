@@ -1749,7 +1749,7 @@ QUnit.module('Legacy basic_fields', {
     });
 
     QUnit.test('html field translatable', async function (assert) {
-        assert.expect(6);
+        assert.expect(7);
 
         this.data.partner.fields.foo.translate = true;
 
@@ -1786,7 +1786,10 @@ QUnit.module('Legacy basic_fields', {
                     return Promise.resolve([["en_US", "English"], ["fr_BE", "French (Belgium)"]]);
                 }
                 if (route === "/web/dataset/call_kw/partner/update_field_translations") {
-                    assert.deepEqual(args.args, [[1], "foo", {"en_US": {"first paragraph": "first paragraph modified"}}], "the new translation value should be written");
+                    assert.deepEqual(args.args, [[1], "foo", {
+                        "en_US": {"first paragraph": "first paragraph modified"},
+                        "fr_BE": {"deuxième paragraphe": "deuxième paragraphe modifié"},
+                    }], "the new translation value should be written");
                     return Promise.resolve();
                 }
                 return this._super.apply(this, arguments);
@@ -1812,6 +1815,12 @@ QUnit.module('Legacy basic_fields', {
             'first part of english translation should be filled');
 
         await testUtils.fields.editInput($enField, "first paragraph modified");
+
+        const $frField = $('.modal .o_translation_dialog .translation:last() input');
+        assert.strictEqual($frField.val(), 'deuxième paragraphe',
+            'second part of french translation should be filled');
+
+        await testUtils.fields.editInput($frField, "deuxième paragraphe modifié");
         await testUtils.dom.click($('.modal button.btn-primary'));  // save
         await testUtils.nextTick();
 
