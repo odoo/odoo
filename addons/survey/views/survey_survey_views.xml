@@ -369,7 +369,7 @@
         <field name="model">survey.survey</field>
         <field name="arch" type="xml">
             <search string="Survey">
-                <field string="Survey" name="title"/>
+                <field string="Survey" name="title" filter_domain="['|', ('title', 'ilike', self), ('session_code', 'ilike', self)]"/>
                 <field string="Question &amp; Pages" name="question_and_page_ids"/>
                 <filter string="Is a Certification" name="certification" domain="[('certification', '=', True)]"/>
                 <filter string="Is not a Certification" name="not_certification" domain="[('certification', '=', False)]"/>
