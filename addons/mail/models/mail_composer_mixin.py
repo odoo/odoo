@@ -25,6 +25,10 @@ class MailComposerMixin(models.AbstractModel):
     body = fields.Html(
         'Contents', compute='_compute_body', readonly=False, store=True,
         render_engine='qweb', render_options={'post_process': True}, sanitize=False)
+    body_has_template_value = fields.Boolean(
+        'Body content is the same as tmeplate',
+        compute='_compute_body_has_template_value',
+    )
     template_id = fields.Many2one('mail.template', 'Mail Template', domain="[('model', '=', render_model)]")
     # Language: override mail.render.mixin field, copy template value
     lang = fields.Char(compute='_compute_lang', precompute=True, readonly=False, store=True)
@@ -48,11 +52,24 @@ class MailComposerMixin(models.AbstractModel):
             elif not composer_mixin.body:
                 composer_mixin.body = False
 
+    @api.depends('body', 'template_id')
+    def _compute_body_has_template_value(self):
+        """ Computes if the current body is the same as the one from template.
+        Both real and sanitized values are considered, to avoid editor issues
+        as much as possible. """
+        for composer_mixin in self:
+            if not tools.is_html_empty(composer_mixin.body) and composer_mixin.template_id:
+                template_value = composer_mixin.template_id.body_html
+                sanitized_template_value = tools.html_sanitize(template_value)
+                composer_mixin.body_has_template_value = composer_mixin.body in (template_value, sanitized_template_value)
+            else:
+                composer_mixin.body_has_template_value = False
+
     @api.depends('template_id')
     def _compute_lang(self):
+        """ Take value form template when set. When removing the template
+        reset the value to avoid keeping part of template configuration. """
         for composer_mixin in self:
-            """ Take value form template when set. When removing the template
-            reset the value to avoid keeping part of template configuration. """
             if composer_mixin.template_id.lang:
                 composer_mixin.lang = composer_mixin.template_id.lang
             elif not composer_mixin.template_id:
@@ -73,35 +90,40 @@ class MailComposerMixin(models.AbstractModel):
             )
 
     def _render_field(self, field, *args, **kwargs):
-        """Render the given field on the given records.
-        This method bypass the rights when needed to
-        be able to render the template values in mass mode.
+        """ Render the given field on the given records. This method enters
+        sudo mode to allow qweb rendering (which is otherwise reserved for
+        the 'mail template editor' group') if we consider it safe. Safe
+        means content comes from the template which is a validated master
+        data. As a summary the heuristic is :
+
+          * if no template, do not bypass the check;
+          * if current user is a template editor, do not bypass the check;
+          * if record value and template value are the same (or equals the
+            sanitized value in case of an HTML field), bypass the check;
+          * for body: if current user cannot edit it, force template value back
+            then bypass the check;
         """
         if field not in self._fields:
             raise ValueError(_("The field %s does not exist on the model %s", field, self._name))
 
-        composer_value = self[field]
-
-        if (
-            not self.template_id
-            or self.is_mail_template_editor
-        ):
+        if not self.template_id:
             # Do not need to bypass the verification
-            return super(MailComposerMixin, self)._render_field(field, *args, **kwargs)
+            return super()._render_field(field, *args, **kwargs)
 
+        composer_value = self[field]
         template_field = 'body_html' if field == 'body' else field
         assert template_field in self.template_id._fields
         template_value = self.template_id[template_field]
 
-        if field == 'body':
-            sanitized_template_value = tools.html_sanitize(template_value)
-            if not self.can_edit_body or composer_value in (sanitized_template_value, template_value):
-                # Take the previous body which we can trust without HTML editor reformatting
-                self.body = self.template_id.body_html
-                return super(MailComposerMixin, self.sudo())._render_field(field, *args, **kwargs)
+        call_sudo = False
+        if (not self.is_mail_template_editor and field == 'body' and
+            (not self.can_edit_body or self.body_has_template_value)):
+            call_sudo = True
+            # Take the previous body which we can trust without HTML editor reformatting
+            self.body = self.template_id.body_html
+        if (not self.is_mail_template_editor and field != 'body' and
+              composer_value == template_value):
+            call_sudo = True
 
-        elif composer_value == template_value:
-            # The value is the same as the mail template so we trust it
-            return super(MailComposerMixin, self.sudo())._render_field(field, *args, **kwargs)
-
-        return super(MailComposerMixin, self)._render_field(field, *args, **kwargs)
+        record = self.sudo() if call_sudo else self
+        return super(MailComposerMixin, record)._render_field(field, *args, **kwargs)

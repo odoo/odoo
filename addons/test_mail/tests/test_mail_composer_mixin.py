@@ -41,19 +41,62 @@ class TestMailComposerMixin(TestMailCommon, TestRecipients):
     def test_content_sync(self):
         """ Test updating template updates the dynamic fields accordingly. """
         source = self.test_record.with_env(self.env)
+        template = self.mail_template.with_env(self.env)
+        template_void = template.copy()
+        template_void.write({
+            'body_html': '<p><br /></p>',
+            'lang': False,
+            'subject': False,
+        })
+
         composer = self.env['mail.test.composer.mixin'].create({
             'name': 'Invite',
-            'template_id': self.mail_template.id,
+            'template_id': template.id,
             'source_ids': [(4, source.id)],
         })
-        self.assertEqual(composer.body, self.mail_template.body_html)
-        self.assertEqual(composer.lang, self.mail_template.lang)
-        self.assertEqual(composer.subject, self.mail_template.subject)
+        self.assertEqual(composer.body, template.body_html)
+        self.assertTrue(composer.body_has_template_value)
+        self.assertEqual(composer.lang, template.lang)
+        self.assertEqual(composer.subject, template.subject)
 
-        subject = composer._render_field('subject', source.ids)[source.id]
-        self.assertEqual(subject, f'EnglishSubject for {source.name}')
+        # check rendering
         body = composer._render_field('body', source.ids)[source.id]
         self.assertEqual(body, f'<p>EnglishBody for {source.name}</p>')
+        subject = composer._render_field('subject', source.ids)[source.id]
+        self.assertEqual(subject, f'EnglishSubject for {source.name}')
+
+        # manual values > template default values
+        composer.write({
+            'body': '<p>CustomBody for <t t-out="object.name"/></p>',
+            'subject': 'CustomSubject for {{ object.name }}',
+        })
+        self.assertFalse(composer.body_has_template_value)
+
+        body = composer._render_field('body', source.ids)[source.id]
+        self.assertEqual(body, f'<p>CustomBody for {source.name}</p>')
+        subject = composer._render_field('subject', source.ids)[source.id]
+        self.assertEqual(subject, f'CustomSubject for {source.name}')
+
+        # template with void values: should not force void (TODO)
+        composer.template_id = template_void.id
+        self.assertEqual(composer.body, f'<p><br /></p>',
+                         'TODO: should not force void value')
+        self.assertFalse(composer.body_has_template_value)
+        self.assertEqual(composer.lang, template.lang)
+        self.assertEqual(composer.subject, False,
+                         'TODO: should not force void value')
+        # temporarily reput values
+        composer.body = template.body_html
+        composer.subject = template.subject
+
+        # reset template TOOD should reset
+        composer.write({'template_id': False})
+        self.assertEqual(composer.body, self.mail_template.body_html,
+                         'TODO: should reset')
+        self.assertFalse(composer.body_has_template_value)
+        self.assertFalse(composer.lang)
+        self.assertEqual(composer.subject, self.mail_template.subject,
+                         'TODO: should reset')
 
     @users("employee")
     def test_rendering_custom(self):
