@@ -369,6 +369,12 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         // grep: COMPANY_TEAM_CONTENTEDITABLE
         let $extraEditableZones = $editableSavableZones.find('.s_company_team .o_not_editable img');
 
+        // Same fix as above (COMPANY_TEAM_CONTENTEDITABLE) but for the images
+        // in image comparison snippet.
+        // grep: IMAGE_COMPARISON_CONTENTEDITABLE
+        $extraEditableZones = $extraEditableZones.add($editableSavableZones
+            .find('.s_image_comparison .o_media_right, .s_image_comparison .o_media_left, .s_image_comparison .o_description > span'));
+
         // To make sure the selection remains bounded to the active tab,
         // each tab is made non editable while keeping its nested
         // oe_structure editable. This avoids having a selection range span
