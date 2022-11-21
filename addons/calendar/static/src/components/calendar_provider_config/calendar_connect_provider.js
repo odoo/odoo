@@ -1,9 +1,11 @@
 /** @odoo-module **/
 
-import { FormRenderer } from "@web/views/form/form_renderer";
+import { registry } from '@web/core/registry';
 import { session } from "@web/session";
+import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { useService } from "@web/core/utils/hooks";
 
+const { Component } = owl;
 const providerData = {
     'google': {
         'restart_sync_method': 'restart_google_synchronization',
@@ -16,7 +18,7 @@ const providerData = {
 }
 
 
-export class CalendarProviderConfigFormRenderer extends FormRenderer {
+export class CalendarConnectProvider extends Component {
     setup() {
         super.setup();
         this.orm = useService('orm');
@@ -69,3 +71,9 @@ export class CalendarProviderConfigFormRenderer extends FormRenderer {
         return Promise.resolve();
     }
 }
+CalendarConnectProvider.props = {
+    ...standardWidgetProps,
+};
+CalendarConnectProvider.template = 'calendar.CalendarConnectProvider';
+
+registry.category("view_widgets").add("calendar_connect_provider", CalendarConnectProvider);
