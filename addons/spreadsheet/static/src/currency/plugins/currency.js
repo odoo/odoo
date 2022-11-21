@@ -83,7 +83,6 @@ class CurrencyPlugin extends spreadsheet.UIPlugin {
     }
 }
 
-CurrencyPlugin.modes = ["normal", "headless"];
 CurrencyPlugin.getters = ["getCurrencyRate", "getCurrencyFormat", "getCompanyCurrencyFormat"];
 
 featurePluginRegistry.add("odooCurrency", CurrencyPlugin);
