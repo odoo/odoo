@@ -123,8 +123,7 @@ class Attendee(models.Model):
                 body = mail_template._render_field(
                     'body_html',
                     attendee.ids,
-                    compute_lang=True,
-                    post_process=True)[attendee.id]
+                    compute_lang=True)[attendee.id]
                 subject = mail_template._render_field(
                     'subject',
                     attendee.ids,
