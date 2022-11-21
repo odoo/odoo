@@ -40,8 +40,8 @@ class AccountMove(models.Model):
     @api.depends('partner_id', 'currency_id')
     def _compute_l10n_ch_qr_is_valid(self):
         for move in self:
-            move.l10n_ch_is_qr_valid = move.move_type == 'out_invoice' \
-                                       and move.partner_bank_id._eligible_for_qr_code('ch_qr', move.partner_id, move.currency_id, raises_error=False)
+            error_messages = move.partner_bank_id._get_error_messages_for_qr('ch_qr', move.partner_id, move.currency_id)
+            move.l10n_ch_is_qr_valid = move.move_type == 'out_invoice' and not error_messages
 
     @api.depends('partner_bank_id.l10n_ch_isr_subscription_eur', 'partner_bank_id.l10n_ch_isr_subscription_chf')
     def _compute_l10n_ch_isr_subscription(self):

@@ -112,14 +112,14 @@ class ResPartnerBank(models.Model):
             return None
 
         self.ensure_one()
-
         if not currency:
             raise UserError(_("Currency must always be provided in order to generate a QR-code"))
 
         available_qr_methods = self.get_available_qr_methods_in_sequence()
         candidate_methods = qr_method and [(qr_method, dict(available_qr_methods)[qr_method])] or available_qr_methods
         for candidate_method, candidate_name in candidate_methods:
-            if self._eligible_for_qr_code(candidate_method, debtor_partner, currency, not silent_errors):
+            error_msg = self._get_error_messages_for_qr(candidate_method, debtor_partner, currency)
+            if not error_msg:
                 error_message = self._check_for_qr_code_errors(candidate_method, amount, currency, debtor_partner, free_communication, structured_communication)
 
                 if not error_message:
@@ -216,18 +216,20 @@ class ResPartnerBank(models.Model):
         all_available.sort(key=lambda x: x[2])
         return [(code, name) for (code, name, sequence) in all_available]
 
-    def _eligible_for_qr_code(self, qr_method, debtor_partner, currency, raises_error=True):
+    def _get_error_messages_for_qr(self, qr_method, debtor_partner, currency):
         """ Tells whether or not the criteria to apply QR-generation
         method qr_method are met for a payment on this account, in the
         given currency, by debtor_partner. This does not impeach generation errors,
         it only checks that this type of QR-code *should be* possible to generate.
+        If not, returns an adequate error message to be displayed to the user if need be.
         Consistency of the required field needs then to be checked by _check_for_qr_code_errors().
+        :returns:  None if the qr method is eligible, or the error message
         """
-        return False
+        return None
 
     def _check_for_qr_code_errors(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
         """ Checks the data before generating a QR-code for the specified qr_method
-        (this method must have been checked for eligbility by _eligible_for_qr_code() first).
+        (this method must have been checked for eligbility by _get_error_messages_for_qr() first).
 
         Returns None if no error was found, or a string describing the first error encountered
         so that it can be reported to the user.

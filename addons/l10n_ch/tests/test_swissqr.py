@@ -93,16 +93,16 @@ class TestSwissQR(AccountTestInvoicingCommon):
 
     def swissqr_not_generated(self, invoice):
         """ Prints the given invoice and tests that no Swiss QR generation is triggered. """
-        self.assertFalse(
-            invoice.partner_bank_id._eligible_for_qr_code('ch_qr', invoice.partner_id, invoice.currency_id),
+        self.assertTrue(
+            invoice.partner_bank_id._get_error_messages_for_qr('ch_qr', invoice.partner_id, invoice.currency_id),
             'No Swiss QR should be generated for this invoice',
         )
 
     def swissqr_generated(self, invoice, ref_type='NON'):
         """ Ensure correct params for Swiss QR generation. """
 
-        self.assertTrue(
-            invoice.partner_bank_id._eligible_for_qr_code('ch_qr', invoice.partner_id, invoice.currency_id), 'A Swiss QR can be generated'
+        self.assertFalse(
+            invoice.partner_bank_id._get_error_messages_for_qr('ch_qr', invoice.partner_id, invoice.currency_id), 'A Swiss QR can be generated'
         )
 
         if ref_type == 'QRR':
@@ -162,11 +162,8 @@ class TestSwissQR(AccountTestInvoicingCommon):
         self.assertEqual(params, expected_params)
 
     def test_swissQR_missing_bank(self):
-        # Let us test the generation of a SwissQR for an invoice, first by showing an
-        # QR is included in the invoice is only generated when Odoo has all the data it needs.
-        with self.assertRaises(UserError), self.cr.savepoint():
-            self.invoice1.action_post()
-            self.swissqr_not_generated(self.invoice1)
+        self.invoice1.action_post()
+        self.swissqr_not_generated(self.invoice1)
 
     def test_swissQR_iban(self):
         # Now we add an account for payment to our invoice

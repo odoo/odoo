@@ -75,12 +75,9 @@ class QrInvoiceWizard(models.TransientModel):
 
         # Log a message inside the chatter explaining why the invoice is faulty.
         for inv in faulty_invoices:
-            try:
-                # The error potentially raised in the following function helps create the wizard's message.
-                inv.partner_bank_id._eligible_for_qr_code('ch_qr', inv.partner_id, inv.currency_id, raises_error=True)
-            except UserError as e:
-                inv.message_post(body=e.name, message_type="comment")
-
+            error_msg = inv.partner_bank_id._get_error_messages_for_qr('ch_qr', inv.partner_id, inv.currency_id)
+            if error_msg:
+                inv.message_post(body=error_msg, message_type="comment")
         action_vals = {
             'name': _("Invalid Invoices"),
             'type': 'ir.actions.act_window',
