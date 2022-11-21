@@ -284,12 +284,13 @@ class MailRenderMixin(models.AbstractModel):
         :param dict add_context: additional context to give to renderer. It
           allows to add or update values to base rendering context generated
           by ``MailRenderMixin._render_eval_context()``;
-        :param dict options: options for rendering (not used currently);
+        :param dict options: options for rendering propagated to IrQweb render
+          (see docstring for available options);
 
         :return dict: {res_id: string of rendered template based on record}
         """
         results = dict.fromkeys(res_ids, u"")
-        if not template_src:
+        if not template_src or not res_ids:
             return results
 
         # prepare template variables
@@ -337,15 +338,14 @@ class MailRenderMixin(models.AbstractModel):
         :param dict add_context: additional context to give to renderer. It
           allows to add or update values to base rendering context generated
           by ``MailRenderMixin._render_eval_context()``;
-        :param dict options: options for rendering (not used currently);
+        :param dict options: options for rendering propagated to IrQweb render
+          (see docstring for available options);
 
         :return dict: {res_id: string of rendered template based on record}
         """
-        # prevent wrong values (rendering on a void record set, ...)
-        if any(r is None for r in res_ids):
-            raise ValueError(_('Template rendering should be called on a valid record IDs.'))
-
         results = {}
+        if not res_ids:
+            return results
 
         # prepare template variables
         variables = self._render_eval_context()
@@ -380,16 +380,13 @@ class MailRenderMixin(models.AbstractModel):
         :param dict add_context: additional context to give to renderer. It
           allows to add or update values to base rendering context generated
           by ``MailRenderMixin._render_inline_template_eval_context()``;
-        :param dict options: options for rendering;
+        :param dict options: options for rendering (no options available
+          currently);
 
         :return dict: {res_id: string of rendered template based on record}
         """
-        # prevent wrong values (rendering on a void record set, ...)
-        if any(r is None for r in res_ids):
-            raise ValueError(_('Template rendering should be called on a valid record IDs.'))
-
         results = dict.fromkeys(res_ids, u"")
-        if not template_txt:
+        if not template_txt or not res_ids:
             return results
 
         template_instructions = parse_inline_template(str(template_txt))
@@ -440,7 +437,7 @@ class MailRenderMixin(models.AbstractModel):
 
     @api.model
     def _render_template(self, template_src, model, res_ids, engine='inline_template',
-                         add_context=None, options=None, post_process=False):
+                         add_context=None, options=None):
         """ Render the given string on records designed by model / res_ids using
         the given rendering engine. Possible engine are small_web, qweb, or
         qweb_view.
@@ -455,12 +452,20 @@ class MailRenderMixin(models.AbstractModel):
         :param dict add_context: additional context to give to renderer. It
           allows to add or update values to base rendering context generated
           by ``MailRenderMixin._render_<engine>_eval_context()``;
-        :param dict options: options for rendering;
-        :param boolean post_process: perform a post processing on rendered result
-          (notably html links management). See``_render_template_postprocess``;
+        :param dict options: options for rendering. Use in this method and also
+          propagated to rendering sub-methods. May contain notably
+
+            boolean post_process: perform a post processing on rendered result
+            (notably html links management). See``_render_template_postprocess``;
+            boolean preserve_comments: if set, comments are preserved. Default
+            behavior is to remove them. It is used notably for browser-specific
+            code implemented like comments;
 
         :return dict: {res_id: string of rendered template based on record}
         """
+        if options is None:
+            options = {}
+
         if not isinstance(res_ids, (list, tuple)):
             raise ValueError(_('Template rendering should be called only using on a list of IDs.'))
         if engine not in ('inline_template', 'qweb', 'qweb_view'):
@@ -476,7 +481,7 @@ class MailRenderMixin(models.AbstractModel):
             rendered = self._render_template_inline_template(template_src, model, res_ids,
                                                              add_context=add_context, options=options)
 
-        if post_process:
+        if options.get('post_process'):
             rendered = self._render_template_postprocess(rendered)
 
         return rendered
@@ -529,7 +534,7 @@ class MailRenderMixin(models.AbstractModel):
 
     def _render_field(self, field, res_ids, engine='inline_template',
                       compute_lang=False, set_lang=False,
-                      add_context=None, options=None, post_process=False):
+                      add_context=None, options=None):
         """ Given some record ids, render a template located on field on all
         records. ``field`` should be a field of self (i.e. ``body_html`` on
         ``mail.template``). res_ids are record IDs linked to ``model`` field
@@ -548,12 +553,25 @@ class MailRenderMixin(models.AbstractModel):
           ``compute_lang`` is False;
 
         :param dict add_context: additional context to give to renderer;
-        :param dict options: options for rendering;
-        :param boolean post_process: perform a post processing on rendered result
-          (notably html links management). See``_render_template_postprocess``);
+        :param dict options: options for rendering. Use in this method and also
+          propagated to rendering sub-methods. Base values come from the field
+          (coming from ``render_options`` parameter) and are updated by this
+          optional dictionary. May contain notably
+
+            boolean post_process: perform a post processing on rendered result
+            (notably html links management). See``_render_template_postprocess``;
+            boolean preserve_comments: if set, comments are preserved. Default
+            behavior is to remove them. It is used notably for browser-specific
+            code implemented like comments;
 
         :return dict: {res_id: string of rendered template based on record}
         """
+        if field not in self:
+            raise ValueError(
+                _('Rendering of %(field_name)s is not possible as not defined on template.',
+                  field_name=field
+                 )
+            )
         if options is None:
             options = {}
 
@@ -565,10 +583,11 @@ class MailRenderMixin(models.AbstractModel):
         else:
             templates_res_ids = {self._context.get('lang'): (self, res_ids)}
 
-        # rendering options
+        # rendering options (update default defined on field by asked options)
         engine = getattr(self._fields[field], 'render_engine', engine)
-        options.update(**getattr(self._fields[field], 'render_options', {}))
-        post_process = options.get('post_process') or post_process
+        field_options = getattr(self._fields[field], 'render_options', {})
+        if options:
+            field_options.update(**options)
 
         return dict(
             (res_id, rendered)
@@ -579,7 +598,6 @@ class MailRenderMixin(models.AbstractModel):
                 tpl_res_ids,
                 engine=engine,
                 add_context=add_context,
-                options=options,
-                post_process=post_process
+                options=field_options,
             ).items()
         )

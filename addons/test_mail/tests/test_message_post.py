@@ -1210,7 +1210,49 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
-    def test_composer_lang_template(self):
+    def test_composer_lang_template_comment(self):
+        test_record = self.test_records[0].with_user(self.env.user)
+        test_template = self.test_template.with_user(self.env.user)
+
+        with self.mock_mail_gateway():
+            test_record.message_post_with_template(
+                test_template.id,
+                composition_mode='comment',
+                email_layout_xmlid='mail.test_layout',
+                message_type='comment',
+                subtype_id=self.env.ref('mail.mt_comment').id,
+            )
+
+        record0_customer = self.env['res.partner'].search([('email_normalized', '=', 'test.record.1@test.customer.com')], limit=1)
+        self.assertTrue(record0_customer, 'Template usage should have created a contact based on record email')
+
+        customer_email = self._find_sent_mail_wemail(record0_customer.email_formatted)
+        self.assertTrue(customer_email)
+        body = customer_email['body']
+        # check content
+        self.assertIn(f'SpanishBody for {test_record.name}', body,
+                      'Body based on template should be translated')
+        # check subject
+        self.assertEqual(f'SpanishSubject for {test_record.name}', customer_email['subject'],
+                         'Subject based on template should be translated')
+        # check notification layout content
+        self.assertIn('Spanish Layout para', body, 'Layout content should be translated')
+        self.assertNotIn('English Layout for', body)
+        self.assertIn('Spanish Layout para Spanish Model Description', body, 'Model name should be translated')
+        # check notification layout strings
+        self.assertIn('View Lang Chatter Model', body,
+                      'Fixme: "View document" should be translated')
+        # self.assertIn('SpanishView Spanish Model Description', body,
+        #               '"View document" should be translated')
+        # self.assertNotIn(f'View {test_record._description}', body,
+        #                  '"View document" should be translated')
+        # self.assertIn('SpanishButtonTitle', body,
+        #               'Groups-based action names should be translated')
+        self.assertIn('NotificationButtonTitle', body, 'Fixme: Groups-based action names should be translated')
+
+    @users('employee')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_composer_lang_template_mass(self):
         test_records = self.test_records.with_user(self.env.user)
         test_template = self.test_template.with_user(self.env.user)
 
@@ -1231,11 +1273,15 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
             self.assertTrue(customer_email)
             body = customer_email['body']
             # check content
-            # self.assertIn('SpanishBody for %s' % record.name, body, 'Body based on template should be translated')
-            self.assertIn('EnglishBody for %s' % record.name, body, 'Fixme: this should be translated')
+            # self.assertIn(f'SpanishBody for {record.name}', body,
+            #               'Body based on template should be translated')
+            self.assertIn(f'EnglishBody for {record.name}', body,
+                          'Fixme: Body based on template should be translated')
             # check subject
-            # self.assertEqual('SpanishSubject for %s' % record.name, customer_email['subject'], 'Subject based on template should be translated')
-            self.assertEqual('EnglishSubject for %s' % record.name, customer_email['subject'], 'Fixme: this should be translated')
+            # self.assertEqual(f'SpanishSubject for {record.name}', customer_email['subject'],
+            #                  'Subject based on template should be translated')
+            self.assertEqual(f'EnglishSubject for {record.name}', customer_email['subject'],
+                             'Fixme: Subject based on template should be translated')
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -1255,16 +1301,20 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
         customer_email = self._find_sent_mail_wemail(self.partner_2.email_formatted)
         self.assertTrue(customer_email)
         body = customer_email['body']
-        # check notification layout translation
-        self.assertIn('Spanish Layout para', body, 'Layout content should be translated')
-        self.assertNotIn('English Layout for', body)
-        self.assertIn('Spanish Layout para Spanish description', body, 'Model name should be translated')
-        self.assertIn('SpanishView Spanish description', body, '"View document" should be translated')
-        self.assertNotIn('View %s' % test_records[1]._description, body)
-        self.assertIn('TestSpanishStuff', body, 'Groups-based action names should be translated')
-        self.assertNotIn('TestStuff', body)
         # check content
-        self.assertIn('Hello', body, 'Body of posted message should be present')
+        self.assertIn('<p>Hello</p>', body, 'Body of posted message should be present')
+        # check notification layout content
+        self.assertIn('Spanish Layout para', body,
+                      'Layout content should be translated')
+        self.assertNotIn('English Layout for', body)
+        self.assertIn('Spanish Layout para Spanish Model Description', body,
+                      'Model name should be translated')
+        # check notification layout strings
+        self.assertIn('SpanishView Spanish Model Description', body,
+                      '"View document" should be translated')
+        self.assertNotIn(f'View {test_records[1]._description}', body)
+        self.assertIn('SpanishButtonTitle', body, 'Groups-based action names should be translated')
+        self.assertNotIn('NotificationButtonTitle', body)
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -1288,15 +1338,23 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
             customer_email = self._find_sent_mail_wemail(customer.email_formatted)
             self.assertTrue(customer_email)
             body = customer_email['body']
-            # check notification layout translation
-            self.assertIn('Spanish Layout para', body, 'Layout content should be translated')
-            self.assertNotIn('English Layout for', body)
-            self.assertIn('Spanish Layout para Spanish description', body, 'Model name should be translated')
-            # self.assertIn('SpanishView Spanish description', body, '"View document" should be translated')
-            self.assertIn('View %s' % test_records[1]._description, body, 'Fixme: this should be translated')
-            # self.assertIn('TestSpanishStuff', body, 'Groups-based action names should be translated')
-            self.assertIn('TestStuff', body, 'Fixme: groups-based action names should be translated')
             # check content
-            self.assertIn('SpanishBody for %s' % record.name, body, 'Body based on template should be translated')
+            self.assertIn(f'SpanishBody for {record.name}', body,
+                          'Body based on template should be translated')
             # check subject
-            self.assertEqual('SpanishSubject for %s' % record.name, customer_email['subject'], 'Subject based on template should be translated')
+            self.assertEqual(f'SpanishSubject for {record.name}', customer_email['subject'],
+                             'Subject based on template should be translated')
+            # check notification layout translation
+            self.assertIn('Spanish Layout para', body,
+                          'Layout content should be translated')
+            self.assertNotIn('English Layout for', body)
+            self.assertIn('Spanish Layout para Spanish Model Description', body,
+                          'Model name should be translated')
+            # self.assertIn('SpanishView Spanish Model Description', body,
+            #               '"View document" should be translated')
+            self.assertIn(f'View {test_records[1]._description}', body,
+                          'Fixme: "View document" should be translated')
+            # self.assertIn('NotificationButtonTitle', body,
+            #               'Groups-based action names should be translated')
+            self.assertIn('NotificationButtonTitle', body,
+                          'Fixme: groups-based action names should be translated')
