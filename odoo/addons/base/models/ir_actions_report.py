@@ -6,6 +6,7 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, AccessError
 from odoo.tools.safe_eval import safe_eval, time
 from odoo.tools.misc import find_in_path
+from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter, PdfReadError
 from odoo.tools import check_barcode_encoding, config, is_html_empty, parse_version
 from odoo.http import request
 from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
@@ -22,7 +23,6 @@ import json
 from lxml import etree
 from contextlib import closing
 from reportlab.graphics.barcode import createBarcodeDrawing
-from PyPDF2 import PdfFileWriter, PdfFileReader, utils
 from collections import OrderedDict
 from collections.abc import Iterable
 from PIL import Image, ImageFile
@@ -610,12 +610,12 @@ class IrActionsReport(models.Model):
 
     @api.model
     def _merge_pdfs(self, streams):
-        writer = PdfFileWriter()
+        writer = OdooPdfFileWriter()
         for stream in streams:
             try:
-                reader = PdfFileReader(stream)
+                reader = OdooPdfFileReader(stream)
                 writer.appendPagesFromReader(reader)
-            except utils.PdfReadError:
+            except PdfReadError:
                 raise UserError(_("Odoo is unable to merge the generated PDFs."))
         result_stream = io.BytesIO()
         streams.append(result_stream)
@@ -737,7 +737,7 @@ class IrActionsReport(models.Model):
             # the top level heading in /Outlines.
             html_ids_wo_none = [x for x in html_ids if x]
             if len(res_ids_wo_stream) > 1 and set(res_ids_wo_stream) == set(html_ids_wo_none):
-                reader = PdfFileReader(pdf_content_stream)
+                reader = OdooPdfFileReader(pdf_content_stream)
                 root = reader.trailer['/Root']
                 has_valid_outlines = '/Outlines' in root and '/First' in root['/Outlines']
                 if not has_valid_outlines:
@@ -766,7 +766,7 @@ class IrActionsReport(models.Model):
                     # Split the PDF according to outlines.
                     for i, num in enumerate(outlines_pages):
                         to = outlines_pages[i + 1] if i + 1 < len(outlines_pages) else reader.numPages
-                        attachment_writer = PdfFileWriter()
+                        attachment_writer = OdooPdfFileWriter()
                         for j in range(num, to):
                             attachment_writer.addPage(reader.getPage(j))
                         stream = io.BytesIO()

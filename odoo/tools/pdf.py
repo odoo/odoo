@@ -6,14 +6,37 @@ import re
 from datetime import datetime
 from hashlib import md5
 from logging import getLogger
-from PyPDF2 import PdfFileWriter, PdfFileReader
-from PyPDF2.generic import DictionaryObject, NameObject, ArrayObject, DecodedStreamObject, NumberObject, createStringObject, ByteStringObject
 from zlib import compress, decompress
 from PIL import Image
 from reportlab.lib import colors
 from reportlab.lib.units import cm
 from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
+
+# Patch PyPDF2 < 2.0 for compatibility with PyPDF2 > 2.0
+# https://pypdf2.readthedocs.io/en/latest/user/migration-1-to-2.html
+try:
+    from PyPDF2 import (
+        PdfFileWriter as PdfWriter,
+        PdfFileReader as PdfReader,
+        PdfFileMerger as PdfMerger,
+    )
+    from PyPDF2.utils import PdfReadError
+
+    PdfWriter._add_object = PdfWriter._addObject
+
+    # by default PdfFileReader will overwrite warnings.showwarning which is what
+    # logging.captureWarnings does, meaning it essentially reverts captureWarnings
+    # every time it's called which is undesirable
+    # The overwrite was removed in PyPDF2 > 2.0 see https://github.com/py-pdf/PyPDF2/pull/225
+    old_init = PdfReader.__init__
+    PdfReader.__init__ = lambda self, stream, strict=True, warndest=None, overwriteWarnings=True: \
+    old_init(self, stream=stream, strict=strict, warndest=None, overwriteWarnings=False)
+except ImportError:
+    from PyPDF2 import PdfWriter, PdfReader
+    from PyPDF2.errors import PdfReadError
+
+from PyPDF2.generic import DictionaryObject, NameObject, ArrayObject, DecodedStreamObject, NumberObject, createStringObject, ByteStringObject
 
 try:
     from fontTools.ttLib import TTFont
@@ -39,7 +62,7 @@ def _unwrapping_get(self, key, default=None):
 DictionaryObject.get = _unwrapping_get
 
 
-class BrandedFileWriter(PdfFileWriter):
+class BrandedFileWriter(PdfWriter):
     def __init__(self):
         super().__init__()
         self.addMetadata({
@@ -48,7 +71,7 @@ class BrandedFileWriter(PdfFileWriter):
         })
 
 
-PdfFileWriter = BrandedFileWriter
+PdfWriter = BrandedFileWriter
 
 
 def merge_pdf(pdf_data):
@@ -57,9 +80,9 @@ def merge_pdf(pdf_data):
     :param list pdf_data: a list of PDF datastrings
     :return: a unique merged PDF datastring
     '''
-    writer = PdfFileWriter()
+    writer = PdfWriter()
     for document in pdf_data:
-        reader = PdfFileReader(io.BytesIO(document), strict=False)
+        reader = PdfReader(io.BytesIO(document), strict=False)
         for page in range(0, reader.getNumPages()):
             writer.addPage(reader.getPage(page))
     with io.BytesIO() as _buffer:
@@ -73,8 +96,8 @@ def rotate_pdf(pdf):
     :param pdf: a PDF to rotate
     :return: a PDF rotated
     '''
-    writer = PdfFileWriter()
-    reader = PdfFileReader(io.BytesIO(pdf), strict=False)
+    writer = PdfWriter()
+    reader = PdfReader(io.BytesIO(pdf), strict=False)
     for page in range(0, reader.getNumPages()):
         page = reader.getPage(page)
         page.rotateClockwise(90)
@@ -94,7 +117,7 @@ def add_banner(pdf_stream, text=None, logo=False, thickness=2 * cm):
     :return (BytesIO):              The modified PDF stream.
     """
 
-    old_pdf = PdfFileReader(pdf_stream, strict=False, overwriteWarnings=False)
+    old_pdf = PdfReader(pdf_stream, strict=False, overwriteWarnings=False)
     packet = io.BytesIO()
     can = canvas.Canvas(packet)
     odoo_logo = Image.open(file_open('base/static/img/main_partner-image.png', mode='rb'))
@@ -129,8 +152,8 @@ def add_banner(pdf_stream, text=None, logo=False, thickness=2 * cm):
     can.save()
 
     # Merge the old pages with the watermark
-    watermark_pdf = PdfFileReader(packet, overwriteWarnings=False)
-    new_pdf = PdfFileWriter()
+    watermark_pdf = PdfReader(packet, overwriteWarnings=False)
+    new_pdf = PdfWriter()
     for p in range(old_pdf.getNumPages()):
         new_page = old_pdf.getPage(p)
         # Remove annotations (if any), to prevent errors in PyPDF2
@@ -146,14 +169,7 @@ def add_banner(pdf_stream, text=None, logo=False, thickness=2 * cm):
     return output
 
 
-# by default PdfFileReader will overwrite warnings.showwarning which is what
-# logging.captureWarnings does, meaning it essentially reverts captureWarnings
-# every time it's called which is undesirable
-old_init = PdfFileReader.__init__
-PdfFileReader.__init__ = lambda self, stream, strict=True, warndest=None, overwriteWarnings=True: \
-    old_init(self, stream=stream, strict=strict, warndest=None, overwriteWarnings=False)
-
-class OdooPdfFileReader(PdfFileReader):
+class OdooPdfFileReader(PdfReader):
     # OVERRIDE of PdfFileReader to add the management of multiple embedded files.
 
     ''' Returns the files inside the PDF.
@@ -177,7 +193,7 @@ class OdooPdfFileReader(PdfFileReader):
             return []
 
 
-class OdooPdfFileWriter(PdfFileWriter):
+class OdooPdfFileWriter(PdfWriter):
 
     def __init__(self, *args, **kwargs):
         """
@@ -237,7 +253,7 @@ class OdooPdfFileWriter(PdfFileWriter):
         else:
             # Create a new object containing an array referencing embedded file
             # And reference this array in the root catalogue
-            attachment_array = self._addObject(ArrayObject([attachment]))
+            attachment_array = self._add_object(ArrayObject([attachment]))
             self._root_object.update({
                 NameObject("/AF"): attachment_array
             })
@@ -299,7 +315,7 @@ class OdooPdfFileWriter(PdfFileWriter):
             NameObject("/Length"): NameObject(str(len(icc_profile_file_data))),
         })
 
-        icc_profile_obj = self._addObject(icc_profile_stream_obj)
+        icc_profile_obj = self._add_object(icc_profile_stream_obj)
 
         output_intent_dict_obj = DictionaryObject()
         output_intent_dict_obj.update({
@@ -309,7 +325,7 @@ class OdooPdfFileWriter(PdfFileWriter):
             NameObject("/Type"): NameObject("/OutputIntent"),
         })
 
-        output_intent_obj = self._addObject(output_intent_dict_obj)
+        output_intent_obj = self._add_object(output_intent_dict_obj)
         self._root_object.update({
             NameObject("/OutputIntents"): ArrayObject([output_intent_obj]),
         })
@@ -375,7 +391,7 @@ class OdooPdfFileWriter(PdfFileWriter):
         })
 
         # Add the new metadata to the pdf, then redirect the reference to refer to this new object.
-        metadata_object = self._addObject(file_entry)
+        metadata_object = self._add_object(file_entry)
         self._root_object.update({NameObject("/Metadata"): metadata_object})
 
     def _create_attachment_object(self, attachment):
@@ -402,7 +418,7 @@ class OdooPdfFileWriter(PdfFileWriter):
             file_entry.update({
                 NameObject("/Subtype"): NameObject(attachment['subtype']),
             })
-        file_entry_object = self._addObject(file_entry)
+        file_entry_object = self._add_object(file_entry)
         filename_object = createStringObject(attachment['filename'])
         filespec_object = DictionaryObject({
             NameObject("/AFRelationship"): NameObject("/Data"),
@@ -417,4 +433,4 @@ class OdooPdfFileWriter(PdfFileWriter):
         })
         if attachment.get('description'):
             filespec_object.update({NameObject("/Desc"): createStringObject(attachment['description'])})
-        return self._addObject(filespec_object)
+        return self._add_object(filespec_object)

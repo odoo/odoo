@@ -21,7 +21,7 @@ class TestPdf(TransactionCase):
         attachments = list(self.minimal_pdf_reader.getAttachments())
         self.assertEqual(len(attachments), 0)
 
-        pdf_writer = pdf.PdfFileWriter()
+        pdf_writer = pdf.PdfWriter()
         pdf_writer.cloneReaderDocumentRoot(self.minimal_pdf_reader)
         pdf_writer.addAttachment('test_attachment.txt', b'My awesome attachment')
 
@@ -74,7 +74,7 @@ class TestPdf(TransactionCase):
 
     def test_branded_file_writer(self):
         # It's not easy to create a PDF with PyPDF2, so instead we copy minimal.pdf with our custom pdf writer
-        pdf_writer = pdf.PdfFileWriter()  # BrandedFileWriter
+        pdf_writer = pdf.PdfWriter()  # BrandedFileWriter
         pdf_writer.cloneReaderDocumentRoot(self.minimal_pdf_reader)
         writer_buffer = io.BytesIO()
         pdf_writer.write(writer_buffer)
@@ -83,7 +83,7 @@ class TestPdf(TransactionCase):
 
         # Read the metadata of the newly created pdf.
         reader_buffer = io.BytesIO(branded_content)
-        pdf_reader = pdf.PdfFileReader(reader_buffer)
+        pdf_reader = pdf.OdooPdfFileReader(reader_buffer)
         pdf_info = pdf_reader.getDocumentInfo()
         self.assertEqual(pdf_info['/Producer'], 'Odoo')
         self.assertEqual(pdf_info['/Creator'], 'Odoo')

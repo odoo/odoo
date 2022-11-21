@@ -4,7 +4,6 @@ import re
 import base64
 import io
 
-from PyPDF2 import PdfFileReader, PdfFileMerger, PdfFileWriter
 from reportlab.platypus import Frame, Paragraph, KeepInFrame
 from reportlab.lib.units import mm
 from reportlab.lib.pagesizes import A4
@@ -14,6 +13,7 @@ from reportlab.pdfgen.canvas import Canvas
 from odoo import fields, models, api, _
 from odoo.addons.iap.tools import iap_tools
 from odoo.exceptions import AccessError, UserError
+from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter, PdfMerger
 from odoo.tools.safe_eval import safe_eval
 
 DEFAULT_ENDPOINT = 'https://iap-snailmail.odoo.com'
@@ -461,10 +461,10 @@ class SnailmailLetter(models.Model):
         canvas.save()
         cover_buf.seek(0)
 
-        invoice = PdfFileReader(io.BytesIO(invoice_bin))
+        invoice = OdooPdfFileReader(io.BytesIO(invoice_bin))
         cover_bin = io.BytesIO(cover_buf.getvalue())
-        cover_file = PdfFileReader(cover_bin)
-        merger = PdfFileMerger()
+        cover_file = OdooPdfFileReader(cover_bin)
+        merger = PdfMerger()
 
         merger.append(cover_file, import_bookmarks=False)
         merger.append(invoice, import_bookmarks=False)
@@ -507,9 +507,9 @@ class SnailmailLetter(models.Model):
         canvas.save()
         pdf_buf.seek(0)
 
-        new_pdf = PdfFileReader(pdf_buf)
-        curr_pdf = PdfFileReader(io.BytesIO(invoice_bin))
-        out = PdfFileWriter()
+        new_pdf = OdooPdfFileReader(pdf_buf)
+        curr_pdf = OdooPdfFileReader(io.BytesIO(invoice_bin))
+        out = OdooPdfFileWriter()
         for page in curr_pdf.pages:
             page.mergePage(new_pdf.getPage(0))
             out.addPage(page)
