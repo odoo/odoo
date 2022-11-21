@@ -346,11 +346,9 @@ class ResPartnerBank(models.Model):
                and int(''.join(str(int(x, 36)) for x in clean(reference[4:] + reference[:4], ' -.,/:').upper().strip())) % 97 == 1
                # see https://github.com/arthurdejong/python-stdnum/blob/master/stdnum/iso11649.py
 
-    def _eligible_for_qr_code(self, qr_method, debtor_partner, currency, raises_error=True):
-        if qr_method == 'sct_qr' and debtor_partner.country_id.code == 'CH' and self.journal_id.country_code == 'CH':
-            return False
-        if qr_method == 'ch_qr':
-            error_messages = [_("The QR code could not be generated for the following reason(s):")]
+    def _get_error_messages_for_qr(self, qr_method, debtor_partner, currency):
+        def _get_error_for_ch_qr():
+            error_messages = [_("The Swiss QR code could not be generated for the following reason(s):")]
             if self.acc_type != 'iban':
                 error_messages.append(_("The account type isn't QR-IBAN or IBAN."))
             if self.partner_id.country_id.code != 'CH':
@@ -358,13 +356,15 @@ class ResPartnerBank(models.Model):
             if not debtor_partner or debtor_partner.country_id.code not in ('CH', 'LI'):
                 error_messages.append(_("The debtor partner's address isn't located in Switzerland."))
             if currency.id not in (self.env.ref('base.EUR').id, self.env.ref('base.CHF').id):
-                error_messages.append(_("The currency isn't EUR nor CHF. \r\n"))
-            if len(error_messages) != 1:
-                if raises_error:
-                    raise UserError(' '.join(error_messages))
-                return False
-            return True
-        return super()._eligible_for_qr_code(qr_method, debtor_partner, currency, raises_error)
+                error_messages.append(_("The currency isn't EUR nor CHF."))
+            return '\r\n'.join(error_messages) if len(error_messages) > 1 else None
+
+        if qr_method == 'sct_qr' and not _get_error_for_ch_qr():
+            return _("When both parties are located in Switzerland, "
+                     "you should use the Swiss QR code process.")
+        if qr_method == 'ch_qr':
+            return _get_error_for_ch_qr()
+        return super()._get_error_messages_for_qr(qr_method, debtor_partner, currency)
 
     def _check_for_qr_code_errors(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
         def _partner_fields_set(partner):
