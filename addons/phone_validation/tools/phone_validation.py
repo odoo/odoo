@@ -59,6 +59,10 @@ try:
             phone_fmt = phonenumbers.PhoneNumberFormat.NATIONAL
         return phonenumbers.format_number(phone_nbr, phone_fmt)
 
+    def phone_is_mobile(number, country_code=None):
+        phone_nbr = phone_parse(number, country_code)
+        return phonenumbers.number_type(phone_nbr) == phonenumbers.PhoneNumberType.MOBILE
+
 except ImportError:
 
     def phone_parse(number, country_code):
@@ -74,6 +78,8 @@ except ImportError:
             _phonenumbers_lib_warning = True
         return number
 
+    def phone_is_mobile(number, country_code=None):
+        return False
 
 def phone_sanitize_numbers(numbers, country_code, country_phone_code, force_format='E164'):
     """ Given a list of numbers, return parsezd and sanitized information
