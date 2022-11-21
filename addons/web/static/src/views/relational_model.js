@@ -1921,7 +1921,15 @@ export class DynamicRecordList extends DynamicList {
         for (const record of records) {
             this.removeRecord(record);
         }
-        await this._adjustOffset();
+        const hasReloaded = await this._adjustOffset();
+        if (resIds.length > 0 && !hasReloaded) {
+            // If the list hasn't been reloaded, force a reload if there are
+            // deleted records.
+            // NOTE that we don't rely on the reload logic of the _adjustOffset
+            // because we don't want the offset to be adjusted. Offset adjustment
+            // should only be done when at the last page.
+            await this.load();
+        }
         return resIds;
     }
 
@@ -2015,13 +2023,15 @@ export class DynamicRecordList extends DynamicList {
     /**
      * Reload the model if more records should appear on the current page.
      *
-     * @returns {Promise<void>}
+     * @returns {Promise<boolean>} Resolves to true if the model reloaded.
      */
     async _adjustOffset() {
         if (this.offset && !this.records.length) {
             this.offset = Math.max(this.offset - this.limit, 0);
             await this.load();
+            return true;
         }
+        return false;
     }
 
     /**
