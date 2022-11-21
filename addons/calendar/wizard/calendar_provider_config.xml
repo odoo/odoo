@@ -4,7 +4,7 @@
         <field name="name">calendar.provider.config.view.form</field>
         <field name="model">calendar.provider.config</field>
         <field name="arch" type="xml">
-            <form js_class="calendar_provider_config_form">
+            <form>
                 <field name="external_calendar_provider" widget="radio" options="{'horizontal': true}"/>
                 <div attrs="{'invisible': [('external_calendar_provider', '!=', 'google')]}">
                     <img alt="Google Calendar icon" src="/calendar/static/src/img/google_calendar_40.png" style="height: 40px; margin-right: 5px"/>
@@ -31,7 +31,7 @@
                     </group>
                 </div>
                 <footer>
-                    <a role="button" title="Connect" class="o_calendar_activate_external_cal btn btn-primary" t-on-click="onConnect">Connect</a>
+                    <widget name="calendar_connect_provider"/>
                     <button string="Cancel" class="btn btn-secondary" special="cancel"/>
                 </footer>
             </form>
