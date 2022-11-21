@@ -58,7 +58,7 @@ export class ListController extends Component {
         this.multiEdit = this.archInfo.multiEdit;
         this.activeActions = this.archInfo.activeActions;
         const fields = this.props.fields;
-        const { rootState } = this.props.state || {};
+        const { rootState } = this.props.state || this;
         this.model = useModel(this.props.Model, {
             resModel: this.props.resModel,
             fields,

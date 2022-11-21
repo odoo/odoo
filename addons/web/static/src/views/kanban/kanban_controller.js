@@ -17,7 +17,8 @@ export class KanbanController extends Component {
     setup() {
         this.actionService = useService("action");
         const { Model, resModel, fields, archInfo, limit, defaultGroupBy, state } = this.props;
-        const { rootState } = state || {};
+        const { rootState } = state || this;
+
         this.model = useModel(Model, {
             activeFields: archInfo.activeFields,
             progressAttributes: archInfo.progressAttributes,
