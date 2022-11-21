@@ -2194,9 +2194,15 @@ export class DynamicGroupList extends DynamicList {
     }
 
     async deleteRecords() {
+        const allResIds = [];
         for (const group of this.groups) {
-            group.list.deleteRecords();
+            const resIds = await group.list.deleteRecords();
+            group.count = group.count - resIds.length;
+            allResIds.push(...resIds);
         }
+        // Return the list of all deleted resIds.
+        // Will be used by the calling group to update its count.
+        return allResIds;
     }
 
     exportState() {
