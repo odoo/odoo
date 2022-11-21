@@ -46,7 +46,6 @@ export default class ChartOdooMenuPlugin extends spreadsheet.CorePlugin {
         data.chartOdooMenusReferences = this.odooMenuReference;
     }
 }
-ChartOdooMenuPlugin.modes = ["normal", "headless"];
 ChartOdooMenuPlugin.getters = ["getChartOdooMenu"];
 
 coreTypes.add("LINK_ODOO_MENU_TO_CHART");
