@@ -28,7 +28,7 @@ Model({
          * @private
          */
         _onChangeTotalCount() {
-            if (this.type === "activity" && this.total_count === 0) {
+            if (this.type === "activity" && this.total_count === 0 && this.planned_count === 0) {
                 this.delete();
             }
         },
@@ -46,7 +46,7 @@ Model({
     },
     onChanges: [
         {
-            dependencies: ["total_count", "type"],
+            dependencies: ["total_count", "type", "planned_count"],
             methodName: "_onChangeTotalCount",
         },
     ],
