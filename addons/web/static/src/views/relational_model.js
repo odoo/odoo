@@ -2399,6 +2399,7 @@ export class DynamicGroupList extends DynamicList {
                 lazy: true,
                 expand: this.expand,
                 expand_orderby: this.expand ? orderByToString(this.orderBy) : null,
+                expand_limit: this.expand ? this.limitByGroup : null,
                 offset: this.offset,
                 limit: this.limit,
                 context: this.context,

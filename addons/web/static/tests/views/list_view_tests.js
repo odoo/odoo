@@ -12,7 +12,7 @@ import { session } from "@web/session";
 import { FloatField } from "@web/views/fields/float/float_field";
 import { TextField } from "@web/views/fields/text/text_field";
 import { ListController } from "@web/views/list/list_controller";
-import { DynamicRecordList } from "@web/views/relational_model";
+import { DynamicRecordList, DynamicGroupList } from "@web/views/relational_model";
 import { actionService } from "@web/webclient/actions/action_service";
 import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
@@ -5374,6 +5374,35 @@ QUnit.module("Views", (hooks) => {
                 target.querySelector(".o_group_header:first-of-type .o_pager_limit").innerText,
                 "6"
             );
+        }
+    );
+
+    QUnit.test(
+        "grouped, show only limited records when the list view is initially expanded",
+        async function (assert) {
+            const forcedDefaultLimit = 3;
+            patchWithCleanup(DynamicGroupList, { DEFAULT_LIMIT: forcedDefaultLimit });
+
+            serverData.models.foo.records = [
+                { id: 121, foo: "blip" },
+                { id: 122, foo: "blip" },
+                { id: 123, foo: "blip" },
+                { id: 124, foo: "blip" },
+                { id: 125, foo: "blip" },
+                { id: 126, foo: "blip" },
+            ];
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: /*xml*/ `
+                    <tree expand="1">
+                        <field name="foo"/>
+                    </tree>`,
+                groupBy: ["foo"],
+            });
+
+            assert.containsN(target, ".o_data_row", forcedDefaultLimit);
         }
     );
 
