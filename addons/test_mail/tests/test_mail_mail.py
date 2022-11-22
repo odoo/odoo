@@ -195,9 +195,10 @@ class TestMailMail(TestMailCommon):
         self.assertSentEmail(mail.env.user.partner_id,
                              ['test.rec.1@example.com', '"Raoul" <test.rec.2@example.com>'],
                              email_cc=['test.cc.1@example.com', 'test.cc.2@example.com'])
-        # Mail: currently cc are put as copy of all sent emails (aka spam)
+        # don't put CCs as copy of each outgoing email, only the first one (and never
+        # with partner based recipients as those may receive specific links)
         self.assertSentEmail(mail.env.user.partner_id, [self.user_employee.email_formatted],
-                             email_cc=['test.cc.1@example.com', 'test.cc.2@example.com'])
+                             email_cc=[])
         self.assertEqual(len(self._mails), 2)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
