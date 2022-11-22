@@ -373,19 +373,30 @@ class MailMail(models.Model):
         if self.email_to:
             email_to = tools.email_split_and_format(self.email_to)
             email_list.append({
+                'email_cc': [],
                 'email_to': email_to,
                 # keep raw initial value for incoming pre processing of outgoing emails
                 'email_to_raw': self.email_to or '',
                 'partner_id': False,
             })
-        # TODO: add all cc once, either to the "To", either as a single entry (do not mix
+        # add all cc once, either to the first "To", either as a single entry (do not mix
         # with partner-specific sending)
-        email_cc = tools.email_split(self.email_cc)
+        if self.email_cc:
+            if email_list:
+                email_list[0]['email_cc'] = tools.email_split(self.email_cc)
+            else:
+                email_list.append({
+                    'email_cc':  tools.email_split(self.email_cc),
+                    'email_to': [],
+                    'email_to_raw': False,
+                    'partner_id': False,
+                })
         # specific behavior to customize the send email for notified partners
         for partner in self.recipient_ids:
             # check partner email content
             email_to = [tools.formataddr((partner.name or '', partner.email or 'False'))]
             email_list.append({
+                'email_cc': [],
                 'email_to': email_to,
                 # keep raw initial value for incoming pre processing of outgoing emails
                 'email_to_raw': partner.email or '',
@@ -415,7 +426,7 @@ class MailMail(models.Model):
                 'attachments': email_attachments,
                 'body': body,
                 'body_alternative': body_alternative,
-                'email_cc': email_cc,
+                'email_cc': email_values['email_cc'],
                 'email_from': self.email_from,
                 'email_to': email_values['email_to'],
                 'email_to_raw': email_values['email_to_raw'],
