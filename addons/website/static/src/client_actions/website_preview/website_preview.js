@@ -9,6 +9,7 @@ import { WebsiteTranslator } from '../../components/translator/translator';
 import { unslugHtmlDataObject } from '../../services/website_service';
 import {OptimizeSEODialog} from '@website/components/dialog/seo';
 import { routeToUrl } from "@web/core/browser/router_service";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
 const { Component, onWillStart, onMounted, onWillUnmount, useRef, useEffect, useState } = owl;
 
@@ -364,6 +365,11 @@ export class WebsitePreview extends Component {
             }
         });
         this.iframe.el.contentDocument.addEventListener('keydown', ev => {
+            if (getActiveHotkey(ev) === 'control+k' && !this.websiteContext.edition) {
+                // Avoid for browsers to focus on the URL bar when pressing
+                // CTRL-K from within the iframe.
+                ev.preventDefault();
+            }
             this.iframe.el.dispatchEvent(new KeyboardEvent('keydown', ev));
         });
         this.iframe.el.contentDocument.addEventListener('keyup', ev => {
