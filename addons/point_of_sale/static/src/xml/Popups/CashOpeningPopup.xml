@@ -16,6 +16,12 @@
                             </div>
                         </div>
                     </div>
+                    <div class="pr-section">
+                        <span class="info-title">PR</span>
+                        <div class="pr-sub-section" t-on-input="handleInputChange()">
+                            <input class="pos-input" type="number" t-model.number="state.pr"/>
+                        </div>
+                    </div>
                     <textarea placeholder="Notes" class="opening-cash-notes" t-model="state.notes"/>
                 </main>
                 <footer class="footer">

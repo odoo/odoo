@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_tax_group_tree" model="ir.ui.view">
+        <field name="name">account.tax.group.l10n_sa.edi.tree</field>
+        <field name="model">account.tax.group</field>
+        <field name="inherit_id" ref="account.view_tax_group_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='country_id']" position="after">
+                <field name="l10n_sa_edi_tax_category" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

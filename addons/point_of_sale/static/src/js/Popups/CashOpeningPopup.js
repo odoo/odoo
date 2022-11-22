@@ -13,6 +13,7 @@ odoo.define('point_of_sale.CashOpeningPopup', function(require) {
             this.state = useState({
                 notes: "",
                 openingCash: this.env.pos.bank_statement.balance_start || 0,
+                pr: this.env.pos.pr || false
             });
             this.moneyDetailsRef = useRef('moneyDetails');
         }
