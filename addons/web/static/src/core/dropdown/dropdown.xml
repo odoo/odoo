@@ -6,7 +6,7 @@
       class="o-dropdown dropdown"
       t-att-class="props.class"
       t-attf-class="
-        {{ directionCaretClass || ''}}
+        {{ state.directionCaretClass || ''}}
         {{ state.open ? 'show' : ''}}
         {{ !showCaret ? 'o-dropdown--no-caret' : '' }}
       "
@@ -36,6 +36,7 @@
         t-att-class="props.menuClass"
         role="menu"
         t-ref="menuRef"
+        t-on-scroll="props.onScroll"
       >
         <t t-slot="default" />
       </div>
