@@ -18,6 +18,7 @@ function evaluateMathematicalExpression(expr, context = {}) {
     for (let v of val.split(new RegExp(/([-+*/()^])/g))) {
         if (!["+", "-", "*", "/", "(", ")", "^"].includes(v) && v.length) {
             // check if this is a float and take into account user delimiter preference
+
             v = parseFloat(v);
         }
         if (v === "^") {
@@ -38,10 +39,12 @@ function evaluateMathematicalExpression(expr, context = {}) {
  * @returns {number}
  */
 function parseNumber(value, options = {}) {
+    if (!value.startsWith("=")) {
     // a number can have the thousand separator multiple times. ex: 1,000,000.00
     value = value.replaceAll(new RegExp(escapeRegExp(options.thousandsSep), "g") || ",", "");
     // a number only have one decimal separator
     value = value.replace(new RegExp(escapeRegExp(options.decimalPoint), "g") || ".", ".");
+    }
 
     if (value.startsWith("=")) {
         value = evaluateMathematicalExpression(value.substring(1));

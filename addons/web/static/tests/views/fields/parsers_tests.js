@@ -143,4 +143,13 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(parseInteger("1,000,000"), 1000000);
         assert.strictEqual(parseFloat("1,000,000.50"), 1000000.5);
     });
+
+    QUnit.test("parseWithMathFormula", function (assert) {
+        patchWithCleanup(localization, {
+            decimalPoint: ",",
+            thousandsSep: ".",
+        });
+        assert.strictEqual(parseFloat("=2,5*2"), 5);
+        assert.strictEqual(parseFloat("=2.500*2"), 5000);
+    });
 });
