@@ -40,7 +40,7 @@
         <t t-if="fullscreen">
             <button class="btn fa fa-arrow-left" data-bs-dismiss="modal" aria-label="Close" t-on-click="close" />
         </t>
-        <h4 class="modal-title text-break">
+        <h4 class="modal-title text-break" t-att-class="{ 'me-auto': fullscreen }">
             <t t-esc="props.title"/>
         </h4>
         <t t-if="!fullscreen">
