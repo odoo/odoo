@@ -14,13 +14,15 @@
         </field>
         <field name="line_ids">
             <record id="tax_report_title_operations" model="account.report.line">
-                <field name="name">Opérations</field>
+                <field name="name">Operations</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_title_operations_sortie" model="account.report.line">
-                        <field name="name">II A la sortie</field>
+                        <field name="name">II Outgoing</field>
+                        <field name="hierarchy_level">1</field>
                         <field name="children_ids">
                             <record id="tax_report_line_00" model="account.report.line">
-                                <field name="name">00 - Opérations soumises à un régime particulier</field>
+                                <field name="name">00 - Operations subject to a special regulation</field>
                                 <field name="code">c00</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_00_tag" model="account.report.expression">
@@ -31,7 +33,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_01" model="account.report.line">
-                                <field name="name">01 - Opérations avec TVA à 6%</field>
+                                <field name="name">01 - Operations subject to 6% VAT</field>
                                 <field name="code">c01</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_01_tag" model="account.report.expression">
@@ -42,7 +44,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_02" model="account.report.line">
-                                <field name="name">02 - Opérations avec TVA à 12%</field>
+                                <field name="name">02 - Operations subject to 12% VAT</field>
                                 <field name="code">c02</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_02_tag" model="account.report.expression">
@@ -53,7 +55,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_03" model="account.report.line">
-                                <field name="name">03 - Opérations avec TVA à 21%</field>
+                                <field name="name">03 - Operations subject to 21% VAT</field>
                                 <field name="code">c03</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_03_tag" model="account.report.expression">
@@ -64,7 +66,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_44" model="account.report.line">
-                                <field name="name">44 - Services intra-communautaires</field>
+                                <field name="name">44 - Intra-Community services</field>
                                 <field name="code">c44</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_44_tag" model="account.report.expression">
@@ -75,7 +77,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_45" model="account.report.line">
-                                <field name="name">45 - Opérations avec TVA due par le cocontractant</field>
+                                <field name="name">45 - Operations subject to VAT due by the co-contractor</field>
                                 <field name="code">c45</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_45_tag" model="account.report.expression">
@@ -86,12 +88,12 @@
                                 </field>
                             </record>
                             <record id="tax_report_title_operations_sortie_46" model="account.report.line">
-                                <field name="name">46 - Livraisons intra-communautaires exemptées</field>
+                                <field name="name">46 - Exempted intra-Community deliveries and ABC sales</field>
                                 <field name="code">c46</field>
                                 <field name="aggregation_formula">c46L.balance + c46T.balance</field>
                                 <field name="children_ids">
                                     <record id="tax_report_line_46L" model="account.report.line">
-                                        <field name="name">46L - Livraisons biens intra-communautaires exemptées</field>
+                                        <field name="name">46L - Exempted intra-Community deliveries</field>
                                         <field name="code">c46L</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_line_46L_tag" model="account.report.expression">
@@ -102,7 +104,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_46T" model="account.report.line">
-                                        <field name="name">46T - Livraisons biens intra-communautaire exemptées</field>
+                                        <field name="name">46T - ABC sales</field>
                                         <field name="code">c46T</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_line_46T_tag" model="account.report.expression">
@@ -115,7 +117,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_47" model="account.report.line">
-                                <field name="name">47 - Autres opérations exemptées</field>
+                                <field name="name">47 - Other exempted operations and operations carried out abroad</field>
                                 <field name="code">c47</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_47_tag" model="account.report.expression">
@@ -126,12 +128,12 @@
                                 </field>
                             </record>
                             <record id="tax_report_title_operations_sortie_48" model="account.report.line">
-                                <field name="name">48 - Notes de crédit aux opérations grilles [44] et [46]</field>
+                                <field name="name">48 - Credit notes for operations in grids [44] and [46]</field>
                                 <field name="code">c48</field>
                                 <field name="aggregation_formula">c48s44.balance + c48s46L.balance + c48s46T.balance</field>
                                 <field name="children_ids">
                                     <record id="tax_report_line_48s44" model="account.report.line">
-                                        <field name="name">48s44 - Notes de crédit aux opérations grilles [44]</field>
+                                        <field name="name">48s44 - Credit notes for operations in grid [44]</field>
                                         <field name="code">c48s44</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_line_48s44_tag" model="account.report.expression">
@@ -142,7 +144,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_48s46L" model="account.report.line">
-                                        <field name="name">48s46L - Notes de crédit aux opérations grilles [46L]</field>
+                                        <field name="name">48s46L - Credit notes for operations in grid [46L]</field>
                                         <field name="code">c48s46L</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_line_48s46L_tag" model="account.report.expression">
@@ -153,7 +155,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_48s46T" model="account.report.line">
-                                        <field name="name">48s46T - Notes de crédit aux opérations grilles [46T]</field>
+                                        <field name="name">48s46T - Credit notes for operations in grid [46T]</field>
                                         <field name="code">c48s46T</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_line_48s46T_tag" model="account.report.expression">
@@ -166,7 +168,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_49" model="account.report.line">
-                                <field name="name">49 - Notes de crédit aux opérations du point II</field>
+                                <field name="name">49 - Credit notes for other operations in part II</field>
                                 <field name="code">c49</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_49_tag" model="account.report.expression">
@@ -179,10 +181,11 @@
                         </field>
                     </record>
                     <record id="tax_report_title_operations_entree" model="account.report.line">
-                        <field name="name">III A l'entrée</field>
+                        <field name="name">III Incoming</field>
+                        <field name="hierarchy_level">1</field>
                         <field name="children_ids">
                             <record id="tax_report_line_81" model="account.report.line">
-                                <field name="name">81 - Marchandises, matières premières et auxiliaires</field>
+                                <field name="name">81 - Trade goods, raw materials and consumables</field>
                                 <field name="code">c81</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_81_tag" model="account.report.expression">
@@ -216,7 +219,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_82" model="account.report.line">
-                                <field name="name">82 - Services et biens divers</field>
+                                <field name="name">82 - Services and miscellaneous goods</field>
                                 <field name="code">c82</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_82_tag" model="account.report.expression">
@@ -250,7 +253,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_83" model="account.report.line">
-                                <field name="name">83 - Biens d'investissement</field>
+                                <field name="name">83 - Investment goods</field>
                                 <field name="code">c83</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_83_tag" model="account.report.expression">
@@ -284,7 +287,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_84" model="account.report.line">
-                                <field name="name">84 - Notes de crédits sur opérations case [86] et [88]</field>
+                                <field name="name">84 - Credit notes for operations in grids [86] and [88]</field>
                                 <field name="code">c84</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_84_tag" model="account.report.expression">
@@ -295,7 +298,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_85" model="account.report.line">
-                                <field name="name">85 - Notes de crédits autres opérations</field>
+                                <field name="name">85 - Credit notes received relating to other operations in part III</field>
                                 <field name="code">c85</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_85_tag" model="account.report.expression">
@@ -306,7 +309,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_86" model="account.report.line">
-                                <field name="name">86 - Acquisition intra-communautaires et ventes ABC</field>
+                                <field name="name">86 - Intra-Community acquisitions and ABC sales</field>
                                 <field name="code">c86</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_86_tag" model="account.report.expression">
@@ -340,7 +343,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_87" model="account.report.line">
-                                <field name="name">87 - Autres opérations</field>
+                                <field name="name">87 - Other operations subject to VAT</field>
                                 <field name="code">c87</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_87_tag" model="account.report.expression">
@@ -374,7 +377,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_88" model="account.report.line">
-                                <field name="name">88 - Acquisition services intra-communautaires</field>
+                                <field name="name">88 - Intra-Community services with reverse charge</field>
                                 <field name="code">c88</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_88_tag" model="account.report.expression">
@@ -413,12 +416,14 @@
             </record>
             <record id="tax_report_title_taxes" model="account.report.line">
                 <field name="name">Taxes</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_title_taxes_dues" model="account.report.line">
-                        <field name="name">IV Dues</field>
+                        <field name="name">IV Due</field>
+                        <field name="hierarchy_level">1</field>
                         <field name="children_ids">
                             <record id="tax_report_line_54" model="account.report.line">
-                                <field name="name">54 - TVA sur opérations des grilles [01], [02], [03]</field>
+                                <field name="name">54 - VAT on operations in grids [01], [02] and [03]</field>
                                 <field name="code">c54</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_54_tag" model="account.report.expression">
@@ -429,7 +434,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_55" model="account.report.line">
-                                <field name="name">55 - TVA sur opérations des grilles [86] et [88]</field>
+                                <field name="name">55 - VAT on operations in grids [86] and [88]</field>
                                 <field name="code">c55</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_55_tag" model="account.report.expression">
@@ -440,7 +445,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_56" model="account.report.line">
-                                <field name="name">56 - TVA sur opérations de la grille [87]</field>
+                                <field name="name">56 - VAT on operations in grid [87], with the exception of imports with reverse charge</field>
                                 <field name="code">c56</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_56_tag" model="account.report.expression">
@@ -451,7 +456,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_57" model="account.report.line">
-                                <field name="name">57 - TVA relatives aux importations</field>
+                                <field name="name">57 - VAT on import with reverse charge</field>
                                 <field name="code">c57</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_57_tag" model="account.report.expression">
@@ -462,7 +467,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_61" model="account.report.line">
-                                <field name="name">61 - Diverses régularisations en faveur de l'Etat</field>
+                                <field name="name">61 - Various VAT regularizations in favor of the State</field>
                                 <field name="code">c61</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_61_tag" model="account.report.expression">
@@ -473,7 +478,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_63" model="account.report.line">
-                                <field name="name">63 - TVA à reverser sur notes de crédit recues</field>
+                                <field name="name">63 - VAT to be paid back on credit notes received</field>
                                 <field name="code">c63</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_63_tag" model="account.report.expression">
@@ -486,10 +491,11 @@
                         </field>
                     </record>
                     <record id="tax_report_title_taxes_deductibles" model="account.report.line">
-                        <field name="name">V Déductibles</field>
+                        <field name="name">V Deductible</field>
+                        <field name="hierarchy_level">1</field>
                         <field name="children_ids">
                             <record id="tax_report_line_59" model="account.report.line">
-                                <field name="name">59 - TVA déductible</field>
+                                <field name="name">59 - Deductible VAT</field>
                                 <field name="code">c59</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_59_tag" model="account.report.expression">
@@ -500,7 +506,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_62" model="account.report.line">
-                                <field name="name">62 - Diverses régularisations en faveur du déclarant</field>
+                                <field name="name">62 - Various VAT regularizations in favor of the declarant</field>
                                 <field name="code">c62</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_62_tag" model="account.report.expression">
@@ -511,7 +517,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_64" model="account.report.line">
-                                <field name="name">64 - TVA à récupérer sur notes de crédit delivrées</field>
+                                <field name="name">64 - VAT to be recovered on credit notes issued</field>
                                 <field name="code">c64</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_64_tag" model="account.report.expression">
@@ -524,10 +530,11 @@
                         </field>
                     </record>
                     <record id="tax_report_title_taxes_soldes" model="account.report.line">
-                        <field name="name">VI Soldes</field>
+                        <field name="name">VI Balance</field>
+                        <field name="hierarchy_level">1</field>
                         <field name="children_ids">
                             <record id="tax_report_line_71" model="account.report.line">
-                                <field name="name">71 - Taxes dues à l'état</field>
+                                <field name="name">71 - Taxes due to the State</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_71_formula" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -538,7 +545,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_72" model="account.report.line">
-                                <field name="name">72 - Somme due par l'état</field>
+                                <field name="name">72 - Amount owed by the State</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_72_formula" model="account.report.expression">
                                         <field name="label">balance</field>
