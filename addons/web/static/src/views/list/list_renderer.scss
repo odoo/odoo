@@ -202,6 +202,9 @@
                     }
                 }
             }
+            .o_group_caret {
+                margin-inline-start: calc(var(--o-list-group-level, 0) * #{map-get($spacers, 4)});
+            }
         }
         tbody + tbody {
             border-top: none; // Override bootstrap for grouped list views
