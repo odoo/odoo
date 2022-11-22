@@ -593,7 +593,7 @@ QUnit.module("Components", ({ beforeEach }) => {
     });
 
     QUnit.test("siblings dropdowns: toggler focused on mouseenter", async (assert) => {
-        class Parent extends Component { }
+        class Parent extends Component {}
         Parent.template = xml`
         <div>
             <Dropdown class="'one'" />
@@ -1144,6 +1144,50 @@ QUnit.module("Components", ({ beforeEach }) => {
             assert.containsOnce(target, ".o-dropdown--menu");
             assert.containsOnce(document.body, ".bootstrap-datetimepicker-widget");
             assert.notOk(target.querySelector(".o_datepicker_input").value === "");
+        }
+    );
+
+    QUnit.test("onOpened callback props called after the menu has been mounted", async (assert) => {
+        const beforeOpenProm = makeDeferred();
+        class Parent extends Component {
+            beforeOpenCallback() {
+                assert.step("beforeOpened");
+                return beforeOpenProm;
+            }
+            onOpenedCallback() {
+                assert.step("onOpened");
+            }
+        }
+        Parent.template = xml`
+            <Dropdown onOpened.bind="onOpenedCallback" beforeOpen.bind="beforeOpenCallback" />
+        `;
+        Parent.components = { Dropdown, DropdownItem };
+        env = await makeTestEnv();
+        await mount(Parent, target, { env });
+        await click(target, "button.dropdown-toggle");
+        assert.verifySteps(["beforeOpened"]);
+        beforeOpenProm.resolve();
+        await nextTick();
+        assert.verifySteps(["onOpened"]);
+    });
+
+    QUnit.test(
+        "onPositioned callback props called after the menu position has been set",
+        async (assert) => {
+            class Parent extends Component {
+                onPositionedCallback({ direction }) {
+                    assert.step("onPositioned");
+                    assert.strictEqual(direction, "top");
+                }
+            }
+            Parent.template = xml`
+            <Dropdown onPositioned.bind="onPositionedCallback" position="'top-fit'" />
+        `;
+            Parent.components = { Dropdown, DropdownItem };
+            env = await makeTestEnv();
+            await mount(Parent, target, { env });
+            await click(target, "button.dropdown-toggle");
+            assert.verifySteps(["onPositioned"], "callback has been called");
         }
     );
 });

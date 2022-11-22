@@ -110,6 +110,7 @@ export class Dropdown extends Component {
             popper: "menuRef",
             position,
             onPositioned: (el, { direction, variant }) => {
+                this.props.onPositioned({ direction, variant });
                 if (this.parentDropdown && ["right", "left"].includes(direction)) {
                     // Correctly align sub dropdowns items with its parent's
                     if (variant === "start") {
@@ -161,6 +162,15 @@ export class Dropdown extends Component {
             const togglerRef = useRef("togglerRef");
             usePosition(() => togglerRef.el, positioningOptions);
         }
+
+        useEffect(
+            (isOpen) => {
+                if (isOpen) {
+                    this.props.onOpened();
+                }
+            },
+            () => [this.state.open]
+        );
     }
 
     // -------------------------------------------------------------------------
@@ -309,6 +319,11 @@ export class Dropdown extends Component {
     }
 }
 Dropdown.bus = new EventBus();
+Dropdown.defaultProps = {
+    onOpened: () => {},
+    onPositioned: () => {},
+    onScroll: () => {},
+};
 Dropdown.props = {
     class: {
         type: String,
@@ -336,6 +351,18 @@ Dropdown.props = {
         optional: true,
     },
     beforeOpen: {
+        type: Function,
+        optional: true,
+    },
+    onOpened: {
+        type: Function,
+        optional: true,
+    },
+    onPositioned: {
+        type: Function,
+        optional: true,
+    },
+    onScroll: {
         type: Function,
         optional: true,
     },

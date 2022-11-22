@@ -483,6 +483,16 @@ export function editSelect(el, selector, value) {
     return triggerEvent(select, null, "change");
 }
 
+export async function editSelectMenu(el, selector, value) {
+    const dropdown = el.querySelector(selector);
+    await click(dropdown.querySelector(".dropdown-toggle"));
+    for (const item of Array.from(dropdown.querySelectorAll(".dropdown-item"))) {
+        if (item.textContent === value) {
+            return await click(item);
+        }
+    }
+}
+
 /**
  * Triggers an hotkey properly disregarding the operating system.
  *

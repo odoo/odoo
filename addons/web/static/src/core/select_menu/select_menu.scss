@@ -1,0 +1,43 @@
+.o_select_menu {
+    .o_select_menu_toggler_slot {
+        flex-grow: 2;
+    }
+    
+    .o_select_menu_toggler_caret,
+    .o_select_menu_toggler_clear {
+        width: 2rem;
+        flex-basis: 1;
+    }
+    
+    .o_select_menu_toggler_clear:hover i {
+        color: red;
+    }
+
+    .o_select_menu_menu {
+        min-width: fit-content;
+        max-height: 350px;
+        border: 1px solid $o-brand-primary;
+
+        .o_select_menu_input {
+            background-color: $dropdown-bg;
+        }
+    
+        .o_select_menu_group {
+            top: 40px;
+        }
+    
+        .o_select_menu_item {
+            max-width: 200px;
+        }
+    }
+
+    .o_select_menu_menu.top {
+        box-shadow: 0 -7px 10px rgba(8, 8, 8, 0.319);
+        border-bottom: none;
+    }
+
+    .o_select_menu_menu.bottom {
+        box-shadow: 0 7px 10px rgba(8, 8, 8, 0.319);
+        border-top: none;
+    }
+}
