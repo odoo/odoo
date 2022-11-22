@@ -36,19 +36,25 @@
                             <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">
                                 Tax Invoice
                             </span>
-                            <span t-if="o.move_type == 'out_invoice' and o.state == 'draft'">
+                            <span t-elif="o.move_type == 'out_invoice' and o.state == 'draft'">
                                 Draft Invoice
                             </span>
-                            <span t-if="o.move_type == 'out_invoice' and o.state == 'cancel'">
+                            <span t-elif="o.move_type == 'out_invoice' and o.state == 'cancel'">
                                 Cancelled Invoice
                             </span>
-                            <span t-if="o.move_type == 'out_refund'">
+                            <span t-elif="o.move_type == 'out_refund' and o.state == 'posted'">
                                 Credit Note
                             </span>
-                            <span t-if="o.move_type == 'in_refund'">
+                            <span t-elif="o.move_type == 'out_refund' and o.state == 'draft'">
+                                Draft Credit Note
+                            </span>
+                            <span t-elif="o.move_type == 'out_refund' and o.state == 'cancel'">
+                                Cancelled Credit Note
+                            </span>
+                            <span t-elif="o.move_type == 'in_refund'">
                                 Vendor Credit Note
                             </span>
-                            <span t-if="o.move_type == 'in_invoice'">
+                            <span t-elif="o.move_type == 'in_invoice'">
                                 Vendor Bill
                             </span>
                         </div>
@@ -59,19 +65,25 @@
                             <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">
                                 فاتورة ضريبية
                             </span>
-                            <span t-if="o.move_type == 'out_invoice' and o.state == 'draft'">
+                            <span t-elif="o.move_type == 'out_invoice' and o.state == 'draft'">
                                 مسودة فاتورة
                             </span>
-                            <span t-if="o.move_type == 'out_invoice' and o.state == 'cancel'">
+                            <span t-elif="o.move_type == 'out_invoice' and o.state == 'cancel'">
                                 فاتورة ملغاة
                             </span>
-                            <span t-if="o.move_type == 'out_refund'">
+                            <span t-elif="o.move_type == 'out_refund' and o.state == 'posted'">
                                 إشعار خصم
                             </span>
-                            <span t-if="o.move_type == 'in_refund'">
+                            <span t-elif="o.move_type == 'out_refund' and o.state == 'draft'">
+                                إشعار خصم المسودة
+                            </span>
+                            <span t-elif="o.move_type == 'out_refund' and o.state == 'cancel'">
+                                إشعار خصم ملغاة
+                            </span>
+                            <span t-elif="o.move_type == 'in_refund'">
                                 إشعار خصم المورد
                             </span>
-                            <span t-if="o.move_type == 'in_invoice'">
+                            <span t-elif="o.move_type == 'in_invoice'">
                                 فاتورة المورد
                             </span>
                         </div>
