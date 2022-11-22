@@ -531,62 +531,61 @@ class IrAttachment(models.Model):
     def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
         # add res_field=False in domain if not present; the arg[0] trick below
         # works for domain items and '&'/'|'/'!' operators too
-        discard_binary_fields_attachments = False
+        disable_binary_fields_attachments = False
         if not any(arg[0] in ('id', 'res_field') for arg in domain):
-            discard_binary_fields_attachments = True
+            disable_binary_fields_attachments = True
             domain = [('res_field', '=', False)] + domain
-
-        ids = super()._search(domain, offset, limit, order, access_rights_uid)
 
         if self.env.is_superuser():
             # rules do not apply for the superuser
-            return ids
-
-        if not ids:
-            return ids
-
-        # Work with a set, as list.remove() is prohibitive for large lists of documents
-        # (takes 20+ seconds on a db with 100k docs during search_count()!)
-        orig_ids = ids
-        ids = set(ids)
+            return super()._search(domain, offset, limit, order, access_rights_uid)
 
         # For attachments, the permissions of the document they are attached to
         # apply, so we must remove attachments for which the user cannot access
-        # the linked document.
-        # Use pure SQL rather than read() as it is about 50% faster for large dbs (100k+ docs),
-        # and the permissions are checked in super() and below anyway.
+        # the linked document. For the sake of performance, fetch the fields to
+        # determine those permissions within the same SQL query.
+        self.flush_model(['res_model', 'res_id', 'res_field', 'public', 'create_uid'])
+        query = super()._search(domain, offset, limit, order, access_rights_uid)
+        query_str, params = query.select(
+            f'"{self._table}"."id"',
+            f'"{self._table}"."res_model"',
+            f'"{self._table}"."res_id"',
+            f'"{self._table}"."res_field"',
+            f'"{self._table}"."public"',
+            f'"{self._table}"."create_uid"',
+        )
+        self.env.cr.execute(query_str, params)
+        rows = self.env.cr.fetchall()
+
+        # determine permissions based on linked records
+        all_ids = []
+        allowed_ids = set()
         model_attachments = defaultdict(lambda: defaultdict(set))   # {res_model: {res_id: set(ids)}}
-        binary_fields_attachments = set()
-        self._cr.execute("""SELECT id, res_model, res_id, public, res_field FROM ir_attachment WHERE id IN %s""", [tuple(ids)])
-        for row in self._cr.dictfetchall():
-            if not row['res_model'] or row['public']:
+        for id_, res_model, res_id, res_field, public, create_uid in rows:
+            all_ids.append(id_)
+            if not res_model or public:
+                allowed_ids.add(id_)
                 continue
-            # model_attachments = {res_model: {res_id: set(ids)}}
-            model_attachments[row['res_model']][row['res_id']].add(row['id'])
-            # Should not retrieve binary fields attachments if not explicitly required
-            if discard_binary_fields_attachments and row['res_field']:
-                binary_fields_attachments.add(row['id'])
+            if res_model and not res_id and create_uid == self.env.uid:
+                allowed_ids.add(id_)
+                continue
+            if not (res_field and disable_binary_fields_attachments):
+                model_attachments[res_model][res_id].add(id_)
 
-        if binary_fields_attachments:
-            ids.difference_update(binary_fields_attachments)
-
-        # To avoid multiple queries for each attachment found, checks are
-        # performed in batch as much as possible.
+        # check permissions on records model by model
         for res_model, targets in model_attachments.items():
             if res_model not in self.env:
+                allowed_ids.update(id_ for ids in targets.values() for id_ in ids)
                 continue
             if not self.env[res_model].check_access_rights('read', False):
-                # remove all corresponding attachment ids
-                ids.difference_update(itertools.chain(*targets.values()))
                 continue
             # filter ids according to what access rules permit
-            target_ids = list(targets)
-            allowed = self.env[res_model].with_context(active_test=False).search([('id', 'in', target_ids)])
-            for res_id in set(target_ids).difference(allowed.ids):
-                ids.difference_update(targets[res_id])
+            ResModel = self.env[res_model].with_context(active_test=False)
+            for res_id in ResModel.search([('id', 'in', list(targets))])._ids:
+                allowed_ids.update(targets[res_id])
 
-        # sort result according to the original sort ordering
-        result = [id for id in orig_ids if id in ids]
+        # filter out all_ids by keeping allowed_ids only
+        result = [id_ for id_ in all_ids if id_ in allowed_ids]
 
         # If the original search reached the limit, it is important the
         # filtered record set does so too. When a JS view receive a
@@ -594,10 +593,10 @@ class IrAttachment(models.Model):
         # reached the last page. To avoid an infinite recursion due to the
         # permission checks the sub-call need to be aware of the number of
         # expected records to retrieve
-        if len(orig_ids) == limit and len(result) < self._context.get('need', limit):
+        if len(all_ids) == limit and len(result) < self._context.get('need', limit):
             need = self._context.get('need', limit) - len(result)
             more_ids = self.with_context(need=need)._search(
-                domain, offset + len(orig_ids), limit, order, access_rights_uid,
+                domain, offset + len(all_ids), limit, order, access_rights_uid,
             )
             result.extend(more_ids[:limit - len(result)])
 
