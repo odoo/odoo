@@ -537,4 +537,27 @@ QUnit.module("Components", (hooks) => {
         assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "0"); // option "="
         assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "abc");
     });
+
+    QUnit.test("show correct operator", async (assert) => {
+        serverData.models.partner.fields.state = {
+            string: "State",
+            type: "selection",
+            selection: [
+                ["abc", "ABC"],
+                ["def", "DEF"],
+                ["ghi", "GHI"],
+            ],
+        };
+
+        await mountComponent(DomainSelector, {
+            props: {
+                resModel: "partner",
+                value: `[['state', 'in', ['abc']]]`,
+                readonly: false,
+            },
+        });
+
+        const select = target.querySelector(".o_domain_leaf_operator_select");
+        assert.strictEqual(select.options[select.options.selectedIndex].text, "in");
+    });
 });
