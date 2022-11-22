@@ -12,13 +12,13 @@ class AccountMove(models.Model):
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'account_move_id', string='Stock Valuation Layer')
 
     def _compute_show_reset_to_draft_button(self):
+        super()._compute_show_reset_to_draft_button()
         for move in self:
             for line in move.line_ids:
                 # if a line has correction layers hide the 'Reset to Darft' button
                 if line._get_stock_valuation_layers(move).stock_valuation_layer_ids.filtered('account_move_line_id'):
                     move.show_reset_to_draft_button = False
-                    return
-        super()._compute_show_reset_to_draft_button()
+                    break
 
     # -------------------------------------------------------------------------
     # OVERRIDE METHODS
