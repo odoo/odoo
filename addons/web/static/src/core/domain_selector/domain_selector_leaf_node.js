@@ -45,32 +45,44 @@ export class DomainSelectorLeafNode extends Component {
         );
     }
 
+    findOperator(operatorList, opToFind) {
+        return operatorList.find((o) =>
+            o.matches({
+                field: this.fieldInfo,
+                value: this.props.node.operands[1],
+                operator: opToFind,
+            })
+        );
+    }
+
+    getOperators(field) {
+        const operators = field.getOperators();
+        if (this.findOperator(operators, this.props.node.operator)) {
+            return operators;
+        }
+        return operators.concat(
+            this.findOperator(
+                registry.category("domain_selector/operator").getAll(),
+                this.props.node.operator
+            )
+        );
+    }
+
     getFieldComponent(type) {
         return registry.category("domain_selector/fields").get(type, null);
     }
     getOperatorInfo(operator) {
-        const op = this.getFieldComponent(this.fieldInfo.type)
-            .getOperators()
-            .find((op) =>
-                op.matches({
-                    field: this.fieldInfo,
-                    operator,
-                    value: this.props.node.operands[1],
-                })
-            );
+        const op = this.findOperator(
+            this.getFieldComponent(this.fieldInfo.type).getOperators(),
+            operator
+        );
         if (op) {
             return op;
         }
-        return registry
-            .category("domain_selector/operator")
-            .getAll()
-            .find((op) =>
-                op.matches({
-                    field: this.fieldInfo,
-                    operator: this.props.node.operator,
-                    value: this.props.node.operands[1],
-                })
-            );
+        return this.findOperator(
+            registry.category("domain_selector/operator").getAll(),
+            this.props.node.operator
+        );
     }
 
     async onFieldChange(fieldName) {
