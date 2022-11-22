@@ -12,6 +12,7 @@ from werkzeug import urls
 
 from odoo import _, api, fields, models, tools
 from odoo.addons.base.models.ir_qweb import QWebException
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import UserError, AccessError
 from odoo.tools import is_html_empty
 from odoo.tools.rendering_tools import convert_inline_template_to_qweb, parse_inline_template, render_inline_template, template_env_globals
@@ -241,7 +242,10 @@ class MailRenderMixin(models.AbstractModel):
     def _check_access_right_dynamic_template(self):
         if not self.env.su and not self.env.user.has_group('mail.group_mail_template_editor') and self._is_dynamic():
             group = self.env.ref('mail.group_mail_template_editor')
-            raise AccessError(_('Only users belonging to the "%s" group can modify dynamic templates.', group.name))
+            raise AccessError(
+                _('Only users belonging to the "%(group_name)s" group can modify dynamic templates.',
+                  group_name=group.name)
+            )
 
     # ------------------------------------------------------------
     # RENDERING
@@ -256,14 +260,15 @@ class MailRenderMixin(models.AbstractModel):
           * various formatting tools;
         """
         render_context = {
+            'ctx': self._context,
             'format_date': lambda date, date_format=False, lang_code=False: format_date(self.env, date, date_format, lang_code),
             'format_datetime': lambda dt, tz=False, dt_format=False, lang_code=False: format_datetime(self.env, dt, tz, dt_format, lang_code),
             'format_time': lambda time, tz=False, time_format=False, lang_code=False: format_time(self.env, time, tz, time_format, lang_code),
             'format_amount': lambda amount, currency, lang_code=False: tools.format_amount(self.env, amount, currency, lang_code),
             'format_duration': lambda value: tools.format_duration(value),
-            'user': self.env.user,
-            'ctx': self._context,
             'is_html_empty': is_html_empty,
+            'slug': slug,
+            'user': self.env.user,
         }
         render_context.update(copy.copy(template_env_globals))
         return render_context
@@ -314,15 +319,21 @@ class MailRenderMixin(models.AbstractModel):
             except Exception as e:
                 if isinstance(e, QWebException) and isinstance(e.__cause__, PermissionError):
                     group = self.env.ref('mail.group_mail_template_editor')
-                    raise AccessError(_('Only users belonging to the "%s" group can modify dynamic templates.', group.name)) from e
+                    raise AccessError(
+                        _('Only users belonging to the "%(group_name)s" group can modify dynamic templates.',
+                           group_name=group.name)
+                    ) from e
                 _logger.info("Failed to render template : %s", template_src, exc_info=True)
-                raise UserError(_("Failed to render QWeb template : %s)", template_src)) from e
+                raise UserError(
+                    _("Failed to render QWeb template : %(template_src)s)",
+                      template_src=template_src)
+                    ) from e
             results[record.id] = render_result
 
         return results
 
     @api.model
-    def _render_template_qweb_view(self, view_xmlid, model, res_ids,
+    def _render_template_qweb_view(self, view_ref, model, res_ids,
                                    add_context=None, options=None):
         """ Render a QWeb template based on an ir.ui.view content.
 
@@ -330,8 +341,9 @@ class MailRenderMixin(models.AbstractModel):
         variables are added:
           * ``object``: record based on which the template is rendered;
 
-        :param str view_xmlid: source QWeb template. It should be a string
-          XmlID allowing to fetch an ``ir.ui.view``;
+        :param str/int/record view_ref: source QWeb template. It should be an
+          XmlID allowing to fetch an ``ir.ui.view``, or an ID of a view or
+          an ``ir.ui.view`` record;
         :param str model: see ``MailRenderMixin._render_template()``;
         :param list res_ids: see ``MailRenderMixin._render_template()``;
 
@@ -352,14 +364,23 @@ class MailRenderMixin(models.AbstractModel):
         if add_context:
             variables.update(**add_context)
 
+        view_ref = view_ref.id if isinstance(view_ref, models.BaseModel) else view_ref
         for record in self.env[model].browse(res_ids):
             variables['object'] = record
             try:
-                render_result = self.env['ir.qweb']._render(view_xmlid, variables, minimal_qcontext=True, raise_if_not_found=False, **(options or {}))
+                render_result = self.env['ir.qweb']._render(
+                    view_ref,
+                    variables,
+                    minimal_qcontext=True,
+                    raise_if_not_found=False,
+                    **(options or {})
+                )
                 results[record.id] = render_result
             except Exception as e:
-                _logger.info("Failed to render template : %s", view_xmlid, exc_info=True)
-                raise UserError(_("Failed to render template : %s") % view_xmlid)
+                _logger.info("Failed to render template : %s", view_ref, exc_info=True)
+                raise UserError(
+                    _("Failed to render template : %(view_ref)s", view_ref=view_ref)
+                ) from e
 
         return results
 
@@ -395,7 +416,10 @@ class MailRenderMixin(models.AbstractModel):
         if (not self._unrestricted_rendering and is_dynamic and not self.env.is_admin() and
            not self.env.user.has_group('mail.group_mail_template_editor')):
             group = self.env.ref('mail.group_mail_template_editor')
-            raise AccessError(_('Only users belonging to the "%s" group can modify dynamic templates.', group.name))
+            raise AccessError(
+                _('Only users belonging to the "%(group_name)s" group can modify dynamic templates.',
+                  group_name=group.name)
+            )
 
         if not is_dynamic:
             # Either the content is a raw text without placeholders, either we fail to
@@ -414,10 +438,16 @@ class MailRenderMixin(models.AbstractModel):
             variables['object'] = record
 
             try:
-                results[record.id] = render_inline_template(template_instructions, variables)
+                results[record.id] = render_inline_template(
+                    template_instructions,
+                    variables
+                )
             except Exception as e:
                 _logger.info("Failed to render inline_template: \n%s", str(template_txt), exc_info=True)
-                raise UserError(_("Failed to render inline_template template : %s)", e))
+                raise UserError(
+                    _("Failed to render inline_template template : %(template_txt)s)",
+                      template_txt=template_txt)
+                ) from e
 
         return results
 
@@ -467,9 +497,15 @@ class MailRenderMixin(models.AbstractModel):
             options = {}
 
         if not isinstance(res_ids, (list, tuple)):
-            raise ValueError(_('Template rendering should be called only using on a list of IDs.'))
+            raise ValueError(
+                _('Template rendering should be called only using on a list of IDs; received %(res_ids)r instead.',
+                  res_ids=res_ids)
+            )
         if engine not in ('inline_template', 'qweb', 'qweb_view'):
-            raise ValueError(_('Template rendering supports only inline_template, qweb, or qweb_view (view or raw).'))
+            raise ValueError(
+                _('Template rendering supports only inline_template, qweb, or qweb_view (view or raw); received %(engine)s instead.',
+                  engine=engine)
+            )
 
         if engine == 'qweb_view':
             rendered = self._render_template_qweb_view(template_src, model, res_ids,
@@ -498,8 +534,6 @@ class MailRenderMixin(models.AbstractModel):
         :return dict: {res_id: lang code (i.e. en_US)}
         """
         self.ensure_one()
-        if not isinstance(res_ids, (list, tuple)):
-            raise ValueError(_('Template rendering for language should be called with a list of IDs.'))
 
         rendered_langs = self._render_template(self.lang, self.render_model, res_ids, engine=engine)
         return dict(
