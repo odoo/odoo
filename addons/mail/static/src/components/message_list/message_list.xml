@@ -53,16 +53,14 @@
                             <hr class="o_MessageList_separatorLine o_MessageList_separatorLineNewMessages"/><span class="o_MessageList_separatorLabel o_MessageList_separatorLabelNewMessages">New messages</span>
                         </div>
                     </t>
-                    <t t-if="!messageView.message.isEmpty">
-                        <t t-set="message_day" t-value="messageView.message.dateDay"/>
-                        <t t-if="current_day !== message_day">
-                            <div class="o_MessageList_separator o_MessageList_separatorDate o_MessageList_item pt-4">
-                                <hr class="o_MessageList_separatorLine"/><span class="o_MessageList_separatorLabel o_MessageList_separatorLabelDate"><t t-esc="message_day"/></span><hr class="o_MessageList_separatorLine"/>
-                                <t t-set="current_day" t-value="message_day"/>
-                            </div>
-                        </t>
-                        <Message class="o_MessageList_item o_MessageList_message" messageViewLocalId="messageView.localId"/>
+                    <t t-set="message_day" t-value="messageView.message.dateDay"/>
+                    <t t-if="current_day !== message_day">
+                        <div class="o_MessageList_separator o_MessageList_separatorDate o_MessageList_item pt-4">
+                            <hr class="o_MessageList_separatorLine"/><span class="o_MessageList_separatorLabel o_MessageList_separatorLabelDate"><t t-esc="message_day"/></span><hr class="o_MessageList_separatorLine"/>
+                            <t t-set="current_day" t-value="message_day"/>
+                        </div>
                     </t>
+                    <Message class="o_MessageList_item o_MessageList_message" messageViewLocalId="messageView.localId"/>
                 </t>
                 <!-- LOADING (if order desc)-->
                 <t t-if="!threadView.threadCache.hasLoadingFailed and threadView.order === 'desc'">

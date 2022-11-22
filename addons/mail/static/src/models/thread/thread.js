@@ -1639,17 +1639,23 @@ function factory(dependencies) {
          * @returns {integer}
          */
         _computeLastSeenByCurrentPartnerMessageId() {
-            const firstMessage = this.orderedMessages[0];
+            const firstMessage = this.cache.orderedNonEmptyMessages[0];
             if (
-                firstMessage &&
-                this.lastSeenByCurrentPartnerMessageId &&
-                this.lastSeenByCurrentPartnerMessageId < firstMessage.id
+                !firstMessage ||
+                (this.lastSeenByCurrentPartnerMessageId &&
+                this.lastSeenByCurrentPartnerMessageId < firstMessage.id)
             ) {
                 // no deduction can be made if there is a gap
                 return this.lastSeenByCurrentPartnerMessageId;
             }
             let lastSeenByCurrentPartnerMessageId = this.lastSeenByCurrentPartnerMessageId;
-            for (const message of this.orderedMessages) {
+            const message = this.orderedMessages.find(message =>
+                message.id === this.lastSeenByCurrentPartnerMessageId
+            );
+            if (message && message.isEmpty) {
+                return this.orderedMessages.slice(0, this.orderedMessages.indexOf(message)).findLast(message => !message.isEmpty).id;
+            }
+            for (const message of this.cache.orderedNonEmptyMessages) {
                 if (message.id <= this.lastSeenByCurrentPartnerMessageId) {
                     continue;
                 }
@@ -1763,13 +1769,13 @@ function factory(dependencies) {
             if (this.localMessageUnreadCounter === 0) {
                 return unlink();
             }
-            const index = this.orderedMessages.findIndex(message =>
+            const index = this.cache.orderedNonEmptyMessages.findIndex(message =>
                 message.id === this.lastSeenByCurrentPartnerMessageId
             );
             if (index === -1) {
                 return unlink();
             }
-            const message = this.orderedMessages[index + 1];
+            const message = this.cache.orderedNonEmptyMessages[index + 1];
             if (!message) {
                 return unlink();
             }

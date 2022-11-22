@@ -722,6 +722,105 @@ QUnit.test('new messages separator on posting message', async function (assert) 
     );
 });
 
+QUnit.test('new messages separator should not disappear after deleting first new message', async function (assert) {
+    assert.expect(5);
+
+    this.data['res.partner'].records.push({
+        id: 11,
+        name: "Foreigner partner",
+    });
+    this.data['res.users'].records.push({
+        id: 42,
+        name: "Foreigner user",
+        partner_id: 11,
+    });
+    this.data['mail.channel'].records.push({
+        channel_type: 'channel',
+        id: 20,
+        is_pinned: true,
+        message_unread_counter: 0,
+        name: "General",
+        seen_message_id: 1,
+        uuid: 'randomuuid',
+    });
+    this.data['mail.message'].records.push({
+        body: "blah",
+        id: 1,
+        model: "mail.channel",
+        res_id: 20,
+    });
+    const { createThreadViewComponent } = await this.start({
+        async mockRPC(route, args) {
+            if (route === '/mail/message/update_content') {
+                return {
+                    id: args.message_id,
+                    body: args.body,
+                    attachments: [],
+                }
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel'
+    });
+    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        qunitTest: insertAndReplace(),
+        thread: link(thread),
+    });
+    await createThreadViewComponent(threadViewer.threadView);
+    document.querySelector('.o_ComposerTextInput_textarea').blur();
+
+    // simulate receiving new messages
+    for (let i=1; i<=2; i++) {
+        await afterNextRender(() => this.env.services.rpc({
+            route: '/mail/chat_post',
+            params: {
+                context: {
+                    mockedUserId: 42,
+                },
+                message_content: `hi ${i}`,
+                uuid: thread.uuid,
+            },
+        }));
+    }
+    assert.containsN(
+        document.body,
+        '.o_Message',
+        3,
+        "should have 3 new messages after receiving 2 new messages"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_MessageList_separatorNewMessages',
+        "'new messages' separator should be shown"
+    );
+    const message = document.querySelector(`.o_Message[data-message-local-id="${
+        this.messaging.models['mail.message'].findFromIdentifyingData({ id: 2 }).localId
+    }"]`);
+    await afterNextRender(() => message.click());
+    assert.containsOnce(
+        message,
+        '.o_MessageActionList_actionDelete',
+        "message action list should have delete action"
+    );
+    await afterNextRender(() => message.querySelector(':scope .o_MessageActionList_actionDelete').click());
+    await afterNextRender(() => document.querySelector('.modal[role="dialog"] footer .btn-primary').click());
+    assert.containsN(
+        document.body,
+        '.o_Message',
+        2,
+        "should now have 2 messages after deleting a message"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_MessageList_separatorNewMessages',
+        "'new messages' separator should be shown as there is a new message left"
+    );
+});
+
 QUnit.test('basic rendering of canceled notification', async function (assert) {
     assert.expect(8);
 
