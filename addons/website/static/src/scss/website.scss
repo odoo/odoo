@@ -952,6 +952,10 @@ header {
         border-radius: o-website-value('menu-border-radius') !important;
         box-shadow: o-website-value('menu-box-shadow') !important;
     }
+    // Prevent the color of the header to impact the color of the nav.
+    &.o_header_is_scrolled, &.o_transitioning.o_header_affixed {
+        background-color: transparent !important;
+    }
 }
 
 @if $-off-canvas-hamburger {
@@ -1288,7 +1292,9 @@ header {
 
         > .navbar {
             @include o-apply-colors(1); // Reset to default colored components
+            // Prevent the nav color/gradient to impact the header color.
             background-color: transparent !important;
+            background-image: none !important;
             border-color: transparent;
             color: inherit;
 
