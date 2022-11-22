@@ -2327,9 +2327,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             {
                 **self.tax_line_vals_1,
                 'currency_id': self.currency_data['currency'].id,
-                'amount_currency': -180.0,
+                'amount_currency': -200.0,
                 'debit': 0.0,
-                'credit': 90.0,
+                'credit': 100.0,
             },
             {
                 **self.tax_line_vals_2,
@@ -2342,8 +2342,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 **self.term_line_vals_1,
                 'name': move.name,
                 'currency_id': self.currency_data['currency'].id,
-                'amount_currency': 1410.0,
-                'debit': 705.0,
+                'amount_currency': 1430.0,
+                'debit': 715.0,
                 'credit': 0.0,
                 'date_maturity': fields.Date.from_string('2017-01-15'),
             },
@@ -2353,8 +2353,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'currency_id': self.currency_data['currency'].id,
             'date': fields.Date.from_string('2017-01-15'),
             'amount_untaxed': 1200.0,
-            'amount_tax': 210.0,
-            'amount_total': 1410.0,
+            'amount_tax': 230.0,
+            'amount_total': 1430.0,
         })
 
     def test_out_invoice_switch_out_refund_1(self):
