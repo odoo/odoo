@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="account.mail_attachment_file"
+       t-inherit="web.Many2ManyBinaryField.attachment_preview"
+       t-inherit-mode="primary"
+       owl="1">
+    </t>
+
+    <t t-name="account.mail_attachments" owl="1">
+        <t t-set="data" t-value="getValue()"/>
+
+        <div t-attf-class="oe_fileupload" aria-atomic="true">
+            <div class="o_attachments">
+                <t t-foreach="data" t-as="file" t-key="file.id">
+                    <t t-call="account.mail_attachment_file"/>
+                </t>
+            </div>
+            <div t-if="!props.readonly" class="oe_add">
+                <FileInput
+                    multiUpload="true"
+                    onUpload.bind="onFileUploaded"
+                    resModel="props.record.resModel"
+                    resId="props.record.data.id or 0">
+                    <button class="btn btn-secondary o_attach" data-tooltip="Attach">
+                        <span class="fa fa-paperclip" aria-label="Attach"/> Attachments
+                    </button>
+                </FileInput>
+            </div>
+        </div>
+    </t>
+
+</templates>

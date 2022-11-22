@@ -120,7 +120,7 @@ tour.register('account_tour', {
         content: _t("Validate."),
         auto: true,
     }, {
-        trigger: "button[name=send_and_print_action]",
+        trigger: "button[name=action_send_and_print]",
         // FIXME WOWL: this selector needs to work in both legacy and non-legacy views
         // because account_invoice_extracts *adds* a js_class on the base view which forces
         // the use of a legacy view in enterprise only

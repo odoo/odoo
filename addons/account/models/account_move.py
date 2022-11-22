@@ -517,6 +517,12 @@ class AccountMove(models.Model):
         states={'draft': [('readonly', False)]},
         help='Defines the smallest coinage of the currency that can be used to pay by cash.',
     )
+    pdf_report_id = fields.Many2one(
+        comodel_name='ir.attachment',
+        string="PDF report",
+        copy=False,
+    )
+    async_data_to_process = fields.Json()
 
     # === Display purpose fields === #
     # used to have a dynamic domain on journal / taxes in the form view.
@@ -2723,6 +2729,22 @@ class AccountMove(models.Model):
         return values
 
     # -------------------------------------------------------------------------
+    # INVOICE REPORT
+    # -------------------------------------------------------------------------
+
+    def _generate_default_invoice_pdf_report(self):
+        self.ensure_one()
+
+        content, _report_format = self.env['ir.actions.report']._render(
+            'account.account_invoices_without_payment',
+            self.ids,
+        )
+        return {
+            'filename': f"{self.name.replace('/', '_')}.pdf",
+            'content': content,
+        }
+
+    # -------------------------------------------------------------------------
     # BUSINESS METHODS
     # -------------------------------------------------------------------------
 
@@ -3442,19 +3464,6 @@ class AccountMove(models.Model):
             'type': 'ir.actions.act_window',
         }
 
-    def action_invoice_print(self):
-        """ Print the invoice and mark it as sent, so that we can see more
-            easily the next step of the workflow
-        """
-        if any(not move.is_invoice(include_receipts=True) for move in self):
-            raise UserError(_("Only invoices could be printed."))
-
-        self.filtered(lambda inv: not inv.is_move_sent).write({'is_move_sent': True})
-        if self.user_has_groups('account.group_account_invoice'):
-            return self.env.ref('account.account_invoices').report_action(self)
-        else:
-            return self.env.ref('account.account_invoices_without_payment').report_action(self)
-
     def action_duplicate(self):
         # offer the possibility to duplicate thanks to a button instead of a hidden menu, which is more visible
         self.ensure_one()
@@ -3467,22 +3476,19 @@ class AccountMove(models.Model):
         return action
 
     def action_send_and_print(self):
+        template = self.env.ref(self._get_mail_template(), raise_if_not_found=False)
+
         return {
-            'name': _('Send Invoice'),
-            'res_model': 'account.invoice.send',
-            'view_mode': 'form',
-            'context': {
-                'default_email_layout_xmlid': 'mail.mail_notification_layout_with_responsible_signature',
-                'default_template_id': self.env.ref(self._get_mail_template()).id,
-                'mark_invoice_as_sent': True,
-                'active_model': 'account.move',
-                # Setting both active_id and active_ids is required, mimicking how direct call to
-                # ir.actions.act_window works
-                'active_id': self.ids[0],
-                'active_ids': self.ids,
-            },
-            'target': 'new',
+            'name': _("Send"),
             'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'account.move.send',
+            'target': 'new',
+            'context': {
+                'active_ids': self.ids,
+                'default_mail_template_id': template.id,
+            },
         }
 
     def action_invoice_sent(self):
@@ -3491,39 +3497,18 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         template = self.env.ref(self._get_mail_template(), raise_if_not_found=False)
-        lang = False
-        if template:
-            lang = template._render_lang(self.ids)[self.id]
-        if not lang:
-            lang = get_lang(self.env).code
-        compose_form = self.env.ref('account.account_invoice_send_wizard_form', raise_if_not_found=False)
-        ctx = dict(
-            default_model='account.move',
-            default_res_id=self.id,
-            # For the sake of consistency we need a default_res_model if
-            # default_res_id is set. Not renaming default_model as it can
-            # create many side-effects.
-            default_res_model='account.move',
-            default_use_template=bool(template),
-            default_template_id=template and template.id or False,
-            default_composition_mode='comment',
-            mark_invoice_as_sent=True,
-            default_email_layout_xmlid="mail.mail_notification_layout_with_responsible_signature",
-            model_description=self.with_context(lang=lang).type_name,
-            force_email=True,
-            active_ids=self.ids,
-        )
 
         report_action = {
-            'name': _('Send Invoice'),
+            'name': _("Send"),
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
-            'res_model': 'account.invoice.send',
-            'views': [(compose_form.id, 'form')],
-            'view_id': compose_form.id,
+            'res_model': 'account.move.send',
             'target': 'new',
-            'context': ctx,
+            'context': {
+                'active_ids': self.ids,
+                'default_mail_template_id': template.id,
+            },
         }
 
         if self.env.is_admin() and not self.env.company.external_report_layout_id and not self.env.context.get('discard_logo_check'):
@@ -3636,6 +3621,25 @@ class AccountMove(models.Model):
 
         if len(records) == 100:  # assumes there are more whenever search hits limit
             self.env.ref('account.ir_cron_auto_post_draft_entry')._trigger()
+
+    @api.model
+    def _cron_send_async_data_to_process(self, job_count=None):
+        limit = job_count + 1 if job_count else None
+        moves = self.search([('async_data_to_process', '!=', False), ('state', '=', 'posted')], limit=limit)
+
+        need_retrigger = job_count and len(moves) > job_count
+        if job_count:
+            moves = moves[:job_count]
+
+        for move in moves:
+            wizard = self.env['account.move.send']\
+                .with_context(active_ids=move.ids)\
+                .new(move.async_data_to_process)
+            wizard.action_send_and_print()
+            move.async_data_to_process = None
+
+        if need_retrigger:
+            self.env.ref('account.ir_cron_account_move_send')._trigger()
 
     # -------------------------------------------------------------------------
     # HELPER METHODS
@@ -4010,24 +4014,6 @@ class AccountMove(models.Model):
             subtitles.append(format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')))
         render_context['subtitles'] = subtitles
         return render_context
-
-    def _process_attachments_for_post(self, attachments, attachment_ids, message_values):
-        """ This method extension ensures that, when using the "Send & Print" feature
-        if the user adds an attachment, the latter will be linked to the record. """
-        self.ensure_one()
-        message_values['model'] = self._name
-        message_values['res_id'] = self.id
-
-        if attachment_ids:
-            # taking advantage of cache looks better in this case, to check
-            filtered_attachment_ids = self.env['ir.attachment'].sudo().browse(attachment_ids).filtered(
-                lambda a: a.res_model == 'account.invoice.send' and a.create_uid.id == self._uid)
-            # link account.invoice.send attachments to mail.compose.message, so that it is then
-            # updated with respect to access rights records in base method
-            if filtered_attachment_ids:
-                filtered_attachment_ids.res_model = 'mail.compose.message'
-
-        return super()._process_attachments_for_post(attachments, attachment_ids, message_values)
 
     # -------------------------------------------------------------------------
     # HOOKS

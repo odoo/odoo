@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_move_send_inherit_snailmail" model="ir.ui.view">
+        <field name="name">account.move.send.form.inherit.snailmail</field>
+        <field name="model">account.move.send</field>
+        <field name="inherit_id" ref="account.account_move_send_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='option_download']" position='after'>
+                <field name="enable_send_by_post" invisible="1"/>
+
+                <div name="option_send_by_post"
+                     attrs="{'invisible': [('enable_send_by_post', '=', False)]}">
+                    <field name="send_by_post"
+                           attrs="{'readonly': [('send_by_post_warning_message', '!=', False)]}"/>
+                    <b><label for="send_by_post"/></b>
+                </div>
+
+                <div class="alert alert-warning"
+                     role="alert"
+                     attrs="{'invisible': [('send_by_post_warning_message', '=', False)]}">
+                    <field name="send_by_post_warning_message"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

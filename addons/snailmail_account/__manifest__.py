@@ -10,14 +10,8 @@ Allows users to send invoices by post
     'depends': ['account', 'snailmail'],
     'data': [
         'views/res_config_settings_views.xml',
-        'wizard/account_invoice_send_views.xml',
-        'security/ir.model.access.csv',
+        'wizard/account_move_send_views.xml',
     ],
     'auto_install': True,
-    'assets': {
-        'web.assets_backend': [
-            'snailmail_account/static/**/*',
-        ],
-    },
     'license': 'LGPL-3',
 }
