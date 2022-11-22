@@ -94,26 +94,6 @@ class AccountEdiTestCommon(AccountTestInvoicingCommon):
     def edi_cron(self):
         self.env['account.edi.document'].sudo().search([('state', 'in', ('to_send', 'to_cancel'))])._process_documents_web_services(with_commit=False)
 
-    def _create_empty_vendor_bill(self):
-        invoice = self.env['account.move'].create({
-            'move_type': 'in_invoice',
-            'journal_id': self.company_data['default_journal_purchase'].id,
-        })
-        return invoice
-
-    def update_invoice_from_file(self, module_name, subfolder, filename, invoice):
-        file_path = get_module_resource(module_name, subfolder, filename)
-        file = open(file_path, 'rb').read()
-
-        attachment = self.env['ir.attachment'].create({
-            'name': filename,
-            'datas': base64.encodebytes(file),
-            'res_id': invoice.id,
-            'res_model': 'account.move',
-        })
-
-        invoice.message_post(attachment_ids=[attachment.id])
-
     def create_invoice_from_file(self, module_name, subfolder, filename):
         file_path = get_module_resource(module_name, subfolder, filename)
         file = open(file_path, 'rb').read()

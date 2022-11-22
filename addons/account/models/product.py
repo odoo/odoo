@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.osv import expression
 from odoo.tools import format_amount
 
 ACCOUNT_DOMAIN = "['&', '&', ('deprecated', '=', False), ('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card','off_balance')), ('company_id', '=', current_company_id)]"
@@ -199,3 +200,34 @@ class ProductProduct(models.Model):
     def _compute_tax_string(self):
         for record in self:
             record.tax_string = record.product_tmpl_id._construct_tax_string(record.lst_price)
+
+    # -------------------------------------------------------------------------
+    # EDI
+    # -------------------------------------------------------------------------
+
+    def _retrieve_product(self, name=None, default_code=None, barcode=None, company=None):
+        '''Search all products and find one that matches one of the parameters.
+
+        :param name:            The name of the product.
+        :param default_code:    The default_code of the product.
+        :param barcode:         The barcode of the product.
+        :param company:         The company of the product.
+        :returns:               A product or an empty recordset if not found.
+        '''
+        if name and '\n' in name:
+            # cut Sales Description from the name
+            name = name.split('\n')[0]
+        domains = []
+        for value, domain in (
+            (name, ('name', 'ilike', name)),
+            (default_code, ('default_code', '=', default_code)),
+            (barcode, ('barcode', '=', barcode)),
+        ):
+            if value is not None:
+                domains.append([domain])
+
+        domain = expression.AND([
+            expression.OR(domains),
+            [('company_id', 'in', [False, company or self.env.company.id])],
+        ])
+        return self.env['product.product'].search(domain, limit=1)

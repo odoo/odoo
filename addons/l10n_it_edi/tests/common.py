@@ -26,22 +26,25 @@ class TestItEdi(AccountEdiTestCommon):
 
         # Company data ------
         cls.company = cls.company_data_2['company']
-        cls.company.l10n_it_codice_fiscale = '01234560157'
-        cls.company.partner_id.l10n_it_pa_index = "0803HR0"
-        cls.company.vat = 'IT01234560157'
+        cls.company.write({
+            'vat': 'IT01234560157',
+            'street': "1234 Test Street",
+            'zip': "12345",
+            'city': "Prova",
+            'country_id': cls.env.ref('base.it').id,
+            'l10n_it_codice_fiscale': '01234560157',
+            'l10n_it_tax_system': "RF01",
+        })
+        cls.company.partner_id.write({
+            'l10n_it_pa_index': "0803HR0"
+        })
 
-        cls.test_bank = cls.env['res.partner.bank'].with_company(cls.company).create({
+        cls.test_bank = cls.env['res.partner.bank'].create({
             'partner_id': cls.company.partner_id.id,
             'acc_number': 'IT1212341234123412341234123',
             'bank_name': 'BIG BANK',
             'bank_bic': 'BIGGBANQ',
         })
-
-        cls.company.l10n_it_tax_system = "RF01"
-        cls.company.street = "1234 Test Street"
-        cls.company.zip = "12345"
-        cls.company.city = "Prova"
-        cls.company.country_id = cls.env.ref('base.it')
 
         # Partners
         cls.italian_partner_a = cls.env['res.partner'].create({
@@ -52,7 +55,7 @@ class TestItEdi(AccountEdiTestCommon):
             'street': 'Via Privata Alessi 6',
             'zip': '28887',
             'city': 'Milan',
-            'company_id': cls.company.id,
+            'company_id': False,
             'is_company': True,
         })
 
@@ -96,22 +99,20 @@ class TestItEdi(AccountEdiTestCommon):
             'private_key': 'l10n_it_edi_test',
         })
 
-        cls.standard_line = {
-            'name': 'standard_line',
-            'quantity': 1,
-            'price_unit': 800.40,
-            'tax_ids': [(6, 0, [cls.company.account_sale_tax_id.id])]
-        }
+        cls.default_tax = cls.env['account.tax'].with_company(cls.company).create({
+            'name': "22%",
+            'amount': 22.0,
+            'amount_type': 'percent',
+        })
 
-        cls.edi_basis_xml = cls._get_test_file_content('IT00470550013_basis.xml')
-        cls.edi_simplified_basis_xml = cls._get_test_file_content('IT00470550013_simpl.xml')
+        cls.module = 'l10n_it_edi'
 
-    @classmethod
-    def _get_test_file_content(cls, filename):
-        """ Get the content of a test file inside this module """
-        path = 'l10n_it_edi/tests/expected_xmls/' + filename
-        with tools.file_open(path, mode='rb') as test_file:
-            return test_file.read()
+    def _assert_export_invoice(self, invoice, filename):
+        path = f'{self.module}/tests/export_xmls/{filename}'
+        with tools.file_open(path, mode='rb') as fd:
+            expected_tree = etree.fromstring(fd.read())
+        invoice_etree = etree.fromstring(self.edi_format._l10n_it_edi_export_invoice_as_xml(invoice))
+        self.assertXmlTreeEqual(invoice_etree, expected_tree)
 
     def _cleanup_etree(self, content, xpaths=None):
         xpaths = {
@@ -124,9 +125,28 @@ class TestItEdi(AccountEdiTestCommon):
             "".join([f"<xpath expr='{x}' position='replace'>{y}</xpath>" for x, y in xpaths.items()])
         )
 
-    def _test_invoice_with_sample_file(self, invoice, filename, xpaths_file=None, xpaths_result=None):
-        invoice_xml = self.edi_format._l10n_it_edi_export_invoice_as_xml(invoice)
-        expected_xml = self._get_test_file_content(filename)
-        result = self._cleanup_etree(invoice_xml, xpaths_result)
-        expected = self._cleanup_etree(expected_xml, xpaths_file)
-        self.assertXmlTreeEqual(result, expected)
+    def _assert_import_invoice(self, filename, expected_values_list):
+        path = f'{self.module}/tests/import_xmls/{filename}'
+        with tools.file_open(path, mode='rb') as fd:
+            import_content = fd.read()
+
+        attachment = self.env['ir.attachment'].create({
+            'name': filename,
+            'raw': import_content,
+        })
+        invoices = self.company_data_2['default_journal_purchase']\
+            .with_context(default_move_type='in_invoice')\
+            ._create_document_from_attachment(attachment.ids)
+
+        expected_invoice_values_list = []
+        expected_invoice_line_ids_values_list = []
+        for expected_values in expected_values_list:
+            invoice_values = dict(expected_values)
+            if 'invoice_line_ids' in invoice_values:
+                expected_invoice_line_ids_values_list += invoice_values.pop('invoice_line_ids')
+            expected_invoice_values_list.append(invoice_values)
+        self.assertRecordValues(invoices, expected_invoice_values_list)
+        if expected_invoice_line_ids_values_list:
+            self.assertRecordValues(invoices.invoice_line_ids, expected_invoice_line_ids_values_list)
+
+        return invoices

@@ -404,7 +404,7 @@ class IrActionsActUrl(models.Model):
 
     def _get_readable_fields(self):
         return super()._get_readable_fields() | {
-            "target", "url",
+            "target", "url", "close",
         }
 
 

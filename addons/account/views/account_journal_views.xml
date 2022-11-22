@@ -151,6 +151,8 @@
                                             <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                                         </div>
                                     </group>
+                                    <!-- edi -->
+                                    <group name="group_edi_config" string="Electronic Data Interchange" invisible="1"/>
                                     <!-- email alias end -->
                                     <group string="Payment Communications" attrs="{'invisible': [('type', '!=', 'sale')]}">
                                         <field name="invoice_reference_type"/>

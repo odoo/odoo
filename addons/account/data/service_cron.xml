@@ -11,4 +11,15 @@
         <field name="code">model._autopost_draft_entries()</field>
         <field name="state">code</field>
     </record>
+
+    <record id="ir_cron_account_move_send" model="ir.cron">
+        <field name="name">Send invoices automatically</field>
+        <field name="model_id" ref="model_account_move"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_account_move_send(job_count=20)</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+    </record>
 </odoo>

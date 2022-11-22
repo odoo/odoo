@@ -289,3 +289,8 @@ def validate_xml_from_attachment(env, xml_content, xsd_name, reload_files_functi
             _check_with_xsd(xml_content, xsd_name, env)
         except FileNotFoundError:
             _logger.warning("The XSD file(s) could not be found, even after a reload")
+
+
+def find_xml_value(xpath, xml_element, namespaces=None):
+    element = xml_element.xpath(xpath, namespaces=namespaces)
+    return element[0].text if element else None
