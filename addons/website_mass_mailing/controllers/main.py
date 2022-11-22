@@ -11,6 +11,9 @@ class MassMailController(main.MassMailController):
 
     @route('/website_mass_mailing/is_subscriber', type='jsonrpc', website=True, auth='public')
     def is_subscriber(self, list_id, subscription_type, **post):
+        mailing_list_su = request.env['mailing.list'].browse(int(list_id)).sudo()
+        if request.env.user._is_internal() and not mailing_list_su.exists().active:
+            return {'is_subscriber': False, 'value': '', 'warn_missing_list': True}
         value = self._get_value(subscription_type)
         fname = self._get_fname(subscription_type)
         is_subscriber = False
@@ -19,7 +22,7 @@ class MassMailController(main.MassMailController):
                 [('list_id', 'in', [int(list_id)]), (f'contact_id.{fname}', '=', value), ('opt_out', '=', False)])
             is_subscriber = contacts_count > 0
 
-        return {'is_subscriber': is_subscriber, 'value': value}
+        return {'is_subscriber': is_subscriber, 'value': value, 'warn_missing_list': False}
 
     def _get_value(self, subscription_type):
         value = None
@@ -54,6 +57,8 @@ class MassMailController(main.MassMailController):
     def subscribe_to_newsletter(subscription_type, value, list_id, fname, address_name=None):
         ContactSubscription = request.env['mailing.subscription'].sudo()
         Contacts = request.env['mailing.contact'].sudo()
+        MailingList = request.env['mailing.list'].sudo()
+
         if subscription_type == 'email':
             name, value = tools.parse_contact_from_email(value)
             if not name:
@@ -61,14 +66,16 @@ class MassMailController(main.MassMailController):
         elif subscription_type == 'mobile':
             name = value
 
+        mailing_list = MailingList.browse(int(list_id)).exists()
         subscription = ContactSubscription.search(
-            [('list_id', '=', int(list_id)), (f'contact_id.{fname}', '=', value)], limit=1)
+            [('list_id', '=', mailing_list.id), (f'contact_id.{fname}', '=', value)], limit=1)
         if not subscription:
             # inline add_to_list as we've already called half of it
             contact_id = Contacts.search([(fname, '=', value)], limit=1)
             if not contact_id:
                 contact_id = Contacts.create({'name': name, fname: value})
-            ContactSubscription.create({'contact_id': contact_id.id, 'list_id': int(list_id)})
+            if mailing_list:
+                ContactSubscription.create({'contact_id': contact_id.id, 'list_id': mailing_list.id})
         elif subscription.opt_out:
             subscription.opt_out = False
         # add email to session
