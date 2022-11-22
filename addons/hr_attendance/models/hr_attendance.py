@@ -163,7 +163,7 @@ class HrAttendance(models.Model):
                 start, stop, emp.resource_id
             )[emp.resource_id.id]
             # Substract Global Leaves and Employee's Leaves
-            leave_intervals = emp.resource_calendar_id._leave_intervals_batch(start, stop, emp.resource_id)
+            leave_intervals = emp.resource_calendar_id._leave_intervals_batch(start, stop, emp.resource_id, domain=[])
             expected_attendances -= leave_intervals[False] | leave_intervals[emp.resource_id.id]
 
             # working_times = {date: [(start, stop)]}
