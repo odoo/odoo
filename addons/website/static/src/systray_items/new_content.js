@@ -75,7 +75,7 @@ export class NewContentModal extends Component {
                     moduleName: 'website_blog',
                     moduleXmlId: 'base.module_website_blog',
                     status: MODULE_STATUS.NOT_INSTALLED,
-                    icon: xml`<i class="fa fa-rss"/>`,
+                    icon: xml`<i class="fa fa-newspaper-o"/>`,
                     title: this.env._t('Blog Post'),
                 },
                 {
