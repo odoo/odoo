@@ -33,7 +33,7 @@ export class Subscribe extends Interaction {
     }
 
     destroy() {
-        this._updateView({ is_subscriber: false });
+        this._updateView({ is_subscriber: false, warn_missing_list: false });
     }
 
     /**
@@ -43,6 +43,13 @@ export class Subscribe extends Interaction {
      * @param {Object} data
      */
     _updateView(data) {
+        if (data.warn_missing_list) {
+            this.renderAt("website_mass_mailing.subscribeListMissingError", {
+                position: "afterbegin",
+                removeOnClean: true,
+            });
+        }
+
         this._updateSubscribeControlsStatus(!!data.is_subscriber);
 
         // js_subscribe_email is kept for compatibility (old name of js_subscribe_value)
