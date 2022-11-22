@@ -448,23 +448,38 @@ export class SpreadsheetPivotModel extends PivotModel {
      */
     _getGroupValues(group, groupBys) {
         return groupBys.map((groupBy) => {
-            return this._sanitizeValue(group[groupBy], groupBy);
+            const { field, aggregateOperator } = this.parseGroupField(groupBy);
+            if (this._isDateField(field)) {
+                const value = this._getGroupStartingDay(groupBy, group);
+                if (!value) {
+                    return false;
+                }
+                const fOut = FORMATS[aggregateOperator]["out"];
+                // eslint-disable-next-line no-undef
+                const date = moment(value);
+                return date.isValid() ? date.format(fOut) : false;
+            }
+            return this._sanitizeValue(group[groupBy]);
         });
     }
 
     /**
-     * @override
+     * When grouping by a time field, return
+     * the group starting day (local to the timezone)
+     * @param {string} groupBy
+     * @param {object} readGroup
+     * @returns {string | undefined}
      */
-    _sanitizeValue(value, groupBy) {
-        const { aggregateOperator, field } = this.parseGroupField(groupBy);
-        if (this._isDateField(field)) {
-            const fIn = FORMATS[aggregateOperator]["in"];
-            const fOut = FORMATS[aggregateOperator]["out"];
-            // eslint-disable-next-line no-undef
-            const date = moment(value, fIn);
-            return date.isValid() ? date.format(fOut) : false;
+    _getGroupStartingDay(groupBy, readGroup) {
+        if (!readGroup["__range"] || !readGroup["__range"][groupBy]) {
+            return undefined;
         }
-        return super._sanitizeValue(value);
+        const { field } = this.parseGroupField(groupBy);
+        const sqlValue = readGroup["__range"][groupBy].from;
+        if (this.metaData.fields[field.name].type === "date") {
+            return sqlValue;
+        }
+        return luxon.DateTime.fromSQL(sqlValue, { zone: "utc" }).toLocal().toISODate();
     }
 
     /**
