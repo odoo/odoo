@@ -477,6 +477,257 @@ QUnit.module("Views", ({ beforeEach }) => {
         );
     });
 
+    QUnit.test("filter panel autocomplete: updates when typing", async (assert) => {
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" date_stop="stop">
+                    <field name="partner_ids" write_model="filter_partner" write_field="partner_id" />
+                </calendar>
+            `,
+        });
+        const section = findFilterPanelSection(target, "partner_ids");
+        assert.containsNone(section, ".o-autocomplete--dropdown-menu");
+        assert.containsNone(section, ".o-autocomplete--dropdown-item");
+        await click(section, ".o-autocomplete--input");
+        assert.containsOnce(section, ".o-autocomplete--dropdown-menu");
+        assert.containsN(section, ".o-autocomplete--dropdown-item", 2);
+        assert.deepEqual(
+            [...section.querySelectorAll(".o-autocomplete--dropdown-item")].map((el) =>
+                el.textContent.trim()
+            ),
+            ["partner 3", "partner 4"]
+        );
+
+        const input = section.querySelector(".o-autocomplete--input");
+        input.value = "partner 3";
+        await triggerEvent(section, ".o-autocomplete--input", "input");
+        assert.containsOnce(section, ".o-autocomplete--dropdown-menu");
+        assert.containsOnce(section, ".o-autocomplete--dropdown-item");
+        assert.strictEqual(
+            section.querySelector(".o-autocomplete--dropdown-item").textContent.trim(),
+            "partner 3"
+        );
+
+        input.value = "a string that would yield to no result as it is too very much convoluted";
+        await triggerEvent(section, ".o-autocomplete--input", "input");
+        assert.containsOnce(section, ".o-autocomplete--dropdown-menu");
+        assert.containsOnce(section, ".o-autocomplete--dropdown-item");
+        assert.strictEqual(
+            section.querySelector(".o-autocomplete--dropdown-item").textContent.trim(),
+            "No records"
+        );
+    });
+
+    QUnit.test("add a filter with the search more dialog", async (assert) => {
+        serverData.views["partner,false,search"] = `<search></search>`;
+        serverData.views["partner,false,list"] = `
+            <tree>
+                <field name="display_name" />
+            </tree>
+        `;
+        serverData.models.partner.records.push(
+            { id: 5, display_name: "foo partner 5" },
+            { id: 6, display_name: "foo partner 6" },
+            { id: 7, display_name: "foo partner 7" },
+            { id: 8, display_name: "foo partner 8" },
+            { id: 9, display_name: "foo partner 9" },
+            { id: 10, display_name: "foo partner 10" },
+            { id: 11, display_name: "foo partner 11" },
+            { id: 12, display_name: "foo partner 12" },
+            { id: 13, display_name: "foo partner 13" }
+        );
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" date_stop="stop">
+                    <field name="partner_ids" write_model="filter_partner" write_field="partner_id" />
+                </calendar>
+            `,
+            mockRPC(route) {
+                if (route.endsWith("/has_group")) {
+                    return true;
+                }
+            },
+        });
+        const section = findFilterPanelSection(target, "partner_ids");
+        assert.containsN(section, ".o_calendar_filter_item", 3);
+        assert.deepEqual(
+            [...section.querySelectorAll(".o_calendar_filter_item")].map((el) =>
+                el.textContent.trim()
+            ),
+            ["partner 2", "partner 1", "Everything"]
+        );
+
+        // Open the autocomplete dropdown
+        assert.containsNone(section, ".o-autocomplete--dropdown-menu");
+        assert.containsNone(section, ".o-autocomplete--dropdown-item");
+        await click(section, ".o-autocomplete--input");
+        assert.containsOnce(section, ".o-autocomplete--dropdown-menu");
+        assert.containsN(section, ".o-autocomplete--dropdown-item", 9);
+        assert.deepEqual(
+            [...section.querySelectorAll(".o-autocomplete--dropdown-item")].map((el) =>
+                el.textContent.trim()
+            ),
+            [
+                "partner 3",
+                "partner 4",
+                "foo partner 5",
+                "foo partner 6",
+                "foo partner 7",
+                "foo partner 8",
+                "foo partner 9",
+                "foo partner 10",
+                "Search More...",
+            ]
+        );
+
+        // Change the search term
+        const input = section.querySelector(".o-autocomplete--input");
+        input.value = "foo";
+        await triggerEvent(section, ".o-autocomplete--input", "input");
+        assert.containsOnce(section, ".o-autocomplete--dropdown-menu");
+        assert.containsN(section, ".o-autocomplete--dropdown-item", 9);
+        assert.deepEqual(
+            [...section.querySelectorAll(".o-autocomplete--dropdown-item")].map((el) =>
+                el.textContent.trim()
+            ),
+            [
+                "foo partner 5",
+                "foo partner 6",
+                "foo partner 7",
+                "foo partner 8",
+                "foo partner 9",
+                "foo partner 10",
+                "foo partner 11",
+                "foo partner 12",
+                "Search More...",
+            ]
+        );
+
+        // Open the search more dialog
+        assert.containsNone(target, ".modal");
+        await click(section, ".o-autocomplete--dropdown-item:last-child");
+        assert.containsOnce(target, ".modal");
+        assert.containsN(target, ".modal .o_data_row", 9);
+        assert.deepEqual(
+            [...target.querySelectorAll(".modal .o_data_row")].map((el) => el.textContent.trim()),
+            [
+                "foo partner 5",
+                "foo partner 6",
+                "foo partner 7",
+                "foo partner 8",
+                "foo partner 9",
+                "foo partner 10",
+                "foo partner 11",
+                "foo partner 12",
+                "foo partner 13",
+            ]
+        );
+        assert.containsOnce(target, ".modal .o_searchview_facet");
+        assert.strictEqual(
+            target.querySelector(".modal .o_searchview_facet").textContent.trim(),
+            "Quick search: foo"
+        );
+
+        // Choose a record
+        await click(target, ".modal .o_data_row:first-child > td:first-child");
+        assert.containsNone(target, ".modal");
+        assert.containsN(section, ".o_calendar_filter_item", 4);
+        assert.deepEqual(
+            [...section.querySelectorAll(".o_calendar_filter_item")].map((el) =>
+                el.textContent.trim()
+            ),
+            ["partner 2", "partner 1", "foo partner 5", "Everything"]
+        );
+        assert.strictEqual(input.value, "");
+
+        // Open the autocomplete dropdown
+        assert.containsNone(section, ".o-autocomplete--dropdown-menu");
+        assert.containsNone(section, ".o-autocomplete--dropdown-item");
+        await click(section, ".o-autocomplete--input");
+        assert.containsOnce(section, ".o-autocomplete--dropdown-menu");
+        assert.containsN(section, ".o-autocomplete--dropdown-item", 9);
+        assert.deepEqual(
+            [...section.querySelectorAll(".o-autocomplete--dropdown-item")].map((el) =>
+                el.textContent.trim()
+            ),
+            [
+                "partner 3",
+                "partner 4",
+                "foo partner 6",
+                "foo partner 7",
+                "foo partner 8",
+                "foo partner 9",
+                "foo partner 10",
+                "foo partner 11",
+                "Search More...",
+            ]
+        );
+
+        // Change the search term
+        input.value = "foo";
+        await triggerEvent(section, ".o-autocomplete--input", "input");
+        assert.containsOnce(section, ".o-autocomplete--dropdown-menu");
+        assert.containsN(section, ".o-autocomplete--dropdown-item", 9);
+        assert.deepEqual(
+            [...section.querySelectorAll(".o-autocomplete--dropdown-item")].map((el) =>
+                el.textContent.trim()
+            ),
+            [
+                "foo partner 6",
+                "foo partner 7",
+                "foo partner 8",
+                "foo partner 9",
+                "foo partner 10",
+                "foo partner 11",
+                "foo partner 12",
+                "foo partner 13",
+                "Search More...",
+            ]
+        );
+
+        // Open the search more dialog
+        assert.containsNone(target, ".modal");
+        await click(section, ".o-autocomplete--dropdown-item:last-child");
+        assert.containsOnce(target, ".modal");
+        assert.containsN(target, ".modal .o_data_row", 8);
+        assert.deepEqual(
+            [...target.querySelectorAll(".modal .o_data_row")].map((el) => el.textContent.trim()),
+            [
+                "foo partner 6",
+                "foo partner 7",
+                "foo partner 8",
+                "foo partner 9",
+                "foo partner 10",
+                "foo partner 11",
+                "foo partner 12",
+                "foo partner 13",
+            ]
+        );
+        assert.containsOnce(target, ".modal .o_searchview_facet");
+        assert.strictEqual(
+            target.querySelector(".modal .o_searchview_facet").textContent.trim(),
+            "Quick search: foo"
+        );
+
+        // Close the search more dialog without choosing a record
+        await click(target, ".modal .o_form_button_cancel");
+        assert.containsNone(target, ".modal");
+        assert.containsN(section, ".o_calendar_filter_item", 4);
+        assert.deepEqual(
+            [...section.querySelectorAll(".o_calendar_filter_item")].map((el) =>
+                el.textContent.trim()
+            ),
+            ["partner 2", "partner 1", "foo partner 5", "Everything"]
+        );
+        assert.strictEqual(input.value, "");
+    });
+
     QUnit.test(
         `delete attribute on calendar doesn't show delete button in popover`,
         async (assert) => {
