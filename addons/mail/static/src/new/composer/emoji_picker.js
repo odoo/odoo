@@ -2,7 +2,15 @@
 
 import { markEventHandled } from "@mail/new/utils";
 
-import { Component, onMounted, onWillStart, useRef, useState, onPatched } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillStart,
+    useEffect,
+    useRef,
+    useState,
+    onPatched,
+} from "@odoo/owl";
 import { getBundle, loadBundle } from "@web/core/assets";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { memoize } from "@web/core/utils/functions";
@@ -61,13 +69,26 @@ export class EmojiPicker extends Component {
             this.emojis = emojis;
             this.state.categoryId = this.categories[0].sortId;
         });
-        onMounted(() => this.inputRef.el.focus());
+        onMounted(() => {
+            this.inputRef.el.focus();
+            this.highlightActiveCategory();
+        });
         onPatched(() => {
             if (this.shouldScrollElem) {
                 this.shouldScrollElem();
                 this.shouldScrollElem = null;
             }
         });
+        useEffect(
+            () => {
+                if (this.state.searchStr) {
+                    this.state.categoryId = null;
+                } else {
+                    this.highlightActiveCategory();
+                }
+            },
+            () => [this.state.searchStr]
+        );
     }
 
     onClick(ev) {
@@ -88,8 +109,8 @@ export class EmojiPicker extends Component {
     selectCategory(ev) {
         const id = Number(ev.target.dataset.id);
         if (id) {
-            this.state.categoryId = id;
             this.state.searchStr = "";
+            this.state.categoryId = id;
             const getElement = () =>
                 this.gridRef.el.querySelector(`.o-emoji-category[data-category="${id}"`);
             const elem = getElement();
@@ -107,6 +128,18 @@ export class EmojiPicker extends Component {
             this.props.onSelect(codepoints);
             this.props.close();
         }
+    }
+
+    highlightActiveCategory() {
+        if (!this.gridRef || !this.gridRef.el) {
+            return;
+        }
+        const coords = this.gridRef.el.getBoundingClientRect();
+        const res = document.elementFromPoint(coords.x, coords.y);
+        if (!res) {
+            return;
+        }
+        this.state.categoryId = parseInt(res.dataset.category);
     }
 }
 
