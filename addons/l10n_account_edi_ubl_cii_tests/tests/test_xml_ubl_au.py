@@ -7,11 +7,8 @@ from odoo.tests import tagged
 class TestUBLAU(TestUBLCommon):
 
     @classmethod
-    def setUpClass(cls,
-                   chart_template_ref="au",
-                   edi_format_ref="account_edi_ubl_cii.ubl_a_nz",
-                   ):
-        super().setUpClass(chart_template_ref=chart_template_ref, edi_format_ref=edi_format_ref)
+    def setUpClass(cls, chart_template_ref="au"):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.partner_1 = cls.env['res.partner'].create({
             'name': "partner_1",
@@ -88,8 +85,8 @@ class TestUBLAU(TestUBLCommon):
             ],
         )
         attachment = self._assert_invoice_attachment(
-            invoice,
-            xpaths='''
+            invoice.ubl_xml_id,
+            xpaths=f'''
                 <xpath expr="./*[local-name()='ID']" position="replace">
                     <ID>___ignore___</ID>
                 </xpath>
@@ -104,6 +101,10 @@ class TestUBLAU(TestUBLCommon):
                 </xpath>
                 <xpath expr=".//*[local-name()='PaymentMeans']/*[local-name()='PaymentID']" position="replace">
                     <PaymentID>___ignore___</PaymentID>
+                </xpath>
+                <xpath expr=".//*[local-name()='AdditionalDocumentReference']/*[local-name()='Attachment']/*[local-name()='EmbeddedDocumentBinaryObject']" position="attributes">
+                    <attribute name="mimeCode">application/pdf</attribute>
+                    <attribute name="filename">{invoice.invoice_pdf_report_id.name}</attribute>
                 </xpath>
             ''',
             expected_file='from_odoo/a_nz_out_invoice.xml',
@@ -142,8 +143,8 @@ class TestUBLAU(TestUBLCommon):
             ],
         )
         attachment = self._assert_invoice_attachment(
-            refund,
-            xpaths='''
+            refund.ubl_xml_id,
+            xpaths=f'''
                 <xpath expr="./*[local-name()='ID']" position="replace">
                     <ID>___ignore___</ID>
                 </xpath>
@@ -158,6 +159,10 @@ class TestUBLAU(TestUBLCommon):
                 </xpath>
                 <xpath expr=".//*[local-name()='PaymentMeans']/*[local-name()='PaymentID']" position="replace">
                     <PaymentID>___ignore___</PaymentID>
+                </xpath>
+                <xpath expr=".//*[local-name()='AdditionalDocumentReference']/*[local-name()='Attachment']/*[local-name()='EmbeddedDocumentBinaryObject']" position="attributes">
+                    <attribute name="mimeCode">application/pdf</attribute>
+                    <attribute name="filename">{refund.invoice_pdf_report_id.name}</attribute>
                 </xpath>
             ''',
             expected_file='from_odoo/a_nz_out_refund.xml',

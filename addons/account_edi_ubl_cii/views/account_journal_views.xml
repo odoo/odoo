@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_journal_form_inherited" model="ir.ui.view">
+            <field name="name">account.journal.form.inherited</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='group_edi_config']" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </xpath>
+                <xpath expr="//group[@name='group_edi_config']" position="inside">
+                    <field name="can_enable_ubl_xml" invisible="1"/>
+                    <field name="can_enable_cii_xml" invisible="1"/>
+                    <field name="checkbox_ubl_xml" attrs="{'invisible': [('can_enable_ubl_xml', '=', False)]}"/>
+                    <field name="checkbox_cii_xml" attrs="{'invisible': [('can_enable_cii_xml', '=', False)]}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

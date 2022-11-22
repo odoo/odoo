@@ -857,7 +857,9 @@ function makeActionManager(env) {
                     type: "warning",
                 });
             }
-            if (options.onClose) {
+            if (action.close) {
+                return doAction({ type: "ir.actions.act_window_close" }, { onClose: options.onClose });
+            } else if (options.onClose) {
                 options.onClose();
             }
         }

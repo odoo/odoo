@@ -320,6 +320,39 @@ class AccountMove(models.Model):
                     output_str += "<li>%s: %s</li>" % (element.tag, text)
         return output_str + "</ul>"
 
+    # -------------------------------------------------------------------------
+    # Import invoice
+    # -------------------------------------------------------------------------
+
+    @api.model
+    def _import_invoice_fattura_pa(self, invoice, file_data, new=False):
+        tree_list = file_data['xml_tree'].xpath('//FatturaElettronicaBody')
+        if not tree_list:
+            return
+
+        self.env['account.edi.format']._import_fattura_pa(tree_list[0], invoice)
+
+        # there might be other invoices inside the EDI.
+        for tree in tree_list[:1]:
+            other_invoice = invoice.create({
+                'journal_id': invoice.journal_id.id,
+            })
+            with other_invoice._get_edi_creation() as other_invoice:
+                self.env['account.edi.format']._import_fattura_pa(tree, other_invoice)
+                other_invoice.message_post(body=_("Created from attachment in %s", invoice._get_html_link()))
+
+        return True
+
+    def _get_edi_decoder(self, file_data, new=False):
+        # EXTENDS 'account'
+        def is_fattura_pa(filename): # TODO: maybe check on etree?
+            return re.search('[A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}.((?i:xml.p7m|xml))', filename)
+
+        if file_data['type'] in ('xml', 'xml_p7m') and is_fattura_pa(file_data['filename']):
+            return self._import_invoice_fattura_pa
+
+        return super()._get_edi_decoder(file_data, new=new)
+
 class AccountTax(models.Model):
     _name = "account.tax"
     _inherit = "account.tax"
