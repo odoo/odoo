@@ -539,7 +539,7 @@ export class Record extends DataPoint {
             const fieldNames = await prom;
             this._removeInvalidFields(fieldNames);
             for (const fieldName of fieldNames) {
-                if (["one2many", "many2many"].includes(this.fields[fieldName].type)) {
+                if (!this.fields[fieldName] || (["one2many", "many2many"].includes(this.fields[fieldName].type))) {
                     const { editedRecord } = this.data[fieldName];
                     if (editedRecord) {
                         editedRecord._removeAllInvalidFields();
