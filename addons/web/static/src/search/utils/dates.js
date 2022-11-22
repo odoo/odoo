@@ -212,8 +212,7 @@ export function constructDateRange(params) {
     }
     const date = referenceMoment
         .set(setParam)
-        .plus(plusParam || {})
-        .setZone("utc", { keepLocalTime: true });
+        .plus(plusParam || {});
     // compute domain
     let leftDate = date.startOf(granularity);
     let rightDate = date.endOf(granularity);
