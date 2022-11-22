@@ -9,7 +9,7 @@ import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
 import { viewService } from "@web/views/view_service";
 import { makeTestEnv } from "../helpers/mock_env";
-import { click, editSelect, getFixture, mount, triggerEvent } from "../helpers/utils";
+import { click, editInput, editSelect, getFixture, mount, triggerEvent } from "../helpers/utils";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
 
 import { Component, xml } from "@odoo/owl";
@@ -559,5 +559,52 @@ QUnit.module("Components", (hooks) => {
 
         const select = target.querySelector(".o_domain_leaf_operator_select");
         assert.strictEqual(select.options[select.options.selectedIndex].text, "in");
+    });
+
+    QUnit.test("multi selection", async (assert) => {
+        serverData.models.partner.fields.state = {
+            string: "State",
+            type: "selection",
+            selection: [
+                ["a", "A"],
+                ["b", "B"],
+                ["c", "C"],
+            ],
+        };
+
+        class Parent extends Component {
+            setup() {
+                this.value = `[("state", "in", ["a", "b", "c"])]`;
+            }
+            onUpdate(newValue) {
+                this.value = newValue;
+                this.render();
+            }
+        }
+        Parent.components = { DomainSelector };
+        Parent.template = xml`
+            <DomainSelector
+                resModel="'partner'"
+                value="value"
+                readonly="false"
+                update="(newValue) => this.onUpdate(newValue)"
+            />
+        `;
+
+        // Create the domain selector and its mock environment
+        const comp = await mountComponent(Parent);
+
+        assert.containsOnce(target, ".o_domain_leaf_value_input");
+        assert.strictEqual(comp.value, `[("state", "in", ["a", "b", "c"])]`);
+        assert.strictEqual(
+            target.querySelector(".o_domain_leaf_value_input").value,
+            `["a", "b", "c"]`
+        );
+
+        await editInput(target, ".o_domain_leaf_value_input", `[]`);
+        assert.strictEqual(comp.value, `[("state", "in", [])]`);
+
+        await editInput(target, ".o_domain_leaf_value_input", `["b"]`);
+        assert.strictEqual(comp.value, `[("state", "in", ["b"])]`);
     });
 });
