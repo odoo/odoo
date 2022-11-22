@@ -929,6 +929,13 @@ export class OdooEditor extends EventTarget {
                     continue;
                 }
             }
+            if (record.target && [Node.TEXT_NODE, Node.ELEMENT_NODE].includes(record.target.nodeType)) {
+                const closestProtected = closestElement(record.target, '[data-oe-protected="true"]');
+                if (closestProtected && closestProtected.nodeType === Node.ELEMENT_NODE &&
+                    record.target !== closestProtected) {
+                    continue;
+                }
+            }
             filteredRecords.push(record);
         }
         return this.options.filterMutationRecords(filteredRecords);
@@ -2164,12 +2171,16 @@ export class OdooEditor extends EventTarget {
      * @returns {boolean}
      */
     _handleSelectionInTable(ev=undefined) {
+        const selection = this.document.getSelection();
+        const anchorNode = selection.anchorNode;
+        if (anchorNode && closestElement(anchorNode, '[data-oe-protected="true"]')) {
+            return false;
+        }
         this.deselectTable();
         const traversedNodes = getTraversedNodes(this.editable);
         if (this._isResizingTable || !traversedNodes.some(node => !!closestElement(node, 'td'))) {
             return false;
         }
-        const selection = this.document.getSelection();
         let range;
         if (selection.rangeCount > 1) {
             // Firefox selection in table works with multiple ranges.
@@ -3362,7 +3373,7 @@ export class OdooEditor extends EventTarget {
     _onSelectionChange() {
         const selection = this.document.getSelection();
         const anchorNode = selection.anchorNode;
-        if (anchorNode && closestElement(anchorNode, '.oe-blackbox')) {
+        if (anchorNode && closestElement(anchorNode, '[data-oe-protected="true"]')) {
             return;
         }
 
@@ -3547,6 +3558,13 @@ export class OdooEditor extends EventTarget {
                 emptyElement.removeAttribute('data-oe-zws-empty-inline');
             }
         }
+
+        // Clean all protected nodes because they are not sanitized
+        const protectedNodes = element.querySelectorAll('[data-oe-protected="true"]');
+        for (const node of protectedNodes) {
+            node.replaceChildren();
+        }
+
         sanitize(element);
 
         // Remove contenteditable=false on elements
@@ -3578,7 +3596,7 @@ export class OdooEditor extends EventTarget {
     _handleCommandHint() {
         const selection = this.document.getSelection();
         const anchorNode = selection.anchorNode;
-        if (anchorNode && closestElement(anchorNode, '.oe-blackbox')) {
+        if (anchorNode && closestElement(anchorNode, '[data-oe-protected="true"]')) {
             return;
         }
 
@@ -3652,7 +3670,7 @@ export class OdooEditor extends EventTarget {
     _fixSelectionOnContenteditableFalse() {
         const selection = this.document.getSelection();
         const anchorNode = selection.anchorNode;
-        if (anchorNode && closestElement(anchorNode, '.oe-blackbox')) {
+        if (anchorNode && closestElement(anchorNode, '[data-oe-protected="true"]')) {
             return;
         }
         // When the browser set the selection inside a node that is
