@@ -36,7 +36,7 @@ import { onWillUnmount, useEffect, useExternalListener, useRef } from "@odoo/owl
  * }} VariantsData
  *
  * @typedef {"top" | "left" | "bottom" | "right"} Direction
- * @typedef {"start" | "middle" | "end"} Variant
+ * @typedef {"start" | "middle" | "end" | "fit"} Variant
  *
  * @typedef {{[direction in Direction]: string}} DirectionFlipOrder
  *  values are successive DirectionsDataKey represented as a single string
@@ -57,11 +57,13 @@ import { onWillUnmount, useEffect, useExternalListener, useRef } from "@odoo/owl
 /** @type {{[d: string]: Direction}} */
 const DIRECTIONS = { t: "top", r: "right", b: "bottom", l: "left" };
 /** @type {{[v: string]: Variant}} */
-const VARIANTS = { s: "start", m: "middle", e: "end" };
+const VARIANTS = { s: "start", m: "middle", e: "end", f: "fit" };
 /** @type DirectionFlipOrder */
 const DIRECTION_FLIP_ORDER = { top: "tbrl", right: "rltb", bottom: "btrl", left: "lrbt" };
 /** @type VariantFlipOrder */
-const VARIANT_FLIP_ORDER = { start: "sme", middle: "mse", end: "ems" };
+const VARIANT_FLIP_ORDER = { start: "sme", middle: "mse", end: "ems", fit: "f" };
+/** @type DirectionFlipOrder */
+const FIT_FLIP_ORDER = { top: "tb", right: "rl", bottom: "bt", left: "lr" };
 
 /** @type {Options} */
 const DEFAULTS = {
@@ -86,7 +88,8 @@ const DEFAULTS = {
 function getBestPosition(reference, popper, { container, margin, position }) {
     // Retrieve directions and variants
     const [directionKey, variantKey = "middle"] = position.split("-");
-    const directions = DIRECTION_FLIP_ORDER[directionKey];
+    const directions =
+        variantKey === "fit" ? FIT_FLIP_ORDER[directionKey] : DIRECTION_FLIP_ORDER[directionKey];
     const variants = VARIANT_FLIP_ORDER[variantKey];
 
     // Boxes
@@ -106,9 +109,11 @@ function getBestPosition(reference, popper, { container, margin, position }) {
     };
     /** @type {VariantsData} */
     const variantsData = {
+        vf: refBox.left,
         vs: refBox.left,
         vm: refBox.left + refBox.width / 2 + -popBox.width / 2,
         ve: refBox.right - popBox.width,
+        hf: refBox.top,
         hs: refBox.top,
         hm: refBox.top + refBox.height / 2 + -popBox.height / 2,
         he: refBox.bottom - popBox.height,
@@ -198,6 +203,7 @@ function getBestPosition(reference, popper, { container, margin, position }) {
  * @param {Options} options
  */
 export function reposition(reference, popper, options) {
+    const [directionKey, variantKey = "middle"] = options.position.split("-");
     options = {
         container: document.documentElement,
         ...options,
@@ -213,6 +219,12 @@ export function reposition(reference, popper, options) {
     const { top, left } = position;
     popper.style.top = `${top}px`;
     popper.style.left = `${left}px`;
+
+    if (variantKey === "fit") {
+        const styleProperty = ["top", "bottom"].includes(directionKey) ? "width" : "height";
+        popper.style[styleProperty] = reference.getBoundingClientRect()[styleProperty] + "px";
+    }
+
     if (options.onPositioned) {
         options.onPositioned(popper, position);
     }

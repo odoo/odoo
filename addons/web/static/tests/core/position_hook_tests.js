@@ -812,3 +812,36 @@ QUnit.test(
     "reposition from right-end to top-end",
     getRepositionTest("right-end", "top-end", "w125 right")
 );
+
+function getFittingTest(position, styleAttribute) {
+    return async (assert) => {
+        const TestComp = getTestComponent({ position });
+        await mount(TestComp, container);
+        assert.strictEqual(container.querySelector("#popper").style[styleAttribute], "50px");
+    }
+}
+
+QUnit.test(
+    "reposition from bottom-fit to top-fit", getRepositionTest("bottom-fit", "top-fit", "bottom")
+);
+QUnit.test(
+    "reposition from top-fit to bottom-fit", getRepositionTest("top-fit", "bottom-fit", "top")
+);
+QUnit.test(
+    "reposition from right-fit to left-fit", getRepositionTest("right-fit", "left-fit", "right")
+);
+QUnit.test(
+    "reposition from left-fit to right-fit", getRepositionTest("left-fit", "right-fit", "left")
+);
+QUnit.test(
+    "bottom-fit has the same width as the reference", getFittingTest("bottom-fit", "width")
+);
+QUnit.test(
+    "top-fit has the same width as the reference", getFittingTest("top-fit", "width")
+);
+QUnit.test(
+    "left-fit has the same height as the reference", getFittingTest("left-fit", "height")
+);
+QUnit.test(
+    "right-fit has the same height as the reference", getFittingTest("right-fit", "height")
+);
