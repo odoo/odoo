@@ -3230,6 +3230,9 @@ msgid ""
 "By default, we always unfold the lines that can be. If this is checked, the "
 "line won't be unfolded by default, and a folding button will be displayed."
 msgstr ""
+"Per impostazione predefinita vengono sempre espanse le righe che possono "
+"esserlo. Se selezionata, viene visualizzato un pulsante di minimizzazione e "
+"la riga non viene espansa in modo predefinito."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__active
@@ -10610,6 +10613,12 @@ msgid "Period Comparison"
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "Please create new accounts from the Chart of Accounts menu."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Please define a payment method line on your payment."
@@ -14835,6 +14844,11 @@ msgid "Type Name"
 msgstr "Nome tipologia"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
+msgid "Type a message..."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__qr_code_method
 #: model:ir.model.fields,help:account.field_account_move__qr_code_method
 #: model:ir.model.fields,help:account.field_account_payment__qr_code_method
@@ -14877,7 +14891,7 @@ msgstr "Utili/Perdite non distribuiti"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_unfold_all
 msgid "Unfold All"
-msgstr "Aprire Tutto"
+msgstr "Espandi tutto"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__code

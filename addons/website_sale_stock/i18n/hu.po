@@ -3,18 +3,20 @@
 # 	* website_sale_stock
 # 
 # Translators:
-# Martin Trigaux, 2019
-# krnkris, 2019
-# gezza <geza.nagy@oregional.hu>, 2019
-# Tibor Kőnig <konig.tibor@evitalit.hu>, 2019
+# Zsolt Godó <zsolttokio@gmail.com>, 2022
+# krnkris, 2022
+# Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2022
+# Martin Trigaux, 2022
+# Tamás Németh <ntomasz81@gmail.com>, 2022
+# gezza <geza.nagy@oregional.hu>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Tibor Kőnig <konig.tibor@evitalit.hu>, 2019\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:57+0000\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2022\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,43 +25,38 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_cart_lines
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_payment
-msgid "<strong>Warning!</strong>"
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid ""
+"<span attrs=\"{'invisible': [('show_availability', '=', "
+"False)]}\">Units</span>"
 msgstr ""
 
 #. module: website_sale_stock
-#: model:ir.model.fields,help:website_sale_stock.field_product_product__inventory_availability
-#: model:ir.model.fields,help:website_sale_stock.field_product_template__inventory_availability
-msgid "Adds an inventory availability status on the web product page."
-msgstr ""
-
-#. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
-msgid "Availability"
-msgstr "Elérhetőség"
-
-#. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__available_threshold
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__available_threshold
-#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__available_threshold
-msgid "Availability Threshold"
-msgstr ""
-
-#. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__cart_qty
-msgid "Cart Qty"
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__stock_notification_partner_ids
+msgid "Back in stock Notifications"
 msgstr ""
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfigurációs beállítások"
+msgstr "Beállítások módosítása"
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__custom_message
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__custom_message
-msgid "Custom Message"
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Continue Selling"
+msgstr "Értékesítés folytatása"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__allow_out_of_stock_order
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__allow_out_of_stock_order
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__allow_out_of_stock_order
+msgid "Continue selling when out-of-stock"
+msgstr ""
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
+msgid "Dear Customer,"
 msgstr ""
 
 #. module: website_sale_stock
@@ -68,52 +65,103 @@ msgid ""
 "Default availability mode set on newly created storable products. This can "
 "be changed at the product level."
 msgstr ""
+"Alapértelmezett elérhetőségi mód az új, készletezett termékekhez. Ezt termék"
+" szinten lehet állítani."
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Default visibility for custom messages."
+msgstr ""
 
 #. module: website_sale_stock
 #. openerp-web
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
-msgid "In stock"
+msgid "Get notified when back in stock"
 msgstr ""
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Inventory"
-msgstr "Készlet"
+msgid "How to display products having low quantities (on hand - reserved)"
+msgstr ""
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__inventory_availability
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__inventory_availability
-#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__inventory_availability
-msgid "Inventory Availability"
+#: code:addons/website_sale_stock/controllers/main.py:0
+#, python-format
+msgid "Invalid Email"
+msgstr ""
+
+#. module: website_sale_stock
+#. openerp-web
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+#, python-format
+msgid "Invalid email"
 msgstr ""
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid ""
-"Manage the inventory of your products and display their availability status "
-"on the website."
+msgid "Inventory Defaults"
 msgstr ""
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Mode"
-msgstr "Mód"
+#. openerp-web
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+#, python-format
+msgid "Only"
+msgstr "Kizárólag"
 
 #. module: website_sale_stock
-#: model:ir.model,name:website_sale_stock.model_product_product
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
+msgid "Order Now"
+msgstr "Rendelje most"
+
+#. module: website_sale_stock
+#. openerp-web
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+#, python-format
+msgid "Out of Stock"
+msgstr ""
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Out-of-Stock"
+msgstr ""
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__out_of_stock_message
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__out_of_stock_message
+msgid "Out-of-Stock Message"
+msgstr ""
+
+#. module: website_sale_stock
+#: code:addons/website_sale_stock/models/product_product.py:0
+#: model:ir.model,name:website_sale_stock.model_product_template
+#, python-format
 msgid "Product"
 msgstr "Termék"
 
 #. module: website_sale_stock
-#: model:ir.model,name:website_sale_stock.model_product_template
-msgid "Product Template"
-msgstr "Terméksablon"
+#: model:ir.model,name:website_sale_stock.model_product_product
+msgid "Product Variant"
+msgstr "Termékváltozat"
+
+#. module: website_sale_stock
+#: model:ir.actions.server,name:website_sale_stock.ir_cron_send_availability_email_ir_actions_server
+#: model:ir.cron,cron_name:website_sale_stock.ir_cron_send_availability_email
+#: model:ir.cron,name:website_sale_stock.ir_cron_send_availability_email
+msgid "Product: send email regarding products availability"
+msgstr ""
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
+msgid "Regards,"
+msgstr "Üdvözlettel,"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order
 msgid "Sales Order"
-msgstr "Vásárlói megrendelés"
+msgstr "Vevői rendelések"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order_line
@@ -121,33 +169,23 @@ msgid "Sales Order Line"
 msgstr "Értékesítési megrendelés sor"
 
 #. module: website_sale_stock
-#: model:ir.model.fields.selection,name:website_sale_stock.selection__product_template__inventory_availability__never
-#: model:ir.model.fields.selection,name:website_sale_stock.selection__res_config_settings__inventory_availability__never
-msgid "Sell regardless of inventory"
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Show Available Qty"
 msgstr ""
 
 #. module: website_sale_stock
-#: model:ir.model.fields.selection,name:website_sale_stock.selection__product_template__inventory_availability__threshold
-msgid "Show inventory below a threshold and prevent sales if not enough stock"
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__available_threshold
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__available_threshold
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__available_threshold
+msgid "Show Threshold"
 msgstr ""
 
 #. module: website_sale_stock
-#: model:ir.model.fields.selection,name:website_sale_stock.selection__product_template__inventory_availability__always
-#: model:ir.model.fields.selection,name:website_sale_stock.selection__res_config_settings__inventory_availability__always
-msgid "Show inventory on website and prevent sales if not enough stock"
-msgstr ""
-
-#. module: website_sale_stock
-#: model:ir.model.fields.selection,name:website_sale_stock.selection__res_config_settings__inventory_availability__threshold
-msgid ""
-"Show inventory when below the threshold and prevent sales if not enough "
-"stock"
-msgstr ""
-
-#. module: website_sale_stock
-#: model:ir.model.fields.selection,name:website_sale_stock.selection__product_template__inventory_availability__custom
-#: model:ir.model.fields.selection,name:website_sale_stock.selection__res_config_settings__inventory_availability__custom
-msgid "Show product-specific notifications"
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__show_availability
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__show_availability
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__show_availability
+msgid "Show availability Qty"
 msgstr ""
 
 #. module: website_sale_stock
@@ -157,23 +195,36 @@ msgid ""
 "Some products became unavailable and your cart has been updated. We're sorry"
 " for the inconvenience."
 msgstr ""
+"Néhány termék elérhetősége megszűnt, emiatt a kosár frissítésre került. "
+"Elnézést kérünk az esetleges kellemetlenségekért."
 
 #. module: website_sale_stock
-#. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-#, python-format
-msgid "Temporarily out of stock"
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
+msgid "The following product is now available."
 msgstr ""
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Threshold"
+#: code:addons/website_sale_stock/models/product_product.py:0
+#, python-format
+msgid "The product '%(product_name)s' is now available"
+msgstr ""
+
+#. module: website_sale_stock
+#. openerp-web
+#: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
+#, python-format
+msgid "This product is out of stock."
 msgstr ""
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
 msgid "Transfer"
-msgstr "Átvitel"
+msgstr "Szállítás"
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
+msgid "Units"
+msgstr "egység"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__website_warehouse_id
@@ -185,24 +236,19 @@ msgstr "Raktár"
 #. module: website_sale_stock
 #. openerp-web
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__warning_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line__warning_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_cart_lines
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_payment
 #, python-format
-msgid "Warning"
-msgstr "Figyelmeztetés"
+msgid "We'll notify you once the product is back in stock."
+msgstr ""
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_website
 #: model:ir.model.fields,field_description:website_sale_stock.field_stock_picking__website_id
 msgid "Website"
-msgstr "Weboldal"
+msgstr "Honlap"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,help:website_sale_stock.field_stock_picking__website_id
-msgid "Website this picking belongs to."
+msgid "Website where this order has been placed, for eCommerce orders."
 msgstr ""
 
 #. module: website_sale_stock
@@ -210,27 +256,35 @@ msgstr ""
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "You already added"
+msgstr "Már hozzáadásra került az"
+
+#. module: website_sale_stock
+#. openerp-web
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+#, python-format
+msgid "You already added all the available product in your cart."
+msgstr ""
+
+#. module: website_sale_stock
+#. openerp-web
+#: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
+#, python-format
+msgid "You already have %s Units in your cart."
 msgstr ""
 
 #. module: website_sale_stock
 #: code:addons/website_sale_stock/models/sale_order.py:0
+#: code:addons/website_sale_stock/models/sale_order_line.py:0
 #, python-format
-msgid "You ask for %s products but only %s is available"
+msgid "You ask for %(desired_qty)s products but only %(new_qty)s is available"
 msgstr ""
 
 #. module: website_sale_stock
 #. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+#: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
+#: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #, python-format
-msgid "all"
-msgstr "összes"
-
-#. module: website_sale_stock
-#. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-#, python-format
-msgid "available"
+msgid "You ask for %s Units but only %s are available."
 msgstr ""
 
 #. module: website_sale_stock
@@ -238,4 +292,24 @@ msgstr ""
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "in your cart."
+msgstr "a kosárba."
+
+#. module: website_sale_stock
+#. openerp-web
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+#, python-format
+msgid "left in stock."
+msgstr ""
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "only if below"
+msgstr ""
+
+#. module: website_sale_stock
+#. openerp-web
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+#, python-format
+msgid "youremail@gmail.com"
 msgstr ""

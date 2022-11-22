@@ -132,6 +132,7 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
                         model: 'pos.session',
                         method: 'close_session_from_ui',
                         args: [this.env.pos.pos_session.id, bankPaymentMethodDiffPairs],
+                        context: this.env.session.user_context,
                     });
                     if (!response.successful) {
                         return this.handleClosingError(response);

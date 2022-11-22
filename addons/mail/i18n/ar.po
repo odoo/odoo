@@ -5,8 +5,8 @@
 # Translators:
 # Mustafa Rawi <mustafa@cubexco.com>, 2022
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2022
-# Malaz Abuidris <msea@odoo.com>, 2022
 # Martin Trigaux, 2022
+# Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2302,7 +2302,7 @@ msgstr "فشل التسليم "
 #: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
 msgid "Delivery failure"
-msgstr ""
+msgstr "فشل التوصيل "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__description
@@ -3643,6 +3643,10 @@ msgid ""
 "the email will be send as soon as possible. Unless a timezone is specified, "
 "it is considered as being in UTC timezone."
 msgstr ""
+"إذا كان معداً، سيقوم منظم قائمة الانتظار بإرسال الرسالة بعد التاريخ. إذا لم "
+"يكن معداً، سيتم إرسال الرسالة في أقرب فرصة، إلا إذا تم تحديد المنطقة "
+"الزمنية، فسيتم عندها اعتبارها كجزء من المنطقة الزمنية للتوقيت العالمي "
+"المنسق. "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__scheduled_date
@@ -4344,7 +4348,7 @@ msgstr "جاري تسجيل ملاحظة داخلية… "
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__is_log
 msgid "Log as Internal Note"
-msgstr ""
+msgstr "التسجيل كملاحظة داخلية "
 
 #. module: mail
 #. openerp-web
@@ -6622,6 +6626,11 @@ msgid "Scheduled Send Date"
 msgstr "تاريخ الإرسال المجدول"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
+msgid "Select a language"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__script
 msgid "Script"
 msgstr "نص برمجي"
@@ -7536,7 +7545,7 @@ msgstr ""
 #: code:addons/mail/models/fetchmail.py:0
 #, python-format
 msgid "The server \"%s\" cannot be used because it is archived."
-msgstr ""
+msgstr "لا يمكن استخدام الخادم \"%s\" لأنه مؤرشف. "
 
 #. module: mail
 #. openerp-web
@@ -7889,6 +7898,15 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)\n"
 "- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
 msgstr ""
+"القيم التالية متاحة لنوع إجراء الخادم:\n"
+"- 'تنفيذ كود بايثون': سوف يتم تنفيذ كتلة كود بايثون\n"
+"- 'إنشاءسجل جديد': إنشاء سجل جديد بقيم جديدة\n"
+"- 'تحديث سجل': تحديث قيم سجل\n"
+"- 'تنفيذ عدة إجراءات': قم بتحديد إجراء سوف يقوم بتشغيل إجراءات خادم متعددة أخرى\n"
+"- 'إرسال بريد إلكتروني': قم بنشر رسالة أو ملاحظة أو إرسال بريد إلكتروني (المناقشة)\n"
+"- 'إضافة متابعين': إضافة متابعين إلى سجل (المناقشة)\n"
+"- 'إنشاء النشاط التالي': إنشاء نشاط (المناقشة) \n"
+"- 'إرسال الرسائل النصية القصيرة': أرسل الرسائل النصية القصيرة وسجلها في المستندات (الرسائل النصية القصيرة) "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_exception_decoration
@@ -8264,7 +8282,7 @@ msgstr "نوع واجهة العرض"
 #: code:addons/mail/static/src/components/attachment_image/attachment_image.xml:0
 #, python-format
 msgid "View image"
-msgstr ""
+msgstr "عرض الصورة "
 
 #. module: mail
 #. openerp-web
@@ -8388,7 +8406,7 @@ msgstr "اسم العملية غير صحيح (%s) "
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "YYYY-MM-DD HH:MM:SS"
-msgstr ""
+msgstr "YYYY-MM-DD HH:MM:SS"
 
 #. module: mail
 #. openerp-web

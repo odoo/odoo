@@ -18,8 +18,17 @@
     #editable_select.form-control {
         height: auto;
 
-        .s_website_form_select_item.selected {
-            font-weight: bold;
+        .s_website_form_select_item {
+            &.selected {
+                font-weight: bold;
+            }
+            &:empty::before {
+                content: attr(data-empty-value);
+                pointer-events: none;
+                font-style: italic;
+                font-weight: normal;
+                opacity: 0.6;
+            }
         }
     }
 }
@@ -54,6 +63,14 @@
         .s_website_form_label {
             display: none;
         }
+    }
+
+    .form-control-file.is-invalid {
+        // Note: BS5 use form-control on file inputs now, but this is kept as
+        // compatibility for now (also at the time this was done, Odoo 16.0 uses
+        // BS5 but not yet(?) form-control on file inputs).
+        padding-left: 3px;
+        border-left: 3px solid $form-feedback-invalid-color;
     }
 }
 

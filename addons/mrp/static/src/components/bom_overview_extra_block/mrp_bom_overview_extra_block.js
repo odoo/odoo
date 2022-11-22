@@ -25,7 +25,7 @@ export class BomOverviewExtraBlock extends Component {
 
         onWillUnmount(() => {
             // Need to notify main component that the block was folded so it doesn't appear on the PDF.
-            this.changeFolded({ ids: [this.identifier], isFolded: true });
+            this.props.changeFolded({ ids: [this.identifier], isFolded: true });
         });
     }
 
