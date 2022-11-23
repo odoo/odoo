@@ -20,9 +20,10 @@ class PotLinter(TransactionCase):
             filename = get_resource_path(module, 'i18n', module + '.pot')
             if not filename:
                 continue
-            counts = Counter(map(duplicate_key, TranslationFileReader(filename)))
-            duplicates = [key for key, count in counts.items() if count > 1]
-            self.assertFalse(duplicates, "Duplicate entries found in %s" % filename)
+            with self.subTest(filename=filename):
+                counts = Counter(map(duplicate_key, TranslationFileReader(filename)))
+                duplicates = [key for key, count in counts.items() if count > 1]
+                self.assertFalse(duplicates, "Duplicate entries found")
 
 
 @tagged('-at_install', 'post_install')
