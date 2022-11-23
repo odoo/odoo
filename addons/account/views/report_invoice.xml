@@ -90,7 +90,7 @@
 
                         <t t-set="display_discount" t-value="any(l.discount for l in o.invoice_line_ids)"/>
 
-                        <table class="table table-sm o_main_table" name="invoice_line_table">
+                        <table class="table table-sm o_main_table table-borderless" name="invoice_line_table">
                             <thead>
                                 <tr>
                                     <th name="th_description" class="text-start"><span>Description</span></th>
@@ -167,7 +167,7 @@
                     <div class="clearfix mb-4">
                         <div id="total" class="row">
                             <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ms-auto">
-                                <table class="table table-sm" style="page-break-inside: avoid;">
+                                <table class="table table-sm table-borderless" style="page-break-inside: avoid;">
 
                                     <!--Tax totals-->
                                     <t t-set="tax_totals" t-value="o.tax_totals"/>
