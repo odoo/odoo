@@ -18,6 +18,79 @@
                             <field name="amount_total_signed" string="Total" sum="Total" decoration-bf="1" optional="show" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <field name="state" widget="badge" decoration-success="state == 'posted'" decoration-info="state == 'draft'" optional="show" on_change="1" modifiers="{'readonly':true, 'required':true}"/>
                         </tree>
+                        <form>
+                            <!-- Invisible fields -->
+                            <field name="state" invisible="1"/>
+                            <field name="tax_totals" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="journal_id" invisible="1"/>
+                            <field name="show_name_warning" invisible="1"/>
+                            <field name="posted_before" invisible="1"/>
+                            <field name="move_type" invisible="1"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="bank_partner_id" invisible="1"/>
+                            <field name="quick_edit_mode" invisible="1"/>
+
+                            <div class="oe_title">
+                                <span class="o_form_label"><field name="move_type" attrs="{'invisible': [('move_type', '=', 'entry')]}" readonly="1" nolabel="1"/></span>
+                                <div class="text-warning" attrs="{'invisible': [('show_name_warning', '=', False)]}">The current highest number is <field class="oe_inline" name="highest_name"/>. You might want to put a higher number here.</div>
+                                <h1>
+                                    <field name="name" attrs="{'invisible':[('name', '=', '/'), ('posted_before', '=', False), ('quick_edit_mode', '=', False)],
+                                        'readonly': [('state', '!=', 'draft')]}" placeholder="Draft"/>
+                                    <span attrs="{'invisible': ['|', '|', ('state', '!=', 'draft'), ('name', '!=', '/'), ('quick_edit_mode', '=', True)]}">Draft</span>
+                                </h1>
+                            </div>
+                            <group>
+                                <group id="header_left_group">
+                                    <label for="partner_id" string="Customer" class="fw-bold" attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))]}"/>
+                                    <label for="partner_id" string="Vendor" class="fw-bold" attrs="{'invisible': [('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}"/>
+                                    <field name="partner_id" widget="res_partner_many2one" nolabel="1" context="{
+                                        'res_partner_search_mode': (context.get('default_move_type', 'entry') in ('out_invoice', 'out_refund', 'out_receipt') and 'customer') or (context.get('default_move_type', 'entry') in ('in_invoice', 'in_refund', 'in_receipt') and 'supplier') or False,
+                                        'show_address': 1, 'default_is_company': True, 'show_vat': True}" domain="[('type', '!=', 'private'), ('company_id', 'in', (False, company_id))]" options="{&quot;always_reload&quot;: True, &quot;no_quick_create&quot;: True}" attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
+
+                                    <field name="partner_shipping_id" groups="account.group_delivery_invoice_address" attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))], 'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="quick_edit_total_amount" class="w-50" attrs="{'invisible': ['|', ('move_type', '=', 'entry'), ('quick_edit_mode', '=', False)], 'readonly': [('state', '!=', 'draft')]}"/>
+                                    <label for="ref" string="Bill Reference" attrs="{'invisible':[('move_type', 'not in', ('in_invoice', 'in_receipt', 'in_refund'))]}"/>
+                                    <field name="ref" nolabel="1" attrs="{'invisible':[('move_type', 'not in', ('in_invoice', 'in_receipt', 'in_refund'))]}"/>
+                                    <field name="ref" attrs="{'invisible':[('move_type', 'in', ('in_invoice', 'in_receipt', 'in_refund', 'out_invoice', 'out_refund'))]}"/>
+                                    <field name="tax_cash_basis_origin_move_id" attrs="{'invisible': [('tax_cash_basis_origin_move_id', '=', False)]}"/>
+                                    <label name="invoice_vendor_bill_id_label" for="invoice_vendor_bill_id" string="Auto-Complete" class="oe_edit_only" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('move_type', '!=', 'in_invoice')]}"/>
+                                    <field name="invoice_vendor_bill_id" nolabel="1" class="oe_edit_only" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('move_type', '!=', 'in_invoice')]}" domain="[('company_id', '=', company_id), ('partner_id','child_of', [partner_id]), ('move_type','=','in_invoice')]" placeholder="Select an old vendor bill" options="{'no_create': True}" context="{'show_total_amount': True}"/>
+                                </group>
+                                <group id="header_right_group">
+
+                                    <!-- Invoice date (only invoices / receipts) -->
+                                    <label for="invoice_date" string="Invoice Date" class="fw-bold" attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))]}"/>
+                                    <label for="invoice_date" string="Bill Date" class="fw-bold" attrs="{'invisible': [('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}"/>
+                                    <field name="invoice_date" nolabel="1" options="{'datepicker': {'warn_future': true}}" attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
+
+                                    <field name="date" string="Accounting Date" attrs="{
+                                        'invisible': [('move_type', 'in', ('out_invoice', 'out_refund', 'out_receipt')), ('quick_edit_mode', '=', False)],
+                                        'readonly': [('state', '!=', 'draft')],
+                                    }"/>
+                                    <field name="payment_reference" attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
+                                    <field name="partner_bank_id" context="{'default_partner_id': bank_partner_id}" domain="[('partner_id', '=', bank_partner_id)]" attrs="{'invisible': [('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}"/>
+
+                                    <!-- Invoice payment terms (only invoices) + due date (only invoices / receipts) -->
+                                    <div class="o_td_label" attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}">
+                                        <label for="invoice_date_due" string="Due Date" attrs="{'invisible': [('invoice_payment_term_id', '!=', False)]}"/>
+                                        <label for="invoice_payment_term_id" string="Payment terms" attrs="{'invisible': [('invoice_payment_term_id', '=', False)]}"/>
+                                    </div>
+                                    <div class="d-flex" attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}">
+                                        <field name="invoice_date_due" force_save="1" placeholder="Date" attrs="{'invisible': [('invoice_payment_term_id', '!=', False)]}"/>
+                                        <span class="o_form_label mx-3 oe_edit_only" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', False)]}"> or </span>
+                                        <field name="invoice_payment_term_id" context="{'example_date': invoice_date, 'example_amount': tax_totals['amount_total']}" placeholder="Terms"/>
+                                    </div>
+
+                                    <label for="journal_id" groups="account.group_account_readonly" invisible="context.get('default_journal_id') and context.get('move_type', 'entry') != 'entry'"/>
+                                    <div name="journal_div" class="d-flex" groups="account.group_account_readonly" invisible="context.get('default_journal_id') and context.get('move_type', 'entry') != 'entry'">
+                                        <field name="journal_id" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('posted_before', '=', True)]}"/>
+                                        <span class="oe_inline o_form_label mx-3" groups="base.group_multi_currency" attrs="{'invisible': [('move_type', '=', 'entry')]}"> in </span>
+                                        <field name="currency_id" groups="base.group_multi_currency" attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('move_type', '=', 'entry')]}"/>
+                                    </div>
+                                </group>
+                            </group>
+                        </form>
                     </field>
                 </group>
                 <footer>
