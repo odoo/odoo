@@ -260,12 +260,7 @@ export class KanbanRenderer extends Component {
         if (!this.env.isSmall && group.isFolded) {
             classes.push("o_column_folded");
         }
-        if (
-            this.canResequenceGroups &&
-            group.value &&
-            !group.isFolded &&
-            !group.hasActiveProgressValue
-        ) {
+        if (!group.isFolded && !group.hasActiveProgressValue) {
             classes.push("bg-100");
         }
         if (group.progressBars.length) {
