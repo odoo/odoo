@@ -15,7 +15,7 @@
                 <field name="alias_domain"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
+                        <div t-attf-class="d-flex flex-column flex-fill #{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
                             <t t-value="JSON.parse(record.kanban_dashboard.raw_value)" t-set="dashboard"/>
                             <t t-value="record.type.raw_value" t-set="journal_type"/>
                             <t t-call="JournalTop"/>
@@ -29,8 +29,11 @@
                                         <t t-call="HasSequenceHoles"/>
                                     </div>
                                 </div>
-                                <t t-if="journal_type == 'bank' || journal_type == 'cash' || journal_type == 'sale' || journal_type == 'purchase'" t-call="JournalBodyGraph"/>
-                            </div><div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
+                                <div class="row mt-auto">
+                                    <t t-if="['bank', 'cash', 'sale', 'purchase'].includes(journal_type)" t-call="JournalBodyGraph"/>
+                                </div>
+                            </div>
+                            <div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
                                 <t t-call="JournalManage"/>
                             </div>
                         </div>
