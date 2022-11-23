@@ -344,8 +344,6 @@ class WebsiteSale(http.Controller):
         attributes_ids = {v[0] for v in attrib_values}
         attrib_set = {v[1] for v in attrib_values}
 
-        keep = QueryURL('/shop', **self._shop_get_query_url_kwargs(category and int(category), search, min_price, max_price, **post))
-
         now = datetime.timestamp(datetime.now())
         pricelist = request.env['product.pricelist'].browse(request.session.get('website_sale_current_pl'))
         if not pricelist or request.session.get('website_sale_pricelist_time', 0) < now - 60*60: # test: 1 hour in session
@@ -364,10 +362,13 @@ class WebsiteSale(http.Controller):
             conversion_rate = 1
 
         url = "/shop"
-        if search:
-            post["search"] = search
         if attrib_list:
             post['attrib'] = attrib_list
+
+        keep = QueryURL('/shop', **self._shop_get_query_url_kwargs(category and int(category), search, min_price, max_price, **post))
+
+        if search:
+            post["search"] = search
 
         options = self._get_search_options(
             category=category,
@@ -655,6 +656,7 @@ class WebsiteSale(http.Controller):
         attrib_values = [[int(x) for x in v.split("-")] for v in attrib_list if v]
         attrib_set = {v[1] for v in attrib_values}
 
+        kwargs['attrib'] = attrib_list
         keep = QueryURL(
             '/shop',
             **self._product_get_query_url_kwargs(

@@ -309,7 +309,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
                 var attributeIds = params['attr'].split(',');
                 var $inputs = this.$('input.js_variant_change, select.js_variant_change option');
                 _.each(attributeIds, function (id) {
-                    var $toSelect = $inputs.filter('[data-value_id="' + id + '"]');
+                    var $toSelect = $inputs.filter('[value="' + id + '"]');
                     if ($toSelect.is('input[type="radio"]')) {
                         $toSelect.prop('checked', true);
                     } else if ($toSelect.is('option')) {
@@ -856,8 +856,8 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
                 }
             }
         }
-        if (attributeExclusions.archived_combination) {
-            for (const archivedCombination of attributeExclusions.archived_combination) {
+        if (attributeExclusions.archived_combinations) {
+            for (const archivedCombination of attributeExclusions.archived_combinations) {
                 if (archivedCombination.length !== combination.length) {
                     continue;
                 }
@@ -872,28 +872,48 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
      * @private
      */
     _applyHashFromSearch() {
-        const params = $.deparam(window.location.search.slice(1));
-        if (params.attrib) {
-            const attributeValuesPerAttribute = {};
-            for (const attrib of params.attrib) {
-                const [ptalId, ptavId] = attrib.split('-');
-                const attribValueSelector = `.js_variant_change[name="ptal-${ptalId}"][value="${ptavId}"]`;
-                const attribValue = this.el.querySelector(attribValueSelector);
-                if (attribValue !== null) {
-                    if (!attributeValuesPerAttribute[ptalId]) {
-                        attributeValuesPerAttribute[ptalId] = [];
-                    }
-                    attributeValuesPerAttribute[ptalId].push(ptavId);
+        const salePage = document.querySelector(".o_wsale_product_page");
+        if(salePage !== null) {
+            const params = $.deparam(window.location.search.slice(1));
+            if (params.attrib) {
+                let attribValueArray = [];
+                if(typeof(params.attrib) === "string") {
+                    attribValueArray[0] = (params.attrib.slice(0,3));
                 }
-            }
-            const attributeSelection = this.el.querySelector('.js_add_cart_variants');
-            const attributeExclusions = attributeSelection && JSON.parse(attributeSelection.dataset.attribute_exclusions);
-            if (attributeExclusions && Object.values(attributeValuesPerAttribute).length > 1) {
-                const allCombinations = cartesian(...Object.values(attributeValuesPerAttribute));
-                const selectedCombination = allCombinations.find(c => this._isValidCombination(c, attributeExclusions));
-
-                if (selectedCombination && selectedCombination.length) {
-                    window.location.replace('#attr=' + selectedCombination.join(','));
+                else {
+                    attribValueArray = [...params.attrib];
+                }
+                const attributeValuesPerAttribute = {};
+                attribValueArray.forEach((attrib) => {
+                    if(attrib !== "") {
+                        const [ptalId, ptavId] = attrib.split('-');
+                        // We need to convert the id from product.attribute.value to product.template.attribute.value
+                        const attribValueSelector = this.el.querySelector(`.js_variant_change[data-value_product_id="${ptavId}"]`);
+                        if(attribValueSelector) {
+                            if (!attributeValuesPerAttribute[ptalId]) {
+                                attributeValuesPerAttribute[ptalId] = [];
+                            }
+                            attributeValuesPerAttribute[ptalId].push(attribValueSelector.attributes.value.value);
+                        }
+                    }
+                });
+                const attributeSelection = this.el.querySelector('.js_add_cart_variants');
+                // Parsing to list without index gap
+                const attributeValues = Object.values(attributeValuesPerAttribute);
+                // Check of the possible combinations
+                const attributeExclusions = attributeSelection && JSON.parse(attributeSelection.dataset.attribute_exclusions);
+                if (attributeExclusions && attributeValues.length > 1) {
+                    const allCombinations = cartesian(...attributeValues);
+                    const selectedCombination = allCombinations.find(c => this._isValidCombination(c, attributeExclusions));
+                    if (selectedCombination && selectedCombination.length) {
+                        window.location.replace('#attr=' + selectedCombination.join(','));
+                    }
+                }
+                else {
+                    if(attributeValues[0]) {
+                        const selectedCombination = attributeValues[0].length > 1 ? attributeValues[0][0] : attributeValues[0];
+                        window.location.replace('#attr=' + selectedCombination);
+                    }
                 }
             }
         }
