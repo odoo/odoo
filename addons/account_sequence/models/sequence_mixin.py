@@ -1,4 +1,4 @@
-from psycopg2 import errors
+from psycopg2 import DatabaseError
 
 from odoo import models
 from odoo.tools import mute_logger
@@ -36,7 +36,10 @@ class SequenceMixin(models.AbstractModel):
                     self[self._sequence_field] = sequence
                     self.flush_recordset([self._sequence_field])
                     break
-            except (errors.ExclusionViolation, errors.UniqueViolation):
-                pass
+            except DatabaseError as e:
+                # 23P01 ExclusionViolation
+                # 23505 UniqueViolation
+                if e.pgcode not in ('23P01', '23505'):
+                    raise e
         self._compute_split_sequence()
         self.flush_recordset(['sequence_prefix', 'sequence_number'])
