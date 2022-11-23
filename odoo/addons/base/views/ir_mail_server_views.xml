@@ -33,14 +33,17 @@
                                 </div>
                             </group>
                         </group>
-                        <notebook colspan="4">
+                        <notebook colspan="4"
+                            attrs="{'invisible': [('smtp_authentication', '=', 'cli')]}">
                             <page name="connection" string="Connection">
                                 <group>
                                     <group>
                                         <field name="smtp_encryption" widget="radio"/>
-                                        <field name="smtp_host"/>
-                                        <field name="smtp_port" options="{'format': false}"/>
                                         <field name="smtp_debug" groups="base.group_no_one"/>
+                                        <field name="smtp_host"
+                                            attrs="{'required': [('smtp_authentication', '!=', 'cli')]}"/>
+                                        <field name="smtp_port" options="{'format': false}"
+                                            attrs="{'required': [('smtp_authentication', '!=', 'cli')]}"/>
                                     </group>
                                     <group>
                                         <field name="smtp_user" attrs="{'invisible': [('smtp_authentication', '=', 'certificate')]}" force_save="1"/>
@@ -60,7 +63,7 @@
             <field name="model">ir.mail_server</field>
             <field name="arch" type="xml">
                 <tree string="Outgoing Mail Servers">
-                    <field name="sequence"/>
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="smtp_host"/>
                     <field name="smtp_user"/>

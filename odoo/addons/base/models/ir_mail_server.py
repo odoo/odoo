@@ -98,9 +98,13 @@ class IrMailServer(models.Model):
         "FROM Filtering",
         help='Define for which email address or domain this server can be used.\n'
              'e.g.: "notification@odoo.com" or "odoo.com"')
-    smtp_host = fields.Char(string='SMTP Server', required=True, help="Hostname or IP of SMTP server")
-    smtp_port = fields.Integer(string='SMTP Port', required=True, default=25, help="SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases.")
-    smtp_authentication = fields.Selection([('login', 'Username'), ('certificate', 'SSL Certificate')], string='Authenticate with', required=True, default='login')
+    smtp_host = fields.Char(string='SMTP Server', help="Hostname or IP of SMTP server")
+    smtp_port = fields.Integer(string='SMTP Port', default=25, help="SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases.")
+    smtp_authentication = fields.Selection([
+        ('login', 'Username'),
+        ('certificate', 'SSL Certificate'),
+        ('cli', 'Command Line Interface')
+    ], string='Authenticate with', required=True, default='login')
     smtp_authentication_info = fields.Text('Authentication Info', compute='_compute_smtp_authentication_info')
     smtp_user = fields.Char(string='Username', help="Optional username for SMTP authentication", groups='base.group_system')
     smtp_pass = fields.Char(string='Password', help="Optional password for SMTP authentication", groups='base.group_system')
@@ -137,6 +141,9 @@ class IrMailServer(models.Model):
                 server.smtp_authentication_info = _(
                     'Authenticate by using SSL certificates, belonging to your domain name. \n'
                     'SSL certificates allow you to authenticate your mail server for the entire domain name.')
+            elif server.smtp_authentication == 'cli':
+                server.smtp_authentication_info = _(
+                    'Use the SMTP configuration set in the "Command Line Interface" arguments.')
             else:
                 server.smtp_authentication = False
 
@@ -310,7 +317,7 @@ class IrMailServer(models.Model):
             mail_server = self.env['ir.mail_server']
         ssl_context = None
 
-        if mail_server:
+        if mail_server and mail_server.smtp_authentication != "cli":
             smtp_server = mail_server.smtp_host
             smtp_port = mail_server.smtp_port
             if mail_server.smtp_authentication == "certificate":
@@ -346,8 +353,12 @@ class IrMailServer(models.Model):
             smtp_port = tools.config.get('smtp_port', 25) if port is None else port
             smtp_user = user or tools.config.get('smtp_user')
             smtp_password = password or tools.config.get('smtp_password')
-            from_filter = self.env['ir.config_parameter'].sudo().get_param(
-                'mail.default.from_filter', tools.config.get('from_filter'))
+            if mail_server:
+                from_filter = mail_server.from_filter
+            else:
+                from_filter = self.env['ir.config_parameter'].sudo().get_param(
+                    'mail.default.from_filter', tools.config.get('from_filter'))
+
             smtp_encryption = encryption
             if smtp_encryption is None and tools.config.get('smtp_ssl'):
                 smtp_encryption = 'starttls' # smtp_ssl => STARTTLS as of v7

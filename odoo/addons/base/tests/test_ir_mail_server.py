@@ -14,9 +14,11 @@ from odoo.tools import mute_logger
 @tagged('mail_server')
 class TestIrMailServer(TransactionCase, MockSmtplibCase):
 
-    def setUp(self):
-        self._init_mail_config()
-        self._init_mail_servers()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._init_mail_config()
+        cls._init_mail_servers()
 
     def _build_email(self, mail_from, return_path=None):
         return self.env['ir.mail_server'].build_email(
@@ -267,7 +269,6 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
             from_filter='test.com',
         )
 
-
     @mute_logger('odoo.models.unlink')
     def test_mail_server_send_email_smtp_session(self):
         """Test all the cases when we provide the SMTP session.
@@ -429,6 +430,51 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
             smtp_from=default_bounce_adress,
             message_from='"test" <notifications@test.com>',
             from_filter='test.com',
+        )
+
+    @mute_logger('odoo.models.unlink')
+    @patch.dict('odoo.tools.config.options', {'from_filter': 'fake.com', 'smtp_server': 'cli_example.com'})
+    def test_mail_server_configuration_cli(self):
+        """Check the mail server when the "smtp_authentication" is "cli".
+
+        Should take the configuration from the odoo-bin argument.
+        The "from_filter" of the mail server should overwrite the one set
+        in the CLI arguments.
+        """
+        # should be ignored by the mail server
+        self.env['ir.config_parameter'].sudo().set_param('mail.default.from_filter', 'fake.com')
+
+        self.env['ir.mail_server'].create([{
+            'name': 'Server No From Filter',
+            'smtp_host': 'smtp_host',
+            'smtp_encryption': 'none',
+            'smtp_authentication': 'cli',
+            'from_filter': 'cli_example.com',
+        }])
+
+        IrMailServer = self.env['ir.mail_server']
+
+        # check that the CLI server take the configuration in the odoo-bin argument
+        # except the from_filter which is taken on the mail server
+        with self.mock_smtplib_connection():
+            message = self._build_email(mail_from='test@cli_example.com')
+            IrMailServer.send_email(message)
+
+        self.assert_email_sent_smtp(
+            smtp_from='test@cli_example.com',
+            message_from='test@cli_example.com',
+            from_filter='cli_example.com',
+        )
+
+        # other mail server still work
+        with self.mock_smtplib_connection():
+            message = self._build_email(mail_from='specific_user@test.com')
+            IrMailServer.send_email(message)
+
+        self.assert_email_sent_smtp(
+            smtp_from='specific_user@test.com',
+            message_from='specific_user@test.com',
+            from_filter='specific_user@test.com',
         )
 
     @mute_logger('odoo.models.unlink')
