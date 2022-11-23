@@ -13,13 +13,13 @@ Model({
     },
     lifecycleHooks: {
         _created() {
+            if (!this.messaging.device.isSmall) {
+                this.update({ isDoFocus: true });
+            }
             if (this.messaging.emojiRegistry.isLoaded || this.messaging.emojiRegistry.isLoading) {
                 return;
             }
             this.messaging.emojiRegistry.loadEmojiData();
-            if (!this.messaging.device.isSmall) {
-                this.update({ isDoFocus: true });
-            }
         },
     },
     recordMethods: {
