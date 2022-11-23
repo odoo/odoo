@@ -97,19 +97,76 @@ class HolidaysRequest(models.Model):
         global_from, global_to = False, False
         # TDE FIXME: consider a mapping on several days that is not the standard
         # calendar widget 7-19 in user's TZ is some custom input
-        if values.get('date_from'):
+        if values.get('date_from') and values.get('date_to'):
             user_tz = self.env.user.tz or 'UTC'
-            localized_dt = timezone('UTC').localize(values['date_from']).astimezone(timezone(user_tz))
-            global_from = localized_dt.time().hour == 7 and localized_dt.time().minute == 0
-            new_values['request_date_from'] = localized_dt.date()
-        if values.get('date_to'):
-            user_tz = self.env.user.tz or 'UTC'
-            localized_dt = timezone('UTC').localize(values['date_to']).astimezone(timezone(user_tz))
-            global_to = localized_dt.time().hour == 19 and localized_dt.time().minute == 0
-            new_values['request_date_to'] = localized_dt.date()
+            localized_dt_from = timezone('UTC').localize(values['date_from']).astimezone(timezone(user_tz))
+            global_from = localized_dt_from.time().hour == 7 and localized_dt_from.time().minute == 0
+            date_from = localized_dt_from.date()
+            localized_dt_to = timezone('UTC').localize(values['date_to']).astimezone(timezone(user_tz))
+            global_to = localized_dt_to.time().hour == 19 and localized_dt_to.time().minute == 0
+            date_to = localized_dt_to.date()
+
+            new_values.update([('request_date_from', date_from), ('request_date_to', date_to)])
+
+            employee = self.env['hr.employee'].browse(values['employee_id']) if values.get('employee_id') else self.env.user.employee_id
+            default_start_time = self._get_start_or_end_from_attendance(7, datetime.now().date(), employee).time()
+            default_end_time = self._get_start_or_end_from_attendance(19, datetime.now().date(), employee).time()
+            if values['date_from'].time() == default_start_time and values['date_to'].time() == default_end_time:
+                attendance_from, attendance_to = self._get_attendances(employee, date_from, date_to)
+                new_values['date_from'] = self._get_start_or_end_from_attendance(attendance_from.hour_from, date_from, employee)
+                new_values['date_to'] = self._get_start_or_end_from_attendance(attendance_to.hour_to, date_to, employee)
+
         if global_from and global_to:
             new_values['request_unit_custom'] = True
         return new_values
+
+    def _get_start_or_end_from_attendance(self, hour, date, employee):
+        hour = float_to_time(float(hour))
+        holiday_tz = timezone(employee.tz or self.env.user.tz)
+        return holiday_tz.localize(datetime.combine(date, hour)).astimezone(UTC).replace(tzinfo=None)
+
+    def _get_attendances(self, employee, request_date_from, request_date_to):
+        resource_calendar_id = employee.resource_calendar_id or self.env.company.resource_calendar_id
+        domain = [('calendar_id', '=', resource_calendar_id.id), ('display_type', '=', False)]
+        attendances = self.env['resource.calendar.attendance'].read_group(domain,
+            ['ids:array_agg(id)', 'hour_from:min(hour_from)', 'hour_to:max(hour_to)',
+             'week_type', 'dayofweek', 'day_period'],
+            ['week_type', 'dayofweek', 'day_period'], lazy=False)
+
+        # Must be sorted by dayofweek ASC and day_period DESC
+        attendances = sorted([DummyAttendance(group['hour_from'], group['hour_to'], group['dayofweek'], group['day_period'], group['week_type']) for group in attendances], key=lambda att: (att.dayofweek, att.day_period != 'morning'))
+
+        default_value = DummyAttendance(0, 0, 0, 'morning', False)
+
+        if resource_calendar_id.two_weeks_calendar:
+            # find week type of start_date
+            start_week_type = self.env['resource.calendar.attendance'].get_week_type(request_date_from)
+            attendance_actual_week = [att for att in attendances if att.week_type is False or int(att.week_type) == start_week_type]
+            attendance_actual_next_week = [att for att in attendances if att.week_type is False or int(att.week_type) != start_week_type]
+            # First, add days of actual week coming after date_from
+            attendance_filtred = [att for att in attendance_actual_week if int(att.dayofweek) >= request_date_from.weekday()]
+            # Second, add days of the other type of week
+            attendance_filtred += list(attendance_actual_next_week)
+            # Third, add days of actual week (to consider days that we have remove first because they coming before date_from)
+            attendance_filtred += list(attendance_actual_week)
+            end_week_type = self.env['resource.calendar.attendance'].get_week_type(request_date_to)
+            attendance_actual_week = [att for att in attendances if att.week_type is False or int(att.week_type) == end_week_type]
+            attendance_actual_next_week = [att for att in attendances if att.week_type is False or int(att.week_type) != end_week_type]
+            attendance_filtred_reversed = list(reversed([att for att in attendance_actual_week if int(att.dayofweek) <= request_date_to.weekday()]))
+            attendance_filtred_reversed += list(reversed(attendance_actual_next_week))
+            attendance_filtred_reversed += list(reversed(attendance_actual_week))
+
+            # find first attendance coming after first_day
+            attendance_from = attendance_filtred[0]
+            # find last attendance coming before last_day
+            attendance_to = attendance_filtred_reversed[0]
+        else:
+            # find first attendance coming after first_day
+            attendance_from = next((att for att in attendances if int(att.dayofweek) >= request_date_from.weekday()), attendances[0] if attendances else default_value)
+            # find last attendance coming before last_day
+            attendance_to = next((att for att in reversed(attendances) if int(att.dayofweek) <= request_date_to.weekday()), attendances[-1] if attendances else default_value)
+
+        return attendance_from, attendance_to
 
     active = fields.Boolean(default=True)
     # description
