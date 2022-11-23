@@ -31,7 +31,7 @@ export class ReferenceField extends Component {
         return p.record.preloadedData[p.name];
     }
     getValue(p) {
-        if (p.type === "char") {
+        if (p.type === "char" && p.value) {
             const pdata = this.getPreloadedData(p);
             if (!pdata) {
                 return null;

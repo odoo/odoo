@@ -1968,8 +1968,11 @@ class IrModelData(models.Model):
 
     @api.depends('model', 'res_id')
     def _compute_reference(self):
-        for res in self:
-            res.reference = "%s,%s" % (res.model, res.res_id)
+        for rec in self:
+            reference = ''
+            if rec.model and rec.res_id:
+                reference = f'{rec.model}{rec.res_id}'
+            rec.reference = reference
 
     def _auto_init(self):
         res = super(IrModelData, self)._auto_init()
