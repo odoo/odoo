@@ -54,6 +54,8 @@ class AccountMove(models.Model):
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
+    pos_payment_method_id = fields.Many2one(comodel_name='pos.payment.method', string="POS Payment Method")
+
     def _stock_account_get_anglo_saxon_price_unit(self):
         self.ensure_one()
         if not self.product_id:

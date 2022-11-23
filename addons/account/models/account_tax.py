@@ -403,6 +403,60 @@ class AccountTax(models.Model):
         rep_lines = self.mapped(is_refund and 'refund_repartition_line_ids' or 'invoice_repartition_line_ids')
         return rep_lines.filtered(lambda x: x.repartition_type == repartition_type).mapped('tag_ids')
 
+    @api.model
+    def _get_tax_computation_precision_rounding(self, company, currency):
+        # By default, for each tax, tax amount will first be computed
+        # and rounded at the 'Account' decimal precision for each
+        # PO/SO/invoice line and then these rounded amounts will be
+        # summed, leading to the total amount for that tax. But, if the
+        # company has tax_calculation_rounding_method = round_globally,
+        # we still follow the same method, but we use a much larger
+        # precision when we round the tax amount for each line (we use
+        # the 'Account' decimal precision + 5), and that way it's like
+        # rounding after the sum of the tax amounts of each line
+        prec = currency.rounding
+
+        # In some cases, it is necessary to force/prevent the rounding of the tax and the total
+        # amounts. For example, in SO/PO line, we don't want to round the price unit at the
+        # precision of the currency.
+        # The context key 'round' allows to force the standard behavior.
+        round_tax = company.tax_calculation_rounding_method != 'round_globally'
+        if 'round' in self._context:
+            round_tax = bool(self._context['round'])
+
+        if not round_tax:
+            prec *= 1e-5
+
+        return prec
+
+    def _distribute_tax_amount(self, tax_amount, is_refund, currency, precision_rounding):
+        self.ensure_one()
+        tax_repartition_lines = (self.refund_repartition_line_ids if is_refund else self.invoice_repartition_line_ids)\
+            .filtered(lambda x: x.repartition_type == 'tax')
+        sum_repartition_factor = sum(tax_repartition_lines.mapped('factor'))
+        factorized_tax_amount = round(tax_amount * sum_repartition_factor, precision_rounding=precision_rounding)
+        repartition_line_amounts = [
+            round(tax_amount * line.factor, precision_rounding=precision_rounding)
+            for line in tax_repartition_lines
+        ]
+
+        total_rounding_error = round(
+            factorized_tax_amount - sum(repartition_line_amounts),
+            precision_rounding=precision_rounding,
+        )
+        nber_rounding_steps = int(abs(total_rounding_error / currency.rounding))
+        rounding_error = round(
+            nber_rounding_steps and total_rounding_error / nber_rounding_steps or 0.0,
+            precision_rounding=precision_rounding,
+        )
+        for i, _amount in enumerate(repartition_line_amounts):
+            if nber_rounding_steps:
+                repartition_line_amounts[i] += rounding_error
+                nber_rounding_steps -= 1
+            else:
+                break
+        return zip(tax_repartition_lines, repartition_line_amounts)
+
     def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None, is_refund=False, handle_price_include=True, include_caba_tags=False, fixed_multiplicator=1):
         """Compute all information required to apply taxes (in self + their children in case of a tax group).
         We consider the sequence of the parent for group of taxes.
@@ -457,27 +511,7 @@ class AccountTax(models.Model):
         if not currency:
             currency = company.currency_id
 
-        # By default, for each tax, tax amount will first be computed
-        # and rounded at the 'Account' decimal precision for each
-        # PO/SO/invoice line and then these rounded amounts will be
-        # summed, leading to the total amount for that tax. But, if the
-        # company has tax_calculation_rounding_method = round_globally,
-        # we still follow the same method, but we use a much larger
-        # precision when we round the tax amount for each line (we use
-        # the 'Account' decimal precision + 5), and that way it's like
-        # rounding after the sum of the tax amounts of each line
-        prec = currency.rounding
-
-        # In some cases, it is necessary to force/prevent the rounding of the tax and the total
-        # amounts. For example, in SO/PO line, we don't want to round the price unit at the
-        # precision of the currency.
-        # The context key 'round' allows to force the standard behavior.
-        round_tax = False if company.tax_calculation_rounding_method == 'round_globally' else True
-        if 'round' in self.env.context:
-            round_tax = bool(self.env.context['round'])
-
-        if not round_tax:
-            prec *= 1e-5
+        prec = self._get_tax_computation_precision_rounding(company, currency)
 
         # 3) Iterate the taxes in the reversed sequence order to retrieve the initial base of the computation.
         #     tax  |  base  |  amount  |
@@ -651,16 +685,8 @@ class AccountTax(models.Model):
             # The factorized_tax_amount will be 0.06 (200% x 0.03). However, each line taken independently will compute
             # 50% * 0.03 = 0.01 with rounding. It means there is 0.06 - 0.04 = 0.02 as total_rounding_error to dispatch
             # in lines as 2 x 0.01.
-            repartition_line_amounts = [round(tax_amount * line.factor, precision_rounding=prec) for line in tax_repartition_lines]
-            total_rounding_error = round(factorized_tax_amount - sum(repartition_line_amounts), precision_rounding=prec)
-            nber_rounding_steps = int(abs(total_rounding_error / currency.rounding))
-            rounding_error = round(nber_rounding_steps and total_rounding_error / nber_rounding_steps or 0.0, precision_rounding=prec)
-
-            for repartition_line, line_amount in zip(tax_repartition_lines, repartition_line_amounts):
-
-                if nber_rounding_steps:
-                    line_amount += rounding_error
-                    nber_rounding_steps -= 1
+            rep_line_amount = tax._distribute_tax_amount(tax_amount, is_refund, currency, prec)
+            for repartition_line, line_amount in rep_line_amount:
 
                 if not include_caba_tags and tax.tax_exigibility == 'on_payment':
                     repartition_line_tags = self.env['account.account.tag']

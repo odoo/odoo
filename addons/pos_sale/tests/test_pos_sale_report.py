@@ -61,10 +61,12 @@ class TestPoSSaleReport(TestPoSCommon):
         product_1 = product_template._create_product_variant(prod_tmpl_attrs[0])
         product_1.weight = 1
         product_1.volume = 1
+        product_1.taxes_id.country_id = self.env.company.country_id
 
         product_2 = product_template._create_product_variant(prod_tmpl_attrs[1])
         product_2.weight = 2
         product_2.volume = 2
+        product_2.taxes_id.country_id = self.env.company.country_id
 
         self.open_new_session()
         session = self.pos_session

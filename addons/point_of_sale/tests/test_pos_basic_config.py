@@ -121,20 +121,29 @@ class TestPoSBasicConfig(TestPoSCommon):
                     ],
                 },
                 'cash_statement': [
-                    ((370, ), {
+                    {
+                        'amount': 170,
                         'line_ids': [
-                            {'account_id': self.cash_pm1.journal_id.default_account_id.id, 'partner_id': False, 'debit': 370, 'credit': 0, 'reconciled': False},
-                            {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 370, 'reconciled': True},
+                            {'account_id': self.cash_pm1.journal_id.default_account_id.id, 'partner_id': False, 'debit': 170, 'credit': 0, 'reconciled': False},
+                            {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 170, 'reconciled': True},
                         ]
-                    }),
+                    },
+                    {
+                        'amount': 200,
+                        'line_ids': [
+                            {'account_id': self.cash_pm1.journal_id.default_account_id.id, 'partner_id': False, 'debit': 200, 'credit': 0, 'reconciled': False},
+                            {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 200, 'reconciled': True},
+                        ]
+                    },
                 ],
                 'bank_payments': [
-                    ((220, ), {
+                    {
+                        'amount': 220,
                         'line_ids': [
                             {'account_id': self.bank_pm1.outstanding_account_id.id, 'partner_id': False, 'debit': 220, 'credit': 0, 'reconciled': False},
                             {'account_id': self.bank_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 220, 'reconciled': True},
                         ]
-                    }),
+                    },
                 ],
             },
         })
@@ -170,8 +179,7 @@ class TestPoSBasicConfig(TestPoSCommon):
         +---------------------+---------+
         | sale                |    -560 |
         | pos receivable cash |     150 |
-        | pos receivable bank |     540 |
-        | receivable          |    -130 |
+        | pos receivable bank |     410 |
         +---------------------+---------+
         | Total balance       |     0.0 |
         +---------------------+---------+
@@ -249,18 +257,19 @@ class TestPoSBasicConfig(TestPoSCommon):
                 '00100-010-0003': {
                     'invoice': {
                         'line_ids': [
-                            {'account_id': self.sales_account.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': False},
                             {'account_id': self.sales_account.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 30, 'reconciled': False},
+                            {'account_id': self.sales_account.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': False},
                             {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 130, 'credit': 0, 'reconciled': True},
                         ]
                     },
                     'payments': [
-                        ((self.bank_pm1, 130), {
+                        {
+                            'payment_method_id': self.bank_pm1,
                             'line_ids': [
+                                {'account_id': self.bank_pm1.outstanding_account_id.id, 'partner_id': self.customer.id, 'debit': 130, 'credit': 0, 'reconciled': False},
                                 {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 130, 'reconciled': True},
-                                {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 130, 'credit': 0, 'reconciled': False},
                             ]
-                        }),
+                        },
                     ],
                 }
             },
@@ -269,26 +278,34 @@ class TestPoSBasicConfig(TestPoSCommon):
                 'session_journal_entry': {
                     'line_ids': [
                         {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 560, 'reconciled': False},
-                        {'account_id': self.bank_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 540, 'credit': 0, 'reconciled': True},
                         {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 150, 'credit': 0, 'reconciled': True},
-                        {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 0, 'credit': 130, 'reconciled': True},
+                        {'account_id': self.bank_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 410, 'credit': 0, 'reconciled': True},
                     ],
                 },
                 'cash_statement': [
-                    ((150, ), {
+                    {
+                        'amount': 150,
                         'line_ids': [
                             {'account_id': self.cash_pm1.journal_id.default_account_id.id, 'partner_id': False, 'debit': 150, 'credit': 0, 'reconciled': False},
                             {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 150, 'reconciled': True},
                         ]
-                    }),
+                    },
                 ],
                 'bank_payments': [
-                    ((540, ), {
+                    {
+                        'amount': 130,
                         'line_ids': [
-                            {'account_id': self.bank_pm1.outstanding_account_id.id, 'partner_id': False, 'debit': 540, 'credit': 0, 'reconciled': False},
-                            {'account_id': self.bank_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 540, 'reconciled': True},
+                            {'account_id': self.bank_pm1.outstanding_account_id.id, 'partner_id': self.customer.id, 'debit': 130, 'credit': 0, 'reconciled': False},
+                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 130, 'reconciled': True},
                         ]
-                    }),
+                    },
+                    {
+                        'amount': 410,
+                        'line_ids': [
+                            {'account_id': self.bank_pm1.outstanding_account_id.id, 'partner_id': False, 'debit': 410, 'credit': 0, 'reconciled': False},
+                            {'account_id': self.bank_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 410, 'reconciled': True},
+                        ]
+                    },
                 ],
             },
         })
@@ -309,7 +326,10 @@ class TestPoSBasicConfig(TestPoSCommon):
                         ]
                     },
                     'payments': [
-                        ((self.bank_pm1, 0), False),
+                        {
+                            'payment_method_id': self.bank_pm1,
+                            'line_ids': [],
+                        },
                     ],
                 }
             },
@@ -354,23 +374,35 @@ class TestPoSBasicConfig(TestPoSCommon):
                             {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': True},
                         ]
                     },
-                    'payments': [
-                        ((self.cash_pm1, 100), {
+                    'cash_statement': [
+                        {
+                            'amount': 100,
                             'line_ids': [
+                                {'account_id': self.cash_pm1.journal_id.default_account_id.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': False},
                                 {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': True},
-                                {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 100, 'credit': 0, 'reconciled': False},
-                            ]
-                        }),
-                    ],
+                            ],
+                        }
+                    ]
                 }
             },
             'journal_entries_after_closing': {
-                'session_journal_entry': {
-                    'line_ids': [
-                        {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 0, 'credit': 0, 'reconciled': True},
-                    ],
-                },
-                'cash_statement': [],
+                'session_journal_entry': {},
+                'cash_statement': [
+                    {
+                        'amount': -100,
+                        'line_ids': [
+                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': True},
+                            {'account_id': self.cash_pm1.journal_id.default_account_id.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': False},
+                        ],
+                    },
+                    {
+                        'amount': 100,
+                        'line_ids': [
+                            {'account_id': self.cash_pm1.journal_id.default_account_id.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': False},
+                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': True},
+                        ],
+                    },
+                ],
                 'bank_payments': [],
             },
         })
@@ -403,8 +435,10 @@ class TestPoSBasicConfig(TestPoSCommon):
         +---------------------+---------+
         | account             | balance |
         +---------------------+---------+
-        | sale (sales)        |    -210 |
-        | sale (refund)       |     100 |
+        | pos receivable cash |    -100 |
+        | sales               |    -210 |
+        | sales               |     100 |
+        | pos receivable cash |     100 |
         | pos receivable bank |     110 |
         +---------------------+---------+
         | Total balance       |     0.0 |
@@ -480,19 +514,37 @@ class TestPoSBasicConfig(TestPoSCommon):
             'journal_entries_after_closing': {
                 'session_journal_entry': {
                     'line_ids': [
+                        {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 100, 'reconciled': True},
                         {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 210, 'reconciled': False},
                         {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 100, 'credit': 0, 'reconciled': False},
+                        {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 100, 'credit': 0, 'reconciled': True},
                         {'account_id': self.bank_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 110, 'credit': 0, 'reconciled': True},
                     ],
                 },
-                'cash_statement': [],
+                'cash_statement': [
+                    {
+                        'amount': -100,
+                        'line_ids': [
+                            {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 100, 'credit': 0, 'reconciled': True},
+                            {'account_id': self.cash_split_pm1.journal_id.default_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 100, 'reconciled': False},
+                        ]
+                    },
+                    {
+                        'amount': 100,
+                        'line_ids': [
+                            {'account_id': self.cash_split_pm1.journal_id.default_account_id.id, 'partner_id': False, 'debit': 100, 'credit': 0, 'reconciled': False},
+                            {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 100, 'reconciled': True},
+                        ]
+                    },
+                ],
                 'bank_payments': [
-                    ((110, ), {
+                    {
+                        'amount': 110,
                         'line_ids': [
                             {'account_id': self.bank_pm1.outstanding_account_id.id, 'partner_id': False, 'debit': 110, 'credit': 0, 'reconciled': False},
                             {'account_id': self.bank_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 110, 'reconciled': True},
                         ]
-                    }),
+                    },
                 ],
             },
         })
@@ -511,38 +563,40 @@ class TestPoSBasicConfig(TestPoSCommon):
                     'line_ids': [
                         {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 590, 'reconciled': False},
                         {'account_id': self.bank_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 300, 'credit': 0, 'reconciled': True},
-                        {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': True},
-                        {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 70, 'credit': 0, 'reconciled': True},
-                        {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 120, 'credit': 0, 'reconciled': True},
+                        {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 290, 'credit': 0, 'reconciled': True},
                     ],
                 },
                 'cash_statement': [
-                    ((100, ), {
-                        'line_ids': [
-                            {'account_id': self.cash_split_pm1.journal_id.default_account_id.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': False},
-                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': True},
-                        ]
-                    }),
-                    ((70, ), {
+                    {
+                        'amount': 70,
                         'line_ids': [
                             {'account_id': self.cash_split_pm1.journal_id.default_account_id.id, 'partner_id': self.customer.id, 'debit': 70, 'credit': 0, 'reconciled': False},
                             {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 70, 'reconciled': True},
                         ]
-                    }),
-                    ((120, ), {
+                    },
+                    {
+                        'amount': 100,
+                        'line_ids': [
+                            {'account_id': self.cash_split_pm1.journal_id.default_account_id.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': False},
+                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': True},
+                        ]
+                    },
+                    {
+                        'amount': 120,
                         'line_ids': [
                             {'account_id': self.cash_split_pm1.journal_id.default_account_id.id, 'partner_id': self.customer.id, 'debit': 120, 'credit': 0, 'reconciled': False},
                             {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 120, 'reconciled': True},
                         ]
-                    }),
+                    },
                 ],
                 'bank_payments': [
-                    ((300, ), {
+                    {
+                        'amount': 300,
                         'line_ids': [
                             {'account_id': self.bank_pm1.outstanding_account_id.id, 'partner_id': False, 'debit': 300, 'credit': 0, 'reconciled': False},
                             {'account_id': self.bank_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 300, 'reconciled': True},
                         ]
-                    })
+                    }
                 ],
             },
         })
@@ -550,12 +604,19 @@ class TestPoSBasicConfig(TestPoSCommon):
     def test_rounding_method(self):
         # set the cash rounding method
         self.config.cash_rounding = True
+        self.env.company.account_fiscal_country_id = self.env.ref('base.us')
+
+        profit_account = self.company['default_cash_difference_income_account_id'].copy()
+        loss_account = self.company['default_cash_difference_expense_account_id'].copy()
+        profit_account.name = "Rounding difference (Gain)"
+        loss_account.name = "Rounding difference (Loss)"
+
         self.config.rounding_method = self.env['account.cash.rounding'].create({
             'name': 'add_invoice_line',
             'rounding': 0.05,
             'strategy': 'add_invoice_line',
-            'profit_account_id': self.company['default_cash_difference_income_account_id'].copy().id,
-            'loss_account_id': self.company['default_cash_difference_expense_account_id'].copy().id,
+            'profit_account_id': profit_account.id,
+            'loss_account_id': loss_account.id,
             'rounding_method': 'HALF-UP',
         })
 
@@ -585,9 +646,9 @@ class TestPoSBasicConfig(TestPoSCommon):
         +---------------------+---------+
         | account             | balance |
         +---------------------+---------+
-        | sale                | -596,56 |
-        | pos receivable bank |  516,64 |
-        | Rounding applied    |   -0,01 |
+        | sale                | -529.72 |
+        | pos receivable bank |  529,75 |
+        | Rounding difference |   -0,03 |
         +---------------------+---------+
         | Total balance       |     0.0 |
         +---------------------+---------+
@@ -595,17 +656,15 @@ class TestPoSBasicConfig(TestPoSCommon):
 
         # create orders
         orders = []
-
-        # create orders
-        orders = []
         orders.append(self.create_ui_order_data(
             [(self.product4, 3), (self.product2, 20)],
-            payments=[(self.bank_pm1, 429.90)]
+            payments=[(self.bank_pm1, 429.90)],
         ))
 
         orders.append(self.create_ui_order_data(
             [(self.product1, 6), (self.product4, 4)],
-            payments=[(self.bank_pm1, 99.85)]
+            payments=[(self.bank_pm1, 99.85)],
+            customer=self.partner_a,
         ))
 
         # sync orders
@@ -620,8 +679,23 @@ class TestPoSBasicConfig(TestPoSCommon):
         # check values after the session is closed
         session_account_move = self.pos_session.move_id
 
-        rounding_line = session_account_move.line_ids.filtered(lambda line: line.name == 'Rounding line')
+        rounding_line = session_account_move.line_ids.filtered(lambda line: line.account_id == profit_account)
         self.assertAlmostEqual(rounding_line.credit, 0.03, msg='The credit should be equals to 0.03')
+
+        order = self.env['pos.order'].browse(order[0]['id'])
+        invoice = self.env['account.move'].browse(order.action_pos_order_invoice()['res_id'])
+        self.assertRecordValues(invoice.line_ids.sorted('balance'), [
+            # pylint: disable=bad-whitespace
+            {'balance': -60.0,  'display_type': 'product'},
+            {'balance': -39.84, 'display_type': 'product'},
+            {'balance': -0.01,  'display_type': 'product'},
+            {'balance': 99.85,  'display_type': 'payment_term'},
+        ])
+        self.assertRecordValues(invoice, [{
+            'amount_tax': order.amount_tax,
+            'amount_total': order.amount_paid,
+            'amount_residual': 0.0,
+        }])
 
     def test_correct_partner_on_invoice_receivables(self):
         self._run_test({
@@ -636,8 +710,6 @@ class TestPoSBasicConfig(TestPoSCommon):
                 {'pos_order_lines_ui_args': [(self.product99, 1)], 'payments':[(self.cash_split_pm1, 99)], 'customer': self.customer, 'is_invoiced': False, 'uid': '00100-010-0007'},
                 {'pos_order_lines_ui_args': [(self.product99, 1)], 'payments':[(self.bank_split_pm1, 99)], 'customer': self.customer, 'is_invoiced': False, 'uid': '00100-010-0008'},
                 {'pos_order_lines_ui_args': [(self.product1, 10)], 'payments':[(self.bank_pm1, 100)], 'customer': self.other_customer, 'is_invoiced': True, 'uid': '00100-010-0009'},
-                {'pos_order_lines_ui_args': [(self.product1, 10)], 'payments':[(self.bank_pm1, 100)], 'customer': self.other_customer, 'is_invoiced': True, 'uid': '00100-010-0010'},
-                {'pos_order_lines_ui_args': [(self.product1, 10)], 'payments':[(self.bank_pm1, 100)], 'customer': self.customer, 'is_invoiced': True, 'uid': '00100-010-0011'},
             ],
             'journal_entries_before_closing': {
                 '00100-010-0001': {
@@ -647,14 +719,15 @@ class TestPoSBasicConfig(TestPoSCommon):
                             {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': True},
                         ]
                     },
-                    'payments': [
-                        ((self.cash_pm1, 100), {
+                    'cash_statement': [
+                        {
+                            'amount': 100,
                             'line_ids': [
+                                {'account_id': self.cash_pm1.journal_id.default_account_id.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': False},
                                 {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': True},
-                                {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 100, 'credit': 0, 'reconciled': False},
-                            ]
-                        }),
-                    ],
+                            ],
+                        }
+                    ]
                 },
                 '00100-010-0002': {
                     'invoice': {
@@ -663,14 +736,13 @@ class TestPoSBasicConfig(TestPoSCommon):
                             {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': True},
                         ]
                     },
-                    'payments': [
-                        ((self.bank_pm1, 100), {
-                            'line_ids': [
-                                {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': True},
-                                {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 100, 'credit': 0, 'reconciled': False},
-                            ]
-                        }),
-                    ],
+                    'payments': [{
+                        'payment_method_id': self.bank_pm1,
+                        'line_ids': [
+                            {'account_id': self.bank_pm1.outstanding_account_id.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': False},
+                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': True},
+                        ]
+                    }]
                 },
                 '00100-010-0003': {
                     'invoice': {
@@ -679,14 +751,13 @@ class TestPoSBasicConfig(TestPoSCommon):
                             {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': True},
                         ]
                     },
-                    'payments': [
-                        ((self.cash_split_pm1, 100), {
-                            'line_ids': [
-                                {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': True},
-                                {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 100, 'credit': 0, 'reconciled': False},
-                            ]
-                        }),
-                    ],
+                    'cash_statement': [{
+                        'amount': 100,
+                        'line_ids': [
+                            {'account_id': self.cash_pm1.journal_id.default_account_id.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': False},
+                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': True},
+                        ],
+                    }]
                 },
                 '00100-010-0004': {
                     'invoice': {
@@ -695,14 +766,13 @@ class TestPoSBasicConfig(TestPoSCommon):
                             {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': True},
                         ]
                     },
-                    'payments': [
-                        ((self.bank_split_pm1, 100), {
-                            'line_ids': [
-                                {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': True},
-                                {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 100, 'credit': 0, 'reconciled': False},
-                            ]
-                        }),
-                    ],
+                    'payments': [{
+                        'payment_method_id': self.bank_split_pm1,
+                        'line_ids': [
+                            {'account_id': self.bank_pm1.outstanding_account_id.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': False},
+                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': True},
+                        ]
+                    }]
                 },
                 '00100-010-0009': {
                     'invoice': {
@@ -711,103 +781,92 @@ class TestPoSBasicConfig(TestPoSCommon):
                             {'account_id': self.other_receivable_account.id, 'partner_id': self.other_customer.id, 'debit': 100, 'credit': 0, 'reconciled': True},
                         ]
                     },
-                    'payments': [
-                        ((self.bank_pm1, 100), {
-                            'line_ids': [
-                                {'account_id': self.other_receivable_account.id, 'partner_id': self.other_customer.id, 'debit': 0, 'credit': 100, 'reconciled': True},
-                                {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 100, 'credit': 0, 'reconciled': False},
-                            ]
-                        }),
-                    ],
-                },
-                '00100-010-0010': {
-                    'invoice': {
+                    'payments': [{
+                        'payment_method_id': self.bank_pm1,
                         'line_ids': [
-                            {'account_id': self.sales_account.id, 'partner_id': self.other_customer.id, 'debit': 0, 'credit': 100, 'reconciled': False},
-                            {'account_id': self.other_receivable_account.id, 'partner_id': self.other_customer.id, 'debit': 100, 'credit': 0, 'reconciled': True},
+                            {'account_id': self.bank_pm1.outstanding_account_id.id, 'partner_id': self.other_customer.id, 'debit': 100, 'credit': 0, 'reconciled': False},
+                            {'account_id': self.other_receivable_account.id, 'partner_id': self.other_customer.id, 'debit': 0, 'credit': 100, 'reconciled': True},
                         ]
-                    },
-                    'payments': [
-                        ((self.bank_pm1, 100), {
-                            'line_ids': [
-                                {'account_id': self.other_receivable_account.id, 'partner_id': self.other_customer.id, 'debit': 0, 'credit': 100, 'reconciled': True},
-                                {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 100, 'credit': 0, 'reconciled': False},
-                            ]
-                        }),
-                    ],
-                },
-                '00100-010-0011': {
-                    'invoice': {
-                        'line_ids': [
-                            {'account_id': self.sales_account.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': False},
-                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': True},
-                        ]
-                    },
-                    'payments': [
-                        ((self.bank_pm1, 100), {
-                            'line_ids': [
-                                {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': True},
-                                {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 100, 'credit': 0, 'reconciled': False},
-                            ]
-                        }),
-                    ],
+                    }]
                 },
             },
             'journal_entries_after_closing': {
                 'session_journal_entry': {
                     'line_ids': [
                         {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 398, 'reconciled': False},
-                        {'account_id': self.bank_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 500, 'credit': 0, 'reconciled': True},
-                        {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': True},
+                        {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 100, 'credit': 0, 'reconciled': True},
+                        {'account_id': self.bank_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 100, 'credit': 0, 'reconciled': True},
                         {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 99, 'credit': 0, 'reconciled': True},
-                        {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': True},
                         {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 99, 'credit': 0, 'reconciled': True},
-                        {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 200, 'credit': 0, 'reconciled': True},
-                        {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 0, 'credit': 100, 'reconciled': True},
-                        {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 0, 'credit': 400, 'reconciled': True},
-                        {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 0, 'credit': 100, 'reconciled': True},
-                        {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 0, 'credit': 100, 'reconciled': True},
                     ],
                 },
                 'cash_statement': [
-                    ((100, ), {
-                        'line_ids': [
-                            {'account_id': self.cash_split_pm1.journal_id.default_account_id.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': False},
-                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': True},
-                        ]
-                    }),
-                    ((99, ), {
+                    {
+                        'amount': 99,
                         'line_ids': [
                             {'account_id': self.cash_split_pm1.journal_id.default_account_id.id, 'partner_id': self.customer.id, 'debit': 99, 'credit': 0, 'reconciled': False},
                             {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 99, 'reconciled': True},
                         ]
-                    }),
-                    ((200, ), {
+                    },
+                    {
+                        'amount': 100,
                         'line_ids': [
-                            {'account_id': self.cash_pm1.journal_id.default_account_id.id, 'partner_id': False, 'debit': 200, 'credit': 0, 'reconciled': False},
-                            {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 200, 'reconciled': True},
-                        ]
-                    }),
-                ],
-                'bank_payments': [
-                    ((100, ), {
-                        'line_ids': [
-                            {'account_id': self.bank_split_pm1.outstanding_account_id.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': False},
+                            {'account_id': self.cash_split_pm1.journal_id.default_account_id.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': False},
                             {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': True},
                         ]
-                    }),
-                    ((99, ), {
+                    },
+                    {
+                        'amount': 100,
+                        'line_ids': [
+                            {'account_id': self.cash_split_pm1.journal_id.default_account_id.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': False},
+                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': True},
+                        ]
+                    },
+                    {
+                        'amount': 100,
+                        'line_ids': [
+                            {'account_id': self.cash_split_pm1.journal_id.default_account_id.id, 'partner_id': False, 'debit': 100, 'credit': 0, 'reconciled': False},
+                            {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 100, 'reconciled': True},
+                        ]
+                    },
+
+                ],
+                'bank_payments': [
+                    {
+                        'amount': 99,
                         'line_ids': [
                             {'account_id': self.bank_split_pm1.outstanding_account_id.id, 'partner_id': self.customer.id, 'debit': 99, 'credit': 0, 'reconciled': False},
                             {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 99, 'reconciled': True},
                         ]
-                    }),
-                    ((500, ), {
+                    },
+                    {
+                        'amount': 100,
                         'line_ids': [
-                            {'account_id': self.bank_pm1.outstanding_account_id.id, 'partner_id': False, 'debit': 500, 'credit': 0, 'reconciled': False},
-                            {'account_id': self.bank_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 500, 'reconciled': True},
+                            {'account_id': self.bank_pm1.outstanding_account_id.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': False},
+                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': True},
                         ]
-                    }),
+                    },
+                    {
+                        'amount': 100,
+                        'line_ids': [
+                            {'account_id': self.bank_split_pm1.outstanding_account_id.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': False},
+                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': True},
+                        ]
+                    },
+                    {
+                        'amount': 100,
+                        'line_ids': [
+                            {'account_id': self.bank_pm1.outstanding_account_id.id, 'partner_id': False, 'debit': 100, 'credit': 0, 'reconciled': False},
+                            {'account_id': self.bank_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 100, 'reconciled': True},
+                        ]
+                    },
+                    {
+                        'amount': 100,
+                        'line_ids': [
+                            {'account_id': self.bank_pm1.outstanding_account_id.id, 'partner_id': self.other_customer.id, 'debit': 100, 'credit': 0, 'reconciled': False},
+                            {'account_id': self.other_receivable_account.id, 'partner_id': self.other_customer.id, 'debit': 0, 'credit': 100, 'reconciled': True},
+                        ]
+                    },
                 ],
             },
         })
@@ -884,47 +943,3 @@ class TestPoSBasicConfig(TestPoSCommon):
 
         # calling load_pos_data should not raise an error
         self.pos_session.load_pos_data()
-
-    def test_invoice_past_order(self):
-        # create 1 uninvoiced order then close the session
-        self._run_test({
-            'payment_methods': self.cash_pm1 | self.bank_pm1,
-            'orders': [
-                {'pos_order_lines_ui_args': [(self.product99, 1)], 'payments': [(self.bank_pm1, 99)], 'customer': False, 'is_invoiced': False, 'uid': '00100-010-0001'},
-            ],
-            'journal_entries_before_closing': {},
-            'journal_entries_after_closing': {
-                'session_journal_entry': {
-                    'line_ids': [
-                        {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 99, 'reconciled': False},
-                        {'account_id': self.bank_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 99, 'credit': 0, 'reconciled': True},
-                    ],
-                },
-                'cash_statement': [],
-                'bank_payments': [
-                    ((99, ), {
-                        'line_ids': [
-                            {'account_id': self.bank_pm1.outstanding_account_id.id, 'partner_id': False, 'debit': 99, 'credit': 0, 'reconciled': False},
-                            {'account_id': self.bank_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 99, 'reconciled': True},
-                        ]
-                    })
-                ],
-            },
-        })
-
-        # keep reference of the closed session
-        closed_session = self.pos_session
-        self.assertTrue(closed_session.state == 'closed', 'Session should be closed.')
-
-        order_to_invoice = closed_session.order_ids[0]
-        test_customer = self.env['res.partner'].create({'name': 'Test Customer'})
-
-        with freeze_time(fields.Datetime.now() + relativedelta(days=2)):
-            # create new session after 2 days
-            self.open_new_session(0)
-            # invoice the uninvoiced order
-            order_to_invoice.write({'partner_id': test_customer.id})
-            order_to_invoice.action_pos_order_invoice()
-            # check invoice
-            self.assertTrue(order_to_invoice.account_move, 'Invoice should be created.')
-            self.assertTrue(order_to_invoice.account_move.invoice_date != order_to_invoice.date_order.date(), 'Invoice date should not be the same as order date since the session was closed.')

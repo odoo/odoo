@@ -19,6 +19,7 @@ class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
 
         cls.company_data['company'].write({
             'point_of_sale_update_stock_quantities': 'real',
+            'country_id': cls.env.ref('base.us').id,
         })
 
         cls.AccountBankStatement = cls.env['account.bank.statement']
@@ -619,7 +620,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         if before_closing_cb:
             before_closing_cb()
             _logger.info('DONE: Call of before_closing_cb.')
-        self._check_invoice_journal_entries(pos_session, orders_map, expected_values=args['journal_entries_before_closing'])
+        self._check_session_before_closing(pos_session, orders_map, expected_values=args['journal_entries_before_closing'])
         _logger.info('DONE: Checks for journal entries before closing the session.')
         cash_payment_method = pos_session.payment_method_ids.filtered('is_cash_count')[:1]
         total_cash_payment = sum(pos_session.mapped('order_ids.payment_ids').filtered(lambda payment: payment.payment_method_id.id == cash_payment_method.id).mapped('amount'))
@@ -629,7 +630,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         if after_closing_cb:
             after_closing_cb()
             _logger.info('DONE: Call of after_closing_cb.')
-        self._check_session_journal_entries(pos_session, expected_values=args['journal_entries_after_closing'])
+        self._check_session_after_closing(pos_session, expected_values=args['journal_entries_after_closing'])
         _logger.info('DONE: Checks for journal entries after closing the session.')
 
     def _start_pos_session(self, payment_methods, opening_cash):
@@ -646,10 +647,8 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             result[params['uid']] = self.env['pos.order'].browse([order['id'] for order in self.env['pos.order'].create_from_ui([order_data])])
         return result
 
-    def _check_invoice_journal_entries(self, pos_session, orders_map, expected_values):
+    def _check_session_before_closing(self, pos_session, orders_map, expected_values):
         '''Checks the invoice, together with the payments, from each invoiced order.'''
-        currency_rounding = pos_session.currency_id.rounding
-
         for uid in orders_map:
             order = orders_map[uid]
             if not order.is_invoiced:
@@ -657,60 +656,61 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             invoice = order.account_move
             # allow not checking the invoice since pos is not creating the invoices
             if expected_values[uid].get('invoice'):
-                self._assert_account_move(invoice, expected_values[uid]['invoice'])
-                _logger.info('DONE: Check of invoice for order %s.', uid)
+                self.assertRecordValues(
+                    invoice.line_ids.sorted(lambda line: (line.partner_id, line.debit, line.credit)),
+                    expected_values[uid]['invoice']['line_ids']
+                )
 
             for pos_payment in order.payment_ids:
-                if pos_payment.payment_method_id == self.pay_later_pm:
-                    # Skip the pay later payments since there are no journal entries
-                    # for them when invoicing.
-                    continue
+                if pos_payment.payment_method_id.type == 'cash':
+                    if not pos_payment.statement_line_id:
+                        # we might have multiple pos_payment linked to a single cash_statement_line, see test_14b
+                        continue
+                    # cash statement lines should have been created
+                    expected_vals = expected_values[uid]['cash_statement'].pop(0)
+                    self.assertEqual(pos_payment.statement_line_id.amount, expected_vals['amount'])
+                    self.assertRecordValues(
+                        pos_payment.statement_line_id.move_id.line_ids.sorted(lambda l: -l.balance),
+                        expected_vals['line_ids']
+                    )
 
-                # This predicate is used to match the pos_payment's journal entry to the
-                # list of payments specified in the 'payments' field of the `_run_test`
-                # args.
-                def predicate(args):
-                    payment_method, amount = args
-                    first = payment_method == pos_payment.payment_method_id
-                    second = tools.float_is_zero(pos_payment.amount - amount, precision_rounding=currency_rounding)
-                    return first and second
+                if pos_payment.payment_method_id.type == 'bank':
+                    expected_vals = expected_values[uid]['payments'].pop(0)
+                    self.assertEqual(pos_payment.payment_method_id, expected_vals['payment_method_id'])
+                    if pos_payment.account_move_id.line_ids or expected_vals['line_ids']:
+                        self.assertRecordValues(
+                            pos_payment.account_move_id.line_ids.sorted(lambda l: -l.balance),
+                            expected_vals['line_ids']
+                        )
 
-                self._find_then_assert_values(pos_payment.account_move_id, expected_values[uid]['payments'], predicate)
-                _logger.info('DONE: Check of invoice payment (%s, %s) for order %s.', pos_payment.payment_method_id.name, pos_payment.amount, uid)
+    def _check_session_after_closing(self, pos_session, expected_values):
+        """Checks the journal entries after closing the session excluding entries checked in
+        `_check_session_before_closing`.
+        """
+        # check closing entry
+        if expected_values['session_journal_entry'] or pos_session.move_id.line_ids:
+            self.assertRecordValues(
+                pos_session.move_id.line_ids.sorted(lambda line: (line.partner_id, line.debit, line.credit)),
+                expected_values['session_journal_entry']['line_ids']
+            )
 
-    def _check_session_journal_entries(self, pos_session, expected_values):
-        '''Checks the journal entries after closing the session excluding entries checked in `_check_invoice_journal_entries`.'''
-        currency_rounding = pos_session.currency_id.rounding
+        # check bank statement lines
+        # do not check the cash statement line for the cash difference observed (the amount in the cash register is
+        # not filled, so there's always a cash difference)
+        stmt_lines = pos_session.statement_line_ids.filtered(lambda stmt: not any(["Cash difference observed" in name for name in stmt.line_ids.mapped('name')]))
+        self.assertEqual(len(stmt_lines), len(expected_values['cash_statement']))
+        for statement_line, expected_vals in zip(
+                stmt_lines.sorted('amount'),
+                expected_values['cash_statement']
+        ):
+            self.assertEqual(statement_line.currency_id.compare_amounts(statement_line.amount, expected_vals['amount']), 0)
+            self.assertRecordValues(statement_line.line_ids.sorted(lambda l: -l.balance), expected_vals['line_ids'])
 
-        # check expected session journal entry
-        self._assert_account_move(pos_session.move_id, expected_values['session_journal_entry'])
-        _logger.info("DONE: Check of the session's account move.")
-
-        # check expected cash journal entries
-        for statement_line in pos_session.statement_line_ids:
-            def statement_line_predicate(args):
-                return tools.float_is_zero(statement_line.amount - args[0], precision_rounding=currency_rounding)
-            self._find_then_assert_values(statement_line.move_id, expected_values['cash_statement'], statement_line_predicate)
-        _logger.info("DONE: Check of cash statement lines.")
-
-        # check expected bank payments
-        for bank_payment in pos_session.bank_payment_ids:
-            def bank_payment_predicate(args):
-                return tools.float_is_zero(bank_payment.amount - args[0], precision_rounding=currency_rounding)
-            self._find_then_assert_values(bank_payment.move_id, expected_values['bank_payments'], bank_payment_predicate)
-        _logger.info("DONE: Check of bank account payments.")
-
-    def _find_then_assert_values(self, account_move, source_of_expected_vals, predicate):
-        expected_move_vals = next(move_vals for args, move_vals in source_of_expected_vals if predicate(args))
-        self._assert_account_move(account_move, expected_move_vals)
-
-    def _assert_account_move(self, account_move, expected_account_move_vals):
-        if expected_account_move_vals:
-            # We allow partial checks of the lines of the account move if `line_ids_predicate` is specified.
-            # This means that only those that satisfy the predicate are compared to the expected account move line_ids.
-            line_ids_predicate = expected_account_move_vals.pop('line_ids_predicate', lambda _: True)
-            self.assertRecordValues(account_move.line_ids.filtered(line_ids_predicate), expected_account_move_vals.pop('line_ids'))
-            self.assertRecordValues(account_move, [expected_account_move_vals])
-        else:
-            # if the expected_account_move_vals is falsy, the account_move should be falsy.
-            self.assertFalse(account_move)
+        # check payment's account move
+        self.assertEqual(len(pos_session.order_ids.payment_ids.account_move_id), len(expected_values['bank_payments']))
+        for move, expected_vals in zip(
+                pos_session.order_ids.payment_ids.account_move_id.sorted('amount_total'),
+                expected_values['bank_payments']
+        ):
+            self.assertEqual(move.currency_id.compare_amounts(move.amount_total, expected_vals['amount']), 0)
+            self.assertRecordValues(move.line_ids.sorted(lambda l: -l.balance), expected_vals['line_ids'])

@@ -71,15 +71,15 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
 
         Expected Result
         ===============
-        +---------------------+---------+-----------------+
-        | account             | balance | amount_currency |
-        +---------------------+---------+-----------------+
-        | sale_account        | -1119.6 |         -559.80 |
-        | pos receivable bank |   279.9 |          139.95 |
-        | pos receivable cash |   839.7 |          419.85 |
-        +---------------------+---------+-----------------+
-        | Total balance       |     0.0 |            0.00 |
-        +---------------------+---------+-----------------+
+        +---------------------------+---------+-----------------+
+        | account                   | balance | amount_currency |
+        +---------------------------+---------+-----------------+
+        | sale_account              | -1119.6 |         -559.80 |
+        | Total Bank Other payments |   279.9 |          139.95 |
+        | Total Cash Other payments |   839.7 |          419.85 |
+        +---------------------------+---------+-----------------+
+        | Total balance             |     0.0 |            0.00 |
+        +---------------------------+---------+-----------------+
         """
 
         def _before_closing_cb():
@@ -106,20 +106,29 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
                     ],
                 },
                 'cash_statement': [
-                    ((419.85, ), {
+                    {
+                        'amount': 89.95,
                         'line_ids': [
-                            {'account_id': self.cash_pm2.journal_id.default_account_id.id, 'partner_id': False, 'debit': 839.7, 'credit': 0, 'reconciled': False, 'amount_currency': 419.85},
-                            {'account_id': self.cash_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 839.7, 'reconciled': True, 'amount_currency': -419.85},
+                            {'account_id': self.cash_pm2.journal_id.default_account_id.id, 'partner_id': False, 'debit': 89.95*2, 'credit': 0, 'reconciled': False, 'amount_currency': 89.95},
+                            {'account_id': self.cash_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 89.95*2, 'reconciled': True, 'amount_currency': -89.95},
                         ]
-                    }),
+                    },
+                    {
+                        'amount': 329.9,
+                        'line_ids': [
+                            {'account_id': self.cash_pm2.journal_id.default_account_id.id, 'partner_id': False, 'debit': 329.9*2, 'credit': 0, 'reconciled': False, 'amount_currency': 329.9},
+                            {'account_id': self.cash_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 329.9*2, 'reconciled': True, 'amount_currency': -329.9},
+                        ]
+                    },
                 ],
                 'bank_payments': [
-                    ((139.95, ), {
+                    {
+                        'amount': 139.95,
                         'line_ids': [
                             {'account_id': self.bank_pm2.outstanding_account_id.id, 'partner_id': False, 'debit': 279.9, 'credit': 0, 'reconciled': False, 'amount_currency': 139.95},
                             {'account_id': self.bank_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 279.9, 'reconciled': True, 'amount_currency': -139.95},
                         ]
-                    }),
+                    }
                 ],
             },
         })
@@ -149,10 +158,7 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
         | account             | balance | amount_currency |
         +---------------------+---------+-----------------+
         | sale_account        |  -659.8 |         -329.90 |
-        | pos receivable bank |   279.9 |          139.95 |
-        | pos receivable cash |   839.7 |          419.85 |
-        | invoice receivable  |  -179.9 |          -89.95 |
-        | invoice receivable  |  -279.9 |         -139.95 |
+        | POS receivable cash |   659.8 |          329.90 |
         +---------------------+---------+-----------------+
         | Total balance       |     0.0 |            0.00 |
         +---------------------+---------+-----------------+
@@ -174,23 +180,25 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
             'before_closing_cb': _before_closing_cb,
             'journal_entries_before_closing': {
                 '00100-010-0002': {
-                    'payments': [
-                        ((self.cash_pm2, 89.95), {
+                    'cash_statement': [
+                        {
+                            'amount': 89.95,
                             'line_ids': [
+                                {'account_id': self.cash_pm2.journal_id.default_account_id.id, 'partner_id': self.customer.id, 'debit': 179.90, 'credit': 0, 'reconciled': False, 'amount_currency': 89.95},
                                 {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 179.90, 'reconciled': True, 'amount_currency': -89.95},
-                                {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 179.90, 'credit': 0, 'reconciled': False, 'amount_currency': 89.95},
-                            ]
-                        }),
-                    ],
+                            ],
+                        }
+                    ]
                 },
                 '00100-010-0003': {
                     'payments': [
-                        ((self.bank_pm2, 139.95), {
+                        {
+                            'payment_method_id': self.bank_pm2,
                             'line_ids': [
+                                {'account_id': self.bank_pm2.outstanding_account_id.id, 'partner_id': self.customer.id, 'debit': 279.9, 'credit': 0, 'reconciled': False, 'amount_currency': 139.95},
                                 {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 279.9, 'reconciled': True, 'amount_currency': -139.95},
-                                {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 279.9, 'credit': 0, 'reconciled': False, 'amount_currency': 139.95},
                             ]
-                        }),
+                        },
                     ],
                 },
             },
@@ -198,27 +206,33 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
                 'session_journal_entry': {
                     'line_ids': [
                         {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 659.8, 'reconciled': False, 'amount_currency': -329.90},
-                        {'account_id': self.bank_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 279.9, 'credit': 0, 'reconciled': True, 'amount_currency': 139.95},
-                        {'account_id': self.cash_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 839.7, 'credit': 0, 'reconciled': True, 'amount_currency': 419.85},
-                        {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 0, 'credit': 179.90, 'reconciled': True, 'amount_currency': -89.95},
-                        {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 0, 'credit': 279.9, 'reconciled': True, 'amount_currency': -139.95},
+                        {'account_id': self.cash_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 659.8, 'credit': 0, 'reconciled': True, 'amount_currency': 329.90},
                     ],
                 },
                 'cash_statement': [
-                    ((419.85, ), {
+                    {
+                        'amount': 89.95,
                         'line_ids': [
-                            {'account_id': self.cash_pm2.journal_id.default_account_id.id, 'partner_id': False, 'debit': 839.7, 'credit': 0, 'reconciled': False, 'amount_currency': 419.85},
-                            {'account_id': self.cash_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 839.7, 'reconciled': True, 'amount_currency': -419.85},
-                        ]
-                    }),
+                            {'account_id': self.cash_pm2.journal_id.default_account_id.id, 'partner_id': self.customer.id, 'debit': 179.90, 'credit': 0, 'reconciled': False, 'amount_currency': 89.95},
+                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 179.90, 'reconciled': True, 'amount_currency': -89.95},
+                        ],
+                    },
+                    {
+                        'amount': 329.9,
+                        'line_ids': [
+                            {'account_id': self.cash_pm2.journal_id.default_account_id.id, 'partner_id': False, 'debit': 659.8, 'credit': 0, 'reconciled': False, 'amount_currency': 329.9},
+                            {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 659.8, 'reconciled': True, 'amount_currency': -329.9},
+                        ],
+                    }
                 ],
                 'bank_payments': [
-                    ((139.95, ), {
+                    {
+                        'amount': 139.95,
                         'line_ids': [
-                            {'account_id': self.bank_pm2.outstanding_account_id.id, 'partner_id': False, 'debit': 279.9, 'credit': 0, 'reconciled': False, 'amount_currency': 139.95},
-                            {'account_id': self.bank_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 279.9, 'reconciled': True, 'amount_currency': -139.95},
+                            {'account_id': self.bank_pm2.outstanding_account_id.id, 'partner_id': self.customer.id, 'debit': 279.9, 'credit': 0, 'reconciled': False, 'amount_currency': 139.95},
+                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 279.9, 'reconciled': True, 'amount_currency': -139.95},
                         ]
-                    }),
+                    },
                 ],
             },
         })
@@ -272,19 +286,20 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
             'journal_entries_after_closing': {
                 'session_journal_entry': {
                     'line_ids': [
+                        {'account_id': self.output_account.id, 'partner_id': False, 'debit': 0, 'credit': 2375.99, 'reconciled': True, 'amount_currency': -2375.99},
                         {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 7153.90, 'reconciled': False, 'amount_currency': -3576.95},
                         {'account_id': self.expense_account.id, 'partner_id': False, 'debit': 2375.99, 'credit': 0, 'reconciled': False, 'amount_currency': 2375.99},
                         {'account_id': self.cash_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 7153.90, 'credit': 0, 'reconciled': True, 'amount_currency': 3576.95},
-                        {'account_id': self.output_account.id, 'partner_id': False, 'debit': 0, 'credit': 2375.99, 'reconciled': True, 'amount_currency': -2375.99},
                     ],
                 },
                 'cash_statement': [
-                    ((3576.95, ), {
+                    {
+                        'amount': amount,
                         'line_ids': [
-                            {'account_id': self.cash_pm2.journal_id.default_account_id.id, 'partner_id': False, 'debit': 7153.90, 'credit': 0, 'reconciled': False, 'amount_currency': 3576.95},
-                            {'account_id': self.cash_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 7153.90, 'reconciled': True, 'amount_currency': -3576.95},
+                            {'account_id': self.cash_pm2.journal_id.default_account_id.id, 'partner_id': False, 'debit': amount * 2, 'credit': 0, 'reconciled': False, 'amount_currency': amount},
+                            {'account_id': self.cash_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': amount * 2, 'reconciled': True, 'amount_currency': -amount},
                         ]
-                    }),
+                    } for amount in [22.65, 494.45, 1050, 2009.85]
                 ],
                 'bank_payments': [],
             },
@@ -300,18 +315,19 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
             'journal_entries_after_closing': {
                 'session_journal_entry': {
                     'line_ids': [
-                        {'account_id': self.tax_received_account.id, 'partner_id': False, 'debit': 0, 'credit': 3.43, 'reconciled': False, 'amount_currency': -1.715, 'tax_base_amount': 49},
+                        {'account_id': self.tax_received_account.id, 'partner_id': False, 'debit': 0, 'credit': 3.43, 'reconciled': False, 'amount_currency': -1.715, 'tax_base_amount': 24.5},
                         {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 49, 'reconciled': False, 'amount_currency': -24.5, 'tax_base_amount': 0},
                         {'account_id': self.cash_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 52.43, 'credit': 0, 'reconciled': True, 'amount_currency': 26.215, 'tax_base_amount': 0},
                     ],
                 },
                 'cash_statement': [
-                    ((26.215, ), {
+                    {
+                        'amount': 26.215,
                         'line_ids': [
                             {'account_id': self.cash_pm2.journal_id.default_account_id.id, 'partner_id': False, 'debit': 52.43, 'credit': 0, 'reconciled': False, 'amount_currency': 26.215},
                             {'account_id': self.cash_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 52.43, 'reconciled': True, 'amount_currency': -26.215},
                         ]
-                    }),
+                    },
                 ],
                 'bank_payments': [],
             },

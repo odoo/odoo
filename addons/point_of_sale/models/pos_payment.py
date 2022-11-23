@@ -1,4 +1,4 @@
-from odoo import api, fields, models, _
+from odoo import api, fields, models, Command, _
 from odoo.tools import formatLang, float_is_zero
 from odoo.exceptions import ValidationError
 
@@ -32,6 +32,7 @@ class PosPayment(models.Model):
     ticket = fields.Char('Payment Receipt Info')
     is_change = fields.Boolean(string='Is this payment change?', default=False)
     account_move_id = fields.Many2one('account.move')
+    statement_line_id = fields.Many2one(comodel_name='account.bank.statement.line')
 
     def name_get(self):
         res = []
@@ -63,34 +64,78 @@ class PosPayment(models.Model):
     def export_for_ui(self):
         return self.mapped(self._export_for_ui) if self else []
 
-    def _create_payment_moves(self):
-        result = self.env['account.move']
-        for payment in self:
-            order = payment.pos_order_id
-            payment_method = payment.payment_method_id
-            if payment_method.type == 'pay_later' or float_is_zero(payment.amount, precision_rounding=order.currency_id.rounding):
-                continue
-            accounting_partner = self.env["res.partner"]._find_accounting_partner(payment.partner_id)
-            pos_session = order.session_id
-            journal = pos_session.config_id.journal_id
-            payment_move = self.env['account.move'].with_context(default_journal_id=journal.id).create({
-                'journal_id': journal.id,
-                'date': fields.Date.context_today(payment),
-                'ref': _('Invoice payment for %s (%s) using %s') % (order.name, order.account_move.name, payment_method.name),
-                'pos_payment_ids': payment.ids,
-            })
-            result |= payment_move
-            payment.write({'account_move_id': payment_move.id})
-            amounts = pos_session._update_amounts({'amount': 0, 'amount_converted': 0}, {'amount': payment.amount}, payment.payment_date)
-            credit_line_vals = pos_session._credit_amounts({
-                'account_id': accounting_partner.with_company(order.company_id).property_account_receivable_id.id,  # The field being company dependant, we need to make sure the right value is received.
-                'partner_id': accounting_partner.id,
-                'move_id': payment_move.id,
-            }, amounts['amount'], amounts['amount_converted'])
-            debit_line_vals = pos_session._debit_amounts({
-                'account_id': pos_session.company_id.account_default_pos_receivable_account_id.id,
-                'move_id': payment_move.id,
-            }, amounts['amount'], amounts['amount_converted'])
-            self.env['account.move.line'].with_context(check_move_validity=False).create([credit_line_vals, debit_line_vals])
-            payment_move._post()
-        return result
+    def _prepare_aml_values_list_per_nature(self):
+        self.ensure_one()
+
+        order = self.pos_order_id
+        commercial_partner = self.partner_id.commercial_partner_id
+        company_currency = self.company_id.currency_id
+        label = _("Payment of %s using %s", order.name, self.payment_method_id.name)
+        outstanding_account = self.payment_method_id.outstanding_account_id \
+                              or self.company_id.account_journal_payment_debit_account_id
+
+        # Pay later ("Customer Account") will always link to a partner_id which always has a default receivable account
+        # Cash with split transaction may not have a commercial_partner_id so need a fallback on the account_default_pos_receivable_account_id
+        if self.payment_method_id.type == 'pay_later' or self.payment_method_id.split_transactions:
+            pos_receivable_account = commercial_partner.property_account_receivable_id \
+                                     or self.company_id.account_default_pos_receivable_account_id
+        else:
+            pos_receivable_account = self.payment_method_id.receivable_account_id \
+                                     or self.company_id.account_default_pos_receivable_account_id
+
+        amount_currency = self.amount
+        balance = self.currency_id._convert(amount_currency, company_currency, self.company_id, self.payment_date)
+        return {
+            'outstanding': {
+                'name': label,
+                'account_id': outstanding_account.id,
+                'partner_id': commercial_partner.id,
+                'currency_id': self.currency_id.id,
+                'amount_currency': amount_currency,
+                'balance': balance,
+            },
+            'receivable': {
+                'name': self.pos_order_id.name,
+                'account_id': pos_receivable_account.id,
+                'partner_id': commercial_partner.id,
+                'currency_id': self.currency_id.id,
+                'pos_payment_method_id': self.payment_method_id.id,
+                'amount_currency': -amount_currency,
+                'balance': -balance,
+            },
+            'counterpart_receivable': {
+                'name': self.pos_order_id.name,
+                'account_id': pos_receivable_account.id,
+                'partner_id': commercial_partner.id,
+                'currency_id': self.currency_id.id,
+                'pos_payment_method_id': self.payment_method_id.id,
+                'amount_currency': amount_currency,
+                'balance': balance,
+            },
+        }
+
+    def _prepare_account_payment_values(self):
+        self.ensure_one()
+        payment_amls_values_list_per_nature = self._prepare_aml_values_list_per_nature()
+        journal = self.payment_method_id.journal_id
+
+        # Replace the POS receivable account by the customer one since the payment will be reconciled with an invoice.
+        payment_amls_values_list_per_nature['receivable']['account_id'] = self.partner_id\
+            .with_company(journal.company_id).property_account_receivable_id.id
+
+        is_inbound = self.currency_id.compare_amounts(self.amount, 0.0) >= 0
+        return {
+            'date': self.payment_date,
+            'journal_id': journal.id,
+            'payment_type': 'inbound' if is_inbound else 'outbound',
+            'partner_type': 'customer',
+            'partner_id': self.partner_id.id,
+            'pos_session_id': self.session_id.id,
+            'pos_payment_method_id': self.payment_method_id.id,
+            'force_outstanding_account_id': self.payment_method_id.outstanding_account_id.id,
+            'amount': abs(self.amount),
+            'line_ids': [
+                Command.create(self.session_id._convert_to_closing_journal_item(payment_amls_values_list_per_nature['outstanding'])),
+                Command.create(self.session_id._convert_to_closing_journal_item(payment_amls_values_list_per_nature['receivable'])),
+            ],
+        }

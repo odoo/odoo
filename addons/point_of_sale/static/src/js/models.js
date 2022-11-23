@@ -2012,6 +2012,8 @@ class Orderline extends PosModel {
         var taxdetail = {};
         var product_taxes = this.pos.get_taxes_after_fp(taxes_ids, this.order.fiscal_position);
 
+        var isRefund = qty < 0.0 || price_unit < 0.0;
+
         var all_taxes = this.compute_all(product_taxes, price_unit, qty, this.pos.currency.rounding);
         var all_taxes_before_discount = this.compute_all(product_taxes, this.get_unit_price(), qty, this.pos.currency.rounding);
         _(all_taxes.taxes).each(function(tax) {
@@ -2026,6 +2028,7 @@ class Orderline extends PosModel {
             "priceWithTaxBeforeDiscount": all_taxes_before_discount.total_included,
             "tax": taxtotal,
             "taxDetails": taxdetail,
+            "isRefund": isRefund,
         };
     }
     display_discount_policy(){
@@ -2412,6 +2415,13 @@ class Order extends PosModel {
         this.paymentlines.forEach(_.bind( function(item) {
             return paymentLines.push([0, 0, item.export_as_JSON()]);
         }, this));
+        let taxDetails = {};
+        this.orderlines.forEach(item => {
+            let allPrices = item.get_all_prices();
+            _(allPrices.taxDetails).forEach(function(amount, tax_id){
+                taxDetails[[allPrices.isRefund, tax_id]] = amount;
+            });
+        });
         var json = {
             name: this.get_name(),
             amount_paid: this.get_total_paid() - this.get_change(),
@@ -2434,6 +2444,7 @@ class Order extends PosModel {
             is_tipped: this.is_tipped || false,
             tip_amount: this.tip_amount || 0,
             access_token: this.access_token || '',
+            tax_details: taxDetails,
         };
         if (!this.is_paid && this.user_id) {
             json.user_id = this.user_id;
