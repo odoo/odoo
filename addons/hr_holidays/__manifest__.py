@@ -98,6 +98,9 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
         'web.qunit_suite_tests': [
             'hr_holidays/static/tests/qunit_suite_tests/**/*.js',
         ],
+        'web.assets_tests': [
+            '/hr_holidays/static/tests/tours/**/**.js'
+        ],
     },
     'license': 'LGPL-3',
 }
