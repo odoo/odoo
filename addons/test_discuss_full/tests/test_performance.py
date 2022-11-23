@@ -947,12 +947,12 @@ class TestDiscussFullPerformance(TransactionCase):
                 {
                     'id': 1,
                     'source': 'hello',
-                    'substitution': 'Hello. How may I help you?',
+                    'substitution': 'Hello, how may I help you?',
                 },
                 {
                     'id': 2,
                     'source': 'bye',
-                    'substitution': 'Thanks for your feedback. Good bye!',
+                    'substitution': 'Thanks for your feedback. Goodbye!',
                 },
             ],
             'internalUserGroupId': self.env.ref('base.group_user').id,
