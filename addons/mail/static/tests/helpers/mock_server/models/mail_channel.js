@@ -282,24 +282,26 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
      */
     _mockMailChannelChannelFetchPreview(ids) {
         const channels = this.getRecords("mail.channel", [["id", "in", ids]]);
-        return channels.map((channel) => {
-            const channelMessages = this.getRecords("mail.message", [
-                ["model", "=", "mail.channel"],
-                ["res_id", "=", channel.id],
-            ]);
-            const lastMessage = channelMessages.reduce((lastMessage, message) => {
-                if (message.id > lastMessage.id) {
-                    return message;
-                }
-                return lastMessage;
-            }, channelMessages[0]);
-            return {
-                id: channel.id,
-                last_message: lastMessage
-                    ? this._mockMailMessageMessageFormat([lastMessage.id])[0]
-                    : false,
-            };
-        });
+        return channels
+            .map((channel) => {
+                const channelMessages = this.getRecords("mail.message", [
+                    ["model", "=", "mail.channel"],
+                    ["res_id", "=", channel.id],
+                ]);
+                const lastMessage = channelMessages.reduce((lastMessage, message) => {
+                    if (message.id > lastMessage.id) {
+                        return message;
+                    }
+                    return lastMessage;
+                }, channelMessages[0]);
+                return {
+                    id: channel.id,
+                    last_message: lastMessage
+                        ? this._mockMailMessageMessageFormat([lastMessage.id])[0]
+                        : false,
+                };
+            })
+            .filter((preview) => preview.last_message);
     },
     /**
      * Simulates the 'channel_fold' route on `mail.channel`.
