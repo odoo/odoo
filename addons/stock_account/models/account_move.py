@@ -324,17 +324,29 @@ class AccountMoveLine(models.Model):
         return price_unit_by_layer
 
     def _get_stock_layer_price_difference(self, layers, layers_price_unit, price_unit):
+        self.ensure_one()
         po_line = self.purchase_line_id
+        aml_qty = self.product_uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
         invoice_lines = po_line.invoice_lines - self
         invoices_qty = 0
         for invoice_line in invoice_lines:
             invoices_qty += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, invoice_line.product_id.uom_id)
+        qty_received = po_line.product_uom._compute_quantity(po_line.qty_received, self.product_id.uom_id)
+        out_qty = qty_received - sum(layers.mapped('remaining_qty'))
+        out_and_not_billed_qty = max(0, out_qty - invoices_qty)
+        total_to_correct = max(0, aml_qty - out_and_not_billed_qty)
+        # we also need to skip the remaining qty that is already billed
+        total_to_skip = max(0, invoices_qty - out_qty)
         layers_to_correct = {}
         for layer in layers:
-            if layer.quantity <= invoices_qty:
-                invoices_qty -= layer.quantity
-                continue
-            qty_to_correct = layer.quantity - invoices_qty
+            if float_compare(total_to_correct, 0, precision_rounding=self.product_id.uom_id.rounding) <= 0:
+                break
+            remaining_qty = layer.remaining_qty
+            qty_to_skip = min(total_to_skip, remaining_qty)
+            remaining_qty = max(0, remaining_qty - qty_to_skip)
+            qty_to_correct = min(total_to_correct, remaining_qty)
+            total_to_skip -= qty_to_skip
+            total_to_correct -= qty_to_correct
             layer_price_unit = self.company_id.currency_id._convert(
                 layers_price_unit[layer], po_line.currency_id, self.company_id, self.date, round=False)
             price_difference = price_unit - layer_price_unit
