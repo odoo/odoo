@@ -1504,10 +1504,7 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
      */
     async updateUI() {
         if (this.updateColorPreviews) {
-            const ccPreviewEls = this.el.querySelectorAll('.o_we_cc_preview_wrapper');
-            this.trigger_up('update_color_previews', {
-                ccPreviewEls,
-            });
+            this.trigger_up('update_color_previews');
             this.updateColorPreviews = false;
         }
         await this._super(...arguments);
@@ -1561,9 +1558,7 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
             ccPreviewEls.push(ccPreviewEl);
             presetCollapseEl.appendChild(collapseEl);
         }
-        this.trigger_up('update_color_previews', {
-            ccPreviewEls,
-        });
+        this.trigger_up('update_color_previews');
         await this._super(...arguments);
     },
 });

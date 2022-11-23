@@ -280,7 +280,7 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         self.assertEqual(copies[5].name, 'XMISC/2019/00004')
 
         # Can't have twice the same name
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(psycopg2.DatabaseError), mute_logger('odoo.sql_db'), self.env.cr.savepoint():
             copies[0].name = 'XMISC/2019/00001'
 
         # Lets remove the order by date
@@ -508,14 +508,14 @@ class TestSequenceMixinConcurrency(TransactionCase):
         move.action_post()
         env2.cr.commit()
 
-        # try to post in cr1, should fail because this transaction started before the post in cr2
+        # try to post in cr1, the retry sould find the right number
         move = env1['account.move'].browse(self.data['move_ids'][2])
-        with self.assertRaises(psycopg2.OperationalError), mute_logger('odoo.sql_db'):
-            move.action_post()
+        move.action_post()
+        env1.cr.commit()
 
         # check the values
         moves = env0['account.move'].browse(self.data['move_ids'])
-        self.assertEqual(moves.mapped('name'), ['CT/2016/01/0001', 'CT/2016/01/0002', '/'])
+        self.assertEqual(moves.mapped('name'), ['CT/2016/01/0001', 'CT/2016/01/0002', 'CT/2016/01/0003'])
 
     def test_sequence_concurency_no_useless_lock(self):
         """Do not lock needlessly when the sequence is not computed"""

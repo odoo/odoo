@@ -8,7 +8,7 @@ from psycopg2 import sql, DatabaseError
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, mute_logger
 from odoo.exceptions import ValidationError, UserError
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 
@@ -641,20 +641,20 @@ class ResPartner(models.Model):
     def _increase_rank(self, field, n=1):
         if self.ids and field in ['customer_rank', 'supplier_rank']:
             try:
-                with self.env.cr.savepoint(flush=False):
+                with self.env.cr.savepoint(flush=False), mute_logger('odoo.sql_db'):
                     query = sql.SQL("""
-                        SELECT {field} FROM res_partner WHERE ID IN %(partner_ids)s FOR UPDATE NOWAIT;
+                        SELECT {field} FROM res_partner WHERE ID IN %(partner_ids)s FOR NO KEY UPDATE NOWAIT;
                         UPDATE res_partner SET {field} = {field} + %(n)s
                         WHERE id IN %(partner_ids)s
                     """).format(field=sql.Identifier(field))
                     self.env.cr.execute(query, {'partner_ids': tuple(self.ids), 'n': n})
-                    for partner in self:
-                        self.env.cache.remove(partner, partner._fields[field])
+                    self.invalidate_recordset([field])
             except DatabaseError as e:
-                if e.pgcode == '55P03':
-                    _logger.debug('Another transaction already locked partner rows. Cannot update partner ranks.')
-                else:
+                # 55P03 LockNotAvailable
+                # 40001 SerializationFailure
+                if e.pgcode not in ('55P03', '40001'):
                     raise e
+                _logger.debug('Another transaction already locked partner rows. Cannot update partner ranks.')
 
     @api.model
     def get_partner_localisation_fields_required_to_invoice(self, country_id):
