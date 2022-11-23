@@ -40,6 +40,10 @@ odoo.define('debug_menu_set_defaults.tour', function (require) {
                 },
             },
             {
+                content: "Check that there are conditions",
+                trigger: '#formview_default_conditions',
+            },
+            {
                 content: "Save the new default",
                 trigger: 'footer button:contains(Save default)',
             },
