@@ -115,10 +115,19 @@ class HolidaysRequest(models.Model):
 
     def _default_get_request_parameters(self, values):
         new_values = dict(values)
-        if values.get('date_from'):
-            new_values['request_date_from'] = self._adjust_date_based_on_tz(values['date_from'].date(), values['date_from'].time())
-        if values.get('date_to'):
-            new_values['request_date_to'] = self._adjust_date_based_on_tz(values['date_to'].date(), values['date_to'].time())
+        if values.get('date_from') and values.get('date_to'):
+            date_from = self._adjust_date_based_on_tz(values['date_from'].date(), values['date_from'].time())
+            date_to = self._adjust_date_based_on_tz(values['date_to'].date(), values['date_to'].time())
+            new_values.update([('request_date_from', date_from), ('request_date_to', date_to)])
+
+            employee = self.env['hr.employee'].browse(values['employee_id']) if values.get('employee_id') else self.env.user.employee_id
+            default_start_time = self._get_start_or_end_from_attendance(7, datetime.now().date(), employee).time()
+            default_end_time = self._get_start_or_end_from_attendance(19, datetime.now().date(), employee).time()
+            if values['date_from'].time() == default_start_time and values['date_to'].time() == default_end_time:
+                attendance_from, attendance_to = self._get_attendances(employee, date_from, date_to)
+                new_values['date_from'] = self._get_start_or_end_from_attendance(attendance_from.hour_from, date_from, employee)
+                new_values['date_to'] = self._get_start_or_end_from_attendance(attendance_to.hour_to, date_to, employee)
+
         return new_values
 
     active = fields.Boolean(default=True, readonly=True)
