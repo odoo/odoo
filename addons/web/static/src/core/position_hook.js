@@ -120,6 +120,7 @@ function getBestPosition(reference, popper, { container, margin, position }) {
         const directionValue = directionsData[d];
         const variantValue = variantsData[variantPrefix + v];
 
+        let correctedVariantValue = variantValue;
         if (containerRestricted) {
             const [directionSize, variantSize] = vertical
                 ? [popBox.height + margin, popBox.width]
@@ -140,46 +141,65 @@ function getBestPosition(reference, popper, { container, margin, position }) {
                     variantMax += container.scrollTop;
                 }
             }
-
             // Abort if outside container boundaries
-            const directionOverflow =
-                Math.ceil(directionValue) < Math.floor(directionMin) ||
-                Math.floor(directionValue + directionSize) > Math.ceil(directionMax);
-            const variantOverflow =
-                Math.ceil(variantValue) < Math.floor(variantMin) ||
-                Math.floor(variantValue + variantSize) > Math.ceil(variantMax);
-            if (directionOverflow || variantOverflow) {
-                return null;
+            const directionOverflowMin = Math.floor(directionMin) - Math.ceil(directionValue);
+            const directionOverflowMax = Math.floor(directionValue + directionSize) - Math.ceil(directionMax);
+            const variantOverflowMin = Math.floor(variantMin) - Math.ceil(variantValue);
+            const variantOverflowMax = Math.floor(variantValue + variantSize) - Math.ceil(variantMax);
+
+            const directionOverflow = directionOverflowMin > 0 || directionOverflowMax > 0;
+            const variantOverflow = variantOverflowMin > 0 || variantOverflowMax > 0;
+            const overflow = variantOverflow || directionOverflow;
+
+            if (overflow) {
+                if (!directionOverflow) {
+                    if (variantOverflowMax > 0) {
+                        correctedVariantValue -= variantOverflowMax;
+                    }
+                    const correctedVariantOverflowMin = Math.floor(variantMin) - Math.ceil(correctedVariantValue);
+                    if (correctedVariantOverflowMin > 0) {
+                        correctedVariantValue += correctedVariantOverflowMin;
+                    }
+                } else {
+                    return null;
+                }
             }
         }
 
         const positioning = vertical
             ? {
                   top: directionValue,
-                  left: variantValue,
+                  left: correctedVariantValue,
               }
             : {
-                  top: variantValue,
+                  top: correctedVariantValue,
                   left: directionValue,
               };
         return {
             ...positioning,
             direction: DIRECTIONS[d],
             variant: VARIANTS[v],
+            isPerfectFit: correctedVariantValue === variantValue,
         };
     }
 
-    // Find best solution
+    // Find a solution, prefer perfect fit
+    let okMatches = [];
     for (const d of directions) {
         for (const v of variants) {
             const match = getPositioningData(d, v, true);
-            if (match) {
-                // Position match have been found.
+            if (match && match.isPerfectFit) {
+                // Perfect match has been found.
                 return match;
+            } else if (match) {
+                okMatches.push(match);
             }
         }
     }
-
+    // Fallback on a position that fits the screen but not at any fixed point
+    if (okMatches.length) {
+        return okMatches[0];
+    }
     // Fallback to default position if no best solution found
     return getPositioningData();
 }
