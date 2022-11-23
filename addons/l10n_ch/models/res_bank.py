@@ -45,7 +45,7 @@ def validate_qr_iban(qr_iban):
     sanitized_qr_iban = sanitize_account_number(qr_iban)
 
     if sanitized_qr_iban[:2] not in ['CH', 'LI']:
-        raise ValidationError(_("QR-IBAN numbers are only available in Switzerland."))
+        raise ValidationError(_("QR-IBAN numbers are only available in Switzerland and Liechtenstein."))
 
     # Now, check if it's valid QR-IBAN (based on its IID).
     if not check_qr_iban_range(sanitized_qr_iban):
@@ -354,7 +354,7 @@ class ResPartnerBank(models.Model):
             if self.partner_id.country_id.code != 'CH':
                 error_messages.append(_("Your company isn't located in Switzerland."))
             if not debtor_partner or debtor_partner.country_id.code not in ('CH', 'LI'):
-                error_messages.append(_("The debtor partner's address isn't located in Switzerland."))
+                error_messages.append(_("The debtor partner's address isn't located in Switzerland or in Liechtenstein."))
             if currency.id not in (self.env.ref('base.EUR').id, self.env.ref('base.CHF').id):
                 error_messages.append(_("The currency isn't EUR nor CHF. \r\n"))
             if len(error_messages) != 1:
