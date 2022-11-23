@@ -115,7 +115,7 @@ QUnit.module("Fields", ({ beforeEach }) => {
     });
 
     QUnit.test("field html translatable", async (assert) => {
-        assert.expect(9);
+        assert.expect(10);
 
         serverData.models.partner.fields.txt.translate = true;
         serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), {
@@ -156,7 +156,7 @@ QUnit.module("Fields", ({ beforeEach }) => {
                             {
                                 lang: "fr_BE",
                                 source: "first paragraph",
-                                value: "premier paragraphe",
+                                value: "",
                             },
                             {
                                 lang: "fr_BE",
@@ -181,7 +181,10 @@ QUnit.module("Fields", ({ beforeEach }) => {
                             "txt",
                             {
                                 en_US: { "first paragraph": "first paragraph modified" },
-                                fr_BE: { "deuxième paragraphe": "deuxième paragraphe modifié" },
+                                fr_BE: {
+                                    "first paragraph": "premier paragraphe modifié",
+                                    "deuxième paragraphe": "deuxième paragraphe modifié",
+                                },
                             },
                         ],
                         "the new translation value should be written"
@@ -212,21 +215,29 @@ QUnit.module("Fields", ({ beforeEach }) => {
             ".modal .o_translation_dialog .translation input"
         );
 
-        const $enField1 = translations[0];
+        const enField1 = translations[0];
         assert.strictEqual(
-            $enField1.value,
+            enField1.value,
             "first paragraph",
             "first part of english translation should be filled"
         );
-        await editInput($enField1, null, "first paragraph modified");
+        await editInput(enField1, null, "first paragraph modified");
 
-        const $frField2 = translations[3];
+        const frField1 = translations[2];
         assert.strictEqual(
-            $frField2.value,
+            frField1.value,
+            "",
+            "first part of french translation should not be filled"
+        );
+        await editInput(frField1, null, "premier paragraphe modifié");
+
+        const frField2 = translations[3];
+        assert.strictEqual(
+            frField2.value,
             "deuxième paragraphe",
             "second part of french translation should be filled"
         );
-        await editInput($frField2, null, "deuxième paragraphe modifié");
+        await editInput(frField2, null, "deuxième paragraphe modifié");
 
         await click(target, ".modal button.btn-primary"); // save
     });
