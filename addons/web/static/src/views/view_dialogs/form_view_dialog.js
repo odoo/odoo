@@ -81,7 +81,7 @@ FormViewDialog.props = {
     },
     onRecordSaved: { type: Function, optional: true },
     removeRecord: { type: Function, optional: true },
-    resId: { type: [Number, Boolean], optional: true },
+    resId: { type: [Number, Boolean, String], optional: true },
     title: { type: String, optional: true },
     viewId: { type: [Number, Boolean], optional: true },
     preventCreate: { type: Boolean, optional: true },

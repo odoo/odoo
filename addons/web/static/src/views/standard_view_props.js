@@ -33,7 +33,7 @@ export const standardViewProps = {
     noBreadcrumbs: { type: Boolean, optional: true },
     orderBy: { type: Array, elements: String },
     relatedModels: { type: Object, elements: Object, optional: true },
-    resId: { type: [Number, Boolean], optional: true },
+    resId: { type: [Number, Boolean, String], optional: true },
     resIds: { type: Array, optional: true },
     searchMenuTypes: { type: Array, elements: String },
     selectRecord: { type: Function, optional: true },
