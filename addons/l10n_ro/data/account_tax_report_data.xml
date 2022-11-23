@@ -301,7 +301,7 @@
                                             model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">0.5.balance * tax_ro_baza_rd242.balance</field>
+                                        <field name="formula">0.5 * tax_ro_baza_rd242.balance</field>
                                     </record>
                                 </field>
                             </record>
@@ -340,7 +340,7 @@
                                             model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">0.5.balance * tax_ro_baza_rd252.balance</field>
+                                        <field name="formula">0.5 * tax_ro_baza_rd252.balance</field>
                                     </record>
                                 </field>
                             </record>
@@ -379,7 +379,7 @@
                                             model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">0.5.balance * tax_ro_baza_rd262.balance</field>
+                                        <field name="formula">0.5 * tax_ro_baza_rd262.balance</field>
                                     </record>
                                 </field>
                             </record>
@@ -1382,7 +1382,7 @@
             <record id="account_tax_report_ro_baza_rd24_formula" model="account.report.expression">
                 <field name="label">balance</field>
                 <field name="engine">aggregation</field>
-                <field name="formula">tax_ro_baza_rd241.balance + 0.5.balance * tax_ro_baza_rd242.balance</field>
+                <field name="formula">tax_ro_baza_rd241.balance + 0.5 * tax_ro_baza_rd242.balance</field>
             </record>
         </field>
         <field name="children_ids">
@@ -1417,7 +1417,7 @@
             <record id="account_tax_report_ro_baza_rd25_formula" model="account.report.expression">
                 <field name="label">balance</field>
                 <field name="engine">aggregation</field>
-                <field name="formula">tax_ro_baza_rd251.balance + 0.5.balance * tax_ro_baza_rd252.balance</field>
+                <field name="formula">tax_ro_baza_rd251.balance + 0.5 * tax_ro_baza_rd252.balance</field>
             </record>
         </field>
         <field name="children_ids">
@@ -1452,7 +1452,7 @@
             <record id="account_tax_report_ro_baza_rd26_formula" model="account.report.expression">
                 <field name="label">balance</field>
                 <field name="engine">aggregation</field>
-                <field name="formula">tax_ro_baza_rd261.balance + 0.5.balance * tax_ro_baza_rd262.balance</field>
+                <field name="formula">tax_ro_baza_rd261.balance + 0.5 * tax_ro_baza_rd262.balance</field>
             </record>
         </field>
         <field name="children_ids">
