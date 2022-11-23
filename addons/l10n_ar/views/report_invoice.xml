@@ -262,6 +262,17 @@
             </p>
         </div>
 
+        <t t-call="account.document_tax_totals" position="attributes">
+            <attribute name="t-call">l10n_ar.document_tax_totals</attribute>
+        </t>
+
+    </template>
+
+    <template id="document_tax_totals" inherit_id="account.document_tax_totals" primary="True">
+        <xpath expr="//t[@t-foreach]/tr" position="attributes">
+            <!-- Only for the Untaxed Amount  -->
+            <attribute name="t-if">not o._l10n_ar_include_vat()</attribute>
+        </xpath>
     </template>
 
     <!-- FIXME: Temp fix to allow fetching invoice_documemt in Studio Reports with localisation -->
