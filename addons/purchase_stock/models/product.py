@@ -35,7 +35,7 @@ class ProductProduct(models.Model):
         domain = self._get_lines_domain(location_ids, warehouse_ids)
         groups = self.env['purchase.order.line'].read_group(domain,
             ['product_id', 'product_qty', 'order_id', 'product_uom', 'orderpoint_id'],
-            ['order_id', 'product_id', 'product_uom', 'orderpoint_id'], lazy=False)
+            ['order_id', 'product_id', 'product_uom', 'orderpoint_id'], orderby='id', lazy=False)
         for group in groups:
             if group.get('orderpoint_id'):
                 location = self.env['stock.warehouse.orderpoint'].browse(group['orderpoint_id'][:1]).location_id
