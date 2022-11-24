@@ -396,6 +396,9 @@
     const DEFAULT_GAUGE_LOWER_COLOR = "#cc0000";
     const DEFAULT_GAUGE_MIDDLE_COLOR = "#f1c232";
     const DEFAULT_GAUGE_UPPER_COLOR = "#6aa84f";
+    const DEFAULT_SCORECARD_BASELINE_MODE = "difference";
+    const DEFAULT_SCORECARD_BASELINE_COLOR_UP = "#00A04A";
+    const DEFAULT_SCORECARD_BASELINE_COLOR_DOWN = "#DC6965";
     const LINE_FILL_TRANSPARENCY = 0.4;
     // session
     const DEBOUNCE_TIME = 200;
@@ -1632,27 +1635,27 @@
     // TODO in the future : remove these constants MONTHS/DAYS, and use a library such as luxon to handle it
     // + possibly handle automatic translation of day/month
     const MONTHS = {
-        0: "January",
-        1: "February",
-        2: "March",
-        3: "April",
-        4: "May",
-        5: "June",
-        6: "July",
-        7: "August",
-        8: "September",
-        9: "October",
-        10: "November",
-        11: "December",
+        0: _lt("January"),
+        1: _lt("February"),
+        2: _lt("March"),
+        3: _lt("April"),
+        4: _lt("May"),
+        5: _lt("June"),
+        6: _lt("July"),
+        7: _lt("August"),
+        8: _lt("September"),
+        9: _lt("October"),
+        10: _lt("November"),
+        11: _lt("December"),
     };
     const DAYS$1 = {
-        0: "Sunday",
-        1: "Monday",
-        2: "Tuesday",
-        3: "Wednesday",
-        4: "Thursday",
-        5: "Friday",
-        6: "Saturday",
+        0: _lt("Sunday"),
+        1: _lt("Monday"),
+        2: _lt("Tuesday"),
+        3: _lt("Wednesday"),
+        4: _lt("Thursday"),
+        5: _lt("Friday"),
+        6: _lt("Saturday"),
     };
     // -----------------------------------------------------------------------------
     // FORMAT REPRESENTATION CACHE
@@ -2843,7 +2846,7 @@
      * This function will compare the modifications of selection to determine
      * a cell that is part of the new zone and not the previous one.
      */
-    function findCellInNewZone(oldZone, currentZone, viewport) {
+    function findCellInNewZone(oldZone, currentZone) {
         let col, row;
         const { left: oldLeft, right: oldRight, top: oldTop, bottom: oldBottom } = oldZone;
         const { left, right, top, bottom } = currentZone;
@@ -2855,7 +2858,7 @@
         }
         else {
             // left and right don't change
-            col = viewport.left > left || left > viewport.right ? viewport.left : left;
+            col = left;
         }
         if (top != oldTop) {
             row = top;
@@ -2865,7 +2868,7 @@
         }
         else {
             // top and bottom don't change
-            row = viewport.top > top || top > viewport.bottom ? viewport.top : top;
+            row = top;
         }
         return { col, row };
     }
@@ -3757,14 +3760,15 @@
         CommandResult[CommandResult["MergeInFilter"] = 78] = "MergeInFilter";
         CommandResult[CommandResult["NonContinuousTargets"] = 79] = "NonContinuousTargets";
         CommandResult[CommandResult["DuplicatedFigureId"] = 80] = "DuplicatedFigureId";
+        CommandResult[CommandResult["InvalidSelectionStep"] = 81] = "InvalidSelectionStep";
     })(exports.CommandResult || (exports.CommandResult = {}));
 
     var DIRECTION;
     (function (DIRECTION) {
-        DIRECTION[DIRECTION["UP"] = 0] = "UP";
-        DIRECTION[DIRECTION["DOWN"] = 1] = "DOWN";
-        DIRECTION[DIRECTION["LEFT"] = 2] = "LEFT";
-        DIRECTION[DIRECTION["RIGHT"] = 3] = "RIGHT";
+        DIRECTION["UP"] = "up";
+        DIRECTION["DOWN"] = "down";
+        DIRECTION["LEFT"] = "left";
+        DIRECTION["RIGHT"] = "right";
     })(DIRECTION || (DIRECTION = {}));
 
     var LAYERS;
@@ -3972,19 +3976,19 @@
             let x = 0;
             let y = 0;
             switch (direction) {
-                case 0 /* DIRECTION.UP */:
+                case "up" /* DIRECTION.UP */:
                     x = 0;
                     y = -rule.current;
                     break;
-                case 1 /* DIRECTION.DOWN */:
+                case "down" /* DIRECTION.DOWN */:
                     x = 0;
                     y = rule.current;
                     break;
-                case 2 /* DIRECTION.LEFT */:
+                case "left" /* DIRECTION.LEFT */:
                     x = -rule.current;
                     y = 0;
                     break;
-                case 3 /* DIRECTION.RIGHT */:
+                case "right" /* DIRECTION.RIGHT */:
                     x = rule.current;
                     y = 0;
                     break;
@@ -5419,6 +5423,1920 @@
         ];
     }
 
+    /**
+     * AbstractChart is the class from which every Chart should inherit.
+     * The role of this class is to maintain the state of each chart.
+     */
+    class AbstractChart {
+        constructor(definition, sheetId, getters) {
+            this.title = definition.title;
+            this.sheetId = sheetId;
+            this.getters = getters;
+        }
+        /**
+         * Validate the chart definition given as arguments. This function will be
+         * called from allowDispatch function
+         */
+        static validateChartDefinition(validator, definition) {
+            throw new Error("This method should be implemented by sub class");
+        }
+        /**
+         * Get a new chart definition transformed with the executed command. This
+         * functions will be called during operational transform process
+         */
+        static transformDefinition(definition, executed) {
+            throw new Error("This method should be implemented by sub class");
+        }
+        /**
+         * Get an empty definition based on the given context
+         */
+        static getDefinitionFromContextCreation(context) {
+            throw new Error("This method should be implemented by sub class");
+        }
+    }
+
+    /**
+     * Convert a JS color hexadecimal to an excel compatible color.
+     *
+     * In Excel the color don't start with a '#' and the format is AARRGGBB instead of RRGGBBAA
+     */
+    function toXlsxHexColor(color) {
+        color = toHex(color).replace("#", "");
+        // alpha channel goes first
+        if (color.length === 8) {
+            return color.slice(6) + color.slice(0, 6);
+        }
+        return color;
+    }
+
+    function transformZone(zone, executed) {
+        if (executed.type === "REMOVE_COLUMNS_ROWS") {
+            return reduceZoneOnDeletion(zone, executed.dimension === "COL" ? "left" : "top", executed.elements);
+        }
+        if (executed.type === "ADD_COLUMNS_ROWS") {
+            return expandZoneOnInsertion(zone, executed.dimension === "COL" ? "left" : "top", executed.base, executed.position, executed.quantity);
+        }
+        return { ...zone };
+    }
+
+    /**
+     * This file contains helpers that are common to different charts (mainly
+     * line, bar and pie charts)
+     */
+    /**
+     * Adapt ranges of a chart which support DataSet (dataSets and LabelRange).
+     */
+    function updateChartRangesWithDataSets(getters, applyChange, chartDataSets, chartLabelRange) {
+        let isStale = false;
+        const dataSetsWithUndefined = [];
+        for (let index in chartDataSets) {
+            let ds = chartDataSets[index];
+            if (ds.labelCell) {
+                const labelCell = adaptChartRange(ds.labelCell, applyChange);
+                if (ds.labelCell !== labelCell) {
+                    isStale = true;
+                    ds = {
+                        ...ds,
+                        labelCell: labelCell,
+                    };
+                }
+            }
+            const dataRange = adaptChartRange(ds.dataRange, applyChange);
+            if (dataRange === undefined ||
+                getters.getRangeString(dataRange, dataRange.sheetId) === INCORRECT_RANGE_STRING) {
+                isStale = true;
+                ds = undefined;
+            }
+            else if (dataRange !== ds.dataRange) {
+                isStale = true;
+                ds = {
+                    ...ds,
+                    dataRange,
+                };
+            }
+            dataSetsWithUndefined[index] = ds;
+        }
+        let labelRange = chartLabelRange;
+        const range = adaptChartRange(labelRange, applyChange);
+        if (range !== labelRange) {
+            isStale = true;
+            labelRange = range;
+        }
+        const dataSets = dataSetsWithUndefined.filter(isDefined$1);
+        return {
+            isStale,
+            dataSets,
+            labelRange,
+        };
+    }
+    /**
+     * Copy the dataSets given. All the ranges which are on sheetIdFrom will target
+     * sheetIdTo.
+     */
+    function copyDataSetsWithNewSheetId(sheetIdFrom, sheetIdTo, dataSets) {
+        return dataSets.map((ds) => {
+            return {
+                dataRange: copyRangeWithNewSheetId(sheetIdFrom, sheetIdTo, ds.dataRange),
+                labelCell: ds.labelCell
+                    ? copyRangeWithNewSheetId(sheetIdFrom, sheetIdTo, ds.labelCell)
+                    : undefined,
+            };
+        });
+    }
+    /**
+     * Copy a range. If the range is on the sheetIdFrom, the range will target
+     * sheetIdTo.
+     */
+    function copyLabelRangeWithNewSheetId(sheetIdFrom, sheetIdTo, range) {
+        return range ? copyRangeWithNewSheetId(sheetIdFrom, sheetIdTo, range) : undefined;
+    }
+    /**
+     * Adapt a single range of a chart
+     */
+    function adaptChartRange(range, applyChange) {
+        if (!range) {
+            return undefined;
+        }
+        const change = applyChange(range);
+        switch (change.changeType) {
+            case "NONE":
+                return range;
+            case "REMOVE":
+                return undefined;
+            default:
+                return change.range;
+        }
+    }
+    /**
+     * Create the dataSet objects from xcs
+     */
+    function createDataSets(getters, dataSetsString, sheetId, dataSetsHaveTitle) {
+        const dataSets = [];
+        for (const sheetXC of dataSetsString) {
+            const dataRange = getters.getRangeFromSheetXC(sheetId, sheetXC);
+            const { unboundedZone: zone, sheetId: dataSetSheetId, invalidSheetName } = dataRange;
+            if (invalidSheetName) {
+                continue;
+            }
+            // It's a rectangle. We treat all columns (arbitrary) as different data series.
+            if (zone.left !== zone.right && zone.top !== zone.bottom) {
+                if (zone.right === undefined) {
+                    // Should never happens because of the allowDispatch of charts, but just making sure
+                    continue;
+                }
+                for (let column = zone.left; column <= zone.right; column++) {
+                    const columnZone = {
+                        ...zone,
+                        left: column,
+                        right: column,
+                    };
+                    dataSets.push(createDataSet(getters, dataSetSheetId, columnZone, dataSetsHaveTitle
+                        ? {
+                            top: columnZone.top,
+                            bottom: columnZone.top,
+                            left: columnZone.left,
+                            right: columnZone.left,
+                        }
+                        : undefined));
+                }
+            }
+            else if (zone.left === zone.right && zone.top === zone.bottom) {
+                // A single cell. If it's only the title, the dataset is not added.
+                if (!dataSetsHaveTitle) {
+                    dataSets.push(createDataSet(getters, dataSetSheetId, zone, undefined));
+                }
+            }
+            else {
+                /* 1 row or 1 column */
+                dataSets.push(createDataSet(getters, dataSetSheetId, zone, dataSetsHaveTitle
+                    ? {
+                        top: zone.top,
+                        bottom: zone.top,
+                        left: zone.left,
+                        right: zone.left,
+                    }
+                    : undefined));
+            }
+        }
+        return dataSets;
+    }
+    function createDataSet(getters, sheetId, fullZone, titleZone) {
+        if (fullZone.left !== fullZone.right && fullZone.top !== fullZone.bottom) {
+            throw new Error(`Zone should be a single column or row: ${zoneToXc(fullZone)}`);
+        }
+        if (titleZone) {
+            const dataXC = zoneToXc(fullZone);
+            const labelCellXC = zoneToXc(titleZone);
+            return {
+                labelCell: getters.getRangeFromSheetXC(sheetId, labelCellXC),
+                dataRange: getters.getRangeFromSheetXC(sheetId, dataXC),
+            };
+        }
+        else {
+            return {
+                labelCell: undefined,
+                dataRange: getters.getRangeFromSheetXC(sheetId, zoneToXc(fullZone)),
+            };
+        }
+    }
+    /**
+     * Transform a dataSet to a ExcelDataSet
+     */
+    function toExcelDataset(getters, ds) {
+        var _a;
+        const labelZone = (_a = ds.labelCell) === null || _a === void 0 ? void 0 : _a.zone;
+        let dataZone = ds.dataRange.zone;
+        if (labelZone) {
+            const { height, width } = zoneToDimension(dataZone);
+            if (height === 1) {
+                dataZone = { ...dataZone, left: dataZone.left + 1 };
+            }
+            else if (width === 1) {
+                dataZone = { ...dataZone, top: dataZone.top + 1 };
+            }
+        }
+        const dataRange = ds.dataRange.clone({ zone: dataZone });
+        return {
+            label: ds.labelCell ? getters.getRangeString(ds.labelCell, "forceSheetReference") : undefined,
+            range: getters.getRangeString(dataRange, "forceSheetReference"),
+        };
+    }
+    /**
+     * Transform a chart definition which supports dataSets (dataSets and LabelRange)
+     * with an executed command
+     */
+    function transformChartDefinitionWithDataSetsWithZone(definition, executed) {
+        let labelRange;
+        if (definition.labelRange) {
+            const labelZone = transformZone(toUnboundedZone(definition.labelRange), executed);
+            labelRange = labelZone ? zoneToXc(labelZone) : undefined;
+        }
+        const dataSets = definition.dataSets
+            .map(toUnboundedZone)
+            .map((zone) => transformZone(zone, executed))
+            .filter(isDefined$1)
+            .map(zoneToXc);
+        return {
+            ...definition,
+            labelRange,
+            dataSets,
+        };
+    }
+    const GraphColors = [
+        // the same colors as those used in odoo reporting
+        "rgb(31,119,180)",
+        "rgb(255,127,14)",
+        "rgb(174,199,232)",
+        "rgb(255,187,120)",
+        "rgb(44,160,44)",
+        "rgb(152,223,138)",
+        "rgb(214,39,40)",
+        "rgb(255,152,150)",
+        "rgb(148,103,189)",
+        "rgb(197,176,213)",
+        "rgb(140,86,75)",
+        "rgb(196,156,148)",
+        "rgb(227,119,194)",
+        "rgb(247,182,210)",
+        "rgb(127,127,127)",
+        "rgb(199,199,199)",
+        "rgb(188,189,34)",
+        "rgb(219,219,141)",
+        "rgb(23,190,207)",
+        "rgb(158,218,229)",
+    ];
+    class ChartColors {
+        constructor() {
+            this.graphColorIndex = 0;
+        }
+        next() {
+            return GraphColors[this.graphColorIndex++ % GraphColors.length];
+        }
+    }
+    /**
+     * Choose a font color based on a background color.
+     * The font is white with a dark background.
+     */
+    function chartFontColor(backgroundColor) {
+        if (!backgroundColor) {
+            return "#000000";
+        }
+        return relativeLuminance(backgroundColor) < 0.3 ? "#FFFFFF" : "#000000";
+    }
+    function checkDataset(definition) {
+        if (definition.dataSets) {
+            const invalidRanges = definition.dataSets.find((range) => !rangeReference.test(range)) !== undefined;
+            if (invalidRanges) {
+                return 30 /* CommandResult.InvalidDataSet */;
+            }
+            const zones = definition.dataSets.map(toUnboundedZone);
+            if (zones.some((zone) => zone.top !== zone.bottom && isFullRow(zone))) {
+                return 30 /* CommandResult.InvalidDataSet */;
+            }
+        }
+        return 0 /* CommandResult.Success */;
+    }
+    function checkLabelRange(definition) {
+        if (definition.labelRange) {
+            const invalidLabels = !rangeReference.test(definition.labelRange || "");
+            if (invalidLabels) {
+                return 31 /* CommandResult.InvalidLabelRange */;
+            }
+        }
+        return 0 /* CommandResult.Success */;
+    }
+    // ---------------------------------------------------------------------------
+    // Scorecard
+    // ---------------------------------------------------------------------------
+    function getBaselineText(baseline, keyValue, baselineMode) {
+        if (!baseline) {
+            return "";
+        }
+        else if (baselineMode === "text" ||
+            (keyValue === null || keyValue === void 0 ? void 0 : keyValue.type) !== CellValueType.number ||
+            baseline.type !== CellValueType.number) {
+            return baseline.formattedValue;
+        }
+        else {
+            let diff = keyValue.value - baseline.value;
+            if (baselineMode === "percentage" && diff !== 0) {
+                diff = (diff / baseline.value) * 100;
+            }
+            if (baselineMode !== "percentage" && baseline.format) {
+                return formatValue(diff, baseline.format);
+            }
+            const baselineStr = Math.abs(parseFloat(diff.toFixed(2))).toLocaleString();
+            return baselineMode === "percentage" ? baselineStr + "%" : baselineStr;
+        }
+    }
+    function getBaselineColor(baseline, baselineMode, keyValue, colorUp, colorDown) {
+        if (baselineMode === "text" ||
+            (baseline === null || baseline === void 0 ? void 0 : baseline.type) !== CellValueType.number ||
+            (keyValue === null || keyValue === void 0 ? void 0 : keyValue.type) !== CellValueType.number) {
+            return undefined;
+        }
+        const diff = keyValue.value - baseline.value;
+        if (diff > 0) {
+            return colorUp;
+        }
+        else if (diff < 0) {
+            return colorDown;
+        }
+        return undefined;
+    }
+    function getBaselineArrowDirection(baseline, keyValue, baselineMode) {
+        if (baselineMode === "text" ||
+            (baseline === null || baseline === void 0 ? void 0 : baseline.type) !== CellValueType.number ||
+            (keyValue === null || keyValue === void 0 ? void 0 : keyValue.type) !== CellValueType.number) {
+            return "neutral";
+        }
+        const diff = keyValue.value - baseline.value;
+        if (diff > 0) {
+            return "up";
+        }
+        else if (diff < 0) {
+            return "down";
+        }
+        return "neutral";
+    }
+    function getChartPositionAtCenterOfViewport(getters, chartSize) {
+        const { x: viewportX, y: viewportY } = getters.getMainViewportCoordinates();
+        const { offsetX, offsetY } = getters.getActiveSheetScrollInfo();
+        const { width, height } = getters.getSheetViewDimension();
+        const rect = getters.getVisibleRect(getters.getActiveMainViewport());
+        const scrollableViewportWidth = Math.min(rect.width, width - viewportX);
+        const scrollableViewportHeight = Math.min(rect.height, height - viewportY);
+        const position = {
+            x: viewportX + offsetX + Math.max(0, (scrollableViewportWidth - chartSize.width) / 2),
+            y: viewportY + offsetY + Math.max(0, (scrollableViewportHeight - chartSize.height) / 2),
+        }; // Position at the center of the scrollable viewport
+        return position;
+    }
+
+    const CfTerms = {
+        Errors: {
+            [24 /* CommandResult.InvalidRange */]: _lt("The range is invalid"),
+            [49 /* CommandResult.FirstArgMissing */]: _lt("The argument is missing. Please provide a value"),
+            [50 /* CommandResult.SecondArgMissing */]: _lt("The second argument is missing. Please provide a value"),
+            [51 /* CommandResult.MinNaN */]: _lt("The minpoint must be a number"),
+            [52 /* CommandResult.MidNaN */]: _lt("The midpoint must be a number"),
+            [53 /* CommandResult.MaxNaN */]: _lt("The maxpoint must be a number"),
+            [54 /* CommandResult.ValueUpperInflectionNaN */]: _lt("The first value must be a number"),
+            [55 /* CommandResult.ValueLowerInflectionNaN */]: _lt("The second value must be a number"),
+            [45 /* CommandResult.MinBiggerThanMax */]: _lt("Minimum must be smaller then Maximum"),
+            [48 /* CommandResult.MinBiggerThanMid */]: _lt("Minimum must be smaller then Midpoint"),
+            [47 /* CommandResult.MidBiggerThanMax */]: _lt("Midpoint must be smaller then Maximum"),
+            [46 /* CommandResult.LowerBiggerThanUpper */]: _lt("Lower inflection point must be smaller than upper inflection point"),
+            [56 /* CommandResult.MinInvalidFormula */]: _lt("Invalid Minpoint formula"),
+            [58 /* CommandResult.MaxInvalidFormula */]: _lt("Invalid Maxpoint formula"),
+            [57 /* CommandResult.MidInvalidFormula */]: _lt("Invalid Midpoint formula"),
+            [59 /* CommandResult.ValueUpperInvalidFormula */]: _lt("Invalid upper inflection point formula"),
+            [60 /* CommandResult.ValueLowerInvalidFormula */]: _lt("Invalid lower inflection point formula"),
+            [23 /* CommandResult.EmptyRange */]: _lt("A range needs to be defined"),
+            Unexpected: _lt("The rule is invalid for an unknown reason"),
+        },
+        ColorScale: _lt("Color scale"),
+        IconSet: _lt("Icon set"),
+    };
+    const CellIsOperators = {
+        IsEmpty: _lt("Is empty"),
+        IsNotEmpty: _lt("Is not empty"),
+        ContainsText: _lt("Contains"),
+        NotContains: _lt("Does not contain"),
+        BeginsWith: _lt("Starts with"),
+        EndsWith: _lt("Ends with"),
+        Equal: _lt("Is equal to"),
+        NotEqual: _lt("Is not equal to"),
+        GreaterThan: _lt("Is greater than"),
+        GreaterThanOrEqual: _lt("Is greater than or equal to"),
+        LessThan: _lt("Is less than"),
+        LessThanOrEqual: _lt("Is less than or equal to"),
+        Between: _lt("Is between"),
+        NotBetween: _lt("Is not between"),
+    };
+    const ChartTerms = {
+        Series: _lt("Series"),
+        Errors: {
+            Unexpected: _lt("The chart definition is invalid for an unknown reason"),
+            // BASIC CHART ERRORS (LINE | BAR | PIE)
+            [30 /* CommandResult.InvalidDataSet */]: _lt("The dataset is invalid"),
+            [31 /* CommandResult.InvalidLabelRange */]: _lt("Labels are invalid"),
+            // SCORECARD CHART ERRORS
+            [32 /* CommandResult.InvalidScorecardKeyValue */]: _lt("The key value is invalid"),
+            [33 /* CommandResult.InvalidScorecardBaseline */]: _lt("The baseline value is invalid"),
+            // GAUGE CHART ERRORS
+            [34 /* CommandResult.InvalidGaugeDataRange */]: _lt("The data range is invalid"),
+            [35 /* CommandResult.EmptyGaugeRangeMin */]: _lt("A minimum range limit value is needed"),
+            [36 /* CommandResult.GaugeRangeMinNaN */]: _lt("The minimum range limit value must be a number"),
+            [37 /* CommandResult.EmptyGaugeRangeMax */]: _lt("A maximum range limit value is needed"),
+            [38 /* CommandResult.GaugeRangeMaxNaN */]: _lt("The maximum range limit value must be a number"),
+            [39 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */]: _lt("Minimum range limit must be smaller than maximum range limit"),
+            [40 /* CommandResult.GaugeLowerInflectionPointNaN */]: _lt("The lower inflection point value must be a number"),
+            [41 /* CommandResult.GaugeUpperInflectionPointNaN */]: _lt("The upper inflection point value must be a number"),
+        },
+    };
+    const NumberFormatTerms = {
+        Automatic: _lt("Automatic"),
+        Number: _lt("Number"),
+        Percent: _lt("Percent"),
+        Currency: _lt("Currency"),
+        CurrencyRounded: _lt("Currency rounded"),
+        Date: _lt("Date"),
+        Time: _lt("Time"),
+        DateTime: _lt("Date time"),
+        Duration: _lt("Duration"),
+        CustomCurrency: _lt("Custom currency"),
+    };
+    const CustomCurrencyTerms = {
+        Custom: _lt("Custom"),
+    };
+    const MergeErrorMessage = _lt("Merged cells are preventing this operation. Unmerge those cells and try again.");
+
+    /**
+     * This file contains helpers that are common to different runtime charts (mainly
+     * line, bar and pie charts)
+     */
+    /**
+     * Get the data from a dataSet
+     */
+    function getData(getters, ds) {
+        if (ds.dataRange) {
+            const labelCellZone = ds.labelCell ? [zoneToXc(ds.labelCell.zone)] : [];
+            const dataXC = recomputeZones([zoneToXc(ds.dataRange.zone)], labelCellZone)[0];
+            if (dataXC === undefined) {
+                return [];
+            }
+            const dataRange = getters.getRangeFromSheetXC(ds.dataRange.sheetId, dataXC);
+            return getters.getRangeValues(dataRange).map((value) => (value === "" ? undefined : value));
+        }
+        return [];
+    }
+    function filterEmptyDataPoints(labels, datasets) {
+        const numberOfDataPoints = Math.max(labels.length, ...datasets.map((dataset) => { var _a; return ((_a = dataset.data) === null || _a === void 0 ? void 0 : _a.length) || 0; }));
+        const dataPointsIndexes = range(0, numberOfDataPoints).filter((dataPointIndex) => {
+            const label = labels[dataPointIndex];
+            const values = datasets.map((dataset) => { var _a; return (_a = dataset.data) === null || _a === void 0 ? void 0 : _a[dataPointIndex]; });
+            return label || values.some((value) => value === 0 || Boolean(value));
+        });
+        return {
+            labels: dataPointsIndexes.map((i) => labels[i] || ""),
+            dataSetsValues: datasets.map((dataset) => ({
+                ...dataset,
+                data: dataPointsIndexes.map((i) => dataset.data[i]),
+            })),
+        };
+    }
+    function truncateLabel(label) {
+        if (!label) {
+            return "";
+        }
+        if (label.length > MAX_CHAR_LABEL) {
+            return label.substring(0, MAX_CHAR_LABEL) + "…";
+        }
+        return label;
+    }
+    /**
+     * Get a default chart js configuration
+     */
+    function getDefaultChartJsRuntime(chart, labels, fontColor) {
+        return {
+            type: chart.type,
+            options: {
+                // https://www.chartjs.org/docs/latest/general/responsive.html
+                responsive: true,
+                maintainAspectRatio: false,
+                layout: {
+                    padding: { left: 20, right: 20, top: chart.title ? 10 : 25, bottom: 10 },
+                },
+                elements: {
+                    line: {
+                        fill: false, // do not fill the area under line charts
+                    },
+                    point: {
+                        hitRadius: 15, // increased hit radius to display point tooltip when hovering nearby
+                    },
+                },
+                animation: {
+                    duration: 0, // general animation time
+                },
+                hover: {
+                    animationDuration: 10, // duration of animations when hovering an item
+                },
+                responsiveAnimationDuration: 0,
+                title: {
+                    display: !!chart.title,
+                    fontSize: 22,
+                    fontStyle: "normal",
+                    text: _t(chart.title),
+                    fontColor,
+                },
+                legend: {
+                    // Disable default legend onClick (show/hide dataset), to allow us to set a global onClick on the chart container.
+                    // If we want to re-enable this in the future, we need to override the default onClick to stop the event propagation
+                    onClick: undefined,
+                },
+            },
+            data: {
+                labels: labels.map(truncateLabel),
+                datasets: [],
+            },
+        };
+    }
+    function getLabelFormat(getters, range) {
+        if (!range)
+            return undefined;
+        return getters.getEvaluatedCell({
+            sheetId: range.sheetId,
+            col: range.zone.left,
+            row: range.zone.top,
+        }).format;
+    }
+    function getChartLabelValues(getters, dataSets, labelRange) {
+        let labels = { values: [], formattedValues: [] };
+        if (labelRange) {
+            if (!labelRange.invalidXc && !labelRange.invalidSheetName) {
+                labels = {
+                    formattedValues: getters.getRangeFormattedValues(labelRange),
+                    values: getters.getRangeValues(labelRange).map((val) => String(val)),
+                };
+            }
+        }
+        else if (dataSets.length === 1) {
+            for (let i = 0; i < getData(getters, dataSets[0]).length; i++) {
+                labels.formattedValues.push("");
+                labels.values.push("");
+            }
+        }
+        else {
+            if (dataSets[0]) {
+                const ranges = getData(getters, dataSets[0]);
+                labels = {
+                    formattedValues: range(0, ranges.length).map((r) => r.toString()),
+                    values: labels.formattedValues,
+                };
+            }
+        }
+        return labels;
+    }
+    function getChartDatasetValues(getters, dataSets) {
+        const datasetValues = [];
+        for (const [dsIndex, ds] of Object.entries(dataSets)) {
+            let label;
+            if (ds.labelCell) {
+                const labelRange = ds.labelCell;
+                const cell = labelRange
+                    ? getters.getEvaluatedCell({
+                        sheetId: labelRange.sheetId,
+                        col: labelRange.zone.left,
+                        row: labelRange.zone.top,
+                    })
+                    : undefined;
+                label =
+                    cell && labelRange
+                        ? truncateLabel(cell.formattedValue)
+                        : (label = `${ChartTerms.Series} ${parseInt(dsIndex) + 1}`);
+            }
+            else {
+                label = label = `${ChartTerms.Series} ${parseInt(dsIndex) + 1}`;
+            }
+            let data = ds.dataRange ? getData(getters, ds) : [];
+            datasetValues.push({ data, label });
+        }
+        return datasetValues;
+    }
+    /** See https://www.chartjs.org/docs/latest/charts/area.html#filling-modes */
+    function getFillingMode(index) {
+        if (index === 0) {
+            return "origin";
+        }
+        else {
+            return index - 1;
+        }
+    }
+
+    chartRegistry.add("bar", {
+        match: (type) => type === "bar",
+        createChart: (definition, sheetId, getters) => new BarChart(definition, sheetId, getters),
+        getChartRuntime: createBarChartRuntime,
+        validateChartDefinition: (validator, definition) => BarChart.validateChartDefinition(validator, definition),
+        transformDefinition: (definition, executed) => BarChart.transformDefinition(definition, executed),
+        getChartDefinitionFromContextCreation: (context) => BarChart.getDefinitionFromContextCreation(context),
+        name: "Bar",
+    });
+    class BarChart extends AbstractChart {
+        constructor(definition, sheetId, getters) {
+            super(definition, sheetId, getters);
+            this.type = "bar";
+            this.dataSets = createDataSets(getters, definition.dataSets, sheetId, definition.dataSetsHaveTitle);
+            this.labelRange = createRange(getters, sheetId, definition.labelRange);
+            this.background = definition.background;
+            this.verticalAxisPosition = definition.verticalAxisPosition;
+            this.legendPosition = definition.legendPosition;
+            this.stacked = definition.stacked;
+        }
+        static transformDefinition(definition, executed) {
+            return transformChartDefinitionWithDataSetsWithZone(definition, executed);
+        }
+        static validateChartDefinition(validator, definition) {
+            return validator.checkValidations(definition, checkDataset, checkLabelRange);
+        }
+        static getDefinitionFromContextCreation(context) {
+            return {
+                background: context.background,
+                dataSets: context.range ? context.range : [],
+                dataSetsHaveTitle: false,
+                stacked: false,
+                legendPosition: "top",
+                title: context.title || "",
+                type: "bar",
+                verticalAxisPosition: "left",
+                labelRange: context.auxiliaryRange || undefined,
+            };
+        }
+        getContextCreation() {
+            return {
+                background: this.background,
+                title: this.title,
+                range: this.dataSets.map((ds) => this.getters.getRangeString(ds.dataRange, this.sheetId)),
+                auxiliaryRange: this.labelRange
+                    ? this.getters.getRangeString(this.labelRange, this.sheetId)
+                    : undefined,
+            };
+        }
+        copyForSheetId(sheetId) {
+            const dataSets = copyDataSetsWithNewSheetId(this.sheetId, sheetId, this.dataSets);
+            const labelRange = copyLabelRangeWithNewSheetId(this.sheetId, sheetId, this.labelRange);
+            const definition = this.getDefinitionWithSpecificDataSets(dataSets, labelRange, sheetId);
+            return new BarChart(definition, sheetId, this.getters);
+        }
+        copyInSheetId(sheetId) {
+            const definition = this.getDefinitionWithSpecificDataSets(this.dataSets, this.labelRange, sheetId);
+            return new BarChart(definition, sheetId, this.getters);
+        }
+        getDefinition() {
+            return this.getDefinitionWithSpecificDataSets(this.dataSets, this.labelRange);
+        }
+        getDefinitionWithSpecificDataSets(dataSets, labelRange, targetSheetId) {
+            return {
+                type: "bar",
+                dataSetsHaveTitle: dataSets.length ? Boolean(dataSets[0].labelCell) : false,
+                background: this.background,
+                dataSets: dataSets.map((ds) => this.getters.getRangeString(ds.dataRange, targetSheetId || this.sheetId)),
+                legendPosition: this.legendPosition,
+                verticalAxisPosition: this.verticalAxisPosition,
+                labelRange: labelRange
+                    ? this.getters.getRangeString(labelRange, targetSheetId || this.sheetId)
+                    : undefined,
+                title: this.title,
+                stacked: this.stacked,
+            };
+        }
+        getDefinitionForExcel() {
+            const dataSets = this.dataSets
+                .map((ds) => toExcelDataset(this.getters, ds))
+                .filter((ds) => ds.range !== ""); // && range !== INCORRECT_RANGE_STRING ? show incorrect #ref ?
+            return {
+                ...this.getDefinition(),
+                backgroundColor: toXlsxHexColor(this.background || BACKGROUND_CHART_COLOR),
+                fontColor: toXlsxHexColor(chartFontColor(this.background)),
+                dataSets,
+            };
+        }
+        updateRanges(applyChange) {
+            const { dataSets, labelRange, isStale } = updateChartRangesWithDataSets(this.getters, applyChange, this.dataSets, this.labelRange);
+            if (!isStale) {
+                return this;
+            }
+            const definition = this.getDefinitionWithSpecificDataSets(dataSets, labelRange);
+            return new BarChart(definition, this.sheetId, this.getters);
+        }
+    }
+    function getBarConfiguration(chart, labels) {
+        var _a;
+        const fontColor = chartFontColor(chart.background);
+        const config = getDefaultChartJsRuntime(chart, labels, fontColor);
+        const legend = {
+            labels: { fontColor },
+        };
+        if ((!chart.labelRange && chart.dataSets.length === 1) || chart.legendPosition === "none") {
+            legend.display = false;
+        }
+        else {
+            legend.position = chart.legendPosition;
+        }
+        config.options.legend = { ...(_a = config.options) === null || _a === void 0 ? void 0 : _a.legend, ...legend };
+        config.options.layout = {
+            padding: { left: 20, right: 20, top: chart.title ? 10 : 25, bottom: 10 },
+        };
+        config.options.scales = {
+            xAxes: [
+                {
+                    ticks: {
+                        // x axis configuration
+                        maxRotation: 60,
+                        minRotation: 15,
+                        padding: 5,
+                        labelOffset: 2,
+                        fontColor,
+                    },
+                },
+            ],
+            yAxes: [
+                {
+                    position: chart.verticalAxisPosition,
+                    ticks: {
+                        fontColor,
+                        // y axis configuration
+                        beginAtZero: true, // the origin of the y axis is always zero
+                    },
+                },
+            ],
+        };
+        if (chart.stacked) {
+            config.options.scales.xAxes[0].stacked = true;
+            config.options.scales.yAxes[0].stacked = true;
+        }
+        return config;
+    }
+    function createBarChartRuntime(chart, getters) {
+        const labelValues = getChartLabelValues(getters, chart.dataSets, chart.labelRange);
+        let labels = labelValues.formattedValues;
+        let dataSetsValues = getChartDatasetValues(getters, chart.dataSets);
+        ({ labels, dataSetsValues } = filterEmptyDataPoints(labels, dataSetsValues));
+        const config = getBarConfiguration(chart, labels);
+        const colors = new ChartColors();
+        for (let { label, data } of dataSetsValues) {
+            const color = colors.next();
+            const dataset = {
+                label,
+                data,
+                borderColor: color,
+                backgroundColor: color,
+            };
+            config.data.datasets.push(dataset);
+        }
+        return { chartJsConfig: config, background: chart.background || BACKGROUND_CHART_COLOR };
+    }
+
+    const UNIT_LENGTH = {
+        second: 1000,
+        minute: 1000 * 60,
+        hour: 1000 * 3600,
+        day: 1000 * 3600 * 24,
+        month: 1000 * 3600 * 24 * 30,
+        year: 1000 * 3600 * 24 * 365,
+    };
+    const Milliseconds = {
+        inSeconds: function (milliseconds) {
+            return Math.floor(milliseconds / UNIT_LENGTH.second);
+        },
+        inMinutes: function (milliseconds) {
+            return Math.floor(milliseconds / UNIT_LENGTH.minute);
+        },
+        inHours: function (milliseconds) {
+            return Math.floor(milliseconds / UNIT_LENGTH.hour);
+        },
+        inDays: function (milliseconds) {
+            return Math.floor(milliseconds / UNIT_LENGTH.day);
+        },
+        inMonths: function (milliseconds) {
+            return Math.floor(milliseconds / UNIT_LENGTH.month);
+        },
+        inYears: function (milliseconds) {
+            return Math.floor(milliseconds / UNIT_LENGTH.year);
+        },
+    };
+    /**
+     * Regex to test if a format string is a date format that can be translated into a moment time format
+     */
+    const timeFormatMomentCompatible = /^((d|dd|m|mm|yyyy|yy|hh|h|ss|a)(-|:|\s|\/))*(d|dd|m|mm|yyyy|yy|hh|h|ss|a)$/i;
+    /** Get the time options for the XAxis of ChartJS */
+    function getChartTimeOptions(labels, labelFormat) {
+        const momentFormat = convertDateFormatForMoment(labelFormat);
+        const timeUnit = getBestTimeUnitForScale(labels, momentFormat);
+        const displayFormats = {};
+        if (timeUnit) {
+            displayFormats[timeUnit] = momentFormat;
+        }
+        return {
+            parser: momentFormat,
+            displayFormats,
+            unit: timeUnit,
+        };
+    }
+    /**
+     * Convert the given date format into a format that moment.js understands.
+     *
+     * https://momentjs.com/docs/#/parsing/string-format/
+     */
+    function convertDateFormatForMoment(format) {
+        format = format.replace(/y/g, "Y");
+        format = format.replace(/d/g, "D");
+        // "m" before "h" == month, "m" after "h" == minute
+        const indexH = format.indexOf("h");
+        if (indexH >= 0) {
+            format = format.slice(0, indexH).replace(/m/g, "M") + format.slice(indexH);
+        }
+        else {
+            format = format.replace(/m/g, "M");
+        }
+        // If we have an "a", we should display hours as AM/PM (h), otherwise display 24 hours format (H)
+        if (!format.includes("a")) {
+            format = format.replace(/h/g, "H");
+        }
+        return format;
+    }
+    /** Get the minimum time unit that the format is able to display */
+    function getFormatMinDisplayUnit(format) {
+        if (format.includes("s")) {
+            return "second";
+        }
+        else if (format.includes("m")) {
+            return "minute";
+        }
+        else if (format.includes("h") || format.includes("H")) {
+            return "hour";
+        }
+        else if (format.includes("D")) {
+            return "day";
+        }
+        else if (format.includes("M")) {
+            return "month";
+        }
+        return "year";
+    }
+    /**
+     * Returns the best time unit that should be used for the X axis of a chart in order to display all
+     * the labels correctly.
+     *
+     * There is two conditions :
+     *  - the format of the labels should be able to display the unit. For example if the format is "DD/MM/YYYY"
+     *    it makes no sense to try to use minutes in the X axis
+     *  - we want the "best fit" unit. For example if the labels span a period of several days, we want to use days
+     *    as a unit, but if they span 200 days, we'd like to use months instead
+     *
+     */
+    function getBestTimeUnitForScale(labels, format) {
+        const labelDates = labels.map((label) => { var _a; return (_a = parseDateTime(label)) === null || _a === void 0 ? void 0 : _a.jsDate; });
+        if (labelDates.some((date) => date === undefined) || labels.length < 2) {
+            return undefined;
+        }
+        const labelsTimestamps = labelDates.map((date) => date.getTime());
+        const period = Math.max(...labelsTimestamps) - Math.min(...labelsTimestamps);
+        const minUnit = getFormatMinDisplayUnit(format);
+        if (UNIT_LENGTH.second >= UNIT_LENGTH[minUnit] && Milliseconds.inSeconds(period) < 180) {
+            return "second";
+        }
+        else if (UNIT_LENGTH.minute >= UNIT_LENGTH[minUnit] && Milliseconds.inMinutes(period) < 180) {
+            return "minute";
+        }
+        else if (UNIT_LENGTH.hour >= UNIT_LENGTH[minUnit] && Milliseconds.inHours(period) < 96) {
+            return "hour";
+        }
+        else if (UNIT_LENGTH.day >= UNIT_LENGTH[minUnit] && Milliseconds.inDays(period) < 90) {
+            return "day";
+        }
+        else if (UNIT_LENGTH.month >= UNIT_LENGTH[minUnit] && Milliseconds.inMonths(period) < 36) {
+            return "month";
+        }
+        return "year";
+    }
+
+    chartRegistry.add("line", {
+        match: (type) => type === "line",
+        createChart: (definition, sheetId, getters) => new LineChart(definition, sheetId, getters),
+        getChartRuntime: createLineChartRuntime,
+        validateChartDefinition: (validator, definition) => LineChart.validateChartDefinition(validator, definition),
+        transformDefinition: (definition, executed) => LineChart.transformDefinition(definition, executed),
+        getChartDefinitionFromContextCreation: (context) => LineChart.getDefinitionFromContextCreation(context),
+        name: "Line",
+    });
+    class LineChart extends AbstractChart {
+        constructor(definition, sheetId, getters) {
+            super(definition, sheetId, getters);
+            this.type = "line";
+            this.dataSets = createDataSets(this.getters, definition.dataSets, sheetId, definition.dataSetsHaveTitle);
+            this.labelRange = createRange(this.getters, sheetId, definition.labelRange);
+            this.background = definition.background;
+            this.verticalAxisPosition = definition.verticalAxisPosition;
+            this.legendPosition = definition.legendPosition;
+            this.labelsAsText = definition.labelsAsText;
+            this.stacked = definition.stacked;
+        }
+        static validateChartDefinition(validator, definition) {
+            return validator.checkValidations(definition, checkDataset, checkLabelRange);
+        }
+        static transformDefinition(definition, executed) {
+            return transformChartDefinitionWithDataSetsWithZone(definition, executed);
+        }
+        static getDefinitionFromContextCreation(context) {
+            return {
+                background: context.background,
+                dataSets: context.range ? context.range : [],
+                dataSetsHaveTitle: false,
+                labelsAsText: false,
+                legendPosition: "top",
+                title: context.title || "",
+                type: "line",
+                verticalAxisPosition: "left",
+                labelRange: context.auxiliaryRange || undefined,
+                stacked: false,
+            };
+        }
+        getDefinition() {
+            return this.getDefinitionWithSpecificDataSets(this.dataSets, this.labelRange);
+        }
+        getDefinitionWithSpecificDataSets(dataSets, labelRange, targetSheetId) {
+            return {
+                type: "line",
+                dataSetsHaveTitle: dataSets.length ? Boolean(dataSets[0].labelCell) : false,
+                background: this.background,
+                dataSets: dataSets.map((ds) => this.getters.getRangeString(ds.dataRange, targetSheetId || this.sheetId)),
+                legendPosition: this.legendPosition,
+                verticalAxisPosition: this.verticalAxisPosition,
+                labelRange: labelRange
+                    ? this.getters.getRangeString(labelRange, targetSheetId || this.sheetId)
+                    : undefined,
+                title: this.title,
+                labelsAsText: this.labelsAsText,
+                stacked: this.stacked,
+            };
+        }
+        getContextCreation() {
+            return {
+                background: this.background,
+                title: this.title,
+                range: this.dataSets.map((ds) => this.getters.getRangeString(ds.dataRange, this.sheetId)),
+                auxiliaryRange: this.labelRange
+                    ? this.getters.getRangeString(this.labelRange, this.sheetId)
+                    : undefined,
+            };
+        }
+        updateRanges(applyChange) {
+            const { dataSets, labelRange, isStale } = updateChartRangesWithDataSets(this.getters, applyChange, this.dataSets, this.labelRange);
+            if (!isStale) {
+                return this;
+            }
+            const definition = this.getDefinitionWithSpecificDataSets(dataSets, labelRange);
+            return new LineChart(definition, this.sheetId, this.getters);
+        }
+        getDefinitionForExcel() {
+            const dataSets = this.dataSets
+                .map((ds) => toExcelDataset(this.getters, ds))
+                .filter((ds) => ds.range !== ""); // && range !== INCORRECT_RANGE_STRING ? show incorrect #ref ?
+            return {
+                ...this.getDefinition(),
+                backgroundColor: toXlsxHexColor(this.background || BACKGROUND_CHART_COLOR),
+                fontColor: toXlsxHexColor(chartFontColor(this.background)),
+                dataSets,
+            };
+        }
+        copyForSheetId(sheetId) {
+            const dataSets = copyDataSetsWithNewSheetId(this.sheetId, sheetId, this.dataSets);
+            const labelRange = copyLabelRangeWithNewSheetId(this.sheetId, sheetId, this.labelRange);
+            const definition = this.getDefinitionWithSpecificDataSets(dataSets, labelRange, sheetId);
+            return new LineChart(definition, sheetId, this.getters);
+        }
+        copyInSheetId(sheetId) {
+            const definition = this.getDefinitionWithSpecificDataSets(this.dataSets, this.labelRange, sheetId);
+            return new LineChart(definition, sheetId, this.getters);
+        }
+    }
+    function fixEmptyLabelsForDateCharts(labels, dataSetsValues) {
+        if (labels.length === 0 || labels.every((label) => !label)) {
+            return { labels, dataSetsValues };
+        }
+        const newLabels = [...labels];
+        const newDatasets = deepCopy(dataSetsValues);
+        for (let i = 0; i < newLabels.length; i++) {
+            if (!newLabels[i]) {
+                newLabels[i] = findNextDefinedValue(newLabels, i);
+                for (let ds of newDatasets) {
+                    ds.data[i] = undefined;
+                }
+            }
+        }
+        return { labels: newLabels, dataSetsValues: newDatasets };
+    }
+    function canChartParseLabels(labelRange, getters) {
+        return canBeDateChart(labelRange, getters) || canBeLinearChart(labelRange, getters);
+    }
+    function getChartAxisType(chart, getters) {
+        if (isDateChart(chart, getters)) {
+            return "time";
+        }
+        if (isLinearChart(chart, getters)) {
+            return "linear";
+        }
+        return "category";
+    }
+    function isDateChart(chart, getters) {
+        return !chart.labelsAsText && canBeDateChart(chart.labelRange, getters);
+    }
+    function isLinearChart(chart, getters) {
+        return !chart.labelsAsText && canBeLinearChart(chart.labelRange, getters);
+    }
+    function canBeDateChart(labelRange, getters) {
+        if (!labelRange || !canBeLinearChart(labelRange, getters)) {
+            return false;
+        }
+        const labelFormat = getters.getEvaluatedCell({
+            sheetId: labelRange.sheetId,
+            col: labelRange.zone.left,
+            row: labelRange.zone.top,
+        }).format;
+        return Boolean(labelFormat && timeFormatMomentCompatible.test(labelFormat));
+    }
+    function canBeLinearChart(labelRange, getters) {
+        if (!labelRange) {
+            return false;
+        }
+        const labels = getters.getRangeValues(labelRange);
+        if (labels.some((label) => isNaN(Number(label)) && label)) {
+            return false;
+        }
+        if (labels.every((label) => !label)) {
+            return false;
+        }
+        return true;
+    }
+    function getLineConfiguration(chart, labels) {
+        var _a;
+        const fontColor = chartFontColor(chart.background);
+        const config = getDefaultChartJsRuntime(chart, labels, fontColor);
+        const legend = {
+            labels: {
+                fontColor,
+                generateLabels(chart) {
+                    const { data } = chart;
+                    const labels = window.Chart.defaults.global.legend.labels.generateLabels(chart);
+                    for (const [index, label] of labels.entries()) {
+                        label.fillStyle = data.datasets[index].borderColor;
+                    }
+                    return labels;
+                },
+            },
+        };
+        if ((!chart.labelRange && chart.dataSets.length === 1) || chart.legendPosition === "none") {
+            legend.display = false;
+        }
+        else {
+            legend.position = chart.legendPosition;
+        }
+        config.options.legend = { ...(_a = config.options) === null || _a === void 0 ? void 0 : _a.legend, ...legend };
+        config.options.layout = {
+            padding: { left: 20, right: 20, top: chart.title ? 10 : 25, bottom: 10 },
+        };
+        config.options.scales = {
+            xAxes: [
+                {
+                    ticks: {
+                        // x axis configuration
+                        maxRotation: 60,
+                        minRotation: 15,
+                        padding: 5,
+                        labelOffset: 2,
+                        fontColor,
+                    },
+                },
+            ],
+            yAxes: [
+                {
+                    position: chart.verticalAxisPosition,
+                    ticks: {
+                        fontColor,
+                        // y axis configuration
+                        beginAtZero: true, // the origin of the y axis is always zero
+                    },
+                },
+            ],
+        };
+        if (chart.stacked) {
+            config.options.scales.yAxes[0].stacked = true;
+        }
+        return config;
+    }
+    function createLineChartRuntime(chart, getters) {
+        const axisType = getChartAxisType(chart, getters);
+        const labelValues = getChartLabelValues(getters, chart.dataSets, chart.labelRange);
+        let labels = axisType === "linear" ? labelValues.values : labelValues.formattedValues;
+        let dataSetsValues = getChartDatasetValues(getters, chart.dataSets);
+        ({ labels, dataSetsValues } = filterEmptyDataPoints(labels, dataSetsValues));
+        if (axisType === "time") {
+            ({ labels, dataSetsValues } = fixEmptyLabelsForDateCharts(labels, dataSetsValues));
+        }
+        const config = getLineConfiguration(chart, labels);
+        const labelFormat = getLabelFormat(getters, chart.labelRange);
+        if (axisType === "time") {
+            config.options.scales.xAxes[0].type = "time";
+            config.options.scales.xAxes[0].time = getChartTimeOptions(labels, labelFormat);
+            config.options.scales.xAxes[0].ticks.maxTicksLimit = 15;
+        }
+        else if (axisType === "linear") {
+            config.options.scales.xAxes[0].type = "linear";
+            config.options.scales.xAxes[0].ticks.callback = (value) => formatValue(value, labelFormat);
+        }
+        const colors = new ChartColors();
+        for (let [index, { label, data }] of dataSetsValues.entries()) {
+            if (["linear", "time"].includes(axisType)) {
+                // Replace empty string labels by undefined to make sure chartJS doesn't decide that "" is the same as 0
+                data = data.map((y, index) => ({ x: labels[index] || undefined, y }));
+            }
+            const color = colors.next();
+            let backgroundRGBA = colorToRGBA(color);
+            if (chart.stacked) {
+                backgroundRGBA.a = LINE_FILL_TRANSPARENCY;
+            }
+            const backgroundColor = rgbaToHex(backgroundRGBA);
+            const dataset = {
+                label,
+                data,
+                lineTension: 0,
+                borderColor: color,
+                backgroundColor,
+                pointBackgroundColor: color,
+                fill: chart.stacked ? getFillingMode(index) : false,
+            };
+            config.data.datasets.push(dataset);
+        }
+        return { chartJsConfig: config, background: chart.background || BACKGROUND_CHART_COLOR };
+    }
+
+    /**
+     * Create a function used to create a Chart based on the definition
+     */
+    function chartFactory(getters) {
+        const builders = chartRegistry.getAll();
+        function createChart(id, definition, sheetId) {
+            const builder = builders.find((builder) => builder.match(definition.type));
+            if (!builder) {
+                throw new Error(`No builder for this chart: ${definition.type}`);
+            }
+            return builder.createChart(definition, sheetId, getters);
+        }
+        return createChart;
+    }
+    /**
+     * Create a function used to create a Chart Runtime based on the chart class
+     * instance
+     */
+    function chartRuntimeFactory(getters) {
+        const builders = chartRegistry.getAll();
+        function createRuntimeChart(chart) {
+            const builder = builders.find((builder) => builder.match(chart.type));
+            if (!builder) {
+                throw new Error("No runtime builder for this chart.");
+            }
+            return builder.getChartRuntime(chart, getters);
+        }
+        return createRuntimeChart;
+    }
+    /**
+     * Validate the chart definition given in arguments
+     */
+    function validateChartDefinition(validator, definition) {
+        const validators = chartRegistry.getAll().find((validator) => validator.match(definition.type));
+        if (!validators) {
+            throw new Error("Unknown chart type.");
+        }
+        return validators.validateChartDefinition(validator, definition);
+    }
+    /**
+     * Get a new chart definition transformed with the executed command. This
+     * functions will be called during operational transform process
+     */
+    function transformDefinition(definition, executed) {
+        const transformation = chartRegistry.getAll().find((factory) => factory.match(definition.type));
+        if (!transformation) {
+            throw new Error("Unknown chart type.");
+        }
+        return transformation.transformDefinition(definition, executed);
+    }
+    /**
+     * Get an empty definition based on the given context and the given type
+     */
+    function getChartDefinitionFromContextCreation(context, type) {
+        const chartClass = chartRegistry.get(type);
+        return chartClass.getChartDefinitionFromContextCreation(context);
+    }
+    function getChartTypes() {
+        const result = {};
+        for (const key of chartRegistry.getKeys()) {
+            result[key] = chartRegistry.get(key).name;
+        }
+        return result;
+    }
+    /**
+     * Return a "smart" chart definition in the given zone. The definition is "smart" because it will
+     * use the best type of chart to display the data of the zone.
+     *
+     * It will also try to find labels and datasets in the range, and try to find title for the datasets.
+     *
+     * The type of chart will be :
+     * - If the zone is a single non-empty cell, returns a scorecard
+     * - If the all the labels are numbers/date, returns a line chart
+     * - Else returns a bar chart
+     */
+    function getSmartChartDefinition(zone, getters) {
+        let dataSetZone = zone;
+        if (zone.left !== zone.right) {
+            dataSetZone = { ...zone, left: zone.left + 1 };
+        }
+        const dataSets = [zoneToXc(dataSetZone)];
+        const sheetId = getters.getActiveSheetId();
+        const topLeftCell = getters.getCell(sheetId, zone.left, zone.top);
+        if (getZoneArea(zone) === 1 && (topLeftCell === null || topLeftCell === void 0 ? void 0 : topLeftCell.content)) {
+            return {
+                type: "scorecard",
+                title: "",
+                background: BACKGROUND_CHART_COLOR,
+                keyValue: zoneToXc(zone),
+                baselineMode: DEFAULT_SCORECARD_BASELINE_MODE,
+                baselineColorUp: DEFAULT_SCORECARD_BASELINE_COLOR_UP,
+                baselineColorDown: DEFAULT_SCORECARD_BASELINE_COLOR_DOWN,
+            };
+        }
+        let title = "";
+        const cellsInFirstRow = getters.getEvaluatedCellsInZone(sheetId, {
+            ...dataSetZone,
+            bottom: dataSetZone.top,
+        });
+        const dataSetsHaveTitle = !!cellsInFirstRow.find((cell) => cell.type !== CellValueType.empty && cell.type !== CellValueType.number);
+        if (dataSetsHaveTitle) {
+            const texts = cellsInFirstRow
+                .filter((cell) => cell.type !== CellValueType.error && cell.type !== CellValueType.empty)
+                .map((cell) => cell.formattedValue);
+            const lastElement = texts.splice(-1)[0];
+            title = texts.join(", ");
+            if (lastElement) {
+                title += (title ? " " + _t("and") + " " : "") + lastElement;
+            }
+        }
+        let labelRangeXc;
+        if (zone.left !== zone.right) {
+            labelRangeXc = zoneToXc({
+                ...zone,
+                right: zone.left,
+                top: dataSetsHaveTitle ? zone.top + 1 : zone.top,
+            });
+        }
+        // Only display legend for several datasets.
+        const newLegendPos = dataSetZone.right === dataSetZone.left ? "none" : "top";
+        const labelRange = labelRangeXc ? getters.getRangeFromSheetXC(sheetId, labelRangeXc) : undefined;
+        if (canChartParseLabels(labelRange, getters)) {
+            return {
+                title,
+                dataSets,
+                labelsAsText: false,
+                stacked: false,
+                labelRange: labelRangeXc,
+                type: "line",
+                background: BACKGROUND_CHART_COLOR,
+                dataSetsHaveTitle,
+                verticalAxisPosition: "left",
+                legendPosition: newLegendPos,
+            };
+        }
+        return {
+            title,
+            dataSets,
+            labelRange: labelRangeXc,
+            type: "bar",
+            background: BACKGROUND_CHART_COLOR,
+            stacked: false,
+            dataSetsHaveTitle,
+            verticalAxisPosition: "left",
+            legendPosition: newLegendPos,
+        };
+    }
+
+    chartRegistry.add("gauge", {
+        match: (type) => type === "gauge",
+        createChart: (definition, sheetId, getters) => new GaugeChart(definition, sheetId, getters),
+        getChartRuntime: createGaugeChartRuntime,
+        validateChartDefinition: (validator, definition) => GaugeChart.validateChartDefinition(validator, definition),
+        transformDefinition: (definition, executed) => GaugeChart.transformDefinition(definition, executed),
+        getChartDefinitionFromContextCreation: (context) => GaugeChart.getDefinitionFromContextCreation(context),
+        name: "Gauge",
+    });
+    function isDataRangeValid(definition) {
+        return definition.dataRange && !rangeReference.test(definition.dataRange)
+            ? 34 /* CommandResult.InvalidGaugeDataRange */
+            : 0 /* CommandResult.Success */;
+    }
+    function checkRangeLimits(check, batchValidations) {
+        return batchValidations((definition) => {
+            if (definition.sectionRule) {
+                return check(definition.sectionRule.rangeMin, "rangeMin");
+            }
+            return 0 /* CommandResult.Success */;
+        }, (definition) => {
+            if (definition.sectionRule) {
+                return check(definition.sectionRule.rangeMax, "rangeMax");
+            }
+            return 0 /* CommandResult.Success */;
+        });
+    }
+    function checkInflectionPointsValue(check, batchValidations) {
+        return batchValidations((definition) => {
+            if (definition.sectionRule) {
+                return check(definition.sectionRule.lowerInflectionPoint.value, "lowerInflectionPointValue");
+            }
+            return 0 /* CommandResult.Success */;
+        }, (definition) => {
+            if (definition.sectionRule) {
+                return check(definition.sectionRule.upperInflectionPoint.value, "upperInflectionPointValue");
+            }
+            return 0 /* CommandResult.Success */;
+        });
+    }
+    function checkRangeMinBiggerThanRangeMax(definition) {
+        if (definition.sectionRule) {
+            if (Number(definition.sectionRule.rangeMin) >= Number(definition.sectionRule.rangeMax)) {
+                return 39 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */;
+            }
+        }
+        return 0 /* CommandResult.Success */;
+    }
+    function checkEmpty(value, valueName) {
+        if (value === "") {
+            switch (valueName) {
+                case "rangeMin":
+                    return 35 /* CommandResult.EmptyGaugeRangeMin */;
+                case "rangeMax":
+                    return 37 /* CommandResult.EmptyGaugeRangeMax */;
+            }
+        }
+        return 0 /* CommandResult.Success */;
+    }
+    function checkNaN(value, valueName) {
+        if (isNaN(value)) {
+            switch (valueName) {
+                case "rangeMin":
+                    return 36 /* CommandResult.GaugeRangeMinNaN */;
+                case "rangeMax":
+                    return 38 /* CommandResult.GaugeRangeMaxNaN */;
+                case "lowerInflectionPointValue":
+                    return 40 /* CommandResult.GaugeLowerInflectionPointNaN */;
+                case "upperInflectionPointValue":
+                    return 41 /* CommandResult.GaugeUpperInflectionPointNaN */;
+            }
+        }
+        return 0 /* CommandResult.Success */;
+    }
+    class GaugeChart extends AbstractChart {
+        constructor(definition, sheetId, getters) {
+            super(definition, sheetId, getters);
+            this.type = "gauge";
+            this.dataRange = createRange(this.getters, this.sheetId, definition.dataRange);
+            this.sectionRule = definition.sectionRule;
+            this.background = definition.background;
+        }
+        static validateChartDefinition(validator, definition) {
+            return validator.checkValidations(definition, isDataRangeValid, validator.chainValidations(checkRangeLimits(checkEmpty, validator.batchValidations), checkRangeLimits(checkNaN, validator.batchValidations), checkRangeMinBiggerThanRangeMax), validator.chainValidations(checkInflectionPointsValue(checkNaN, validator.batchValidations)));
+        }
+        static transformDefinition(definition, executed) {
+            let dataRangeZone;
+            if (definition.dataRange) {
+                dataRangeZone = transformZone(toUnboundedZone(definition.dataRange), executed);
+            }
+            return {
+                ...definition,
+                dataRange: dataRangeZone ? zoneToXc(dataRangeZone) : undefined,
+            };
+        }
+        static getDefinitionFromContextCreation(context) {
+            return {
+                background: context.background,
+                title: context.title || "",
+                type: "gauge",
+                dataRange: context.range ? context.range[0] : undefined,
+                sectionRule: {
+                    colors: {
+                        lowerColor: DEFAULT_GAUGE_LOWER_COLOR,
+                        middleColor: DEFAULT_GAUGE_MIDDLE_COLOR,
+                        upperColor: DEFAULT_GAUGE_UPPER_COLOR,
+                    },
+                    rangeMin: "0",
+                    rangeMax: "100",
+                    lowerInflectionPoint: {
+                        type: "percentage",
+                        value: "15",
+                    },
+                    upperInflectionPoint: {
+                        type: "percentage",
+                        value: "40",
+                    },
+                },
+            };
+        }
+        copyForSheetId(sheetId) {
+            const dataRange = copyLabelRangeWithNewSheetId(this.sheetId, sheetId, this.dataRange);
+            const definition = this.getDefinitionWithSpecificRanges(dataRange, sheetId);
+            return new GaugeChart(definition, sheetId, this.getters);
+        }
+        copyInSheetId(sheetId) {
+            const definition = this.getDefinitionWithSpecificRanges(this.dataRange, sheetId);
+            return new GaugeChart(definition, sheetId, this.getters);
+        }
+        getDefinition() {
+            return this.getDefinitionWithSpecificRanges(this.dataRange);
+        }
+        getDefinitionWithSpecificRanges(dataRange, targetSheetId) {
+            return {
+                background: this.background,
+                sectionRule: this.sectionRule,
+                title: this.title,
+                type: "gauge",
+                dataRange: dataRange
+                    ? this.getters.getRangeString(dataRange, targetSheetId || this.sheetId)
+                    : undefined,
+            };
+        }
+        getDefinitionForExcel() {
+            // This kind of graph is not exportable in Excel
+            return undefined;
+        }
+        getContextCreation() {
+            return {
+                background: this.background,
+                title: this.title,
+                range: this.dataRange
+                    ? [this.getters.getRangeString(this.dataRange, this.sheetId)]
+                    : undefined,
+            };
+        }
+        updateRanges(applyChange) {
+            const range = adaptChartRange(this.dataRange, applyChange);
+            if (this.dataRange === range) {
+                return this;
+            }
+            const definition = this.getDefinitionWithSpecificRanges(range);
+            return new GaugeChart(definition, this.sheetId, this.getters);
+        }
+    }
+    function getGaugeConfiguration(chart) {
+        const fontColor = chartFontColor(chart.background);
+        const config = getDefaultChartJsRuntime(chart, [], fontColor);
+        config.options.hover = undefined;
+        config.options.events = [];
+        config.options.layout = {
+            padding: { left: 30, right: 30, top: chart.title ? 10 : 25, bottom: 25 },
+        };
+        config.options.needle = {
+            radiusPercentage: 2,
+            widthPercentage: 3.2,
+            lengthPercentage: 80,
+            color: "#000000",
+        };
+        config.options.valueLabel = {
+            display: false,
+            formatter: null,
+            color: "#FFFFFF",
+            backgroundColor: "#000000",
+            fontSize: 30,
+            borderRadius: 5,
+            padding: {
+                top: 5,
+                right: 5,
+                bottom: 5,
+                left: 5,
+            },
+            bottomMarginPercentage: 5,
+        };
+        return config;
+    }
+    function createGaugeChartRuntime(chart, getters) {
+        const config = getGaugeConfiguration(chart);
+        const colors = chart.sectionRule.colors;
+        const lowerPoint = chart.sectionRule.lowerInflectionPoint;
+        const upperPoint = chart.sectionRule.upperInflectionPoint;
+        const lowerPointValue = Number(lowerPoint.value);
+        const upperPointValue = Number(upperPoint.value);
+        const minNeedleValue = Number(chart.sectionRule.rangeMin);
+        const maxNeedleValue = Number(chart.sectionRule.rangeMax);
+        const needleCoverage = maxNeedleValue - minNeedleValue;
+        const needleInflectionPoint = [];
+        if (lowerPoint.value !== "") {
+            const lowerPointNeedleValue = lowerPoint.type === "number"
+                ? lowerPointValue
+                : minNeedleValue + (needleCoverage * lowerPointValue) / 100;
+            needleInflectionPoint.push({
+                value: clip(lowerPointNeedleValue, minNeedleValue, maxNeedleValue),
+                color: colors.lowerColor,
+            });
+        }
+        if (upperPoint.value !== "") {
+            const upperPointNeedleValue = upperPoint.type === "number"
+                ? upperPointValue
+                : minNeedleValue + (needleCoverage * upperPointValue) / 100;
+            needleInflectionPoint.push({
+                value: clip(upperPointNeedleValue, minNeedleValue, maxNeedleValue),
+                color: colors.middleColor,
+            });
+        }
+        const data = [];
+        const backgroundColor = [];
+        needleInflectionPoint
+            .sort((a, b) => a.value - b.value)
+            .map((point) => {
+            data.push(point.value);
+            backgroundColor.push(point.color);
+        });
+        // There's a bug in gauge lib when the last element in `data` is 0 (i.e. when the range maximum is 0).
+        // The value wrongly fallbacks to 1 because 0 is falsy
+        // See https://github.com/haiiaaa/chartjs-gauge/pull/33
+        // https://github.com/haiiaaa/chartjs-gauge/blob/2ea50541d754d710cb30c2502fa690ac5dc27afd/src/controllers/controller.gauge.js#L52
+        data.push(maxNeedleValue);
+        backgroundColor.push(colors.upperColor);
+        const dataRange = chart.dataRange;
+        const deltaBeyondRangeLimit = needleCoverage / 30;
+        let needleValue = minNeedleValue - deltaBeyondRangeLimit; // make needle value always at the minimum by default
+        let cellFormatter = null;
+        let displayValue = false;
+        if (dataRange !== undefined) {
+            const cell = getters.getEvaluatedCell({
+                sheetId: dataRange.sheetId,
+                col: dataRange.zone.left,
+                row: dataRange.zone.top,
+            });
+            if (cell.type === CellValueType.number) {
+                // in gauge graph "datasets.value" is used to calculate the angle of the
+                // needle in the graph. To prevent the needle from making 360° turns, we
+                // clip the value between a min and a max. This min and this max are slightly
+                // smaller and slightly larger than minRange and maxRange to mark the fact
+                // that the needle is out of the range limits
+                needleValue = clip(cell.value, minNeedleValue - deltaBeyondRangeLimit, maxNeedleValue + deltaBeyondRangeLimit);
+                cellFormatter = () => getters.getRangeFormattedValues(dataRange)[0];
+                displayValue = true;
+            }
+        }
+        config.options.valueLabel.display = displayValue;
+        config.options.valueLabel.formatter = cellFormatter;
+        config.data.datasets.push({
+            data,
+            minValue: Number(chart.sectionRule.rangeMin),
+            value: needleValue,
+            backgroundColor,
+        });
+        return {
+            chartJsConfig: config,
+            background: getters.getBackgroundOfSingleCellChart(chart.background, dataRange),
+        };
+    }
+
+    chartRegistry.add("pie", {
+        match: (type) => type === "pie",
+        createChart: (definition, sheetId, getters) => new PieChart(definition, sheetId, getters),
+        getChartRuntime: createPieChartRuntime,
+        validateChartDefinition: (validator, definition) => PieChart.validateChartDefinition(validator, definition),
+        transformDefinition: (definition, executed) => PieChart.transformDefinition(definition, executed),
+        getChartDefinitionFromContextCreation: (context) => PieChart.getDefinitionFromContextCreation(context),
+        name: "Pie",
+    });
+    class PieChart extends AbstractChart {
+        constructor(definition, sheetId, getters) {
+            super(definition, sheetId, getters);
+            this.type = "pie";
+            this.dataSets = createDataSets(getters, definition.dataSets, sheetId, definition.dataSetsHaveTitle);
+            this.labelRange = createRange(getters, sheetId, definition.labelRange);
+            this.background = definition.background;
+            this.legendPosition = definition.legendPosition;
+        }
+        static transformDefinition(definition, executed) {
+            return transformChartDefinitionWithDataSetsWithZone(definition, executed);
+        }
+        static validateChartDefinition(validator, definition) {
+            return validator.checkValidations(definition, checkDataset, checkLabelRange);
+        }
+        static getDefinitionFromContextCreation(context) {
+            return {
+                background: context.background,
+                dataSets: context.range ? context.range : [],
+                dataSetsHaveTitle: false,
+                legendPosition: "top",
+                title: context.title || "",
+                type: "pie",
+                labelRange: context.auxiliaryRange || undefined,
+            };
+        }
+        getDefinition() {
+            return this.getDefinitionWithSpecificDataSets(this.dataSets, this.labelRange);
+        }
+        getContextCreation() {
+            return {
+                background: this.background,
+                title: this.title,
+                range: this.dataSets.map((ds) => this.getters.getRangeString(ds.dataRange, this.sheetId)),
+                auxiliaryRange: this.labelRange
+                    ? this.getters.getRangeString(this.labelRange, this.sheetId)
+                    : undefined,
+            };
+        }
+        getDefinitionWithSpecificDataSets(dataSets, labelRange, targetSheetId) {
+            return {
+                type: "pie",
+                dataSetsHaveTitle: dataSets.length ? Boolean(dataSets[0].labelCell) : false,
+                background: this.background,
+                dataSets: dataSets.map((ds) => this.getters.getRangeString(ds.dataRange, targetSheetId || this.sheetId)),
+                legendPosition: this.legendPosition,
+                labelRange: labelRange
+                    ? this.getters.getRangeString(labelRange, targetSheetId || this.sheetId)
+                    : undefined,
+                title: this.title,
+            };
+        }
+        copyForSheetId(sheetId) {
+            const dataSets = copyDataSetsWithNewSheetId(this.sheetId, sheetId, this.dataSets);
+            const labelRange = copyLabelRangeWithNewSheetId(this.sheetId, sheetId, this.labelRange);
+            const definition = this.getDefinitionWithSpecificDataSets(dataSets, labelRange, sheetId);
+            return new PieChart(definition, sheetId, this.getters);
+        }
+        copyInSheetId(sheetId) {
+            const definition = this.getDefinitionWithSpecificDataSets(this.dataSets, this.labelRange, sheetId);
+            return new PieChart(definition, sheetId, this.getters);
+        }
+        getDefinitionForExcel() {
+            const dataSets = this.dataSets
+                .map((ds) => toExcelDataset(this.getters, ds))
+                .filter((ds) => ds.range !== ""); // && range !== INCORRECT_RANGE_STRING ? show incorrect #ref ?
+            return {
+                ...this.getDefinition(),
+                backgroundColor: toXlsxHexColor(this.background || BACKGROUND_CHART_COLOR),
+                fontColor: toXlsxHexColor(chartFontColor(this.background)),
+                verticalAxisPosition: "left",
+                dataSets,
+            };
+        }
+        updateRanges(applyChange) {
+            const { dataSets, labelRange, isStale } = updateChartRangesWithDataSets(this.getters, applyChange, this.dataSets, this.labelRange);
+            if (!isStale) {
+                return this;
+            }
+            const definition = this.getDefinitionWithSpecificDataSets(dataSets, labelRange);
+            return new PieChart(definition, this.sheetId, this.getters);
+        }
+    }
+    function getPieConfiguration(chart, labels) {
+        var _a;
+        const fontColor = chartFontColor(chart.background);
+        const config = getDefaultChartJsRuntime(chart, labels, fontColor);
+        const legend = {
+            labels: { fontColor },
+        };
+        if ((!chart.labelRange && chart.dataSets.length === 1) || chart.legendPosition === "none") {
+            legend.display = false;
+        }
+        else {
+            legend.position = chart.legendPosition;
+        }
+        config.options.legend = { ...(_a = config.options) === null || _a === void 0 ? void 0 : _a.legend, ...legend };
+        config.options.layout = {
+            padding: { left: 20, right: 20, top: chart.title ? 10 : 25, bottom: 10 },
+        };
+        config.options.tooltips = {
+            callbacks: {
+                title: function (tooltipItems, data) {
+                    return data.datasets[tooltipItems[0].datasetIndex].label;
+                },
+            },
+        };
+        return config;
+    }
+    function getPieColors(colors, dataSetsValues) {
+        const pieColors = [];
+        const maxLength = Math.max(...dataSetsValues.map((ds) => ds.data.length));
+        for (let i = 0; i <= maxLength; i++) {
+            pieColors.push(colors.next());
+        }
+        return pieColors;
+    }
+    function createPieChartRuntime(chart, getters) {
+        const labelValues = getChartLabelValues(getters, chart.dataSets, chart.labelRange);
+        let labels = labelValues.formattedValues;
+        let dataSetsValues = getChartDatasetValues(getters, chart.dataSets);
+        ({ labels, dataSetsValues } = filterEmptyDataPoints(labels, dataSetsValues));
+        const config = getPieConfiguration(chart, labels);
+        const colors = new ChartColors();
+        for (let { label, data } of dataSetsValues) {
+            const backgroundColor = getPieColors(colors, dataSetsValues);
+            const dataset = {
+                label,
+                data,
+                borderColor: "#FFFFFF",
+                backgroundColor,
+            };
+            config.data.datasets.push(dataset);
+        }
+        return { chartJsConfig: config, background: chart.background || BACKGROUND_CHART_COLOR };
+    }
+
+    chartRegistry.add("scorecard", {
+        match: (type) => type === "scorecard",
+        createChart: (definition, sheetId, getters) => new ScorecardChart$1(definition, sheetId, getters),
+        getChartRuntime: createScorecardChartRuntime,
+        validateChartDefinition: (validator, definition) => ScorecardChart$1.validateChartDefinition(validator, definition),
+        transformDefinition: (definition, executed) => ScorecardChart$1.transformDefinition(definition, executed),
+        getChartDefinitionFromContextCreation: (context) => ScorecardChart$1.getDefinitionFromContextCreation(context),
+        name: "Scorecard",
+    });
+    function checkKeyValue(definition) {
+        return definition.keyValue && !rangeReference.test(definition.keyValue)
+            ? 32 /* CommandResult.InvalidScorecardKeyValue */
+            : 0 /* CommandResult.Success */;
+    }
+    function checkBaseline(definition) {
+        return definition.baseline && !rangeReference.test(definition.baseline)
+            ? 33 /* CommandResult.InvalidScorecardBaseline */
+            : 0 /* CommandResult.Success */;
+    }
+    class ScorecardChart$1 extends AbstractChart {
+        constructor(definition, sheetId, getters) {
+            super(definition, sheetId, getters);
+            this.type = "scorecard";
+            this.keyValue = createRange(getters, sheetId, definition.keyValue);
+            this.baseline = createRange(getters, sheetId, definition.baseline);
+            this.baselineMode = definition.baselineMode;
+            this.baselineDescr = definition.baselineDescr;
+            this.background = definition.background;
+            this.baselineColorUp = definition.baselineColorUp;
+            this.baselineColorDown = definition.baselineColorDown;
+        }
+        static validateChartDefinition(validator, definition) {
+            return validator.checkValidations(definition, checkKeyValue, checkBaseline);
+        }
+        static getDefinitionFromContextCreation(context) {
+            return {
+                background: context.background,
+                type: "scorecard",
+                keyValue: context.range ? context.range[0] : undefined,
+                title: context.title || "",
+                baselineMode: DEFAULT_SCORECARD_BASELINE_MODE,
+                baselineColorUp: DEFAULT_SCORECARD_BASELINE_COLOR_UP,
+                baselineColorDown: DEFAULT_SCORECARD_BASELINE_COLOR_DOWN,
+                baseline: context.auxiliaryRange || "",
+            };
+        }
+        static transformDefinition(definition, executed) {
+            let baselineZone;
+            let keyValueZone;
+            if (definition.baseline) {
+                baselineZone = transformZone(toUnboundedZone(definition.baseline), executed);
+            }
+            if (definition.keyValue) {
+                keyValueZone = transformZone(toUnboundedZone(definition.keyValue), executed);
+            }
+            return {
+                ...definition,
+                baseline: baselineZone ? zoneToXc(baselineZone) : undefined,
+                keyValue: keyValueZone ? zoneToXc(keyValueZone) : undefined,
+            };
+        }
+        copyForSheetId(sheetId) {
+            const baseline = copyLabelRangeWithNewSheetId(this.sheetId, sheetId, this.baseline);
+            const keyValue = copyLabelRangeWithNewSheetId(this.sheetId, sheetId, this.keyValue);
+            const definition = this.getDefinitionWithSpecificRanges(baseline, keyValue, sheetId);
+            return new ScorecardChart$1(definition, sheetId, this.getters);
+        }
+        copyInSheetId(sheetId) {
+            const definition = this.getDefinitionWithSpecificRanges(this.baseline, this.keyValue, sheetId);
+            return new ScorecardChart$1(definition, sheetId, this.getters);
+        }
+        getDefinition() {
+            return this.getDefinitionWithSpecificRanges(this.baseline, this.keyValue);
+        }
+        getContextCreation() {
+            return {
+                background: this.background,
+                title: this.title,
+                range: this.keyValue ? [this.getters.getRangeString(this.keyValue, this.sheetId)] : undefined,
+                auxiliaryRange: this.baseline
+                    ? this.getters.getRangeString(this.baseline, this.sheetId)
+                    : undefined,
+            };
+        }
+        getDefinitionWithSpecificRanges(baseline, keyValue, targetSheetId) {
+            return {
+                baselineColorDown: this.baselineColorDown,
+                baselineColorUp: this.baselineColorUp,
+                baselineMode: this.baselineMode,
+                title: this.title,
+                type: "scorecard",
+                background: this.background,
+                baseline: baseline
+                    ? this.getters.getRangeString(baseline, targetSheetId || this.sheetId)
+                    : undefined,
+                baselineDescr: this.baselineDescr,
+                keyValue: keyValue
+                    ? this.getters.getRangeString(keyValue, targetSheetId || this.sheetId)
+                    : undefined,
+            };
+        }
+        getDefinitionForExcel() {
+            // This kind of graph is not exportable in Excel
+            return undefined;
+        }
+        updateRanges(applyChange) {
+            const baseline = adaptChartRange(this.baseline, applyChange);
+            const keyValue = adaptChartRange(this.keyValue, applyChange);
+            if (this.baseline === baseline && this.keyValue === keyValue) {
+                return this;
+            }
+            const definition = this.getDefinitionWithSpecificRanges(baseline, keyValue);
+            return new ScorecardChart$1(definition, this.sheetId, this.getters);
+        }
+    }
+    function createScorecardChartRuntime(chart, getters) {
+        let keyValue = "";
+        let formattedKeyValue = "";
+        let keyValueCell;
+        if (chart.keyValue) {
+            const keyValuePosition = {
+                sheetId: chart.keyValue.sheetId,
+                col: chart.keyValue.zone.left,
+                row: chart.keyValue.zone.top,
+            };
+            keyValueCell = getters.getEvaluatedCell(keyValuePosition);
+            keyValue = String(keyValueCell.value);
+            formattedKeyValue = keyValueCell.formattedValue;
+        }
+        let baselineCell;
+        const baseline = chart.baseline;
+        if (baseline) {
+            const baselinePosition = {
+                sheetId: chart.baseline.sheetId,
+                col: chart.baseline.zone.left,
+                row: chart.baseline.zone.top,
+            };
+            baselineCell = getters.getEvaluatedCell(baselinePosition);
+        }
+        const background = getters.getBackgroundOfSingleCellChart(chart.background, chart.keyValue);
+        return {
+            title: _t(chart.title),
+            keyValue: formattedKeyValue || keyValue,
+            baselineDisplay: getBaselineText(baselineCell, keyValueCell, chart.baselineMode),
+            baselineArrow: getBaselineArrowDirection(baselineCell, keyValueCell, chart.baselineMode),
+            baselineColor: getBaselineColor(baselineCell, chart.baselineMode, keyValueCell, chart.baselineColorUp, chart.baselineColorDown),
+            baselineDescr: _t(chart.baselineDescr || ""),
+            fontColor: chartFontColor(background),
+            background,
+            baselineStyle: chart.baselineMode !== "percentage" && baseline
+                ? getters.getCellStyle({
+                    sheetId: baseline.sheetId,
+                    col: baseline.zone.left,
+                    row: baseline.zone.top,
+                })
+                : undefined,
+            keyValueStyle: chart.keyValue
+                ? getters.getCellStyle({
+                    sheetId: chart.keyValue.sheetId,
+                    col: chart.keyValue.zone.left,
+                    row: chart.keyValue.zone.top,
+                })
+                : undefined,
+        };
+    }
+
     const SORT_TYPES = [
         CellValueType.number,
         CellValueType.error,
@@ -6069,73 +7987,24 @@
     //------------------------------------------------------------------------------
     const CREATE_CHART = (env) => {
         const getters = env.model.getters;
-        const zone = getters.getSelectedZone();
-        let dataSetZone = zone;
         const id = env.model.uuidGenerator.uuidv4();
-        let labelRange;
-        if (zone.left !== zone.right) {
-            dataSetZone = { ...zone, left: zone.left + 1 };
-        }
-        const dataSets = [zoneToXc(dataSetZone)];
         const sheetId = getters.getActiveSheetId();
-        const { x: offsetCorrectionX, y: offsetCorrectionY } = getters.getMainViewportCoordinates();
-        const { offsetX, offsetY } = getters.getActiveSheetScrollInfo();
-        const { width, height } = getters.getSheetViewDimension();
+        if (getZoneArea(env.model.getters.getSelectedZone()) === 1) {
+            env.model.selection.selectTableAroundSelection();
+        }
         const size = { width: DEFAULT_FIGURE_WIDTH, height: DEFAULT_FIGURE_HEIGHT };
-        const rect = getters.getVisibleRect(getters.getActiveMainViewport());
-        const scrollableViewportWidth = Math.min(rect.width, width - offsetCorrectionX);
-        const scrollableViewportHeight = Math.min(rect.height, height - offsetCorrectionY);
-        const position = {
-            x: offsetCorrectionX +
-                offsetX +
-                Math.max(0, (scrollableViewportWidth - DEFAULT_FIGURE_WIDTH) / 2),
-            y: offsetCorrectionY +
-                offsetY +
-                Math.max(0, (scrollableViewportHeight - DEFAULT_FIGURE_HEIGHT) / 2),
-        }; // Position at the center of the scrollable viewport
-        let title = "";
-        const cells = env.model.getters.getEvaluatedCellsInZone(sheetId, {
-            ...dataSetZone,
-            bottom: dataSetZone.top,
-        });
-        const dataSetsHaveTitle = cells.some((cell) => cell.type !== CellValueType.number && cell.type !== CellValueType.empty);
-        if (dataSetsHaveTitle) {
-            const texts = cells
-                .filter((cell) => cell.type !== CellValueType.error && cell.type !== CellValueType.empty)
-                .map((cell) => cell.formattedValue);
-            const lastElement = texts.splice(-1)[0];
-            title = texts.join(", ");
-            if (lastElement) {
-                title += (title ? " " + env._t("and") + " " : "") + lastElement;
-            }
-        }
-        if (zone.left !== zone.right) {
-            labelRange = zoneToXc({
-                ...zone,
-                right: zone.left,
-                top: dataSetsHaveTitle ? zone.top + 1 : zone.top,
-            });
-        }
-        const newLegendPos = dataSetZone.right === dataSetZone.left ? "none" : "top"; //Using the same variable as above to identify number of columns involved.
-        env.model.dispatch("CREATE_CHART", {
+        const position = getChartPositionAtCenterOfViewport(getters, size);
+        const result = env.model.dispatch("CREATE_CHART", {
             sheetId,
             id,
             position,
             size,
-            definition: {
-                title,
-                dataSets,
-                labelRange,
-                type: "bar",
-                background: BACKGROUND_CHART_COLOR,
-                stacked: false,
-                dataSetsHaveTitle,
-                verticalAxisPosition: "left",
-                legendPosition: newLegendPos,
-            },
+            definition: getSmartChartDefinition(env.model.getters.getSelectedZone(), env.model.getters),
         });
-        env.model.dispatch("SELECT_FIGURE", { id });
-        env.openSidePanel("ChartPanel");
+        if (result.isSuccessful) {
+            env.model.dispatch("SELECT_FIGURE", { id });
+            env.openSidePanel("ChartPanel");
+        }
     };
     //------------------------------------------------------------------------------
     // Style/Format
@@ -6598,85 +8467,6 @@
         action: (env) => env.model.dispatch("HIDE_SHEET", { sheetId: env.model.getters.getActiveSheetId() }),
     });
 
-    const CfTerms = {
-        Errors: {
-            [24 /* CommandResult.InvalidRange */]: _lt("The range is invalid"),
-            [49 /* CommandResult.FirstArgMissing */]: _lt("The argument is missing. Please provide a value"),
-            [50 /* CommandResult.SecondArgMissing */]: _lt("The second argument is missing. Please provide a value"),
-            [51 /* CommandResult.MinNaN */]: _lt("The minpoint must be a number"),
-            [52 /* CommandResult.MidNaN */]: _lt("The midpoint must be a number"),
-            [53 /* CommandResult.MaxNaN */]: _lt("The maxpoint must be a number"),
-            [54 /* CommandResult.ValueUpperInflectionNaN */]: _lt("The first value must be a number"),
-            [55 /* CommandResult.ValueLowerInflectionNaN */]: _lt("The second value must be a number"),
-            [45 /* CommandResult.MinBiggerThanMax */]: _lt("Minimum must be smaller then Maximum"),
-            [48 /* CommandResult.MinBiggerThanMid */]: _lt("Minimum must be smaller then Midpoint"),
-            [47 /* CommandResult.MidBiggerThanMax */]: _lt("Midpoint must be smaller then Maximum"),
-            [46 /* CommandResult.LowerBiggerThanUpper */]: _lt("Lower inflection point must be smaller than upper inflection point"),
-            [56 /* CommandResult.MinInvalidFormula */]: _lt("Invalid Minpoint formula"),
-            [58 /* CommandResult.MaxInvalidFormula */]: _lt("Invalid Maxpoint formula"),
-            [57 /* CommandResult.MidInvalidFormula */]: _lt("Invalid Midpoint formula"),
-            [59 /* CommandResult.ValueUpperInvalidFormula */]: _lt("Invalid upper inflection point formula"),
-            [60 /* CommandResult.ValueLowerInvalidFormula */]: _lt("Invalid lower inflection point formula"),
-            [23 /* CommandResult.EmptyRange */]: _lt("A range needs to be defined"),
-            Unexpected: _lt("The rule is invalid for an unknown reason"),
-        },
-        ColorScale: _lt("Color scale"),
-        IconSet: _lt("Icon set"),
-    };
-    const CellIsOperators = {
-        IsEmpty: _lt("Is empty"),
-        IsNotEmpty: _lt("Is not empty"),
-        ContainsText: _lt("Contains"),
-        NotContains: _lt("Does not contain"),
-        BeginsWith: _lt("Starts with"),
-        EndsWith: _lt("Ends with"),
-        Equal: _lt("Is equal to"),
-        NotEqual: _lt("Is not equal to"),
-        GreaterThan: _lt("Is greater than"),
-        GreaterThanOrEqual: _lt("Is greater than or equal to"),
-        LessThan: _lt("Is less than"),
-        LessThanOrEqual: _lt("Is less than or equal to"),
-        Between: _lt("Is between"),
-        NotBetween: _lt("Is not between"),
-    };
-    const ChartTerms = {
-        Series: _lt("Series"),
-        Errors: {
-            Unexpected: _lt("The chart definition is invalid for an unknown reason"),
-            // BASIC CHART ERRORS (LINE | BAR | PIE)
-            [30 /* CommandResult.InvalidDataSet */]: _lt("The dataset is invalid"),
-            [31 /* CommandResult.InvalidLabelRange */]: _lt("Labels are invalid"),
-            // SCORECARD CHART ERRORS
-            [32 /* CommandResult.InvalidScorecardKeyValue */]: _lt("The key value is invalid"),
-            [33 /* CommandResult.InvalidScorecardBaseline */]: _lt("The baseline value is invalid"),
-            // GAUGE CHART ERRORS
-            [34 /* CommandResult.InvalidGaugeDataRange */]: _lt("The data range is invalid"),
-            [35 /* CommandResult.EmptyGaugeRangeMin */]: _lt("A minimum range limit value is needed"),
-            [36 /* CommandResult.GaugeRangeMinNaN */]: _lt("The minimum range limit value must be a number"),
-            [37 /* CommandResult.EmptyGaugeRangeMax */]: _lt("A maximum range limit value is needed"),
-            [38 /* CommandResult.GaugeRangeMaxNaN */]: _lt("The maximum range limit value must be a number"),
-            [39 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */]: _lt("Minimum range limit must be smaller than maximum range limit"),
-            [40 /* CommandResult.GaugeLowerInflectionPointNaN */]: _lt("The lower inflection point value must be a number"),
-            [41 /* CommandResult.GaugeUpperInflectionPointNaN */]: _lt("The upper inflection point value must be a number"),
-        },
-    };
-    const NumberFormatTerms = {
-        Automatic: _lt("Automatic"),
-        Number: _lt("Number"),
-        Percent: _lt("Percent"),
-        Currency: _lt("Currency"),
-        CurrencyRounded: _lt("Currency rounded"),
-        Date: _lt("Date"),
-        Time: _lt("Time"),
-        DateTime: _lt("Date time"),
-        Duration: _lt("Duration"),
-        CustomCurrency: _lt("Custom currency"),
-    };
-    const CustomCurrencyTerms = {
-        Custom: _lt("Custom"),
-    };
-    const MergeErrorMessage = _lt("Merged cells are preventing this operation. Unmerge those cells and try again.");
-
     function interactiveFreezeColumnsRows(env, dimension, base) {
         const sheetId = env.model.getters.getActiveSheetId();
         const cmd = dimension === "COL" ? "FREEZE_COLUMNS" : "FREEZE_ROWS";
@@ -7136,10 +8926,10 @@
     function updateSelectionWithArrowKeys(ev, selection) {
         const direction = arrowMap[ev.key];
         if (ev.shiftKey) {
-            selection.resizeAnchorZone(direction, ev.ctrlKey ? "end" : "one");
+            selection.resizeAnchorZone(direction, ev.ctrlKey ? "end" : 1);
         }
         else {
-            selection.moveAnchorCell(direction, ev.ctrlKey ? "end" : "one");
+            selection.moveAnchorCell(direction, ev.ctrlKey ? "end" : 1);
         }
     }
 
@@ -7408,1745 +9198,6 @@
         }
     }
     BarConfigPanel.template = "o-spreadsheet-BarConfigPanel";
-
-    /**
-     * AbstractChart is the class from which every Chart should inherit.
-     * The role of this class is to maintain the state of each chart.
-     */
-    class AbstractChart {
-        constructor(definition, sheetId, getters) {
-            this.title = definition.title;
-            this.sheetId = sheetId;
-            this.getters = getters;
-        }
-        /**
-         * Validate the chart definition given as arguments. This function will be
-         * called from allowDispatch function
-         */
-        static validateChartDefinition(validator, definition) {
-            throw new Error("This method should be implemented by sub class");
-        }
-        /**
-         * Get a new chart definition transformed with the executed command. This
-         * functions will be called during operational transform process
-         */
-        static transformDefinition(definition, executed) {
-            throw new Error("This method should be implemented by sub class");
-        }
-        /**
-         * Get an empty definition based on the given context
-         */
-        static getDefinitionFromContextCreation(context) {
-            throw new Error("This method should be implemented by sub class");
-        }
-    }
-
-    /**
-     * Convert a JS color hexadecimal to an excel compatible color.
-     *
-     * In Excel the color don't start with a '#' and the format is AARRGGBB instead of RRGGBBAA
-     */
-    function toXlsxHexColor(color) {
-        color = toHex(color).replace("#", "");
-        // alpha channel goes first
-        if (color.length === 8) {
-            return color.slice(6) + color.slice(0, 6);
-        }
-        return color;
-    }
-
-    function transformZone(zone, executed) {
-        if (executed.type === "REMOVE_COLUMNS_ROWS") {
-            return reduceZoneOnDeletion(zone, executed.dimension === "COL" ? "left" : "top", executed.elements);
-        }
-        if (executed.type === "ADD_COLUMNS_ROWS") {
-            return expandZoneOnInsertion(zone, executed.dimension === "COL" ? "left" : "top", executed.base, executed.position, executed.quantity);
-        }
-        return { ...zone };
-    }
-
-    /**
-     * This file contains helpers that are common to different charts (mainly
-     * line, bar and pie charts)
-     */
-    /**
-     * Adapt ranges of a chart which support DataSet (dataSets and LabelRange).
-     */
-    function updateChartRangesWithDataSets(getters, applyChange, chartDataSets, chartLabelRange) {
-        let isStale = false;
-        const dataSetsWithUndefined = [];
-        for (let index in chartDataSets) {
-            let ds = chartDataSets[index];
-            if (ds.labelCell) {
-                const labelCell = adaptChartRange(ds.labelCell, applyChange);
-                if (ds.labelCell !== labelCell) {
-                    isStale = true;
-                    ds = {
-                        ...ds,
-                        labelCell: labelCell,
-                    };
-                }
-            }
-            const dataRange = adaptChartRange(ds.dataRange, applyChange);
-            if (dataRange === undefined ||
-                getters.getRangeString(dataRange, dataRange.sheetId) === INCORRECT_RANGE_STRING) {
-                isStale = true;
-                ds = undefined;
-            }
-            else if (dataRange !== ds.dataRange) {
-                isStale = true;
-                ds = {
-                    ...ds,
-                    dataRange,
-                };
-            }
-            dataSetsWithUndefined[index] = ds;
-        }
-        let labelRange = chartLabelRange;
-        const range = adaptChartRange(labelRange, applyChange);
-        if (range !== labelRange) {
-            isStale = true;
-            labelRange = range;
-        }
-        const dataSets = dataSetsWithUndefined.filter(isDefined$1);
-        return {
-            isStale,
-            dataSets,
-            labelRange,
-        };
-    }
-    /**
-     * Copy the dataSets given. All the ranges which are on sheetIdFrom will target
-     * sheetIdTo.
-     */
-    function copyDataSetsWithNewSheetId(sheetIdFrom, sheetIdTo, dataSets) {
-        return dataSets.map((ds) => {
-            return {
-                dataRange: copyRangeWithNewSheetId(sheetIdFrom, sheetIdTo, ds.dataRange),
-                labelCell: ds.labelCell
-                    ? copyRangeWithNewSheetId(sheetIdFrom, sheetIdTo, ds.labelCell)
-                    : undefined,
-            };
-        });
-    }
-    /**
-     * Copy a range. If the range is on the sheetIdFrom, the range will target
-     * sheetIdTo.
-     */
-    function copyLabelRangeWithNewSheetId(sheetIdFrom, sheetIdTo, range) {
-        return range ? copyRangeWithNewSheetId(sheetIdFrom, sheetIdTo, range) : undefined;
-    }
-    /**
-     * Adapt a single range of a chart
-     */
-    function adaptChartRange(range, applyChange) {
-        if (!range) {
-            return undefined;
-        }
-        const change = applyChange(range);
-        switch (change.changeType) {
-            case "NONE":
-                return range;
-            case "REMOVE":
-                return undefined;
-            default:
-                return change.range;
-        }
-    }
-    /**
-     * Create the dataSet objects from xcs
-     */
-    function createDataSets(getters, dataSetsString, sheetId, dataSetsHaveTitle) {
-        const dataSets = [];
-        for (const sheetXC of dataSetsString) {
-            const dataRange = getters.getRangeFromSheetXC(sheetId, sheetXC);
-            const { unboundedZone: zone, sheetId: dataSetSheetId, invalidSheetName } = dataRange;
-            if (invalidSheetName) {
-                continue;
-            }
-            // It's a rectangle. We treat all columns (arbitrary) as different data series.
-            if (zone.left !== zone.right && zone.top !== zone.bottom) {
-                if (zone.right === undefined) {
-                    // Should never happens because of the allowDispatch of charts, but just making sure
-                    continue;
-                }
-                for (let column = zone.left; column <= zone.right; column++) {
-                    const columnZone = {
-                        ...zone,
-                        left: column,
-                        right: column,
-                    };
-                    dataSets.push(createDataSet(getters, dataSetSheetId, columnZone, dataSetsHaveTitle
-                        ? {
-                            top: columnZone.top,
-                            bottom: columnZone.top,
-                            left: columnZone.left,
-                            right: columnZone.left,
-                        }
-                        : undefined));
-                }
-            }
-            else if (zone.left === zone.right && zone.top === zone.bottom) {
-                // A single cell. If it's only the title, the dataset is not added.
-                if (!dataSetsHaveTitle) {
-                    dataSets.push(createDataSet(getters, dataSetSheetId, zone, undefined));
-                }
-            }
-            else {
-                /* 1 row or 1 column */
-                dataSets.push(createDataSet(getters, dataSetSheetId, zone, dataSetsHaveTitle
-                    ? {
-                        top: zone.top,
-                        bottom: zone.top,
-                        left: zone.left,
-                        right: zone.left,
-                    }
-                    : undefined));
-            }
-        }
-        return dataSets;
-    }
-    function createDataSet(getters, sheetId, fullZone, titleZone) {
-        if (fullZone.left !== fullZone.right && fullZone.top !== fullZone.bottom) {
-            throw new Error(`Zone should be a single column or row: ${zoneToXc(fullZone)}`);
-        }
-        if (titleZone) {
-            const dataXC = zoneToXc(fullZone);
-            const labelCellXC = zoneToXc(titleZone);
-            return {
-                labelCell: getters.getRangeFromSheetXC(sheetId, labelCellXC),
-                dataRange: getters.getRangeFromSheetXC(sheetId, dataXC),
-            };
-        }
-        else {
-            return {
-                labelCell: undefined,
-                dataRange: getters.getRangeFromSheetXC(sheetId, zoneToXc(fullZone)),
-            };
-        }
-    }
-    /**
-     * Transform a dataSet to a ExcelDataSet
-     */
-    function toExcelDataset(getters, ds) {
-        var _a;
-        const labelZone = (_a = ds.labelCell) === null || _a === void 0 ? void 0 : _a.zone;
-        let dataZone = ds.dataRange.zone;
-        if (labelZone) {
-            const { height, width } = zoneToDimension(dataZone);
-            if (height === 1) {
-                dataZone = { ...dataZone, left: dataZone.left + 1 };
-            }
-            else if (width === 1) {
-                dataZone = { ...dataZone, top: dataZone.top + 1 };
-            }
-        }
-        const dataRange = ds.dataRange.clone({ zone: dataZone });
-        return {
-            label: ds.labelCell ? getters.getRangeString(ds.labelCell, "forceSheetReference") : undefined,
-            range: getters.getRangeString(dataRange, "forceSheetReference"),
-        };
-    }
-    /**
-     * Transform a chart definition which supports dataSets (dataSets and LabelRange)
-     * with an executed command
-     */
-    function transformChartDefinitionWithDataSetsWithZone(definition, executed) {
-        let labelRange;
-        if (definition.labelRange) {
-            const labelZone = transformZone(toUnboundedZone(definition.labelRange), executed);
-            labelRange = labelZone ? zoneToXc(labelZone) : undefined;
-        }
-        const dataSets = definition.dataSets
-            .map(toUnboundedZone)
-            .map((zone) => transformZone(zone, executed))
-            .filter(isDefined$1)
-            .map(zoneToXc);
-        return {
-            ...definition,
-            labelRange,
-            dataSets,
-        };
-    }
-    const GraphColors = [
-        // the same colors as those used in odoo reporting
-        "rgb(31,119,180)",
-        "rgb(255,127,14)",
-        "rgb(174,199,232)",
-        "rgb(255,187,120)",
-        "rgb(44,160,44)",
-        "rgb(152,223,138)",
-        "rgb(214,39,40)",
-        "rgb(255,152,150)",
-        "rgb(148,103,189)",
-        "rgb(197,176,213)",
-        "rgb(140,86,75)",
-        "rgb(196,156,148)",
-        "rgb(227,119,194)",
-        "rgb(247,182,210)",
-        "rgb(127,127,127)",
-        "rgb(199,199,199)",
-        "rgb(188,189,34)",
-        "rgb(219,219,141)",
-        "rgb(23,190,207)",
-        "rgb(158,218,229)",
-    ];
-    class ChartColors {
-        constructor() {
-            this.graphColorIndex = 0;
-        }
-        next() {
-            return GraphColors[this.graphColorIndex++ % GraphColors.length];
-        }
-    }
-    /**
-     * Choose a font color based on a background color.
-     * The font is white with a dark background.
-     */
-    function chartFontColor(backgroundColor) {
-        if (!backgroundColor) {
-            return "#000000";
-        }
-        return relativeLuminance(backgroundColor) < 0.3 ? "#FFFFFF" : "#000000";
-    }
-    function checkDataset(definition) {
-        if (definition.dataSets) {
-            const invalidRanges = definition.dataSets.find((range) => !rangeReference.test(range)) !== undefined;
-            if (invalidRanges) {
-                return 30 /* CommandResult.InvalidDataSet */;
-            }
-            const zones = definition.dataSets.map(toUnboundedZone);
-            if (zones.some((zone) => zone.top !== zone.bottom && isFullRow(zone))) {
-                return 30 /* CommandResult.InvalidDataSet */;
-            }
-        }
-        return 0 /* CommandResult.Success */;
-    }
-    function checkLabelRange(definition) {
-        if (definition.labelRange) {
-            const invalidLabels = !rangeReference.test(definition.labelRange || "");
-            if (invalidLabels) {
-                return 31 /* CommandResult.InvalidLabelRange */;
-            }
-        }
-        return 0 /* CommandResult.Success */;
-    }
-    // ---------------------------------------------------------------------------
-    // Scorecard
-    // ---------------------------------------------------------------------------
-    function getBaselineText(baseline, keyValue, baselineMode) {
-        if (!baseline) {
-            return "";
-        }
-        else if (baselineMode === "text" ||
-            (keyValue === null || keyValue === void 0 ? void 0 : keyValue.type) !== CellValueType.number ||
-            baseline.type !== CellValueType.number) {
-            return baseline.formattedValue;
-        }
-        else {
-            let diff = keyValue.value - baseline.value;
-            if (baselineMode === "percentage" && diff !== 0) {
-                diff = (diff / baseline.value) * 100;
-            }
-            if (baselineMode !== "percentage" && baseline.format) {
-                return formatValue(diff, baseline.format);
-            }
-            const baselineStr = Math.abs(parseFloat(diff.toFixed(2))).toLocaleString();
-            return baselineMode === "percentage" ? baselineStr + "%" : baselineStr;
-        }
-    }
-    function getBaselineColor(baseline, baselineMode, keyValue, colorUp, colorDown) {
-        if (baselineMode === "text" ||
-            (baseline === null || baseline === void 0 ? void 0 : baseline.type) !== CellValueType.number ||
-            (keyValue === null || keyValue === void 0 ? void 0 : keyValue.type) !== CellValueType.number) {
-            return undefined;
-        }
-        const diff = keyValue.value - baseline.value;
-        if (diff > 0) {
-            return colorUp;
-        }
-        else if (diff < 0) {
-            return colorDown;
-        }
-        return undefined;
-    }
-    function getBaselineArrowDirection(baseline, keyValue, baselineMode) {
-        if (baselineMode === "text" ||
-            (baseline === null || baseline === void 0 ? void 0 : baseline.type) !== CellValueType.number ||
-            (keyValue === null || keyValue === void 0 ? void 0 : keyValue.type) !== CellValueType.number) {
-            return "neutral";
-        }
-        const diff = keyValue.value - baseline.value;
-        if (diff > 0) {
-            return "up";
-        }
-        else if (diff < 0) {
-            return "down";
-        }
-        return "neutral";
-    }
-
-    /**
-     * This file contains helpers that are common to different runtime charts (mainly
-     * line, bar and pie charts)
-     */
-    /**
-     * Get the data from a dataSet
-     */
-    function getData(getters, ds) {
-        if (ds.dataRange) {
-            const labelCellZone = ds.labelCell ? [zoneToXc(ds.labelCell.zone)] : [];
-            const dataXC = recomputeZones([zoneToXc(ds.dataRange.zone)], labelCellZone)[0];
-            if (dataXC === undefined) {
-                return [];
-            }
-            const dataRange = getters.getRangeFromSheetXC(ds.dataRange.sheetId, dataXC);
-            return getters.getRangeValues(dataRange).map((value) => (value === "" ? undefined : value));
-        }
-        return [];
-    }
-    function filterEmptyDataPoints(labels, datasets) {
-        const numberOfDataPoints = Math.max(labels.length, ...datasets.map((dataset) => { var _a; return ((_a = dataset.data) === null || _a === void 0 ? void 0 : _a.length) || 0; }));
-        const dataPointsIndexes = range(0, numberOfDataPoints).filter((dataPointIndex) => {
-            const label = labels[dataPointIndex];
-            const values = datasets.map((dataset) => { var _a; return (_a = dataset.data) === null || _a === void 0 ? void 0 : _a[dataPointIndex]; });
-            return label || values.some((value) => value === 0 || Boolean(value));
-        });
-        return {
-            labels: dataPointsIndexes.map((i) => labels[i] || ""),
-            dataSetsValues: datasets.map((dataset) => ({
-                ...dataset,
-                data: dataPointsIndexes.map((i) => dataset.data[i]),
-            })),
-        };
-    }
-    function truncateLabel(label) {
-        if (!label) {
-            return "";
-        }
-        if (label.length > MAX_CHAR_LABEL) {
-            return label.substring(0, MAX_CHAR_LABEL) + "…";
-        }
-        return label;
-    }
-    /**
-     * Get a default chart js configuration
-     */
-    function getDefaultChartJsRuntime(chart, labels, fontColor) {
-        return {
-            type: chart.type,
-            options: {
-                // https://www.chartjs.org/docs/latest/general/responsive.html
-                responsive: true,
-                maintainAspectRatio: false,
-                layout: {
-                    padding: { left: 20, right: 20, top: chart.title ? 10 : 25, bottom: 10 },
-                },
-                elements: {
-                    line: {
-                        fill: false, // do not fill the area under line charts
-                    },
-                    point: {
-                        hitRadius: 15, // increased hit radius to display point tooltip when hovering nearby
-                    },
-                },
-                animation: {
-                    duration: 0, // general animation time
-                },
-                hover: {
-                    animationDuration: 10, // duration of animations when hovering an item
-                },
-                responsiveAnimationDuration: 0,
-                title: {
-                    display: !!chart.title,
-                    fontSize: 22,
-                    fontStyle: "normal",
-                    text: _t(chart.title),
-                    fontColor,
-                },
-                legend: {
-                    // Disable default legend onClick (show/hide dataset), to allow us to set a global onClick on the chart container.
-                    // If we want to re-enable this in the future, we need to override the default onClick to stop the event propagation
-                    onClick: undefined,
-                },
-            },
-            data: {
-                labels: labels.map(truncateLabel),
-                datasets: [],
-            },
-        };
-    }
-    function getLabelFormat(getters, range) {
-        if (!range)
-            return undefined;
-        return getters.getEvaluatedCell({
-            sheetId: range.sheetId,
-            col: range.zone.left,
-            row: range.zone.top,
-        }).format;
-    }
-    function getChartLabelValues(getters, dataSets, labelRange) {
-        let labels = { values: [], formattedValues: [] };
-        if (labelRange) {
-            if (!labelRange.invalidXc && !labelRange.invalidSheetName) {
-                labels = {
-                    formattedValues: getters.getRangeFormattedValues(labelRange),
-                    values: getters.getRangeValues(labelRange).map((val) => String(val)),
-                };
-            }
-        }
-        else if (dataSets.length === 1) {
-            for (let i = 0; i < getData(getters, dataSets[0]).length; i++) {
-                labels.formattedValues.push("");
-                labels.values.push("");
-            }
-        }
-        else {
-            if (dataSets[0]) {
-                const ranges = getData(getters, dataSets[0]);
-                labels = {
-                    formattedValues: range(0, ranges.length).map((r) => r.toString()),
-                    values: labels.formattedValues,
-                };
-            }
-        }
-        return labels;
-    }
-    function getChartDatasetValues(getters, dataSets) {
-        const datasetValues = [];
-        for (const [dsIndex, ds] of Object.entries(dataSets)) {
-            let label;
-            if (ds.labelCell) {
-                const labelRange = ds.labelCell;
-                const cell = labelRange
-                    ? getters.getEvaluatedCell({
-                        sheetId: labelRange.sheetId,
-                        col: labelRange.zone.left,
-                        row: labelRange.zone.top,
-                    })
-                    : undefined;
-                label =
-                    cell && labelRange
-                        ? truncateLabel(cell.formattedValue)
-                        : (label = `${ChartTerms.Series} ${parseInt(dsIndex) + 1}`);
-            }
-            else {
-                label = label = `${ChartTerms.Series} ${parseInt(dsIndex) + 1}`;
-            }
-            let data = ds.dataRange ? getData(getters, ds) : [];
-            datasetValues.push({ data, label });
-        }
-        return datasetValues;
-    }
-    /** See https://www.chartjs.org/docs/latest/charts/area.html#filling-modes */
-    function getFillingMode(index) {
-        if (index === 0) {
-            return "origin";
-        }
-        else {
-            return index - 1;
-        }
-    }
-
-    chartRegistry.add("bar", {
-        match: (type) => type === "bar",
-        createChart: (definition, sheetId, getters) => new BarChart(definition, sheetId, getters),
-        getChartRuntime: createBarChartRuntime,
-        validateChartDefinition: (validator, definition) => BarChart.validateChartDefinition(validator, definition),
-        transformDefinition: (definition, executed) => BarChart.transformDefinition(definition, executed),
-        getChartDefinitionFromContextCreation: (context) => BarChart.getDefinitionFromContextCreation(context),
-        name: "Bar",
-    });
-    class BarChart extends AbstractChart {
-        constructor(definition, sheetId, getters) {
-            super(definition, sheetId, getters);
-            this.type = "bar";
-            this.dataSets = createDataSets(getters, definition.dataSets, sheetId, definition.dataSetsHaveTitle);
-            this.labelRange = createRange(getters, sheetId, definition.labelRange);
-            this.background = definition.background;
-            this.verticalAxisPosition = definition.verticalAxisPosition;
-            this.legendPosition = definition.legendPosition;
-            this.stacked = definition.stacked;
-        }
-        static transformDefinition(definition, executed) {
-            return transformChartDefinitionWithDataSetsWithZone(definition, executed);
-        }
-        static validateChartDefinition(validator, definition) {
-            return validator.checkValidations(definition, checkDataset, checkLabelRange);
-        }
-        static getDefinitionFromContextCreation(context) {
-            return {
-                background: context.background,
-                dataSets: context.range ? context.range : [],
-                dataSetsHaveTitle: false,
-                stacked: false,
-                legendPosition: "top",
-                title: context.title || "",
-                type: "bar",
-                verticalAxisPosition: "left",
-                labelRange: context.auxiliaryRange || undefined,
-            };
-        }
-        getContextCreation() {
-            return {
-                background: this.background,
-                title: this.title,
-                range: this.dataSets.map((ds) => this.getters.getRangeString(ds.dataRange, this.sheetId)),
-                auxiliaryRange: this.labelRange
-                    ? this.getters.getRangeString(this.labelRange, this.sheetId)
-                    : undefined,
-            };
-        }
-        copyForSheetId(sheetId) {
-            const dataSets = copyDataSetsWithNewSheetId(this.sheetId, sheetId, this.dataSets);
-            const labelRange = copyLabelRangeWithNewSheetId(this.sheetId, sheetId, this.labelRange);
-            const definition = this.getDefinitionWithSpecificDataSets(dataSets, labelRange, sheetId);
-            return new BarChart(definition, sheetId, this.getters);
-        }
-        copyInSheetId(sheetId) {
-            const definition = this.getDefinitionWithSpecificDataSets(this.dataSets, this.labelRange, sheetId);
-            return new BarChart(definition, sheetId, this.getters);
-        }
-        getDefinition() {
-            return this.getDefinitionWithSpecificDataSets(this.dataSets, this.labelRange);
-        }
-        getDefinitionWithSpecificDataSets(dataSets, labelRange, targetSheetId) {
-            return {
-                type: "bar",
-                dataSetsHaveTitle: dataSets.length ? Boolean(dataSets[0].labelCell) : false,
-                background: this.background,
-                dataSets: dataSets.map((ds) => this.getters.getRangeString(ds.dataRange, targetSheetId || this.sheetId)),
-                legendPosition: this.legendPosition,
-                verticalAxisPosition: this.verticalAxisPosition,
-                labelRange: labelRange
-                    ? this.getters.getRangeString(labelRange, targetSheetId || this.sheetId)
-                    : undefined,
-                title: this.title,
-                stacked: this.stacked,
-            };
-        }
-        getDefinitionForExcel() {
-            const dataSets = this.dataSets
-                .map((ds) => toExcelDataset(this.getters, ds))
-                .filter((ds) => ds.range !== ""); // && range !== INCORRECT_RANGE_STRING ? show incorrect #ref ?
-            return {
-                ...this.getDefinition(),
-                backgroundColor: toXlsxHexColor(this.background || BACKGROUND_CHART_COLOR),
-                fontColor: toXlsxHexColor(chartFontColor(this.background)),
-                dataSets,
-            };
-        }
-        updateRanges(applyChange) {
-            const { dataSets, labelRange, isStale } = updateChartRangesWithDataSets(this.getters, applyChange, this.dataSets, this.labelRange);
-            if (!isStale) {
-                return this;
-            }
-            const definition = this.getDefinitionWithSpecificDataSets(dataSets, labelRange);
-            return new BarChart(definition, this.sheetId, this.getters);
-        }
-    }
-    function getBarConfiguration(chart, labels) {
-        var _a;
-        const fontColor = chartFontColor(chart.background);
-        const config = getDefaultChartJsRuntime(chart, labels, fontColor);
-        const legend = {
-            labels: { fontColor },
-        };
-        if ((!chart.labelRange && chart.dataSets.length === 1) || chart.legendPosition === "none") {
-            legend.display = false;
-        }
-        else {
-            legend.position = chart.legendPosition;
-        }
-        config.options.legend = { ...(_a = config.options) === null || _a === void 0 ? void 0 : _a.legend, ...legend };
-        config.options.layout = {
-            padding: { left: 20, right: 20, top: chart.title ? 10 : 25, bottom: 10 },
-        };
-        config.options.scales = {
-            xAxes: [
-                {
-                    ticks: {
-                        // x axis configuration
-                        maxRotation: 60,
-                        minRotation: 15,
-                        padding: 5,
-                        labelOffset: 2,
-                        fontColor,
-                    },
-                },
-            ],
-            yAxes: [
-                {
-                    position: chart.verticalAxisPosition,
-                    ticks: {
-                        fontColor,
-                        // y axis configuration
-                        beginAtZero: true, // the origin of the y axis is always zero
-                    },
-                },
-            ],
-        };
-        if (chart.stacked) {
-            config.options.scales.xAxes[0].stacked = true;
-            config.options.scales.yAxes[0].stacked = true;
-        }
-        return config;
-    }
-    function createBarChartRuntime(chart, getters) {
-        const labelValues = getChartLabelValues(getters, chart.dataSets, chart.labelRange);
-        let labels = labelValues.formattedValues;
-        let dataSetsValues = getChartDatasetValues(getters, chart.dataSets);
-        ({ labels, dataSetsValues } = filterEmptyDataPoints(labels, dataSetsValues));
-        const config = getBarConfiguration(chart, labels);
-        const colors = new ChartColors();
-        for (let { label, data } of dataSetsValues) {
-            const color = colors.next();
-            const dataset = {
-                label,
-                data,
-                borderColor: color,
-                backgroundColor: color,
-            };
-            config.data.datasets.push(dataset);
-        }
-        return { chartJsConfig: config, background: chart.background || BACKGROUND_CHART_COLOR };
-    }
-
-    /**
-     * Create a function used to create a Chart based on the definition
-     */
-    function chartFactory(getters) {
-        const builders = chartRegistry.getAll();
-        function createChart(id, definition, sheetId) {
-            const builder = builders.find((builder) => builder.match(definition.type));
-            if (!builder) {
-                throw new Error(`No builder for this chart: ${definition.type}`);
-            }
-            return builder.createChart(definition, sheetId, getters);
-        }
-        return createChart;
-    }
-    /**
-     * Create a function used to create a Chart Runtime based on the chart class
-     * instance
-     */
-    function chartRuntimeFactory(getters) {
-        const builders = chartRegistry.getAll();
-        function createRuntimeChart(chart) {
-            const builder = builders.find((builder) => builder.match(chart.type));
-            if (!builder) {
-                throw new Error("No runtime builder for this chart.");
-            }
-            return builder.getChartRuntime(chart, getters);
-        }
-        return createRuntimeChart;
-    }
-    /**
-     * Validate the chart definition given in arguments
-     */
-    function validateChartDefinition(validator, definition) {
-        const validators = chartRegistry.getAll().find((validator) => validator.match(definition.type));
-        if (!validators) {
-            throw new Error("Unknown chart type.");
-        }
-        return validators.validateChartDefinition(validator, definition);
-    }
-    /**
-     * Get a new chart definition transformed with the executed command. This
-     * functions will be called during operational transform process
-     */
-    function transformDefinition(definition, executed) {
-        const transformation = chartRegistry.getAll().find((factory) => factory.match(definition.type));
-        if (!transformation) {
-            throw new Error("Unknown chart type.");
-        }
-        return transformation.transformDefinition(definition, executed);
-    }
-    /**
-     * Get an empty definition based on the given context and the given type
-     */
-    function getChartDefinitionFromContextCreation(context, type) {
-        const chartClass = chartRegistry.get(type);
-        return chartClass.getChartDefinitionFromContextCreation(context);
-    }
-    function getChartTypes() {
-        const result = {};
-        for (const key of chartRegistry.getKeys()) {
-            result[key] = chartRegistry.get(key).name;
-        }
-        return result;
-    }
-
-    chartRegistry.add("gauge", {
-        match: (type) => type === "gauge",
-        createChart: (definition, sheetId, getters) => new GaugeChart(definition, sheetId, getters),
-        getChartRuntime: createGaugeChartRuntime,
-        validateChartDefinition: (validator, definition) => GaugeChart.validateChartDefinition(validator, definition),
-        transformDefinition: (definition, executed) => GaugeChart.transformDefinition(definition, executed),
-        getChartDefinitionFromContextCreation: (context) => GaugeChart.getDefinitionFromContextCreation(context),
-        name: "Gauge",
-    });
-    function isDataRangeValid(definition) {
-        return definition.dataRange && !rangeReference.test(definition.dataRange)
-            ? 34 /* CommandResult.InvalidGaugeDataRange */
-            : 0 /* CommandResult.Success */;
-    }
-    function checkRangeLimits(check, batchValidations) {
-        return batchValidations((definition) => {
-            if (definition.sectionRule) {
-                return check(definition.sectionRule.rangeMin, "rangeMin");
-            }
-            return 0 /* CommandResult.Success */;
-        }, (definition) => {
-            if (definition.sectionRule) {
-                return check(definition.sectionRule.rangeMax, "rangeMax");
-            }
-            return 0 /* CommandResult.Success */;
-        });
-    }
-    function checkInflectionPointsValue(check, batchValidations) {
-        return batchValidations((definition) => {
-            if (definition.sectionRule) {
-                return check(definition.sectionRule.lowerInflectionPoint.value, "lowerInflectionPointValue");
-            }
-            return 0 /* CommandResult.Success */;
-        }, (definition) => {
-            if (definition.sectionRule) {
-                return check(definition.sectionRule.upperInflectionPoint.value, "upperInflectionPointValue");
-            }
-            return 0 /* CommandResult.Success */;
-        });
-    }
-    function checkRangeMinBiggerThanRangeMax(definition) {
-        if (definition.sectionRule) {
-            if (Number(definition.sectionRule.rangeMin) >= Number(definition.sectionRule.rangeMax)) {
-                return 39 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */;
-            }
-        }
-        return 0 /* CommandResult.Success */;
-    }
-    function checkEmpty(value, valueName) {
-        if (value === "") {
-            switch (valueName) {
-                case "rangeMin":
-                    return 35 /* CommandResult.EmptyGaugeRangeMin */;
-                case "rangeMax":
-                    return 37 /* CommandResult.EmptyGaugeRangeMax */;
-            }
-        }
-        return 0 /* CommandResult.Success */;
-    }
-    function checkNaN(value, valueName) {
-        if (isNaN(value)) {
-            switch (valueName) {
-                case "rangeMin":
-                    return 36 /* CommandResult.GaugeRangeMinNaN */;
-                case "rangeMax":
-                    return 38 /* CommandResult.GaugeRangeMaxNaN */;
-                case "lowerInflectionPointValue":
-                    return 40 /* CommandResult.GaugeLowerInflectionPointNaN */;
-                case "upperInflectionPointValue":
-                    return 41 /* CommandResult.GaugeUpperInflectionPointNaN */;
-            }
-        }
-        return 0 /* CommandResult.Success */;
-    }
-    class GaugeChart extends AbstractChart {
-        constructor(definition, sheetId, getters) {
-            super(definition, sheetId, getters);
-            this.type = "gauge";
-            this.dataRange = createRange(this.getters, this.sheetId, definition.dataRange);
-            this.sectionRule = definition.sectionRule;
-            this.background = definition.background;
-        }
-        static validateChartDefinition(validator, definition) {
-            return validator.checkValidations(definition, isDataRangeValid, validator.chainValidations(checkRangeLimits(checkEmpty, validator.batchValidations), checkRangeLimits(checkNaN, validator.batchValidations), checkRangeMinBiggerThanRangeMax), validator.chainValidations(checkInflectionPointsValue(checkNaN, validator.batchValidations)));
-        }
-        static transformDefinition(definition, executed) {
-            let dataRangeZone;
-            if (definition.dataRange) {
-                dataRangeZone = transformZone(toUnboundedZone(definition.dataRange), executed);
-            }
-            return {
-                ...definition,
-                dataRange: dataRangeZone ? zoneToXc(dataRangeZone) : undefined,
-            };
-        }
-        static getDefinitionFromContextCreation(context) {
-            return {
-                background: context.background,
-                title: context.title || "",
-                type: "gauge",
-                dataRange: context.range ? context.range[0] : undefined,
-                sectionRule: {
-                    colors: {
-                        lowerColor: DEFAULT_GAUGE_LOWER_COLOR,
-                        middleColor: DEFAULT_GAUGE_MIDDLE_COLOR,
-                        upperColor: DEFAULT_GAUGE_UPPER_COLOR,
-                    },
-                    rangeMin: "0",
-                    rangeMax: "100",
-                    lowerInflectionPoint: {
-                        type: "percentage",
-                        value: "15",
-                    },
-                    upperInflectionPoint: {
-                        type: "percentage",
-                        value: "40",
-                    },
-                },
-            };
-        }
-        copyForSheetId(sheetId) {
-            const dataRange = copyLabelRangeWithNewSheetId(this.sheetId, sheetId, this.dataRange);
-            const definition = this.getDefinitionWithSpecificRanges(dataRange, sheetId);
-            return new GaugeChart(definition, sheetId, this.getters);
-        }
-        copyInSheetId(sheetId) {
-            const definition = this.getDefinitionWithSpecificRanges(this.dataRange, sheetId);
-            return new GaugeChart(definition, sheetId, this.getters);
-        }
-        getDefinition() {
-            return this.getDefinitionWithSpecificRanges(this.dataRange);
-        }
-        getDefinitionWithSpecificRanges(dataRange, targetSheetId) {
-            return {
-                background: this.background,
-                sectionRule: this.sectionRule,
-                title: this.title,
-                type: "gauge",
-                dataRange: dataRange
-                    ? this.getters.getRangeString(dataRange, targetSheetId || this.sheetId)
-                    : undefined,
-            };
-        }
-        getDefinitionForExcel() {
-            // This kind of graph is not exportable in Excel
-            return undefined;
-        }
-        getContextCreation() {
-            return {
-                background: this.background,
-                title: this.title,
-                range: this.dataRange
-                    ? [this.getters.getRangeString(this.dataRange, this.sheetId)]
-                    : undefined,
-            };
-        }
-        updateRanges(applyChange) {
-            const range = adaptChartRange(this.dataRange, applyChange);
-            if (this.dataRange === range) {
-                return this;
-            }
-            const definition = this.getDefinitionWithSpecificRanges(range);
-            return new GaugeChart(definition, this.sheetId, this.getters);
-        }
-    }
-    function getGaugeConfiguration(chart) {
-        const fontColor = chartFontColor(chart.background);
-        const config = getDefaultChartJsRuntime(chart, [], fontColor);
-        config.options.hover = undefined;
-        config.options.events = [];
-        config.options.layout = {
-            padding: { left: 30, right: 30, top: chart.title ? 10 : 25, bottom: 25 },
-        };
-        config.options.needle = {
-            radiusPercentage: 2,
-            widthPercentage: 3.2,
-            lengthPercentage: 80,
-            color: "#000000",
-        };
-        config.options.valueLabel = {
-            display: false,
-            formatter: null,
-            color: "#FFFFFF",
-            backgroundColor: "#000000",
-            fontSize: 30,
-            borderRadius: 5,
-            padding: {
-                top: 5,
-                right: 5,
-                bottom: 5,
-                left: 5,
-            },
-            bottomMarginPercentage: 5,
-        };
-        return config;
-    }
-    function createGaugeChartRuntime(chart, getters) {
-        const config = getGaugeConfiguration(chart);
-        const colors = chart.sectionRule.colors;
-        const lowerPoint = chart.sectionRule.lowerInflectionPoint;
-        const upperPoint = chart.sectionRule.upperInflectionPoint;
-        const lowerPointValue = Number(lowerPoint.value);
-        const upperPointValue = Number(upperPoint.value);
-        const minNeedleValue = Number(chart.sectionRule.rangeMin);
-        const maxNeedleValue = Number(chart.sectionRule.rangeMax);
-        const needleCoverage = maxNeedleValue - minNeedleValue;
-        const needleInflectionPoint = [];
-        if (lowerPoint.value !== "") {
-            const lowerPointNeedleValue = lowerPoint.type === "number"
-                ? lowerPointValue
-                : minNeedleValue + (needleCoverage * lowerPointValue) / 100;
-            needleInflectionPoint.push({
-                value: clip(lowerPointNeedleValue, minNeedleValue, maxNeedleValue),
-                color: colors.lowerColor,
-            });
-        }
-        if (upperPoint.value !== "") {
-            const upperPointNeedleValue = upperPoint.type === "number"
-                ? upperPointValue
-                : minNeedleValue + (needleCoverage * upperPointValue) / 100;
-            needleInflectionPoint.push({
-                value: clip(upperPointNeedleValue, minNeedleValue, maxNeedleValue),
-                color: colors.middleColor,
-            });
-        }
-        const data = [];
-        const backgroundColor = [];
-        needleInflectionPoint
-            .sort((a, b) => a.value - b.value)
-            .map((point) => {
-            data.push(point.value);
-            backgroundColor.push(point.color);
-        });
-        // There's a bug in gauge lib when the last element in `data` is 0 (i.e. when the range maximum is 0).
-        // The value wrongly fallbacks to 1 because 0 is falsy
-        // See https://github.com/haiiaaa/chartjs-gauge/pull/33
-        // https://github.com/haiiaaa/chartjs-gauge/blob/2ea50541d754d710cb30c2502fa690ac5dc27afd/src/controllers/controller.gauge.js#L52
-        data.push(maxNeedleValue);
-        backgroundColor.push(colors.upperColor);
-        const dataRange = chart.dataRange;
-        const deltaBeyondRangeLimit = needleCoverage / 30;
-        let needleValue = minNeedleValue - deltaBeyondRangeLimit; // make needle value always at the minimum by default
-        let cellFormatter = null;
-        let displayValue = false;
-        if (dataRange !== undefined) {
-            const cell = getters.getEvaluatedCell({
-                sheetId: dataRange.sheetId,
-                col: dataRange.zone.left,
-                row: dataRange.zone.top,
-            });
-            if (cell.type === CellValueType.number) {
-                // in gauge graph "datasets.value" is used to calculate the angle of the
-                // needle in the graph. To prevent the needle from making 360° turns, we
-                // clip the value between a min and a max. This min and this max are slightly
-                // smaller and slightly larger than minRange and maxRange to mark the fact
-                // that the needle is out of the range limits
-                needleValue = clip(cell.value, minNeedleValue - deltaBeyondRangeLimit, maxNeedleValue + deltaBeyondRangeLimit);
-                cellFormatter = () => getters.getRangeFormattedValues(dataRange)[0];
-                displayValue = true;
-            }
-        }
-        config.options.valueLabel.display = displayValue;
-        config.options.valueLabel.formatter = cellFormatter;
-        config.data.datasets.push({
-            data,
-            minValue: Number(chart.sectionRule.rangeMin),
-            value: needleValue,
-            backgroundColor,
-        });
-        return {
-            chartJsConfig: config,
-            background: getters.getBackgroundOfSingleCellChart(chart.background, dataRange),
-        };
-    }
-
-    const UNIT_LENGTH = {
-        second: 1000,
-        minute: 1000 * 60,
-        hour: 1000 * 3600,
-        day: 1000 * 3600 * 24,
-        month: 1000 * 3600 * 24 * 30,
-        year: 1000 * 3600 * 24 * 365,
-    };
-    const Milliseconds = {
-        inSeconds: function (milliseconds) {
-            return Math.floor(milliseconds / UNIT_LENGTH.second);
-        },
-        inMinutes: function (milliseconds) {
-            return Math.floor(milliseconds / UNIT_LENGTH.minute);
-        },
-        inHours: function (milliseconds) {
-            return Math.floor(milliseconds / UNIT_LENGTH.hour);
-        },
-        inDays: function (milliseconds) {
-            return Math.floor(milliseconds / UNIT_LENGTH.day);
-        },
-        inMonths: function (milliseconds) {
-            return Math.floor(milliseconds / UNIT_LENGTH.month);
-        },
-        inYears: function (milliseconds) {
-            return Math.floor(milliseconds / UNIT_LENGTH.year);
-        },
-    };
-    /**
-     * Regex to test if a format string is a date format that can be translated into a moment time format
-     */
-    const timeFormatMomentCompatible = /^((d|dd|m|mm|yyyy|yy|hh|h|ss|a)(-|:|\s|\/))*(d|dd|m|mm|yyyy|yy|hh|h|ss|a)$/i;
-    /** Get the time options for the XAxis of ChartJS */
-    function getChartTimeOptions(labels, labelFormat) {
-        const momentFormat = convertDateFormatForMoment(labelFormat);
-        const timeUnit = getBestTimeUnitForScale(labels, momentFormat);
-        const displayFormats = {};
-        if (timeUnit) {
-            displayFormats[timeUnit] = momentFormat;
-        }
-        return {
-            parser: momentFormat,
-            displayFormats,
-            unit: timeUnit,
-        };
-    }
-    /**
-     * Convert the given date format into a format that moment.js understands.
-     *
-     * https://momentjs.com/docs/#/parsing/string-format/
-     */
-    function convertDateFormatForMoment(format) {
-        format = format.replace(/y/g, "Y");
-        format = format.replace(/d/g, "D");
-        // "m" before "h" == month, "m" after "h" == minute
-        const indexH = format.indexOf("h");
-        if (indexH >= 0) {
-            format = format.slice(0, indexH).replace(/m/g, "M") + format.slice(indexH);
-        }
-        else {
-            format = format.replace(/m/g, "M");
-        }
-        // If we have an "a", we should display hours as AM/PM (h), otherwise display 24 hours format (H)
-        if (!format.includes("a")) {
-            format = format.replace(/h/g, "H");
-        }
-        return format;
-    }
-    /** Get the minimum time unit that the format is able to display */
-    function getFormatMinDisplayUnit(format) {
-        if (format.includes("s")) {
-            return "second";
-        }
-        else if (format.includes("m")) {
-            return "minute";
-        }
-        else if (format.includes("h") || format.includes("H")) {
-            return "hour";
-        }
-        else if (format.includes("D")) {
-            return "day";
-        }
-        else if (format.includes("M")) {
-            return "month";
-        }
-        return "year";
-    }
-    /**
-     * Returns the best time unit that should be used for the X axis of a chart in order to display all
-     * the labels correctly.
-     *
-     * There is two conditions :
-     *  - the format of the labels should be able to display the unit. For example if the format is "DD/MM/YYYY"
-     *    it makes no sense to try to use minutes in the X axis
-     *  - we want the "best fit" unit. For example if the labels span a period of several days, we want to use days
-     *    as a unit, but if they span 200 days, we'd like to use months instead
-     *
-     */
-    function getBestTimeUnitForScale(labels, format) {
-        const labelDates = labels.map((label) => { var _a; return (_a = parseDateTime(label)) === null || _a === void 0 ? void 0 : _a.jsDate; });
-        if (labelDates.some((date) => date === undefined) || labels.length < 2) {
-            return undefined;
-        }
-        const labelsTimestamps = labelDates.map((date) => date.getTime());
-        const period = Math.max(...labelsTimestamps) - Math.min(...labelsTimestamps);
-        const minUnit = getFormatMinDisplayUnit(format);
-        if (UNIT_LENGTH.second >= UNIT_LENGTH[minUnit] && Milliseconds.inSeconds(period) < 180) {
-            return "second";
-        }
-        else if (UNIT_LENGTH.minute >= UNIT_LENGTH[minUnit] && Milliseconds.inMinutes(period) < 180) {
-            return "minute";
-        }
-        else if (UNIT_LENGTH.hour >= UNIT_LENGTH[minUnit] && Milliseconds.inHours(period) < 96) {
-            return "hour";
-        }
-        else if (UNIT_LENGTH.day >= UNIT_LENGTH[minUnit] && Milliseconds.inDays(period) < 90) {
-            return "day";
-        }
-        else if (UNIT_LENGTH.month >= UNIT_LENGTH[minUnit] && Milliseconds.inMonths(period) < 36) {
-            return "month";
-        }
-        return "year";
-    }
-
-    chartRegistry.add("line", {
-        match: (type) => type === "line",
-        createChart: (definition, sheetId, getters) => new LineChart(definition, sheetId, getters),
-        getChartRuntime: createLineChartRuntime,
-        validateChartDefinition: (validator, definition) => LineChart.validateChartDefinition(validator, definition),
-        transformDefinition: (definition, executed) => LineChart.transformDefinition(definition, executed),
-        getChartDefinitionFromContextCreation: (context) => LineChart.getDefinitionFromContextCreation(context),
-        name: "Line",
-    });
-    class LineChart extends AbstractChart {
-        constructor(definition, sheetId, getters) {
-            super(definition, sheetId, getters);
-            this.type = "line";
-            this.dataSets = createDataSets(this.getters, definition.dataSets, sheetId, definition.dataSetsHaveTitle);
-            this.labelRange = createRange(this.getters, sheetId, definition.labelRange);
-            this.background = definition.background;
-            this.verticalAxisPosition = definition.verticalAxisPosition;
-            this.legendPosition = definition.legendPosition;
-            this.labelsAsText = definition.labelsAsText;
-            this.stacked = definition.stacked;
-        }
-        static validateChartDefinition(validator, definition) {
-            return validator.checkValidations(definition, checkDataset, checkLabelRange);
-        }
-        static transformDefinition(definition, executed) {
-            return transformChartDefinitionWithDataSetsWithZone(definition, executed);
-        }
-        static getDefinitionFromContextCreation(context) {
-            return {
-                background: context.background,
-                dataSets: context.range ? context.range : [],
-                dataSetsHaveTitle: false,
-                labelsAsText: false,
-                legendPosition: "top",
-                title: context.title || "",
-                type: "line",
-                verticalAxisPosition: "left",
-                labelRange: context.auxiliaryRange || undefined,
-                stacked: false,
-            };
-        }
-        getDefinition() {
-            return this.getDefinitionWithSpecificDataSets(this.dataSets, this.labelRange);
-        }
-        getDefinitionWithSpecificDataSets(dataSets, labelRange, targetSheetId) {
-            return {
-                type: "line",
-                dataSetsHaveTitle: dataSets.length ? Boolean(dataSets[0].labelCell) : false,
-                background: this.background,
-                dataSets: dataSets.map((ds) => this.getters.getRangeString(ds.dataRange, targetSheetId || this.sheetId)),
-                legendPosition: this.legendPosition,
-                verticalAxisPosition: this.verticalAxisPosition,
-                labelRange: labelRange
-                    ? this.getters.getRangeString(labelRange, targetSheetId || this.sheetId)
-                    : undefined,
-                title: this.title,
-                labelsAsText: this.labelsAsText,
-                stacked: this.stacked,
-            };
-        }
-        getContextCreation() {
-            return {
-                background: this.background,
-                title: this.title,
-                range: this.dataSets.map((ds) => this.getters.getRangeString(ds.dataRange, this.sheetId)),
-                auxiliaryRange: this.labelRange
-                    ? this.getters.getRangeString(this.labelRange, this.sheetId)
-                    : undefined,
-            };
-        }
-        updateRanges(applyChange) {
-            const { dataSets, labelRange, isStale } = updateChartRangesWithDataSets(this.getters, applyChange, this.dataSets, this.labelRange);
-            if (!isStale) {
-                return this;
-            }
-            const definition = this.getDefinitionWithSpecificDataSets(dataSets, labelRange);
-            return new LineChart(definition, this.sheetId, this.getters);
-        }
-        getDefinitionForExcel() {
-            const dataSets = this.dataSets
-                .map((ds) => toExcelDataset(this.getters, ds))
-                .filter((ds) => ds.range !== ""); // && range !== INCORRECT_RANGE_STRING ? show incorrect #ref ?
-            return {
-                ...this.getDefinition(),
-                backgroundColor: toXlsxHexColor(this.background || BACKGROUND_CHART_COLOR),
-                fontColor: toXlsxHexColor(chartFontColor(this.background)),
-                dataSets,
-            };
-        }
-        copyForSheetId(sheetId) {
-            const dataSets = copyDataSetsWithNewSheetId(this.sheetId, sheetId, this.dataSets);
-            const labelRange = copyLabelRangeWithNewSheetId(this.sheetId, sheetId, this.labelRange);
-            const definition = this.getDefinitionWithSpecificDataSets(dataSets, labelRange, sheetId);
-            return new LineChart(definition, sheetId, this.getters);
-        }
-        copyInSheetId(sheetId) {
-            const definition = this.getDefinitionWithSpecificDataSets(this.dataSets, this.labelRange, sheetId);
-            return new LineChart(definition, sheetId, this.getters);
-        }
-    }
-    function fixEmptyLabelsForDateCharts(labels, dataSetsValues) {
-        if (labels.length === 0 || labels.every((label) => !label)) {
-            return { labels, dataSetsValues };
-        }
-        const newLabels = [...labels];
-        const newDatasets = deepCopy(dataSetsValues);
-        for (let i = 0; i < newLabels.length; i++) {
-            if (!newLabels[i]) {
-                newLabels[i] = findNextDefinedValue(newLabels, i);
-                for (let ds of newDatasets) {
-                    ds.data[i] = undefined;
-                }
-            }
-        }
-        return { labels: newLabels, dataSetsValues: newDatasets };
-    }
-    function canChartParseLabels(chart, getters) {
-        return canBeDateChart(chart, getters) || canBeLinearChart(chart, getters);
-    }
-    function getChartAxisType(chart, getters) {
-        if (isDateChart(chart, getters)) {
-            return "time";
-        }
-        if (isLinearChart(chart, getters)) {
-            return "linear";
-        }
-        return "category";
-    }
-    function isDateChart(chart, getters) {
-        return !chart.labelsAsText && canBeDateChart(chart, getters);
-    }
-    function isLinearChart(chart, getters) {
-        return !chart.labelsAsText && canBeLinearChart(chart, getters);
-    }
-    function canBeDateChart(chart, getters) {
-        if (!chart.labelRange || !chart.dataSets || !canBeLinearChart(chart, getters)) {
-            return false;
-        }
-        const labelFormat = getters.getEvaluatedCell({
-            sheetId: chart.labelRange.sheetId,
-            col: chart.labelRange.zone.left,
-            row: chart.labelRange.zone.top,
-        }).format;
-        return Boolean(labelFormat && timeFormatMomentCompatible.test(labelFormat));
-    }
-    function canBeLinearChart(chart, getters) {
-        if (!chart.labelRange || !chart.dataSets) {
-            return false;
-        }
-        const labels = getters.getRangeValues(chart.labelRange);
-        if (labels.some((label) => isNaN(Number(label)) && label)) {
-            return false;
-        }
-        if (labels.every((label) => !label)) {
-            return false;
-        }
-        return true;
-    }
-    function getLineConfiguration(chart, labels) {
-        var _a;
-        const fontColor = chartFontColor(chart.background);
-        const config = getDefaultChartJsRuntime(chart, labels, fontColor);
-        const legend = {
-            labels: {
-                fontColor,
-                generateLabels(chart) {
-                    const { data } = chart;
-                    const labels = window.Chart.defaults.global.legend.labels.generateLabels(chart);
-                    for (const [index, label] of labels.entries()) {
-                        label.fillStyle = data.datasets[index].borderColor;
-                    }
-                    return labels;
-                },
-            },
-        };
-        if ((!chart.labelRange && chart.dataSets.length === 1) || chart.legendPosition === "none") {
-            legend.display = false;
-        }
-        else {
-            legend.position = chart.legendPosition;
-        }
-        config.options.legend = { ...(_a = config.options) === null || _a === void 0 ? void 0 : _a.legend, ...legend };
-        config.options.layout = {
-            padding: { left: 20, right: 20, top: chart.title ? 10 : 25, bottom: 10 },
-        };
-        config.options.scales = {
-            xAxes: [
-                {
-                    ticks: {
-                        // x axis configuration
-                        maxRotation: 60,
-                        minRotation: 15,
-                        padding: 5,
-                        labelOffset: 2,
-                        fontColor,
-                    },
-                },
-            ],
-            yAxes: [
-                {
-                    position: chart.verticalAxisPosition,
-                    ticks: {
-                        fontColor,
-                        // y axis configuration
-                        beginAtZero: true, // the origin of the y axis is always zero
-                    },
-                },
-            ],
-        };
-        if (chart.stacked) {
-            config.options.scales.yAxes[0].stacked = true;
-        }
-        return config;
-    }
-    function createLineChartRuntime(chart, getters) {
-        const axisType = getChartAxisType(chart, getters);
-        const labelValues = getChartLabelValues(getters, chart.dataSets, chart.labelRange);
-        let labels = axisType === "linear" ? labelValues.values : labelValues.formattedValues;
-        let dataSetsValues = getChartDatasetValues(getters, chart.dataSets);
-        ({ labels, dataSetsValues } = filterEmptyDataPoints(labels, dataSetsValues));
-        if (axisType === "time") {
-            ({ labels, dataSetsValues } = fixEmptyLabelsForDateCharts(labels, dataSetsValues));
-        }
-        const config = getLineConfiguration(chart, labels);
-        const labelFormat = getLabelFormat(getters, chart.labelRange);
-        if (axisType === "time") {
-            config.options.scales.xAxes[0].type = "time";
-            config.options.scales.xAxes[0].time = getChartTimeOptions(labels, labelFormat);
-            config.options.scales.xAxes[0].ticks.maxTicksLimit = 15;
-        }
-        else if (axisType === "linear") {
-            config.options.scales.xAxes[0].type = "linear";
-            config.options.scales.xAxes[0].ticks.callback = (value) => formatValue(value, labelFormat);
-        }
-        const colors = new ChartColors();
-        for (let [index, { label, data }] of dataSetsValues.entries()) {
-            if (["linear", "time"].includes(axisType)) {
-                // Replace empty string labels by undefined to make sure chartJS doesn't decide that "" is the same as 0
-                data = data.map((y, index) => ({ x: labels[index] || undefined, y }));
-            }
-            const color = colors.next();
-            let backgroundRGBA = colorToRGBA(color);
-            if (chart.stacked) {
-                backgroundRGBA.a = LINE_FILL_TRANSPARENCY;
-            }
-            const backgroundColor = rgbaToHex(backgroundRGBA);
-            const dataset = {
-                label,
-                data,
-                lineTension: 0,
-                borderColor: color,
-                backgroundColor,
-                pointBackgroundColor: color,
-                fill: chart.stacked ? getFillingMode(index) : false,
-            };
-            config.data.datasets.push(dataset);
-        }
-        return { chartJsConfig: config, background: chart.background || BACKGROUND_CHART_COLOR };
-    }
-
-    chartRegistry.add("pie", {
-        match: (type) => type === "pie",
-        createChart: (definition, sheetId, getters) => new PieChart(definition, sheetId, getters),
-        getChartRuntime: createPieChartRuntime,
-        validateChartDefinition: (validator, definition) => PieChart.validateChartDefinition(validator, definition),
-        transformDefinition: (definition, executed) => PieChart.transformDefinition(definition, executed),
-        getChartDefinitionFromContextCreation: (context) => PieChart.getDefinitionFromContextCreation(context),
-        name: "Pie",
-    });
-    class PieChart extends AbstractChart {
-        constructor(definition, sheetId, getters) {
-            super(definition, sheetId, getters);
-            this.type = "pie";
-            this.dataSets = createDataSets(getters, definition.dataSets, sheetId, definition.dataSetsHaveTitle);
-            this.labelRange = createRange(getters, sheetId, definition.labelRange);
-            this.background = definition.background;
-            this.legendPosition = definition.legendPosition;
-        }
-        static transformDefinition(definition, executed) {
-            return transformChartDefinitionWithDataSetsWithZone(definition, executed);
-        }
-        static validateChartDefinition(validator, definition) {
-            return validator.checkValidations(definition, checkDataset, checkLabelRange);
-        }
-        static getDefinitionFromContextCreation(context) {
-            return {
-                background: context.background,
-                dataSets: context.range ? context.range : [],
-                dataSetsHaveTitle: false,
-                legendPosition: "top",
-                title: context.title || "",
-                type: "pie",
-                labelRange: context.auxiliaryRange || undefined,
-            };
-        }
-        getDefinition() {
-            return this.getDefinitionWithSpecificDataSets(this.dataSets, this.labelRange);
-        }
-        getContextCreation() {
-            return {
-                background: this.background,
-                title: this.title,
-                range: this.dataSets.map((ds) => this.getters.getRangeString(ds.dataRange, this.sheetId)),
-                auxiliaryRange: this.labelRange
-                    ? this.getters.getRangeString(this.labelRange, this.sheetId)
-                    : undefined,
-            };
-        }
-        getDefinitionWithSpecificDataSets(dataSets, labelRange, targetSheetId) {
-            return {
-                type: "pie",
-                dataSetsHaveTitle: dataSets.length ? Boolean(dataSets[0].labelCell) : false,
-                background: this.background,
-                dataSets: dataSets.map((ds) => this.getters.getRangeString(ds.dataRange, targetSheetId || this.sheetId)),
-                legendPosition: this.legendPosition,
-                labelRange: labelRange
-                    ? this.getters.getRangeString(labelRange, targetSheetId || this.sheetId)
-                    : undefined,
-                title: this.title,
-            };
-        }
-        copyForSheetId(sheetId) {
-            const dataSets = copyDataSetsWithNewSheetId(this.sheetId, sheetId, this.dataSets);
-            const labelRange = copyLabelRangeWithNewSheetId(this.sheetId, sheetId, this.labelRange);
-            const definition = this.getDefinitionWithSpecificDataSets(dataSets, labelRange, sheetId);
-            return new PieChart(definition, sheetId, this.getters);
-        }
-        copyInSheetId(sheetId) {
-            const definition = this.getDefinitionWithSpecificDataSets(this.dataSets, this.labelRange, sheetId);
-            return new PieChart(definition, sheetId, this.getters);
-        }
-        getDefinitionForExcel() {
-            const dataSets = this.dataSets
-                .map((ds) => toExcelDataset(this.getters, ds))
-                .filter((ds) => ds.range !== ""); // && range !== INCORRECT_RANGE_STRING ? show incorrect #ref ?
-            return {
-                ...this.getDefinition(),
-                backgroundColor: toXlsxHexColor(this.background || BACKGROUND_CHART_COLOR),
-                fontColor: toXlsxHexColor(chartFontColor(this.background)),
-                verticalAxisPosition: "left",
-                dataSets,
-            };
-        }
-        updateRanges(applyChange) {
-            const { dataSets, labelRange, isStale } = updateChartRangesWithDataSets(this.getters, applyChange, this.dataSets, this.labelRange);
-            if (!isStale) {
-                return this;
-            }
-            const definition = this.getDefinitionWithSpecificDataSets(dataSets, labelRange);
-            return new PieChart(definition, this.sheetId, this.getters);
-        }
-    }
-    function getPieConfiguration(chart, labels) {
-        var _a;
-        const fontColor = chartFontColor(chart.background);
-        const config = getDefaultChartJsRuntime(chart, labels, fontColor);
-        const legend = {
-            labels: { fontColor },
-        };
-        if ((!chart.labelRange && chart.dataSets.length === 1) || chart.legendPosition === "none") {
-            legend.display = false;
-        }
-        else {
-            legend.position = chart.legendPosition;
-        }
-        config.options.legend = { ...(_a = config.options) === null || _a === void 0 ? void 0 : _a.legend, ...legend };
-        config.options.layout = {
-            padding: { left: 20, right: 20, top: chart.title ? 10 : 25, bottom: 10 },
-        };
-        config.options.tooltips = {
-            callbacks: {
-                title: function (tooltipItems, data) {
-                    return data.datasets[tooltipItems[0].datasetIndex].label;
-                },
-            },
-        };
-        return config;
-    }
-    function getPieColors(colors, dataSetsValues) {
-        const pieColors = [];
-        const maxLength = Math.max(...dataSetsValues.map((ds) => ds.data.length));
-        for (let i = 0; i <= maxLength; i++) {
-            pieColors.push(colors.next());
-        }
-        return pieColors;
-    }
-    function createPieChartRuntime(chart, getters) {
-        const labelValues = getChartLabelValues(getters, chart.dataSets, chart.labelRange);
-        let labels = labelValues.formattedValues;
-        let dataSetsValues = getChartDatasetValues(getters, chart.dataSets);
-        ({ labels, dataSetsValues } = filterEmptyDataPoints(labels, dataSetsValues));
-        const config = getPieConfiguration(chart, labels);
-        const colors = new ChartColors();
-        for (let { label, data } of dataSetsValues) {
-            const backgroundColor = getPieColors(colors, dataSetsValues);
-            const dataset = {
-                label,
-                data,
-                borderColor: "#FFFFFF",
-                backgroundColor,
-            };
-            config.data.datasets.push(dataset);
-        }
-        return { chartJsConfig: config, background: chart.background || BACKGROUND_CHART_COLOR };
-    }
-
-    chartRegistry.add("scorecard", {
-        match: (type) => type === "scorecard",
-        createChart: (definition, sheetId, getters) => new ScorecardChart$1(definition, sheetId, getters),
-        getChartRuntime: createScorecardChartRuntime,
-        validateChartDefinition: (validator, definition) => ScorecardChart$1.validateChartDefinition(validator, definition),
-        transformDefinition: (definition, executed) => ScorecardChart$1.transformDefinition(definition, executed),
-        getChartDefinitionFromContextCreation: (context) => ScorecardChart$1.getDefinitionFromContextCreation(context),
-        name: "Scorecard",
-    });
-    function checkKeyValue(definition) {
-        return definition.keyValue && !rangeReference.test(definition.keyValue)
-            ? 32 /* CommandResult.InvalidScorecardKeyValue */
-            : 0 /* CommandResult.Success */;
-    }
-    function checkBaseline(definition) {
-        return definition.baseline && !rangeReference.test(definition.baseline)
-            ? 33 /* CommandResult.InvalidScorecardBaseline */
-            : 0 /* CommandResult.Success */;
-    }
-    class ScorecardChart$1 extends AbstractChart {
-        constructor(definition, sheetId, getters) {
-            super(definition, sheetId, getters);
-            this.type = "scorecard";
-            this.keyValue = createRange(getters, sheetId, definition.keyValue);
-            this.baseline = createRange(getters, sheetId, definition.baseline);
-            this.baselineMode = definition.baselineMode;
-            this.baselineDescr = definition.baselineDescr;
-            this.background = definition.background;
-            this.baselineColorUp = definition.baselineColorUp;
-            this.baselineColorDown = definition.baselineColorDown;
-        }
-        static validateChartDefinition(validator, definition) {
-            return validator.checkValidations(definition, checkKeyValue, checkBaseline);
-        }
-        static getDefinitionFromContextCreation(context) {
-            return {
-                background: context.background,
-                type: "scorecard",
-                keyValue: context.range ? context.range[0] : undefined,
-                title: context.title || "",
-                baselineMode: "difference",
-                baselineColorUp: "#00A04A",
-                baselineColorDown: "#DC6965",
-                baseline: context.auxiliaryRange || "",
-            };
-        }
-        static transformDefinition(definition, executed) {
-            let baselineZone;
-            let keyValueZone;
-            if (definition.baseline) {
-                baselineZone = transformZone(toUnboundedZone(definition.baseline), executed);
-            }
-            if (definition.keyValue) {
-                keyValueZone = transformZone(toUnboundedZone(definition.keyValue), executed);
-            }
-            return {
-                ...definition,
-                baseline: baselineZone ? zoneToXc(baselineZone) : undefined,
-                keyValue: keyValueZone ? zoneToXc(keyValueZone) : undefined,
-            };
-        }
-        copyForSheetId(sheetId) {
-            const baseline = copyLabelRangeWithNewSheetId(this.sheetId, sheetId, this.baseline);
-            const keyValue = copyLabelRangeWithNewSheetId(this.sheetId, sheetId, this.keyValue);
-            const definition = this.getDefinitionWithSpecificRanges(baseline, keyValue, sheetId);
-            return new ScorecardChart$1(definition, sheetId, this.getters);
-        }
-        copyInSheetId(sheetId) {
-            const definition = this.getDefinitionWithSpecificRanges(this.baseline, this.keyValue, sheetId);
-            return new ScorecardChart$1(definition, sheetId, this.getters);
-        }
-        getDefinition() {
-            return this.getDefinitionWithSpecificRanges(this.baseline, this.keyValue);
-        }
-        getContextCreation() {
-            return {
-                background: this.background,
-                title: this.title,
-                range: this.keyValue ? [this.getters.getRangeString(this.keyValue, this.sheetId)] : undefined,
-                auxiliaryRange: this.baseline
-                    ? this.getters.getRangeString(this.baseline, this.sheetId)
-                    : undefined,
-            };
-        }
-        getDefinitionWithSpecificRanges(baseline, keyValue, targetSheetId) {
-            return {
-                baselineColorDown: this.baselineColorDown,
-                baselineColorUp: this.baselineColorUp,
-                baselineMode: this.baselineMode,
-                title: this.title,
-                type: "scorecard",
-                background: this.background,
-                baseline: baseline
-                    ? this.getters.getRangeString(baseline, targetSheetId || this.sheetId)
-                    : undefined,
-                baselineDescr: this.baselineDescr,
-                keyValue: keyValue
-                    ? this.getters.getRangeString(keyValue, targetSheetId || this.sheetId)
-                    : undefined,
-            };
-        }
-        getDefinitionForExcel() {
-            // This kind of graph is not exportable in Excel
-            return undefined;
-        }
-        updateRanges(applyChange) {
-            const baseline = adaptChartRange(this.baseline, applyChange);
-            const keyValue = adaptChartRange(this.keyValue, applyChange);
-            if (this.baseline === baseline && this.keyValue === keyValue) {
-                return this;
-            }
-            const definition = this.getDefinitionWithSpecificRanges(baseline, keyValue);
-            return new ScorecardChart$1(definition, this.sheetId, this.getters);
-        }
-    }
-    function createScorecardChartRuntime(chart, getters) {
-        let keyValue = "";
-        let formattedKeyValue = "";
-        let keyValueCell;
-        if (chart.keyValue) {
-            const keyValuePosition = {
-                sheetId: chart.keyValue.sheetId,
-                col: chart.keyValue.zone.left,
-                row: chart.keyValue.zone.top,
-            };
-            keyValueCell = getters.getEvaluatedCell(keyValuePosition);
-            keyValue = String(keyValueCell.value);
-            formattedKeyValue = keyValueCell.formattedValue;
-        }
-        let baselineCell;
-        const baseline = chart.baseline;
-        if (baseline) {
-            const baselinePosition = {
-                sheetId: chart.baseline.sheetId,
-                col: chart.baseline.zone.left,
-                row: chart.baseline.zone.top,
-            };
-            baselineCell = getters.getEvaluatedCell(baselinePosition);
-        }
-        const background = getters.getBackgroundOfSingleCellChart(chart.background, chart.keyValue);
-        return {
-            title: _t(chart.title),
-            keyValue: formattedKeyValue || keyValue,
-            baselineDisplay: getBaselineText(baselineCell, keyValueCell, chart.baselineMode),
-            baselineArrow: getBaselineArrowDirection(baselineCell, keyValueCell, chart.baselineMode),
-            baselineColor: getBaselineColor(baselineCell, chart.baselineMode, keyValueCell, chart.baselineColorUp, chart.baselineColorDown),
-            baselineDescr: _t(chart.baselineDescr || ""),
-            fontColor: chartFontColor(background),
-            background,
-            baselineStyle: chart.baselineMode !== "percentage" && baseline
-                ? getters.getCellStyle({
-                    sheetId: baseline.sheetId,
-                    col: baseline.zone.left,
-                    row: baseline.zone.top,
-                })
-                : undefined,
-            keyValueStyle: chart.keyValue
-                ? getters.getCellStyle({
-                    sheetId: chart.keyValue.sheetId,
-                    col: chart.keyValue.zone.left,
-                    row: chart.keyValue.zone.top,
-                })
-                : undefined,
-        };
-    }
 
     const PICKER_PADDING = 6;
     const LINE_VERTICAL_PADDING = 1;
@@ -9600,7 +9651,7 @@
         get canTreatLabelsAsText() {
             const chart = this.env.model.getters.getChart(this.props.figureId);
             if (chart && chart instanceof LineChart) {
-                return canChartParseLabels(chart, this.env.model.getters);
+                return canChartParseLabels(chart.labelRange, this.env.model.getters);
             }
             return false;
         }
@@ -20522,7 +20573,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             const direction = ev.shiftKey ? "left" : "right";
             this.env.model.dispatch("STOP_EDITION");
-            this.env.model.selection.moveAnchorCell(direction, "one");
+            this.env.model.selection.moveAnchorCell(direction, 1);
         }
         processEnterKey(ev) {
             var _a;
@@ -20538,7 +20589,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             this.env.model.dispatch("STOP_EDITION");
             const direction = ev.shiftKey ? "up" : "down";
-            this.env.model.selection.moveAnchorCell(direction, "one");
+            this.env.model.selection.moveAnchorCell(direction, 1);
         }
         processEscapeKey() {
             this.env.model.dispatch("STOP_EDITION", { cancel: true });
@@ -22639,8 +22690,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         ? this.props.onGridComposerCellFocused()
                         : this.props.onComposerContentFocused();
                 },
-                TAB: () => this.env.model.selection.moveAnchorCell("right", "one"),
-                "SHIFT+TAB": () => this.env.model.selection.moveAnchorCell("left", "one"),
+                TAB: () => this.env.model.selection.moveAnchorCell("right", 1),
+                "SHIFT+TAB": () => this.env.model.selection.moveAnchorCell("left", 1),
                 F2: () => {
                     const cell = this.env.model.getters.getActiveCell();
                     cell.type === CellValueType.empty
@@ -29394,6 +29445,382 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         };
     }
 
+    class RangeAdapter {
+        constructor(getters) {
+            this.providers = [];
+            this.getters = getters;
+        }
+        // ---------------------------------------------------------------------------
+        // Command Handling
+        // ---------------------------------------------------------------------------
+        allowDispatch(cmd) {
+            if (cmd.type === "MOVE_RANGES") {
+                return cmd.target.length === 1 ? 0 /* CommandResult.Success */ : 25 /* CommandResult.InvalidZones */;
+            }
+            return 0 /* CommandResult.Success */;
+        }
+        beforeHandle(command) { }
+        handle(cmd) {
+            switch (cmd.type) {
+                case "REMOVE_COLUMNS_ROWS": {
+                    let start = cmd.dimension === "COL" ? "left" : "top";
+                    let end = cmd.dimension === "COL" ? "right" : "bottom";
+                    let dimension = cmd.dimension === "COL" ? "columns" : "rows";
+                    const elements = [...cmd.elements];
+                    elements.sort((a, b) => b - a);
+                    const groups = groupConsecutive(elements);
+                    this.executeOnAllRanges((range) => {
+                        if (range.sheetId !== cmd.sheetId) {
+                            return { changeType: "NONE" };
+                        }
+                        let newRange = range;
+                        let changeType = "NONE";
+                        for (let group of groups) {
+                            const min = Math.min(...group);
+                            const max = Math.max(...group);
+                            if (range.zone[start] <= min && min <= range.zone[end]) {
+                                const toRemove = Math.min(range.zone[end], max) - min + 1;
+                                changeType = "RESIZE";
+                                newRange = this.createAdaptedRange(newRange, dimension, changeType, -toRemove);
+                            }
+                            else if (range.zone[start] >= min && range.zone[end] <= max) {
+                                changeType = "REMOVE";
+                            }
+                            else if (range.zone[start] <= max && range.zone[end] >= max) {
+                                const toRemove = max - range.zone[start] + 1;
+                                changeType = "RESIZE";
+                                newRange = this.createAdaptedRange(newRange, dimension, changeType, -toRemove);
+                                newRange = this.createAdaptedRange(newRange, dimension, "MOVE", -(range.zone[start] - min));
+                            }
+                            else if (min < range.zone[start]) {
+                                changeType = "MOVE";
+                                newRange = this.createAdaptedRange(newRange, dimension, changeType, -(max - min + 1));
+                            }
+                        }
+                        if (changeType !== "NONE") {
+                            return { changeType, range: newRange };
+                        }
+                        return { changeType: "NONE" };
+                    }, cmd.sheetId);
+                    break;
+                }
+                case "ADD_COLUMNS_ROWS": {
+                    let start = cmd.dimension === "COL" ? "left" : "top";
+                    let end = cmd.dimension === "COL" ? "right" : "bottom";
+                    let dimension = cmd.dimension === "COL" ? "columns" : "rows";
+                    this.executeOnAllRanges((range) => {
+                        if (range.sheetId !== cmd.sheetId) {
+                            return { changeType: "NONE" };
+                        }
+                        if (cmd.position === "after") {
+                            if (range.zone[start] <= cmd.base && cmd.base < range.zone[end]) {
+                                return {
+                                    changeType: "RESIZE",
+                                    range: this.createAdaptedRange(range, dimension, "RESIZE", cmd.quantity),
+                                };
+                            }
+                            if (cmd.base < range.zone[start]) {
+                                return {
+                                    changeType: "MOVE",
+                                    range: this.createAdaptedRange(range, dimension, "MOVE", cmd.quantity),
+                                };
+                            }
+                        }
+                        else {
+                            if (range.zone[start] < cmd.base && cmd.base <= range.zone[end]) {
+                                return {
+                                    changeType: "RESIZE",
+                                    range: this.createAdaptedRange(range, dimension, "RESIZE", cmd.quantity),
+                                };
+                            }
+                            if (cmd.base <= range.zone[start]) {
+                                return {
+                                    changeType: "MOVE",
+                                    range: this.createAdaptedRange(range, dimension, "MOVE", cmd.quantity),
+                                };
+                            }
+                        }
+                        return { changeType: "NONE" };
+                    }, cmd.sheetId);
+                    break;
+                }
+                case "DELETE_SHEET": {
+                    this.executeOnAllRanges((range) => {
+                        if (range.sheetId !== cmd.sheetId) {
+                            return { changeType: "NONE" };
+                        }
+                        const invalidSheetName = this.getters.getSheetName(cmd.sheetId);
+                        const sheetId = "";
+                        range = range.clone({ sheetId, invalidSheetName });
+                        return { changeType: "REMOVE", range };
+                    }, cmd.sheetId);
+                    break;
+                }
+                case "RENAME_SHEET": {
+                    this.executeOnAllRanges((range) => {
+                        if (range.sheetId === cmd.sheetId) {
+                            return { changeType: "CHANGE", range };
+                        }
+                        if (cmd.name && range.invalidSheetName === cmd.name) {
+                            const invalidSheetName = undefined;
+                            const sheetId = cmd.sheetId;
+                            const newRange = range.clone({ sheetId, invalidSheetName });
+                            return { changeType: "CHANGE", range: newRange };
+                        }
+                        return { changeType: "NONE" };
+                    });
+                    break;
+                }
+                case "MOVE_RANGES": {
+                    const originZone = cmd.target[0];
+                    this.executeOnAllRanges((range) => {
+                        if (range.sheetId !== cmd.sheetId || !isZoneInside(range.zone, originZone)) {
+                            return { changeType: "NONE" };
+                        }
+                        const targetSheetId = cmd.targetSheetId;
+                        const offsetX = cmd.col - originZone.left;
+                        const offsetY = cmd.row - originZone.top;
+                        const adaptedRange = this.createAdaptedRange(range, "both", "MOVE", [offsetX, offsetY]);
+                        const prefixSheet = cmd.sheetId === targetSheetId ? adaptedRange.prefixSheet : true;
+                        return {
+                            changeType: "MOVE",
+                            range: adaptedRange.clone({ sheetId: targetSheetId, prefixSheet }),
+                        };
+                    });
+                    break;
+                }
+            }
+        }
+        finalize() { }
+        /**
+         * Return a modified adapting function that verifies that after adapting a range, the range is still valid.
+         * Any range that gets adapted by the function adaptRange in parameter does so
+         * without caring if the start and end of the range in both row and column
+         * direction can be incorrect. This function ensure that an incorrect range gets removed.
+         */
+        verifyRangeRemoved(adaptRange) {
+            return (range) => {
+                const result = adaptRange(range);
+                if (result.changeType !== "NONE" && !isZoneValid(result.range.zone)) {
+                    return { range: result.range, changeType: "REMOVE" };
+                }
+                return result;
+            };
+        }
+        createAdaptedRange(range, dimension, operation, by) {
+            const zone = createAdaptedZone(range.unboundedZone, dimension, operation, by);
+            const adaptedRange = range.clone({ zone });
+            return adaptedRange;
+        }
+        executeOnAllRanges(adaptRange, sheetId) {
+            const func = this.verifyRangeRemoved(adaptRange);
+            for (const provider of this.providers) {
+                provider(func, sheetId);
+            }
+        }
+        /**
+         * Stores the functions bound to each plugin to be able to iterate over all ranges of the application,
+         * without knowing any details of the internal data structure of the plugins and without storing ranges
+         * in the range adapter.
+         *
+         * @param provider a function bound to a plugin that will loop over its internal data structure to find
+         * all ranges
+         */
+        addRangeProvider(provider) {
+            this.providers.push(provider);
+        }
+        // ---------------------------------------------------------------------------
+        // Getters
+        // ---------------------------------------------------------------------------
+        createAdaptedRanges(ranges, offsetX, offsetY, sheetId) {
+            const rangesImpl = ranges.map((range) => RangeImpl.fromRange(range, this.getters));
+            return rangesImpl.map((range) => {
+                if (!isZoneValid(range.zone)) {
+                    return range;
+                }
+                const copySheetId = range.prefixSheet ? range.sheetId : sheetId;
+                const unboundZone = {
+                    ...range.unboundedZone,
+                    // Don't shift left if the range is a full row without header
+                    left: range.isFullRow && !range.unboundedZone.hasHeader
+                        ? range.unboundedZone.left
+                        : range.unboundedZone.left + (range.parts[0].colFixed ? 0 : offsetX),
+                    // Don't shift right if the range is a full row
+                    right: range.isFullRow
+                        ? range.unboundedZone.right
+                        : range.unboundedZone.right +
+                            ((range.parts[1] || range.parts[0]).colFixed ? 0 : offsetX),
+                    // Don't shift up if the range is a column row without header
+                    top: range.isFullCol && !range.unboundedZone.hasHeader
+                        ? range.unboundedZone.top
+                        : range.unboundedZone.top + (range.parts[0].rowFixed ? 0 : offsetY),
+                    // Don't shift down if the range is a full column
+                    bottom: range.isFullCol
+                        ? range.unboundedZone.bottom
+                        : range.unboundedZone.bottom +
+                            ((range.parts[1] || range.parts[0]).rowFixed ? 0 : offsetY),
+                };
+                return range.clone({ sheetId: copySheetId, zone: unboundZone }).orderZone();
+            });
+        }
+        /**
+         * Creates a range from a XC reference that can contain a sheet reference
+         * @param defaultSheetId the sheet to default to if the sheetXC parameter does not contain a sheet reference (usually the active sheet Id)
+         * @param sheetXC the string description of a range, in the form SheetName!XC:XC
+         */
+        getRangeFromSheetXC(defaultSheetId, sheetXC) {
+            if (!rangeReference.test(sheetXC)) {
+                return new RangeImpl({
+                    sheetId: "",
+                    zone: { left: -1, top: -1, right: -1, bottom: -1 },
+                    parts: [],
+                    invalidXc: sheetXC,
+                    prefixSheet: false,
+                }, this.getters.getSheetSize);
+            }
+            let sheetName = "";
+            let prefixSheet = false;
+            if (sheetXC.includes("!")) {
+                [sheetName, sheetXC] = sheetXC.split("!");
+                if (sheetName) {
+                    prefixSheet = true;
+                }
+            }
+            const zone = toUnboundedZone(sheetXC);
+            const parts = RangeImpl.getRangeParts(sheetXC, zone);
+            const invalidSheetName = sheetName && !this.getters.getSheetIdByName(sheetName) ? sheetName : undefined;
+            const sheetId = this.getters.getSheetIdByName(sheetName) || defaultSheetId;
+            const rangeInterface = { prefixSheet, zone, sheetId, invalidSheetName, parts };
+            return new RangeImpl(rangeInterface, this.getters.getSheetSize).orderZone();
+        }
+        /**
+         * Same as `getRangeString` but add all necessary merge to the range to make it a valid selection
+         */
+        getSelectionRangeString(range, forSheetId) {
+            const rangeImpl = RangeImpl.fromRange(range, this.getters);
+            const expandedZone = this.getters.expandZone(rangeImpl.sheetId, rangeImpl.zone);
+            const expandedRange = rangeImpl.clone({
+                zone: {
+                    ...expandedZone,
+                    bottom: rangeImpl.isFullCol ? undefined : expandedZone.bottom,
+                    right: rangeImpl.isFullRow ? undefined : expandedZone.right,
+                },
+            });
+            return this.getRangeString(expandedRange, forSheetId);
+        }
+        /**
+         * Gets the string that represents the range as it is at the moment of the call.
+         * The string will be prefixed with the sheet name if the call specified a sheet id in `forSheetId`
+         * different than the sheet on which the range has been created.
+         *
+         * @param range the range (received from getRangeFromXC or getRangeFromZone)
+         * @param forSheetId the id of the sheet where the range string is supposed to be used.
+         */
+        getRangeString(range, forSheetId) {
+            if (!range) {
+                return INCORRECT_RANGE_STRING;
+            }
+            if (range.invalidXc) {
+                return range.invalidXc;
+            }
+            if (range.zone.bottom - range.zone.top < 0 || range.zone.right - range.zone.left < 0) {
+                return INCORRECT_RANGE_STRING;
+            }
+            if (range.zone.left < 0 || range.zone.top < 0) {
+                return INCORRECT_RANGE_STRING;
+            }
+            const rangeImpl = RangeImpl.fromRange(range, this.getters);
+            let prefixSheet = rangeImpl.sheetId !== forSheetId || rangeImpl.invalidSheetName || rangeImpl.prefixSheet;
+            let sheetName = "";
+            if (prefixSheet) {
+                if (rangeImpl.invalidSheetName) {
+                    sheetName = rangeImpl.invalidSheetName;
+                }
+                else {
+                    sheetName = getComposerSheetName(this.getters.getSheetName(rangeImpl.sheetId));
+                }
+            }
+            if (prefixSheet && !sheetName) {
+                return INCORRECT_RANGE_STRING;
+            }
+            let rangeString = this.getRangePartString(rangeImpl, 0);
+            if (rangeImpl.parts && rangeImpl.parts.length === 2) {
+                // this if converts A2:A2 into A2 except if any part of the original range had fixed row or column (with $)
+                if (rangeImpl.zone.top !== rangeImpl.zone.bottom ||
+                    rangeImpl.zone.left !== rangeImpl.zone.right ||
+                    rangeImpl.parts[0].rowFixed ||
+                    rangeImpl.parts[0].colFixed ||
+                    rangeImpl.parts[1].rowFixed ||
+                    rangeImpl.parts[1].colFixed) {
+                    rangeString += ":";
+                    rangeString += this.getRangePartString(rangeImpl, 1);
+                }
+            }
+            return `${prefixSheet ? sheetName + "!" : ""}${rangeString}`;
+        }
+        getRangeDataFromXc(sheetId, xc) {
+            return this.getters.getRangeFromSheetXC(sheetId, xc).rangeData;
+        }
+        getRangeDataFromZone(sheetId, zone) {
+            return { _sheetId: sheetId, _zone: zone };
+        }
+        getRangeFromRangeData(data) {
+            const rangeInterface = {
+                prefixSheet: false,
+                zone: data._zone,
+                sheetId: data._sheetId,
+                invalidSheetName: undefined,
+                parts: [
+                    { colFixed: false, rowFixed: false },
+                    { colFixed: false, rowFixed: false },
+                ],
+            };
+            return new RangeImpl(rangeInterface, this.getters.getSheetSize);
+        }
+        // ---------------------------------------------------------------------------
+        // Private
+        // ---------------------------------------------------------------------------
+        /**
+         * Get a Xc string that represent a part of a range
+         */
+        getRangePartString(range, part) {
+            const colFixed = range.parts && range.parts[part].colFixed ? "$" : "";
+            const col = part === 0 ? numberToLetters(range.zone.left) : numberToLetters(range.zone.right);
+            const rowFixed = range.parts && range.parts[part].rowFixed ? "$" : "";
+            const row = part === 0 ? String(range.zone.top + 1) : String(range.zone.bottom + 1);
+            let str = "";
+            if (range.isFullCol) {
+                if (part === 0 && range.unboundedZone.hasHeader) {
+                    str = colFixed + col + rowFixed + row;
+                }
+                else {
+                    str = colFixed + col;
+                }
+            }
+            else if (range.isFullRow) {
+                if (part === 0 && range.unboundedZone.hasHeader) {
+                    str = colFixed + col + rowFixed + row;
+                }
+                else {
+                    str = rowFixed + row;
+                }
+            }
+            else {
+                str = colFixed + col + rowFixed + row;
+            }
+            return str;
+        }
+    }
+    RangeAdapter.getters = [
+        "getRangeString",
+        "getSelectionRangeString",
+        "getRangeFromSheetXC",
+        "createAdaptedRanges",
+        "getRangeDataFromXc",
+        "getRangeDataFromZone",
+        "getRangeFromRangeData",
+    ];
+
     class SheetPlugin extends CorePlugin {
         constructor() {
             super(...arguments);
@@ -30243,1582 +30670,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         "getSheetZone",
         "getPaneDivisions",
     ];
-
-    /**
-     * This plugin manage the autofill.
-     *
-     * The way it works is the next one:
-     * For each line (row if the direction is left/right, col otherwise), we create
-     * a "AutofillGenerator" object which is used to compute the cells to
-     * autofill.
-     *
-     * When we need to autofill a cell, we compute the origin cell in the source.
-     *  EX: from A1:A2, autofill A3->A6.
-     *      Target | Origin cell
-     *        A3   |   A1
-     *        A4   |   A2
-     *        A5   |   A1
-     *        A6   |   A2
-     * When we have the origin, we take the associated cell in the AutofillGenerator
-     * and we apply the modifier (AutofillModifier) associated to the content of the
-     * cell.
-     */
-    /**
-     * This class is used to generate the next values to autofill.
-     * It's done from a selection (the source) and describe how the next values
-     * should be computed.
-     */
-    class AutofillGenerator {
-        constructor(cells, getters, direction) {
-            this.index = 0;
-            this.cells = cells;
-            this.getters = getters;
-            this.direction = direction;
-        }
-        /**
-         * Get the next value to autofill
-         */
-        next() {
-            const genCell = this.cells[this.index++ % this.cells.length];
-            const rule = genCell.rule;
-            const { cellData, tooltip } = autofillModifiersRegistry
-                .get(rule.type)
-                .apply(rule, genCell.data, this.getters, this.direction);
-            return {
-                cellData,
-                tooltip,
-                origin: {
-                    col: genCell.data.col,
-                    row: genCell.data.row,
-                },
-            };
-        }
-    }
-    /**
-     * Autofill Plugin
-     *
-     */
-    class AutofillPlugin extends UIPlugin {
-        constructor() {
-            super(...arguments);
-            this.lastCellSelected = {};
-        }
-        // ---------------------------------------------------------------------------
-        // Command Handling
-        // ---------------------------------------------------------------------------
-        allowDispatch(cmd) {
-            switch (cmd.type) {
-                case "AUTOFILL_SELECT":
-                    const sheetId = this.getters.getActiveSheetId();
-                    this.lastCellSelected.col =
-                        cmd.col === -1
-                            ? this.lastCellSelected.col
-                            : clip(cmd.col, 0, this.getters.getNumberCols(sheetId));
-                    this.lastCellSelected.row =
-                        cmd.row === -1
-                            ? this.lastCellSelected.row
-                            : clip(cmd.row, 0, this.getters.getNumberRows(sheetId));
-                    if (this.lastCellSelected.col !== undefined && this.lastCellSelected.row !== undefined) {
-                        return 0 /* CommandResult.Success */;
-                    }
-                    return 43 /* CommandResult.InvalidAutofillSelection */;
-                case "AUTOFILL_AUTO":
-                    const zone = this.getters.getSelectedZone();
-                    return zone.top === zone.bottom
-                        ? 0 /* CommandResult.Success */
-                        : 1 /* CommandResult.CancelledForUnknownReason */;
-            }
-            return 0 /* CommandResult.Success */;
-        }
-        handle(cmd) {
-            switch (cmd.type) {
-                case "AUTOFILL":
-                    this.autofill(true);
-                    break;
-                case "AUTOFILL_SELECT":
-                    this.select(cmd.col, cmd.row);
-                    break;
-                case "AUTOFILL_AUTO":
-                    this.autofillAuto();
-                    break;
-                case "AUTOFILL_CELL":
-                    this.autoFillMerge(cmd.originCol, cmd.originRow, cmd.col, cmd.row);
-                    const sheetId = this.getters.getActiveSheetId();
-                    this.dispatch("UPDATE_CELL", {
-                        sheetId,
-                        col: cmd.col,
-                        row: cmd.row,
-                        style: cmd.style || null,
-                        content: cmd.content || "",
-                        format: cmd.format || "",
-                    });
-                    this.dispatch("SET_BORDER", {
-                        sheetId,
-                        col: cmd.col,
-                        row: cmd.row,
-                        border: cmd.border,
-                    });
-            }
-        }
-        // ---------------------------------------------------------------------------
-        // Getters
-        // ---------------------------------------------------------------------------
-        getAutofillTooltip() {
-            return this.tooltip;
-        }
-        // ---------------------------------------------------------------------------
-        // Private methods
-        // ---------------------------------------------------------------------------
-        /**
-         * Autofill the autofillZone from the current selection
-         * @param apply Flag set to true to apply the autofill in the model. It's
-         *              useful to set it to false when we need to fill the tooltip
-         */
-        autofill(apply) {
-            if (!this.autofillZone || this.direction === undefined) {
-                this.tooltip = undefined;
-                return;
-            }
-            const source = this.getters.getSelectedZone();
-            const target = this.autofillZone;
-            switch (this.direction) {
-                case 1 /* DIRECTION.DOWN */:
-                    for (let col = source.left; col <= source.right; col++) {
-                        const xcs = [];
-                        for (let row = source.top; row <= source.bottom; row++) {
-                            xcs.push(toXC(col, row));
-                        }
-                        const generator = this.createGenerator(xcs);
-                        for (let row = target.top; row <= target.bottom; row++) {
-                            this.computeNewCell(generator, col, row, apply);
-                        }
-                    }
-                    break;
-                case 0 /* DIRECTION.UP */:
-                    for (let col = source.left; col <= source.right; col++) {
-                        const xcs = [];
-                        for (let row = source.bottom; row >= source.top; row--) {
-                            xcs.push(toXC(col, row));
-                        }
-                        const generator = this.createGenerator(xcs);
-                        for (let row = target.bottom; row >= target.top; row--) {
-                            this.computeNewCell(generator, col, row, apply);
-                        }
-                    }
-                    break;
-                case 2 /* DIRECTION.LEFT */:
-                    for (let row = source.top; row <= source.bottom; row++) {
-                        const xcs = [];
-                        for (let col = source.right; col >= source.left; col--) {
-                            xcs.push(toXC(col, row));
-                        }
-                        const generator = this.createGenerator(xcs);
-                        for (let col = target.right; col >= target.left; col--) {
-                            this.computeNewCell(generator, col, row, apply);
-                        }
-                    }
-                    break;
-                case 3 /* DIRECTION.RIGHT */:
-                    for (let row = source.top; row <= source.bottom; row++) {
-                        const xcs = [];
-                        for (let col = source.left; col <= source.right; col++) {
-                            xcs.push(toXC(col, row));
-                        }
-                        const generator = this.createGenerator(xcs);
-                        for (let col = target.left; col <= target.right; col++) {
-                            this.computeNewCell(generator, col, row, apply);
-                        }
-                    }
-                    break;
-            }
-            if (apply) {
-                const zone = union(this.getters.getSelectedZone(), this.autofillZone);
-                this.autofillZone = undefined;
-                this.lastCellSelected = {};
-                this.direction = undefined;
-                this.tooltip = undefined;
-                this.selection.selectZone({ cell: { col: zone.left, row: zone.top }, zone });
-            }
-        }
-        /**
-         * Select a cell which becomes the last cell of the autofillZone
-         */
-        select(col, row) {
-            const source = this.getters.getSelectedZone();
-            if (isInside(col, row, source)) {
-                this.autofillZone = undefined;
-                return;
-            }
-            this.direction = this.getDirection(col, row);
-            switch (this.direction) {
-                case 0 /* DIRECTION.UP */:
-                    this.saveZone(row, source.top - 1, source.left, source.right);
-                    break;
-                case 1 /* DIRECTION.DOWN */:
-                    this.saveZone(source.bottom + 1, row, source.left, source.right);
-                    break;
-                case 2 /* DIRECTION.LEFT */:
-                    this.saveZone(source.top, source.bottom, col, source.left - 1);
-                    break;
-                case 3 /* DIRECTION.RIGHT */:
-                    this.saveZone(source.top, source.bottom, source.right + 1, col);
-                    break;
-            }
-            this.autofill(false);
-        }
-        /**
-         * Computes the autofillZone to autofill when the user double click on the
-         * autofiller
-         */
-        autofillAuto() {
-            const zone = this.getters.getSelectedZone();
-            const sheetId = this.getters.getActiveSheetId();
-            let col = zone.left;
-            let row = zone.bottom;
-            if (col > 0) {
-                let left = this.getters.getEvaluatedCell({ sheetId, col: col - 1, row });
-                while (left.type !== CellValueType.empty) {
-                    row += 1;
-                    left = this.getters.getEvaluatedCell({ sheetId, col: col - 1, row });
-                }
-            }
-            if (row === zone.bottom) {
-                col = zone.right;
-                if (col <= this.getters.getNumberCols(sheetId)) {
-                    let right = this.getters.getEvaluatedCell({ sheetId, col: col + 1, row });
-                    while (right.type !== CellValueType.empty) {
-                        row += 1;
-                        right = this.getters.getEvaluatedCell({ sheetId, col: col + 1, row });
-                    }
-                }
-            }
-            if (row !== zone.bottom) {
-                this.select(zone.left, row - 1);
-                this.autofill(true);
-            }
-        }
-        /**
-         * Generate the next cell
-         */
-        computeNewCell(generator, col, row, apply) {
-            const { cellData, tooltip, origin } = generator.next();
-            const { content, style, border, format } = cellData;
-            this.tooltip = tooltip;
-            if (apply) {
-                this.dispatch("AUTOFILL_CELL", {
-                    originCol: origin.col,
-                    originRow: origin.row,
-                    col,
-                    row,
-                    content,
-                    style,
-                    border,
-                    format,
-                });
-            }
-        }
-        /**
-         * Get the rule associated to the current cell
-         */
-        getRule(cell, cells) {
-            const rules = autofillRulesRegistry.getAll().sort((a, b) => a.sequence - b.sequence);
-            const rule = rules.find((rule) => rule.condition(cell, cells));
-            return rule && rule.generateRule(cell, cells);
-        }
-        /**
-         * Create the generator to be able to autofill the next cells.
-         */
-        createGenerator(source) {
-            const nextCells = [];
-            const cellsData = [];
-            const sheetId = this.getters.getActiveSheetId();
-            for (let xc of source) {
-                const { col, row } = toCartesian(xc);
-                const cell = this.getters.getCell(sheetId, col, row);
-                cellsData.push({
-                    col,
-                    row,
-                    cell,
-                    sheetId,
-                });
-            }
-            const cells = cellsData.map((cellData) => cellData.cell);
-            for (let cellData of cellsData) {
-                let rule = { type: "COPY_MODIFIER" };
-                if (cellData && cellData.cell) {
-                    const newRule = this.getRule(cellData.cell, cells);
-                    rule = newRule || rule;
-                }
-                const { sheetId, col, row } = cellData;
-                const border = this.getters.getCellBorder(sheetId, col, row) || undefined;
-                nextCells.push({
-                    data: { ...cellData, border },
-                    rule,
-                });
-            }
-            return new AutofillGenerator(nextCells, this.getters, this.direction);
-        }
-        saveZone(top, bottom, left, right) {
-            this.autofillZone = { top, bottom, left, right };
-        }
-        /**
-         * Compute the direction of the autofill from the last selected zone and
-         * a given cell (col, row)
-         */
-        getDirection(col, row) {
-            const source = this.getters.getSelectedZone();
-            const position = {
-                up: { number: source.top - row, value: 0 /* DIRECTION.UP */ },
-                down: { number: row - source.bottom, value: 1 /* DIRECTION.DOWN */ },
-                left: { number: source.left - col, value: 2 /* DIRECTION.LEFT */ },
-                right: { number: col - source.right, value: 3 /* DIRECTION.RIGHT */ },
-            };
-            if (Object.values(position)
-                .map((x) => (x.number > 0 ? 1 : 0))
-                .reduce((acc, value) => acc + value) === 1) {
-                return Object.values(position).find((x) => (x.number > 0 ? 1 : 0)).value;
-            }
-            const first = position.up.number > 0 ? "up" : "down";
-            const second = position.left.number > 0 ? "left" : "right";
-            return Math.abs(position[first].number) >= Math.abs(position[second].number)
-                ? position[first].value
-                : position[second].value;
-        }
-        autoFillMerge(originCol, originRow, col, row) {
-            const activeSheet = this.getters.getActiveSheet();
-            if (this.getters.isInMerge(activeSheet.id, col, row) &&
-                !this.getters.isInMerge(activeSheet.id, originCol, originRow)) {
-                const zone = this.getters.getMerge(activeSheet.id, col, row);
-                if (zone) {
-                    this.dispatch("REMOVE_MERGE", {
-                        sheetId: activeSheet.id,
-                        target: [zone],
-                    });
-                }
-            }
-            const originMerge = this.getters.getMerge(activeSheet.id, originCol, originRow);
-            if ((originMerge === null || originMerge === void 0 ? void 0 : originMerge.topLeft.col) === originCol && (originMerge === null || originMerge === void 0 ? void 0 : originMerge.topLeft.row) === originRow) {
-                this.dispatch("ADD_MERGE", {
-                    sheetId: activeSheet.id,
-                    target: [
-                        {
-                            top: row,
-                            bottom: row + originMerge.bottom - originMerge.top,
-                            left: col,
-                            right: col + originMerge.right - originMerge.left,
-                        },
-                    ],
-                });
-            }
-        }
-        // ---------------------------------------------------------------------------
-        // Grid rendering
-        // ---------------------------------------------------------------------------
-        drawGrid(renderingContext) {
-            if (!this.autofillZone) {
-                return;
-            }
-            const { ctx, thinLineWidth } = renderingContext;
-            const { x, y, width, height } = this.getters.getVisibleRect(this.autofillZone);
-            if (width > 0 && height > 0) {
-                ctx.strokeStyle = "black";
-                ctx.lineWidth = thinLineWidth;
-                ctx.setLineDash([3]);
-                ctx.strokeRect(x, y, width, height);
-                ctx.setLineDash([]);
-            }
-        }
-    }
-    AutofillPlugin.layers = [5 /* LAYERS.Autofill */];
-    AutofillPlugin.getters = ["getAutofillTooltip"];
-
-    class AutomaticSumPlugin extends UIPlugin {
-        handle(cmd) {
-            switch (cmd.type) {
-                case "SUM_SELECTION":
-                    const sheetId = this.getters.getActiveSheetId();
-                    const { zones, anchor } = this.getters.getSelection();
-                    for (const zone of zones) {
-                        const sums = this.getAutomaticSums(sheetId, zone, anchor.cell);
-                        this.dispatchCellUpdates(sheetId, sums);
-                    }
-                    break;
-            }
-        }
-        getAutomaticSums(sheetId, zone, anchor) {
-            return this.shouldFindData(sheetId, zone)
-                ? this.sumAdjacentData(sheetId, zone, anchor)
-                : this.sumData(sheetId, zone);
-        }
-        // ---------------------------------------------------------------------------
-        // Private methods
-        // ---------------------------------------------------------------------------
-        sumData(sheetId, zone) {
-            const dimensions = this.dimensionsToSum(sheetId, zone);
-            const sums = this.sumDimensions(sheetId, zone, dimensions).filter(({ zone }) => !this.getters.isEmpty(sheetId, zone));
-            if (dimensions.has("ROW") && dimensions.has("COL")) {
-                sums.push(this.sumTotal(zone));
-            }
-            return sums;
-        }
-        sumAdjacentData(sheetId, zone, anchor) {
-            const { col, row } = isInside(anchor.col, anchor.row, zone)
-                ? anchor
-                : { col: zone.left, row: zone.top };
-            const dataZone = this.findAdjacentData(sheetId, col, row);
-            if (!dataZone) {
-                return [];
-            }
-            if (this.getters.isSingleCellOrMerge(sheetId, zone) ||
-                isOneDimensional(union(dataZone, zone))) {
-                return [{ position: { col, row }, zone: dataZone }];
-            }
-            else {
-                return this.sumDimensions(sheetId, union(dataZone, zone), this.transpose(this.dimensionsToSum(sheetId, zone)));
-            }
-        }
-        /**
-         * Find a zone to automatically sum a column or row of numbers.
-         *
-         * We first decide which direction will be summed (column or row).
-         * Here is the strategy:
-         *  1. If the left cell is a number and the top cell is not: choose horizontal
-         *  2. Try to find a valid vertical zone. If it's valid: choose vertical
-         *  3. Try to find a valid horizontal zone. If it's valid: choose horizontal
-         *  4. Otherwise, no zone is returned
-         *
-         * Now, how to find a valid zone?
-         * The zone starts directly above or on the left of the starting point
-         * (depending on the direction).
-         * The zone ends where the first continuous sequence of numbers ends.
-         * Empty or text cells can be part of the zone while no number has been found.
-         * Other kind of cells (boolean, dates, etc.) are not valid in the zone and the
-         * search stops immediately if one is found.
-         *
-         *  -------                                       -------
-         * |   1   |                                     |   1   |
-         *  -------                                       -------
-         * |       |                                     |       |
-         *  -------  <= end of the sequence, stop here    -------
-         * |   2   |                                     |   2   |
-         *  -------                                       -------
-         * |   3   | <= start of the number sequence     |   3   |
-         *  -------                                       -------
-         * |       | <= ignored                          | FALSE | <= invalid, no zone is found
-         *  -------                                       -------
-         * |   A   | <= ignored                          |   A   | <= ignored
-         *  -------                                       -------
-         */
-        findAdjacentData(sheetId, col, row) {
-            const sheet = this.getters.getSheet(sheetId);
-            const mainCellPosition = this.getters.getMainCellPosition(sheetId, col, row);
-            const zone = this.findSuitableZoneToSum(sheet, mainCellPosition.col, mainCellPosition.row);
-            if (zone) {
-                return this.getters.expandZone(sheetId, zone);
-            }
-            return undefined;
-        }
-        /**
-         * Return the zone to sum if a valid one is found.
-         * @see getAutomaticSumZone
-         */
-        findSuitableZoneToSum(sheet, col, row) {
-            const topCell = this.getters.getEvaluatedCell({ sheetId: sheet.id, col, row: row - 1 });
-            const leftCell = this.getters.getEvaluatedCell({ sheetId: sheet.id, col: col - 1, row });
-            if (this.isNumber(leftCell) && !this.isNumber(topCell)) {
-                return this.findHorizontalZone(sheet, col, row);
-            }
-            const verticalZone = this.findVerticalZone(sheet, col, row);
-            if (this.isZoneValid(verticalZone)) {
-                return verticalZone;
-            }
-            const horizontalZone = this.findHorizontalZone(sheet, col, row);
-            if (this.isZoneValid(horizontalZone)) {
-                return horizontalZone;
-            }
-            return undefined;
-        }
-        findVerticalZone(sheet, col, row) {
-            const zone = {
-                top: 0,
-                bottom: row - 1,
-                left: col,
-                right: col,
-            };
-            const top = this.reduceZoneStart(sheet, zone, zone.bottom);
-            return { ...zone, top };
-        }
-        findHorizontalZone(sheet, col, row) {
-            const zone = {
-                top: row,
-                bottom: row,
-                left: 0,
-                right: col - 1,
-            };
-            const left = this.reduceZoneStart(sheet, zone, zone.right);
-            return { ...zone, left };
-        }
-        /**
-         * Reduces a column or row zone to a valid zone for the automatic sum.
-         * @see getAutomaticSumZone
-         * @param sheet
-         * @param zone one dimensional zone (a single row or a single column). The zone is
-         *             assumed to start at the beginning of the column (top=0) or the row (left=0)
-         * @param end end index of the zone (`bottom` or `right` depending on the dimension)
-         * @returns the starting position of the valid zone or Infinity if the zone is not valid.
-         */
-        reduceZoneStart(sheet, zone, end) {
-            const cells = this.getters.getEvaluatedCellsInZone(sheet.id, zone);
-            const cellPositions = range(end, -1, -1);
-            const invalidCells = cellPositions.filter((position) => cells[position] && !cells[position].isAutoSummable);
-            const maxValidPosition = Math.max(...invalidCells);
-            const numberSequences = groupConsecutive(cellPositions.filter((position) => this.isNumber(cells[position])));
-            const firstSequence = numberSequences[0] || [];
-            if (Math.max(...firstSequence) < maxValidPosition) {
-                return Infinity;
-            }
-            return Math.min(...firstSequence);
-        }
-        shouldFindData(sheetId, zone) {
-            return this.getters.isEmpty(sheetId, zone) || this.getters.isSingleCellOrMerge(sheetId, zone);
-        }
-        isNumber(cell) {
-            var _a;
-            return cell.type === CellValueType.number && !((_a = cell.format) === null || _a === void 0 ? void 0 : _a.match(DATETIME_FORMAT));
-        }
-        isZoneValid(zone) {
-            return zone.bottom >= zone.top && zone.right >= zone.left;
-        }
-        lastColIsEmpty(sheetId, zone) {
-            return this.getters.isEmpty(sheetId, { ...zone, left: zone.right });
-        }
-        lastRowIsEmpty(sheetId, zone) {
-            return this.getters.isEmpty(sheetId, { ...zone, top: zone.bottom });
-        }
-        /**
-         * Decides which dimensions (columns or rows) should be summed
-         * based on its shape and what's inside the zone.
-         */
-        dimensionsToSum(sheetId, zone) {
-            const dimensions = new Set();
-            if (isOneDimensional(zone)) {
-                dimensions.add(zoneToDimension(zone).width === 1 ? "COL" : "ROW");
-                return dimensions;
-            }
-            if (this.lastColIsEmpty(sheetId, zone)) {
-                dimensions.add("ROW");
-            }
-            if (this.lastRowIsEmpty(sheetId, zone)) {
-                dimensions.add("COL");
-            }
-            if (dimensions.size === 0) {
-                dimensions.add("COL");
-            }
-            return dimensions;
-        }
-        /**
-         * Sum each column and/or row in the zone in the appropriate cells,
-         * depending on the available space.
-         */
-        sumDimensions(sheetId, zone, dimensions) {
-            return [
-                ...(dimensions.has("COL") ? this.sumColumns(zone, sheetId) : []),
-                ...(dimensions.has("ROW") ? this.sumRows(zone, sheetId) : []),
-            ];
-        }
-        /**
-         * Sum the total of the zone in the bottom right cell, assuming
-         * the last row contains summed columns.
-         */
-        sumTotal(zone) {
-            const { bottom, right } = zone;
-            return {
-                position: { col: right, row: bottom },
-                zone: { ...zone, top: bottom, right: right - 1 },
-            };
-        }
-        sumColumns(zone, sheetId) {
-            const target = this.nextEmptyRow(sheetId, { ...zone, bottom: zone.bottom - 1 });
-            zone = { ...zone, bottom: Math.min(zone.bottom, target.bottom - 1) };
-            return positions(target).map((position) => ({
-                position,
-                zone: { ...zone, right: position.col, left: position.col },
-            }));
-        }
-        sumRows(zone, sheetId) {
-            const target = this.nextEmptyCol(sheetId, { ...zone, right: zone.right - 1 });
-            zone = { ...zone, right: Math.min(zone.right, target.right - 1) };
-            return positions(target).map((position) => ({
-                position,
-                zone: { ...zone, top: position.row, bottom: position.row },
-            }));
-        }
-        dispatchCellUpdates(sheetId, sums) {
-            for (const sum of sums) {
-                const { col, row } = sum.position;
-                this.dispatch("UPDATE_CELL", {
-                    sheetId,
-                    col,
-                    row,
-                    content: `=SUM(${this.getters.zoneToXC(sheetId, sum.zone)})`,
-                });
-            }
-        }
-        /**
-         * Find the first row where all cells below the zone are empty.
-         */
-        nextEmptyRow(sheetId, zone) {
-            let start = zone.bottom + 1;
-            const { left, right } = zone;
-            while (!this.getters.isEmpty(sheetId, { bottom: start, top: start, left, right })) {
-                start++;
-            }
-            return {
-                ...zone,
-                top: start,
-                bottom: start,
-            };
-        }
-        /**
-         * Find the first column where all cells right of the zone are empty.
-         */
-        nextEmptyCol(sheetId, zone) {
-            let start = zone.right + 1;
-            const { top, bottom } = zone;
-            while (!this.getters.isEmpty(sheetId, { left: start, right: start, top, bottom })) {
-                start++;
-            }
-            return {
-                ...zone,
-                left: start,
-                right: start,
-            };
-        }
-        /**
-         * Transpose the given dimensions.
-         * COL becomes ROW
-         * ROW becomes COL
-         */
-        transpose(dimensions) {
-            return new Set([...dimensions.values()].map((dimension) => (dimension === "COL" ? "ROW" : "COL")));
-        }
-    }
-    AutomaticSumPlugin.getters = ["getAutomaticSums"];
-
-    /**
-     * Plugin managing the display of components next to cells.
-     */
-    class CellPopoverPlugin extends UIPlugin {
-        allowDispatch(cmd) {
-            switch (cmd.type) {
-                case "OPEN_CELL_POPOVER":
-                    try {
-                        cellPopoverRegistry.get(cmd.popoverType);
-                    }
-                    catch (error) {
-                        return 70 /* CommandResult.InvalidCellPopover */;
-                    }
-                    return 0 /* CommandResult.Success */;
-                default:
-                    return 0 /* CommandResult.Success */;
-            }
-        }
-        handle(cmd) {
-            switch (cmd.type) {
-                case "ACTIVATE_SHEET":
-                    this.persistentPopover = undefined;
-                    break;
-                case "OPEN_CELL_POPOVER":
-                    this.persistentPopover = {
-                        col: cmd.col,
-                        row: cmd.row,
-                        type: cmd.popoverType,
-                    };
-                    break;
-                case "CLOSE_CELL_POPOVER":
-                    this.persistentPopover = undefined;
-                    break;
-            }
-        }
-        getCellPopover({ col, row }) {
-            var _a, _b;
-            const sheetId = this.getters.getActiveSheetId();
-            if (this.persistentPopover &&
-                this.getters.isVisibleInViewport(sheetId, this.persistentPopover.col, this.persistentPopover.row)) {
-                const mainPosition = this.getters.getMainCellPosition(sheetId, this.persistentPopover.col, this.persistentPopover.row);
-                const popover = (_b = (_a = cellPopoverRegistry
-                    .get(this.persistentPopover.type)).onOpen) === null || _b === void 0 ? void 0 : _b.call(_a, { sheetId, ...mainPosition }, this.getters);
-                return !(popover === null || popover === void 0 ? void 0 : popover.isOpen)
-                    ? { isOpen: false }
-                    : {
-                        ...popover,
-                        ...this.computePopoverProps(this.persistentPopover, popover.cellCorner),
-                    };
-            }
-            if (col === undefined ||
-                row === undefined ||
-                !this.getters.isVisibleInViewport(sheetId, col, row)) {
-                return { isOpen: false };
-            }
-            const mainPosition = this.getters.getMainCellPosition(sheetId, col, row);
-            const popover = cellPopoverRegistry
-                .getAll()
-                .map((matcher) => { var _a; return (_a = matcher.onHover) === null || _a === void 0 ? void 0 : _a.call(matcher, { sheetId, ...mainPosition }, this.getters); })
-                .find((popover) => popover === null || popover === void 0 ? void 0 : popover.isOpen);
-            return !(popover === null || popover === void 0 ? void 0 : popover.isOpen)
-                ? { isOpen: false }
-                : {
-                    ...popover,
-                    ...this.computePopoverProps(mainPosition, popover.cellCorner),
-                };
-        }
-        getPersistentPopoverTypeAtPosition({ col, row }) {
-            if (this.persistentPopover &&
-                this.persistentPopover.col === col &&
-                this.persistentPopover.row === row) {
-                return this.persistentPopover.type;
-            }
-            return undefined;
-        }
-        computePopoverProps({ col, row }, corner) {
-            const { width, height } = this.getters.getVisibleRect(positionToZone({ col, row }));
-            return {
-                coordinates: this.computePopoverPosition({ col, row }, corner),
-                cellWidth: -width,
-                cellHeight: -height,
-            };
-        }
-        computePopoverPosition({ col, row }, corner) {
-            const sheetId = this.getters.getActiveSheetId();
-            const merge = this.getters.getMerge(sheetId, col, row);
-            if (merge) {
-                col = corner === "TopRight" ? merge.right : merge.left;
-                row = corner === "TopRight" ? merge.top : merge.bottom;
-            }
-            // x, y are relative to the canvas
-            const { x, y, width, height } = this.getters.getVisibleRect(positionToZone({ col, row }));
-            switch (corner) {
-                case "BottomLeft":
-                    return { x, y: y + height };
-                case "TopRight":
-                    return { x: x + width, y: y };
-            }
-        }
-    }
-    CellPopoverPlugin.getters = ["getCellPopover", "getPersistentPopoverTypeAtPosition"];
-    CellPopoverPlugin.modes = ["normal"];
-
-    /** Abstract state of the clipboard when copying/cutting content that is pasted in cells of the sheet */
-    class ClipboardCellsAbstractState {
-        constructor(operation, getters, dispatch, selection) {
-            this.getters = getters;
-            this.dispatch = dispatch;
-            this.selection = selection;
-            this.operation = operation;
-            this.sheetId = getters.getActiveSheetId();
-        }
-        isCutAllowed(target) {
-            return 0 /* CommandResult.Success */;
-        }
-        isPasteAllowed(target, clipboardOption) {
-            return 0 /* CommandResult.Success */;
-        }
-        /**
-         * Add columns and/or rows to ensure that col + width and row + height are still
-         * in the sheet
-         */
-        addMissingDimensions(width, height, col, row) {
-            const sheetId = this.getters.getActiveSheetId();
-            const missingRows = height + row - this.getters.getNumberRows(sheetId);
-            if (missingRows > 0) {
-                this.dispatch("ADD_COLUMNS_ROWS", {
-                    dimension: "ROW",
-                    base: this.getters.getNumberRows(sheetId) - 1,
-                    sheetId,
-                    quantity: missingRows,
-                    position: "after",
-                });
-            }
-            const missingCols = width + col - this.getters.getNumberCols(sheetId);
-            if (missingCols > 0) {
-                this.dispatch("ADD_COLUMNS_ROWS", {
-                    dimension: "COL",
-                    base: this.getters.getNumberCols(sheetId) - 1,
-                    sheetId,
-                    quantity: missingCols,
-                    position: "after",
-                });
-            }
-        }
-        isColRowDirtyingClipboard(position, dimension) {
-            return false;
-        }
-        drawClipboard(renderingContext) { }
-    }
-
-    /** State of the clipboard when copying/cutting cells */
-    class ClipboardCellsState extends ClipboardCellsAbstractState {
-        constructor(zones, operation, getters, dispatch, selection) {
-            super(operation, getters, dispatch, selection);
-            if (!zones.length) {
-                this.cells = [[]];
-                this.zones = [];
-                this.copiedTables = [];
-                return;
-            }
-            const lefts = new Set(zones.map((z) => z.left));
-            const rights = new Set(zones.map((z) => z.right));
-            const tops = new Set(zones.map((z) => z.top));
-            const bottoms = new Set(zones.map((z) => z.bottom));
-            const areZonesCompatible = (tops.size === 1 && bottoms.size === 1) || (lefts.size === 1 && rights.size === 1);
-            // In order to don't paste several times the same cells in intersected zones
-            // --> we merge zones that have common cells
-            const clippedZones = areZonesCompatible
-                ? mergeOverlappingZones(zones)
-                : [zones[zones.length - 1]];
-            const cellsPosition = clippedZones.map((zone) => positions(zone)).flat();
-            const columnsIndex = [...new Set(cellsPosition.map((p) => p.col))].sort((a, b) => a - b);
-            const rowsIndex = [...new Set(cellsPosition.map((p) => p.row))].sort((a, b) => a - b);
-            const cellsInClipboard = [];
-            const sheetId = getters.getActiveSheetId();
-            for (let row of rowsIndex) {
-                let cellsInRow = [];
-                for (let col of columnsIndex) {
-                    cellsInRow.push({
-                        cell: getters.getCell(sheetId, col, row),
-                        evaluatedCell: getters.getEvaluatedCell({ sheetId, col, row }),
-                        border: getters.getCellBorder(sheetId, col, row) || undefined,
-                        position: { col, row, sheetId },
-                    });
-                }
-                cellsInClipboard.push(cellsInRow);
-            }
-            const tables = [];
-            for (const zone of zones) {
-                for (const table of this.getters.getFilterTablesInZone(sheetId, zone)) {
-                    const values = [];
-                    for (const col of range(table.zone.left, table.zone.right + 1)) {
-                        values.push(this.getters.getFilterValues(sheetId, col, table.zone.top));
-                    }
-                    tables.push({ filtersValues: values, zone: table.zone });
-                }
-            }
-            this.cells = cellsInClipboard;
-            this.zones = clippedZones;
-            this.copiedTables = tables;
-        }
-        isCutAllowed(target) {
-            if (target.length !== 1) {
-                return 18 /* CommandResult.WrongCutSelection */;
-            }
-            return 0 /* CommandResult.Success */;
-        }
-        isPasteAllowed(target, clipboardOption) {
-            const sheetId = this.getters.getActiveSheetId();
-            if (this.operation === "CUT" && (clipboardOption === null || clipboardOption === void 0 ? void 0 : clipboardOption.pasteOption) !== undefined) {
-                // cannot paste only format or only value if the previous operation is a CUT
-                return 20 /* CommandResult.WrongPasteOption */;
-            }
-            if (target.length > 1) {
-                // cannot paste if we have a clipped zone larger than a cell and multiple
-                // zones selected
-                if (this.cells.length > 1 || this.cells[0].length > 1) {
-                    return 19 /* CommandResult.WrongPasteSelection */;
-                }
-            }
-            const clipboardHeight = this.cells.length;
-            const clipboardWidth = this.cells[0].length;
-            for (let zone of this.getPasteZones(target)) {
-                if (this.getters.doesIntersectMerge(sheetId, zone)) {
-                    if (target.length > 1 ||
-                        !this.getters.isSingleCellOrMerge(sheetId, target[0]) ||
-                        clipboardHeight * clipboardWidth !== 1) {
-                        return 2 /* CommandResult.WillRemoveExistingMerge */;
-                    }
-                }
-            }
-            const { xSplit, ySplit } = this.getters.getPaneDivisions(sheetId);
-            for (const zone of this.getPasteZones(target)) {
-                if ((zone.left < xSplit && zone.right >= xSplit) ||
-                    (zone.top < ySplit && zone.bottom >= ySplit)) {
-                    return 73 /* CommandResult.FrozenPaneOverlap */;
-                }
-            }
-            return 0 /* CommandResult.Success */;
-        }
-        /**
-         * Paste the clipboard content in the given target
-         */
-        paste(target, options) {
-            if (this.operation === "COPY") {
-                this.pasteFromCopy(target, options);
-            }
-            else {
-                this.pasteFromCut(target, options);
-            }
-            const height = this.cells.length;
-            const width = this.cells[0].length;
-            const isCutOperation = this.operation === "CUT";
-            if (options === null || options === void 0 ? void 0 : options.selectTarget) {
-                this.selectPastedZone(width, height, isCutOperation, target);
-            }
-        }
-        pasteFromCopy(target, options) {
-            if (target.length === 1) {
-                // in this specific case, due to the isPasteAllowed function:
-                // state.cells can contains several cells.
-                // So if the target zone is larger than the copied zone,
-                // we duplicate each cells as many times as possible to fill the zone.
-                const height = this.cells.length;
-                const width = this.cells[0].length;
-                const pasteZones = this.pastedZones(target, width, height);
-                for (const zone of pasteZones) {
-                    this.pasteZone(zone.left, zone.top, options);
-                }
-            }
-            else {
-                // in this case, due to the isPasteAllowed function: state.cells contains
-                // only one cell
-                for (const zone of target) {
-                    for (let col = zone.left; col <= zone.right; col++) {
-                        for (let row = zone.top; row <= zone.bottom; row++) {
-                            this.pasteZone(col, row, options);
-                        }
-                    }
-                }
-            }
-            if ((options === null || options === void 0 ? void 0 : options.pasteOption) === undefined) {
-                this.pasteCopiedTables(target);
-            }
-        }
-        pasteFromCut(target, options) {
-            this.clearClippedZones();
-            const selection = target[0];
-            this.pasteZone(selection.left, selection.top, options);
-            this.dispatch("MOVE_RANGES", {
-                target: this.zones,
-                sheetId: this.sheetId,
-                targetSheetId: this.getters.getActiveSheetId(),
-                col: selection.left,
-                row: selection.top,
-            });
-            for (const filterTable of this.copiedTables) {
-                this.dispatch("REMOVE_FILTER_TABLE", {
-                    sheetId: this.getters.getActiveSheetId(),
-                    target: [filterTable.zone],
-                });
-            }
-            this.pasteCopiedTables(target);
-        }
-        /**
-         * The clipped zone is copied as many times as it fits in the target.
-         * This returns the list of zones where the clipped zone is copy-pasted.
-         */
-        pastedZones(target, originWidth, originHeight) {
-            const selection = target[0];
-            const repeatHorizontally = Math.max(1, Math.floor((selection.right + 1 - selection.left) / originWidth));
-            const repeatVertically = Math.max(1, Math.floor((selection.bottom + 1 - selection.top) / originHeight));
-            const zones = [];
-            for (let x = 0; x < repeatHorizontally; x++) {
-                for (let y = 0; y < repeatVertically; y++) {
-                    const top = selection.top + y * originHeight;
-                    const left = selection.left + x * originWidth;
-                    zones.push({
-                        left,
-                        top,
-                        bottom: top + originHeight - 1,
-                        right: left + originWidth - 1,
-                    });
-                }
-            }
-            return zones;
-        }
-        /**
-         * Compute the complete zones where to paste the current clipboard
-         */
-        getPasteZones(target) {
-            const cells = this.cells;
-            if (!cells.length || !cells[0].length) {
-                return target;
-            }
-            const pasteZones = [];
-            const height = cells.length;
-            const width = cells[0].length;
-            const selection = target[target.length - 1];
-            const col = selection.left;
-            const row = selection.top;
-            const repetitionCol = Math.max(1, Math.floor((selection.right + 1 - col) / width));
-            const repetitionRow = Math.max(1, Math.floor((selection.bottom + 1 - row) / height));
-            for (let x = 1; x <= repetitionCol; x++) {
-                for (let y = 1; y <= repetitionRow; y++) {
-                    pasteZones.push({
-                        left: col,
-                        top: row,
-                        right: col - 1 + x * width,
-                        bottom: row - 1 + y * height,
-                    });
-                }
-            }
-            return pasteZones;
-        }
-        /**
-         * Update the selection with the newly pasted zone
-         */
-        selectPastedZone(width, height, isCutOperation, target) {
-            const selection = target[0];
-            const col = selection.left;
-            const row = selection.top;
-            if (height > 1 || width > 1 || isCutOperation) {
-                const zones = this.pastedZones(target, width, height);
-                const newZone = isCutOperation ? zones[0] : union(...zones);
-                this.selection.selectZone({ cell: { col, row }, zone: newZone });
-            }
-        }
-        /**
-         * Clear the clipped zones: remove the cells and clear the formatting
-         */
-        clearClippedZones() {
-            for (const row of this.cells) {
-                for (const cell of row) {
-                    if (cell.cell) {
-                        this.dispatch("CLEAR_CELL", cell.position);
-                    }
-                }
-            }
-            this.dispatch("CLEAR_FORMATTING", {
-                sheetId: this.sheetId,
-                target: this.zones,
-            });
-        }
-        pasteZone(col, row, clipboardOptions) {
-            const height = this.cells.length;
-            const width = this.cells[0].length;
-            // This condition is used to determine if we have to paste the CF or not.
-            // We have to do it when the command handled is "PASTE", not "INSERT_CELL"
-            // or "DELETE_CELL". So, the state should be the local state
-            const shouldPasteCF = (clipboardOptions === null || clipboardOptions === void 0 ? void 0 : clipboardOptions.pasteOption) !== "onlyValue" && (clipboardOptions === null || clipboardOptions === void 0 ? void 0 : clipboardOptions.shouldPasteCF);
-            const sheetId = this.getters.getActiveSheetId();
-            // first, add missing cols/rows if needed
-            this.addMissingDimensions(width, height, col, row);
-            // then, perform the actual paste operation
-            for (let r = 0; r < height; r++) {
-                const rowCells = this.cells[r];
-                for (let c = 0; c < width; c++) {
-                    const origin = rowCells[c];
-                    const position = { col: col + c, row: row + r, sheetId: sheetId };
-                    // TODO: refactor this part. the "Paste merge" action is also executed with
-                    // MOVE_RANGES in pasteFromCut. Adding a condition on the operation type here
-                    // is not appropriate
-                    if (this.operation !== "CUT") {
-                        this.pasteMergeIfExist(origin.position, position);
-                    }
-                    this.pasteCell(origin, position, this.operation, clipboardOptions);
-                    if (shouldPasteCF) {
-                        this.dispatch("PASTE_CONDITIONAL_FORMAT", {
-                            origin: origin.position,
-                            target: position,
-                            operation: this.operation,
-                        });
-                    }
-                }
-            }
-        }
-        /**
-         * Paste the cell at the given position to the target position
-         */
-        pasteCell(origin, target, operation, clipboardOption) {
-            const { sheetId, col, row } = target;
-            const targetCell = this.getters.getEvaluatedCell(target);
-            if ((clipboardOption === null || clipboardOption === void 0 ? void 0 : clipboardOption.pasteOption) !== "onlyValue") {
-                const targetBorders = this.getters.getCellBorder(sheetId, col, row);
-                const originBorders = origin.border;
-                const border = {
-                    top: (targetBorders === null || targetBorders === void 0 ? void 0 : targetBorders.top) || (originBorders === null || originBorders === void 0 ? void 0 : originBorders.top),
-                    bottom: (targetBorders === null || targetBorders === void 0 ? void 0 : targetBorders.bottom) || (originBorders === null || originBorders === void 0 ? void 0 : originBorders.bottom),
-                    left: (targetBorders === null || targetBorders === void 0 ? void 0 : targetBorders.left) || (originBorders === null || originBorders === void 0 ? void 0 : originBorders.left),
-                    right: (targetBorders === null || targetBorders === void 0 ? void 0 : targetBorders.right) || (originBorders === null || originBorders === void 0 ? void 0 : originBorders.right),
-                };
-                this.dispatch("SET_BORDER", { sheetId, col, row, border });
-            }
-            if (origin.cell) {
-                if ((clipboardOption === null || clipboardOption === void 0 ? void 0 : clipboardOption.pasteOption) === "onlyFormat") {
-                    this.dispatch("UPDATE_CELL", {
-                        ...target,
-                        style: origin.cell.style,
-                        format: origin.evaluatedCell.format,
-                    });
-                    return;
-                }
-                if ((clipboardOption === null || clipboardOption === void 0 ? void 0 : clipboardOption.pasteOption) === "onlyValue") {
-                    const content = formatValue(origin.evaluatedCell.value);
-                    this.dispatch("UPDATE_CELL", { ...target, content });
-                    return;
-                }
-                let content = origin.cell.content;
-                if (origin.cell.isFormula && operation === "COPY") {
-                    const offsetX = col - origin.position.col;
-                    const offsetY = row - origin.position.row;
-                    content = this.getUpdatedContent(sheetId, origin.cell, offsetX, offsetY, operation);
-                }
-                this.dispatch("UPDATE_CELL", {
-                    ...target,
-                    content,
-                    style: origin.cell.style || null,
-                    format: origin.cell.format,
-                });
-            }
-            else if (targetCell) {
-                if ((clipboardOption === null || clipboardOption === void 0 ? void 0 : clipboardOption.pasteOption) === "onlyValue") {
-                    this.dispatch("UPDATE_CELL", { ...target, content: "" });
-                }
-                else if ((clipboardOption === null || clipboardOption === void 0 ? void 0 : clipboardOption.pasteOption) === "onlyFormat") {
-                    this.dispatch("UPDATE_CELL", { ...target, style: null, format: "" });
-                }
-                else {
-                    this.dispatch("CLEAR_CELL", target);
-                }
-            }
-        }
-        /**
-         * Get the newly updated formula, after applying offsets
-         */
-        getUpdatedContent(sheetId, cell, offsetX, offsetY, operation) {
-            const ranges = this.getters.createAdaptedRanges(cell.dependencies, offsetX, offsetY, sheetId);
-            return this.getters.buildFormulaContent(sheetId, cell, ranges);
-        }
-        /**
-         * If the origin position given is the top left of a merge, merge the target
-         * position.
-         */
-        pasteMergeIfExist(origin, target) {
-            let { sheetId, col, row } = origin;
-            const { col: mainCellColOrigin, row: mainCellRowOrigin } = this.getters.getMainCellPosition(sheetId, col, row);
-            if (mainCellColOrigin === col && mainCellRowOrigin === row) {
-                const merge = this.getters.getMerge(sheetId, col, row);
-                if (!merge) {
-                    return;
-                }
-                ({ sheetId, col, row } = target);
-                this.dispatch("ADD_MERGE", {
-                    sheetId,
-                    force: true,
-                    target: [
-                        {
-                            left: col,
-                            top: row,
-                            right: col + merge.right - merge.left,
-                            bottom: row + merge.bottom - merge.top,
-                        },
-                    ],
-                });
-            }
-        }
-        /** Paste the filter tables that are in the state */
-        pasteCopiedTables(target) {
-            const sheetId = this.getters.getActiveSheetId();
-            const selection = target[0];
-            const cutZone = this.zones[0];
-            const cutOffset = [
-                selection.left - cutZone.left,
-                selection.top - cutZone.top,
-            ];
-            for (const table of this.copiedTables) {
-                const newTableZone = createAdaptedZone(table.zone, "both", "MOVE", cutOffset);
-                this.dispatch("CREATE_FILTER_TABLE", { sheetId, target: [newTableZone] });
-                for (const i of range(0, table.filtersValues.length)) {
-                    this.dispatch("UPDATE_FILTER", {
-                        sheetId,
-                        col: newTableZone.left + i,
-                        row: newTableZone.top,
-                        values: table.filtersValues[i],
-                    });
-                }
-            }
-        }
-        getClipboardContent() {
-            return (this.cells
-                .map((cells) => {
-                return cells
-                    .map((c) => c.cell ? this.getters.getCellText(c.position, this.getters.shouldShowFormulas()) : "")
-                    .join("\t");
-            })
-                .join("\n") || "\t");
-        }
-        isColRowDirtyingClipboard(position, dimension) {
-            if (!this.zones)
-                return false;
-            for (let zone of this.zones) {
-                if (dimension === "COL" && position <= zone.right) {
-                    return true;
-                }
-                if (dimension === "ROW" && position <= zone.bottom) {
-                    return true;
-                }
-            }
-            return false;
-        }
-        drawClipboard(renderingContext) {
-            const { ctx, thinLineWidth } = renderingContext;
-            if (this.sheetId !== this.getters.getActiveSheetId() || !this.zones || !this.zones.length) {
-                return;
-            }
-            ctx.setLineDash([8, 5]);
-            ctx.strokeStyle = SELECTION_BORDER_COLOR;
-            ctx.lineWidth = 3.3 * thinLineWidth;
-            for (const zone of this.zones) {
-                const { x, y, width, height } = this.getters.getVisibleRect(zone);
-                if (width > 0 && height > 0) {
-                    ctx.strokeRect(x, y, width, height);
-                }
-            }
-        }
-    }
-
-    /** State of the clipboard when copying/cutting figures */
-    class ClipboardFigureState {
-        constructor(operation, getters, dispatch) {
-            this.getters = getters;
-            this.dispatch = dispatch;
-            this.sheetId = getters.getActiveSheetId();
-            const copiedFigureId = getters.getSelectedFigureId();
-            if (!copiedFigureId) {
-                throw new Error(`No figure selected`);
-            }
-            const figure = getters.getFigure(this.sheetId, copiedFigureId);
-            if (!figure) {
-                throw new Error(`No figure for the given id: ${copiedFigureId}`);
-            }
-            this.copiedFigure = { ...figure };
-            const chart = getters.getChart(copiedFigureId);
-            if (!chart) {
-                throw new Error(`No chart for the given id: ${copiedFigureId}`);
-            }
-            this.copiedChart = chart.copyInSheetId(this.sheetId);
-            this.operation = operation;
-        }
-        isCutAllowed(target) {
-            return 0 /* CommandResult.Success */;
-        }
-        isPasteAllowed(target, option) {
-            if (target.length === 0) {
-                return 71 /* CommandResult.EmptyTarget */;
-            }
-            if ((option === null || option === void 0 ? void 0 : option.pasteOption) !== undefined) {
-                return 21 /* CommandResult.WrongFigurePasteOption */;
-            }
-            return 0 /* CommandResult.Success */;
-        }
-        /**
-         * Paste the clipboard content in the given target
-         */
-        paste(target) {
-            const sheetId = this.getters.getActiveSheetId();
-            const position = {
-                x: this.getters.getColDimensions(sheetId, target[0].left).start,
-                y: this.getters.getRowDimensions(sheetId, target[0].top).start,
-            };
-            const newChart = this.copiedChart.copyInSheetId(sheetId);
-            const newId = new UuidGenerator().uuidv4();
-            this.dispatch("CREATE_CHART", {
-                id: newId,
-                sheetId,
-                position,
-                size: { height: this.copiedFigure.height, width: this.copiedFigure.width },
-                definition: newChart.getDefinition(),
-            });
-            if (this.operation === "CUT") {
-                this.dispatch("DELETE_FIGURE", {
-                    sheetId: this.copiedChart.sheetId,
-                    id: this.copiedFigure.id,
-                });
-            }
-            this.dispatch("SELECT_FIGURE", { id: newId });
-        }
-        getClipboardContent() {
-            return "\t";
-        }
-        isColRowDirtyingClipboard(position, dimension) {
-            return false;
-        }
-        drawClipboard(renderingContext) { }
-    }
-
-    /** State of the clipboard when copying/cutting from the OS clipboard*/
-    class ClipboardOsState extends ClipboardCellsAbstractState {
-        constructor(content, getters, dispatch, selection) {
-            super("COPY", getters, dispatch, selection);
-            this.values = content
-                .replace(/\r/g, "")
-                .split("\n")
-                .map((vals) => vals.split("\t"));
-        }
-        isPasteAllowed(target, clipboardOption) {
-            const sheetId = this.getters.getActiveSheetId();
-            const pasteZone = this.getPasteZone(target);
-            if (this.getters.doesIntersectMerge(sheetId, pasteZone)) {
-                return 2 /* CommandResult.WillRemoveExistingMerge */;
-            }
-            return 0 /* CommandResult.Success */;
-        }
-        paste(target) {
-            const values = this.values;
-            const pasteZone = this.getPasteZone(target);
-            const { left: activeCol, top: activeRow } = pasteZone;
-            const { width, height } = zoneToDimension(pasteZone);
-            const sheetId = this.getters.getActiveSheetId();
-            this.addMissingDimensions(width, height, activeCol, activeRow);
-            for (let i = 0; i < values.length; i++) {
-                for (let j = 0; j < values[i].length; j++) {
-                    this.dispatch("UPDATE_CELL", {
-                        row: activeRow + i,
-                        col: activeCol + j,
-                        content: values[i][j],
-                        sheetId,
-                    });
-                }
-            }
-            const zone = {
-                left: activeCol,
-                top: activeRow,
-                right: activeCol + width - 1,
-                bottom: activeRow + height - 1,
-            };
-            this.selection.selectZone({ cell: { col: activeCol, row: activeRow }, zone });
-        }
-        getClipboardContent() {
-            return this.values.map((values) => values.join("\t")).join("\n");
-        }
-        getPasteZone(target) {
-            const height = this.values.length;
-            const width = Math.max(...this.values.map((a) => a.length));
-            const { left: activeCol, top: activeRow } = target[0];
-            return {
-                top: activeRow,
-                left: activeCol,
-                bottom: activeRow + height - 1,
-                right: activeCol + width - 1,
-            };
-        }
-    }
-
-    /**
-     * Clipboard Plugin
-     *
-     * This clipboard manages all cut/copy/paste interactions internal to the
-     * application, and with the OS clipboard as well.
-     */
-    class ClipboardPlugin extends UIPlugin {
-        constructor() {
-            super(...arguments);
-            this.status = "invisible";
-            this._isPaintingFormat = false;
-        }
-        // ---------------------------------------------------------------------------
-        // Command Handling
-        // ---------------------------------------------------------------------------
-        allowDispatch(cmd) {
-            switch (cmd.type) {
-                case "CUT":
-                    const zones = cmd.target || this.getters.getSelectedZones();
-                    const state = this.getClipboardState(zones, cmd.type);
-                    return state.isCutAllowed(zones);
-                case "PASTE":
-                    if (!this.state) {
-                        return 22 /* CommandResult.EmptyClipboard */;
-                    }
-                    const pasteOption = cmd.pasteOption || (this._isPaintingFormat ? "onlyFormat" : undefined);
-                    return this.state.isPasteAllowed(cmd.target, { pasteOption });
-                case "PASTE_FROM_OS_CLIPBOARD": {
-                    const state = new ClipboardOsState(cmd.text, this.getters, this.dispatch, this.selection);
-                    return state.isPasteAllowed(cmd.target);
-                }
-                case "INSERT_CELL": {
-                    const { cut, paste } = this.getInsertCellsTargets(cmd.zone, cmd.shiftDimension);
-                    const state = this.getClipboardStateForCopyCells(cut, "CUT");
-                    return state.isPasteAllowed(paste);
-                }
-                case "DELETE_CELL": {
-                    const { cut, paste } = this.getDeleteCellsTargets(cmd.zone, cmd.shiftDimension);
-                    const state = this.getClipboardStateForCopyCells(cut, "CUT");
-                    return state.isPasteAllowed(paste);
-                }
-            }
-            return 0 /* CommandResult.Success */;
-        }
-        handle(cmd) {
-            var _a, _b;
-            switch (cmd.type) {
-                case "COPY":
-                case "CUT":
-                    const zones = ("target" in cmd && cmd.target) || this.getters.getSelectedZones();
-                    this.state = this.getClipboardState(zones, cmd.type);
-                    this.status = "visible";
-                    break;
-                case "PASTE":
-                    if (!this.state) {
-                        break;
-                    }
-                    const pasteOption = cmd.pasteOption || (this._isPaintingFormat ? "onlyFormat" : undefined);
-                    this._isPaintingFormat = false;
-                    this.state.paste(cmd.target, { pasteOption, shouldPasteCF: true, selectTarget: true });
-                    if (this.state.operation === "CUT") {
-                        this.state = undefined;
-                    }
-                    this.status = "invisible";
-                    break;
-                case "DELETE_CELL": {
-                    const { cut, paste } = this.getDeleteCellsTargets(cmd.zone, cmd.shiftDimension);
-                    const state = this.getClipboardStateForCopyCells(cut, "CUT");
-                    state.paste(paste);
-                    break;
-                }
-                case "INSERT_CELL": {
-                    const { cut, paste } = this.getInsertCellsTargets(cmd.zone, cmd.shiftDimension);
-                    const state = this.getClipboardStateForCopyCells(cut, "CUT");
-                    state.paste(paste);
-                    break;
-                }
-                case "ADD_COLUMNS_ROWS": {
-                    this.status = "invisible";
-                    // If we add a col/row inside or before the cut area, we invalidate the clipboard
-                    if (((_a = this.state) === null || _a === void 0 ? void 0 : _a.operation) !== "CUT") {
-                        return;
-                    }
-                    const isClipboardDirty = this.state.isColRowDirtyingClipboard(cmd.position === "before" ? cmd.base : cmd.base + 1, cmd.dimension);
-                    if (isClipboardDirty) {
-                        this.state = undefined;
-                    }
-                    break;
-                }
-                case "REMOVE_COLUMNS_ROWS": {
-                    this.status = "invisible";
-                    // If we remove a col/row inside or before the cut area, we invalidate the clipboard
-                    if (((_b = this.state) === null || _b === void 0 ? void 0 : _b.operation) !== "CUT") {
-                        return;
-                    }
-                    for (let el of cmd.elements) {
-                        const isClipboardDirty = this.state.isColRowDirtyingClipboard(el, cmd.dimension);
-                        if (isClipboardDirty) {
-                            this.state = undefined;
-                            break;
-                        }
-                    }
-                    this.status = "invisible";
-                    break;
-                }
-                case "PASTE_FROM_OS_CLIPBOARD":
-                    const state = new ClipboardOsState(cmd.text, this.getters, this.dispatch, this.selection);
-                    state.paste(cmd.target);
-                    this.status = "invisible";
-                    break;
-                case "ACTIVATE_PAINT_FORMAT": {
-                    const zones = this.getters.getSelectedZones();
-                    this.state = this.getClipboardStateForCopyCells(zones, "COPY");
-                    this._isPaintingFormat = true;
-                    this.status = "visible";
-                    break;
-                }
-                default:
-                    if (isCoreCommand(cmd)) {
-                        this.status = "invisible";
-                    }
-            }
-        }
-        // ---------------------------------------------------------------------------
-        // Getters
-        // ---------------------------------------------------------------------------
-        /**
-         * Format the current clipboard to a string suitable for being pasted in other
-         * programs.
-         *
-         * - add a tab character between each consecutive cells
-         * - add a newline character between each line
-         *
-         * Note that it returns \t if the clipboard is empty. This is necessary for the
-         * clipboard copy event to add it as data, otherwise an empty string is not
-         * considered as a copy content.
-         */
-        getClipboardContent() {
-            var _a;
-            return ((_a = this.state) === null || _a === void 0 ? void 0 : _a.getClipboardContent()) || "\t";
-        }
-        isCutOperation() {
-            return this.state ? this.state.operation === "CUT" : false;
-        }
-        isPaintingFormat() {
-            return this._isPaintingFormat;
-        }
-        // ---------------------------------------------------------------------------
-        // Private methods
-        // ---------------------------------------------------------------------------
-        getDeleteCellsTargets(zone, dimension) {
-            const sheetId = this.getters.getActiveSheetId();
-            let cut;
-            if (dimension === "COL") {
-                cut = {
-                    ...zone,
-                    left: zone.right + 1,
-                    right: this.getters.getNumberCols(sheetId) - 1,
-                };
-            }
-            else {
-                cut = {
-                    ...zone,
-                    top: zone.bottom + 1,
-                    bottom: this.getters.getNumberRows(sheetId) - 1,
-                };
-            }
-            return { cut: [cut], paste: [zone] };
-        }
-        getInsertCellsTargets(zone, dimension) {
-            const sheetId = this.getters.getActiveSheetId();
-            let cut;
-            let paste;
-            if (dimension === "COL") {
-                cut = {
-                    ...zone,
-                    right: this.getters.getNumberCols(sheetId) - 1,
-                };
-                paste = {
-                    ...zone,
-                    left: zone.right + 1,
-                    right: zone.right + 1,
-                };
-            }
-            else {
-                cut = {
-                    ...zone,
-                    bottom: this.getters.getNumberRows(sheetId) - 1,
-                };
-                paste = { ...zone, top: zone.bottom + 1, bottom: this.getters.getNumberRows(sheetId) - 1 };
-            }
-            return { cut: [cut], paste: [paste] };
-        }
-        getClipboardStateForCopyCells(zones, operation) {
-            return new ClipboardCellsState(zones, operation, this.getters, this.dispatch, this.selection);
-        }
-        /**
-         * Get the clipboard state from the given zones.
-         */
-        getClipboardState(zones, operation) {
-            const selectedFigureId = this.getters.getSelectedFigureId();
-            if (selectedFigureId) {
-                return new ClipboardFigureState(operation, this.getters, this.dispatch);
-            }
-            return new ClipboardCellsState(zones, operation, this.getters, this.dispatch, this.selection);
-        }
-        // ---------------------------------------------------------------------------
-        // Grid rendering
-        // ---------------------------------------------------------------------------
-        drawGrid(renderingContext) {
-            if (this.status !== "visible" || !this.state) {
-                return;
-            }
-            this.state.drawClipboard(renderingContext);
-        }
-    }
-    ClipboardPlugin.layers = [2 /* LAYERS.Clipboard */];
-    ClipboardPlugin.getters = ["getClipboardContent", "isCutOperation", "isPaintingFormat"];
 
     /**
      * https://tomekdev.com/posts/sorting-colors-in-js
@@ -32931,6 +31782,1650 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         "isFilterActive",
     ];
 
+    class InternalViewport {
+        constructor(getters, sheetId, boundaries, sizeInGrid, options, offsets) {
+            this.getters = getters;
+            this.sheetId = sheetId;
+            this.boundaries = boundaries;
+            this.width = sizeInGrid.width;
+            this.height = sizeInGrid.height;
+            this.offsetScrollbarX = offsets.x;
+            this.offsetScrollbarY = offsets.y;
+            this.canScrollVertically = options.canScrollVertically;
+            this.canScrollHorizontally = options.canScrollHorizontally;
+            this.offsetCorrectionX = this.getters.getColDimensions(this.sheetId, this.boundaries.left).start;
+            this.offsetCorrectionY = this.getters.getRowDimensions(this.sheetId, this.boundaries.top).start;
+            this.adjustViewportOffsetX();
+            this.adjustViewportOffsetY();
+        }
+        // PUBLIC
+        getMaxSize() {
+            const lastCol = this.getters.findLastVisibleColRowIndex(this.sheetId, "COL", {
+                first: this.boundaries.left,
+                last: this.boundaries.right,
+            });
+            const lastRow = this.getters.findLastVisibleColRowIndex(this.sheetId, "ROW", {
+                first: this.boundaries.top,
+                last: this.boundaries.bottom,
+            });
+            const { end: lastColEnd, size: lastColSize } = this.getters.getColDimensions(this.sheetId, lastCol);
+            const { end: lastRowEnd, size: lastRowSize } = this.getters.getRowDimensions(this.sheetId, lastRow);
+            const leftColIndex = this.searchHeaderIndex("COL", lastColEnd - this.width, 0);
+            const leftColSize = this.getters.getColSize(this.sheetId, leftColIndex);
+            const leftRowIndex = this.searchHeaderIndex("ROW", lastRowEnd - this.height, 0);
+            const topRowSize = this.getters.getRowSize(this.sheetId, leftRowIndex);
+            const width = lastColEnd -
+                this.offsetCorrectionX +
+                (this.canScrollHorizontally
+                    ? Math.max(DEFAULT_CELL_WIDTH, Math.min(leftColSize, this.width - lastColSize))
+                    : 0);
+            const height = lastRowEnd -
+                this.offsetCorrectionY +
+                (this.canScrollVertically
+                    ? Math.max(DEFAULT_CELL_HEIGHT + 5, Math.min(topRowSize, this.height - lastRowSize))
+                    : 0);
+            return { width, height };
+        }
+        /**
+         * Return the index of a column given an offset x, based on the pane left
+         * visible cell.
+         * It returns -1 if no column is found.
+         */
+        getColIndex(x, absolute = false) {
+            if (x < this.offsetCorrectionX || x > this.offsetCorrectionX + this.width) {
+                return -1;
+            }
+            return this.searchHeaderIndex("COL", x - this.offsetCorrectionX, this.left, absolute);
+        }
+        /**
+         * Return the index of a row given an offset y, based on the pane top
+         * visible cell.
+         * It returns -1 if no row is found.
+         */
+        getRowIndex(y, absolute = false) {
+            if (y < this.offsetCorrectionY || y > this.offsetCorrectionY + this.height) {
+                return -1;
+            }
+            return this.searchHeaderIndex("ROW", y - this.offsetCorrectionY, this.top, absolute);
+        }
+        /**
+         * This function will make sure that the provided cell position (or current selected position) is part of
+         * the pane that is actually displayed on the client. We therefore adjust the offset of the pane
+         * until it contains the cell completely.
+         */
+        adjustPosition(position) {
+            const sheetId = this.sheetId;
+            if (!position) {
+                position = this.getters.getSheetPosition(sheetId);
+            }
+            const mainCellPosition = this.getters.getMainCellPosition(sheetId, position.col, position.row);
+            const { col, row } = this.getters.getNextVisibleCellPosition(sheetId, mainCellPosition.col, mainCellPosition.row);
+            if (isInside(col, this.boundaries.top, this.boundaries)) {
+                this.adjustPositionX(col);
+            }
+            if (isInside(this.boundaries.left, row, this.boundaries)) {
+                this.adjustPositionY(row);
+            }
+        }
+        adjustPositionX(col) {
+            const sheetId = this.sheetId;
+            const { start, end } = this.getters.getColDimensions(sheetId, col);
+            while (end > this.offsetX + this.offsetCorrectionX + this.width &&
+                this.offsetX + this.offsetCorrectionX < start) {
+                this.offsetX = this.getters.getColDimensions(sheetId, this.left).end - this.offsetCorrectionX;
+                this.offsetScrollbarX = this.offsetX;
+                this.adjustViewportZoneX();
+            }
+            while (col < this.left) {
+                let leftCol;
+                for (leftCol = this.left; leftCol >= 0; leftCol--) {
+                    if (!this.getters.isColHidden(sheetId, leftCol)) {
+                        break;
+                    }
+                }
+                this.offsetX =
+                    this.getters.getColDimensions(sheetId, leftCol - 1).start - this.offsetCorrectionX;
+                this.offsetScrollbarX = this.offsetX;
+                this.adjustViewportZoneX();
+            }
+        }
+        adjustPositionY(row) {
+            const sheetId = this.sheetId;
+            while (this.getters.getRowDimensions(sheetId, row).end >
+                this.offsetY + this.height + this.offsetCorrectionY &&
+                this.offsetY + this.offsetCorrectionY < this.getters.getRowDimensions(sheetId, row).start) {
+                this.offsetY = this.getters.getRowDimensions(sheetId, this.top).end - this.offsetCorrectionY;
+                this.offsetScrollbarY = this.offsetY;
+                this.adjustViewportZoneY();
+            }
+            while (row < this.top) {
+                let topRow;
+                for (topRow = this.top; topRow >= 0; topRow--) {
+                    if (!this.getters.isRowHidden(sheetId, topRow)) {
+                        break;
+                    }
+                }
+                this.offsetY =
+                    this.getters.getRowDimensions(sheetId, topRow - 1).start - this.offsetCorrectionY;
+                this.offsetScrollbarY = this.offsetY;
+                this.adjustViewportZoneY();
+            }
+        }
+        setViewportOffset(offsetX, offsetY) {
+            this.setViewportOffsetX(offsetX);
+            this.setViewportOffsetY(offsetY);
+        }
+        adjustViewportZone() {
+            this.adjustViewportZoneX();
+            this.adjustViewportZoneY();
+        }
+        getRect(zone) {
+            const targetZone = intersection(zone, this.zone);
+            if (targetZone) {
+                return {
+                    x: this.getters.getColRowOffset("COL", this.zone.left, targetZone.left) +
+                        this.offsetCorrectionX,
+                    y: this.getters.getColRowOffset("ROW", this.zone.top, targetZone.top) +
+                        this.offsetCorrectionY,
+                    width: this.getters.getColRowOffset("COL", targetZone.left, targetZone.right + 1),
+                    height: this.getters.getColRowOffset("ROW", targetZone.top, targetZone.bottom + 1),
+                };
+            }
+            else {
+                return undefined;
+            }
+        }
+        isVisible(col, row) {
+            const isInside = row <= this.bottom && row >= this.top && col >= this.left && col <= this.right;
+            return (isInside &&
+                !this.getters.isColHidden(this.sheetId, col) &&
+                !this.getters.isRowHidden(this.sheetId, row));
+        }
+        // PRIVATE
+        searchHeaderIndex(dimension, position, startIndex = 0, absolute = false) {
+            let size = 0;
+            const sheetId = this.sheetId;
+            const headers = this.getters.getNumberHeaders(sheetId, dimension);
+            for (let i = startIndex; i <= headers - 1; i++) {
+                const isHiddenInViewport = !absolute && dimension === "COL"
+                    ? i < this.left && i > this.right
+                    : i < this.top && i > this.bottom;
+                if (this.getters.isHeaderHidden(sheetId, dimension, i) || isHiddenInViewport) {
+                    continue;
+                }
+                size +=
+                    dimension === "COL"
+                        ? this.getters.getColSize(sheetId, i)
+                        : this.getters.getRowSize(sheetId, i);
+                if (size > position) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+        get zone() {
+            return { left: this.left, right: this.right, top: this.top, bottom: this.bottom };
+        }
+        setViewportOffsetX(offsetX) {
+            if (!this.canScrollHorizontally) {
+                return;
+            }
+            this.offsetScrollbarX = offsetX;
+            this.adjustViewportZoneX();
+        }
+        setViewportOffsetY(offsetY) {
+            if (!this.canScrollVertically) {
+                return;
+            }
+            this.offsetScrollbarY = offsetY;
+            this.adjustViewportZoneY();
+        }
+        /** Corrects the viewport's horizontal offset based on the current structure
+         *  To make sure that at least on column is visible inside the viewport.
+         */
+        adjustViewportOffsetX() {
+            if (this.canScrollHorizontally) {
+                const { width: viewportWidth } = this.getMaxSize();
+                if (this.width + this.offsetScrollbarX > viewportWidth) {
+                    this.offsetScrollbarX = Math.max(0, viewportWidth - this.width);
+                }
+            }
+            this.left = this.getColIndex(this.offsetScrollbarX, true);
+            this.right = this.getColIndex(this.offsetScrollbarX + this.width, true);
+            if (this.right === -1) {
+                this.right = this.boundaries.right;
+            }
+            this.adjustViewportZoneX();
+        }
+        /** Corrects the viewport's vertical offset based on the current structure
+         *  To make sure that at least on row is visible inside the viewport.
+         */
+        adjustViewportOffsetY() {
+            if (this.canScrollVertically) {
+                const { height: paneHeight } = this.getMaxSize();
+                if (this.height + this.offsetScrollbarY > paneHeight) {
+                    this.offsetScrollbarY = Math.max(0, paneHeight - this.height);
+                }
+            }
+            this.top = this.getRowIndex(this.offsetScrollbarY, true);
+            this.bottom = this.getRowIndex(this.offsetScrollbarY + this.width, true);
+            if (this.bottom === -1) {
+                this.bottom = this.boundaries.bottom;
+            }
+            this.adjustViewportZoneY();
+        }
+        /** Updates the pane zone and snapped offset based on its horizontal
+         * offset (will find Left) and its width (will find Right) */
+        adjustViewportZoneX() {
+            const sheetId = this.sheetId;
+            this.left = this.searchHeaderIndex("COL", this.offsetScrollbarX, this.boundaries.left);
+            this.right = Math.min(this.boundaries.right, this.searchHeaderIndex("COL", this.width, this.left));
+            if (this.right === -1) {
+                this.right = this.getters.getNumberCols(sheetId) - 1;
+            }
+            this.offsetX =
+                this.getters.getColDimensions(sheetId, this.left).start -
+                    this.getters.getColDimensions(sheetId, this.boundaries.left).start;
+        }
+        /** Updates the pane zone and snapped offset based on its vertical
+         * offset (will find Top) and its width (will find Bottom) */
+        adjustViewportZoneY() {
+            const sheetId = this.sheetId;
+            this.top = this.searchHeaderIndex("ROW", this.offsetScrollbarY, this.boundaries.top);
+            this.bottom = Math.min(this.boundaries.bottom, this.searchHeaderIndex("ROW", this.height, this.top));
+            if (this.bottom === -1) {
+                this.bottom = this.getters.getNumberRows(sheetId) - 1;
+            }
+            this.offsetY =
+                this.getters.getRowDimensions(sheetId, this.top).start -
+                    this.getters.getRowDimensions(sheetId, this.boundaries.top).start;
+        }
+    }
+
+    /**
+     *   EdgeScrollCases Schema
+     *
+     *  The dots/double dots represent a freeze (= a split of viewports)
+     *  In this example, we froze vertically between columns D and E
+     *  and horizontally between rows 4 and 5.
+     *
+     *  One can see that we scrolled horizontally from column E to G and
+     *  vertically from row 5 to 7.
+     *
+     *     A  B  C  D   G  H  I  J  K  L  M  N  O  P  Q  R  S  T
+     *     _______________________________________________________
+     *  1 |           :                                           |
+     *  2 |           :                                           |
+     *  3 |           :        B   ↑                 6            |
+     *  4 |           :        |   |                 |            |
+     *     ····················+···+·················+············|
+     *  7 |           :        |   |                 |            |
+     *  8 |           :        ↓   2                 |            |
+     *  9 |           :                              |            |
+     * 10 |       A --+--→                           |            |
+     * 11 |           :                              |            |
+     * 12 |           :                              |            |
+     * 13 |        ←--+-- 1                          |            |
+     * 14 |           :                              |        3 --+--→
+     * 15 |           :                              |            |
+     * 16 |           :                              |            |
+     * 17 |       5 --+-------------------------------------------+--→
+     * 18 |           :                              |            |
+     * 19 |           :                  4           |            |
+     * 20 |           :                  |           |            |
+     *     ______________________________+___________| ____________
+     *                                   |           |
+     *                                   ↓           ↓
+     */
+    /**
+     * Viewport plugin.
+     *
+     * This plugin manages all things related to all viewport states.
+     *
+     */
+    class SheetViewPlugin extends UIPlugin {
+        constructor() {
+            super(...arguments);
+            this.viewports = {};
+            /**
+             * The viewport dimensions are usually set by one of the components
+             * (i.e. when grid component is mounted) to properly reflect its state in the DOM.
+             * In the absence of a component (standalone model), is it mandatory to set reasonable default values
+             * to ensure the correct operation of this plugin.
+             */
+            this.sheetViewWidth = DEFAULT_SHEETVIEW_SIZE;
+            this.sheetViewHeight = DEFAULT_SHEETVIEW_SIZE;
+            this.gridOffsetX = 0;
+            this.gridOffsetY = 0;
+            this.sheetsWithDirtyViewports = new Set();
+        }
+        // ---------------------------------------------------------------------------
+        // Command Handling
+        // ---------------------------------------------------------------------------
+        allowDispatch(cmd) {
+            switch (cmd.type) {
+                case "SET_VIEWPORT_OFFSET":
+                    return this.checkScrollingDirection(cmd);
+                case "RESIZE_SHEETVIEW":
+                    return this.chainValidations(this.checkValuesAreDifferent, this.checkPositiveDimension)(cmd);
+                case "FREEZE_COLUMNS": {
+                    const sheetId = this.getters.getActiveSheetId();
+                    const merges = this.getters.getMerges(sheetId);
+                    for (let merge of merges) {
+                        if (merge.left < cmd.quantity && cmd.quantity <= merge.right) {
+                            return 63 /* CommandResult.MergeOverlap */;
+                        }
+                    }
+                    return 0 /* CommandResult.Success */;
+                }
+                case "FREEZE_ROWS": {
+                    const sheetId = this.getters.getActiveSheetId();
+                    const merges = this.getters.getMerges(sheetId);
+                    for (let merge of merges) {
+                        if (merge.top < cmd.quantity && cmd.quantity <= merge.bottom) {
+                            return 63 /* CommandResult.MergeOverlap */;
+                        }
+                    }
+                    return 0 /* CommandResult.Success */;
+                }
+                default:
+                    return 0 /* CommandResult.Success */;
+            }
+        }
+        handleEvent(event) {
+            switch (event.type) {
+                case "HeadersSelected":
+                case "AlterZoneCorner":
+                    break;
+                case "ZonesSelected":
+                    let { col, row } = findCellInNewZone(event.previousAnchor.zone, event.anchor.zone);
+                    if (event.mode === "updateAnchor") {
+                        const oldZone = event.previousAnchor.zone;
+                        const newZone = event.anchor.zone;
+                        // altering a zone should not move the viewport in a dimension that wasn't changed
+                        const { top, bottom, left, right } = this.getters.getActiveMainViewport();
+                        if (oldZone.left === newZone.left && oldZone.right === newZone.right) {
+                            col = left > col || col > right ? left : col;
+                        }
+                        if (oldZone.top === newZone.top && oldZone.bottom === newZone.bottom) {
+                            row = top > row || row > bottom ? top : row;
+                        }
+                    }
+                    const sheetId = this.getters.getActiveSheetId();
+                    col = Math.min(col, this.getters.getNumberCols(sheetId) - 1);
+                    row = Math.min(row, this.getters.getNumberRows(sheetId) - 1);
+                    this.refreshViewport(this.getters.getActiveSheetId(), { col, row });
+                    break;
+            }
+        }
+        handle(cmd) {
+            var _a;
+            this.cleanViewports();
+            switch (cmd.type) {
+                case "START":
+                    this.selection.observe(this, {
+                        handleEvent: this.handleEvent.bind(this),
+                    });
+                    this.resetViewports(this.getters.getActiveSheetId());
+                    break;
+                case "UNDO":
+                case "REDO":
+                    this.resetSheetViews();
+                    break;
+                case "RESIZE_SHEETVIEW":
+                    this.resizeSheetView(cmd.height, cmd.width, cmd.gridOffsetX, cmd.gridOffsetY);
+                    break;
+                case "SET_VIEWPORT_OFFSET":
+                    this.setSheetViewOffset(cmd.offsetX, cmd.offsetY);
+                    break;
+                case "SHIFT_VIEWPORT_DOWN":
+                    const { top } = this.getActiveMainViewport();
+                    const sheetId = this.getters.getActiveSheetId();
+                    const shiftedOffsetY = this.clipOffsetY(this.getters.getRowDimensions(sheetId, top).start + this.sheetViewHeight);
+                    this.shiftVertically(shiftedOffsetY);
+                    break;
+                case "SHIFT_VIEWPORT_UP": {
+                    const { top } = this.getActiveMainViewport();
+                    const sheetId = this.getters.getActiveSheetId();
+                    const shiftedOffsetY = this.clipOffsetY(this.getters.getRowDimensions(sheetId, top).end - this.sheetViewHeight);
+                    this.shiftVertically(shiftedOffsetY);
+                    break;
+                }
+                case "REMOVE_COLUMNS_ROWS":
+                case "RESIZE_COLUMNS_ROWS":
+                case "HIDE_COLUMNS_ROWS":
+                case "ADD_COLUMNS_ROWS":
+                case "UNHIDE_COLUMNS_ROWS":
+                case "UPDATE_FILTER":
+                    this.resetViewports(cmd.sheetId);
+                    break;
+                case "UPDATE_CELL":
+                    // update cell content or format can change hidden rows because of data filters
+                    if ("content" in cmd || "format" in cmd || ((_a = cmd.style) === null || _a === void 0 ? void 0 : _a.fontSize) !== undefined) {
+                        this.sheetsWithDirtyViewports.add(cmd.sheetId);
+                    }
+                    break;
+                case "ACTIVATE_SHEET":
+                    this.setViewports();
+                    this.refreshViewport(cmd.sheetIdTo);
+                    break;
+                case "UNFREEZE_ROWS":
+                case "UNFREEZE_COLUMNS":
+                case "FREEZE_COLUMNS":
+                case "FREEZE_ROWS":
+                case "UNFREEZE_COLUMNS_ROWS":
+                    this.resetViewports(this.getters.getActiveSheetId());
+                    break;
+                case "DELETE_SHEET":
+                    this.sheetsWithDirtyViewports.delete(cmd.sheetId);
+                    break;
+            }
+        }
+        finalize() {
+            for (const sheetId of this.sheetsWithDirtyViewports) {
+                this.resetViewports(sheetId);
+            }
+            this.sheetsWithDirtyViewports = new Set();
+            this.setViewports();
+        }
+        setViewports() {
+            var _a;
+            const sheetIds = this.getters.getSheetIds();
+            for (const sheetId of sheetIds) {
+                if (!((_a = this.viewports[sheetId]) === null || _a === void 0 ? void 0 : _a.bottomRight)) {
+                    this.resetViewports(sheetId);
+                }
+            }
+        }
+        // ---------------------------------------------------------------------------
+        // Getters
+        // ---------------------------------------------------------------------------
+        /**
+         * Return the index of a column given an offset x, based on the viewport left
+         * visible cell.
+         * It returns -1 if no column is found.
+         */
+        getColIndex(x) {
+            const sheetId = this.getters.getActiveSheetId();
+            return Math.max(...this.getSubViewports(sheetId).map((viewport) => viewport.getColIndex(x)));
+        }
+        /**
+         * Return the index of a row given an offset y, based on the viewport top
+         * visible cell.
+         * It returns -1 if no row is found.
+         */
+        getRowIndex(y) {
+            const sheetId = this.getters.getActiveSheetId();
+            return Math.max(...this.getSubViewports(sheetId).map((viewport) => viewport.getRowIndex(y)));
+        }
+        getSheetViewDimensionWithHeaders() {
+            return {
+                width: this.sheetViewWidth + this.gridOffsetX,
+                height: this.sheetViewHeight + this.gridOffsetY,
+            };
+        }
+        getSheetViewDimension() {
+            return {
+                width: this.sheetViewWidth,
+                height: this.sheetViewHeight,
+            };
+        }
+        /** type as pane, not viewport but basically pane extends viewport */
+        getActiveMainViewport() {
+            const sheetId = this.getters.getActiveSheetId();
+            return this.getMainViewport(sheetId);
+        }
+        getActiveSheetScrollInfo() {
+            const sheetId = this.getters.getActiveSheetId();
+            return this.getSheetScrollInfo(sheetId);
+        }
+        getSheetViewVisibleCols() {
+            const sheetId = this.getters.getActiveSheetId();
+            const viewports = this.getSubViewports(sheetId);
+            return [...new Set(viewports.map((v) => range(v.left, v.right + 1)).flat())].filter((col) => !this.getters.isHeaderHidden(sheetId, "COL", col));
+        }
+        getSheetViewVisibleRows() {
+            const sheetId = this.getters.getActiveSheetId();
+            const viewports = this.getSubViewports(sheetId);
+            return [...new Set(viewports.map((v) => range(v.top, v.bottom + 1)).flat())].filter((row) => !this.getters.isHeaderHidden(sheetId, "ROW", row));
+        }
+        /**
+         * Return the main viewport maximum size. That is the zone dimension
+         * with some bottom and right padding.
+         */
+        getMainViewportRect() {
+            const sheetId = this.getters.getActiveSheetId();
+            const viewport = this.getMainInternalViewport(sheetId);
+            const { xSplit, ySplit } = this.getters.getPaneDivisions(sheetId);
+            let { width, height } = viewport.getMaxSize();
+            const x = this.getters.getColDimensions(sheetId, xSplit).start;
+            const y = this.getters.getRowDimensions(sheetId, ySplit).start;
+            return { x, y, width, height };
+        }
+        getMaximumSheetOffset() {
+            const sheetId = this.getters.getActiveSheetId();
+            const { width, height } = this.getMainViewportRect();
+            const viewport = this.getMainInternalViewport(sheetId);
+            return {
+                maxOffsetX: Math.max(0, width - viewport.width + 1),
+                maxOffsetY: Math.max(0, height - viewport.height + 1),
+            };
+        }
+        getColRowOffsetInViewport(dimension, referenceIndex, index) {
+            const sheetId = this.getters.getActiveSheetId();
+            const visibleCols = this.getters.getSheetViewVisibleCols();
+            const visibleRows = this.getters.getSheetViewVisibleRows();
+            if (index < referenceIndex) {
+                return -this.getColRowOffsetInViewport(dimension, index, referenceIndex);
+            }
+            let offset = 0;
+            const visibleIndexes = dimension === "COL" ? visibleCols : visibleRows;
+            for (let i = referenceIndex; i < index; i++) {
+                if (!visibleIndexes.includes(i)) {
+                    continue;
+                }
+                offset +=
+                    dimension === "COL"
+                        ? this.getters.getColSize(sheetId, i)
+                        : this.getters.getRowSize(sheetId, i);
+            }
+            return offset;
+        }
+        /**
+         * Check if a given position is visible in the viewport.
+         */
+        isVisibleInViewport(sheetId, col, row) {
+            return this.getSubViewports(sheetId).some((pane) => pane.isVisible(col, row));
+        }
+        // => return s the new offset
+        getEdgeScrollCol(x, previousX, startingX) {
+            let canEdgeScroll = false;
+            let direction = 0;
+            let delay = 0;
+            /** 4 cases : See EdgeScrollCases Schema at the top
+             * 1. previous in XRight > XLeft
+             * 3. previous in XRight > outside
+             * 5. previous in Left > outside
+             * A. previous in Left > right
+             * with X a position taken in the bottomRIght (aka scrollable) viewport
+             */
+            const { xSplit } = this.getters.getPaneDivisions(this.getters.getActiveSheetId());
+            const { width } = this.getSheetViewDimension();
+            const { x: offsetCorrectionX } = this.getMainViewportCoordinates();
+            const currentOffsetX = this.getActiveSheetScrollInfo().offsetX;
+            if (x > width) {
+                // 3 & 5
+                canEdgeScroll = true;
+                delay = scrollDelay(x - width);
+                direction = 1;
+            }
+            else if (x < offsetCorrectionX && startingX >= offsetCorrectionX && currentOffsetX > 0) {
+                // 1
+                canEdgeScroll = true;
+                delay = scrollDelay(offsetCorrectionX - x);
+                direction = -1;
+            }
+            else if (xSplit && previousX < offsetCorrectionX && x > offsetCorrectionX) {
+                // A
+                canEdgeScroll = true;
+                delay = scrollDelay(x);
+                direction = "reset";
+            }
+            return { canEdgeScroll, direction, delay };
+        }
+        getEdgeScrollRow(y, previousY, tartingY) {
+            let canEdgeScroll = false;
+            let direction = 0;
+            let delay = 0;
+            /** 4 cases : See EdgeScrollCases Schema at the top
+             * 2. previous in XBottom > XTop
+             * 4. previous in XRight > outside
+             * 6. previous in Left > outside
+             * B. previous in Left > right
+             * with X a position taken in the bottomRIght (aka scrollable) viewport
+             */
+            const { ySplit } = this.getters.getPaneDivisions(this.getters.getActiveSheetId());
+            const { height } = this.getSheetViewDimension();
+            const { y: offsetCorrectionY } = this.getMainViewportCoordinates();
+            const currentOffsetY = this.getActiveSheetScrollInfo().offsetY;
+            if (y > height) {
+                // 4 & 6
+                canEdgeScroll = true;
+                delay = scrollDelay(y - height);
+                direction = 1;
+            }
+            else if (y < offsetCorrectionY && tartingY >= offsetCorrectionY && currentOffsetY > 0) {
+                // 2
+                canEdgeScroll = true;
+                delay = scrollDelay(offsetCorrectionY - y);
+                direction = -1;
+            }
+            else if (ySplit && previousY < offsetCorrectionY && y > offsetCorrectionY) {
+                // B
+                canEdgeScroll = true;
+                delay = scrollDelay(y);
+                direction = "reset";
+            }
+            return { canEdgeScroll, direction, delay };
+        }
+        /**
+         * Computes the coordinates and size to draw the zone on the canvas
+         */
+        getVisibleRect(zone) {
+            const sheetId = this.getters.getActiveSheetId();
+            const viewportRects = this.getSubViewports(sheetId)
+                .map((viewport) => viewport.getRect(zone))
+                .filter(isDefined$1);
+            if (viewportRects.length === 0) {
+                return { x: 0, y: 0, width: 0, height: 0 };
+            }
+            const x = Math.min(...viewportRects.map((rect) => rect.x));
+            const y = Math.min(...viewportRects.map((rect) => rect.y));
+            const width = Math.max(...viewportRects.map((rect) => rect.x + rect.width)) - x;
+            const height = Math.max(...viewportRects.map((rect) => rect.y + rect.height)) - y;
+            return {
+                x: x + this.gridOffsetX,
+                y: y + this.gridOffsetY,
+                width,
+                height,
+            };
+        }
+        /**
+         * Returns the position of the MainViewport relatively to the start of the grid (without headers)
+         * It corresponds to the summed dimensions of the visible cols/rows (in x/y respectively)
+         * situated before the pane divisions.
+         */
+        getMainViewportCoordinates() {
+            const sheetId = this.getters.getActiveSheetId();
+            const { xSplit, ySplit } = this.getters.getPaneDivisions(sheetId);
+            const x = this.getters.getColDimensions(sheetId, xSplit).start;
+            const y = this.getters.getRowDimensions(sheetId, ySplit).start;
+            return { x, y };
+        }
+        // ---------------------------------------------------------------------------
+        // Private
+        // ---------------------------------------------------------------------------
+        ensureMainViewportExist(sheetId) {
+            if (!this.viewports[sheetId]) {
+                this.resetViewports(sheetId);
+            }
+        }
+        getSubViewports(sheetId) {
+            this.ensureMainViewportExist(sheetId);
+            return Object.values(this.viewports[sheetId]).filter(isDefined$1);
+        }
+        checkPositiveDimension(cmd) {
+            if (cmd.width < 0 || cmd.height < 0) {
+                return 66 /* CommandResult.InvalidViewportSize */;
+            }
+            return 0 /* CommandResult.Success */;
+        }
+        checkValuesAreDifferent(cmd) {
+            const { height, width } = this.getSheetViewDimension();
+            if (cmd.gridOffsetX === this.gridOffsetX &&
+                cmd.gridOffsetY === this.gridOffsetY &&
+                cmd.width === width &&
+                cmd.height === height) {
+                return 74 /* CommandResult.ValuesNotChanged */;
+            }
+            return 0 /* CommandResult.Success */;
+        }
+        checkScrollingDirection({ offsetX, offsetY, }) {
+            const pane = this.getMainInternalViewport(this.getters.getActiveSheetId());
+            if ((!pane.canScrollHorizontally && offsetX > 0) ||
+                (!pane.canScrollVertically && offsetY > 0)) {
+                return 67 /* CommandResult.InvalidScrollingDirection */;
+            }
+            return 0 /* CommandResult.Success */;
+        }
+        getMainViewport(sheetId) {
+            const viewport = this.getMainInternalViewport(sheetId);
+            return {
+                top: viewport.top,
+                left: viewport.left,
+                bottom: viewport.bottom,
+                right: viewport.right,
+            };
+        }
+        getMainInternalViewport(sheetId) {
+            this.ensureMainViewportExist(sheetId);
+            return this.viewports[sheetId].bottomRight;
+        }
+        getSheetScrollInfo(sheetId) {
+            const viewport = this.getMainInternalViewport(sheetId);
+            return {
+                offsetX: viewport.offsetX,
+                offsetY: viewport.offsetY,
+                offsetScrollbarX: viewport.offsetScrollbarX,
+                offsetScrollbarY: viewport.offsetScrollbarY,
+            };
+        }
+        /** gets rid of deprecated sheetIds */
+        cleanViewports() {
+            const sheetIds = this.getters.getSheetIds();
+            for (let sheetId of Object.keys(this.viewports)) {
+                if (!sheetIds.includes(sheetId)) {
+                    delete this.viewports[sheetId];
+                }
+            }
+        }
+        resetSheetViews() {
+            for (let sheetId of Object.keys(this.viewports)) {
+                const position = this.getters.getSheetPosition(sheetId);
+                this.resetViewports(sheetId);
+                const viewports = this.getSubViewports(sheetId);
+                Object.values(viewports).forEach((viewport) => {
+                    viewport.adjustPosition(position);
+                });
+            }
+        }
+        resizeSheetView(height, width, gridOffsetX = 0, gridOffsetY = 0) {
+            this.sheetViewHeight = height;
+            this.sheetViewWidth = width;
+            this.gridOffsetX = gridOffsetX;
+            this.gridOffsetY = gridOffsetY;
+            this.recomputeViewports();
+        }
+        recomputeViewports() {
+            for (let sheetId of Object.keys(this.viewports)) {
+                this.resetViewports(sheetId);
+            }
+        }
+        setSheetViewOffset(offsetX, offsetY) {
+            const sheetId = this.getters.getActiveSheetId();
+            const { maxOffsetX, maxOffsetY } = this.getMaximumSheetOffset();
+            Object.values(this.getSubViewports(sheetId)).forEach((viewport) => viewport.setViewportOffset(clip(offsetX, 0, maxOffsetX), clip(offsetY, 0, maxOffsetY)));
+        }
+        /**
+         * Clip the vertical offset within the allowed range.
+         * Not above the sheet, nor below the sheet.
+         */
+        clipOffsetY(offsetY) {
+            const { height } = this.getMainViewportRect();
+            const maxOffset = height - this.sheetViewHeight;
+            offsetY = Math.min(offsetY, maxOffset);
+            offsetY = Math.max(offsetY, 0);
+            return offsetY;
+        }
+        getViewportOffset(sheetId) {
+            var _a, _b;
+            return {
+                x: ((_a = this.viewports[sheetId]) === null || _a === void 0 ? void 0 : _a.bottomRight.offsetScrollbarX) || 0,
+                y: ((_b = this.viewports[sheetId]) === null || _b === void 0 ? void 0 : _b.bottomRight.offsetScrollbarY) || 0,
+            };
+        }
+        resetViewports(sheetId) {
+            const { xSplit, ySplit } = this.getters.getPaneDivisions(sheetId);
+            const nCols = this.getters.getNumberCols(sheetId);
+            const nRows = this.getters.getNumberRows(sheetId);
+            const colOffset = this.getters.getColRowOffset("COL", 0, xSplit, sheetId);
+            const rowOffset = this.getters.getColRowOffset("ROW", 0, ySplit, sheetId);
+            const { xRatio, yRatio } = this.getFrozenSheetViewRatio(sheetId);
+            const canScrollHorizontally = xRatio < 1.0;
+            const canScrollVertically = yRatio < 1.0;
+            const previousOffset = this.getViewportOffset(sheetId);
+            const sheetViewports = {
+                topLeft: (ySplit &&
+                    xSplit &&
+                    new InternalViewport(this.getters, sheetId, { left: 0, right: xSplit - 1, top: 0, bottom: ySplit - 1 }, { width: colOffset, height: rowOffset }, { canScrollHorizontally: false, canScrollVertically: false }, { x: 0, y: 0 })) ||
+                    undefined,
+                topRight: (ySplit &&
+                    new InternalViewport(this.getters, sheetId, { left: xSplit, right: nCols - 1, top: 0, bottom: ySplit - 1 }, { width: this.sheetViewWidth - colOffset, height: rowOffset }, { canScrollHorizontally, canScrollVertically: false }, { x: canScrollHorizontally ? previousOffset.x : 0, y: 0 })) ||
+                    undefined,
+                bottomLeft: (xSplit &&
+                    new InternalViewport(this.getters, sheetId, { left: 0, right: xSplit - 1, top: ySplit, bottom: nRows - 1 }, { width: colOffset, height: this.sheetViewHeight - rowOffset }, { canScrollHorizontally: false, canScrollVertically }, { x: 0, y: canScrollVertically ? previousOffset.y : 0 })) ||
+                    undefined,
+                bottomRight: new InternalViewport(this.getters, sheetId, { left: xSplit, right: nCols - 1, top: ySplit, bottom: nRows - 1 }, {
+                    width: this.sheetViewWidth - colOffset,
+                    height: this.sheetViewHeight - rowOffset,
+                }, { canScrollHorizontally, canScrollVertically }, {
+                    x: canScrollHorizontally ? previousOffset.x : 0,
+                    y: canScrollVertically ? previousOffset.y : 0,
+                }),
+            };
+            this.viewports[sheetId] = sheetViewports;
+        }
+        /**
+         * Adjust the viewport such that the anchor position is visible
+         */
+        refreshViewport(sheetId, anchorPosition) {
+            Object.values(this.getSubViewports(sheetId)).forEach((viewport) => {
+                viewport.adjustViewportZone();
+                viewport.adjustPosition(anchorPosition);
+            });
+        }
+        /**
+         * Shift the viewport vertically and move the selection anchor
+         * such that it remains at the same place relative to the
+         * viewport top.
+         */
+        shiftVertically(offset) {
+            const { top } = this.getActiveMainViewport();
+            const { offsetX } = this.getActiveSheetScrollInfo();
+            this.setSheetViewOffset(offsetX, offset);
+            const { anchor } = this.getters.getSelection();
+            const deltaRow = this.getActiveMainViewport().top - top;
+            this.selection.selectCell(anchor.cell.col, anchor.cell.row + deltaRow);
+        }
+        getVisibleFigures() {
+            const sheetId = this.getters.getActiveSheetId();
+            const result = [];
+            const figures = this.getters.getFigures(sheetId);
+            const { offsetX, offsetY } = this.getSheetScrollInfo(sheetId);
+            const { x: offsetCorrectionX, y: offsetCorrectionY } = this.getters.getMainViewportCoordinates();
+            const { width, height } = this.getters.getSheetViewDimensionWithHeaders();
+            for (const figure of figures) {
+                if (figure.x >= offsetCorrectionX &&
+                    (figure.x + figure.width <= offsetCorrectionX + offsetX ||
+                        figure.x >= width + offsetX + offsetCorrectionX)) {
+                    continue;
+                }
+                if (figure.y >= offsetCorrectionY &&
+                    (figure.y + figure.height <= offsetCorrectionY + offsetY ||
+                        figure.y >= height + offsetY + offsetCorrectionY)) {
+                    continue;
+                }
+                result.push(figure);
+            }
+            return result;
+        }
+        getFrozenSheetViewRatio(sheetId) {
+            const { xSplit, ySplit } = this.getters.getPaneDivisions(sheetId);
+            const offsetCorrectionX = this.getters.getColDimensions(sheetId, xSplit).start;
+            const offsetCorrectionY = this.getters.getRowDimensions(sheetId, ySplit).start;
+            const width = this.sheetViewWidth + this.gridOffsetX;
+            const height = this.sheetViewHeight + this.gridOffsetY;
+            return { xRatio: offsetCorrectionX / width, yRatio: offsetCorrectionY / height };
+        }
+    }
+    SheetViewPlugin.getters = [
+        "getColIndex",
+        "getRowIndex",
+        "getActiveMainViewport",
+        "getSheetViewDimension",
+        "getSheetViewDimensionWithHeaders",
+        "getMainViewportRect",
+        "isVisibleInViewport",
+        "getEdgeScrollCol",
+        "getEdgeScrollRow",
+        "getVisibleFigures",
+        "getVisibleRect",
+        "getColRowOffsetInViewport",
+        "getMainViewportCoordinates",
+        "getActiveSheetScrollInfo",
+        "getSheetViewVisibleCols",
+        "getSheetViewVisibleRows",
+        "getFrozenSheetViewRatio",
+    ];
+
+    /**
+     * This plugin manage the autofill.
+     *
+     * The way it works is the next one:
+     * For each line (row if the direction is left/right, col otherwise), we create
+     * a "AutofillGenerator" object which is used to compute the cells to
+     * autofill.
+     *
+     * When we need to autofill a cell, we compute the origin cell in the source.
+     *  EX: from A1:A2, autofill A3->A6.
+     *      Target | Origin cell
+     *        A3   |   A1
+     *        A4   |   A2
+     *        A5   |   A1
+     *        A6   |   A2
+     * When we have the origin, we take the associated cell in the AutofillGenerator
+     * and we apply the modifier (AutofillModifier) associated to the content of the
+     * cell.
+     */
+    /**
+     * This class is used to generate the next values to autofill.
+     * It's done from a selection (the source) and describe how the next values
+     * should be computed.
+     */
+    class AutofillGenerator {
+        constructor(cells, getters, direction) {
+            this.index = 0;
+            this.cells = cells;
+            this.getters = getters;
+            this.direction = direction;
+        }
+        /**
+         * Get the next value to autofill
+         */
+        next() {
+            const genCell = this.cells[this.index++ % this.cells.length];
+            const rule = genCell.rule;
+            const { cellData, tooltip } = autofillModifiersRegistry
+                .get(rule.type)
+                .apply(rule, genCell.data, this.getters, this.direction);
+            return {
+                cellData,
+                tooltip,
+                origin: {
+                    col: genCell.data.col,
+                    row: genCell.data.row,
+                },
+            };
+        }
+    }
+    /**
+     * Autofill Plugin
+     *
+     */
+    class AutofillPlugin extends UIPlugin {
+        constructor() {
+            super(...arguments);
+            this.lastCellSelected = {};
+        }
+        // ---------------------------------------------------------------------------
+        // Command Handling
+        // ---------------------------------------------------------------------------
+        allowDispatch(cmd) {
+            switch (cmd.type) {
+                case "AUTOFILL_SELECT":
+                    const sheetId = this.getters.getActiveSheetId();
+                    this.lastCellSelected.col =
+                        cmd.col === -1
+                            ? this.lastCellSelected.col
+                            : clip(cmd.col, 0, this.getters.getNumberCols(sheetId));
+                    this.lastCellSelected.row =
+                        cmd.row === -1
+                            ? this.lastCellSelected.row
+                            : clip(cmd.row, 0, this.getters.getNumberRows(sheetId));
+                    if (this.lastCellSelected.col !== undefined && this.lastCellSelected.row !== undefined) {
+                        return 0 /* CommandResult.Success */;
+                    }
+                    return 43 /* CommandResult.InvalidAutofillSelection */;
+                case "AUTOFILL_AUTO":
+                    const zone = this.getters.getSelectedZone();
+                    return zone.top === zone.bottom
+                        ? 0 /* CommandResult.Success */
+                        : 1 /* CommandResult.CancelledForUnknownReason */;
+            }
+            return 0 /* CommandResult.Success */;
+        }
+        handle(cmd) {
+            switch (cmd.type) {
+                case "AUTOFILL":
+                    this.autofill(true);
+                    break;
+                case "AUTOFILL_SELECT":
+                    this.select(cmd.col, cmd.row);
+                    break;
+                case "AUTOFILL_AUTO":
+                    this.autofillAuto();
+                    break;
+                case "AUTOFILL_CELL":
+                    this.autoFillMerge(cmd.originCol, cmd.originRow, cmd.col, cmd.row);
+                    const sheetId = this.getters.getActiveSheetId();
+                    this.dispatch("UPDATE_CELL", {
+                        sheetId,
+                        col: cmd.col,
+                        row: cmd.row,
+                        style: cmd.style || null,
+                        content: cmd.content || "",
+                        format: cmd.format || "",
+                    });
+                    this.dispatch("SET_BORDER", {
+                        sheetId,
+                        col: cmd.col,
+                        row: cmd.row,
+                        border: cmd.border,
+                    });
+            }
+        }
+        // ---------------------------------------------------------------------------
+        // Getters
+        // ---------------------------------------------------------------------------
+        getAutofillTooltip() {
+            return this.tooltip;
+        }
+        // ---------------------------------------------------------------------------
+        // Private methods
+        // ---------------------------------------------------------------------------
+        /**
+         * Autofill the autofillZone from the current selection
+         * @param apply Flag set to true to apply the autofill in the model. It's
+         *              useful to set it to false when we need to fill the tooltip
+         */
+        autofill(apply) {
+            if (!this.autofillZone || !this.steps || this.direction === undefined) {
+                this.tooltip = undefined;
+                return;
+            }
+            const source = this.getters.getSelectedZone();
+            const target = this.autofillZone;
+            switch (this.direction) {
+                case "down" /* DIRECTION.DOWN */:
+                    for (let col = source.left; col <= source.right; col++) {
+                        const xcs = [];
+                        for (let row = source.top; row <= source.bottom; row++) {
+                            xcs.push(toXC(col, row));
+                        }
+                        const generator = this.createGenerator(xcs);
+                        for (let row = target.top; row <= target.bottom; row++) {
+                            this.computeNewCell(generator, col, row, apply);
+                        }
+                    }
+                    break;
+                case "up" /* DIRECTION.UP */:
+                    for (let col = source.left; col <= source.right; col++) {
+                        const xcs = [];
+                        for (let row = source.bottom; row >= source.top; row--) {
+                            xcs.push(toXC(col, row));
+                        }
+                        const generator = this.createGenerator(xcs);
+                        for (let row = target.bottom; row >= target.top; row--) {
+                            this.computeNewCell(generator, col, row, apply);
+                        }
+                    }
+                    break;
+                case "left" /* DIRECTION.LEFT */:
+                    for (let row = source.top; row <= source.bottom; row++) {
+                        const xcs = [];
+                        for (let col = source.right; col >= source.left; col--) {
+                            xcs.push(toXC(col, row));
+                        }
+                        const generator = this.createGenerator(xcs);
+                        for (let col = target.right; col >= target.left; col--) {
+                            this.computeNewCell(generator, col, row, apply);
+                        }
+                    }
+                    break;
+                case "right" /* DIRECTION.RIGHT */:
+                    for (let row = source.top; row <= source.bottom; row++) {
+                        const xcs = [];
+                        for (let col = source.left; col <= source.right; col++) {
+                            xcs.push(toXC(col, row));
+                        }
+                        const generator = this.createGenerator(xcs);
+                        for (let col = target.left; col <= target.right; col++) {
+                            this.computeNewCell(generator, col, row, apply);
+                        }
+                    }
+                    break;
+            }
+            if (apply) {
+                this.autofillZone = undefined;
+                this.selection.resizeAnchorZone(this.direction, this.steps);
+                this.lastCellSelected = {};
+                this.direction = undefined;
+                this.steps = 0;
+                this.tooltip = undefined;
+            }
+        }
+        /**
+         * Select a cell which becomes the last cell of the autofillZone
+         */
+        select(col, row) {
+            const source = this.getters.getSelectedZone();
+            if (isInside(col, row, source)) {
+                this.autofillZone = undefined;
+                return;
+            }
+            this.direction = this.getDirection(col, row);
+            switch (this.direction) {
+                case "up" /* DIRECTION.UP */:
+                    this.saveZone(row, source.top - 1, source.left, source.right);
+                    this.steps = source.top - row;
+                    break;
+                case "down" /* DIRECTION.DOWN */:
+                    this.saveZone(source.bottom + 1, row, source.left, source.right);
+                    this.steps = row - source.bottom;
+                    break;
+                case "left" /* DIRECTION.LEFT */:
+                    this.saveZone(source.top, source.bottom, col, source.left - 1);
+                    this.steps = source.left - col;
+                    break;
+                case "right" /* DIRECTION.RIGHT */:
+                    this.saveZone(source.top, source.bottom, source.right + 1, col);
+                    this.steps = col - source.right;
+                    break;
+            }
+            this.autofill(false);
+        }
+        /**
+         * Computes the autofillZone to autofill when the user double click on the
+         * autofiller
+         */
+        autofillAuto() {
+            const zone = this.getters.getSelectedZone();
+            const sheetId = this.getters.getActiveSheetId();
+            let col = zone.left;
+            let row = zone.bottom;
+            if (col > 0) {
+                let left = this.getters.getEvaluatedCell({ sheetId, col: col - 1, row });
+                while (left.type !== CellValueType.empty) {
+                    row += 1;
+                    left = this.getters.getEvaluatedCell({ sheetId, col: col - 1, row });
+                }
+            }
+            if (row === zone.bottom) {
+                col = zone.right;
+                if (col <= this.getters.getNumberCols(sheetId)) {
+                    let right = this.getters.getEvaluatedCell({ sheetId, col: col + 1, row });
+                    while (right.type !== CellValueType.empty) {
+                        row += 1;
+                        right = this.getters.getEvaluatedCell({ sheetId, col: col + 1, row });
+                    }
+                }
+            }
+            if (row !== zone.bottom) {
+                this.select(zone.left, row - 1);
+                this.autofill(true);
+            }
+        }
+        /**
+         * Generate the next cell
+         */
+        computeNewCell(generator, col, row, apply) {
+            const { cellData, tooltip, origin } = generator.next();
+            const { content, style, border, format } = cellData;
+            this.tooltip = tooltip;
+            if (apply) {
+                this.dispatch("AUTOFILL_CELL", {
+                    originCol: origin.col,
+                    originRow: origin.row,
+                    col,
+                    row,
+                    content,
+                    style,
+                    border,
+                    format,
+                });
+            }
+        }
+        /**
+         * Get the rule associated to the current cell
+         */
+        getRule(cell, cells) {
+            const rules = autofillRulesRegistry.getAll().sort((a, b) => a.sequence - b.sequence);
+            const rule = rules.find((rule) => rule.condition(cell, cells));
+            return rule && rule.generateRule(cell, cells);
+        }
+        /**
+         * Create the generator to be able to autofill the next cells.
+         */
+        createGenerator(source) {
+            const nextCells = [];
+            const cellsData = [];
+            const sheetId = this.getters.getActiveSheetId();
+            for (let xc of source) {
+                const { col, row } = toCartesian(xc);
+                const cell = this.getters.getCell(sheetId, col, row);
+                cellsData.push({
+                    col,
+                    row,
+                    cell,
+                    sheetId,
+                });
+            }
+            const cells = cellsData.map((cellData) => cellData.cell);
+            for (let cellData of cellsData) {
+                let rule = { type: "COPY_MODIFIER" };
+                if (cellData && cellData.cell) {
+                    const newRule = this.getRule(cellData.cell, cells);
+                    rule = newRule || rule;
+                }
+                const { sheetId, col, row } = cellData;
+                const border = this.getters.getCellBorder(sheetId, col, row) || undefined;
+                nextCells.push({
+                    data: { ...cellData, border },
+                    rule,
+                });
+            }
+            return new AutofillGenerator(nextCells, this.getters, this.direction);
+        }
+        saveZone(top, bottom, left, right) {
+            this.autofillZone = { top, bottom, left, right };
+        }
+        /**
+         * Compute the direction of the autofill from the last selected zone and
+         * a given cell (col, row)
+         */
+        getDirection(col, row) {
+            const source = this.getters.getSelectedZone();
+            const position = {
+                up: { number: source.top - row, value: "up" /* DIRECTION.UP */ },
+                down: { number: row - source.bottom, value: "down" /* DIRECTION.DOWN */ },
+                left: { number: source.left - col, value: "left" /* DIRECTION.LEFT */ },
+                right: { number: col - source.right, value: "right" /* DIRECTION.RIGHT */ },
+            };
+            if (Object.values(position)
+                .map((x) => (x.number > 0 ? 1 : 0))
+                .reduce((acc, value) => acc + value) === 1) {
+                return Object.values(position).find((x) => (x.number > 0 ? 1 : 0)).value;
+            }
+            const first = position.up.number > 0 ? "up" : "down";
+            const second = position.left.number > 0 ? "left" : "right";
+            return Math.abs(position[first].number) >= Math.abs(position[second].number)
+                ? position[first].value
+                : position[second].value;
+        }
+        autoFillMerge(originCol, originRow, col, row) {
+            const activeSheet = this.getters.getActiveSheet();
+            if (this.getters.isInMerge(activeSheet.id, col, row) &&
+                !this.getters.isInMerge(activeSheet.id, originCol, originRow)) {
+                const zone = this.getters.getMerge(activeSheet.id, col, row);
+                if (zone) {
+                    this.dispatch("REMOVE_MERGE", {
+                        sheetId: activeSheet.id,
+                        target: [zone],
+                    });
+                }
+            }
+            const originMerge = this.getters.getMerge(activeSheet.id, originCol, originRow);
+            if ((originMerge === null || originMerge === void 0 ? void 0 : originMerge.topLeft.col) === originCol && (originMerge === null || originMerge === void 0 ? void 0 : originMerge.topLeft.row) === originRow) {
+                this.dispatch("ADD_MERGE", {
+                    sheetId: activeSheet.id,
+                    target: [
+                        {
+                            top: row,
+                            bottom: row + originMerge.bottom - originMerge.top,
+                            left: col,
+                            right: col + originMerge.right - originMerge.left,
+                        },
+                    ],
+                });
+            }
+        }
+        // ---------------------------------------------------------------------------
+        // Grid rendering
+        // ---------------------------------------------------------------------------
+        drawGrid(renderingContext) {
+            if (!this.autofillZone) {
+                return;
+            }
+            const { ctx, thinLineWidth } = renderingContext;
+            const { x, y, width, height } = this.getters.getVisibleRect(this.autofillZone);
+            if (width > 0 && height > 0) {
+                ctx.strokeStyle = "black";
+                ctx.lineWidth = thinLineWidth;
+                ctx.setLineDash([3]);
+                ctx.strokeRect(x, y, width, height);
+                ctx.setLineDash([]);
+            }
+        }
+    }
+    AutofillPlugin.layers = [5 /* LAYERS.Autofill */];
+    AutofillPlugin.getters = ["getAutofillTooltip"];
+
+    class AutomaticSumPlugin extends UIPlugin {
+        handle(cmd) {
+            switch (cmd.type) {
+                case "SUM_SELECTION":
+                    const sheetId = this.getters.getActiveSheetId();
+                    const { zones, anchor } = this.getters.getSelection();
+                    for (const zone of zones) {
+                        const sums = this.getAutomaticSums(sheetId, zone, anchor.cell);
+                        this.dispatchCellUpdates(sheetId, sums);
+                    }
+                    break;
+            }
+        }
+        getAutomaticSums(sheetId, zone, anchor) {
+            return this.shouldFindData(sheetId, zone)
+                ? this.sumAdjacentData(sheetId, zone, anchor)
+                : this.sumData(sheetId, zone);
+        }
+        // ---------------------------------------------------------------------------
+        // Private methods
+        // ---------------------------------------------------------------------------
+        sumData(sheetId, zone) {
+            const dimensions = this.dimensionsToSum(sheetId, zone);
+            const sums = this.sumDimensions(sheetId, zone, dimensions).filter(({ zone }) => !this.getters.isEmpty(sheetId, zone));
+            if (dimensions.has("ROW") && dimensions.has("COL")) {
+                sums.push(this.sumTotal(zone));
+            }
+            return sums;
+        }
+        sumAdjacentData(sheetId, zone, anchor) {
+            const { col, row } = isInside(anchor.col, anchor.row, zone)
+                ? anchor
+                : { col: zone.left, row: zone.top };
+            const dataZone = this.findAdjacentData(sheetId, col, row);
+            if (!dataZone) {
+                return [];
+            }
+            if (this.getters.isSingleCellOrMerge(sheetId, zone) ||
+                isOneDimensional(union(dataZone, zone))) {
+                return [{ position: { col, row }, zone: dataZone }];
+            }
+            else {
+                return this.sumDimensions(sheetId, union(dataZone, zone), this.transpose(this.dimensionsToSum(sheetId, zone)));
+            }
+        }
+        /**
+         * Find a zone to automatically sum a column or row of numbers.
+         *
+         * We first decide which direction will be summed (column or row).
+         * Here is the strategy:
+         *  1. If the left cell is a number and the top cell is not: choose horizontal
+         *  2. Try to find a valid vertical zone. If it's valid: choose vertical
+         *  3. Try to find a valid horizontal zone. If it's valid: choose horizontal
+         *  4. Otherwise, no zone is returned
+         *
+         * Now, how to find a valid zone?
+         * The zone starts directly above or on the left of the starting point
+         * (depending on the direction).
+         * The zone ends where the first continuous sequence of numbers ends.
+         * Empty or text cells can be part of the zone while no number has been found.
+         * Other kind of cells (boolean, dates, etc.) are not valid in the zone and the
+         * search stops immediately if one is found.
+         *
+         *  -------                                       -------
+         * |   1   |                                     |   1   |
+         *  -------                                       -------
+         * |       |                                     |       |
+         *  -------  <= end of the sequence, stop here    -------
+         * |   2   |                                     |   2   |
+         *  -------                                       -------
+         * |   3   | <= start of the number sequence     |   3   |
+         *  -------                                       -------
+         * |       | <= ignored                          | FALSE | <= invalid, no zone is found
+         *  -------                                       -------
+         * |   A   | <= ignored                          |   A   | <= ignored
+         *  -------                                       -------
+         */
+        findAdjacentData(sheetId, col, row) {
+            const sheet = this.getters.getSheet(sheetId);
+            const mainCellPosition = this.getters.getMainCellPosition(sheetId, col, row);
+            const zone = this.findSuitableZoneToSum(sheet, mainCellPosition.col, mainCellPosition.row);
+            if (zone) {
+                return this.getters.expandZone(sheetId, zone);
+            }
+            return undefined;
+        }
+        /**
+         * Return the zone to sum if a valid one is found.
+         * @see getAutomaticSumZone
+         */
+        findSuitableZoneToSum(sheet, col, row) {
+            const topCell = this.getters.getEvaluatedCell({ sheetId: sheet.id, col, row: row - 1 });
+            const leftCell = this.getters.getEvaluatedCell({ sheetId: sheet.id, col: col - 1, row });
+            if (this.isNumber(leftCell) && !this.isNumber(topCell)) {
+                return this.findHorizontalZone(sheet, col, row);
+            }
+            const verticalZone = this.findVerticalZone(sheet, col, row);
+            if (this.isZoneValid(verticalZone)) {
+                return verticalZone;
+            }
+            const horizontalZone = this.findHorizontalZone(sheet, col, row);
+            if (this.isZoneValid(horizontalZone)) {
+                return horizontalZone;
+            }
+            return undefined;
+        }
+        findVerticalZone(sheet, col, row) {
+            const zone = {
+                top: 0,
+                bottom: row - 1,
+                left: col,
+                right: col,
+            };
+            const top = this.reduceZoneStart(sheet, zone, zone.bottom);
+            return { ...zone, top };
+        }
+        findHorizontalZone(sheet, col, row) {
+            const zone = {
+                top: row,
+                bottom: row,
+                left: 0,
+                right: col - 1,
+            };
+            const left = this.reduceZoneStart(sheet, zone, zone.right);
+            return { ...zone, left };
+        }
+        /**
+         * Reduces a column or row zone to a valid zone for the automatic sum.
+         * @see getAutomaticSumZone
+         * @param sheet
+         * @param zone one dimensional zone (a single row or a single column). The zone is
+         *             assumed to start at the beginning of the column (top=0) or the row (left=0)
+         * @param end end index of the zone (`bottom` or `right` depending on the dimension)
+         * @returns the starting position of the valid zone or Infinity if the zone is not valid.
+         */
+        reduceZoneStart(sheet, zone, end) {
+            const cells = this.getters.getEvaluatedCellsInZone(sheet.id, zone);
+            const cellPositions = range(end, -1, -1);
+            const invalidCells = cellPositions.filter((position) => cells[position] && !cells[position].isAutoSummable);
+            const maxValidPosition = Math.max(...invalidCells);
+            const numberSequences = groupConsecutive(cellPositions.filter((position) => this.isNumber(cells[position])));
+            const firstSequence = numberSequences[0] || [];
+            if (Math.max(...firstSequence) < maxValidPosition) {
+                return Infinity;
+            }
+            return Math.min(...firstSequence);
+        }
+        shouldFindData(sheetId, zone) {
+            return this.getters.isEmpty(sheetId, zone) || this.getters.isSingleCellOrMerge(sheetId, zone);
+        }
+        isNumber(cell) {
+            var _a;
+            return cell.type === CellValueType.number && !((_a = cell.format) === null || _a === void 0 ? void 0 : _a.match(DATETIME_FORMAT));
+        }
+        isZoneValid(zone) {
+            return zone.bottom >= zone.top && zone.right >= zone.left;
+        }
+        lastColIsEmpty(sheetId, zone) {
+            return this.getters.isEmpty(sheetId, { ...zone, left: zone.right });
+        }
+        lastRowIsEmpty(sheetId, zone) {
+            return this.getters.isEmpty(sheetId, { ...zone, top: zone.bottom });
+        }
+        /**
+         * Decides which dimensions (columns or rows) should be summed
+         * based on its shape and what's inside the zone.
+         */
+        dimensionsToSum(sheetId, zone) {
+            const dimensions = new Set();
+            if (isOneDimensional(zone)) {
+                dimensions.add(zoneToDimension(zone).width === 1 ? "COL" : "ROW");
+                return dimensions;
+            }
+            if (this.lastColIsEmpty(sheetId, zone)) {
+                dimensions.add("ROW");
+            }
+            if (this.lastRowIsEmpty(sheetId, zone)) {
+                dimensions.add("COL");
+            }
+            if (dimensions.size === 0) {
+                dimensions.add("COL");
+            }
+            return dimensions;
+        }
+        /**
+         * Sum each column and/or row in the zone in the appropriate cells,
+         * depending on the available space.
+         */
+        sumDimensions(sheetId, zone, dimensions) {
+            return [
+                ...(dimensions.has("COL") ? this.sumColumns(zone, sheetId) : []),
+                ...(dimensions.has("ROW") ? this.sumRows(zone, sheetId) : []),
+            ];
+        }
+        /**
+         * Sum the total of the zone in the bottom right cell, assuming
+         * the last row contains summed columns.
+         */
+        sumTotal(zone) {
+            const { bottom, right } = zone;
+            return {
+                position: { col: right, row: bottom },
+                zone: { ...zone, top: bottom, right: right - 1 },
+            };
+        }
+        sumColumns(zone, sheetId) {
+            const target = this.nextEmptyRow(sheetId, { ...zone, bottom: zone.bottom - 1 });
+            zone = { ...zone, bottom: Math.min(zone.bottom, target.bottom - 1) };
+            return positions(target).map((position) => ({
+                position,
+                zone: { ...zone, right: position.col, left: position.col },
+            }));
+        }
+        sumRows(zone, sheetId) {
+            const target = this.nextEmptyCol(sheetId, { ...zone, right: zone.right - 1 });
+            zone = { ...zone, right: Math.min(zone.right, target.right - 1) };
+            return positions(target).map((position) => ({
+                position,
+                zone: { ...zone, top: position.row, bottom: position.row },
+            }));
+        }
+        dispatchCellUpdates(sheetId, sums) {
+            for (const sum of sums) {
+                const { col, row } = sum.position;
+                this.dispatch("UPDATE_CELL", {
+                    sheetId,
+                    col,
+                    row,
+                    content: `=SUM(${this.getters.zoneToXC(sheetId, sum.zone)})`,
+                });
+            }
+        }
+        /**
+         * Find the first row where all cells below the zone are empty.
+         */
+        nextEmptyRow(sheetId, zone) {
+            let start = zone.bottom + 1;
+            const { left, right } = zone;
+            while (!this.getters.isEmpty(sheetId, { bottom: start, top: start, left, right })) {
+                start++;
+            }
+            return {
+                ...zone,
+                top: start,
+                bottom: start,
+            };
+        }
+        /**
+         * Find the first column where all cells right of the zone are empty.
+         */
+        nextEmptyCol(sheetId, zone) {
+            let start = zone.right + 1;
+            const { top, bottom } = zone;
+            while (!this.getters.isEmpty(sheetId, { left: start, right: start, top, bottom })) {
+                start++;
+            }
+            return {
+                ...zone,
+                left: start,
+                right: start,
+            };
+        }
+        /**
+         * Transpose the given dimensions.
+         * COL becomes ROW
+         * ROW becomes COL
+         */
+        transpose(dimensions) {
+            return new Set([...dimensions.values()].map((dimension) => (dimension === "COL" ? "ROW" : "COL")));
+        }
+    }
+    AutomaticSumPlugin.getters = ["getAutomaticSums"];
+
+    /**
+     * Plugin managing the display of components next to cells.
+     */
+    class CellPopoverPlugin extends UIPlugin {
+        allowDispatch(cmd) {
+            switch (cmd.type) {
+                case "OPEN_CELL_POPOVER":
+                    try {
+                        cellPopoverRegistry.get(cmd.popoverType);
+                    }
+                    catch (error) {
+                        return 70 /* CommandResult.InvalidCellPopover */;
+                    }
+                    return 0 /* CommandResult.Success */;
+                default:
+                    return 0 /* CommandResult.Success */;
+            }
+        }
+        handle(cmd) {
+            switch (cmd.type) {
+                case "ACTIVATE_SHEET":
+                    this.persistentPopover = undefined;
+                    break;
+                case "OPEN_CELL_POPOVER":
+                    this.persistentPopover = {
+                        col: cmd.col,
+                        row: cmd.row,
+                        type: cmd.popoverType,
+                    };
+                    break;
+                case "CLOSE_CELL_POPOVER":
+                    this.persistentPopover = undefined;
+                    break;
+            }
+        }
+        getCellPopover({ col, row }) {
+            var _a, _b;
+            const sheetId = this.getters.getActiveSheetId();
+            if (this.persistentPopover &&
+                this.getters.isVisibleInViewport(sheetId, this.persistentPopover.col, this.persistentPopover.row)) {
+                const mainPosition = this.getters.getMainCellPosition(sheetId, this.persistentPopover.col, this.persistentPopover.row);
+                const popover = (_b = (_a = cellPopoverRegistry
+                    .get(this.persistentPopover.type)).onOpen) === null || _b === void 0 ? void 0 : _b.call(_a, { sheetId, ...mainPosition }, this.getters);
+                return !(popover === null || popover === void 0 ? void 0 : popover.isOpen)
+                    ? { isOpen: false }
+                    : {
+                        ...popover,
+                        ...this.computePopoverProps(this.persistentPopover, popover.cellCorner),
+                    };
+            }
+            if (col === undefined ||
+                row === undefined ||
+                !this.getters.isVisibleInViewport(sheetId, col, row)) {
+                return { isOpen: false };
+            }
+            const mainPosition = this.getters.getMainCellPosition(sheetId, col, row);
+            const popover = cellPopoverRegistry
+                .getAll()
+                .map((matcher) => { var _a; return (_a = matcher.onHover) === null || _a === void 0 ? void 0 : _a.call(matcher, { sheetId, ...mainPosition }, this.getters); })
+                .find((popover) => popover === null || popover === void 0 ? void 0 : popover.isOpen);
+            return !(popover === null || popover === void 0 ? void 0 : popover.isOpen)
+                ? { isOpen: false }
+                : {
+                    ...popover,
+                    ...this.computePopoverProps(mainPosition, popover.cellCorner),
+                };
+        }
+        getPersistentPopoverTypeAtPosition({ col, row }) {
+            if (this.persistentPopover &&
+                this.persistentPopover.col === col &&
+                this.persistentPopover.row === row) {
+                return this.persistentPopover.type;
+            }
+            return undefined;
+        }
+        computePopoverProps({ col, row }, corner) {
+            const { width, height } = this.getters.getVisibleRect(positionToZone({ col, row }));
+            return {
+                coordinates: this.computePopoverPosition({ col, row }, corner),
+                cellWidth: -width,
+                cellHeight: -height,
+            };
+        }
+        computePopoverPosition({ col, row }, corner) {
+            const sheetId = this.getters.getActiveSheetId();
+            const merge = this.getters.getMerge(sheetId, col, row);
+            if (merge) {
+                col = corner === "TopRight" ? merge.right : merge.left;
+                row = corner === "TopRight" ? merge.top : merge.bottom;
+            }
+            // x, y are relative to the canvas
+            const { x, y, width, height } = this.getters.getVisibleRect(positionToZone({ col, row }));
+            switch (corner) {
+                case "BottomLeft":
+                    return { x, y: y + height };
+                case "TopRight":
+                    return { x: x + width, y: y };
+            }
+        }
+    }
+    CellPopoverPlugin.getters = ["getCellPopover", "getPersistentPopoverTypeAtPosition"];
+    CellPopoverPlugin.modes = ["normal"];
+
     const BORDER_COLOR = "#8B008B";
     const BACKGROUND_COLOR = "#8B008B33";
     var Direction;
@@ -33782,7 +34277,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 const previousCell = this.getters.getEvaluatedCell({ sheetId, col: col - 1, row });
                 const previousCellBorder = this.getters.getCellBorderWithFilterBorder(sheetId, col - 1, row);
                 if (previousCell.type !== CellValueType.empty ||
-                    this.getters.isInMerge(sheetId, col + 1, row) ||
+                    this.getters.isInMerge(sheetId, col - 1, row) ||
                     (previousCellBorder === null || previousCellBorder === void 0 ? void 0 : previousCellBorder.right)) {
                     return col;
                 }
@@ -33961,623 +34456,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     }
     RendererPlugin.layers = [0 /* LAYERS.Background */, 7 /* LAYERS.Headers */];
     RendererPlugin.getters = ["getColDimensionsInViewport", "getRowDimensionsInViewport"];
-
-    const selectionStatisticFunctions = [
-        {
-            name: _lt("Sum"),
-            types: [CellValueType.number],
-            compute: (values) => SUM.compute([values]),
-        },
-        {
-            name: _lt("Avg"),
-            types: [CellValueType.number],
-            compute: (values) => AVERAGE.compute([values]),
-        },
-        {
-            name: _lt("Min"),
-            types: [CellValueType.number],
-            compute: (values) => MIN.compute([values]),
-        },
-        {
-            name: _lt("Max"),
-            types: [CellValueType.number],
-            compute: (values) => MAX.compute([values]),
-        },
-        {
-            name: _lt("Count"),
-            types: [CellValueType.number, CellValueType.text, CellValueType.boolean, CellValueType.error],
-            compute: (values) => COUNTA.compute([values]),
-        },
-        {
-            name: _lt("Count Numbers"),
-            types: [CellValueType.number, CellValueType.text, CellValueType.boolean, CellValueType.error],
-            compute: (values) => COUNT.compute([values]),
-        },
-    ];
-    /**
-     * SelectionPlugin
-     */
-    class GridSelectionPlugin extends UIPlugin {
-        constructor(getters, state, dispatch, config, selection) {
-            super(getters, state, dispatch, config, selection);
-            this.gridSelection = {
-                anchor: {
-                    cell: { col: 0, row: 0 },
-                    zone: { top: 0, left: 0, bottom: 0, right: 0 },
-                },
-                zones: [{ top: 0, left: 0, bottom: 0, right: 0 }],
-            };
-            this.selectedFigureId = null;
-            this.sheetsData = {};
-            // This flag is used to avoid to historize the ACTIVE_SHEET command when it's
-            // the main command.
-            this.activeSheet = null;
-            this.moveClient = config.moveClient;
-        }
-        // ---------------------------------------------------------------------------
-        // Command Handling
-        // ---------------------------------------------------------------------------
-        allowDispatch(cmd) {
-            switch (cmd.type) {
-                case "ACTIVATE_SHEET":
-                    try {
-                        this.getters.getSheet(cmd.sheetIdTo);
-                        break;
-                    }
-                    catch (error) {
-                        return 26 /* CommandResult.InvalidSheetId */;
-                    }
-                case "MOVE_COLUMNS_ROWS":
-                    return this.isMoveElementAllowed(cmd);
-            }
-            return 0 /* CommandResult.Success */;
-        }
-        handleEvent(event) {
-            const anchor = event.anchor;
-            let zones = [];
-            switch (event.mode) {
-                case "overrideSelection":
-                    zones = [anchor.zone];
-                    break;
-                case "updateAnchor":
-                    zones = [...this.gridSelection.zones];
-                    const index = zones.findIndex((z) => isEqual(z, event.previousAnchor.zone));
-                    if (index >= 0) {
-                        zones[index] = anchor.zone;
-                    }
-                    break;
-                case "newAnchor":
-                    zones = [...this.gridSelection.zones, anchor.zone];
-                    break;
-            }
-            this.setSelectionMixin(event.anchor, zones);
-            /** Any change to the selection has to be  reflected in the selection processor. */
-            this.selection.resetDefaultAnchor(this, deepCopy(this.gridSelection.anchor));
-            const { col, row } = this.gridSelection.anchor.cell;
-            this.moveClient({
-                sheetId: this.getters.getActiveSheetId(),
-                col,
-                row,
-            });
-            this.selectedFigureId = null;
-        }
-        handle(cmd) {
-            switch (cmd.type) {
-                case "START_EDITION":
-                case "ACTIVATE_SHEET":
-                    this.selectedFigureId = null;
-                    break;
-                case "DELETE_FIGURE":
-                    if (this.selectedFigureId === cmd.id) {
-                        this.selectedFigureId = null;
-                    }
-                    break;
-                case "DELETE_SHEET":
-                    if (this.selectedFigureId && this.getters.getFigure(cmd.sheetId, this.selectedFigureId)) {
-                        this.selectedFigureId = null;
-                    }
-                    break;
-            }
-            switch (cmd.type) {
-                case "START":
-                    const firstSheetId = this.getters.getVisibleSheetIds()[0];
-                    this.dispatch("ACTIVATE_SHEET", {
-                        sheetIdTo: firstSheetId,
-                        sheetIdFrom: firstSheetId,
-                    });
-                    const { col, row } = this.getters.getNextVisibleCellPosition(firstSheetId, 0, 0);
-                    this.selectCell(col, row);
-                    this.selection.registerAsDefault(this, this.gridSelection.anchor, {
-                        handleEvent: this.handleEvent.bind(this),
-                    });
-                    this.moveClient({ sheetId: firstSheetId, col: 0, row: 0 });
-                    break;
-                case "ACTIVATE_SHEET": {
-                    if (!this.getters.isSheetVisible(cmd.sheetIdTo)) {
-                        this.dispatch("SHOW_SHEET", { sheetId: cmd.sheetIdTo });
-                    }
-                    this.setActiveSheet(cmd.sheetIdTo);
-                    this.sheetsData[cmd.sheetIdFrom] = {
-                        gridSelection: deepCopy(this.gridSelection),
-                    };
-                    if (cmd.sheetIdTo in this.sheetsData) {
-                        Object.assign(this, this.sheetsData[cmd.sheetIdTo]);
-                        this.selection.resetDefaultAnchor(this, deepCopy(this.gridSelection.anchor));
-                    }
-                    else {
-                        const { col, row } = this.getters.getNextVisibleCellPosition(cmd.sheetIdTo, 0, 0);
-                        this.selectCell(col, row);
-                    }
-                    break;
-                }
-                case "REMOVE_COLUMNS_ROWS": {
-                    const sheetId = this.getters.getActiveSheetId();
-                    if (cmd.sheetId === sheetId) {
-                        if (cmd.dimension === "COL") {
-                            this.onColumnsRemoved(cmd);
-                        }
-                        else {
-                            this.onRowsRemoved(cmd);
-                        }
-                        const { col, row } = this.gridSelection.anchor.cell;
-                        this.moveClient({ sheetId, col, row });
-                    }
-                    break;
-                }
-                case "ADD_COLUMNS_ROWS": {
-                    const sheetId = this.getters.getActiveSheetId();
-                    if (cmd.sheetId === sheetId) {
-                        this.onAddElements(cmd);
-                        const { col, row } = this.gridSelection.anchor.cell;
-                        this.moveClient({ sheetId, col, row });
-                    }
-                    break;
-                }
-                case "MOVE_COLUMNS_ROWS":
-                    if (cmd.sheetId === this.getActiveSheetId()) {
-                        this.onMoveElements(cmd);
-                    }
-                    break;
-                case "SELECT_FIGURE":
-                    this.selectedFigureId = cmd.id;
-                    break;
-                case "ACTIVATE_NEXT_SHEET":
-                    this.activateNextSheet("right");
-                    break;
-                case "ACTIVATE_PREVIOUS_SHEET":
-                    this.activateNextSheet("left");
-                    break;
-                case "HIDE_SHEET":
-                    if (cmd.sheetId === this.getActiveSheetId()) {
-                        this.dispatch("ACTIVATE_SHEET", {
-                            sheetIdFrom: cmd.sheetId,
-                            sheetIdTo: this.getters.getVisibleSheetIds()[0],
-                        });
-                    }
-                    break;
-                case "UNDO":
-                case "REDO":
-                case "DELETE_SHEET":
-                    const deletedSheetIds = Object.keys(this.sheetsData).filter((sheetId) => !this.getters.tryGetSheet(sheetId));
-                    for (const sheetId of deletedSheetIds) {
-                        delete this.sheetsData[sheetId];
-                    }
-                    for (const sheetId in this.sheetsData) {
-                        const gridSelection = this.clipSelection(sheetId, this.sheetsData[sheetId].gridSelection);
-                        this.sheetsData[sheetId] = {
-                            gridSelection: deepCopy(gridSelection),
-                        };
-                    }
-                    if (!this.getters.tryGetSheet(this.getters.getActiveSheetId())) {
-                        const currentSheetIds = this.getters.getVisibleSheetIds();
-                        this.activeSheet = this.getters.getSheet(currentSheetIds[0]);
-                        if (this.activeSheet.id in this.sheetsData) {
-                            const { anchor } = this.clipSelection(this.activeSheet.id, this.sheetsData[this.activeSheet.id].gridSelection);
-                            this.selectCell(anchor.cell.col, anchor.cell.row);
-                        }
-                        else {
-                            this.selectCell(0, 0);
-                        }
-                        const { col, row } = this.gridSelection.anchor.cell;
-                        this.moveClient({
-                            sheetId: this.getters.getActiveSheetId(),
-                            col,
-                            row,
-                        });
-                    }
-                    const sheetId = this.getters.getActiveSheetId();
-                    this.gridSelection.zones = this.gridSelection.zones.map((z) => this.getters.expandZone(sheetId, z));
-                    this.gridSelection.anchor.zone = this.getters.expandZone(sheetId, this.gridSelection.anchor.zone);
-                    this.setSelectionMixin(this.gridSelection.anchor, this.gridSelection.zones);
-                    break;
-            }
-            /** Any change to the selection has to be  reflected in the selection processor. */
-            this.selection.resetDefaultAnchor(this, deepCopy(this.gridSelection.anchor));
-        }
-        // ---------------------------------------------------------------------------
-        // Getters
-        // ---------------------------------------------------------------------------
-        getActiveSheet() {
-            return this.activeSheet;
-        }
-        getActiveSheetId() {
-            return this.activeSheet.id;
-        }
-        getActiveCell() {
-            const sheetId = this.getters.getActiveSheetId();
-            const { col, row } = this.gridSelection.anchor.cell;
-            const mainPosition = this.getters.getMainCellPosition(sheetId, col, row);
-            return this.getters.getEvaluatedCell({ sheetId, ...mainPosition });
-        }
-        getActiveCols() {
-            const activeCols = new Set();
-            for (let zone of this.gridSelection.zones) {
-                if (zone.top === 0 &&
-                    zone.bottom === this.getters.getNumberRows(this.getters.getActiveSheetId()) - 1) {
-                    for (let i = zone.left; i <= zone.right; i++) {
-                        activeCols.add(i);
-                    }
-                }
-            }
-            return activeCols;
-        }
-        getActiveRows() {
-            const activeRows = new Set();
-            const sheetId = this.getters.getActiveSheetId();
-            for (let zone of this.gridSelection.zones) {
-                if (zone.left === 0 && zone.right === this.getters.getNumberCols(sheetId) - 1) {
-                    for (let i = zone.top; i <= zone.bottom; i++) {
-                        activeRows.add(i);
-                    }
-                }
-            }
-            return activeRows;
-        }
-        getCurrentStyle() {
-            const zone = this.getters.getSelectedZone();
-            const sheetId = this.getters.getActiveSheetId();
-            return this.getters.getCellStyle({ sheetId, col: zone.left, row: zone.top });
-        }
-        getSelectedZones() {
-            return deepCopy(this.gridSelection.zones);
-        }
-        getSelectedZone() {
-            return deepCopy(this.gridSelection.anchor.zone);
-        }
-        getSelection() {
-            return deepCopy(this.gridSelection);
-        }
-        getSelectedFigureId() {
-            return this.selectedFigureId;
-        }
-        getPosition() {
-            return { col: this.gridSelection.anchor.cell.col, row: this.gridSelection.anchor.cell.row };
-        }
-        getSheetPosition(sheetId) {
-            if (sheetId === this.getters.getActiveSheetId()) {
-                return this.getPosition();
-            }
-            else {
-                const sheetData = this.sheetsData[sheetId];
-                return sheetData
-                    ? {
-                        col: sheetData.gridSelection.anchor.cell.col,
-                        row: sheetData.gridSelection.anchor.cell.row,
-                    }
-                    : this.getters.getNextVisibleCellPosition(sheetId, 0, 0);
-            }
-        }
-        getStatisticFnResults() {
-            // get deduplicated cells in zones
-            const cells = new Set(this.gridSelection.zones
-                .map((zone) => this.getters.getEvaluatedCellsInZone(this.getters.getActiveSheetId(), zone))
-                .flat()
-                .filter((cell) => cell.type !== CellValueType.empty));
-            let cellsTypes = new Set();
-            let cellsValues = [];
-            for (let cell of cells) {
-                cellsTypes.add(cell.type);
-                cellsValues.push(cell.value);
-            }
-            let statisticFnResults = {};
-            for (let fn of selectionStatisticFunctions) {
-                // We don't want to display statistical information when there is no interest:
-                // We set the statistical result to undefined if the data handled by the selection
-                // does not match the data handled by the function.
-                // Ex: if there are only texts in the selection, we prefer that the SUM result
-                // be displayed as undefined rather than 0.
-                let fnResult = undefined;
-                if (fn.types.some((t) => cellsTypes.has(t))) {
-                    fnResult = fn.compute(cellsValues);
-                }
-                statisticFnResults[fn.name] = fnResult;
-            }
-            return statisticFnResults;
-        }
-        getAggregate() {
-            let aggregate = 0;
-            let n = 0;
-            const sheetId = this.getters.getActiveSheetId();
-            const cellPositions = this.gridSelection.zones.map(positions).flat();
-            for (const { col, row } of cellPositions) {
-                const cell = this.getters.getEvaluatedCell({ sheetId, col, row });
-                if (cell.type === CellValueType.number) {
-                    n++;
-                    aggregate += cell.value;
-                }
-            }
-            return n < 2 ? null : formatValue(aggregate);
-        }
-        isSelected(zone) {
-            return !!this.getters.getSelectedZones().find((z) => isEqual(z, zone));
-        }
-        /**
-         * Returns a sorted array of indexes of all columns (respectively rows depending
-         * on the dimension parameter) intersected by the currently selected zones.
-         *
-         * example:
-         * assume selectedZones: [{left:0, right: 2, top :2, bottom: 4}, {left:5, right: 6, top :3, bottom: 5}]
-         *
-         * if dimension === "COL" => [0,1,2,5,6]
-         * if dimension === "ROW" => [2,3,4,5]
-         */
-        getElementsFromSelection(dimension) {
-            if (dimension === "COL" && this.getters.getActiveCols().size === 0) {
-                return [];
-            }
-            if (dimension === "ROW" && this.getters.getActiveRows().size === 0) {
-                return [];
-            }
-            const zones = this.getters.getSelectedZones();
-            let elements = [];
-            const start = dimension === "COL" ? "left" : "top";
-            const end = dimension === "COL" ? "right" : "bottom";
-            for (const zone of zones) {
-                const zoneRows = Array.from({ length: zone[end] - zone[start] + 1 }, (_, i) => zone[start] + i);
-                elements = elements.concat(zoneRows);
-            }
-            return [...new Set(elements)].sort();
-        }
-        // ---------------------------------------------------------------------------
-        // Other
-        // ---------------------------------------------------------------------------
-        /**
-         * Ensure selections are not outside sheet boundaries.
-         * They are clipped to fit inside the sheet if needed.
-         */
-        setSelectionMixin(anchor, zones) {
-            const { anchor: clippedAnchor, zones: clippedZones } = this.clipSelection(this.getters.getActiveSheetId(), { anchor, zones });
-            this.gridSelection.anchor = clippedAnchor;
-            this.gridSelection.zones = uniqueZones(clippedZones);
-        }
-        /**
-         * Change the anchor of the selection active cell to an absolute col and row index.
-         *
-         * This is a non trivial task. We need to stop the editing process and update
-         * properly the current selection.  Also, this method can optionally create a new
-         * range in the selection.
-         */
-        selectCell(col, row) {
-            const sheetId = this.getters.getActiveSheetId();
-            const zone = this.getters.expandZone(sheetId, { left: col, right: col, top: row, bottom: row });
-            this.setSelectionMixin({ zone, cell: { col, row } }, [zone]);
-        }
-        setActiveSheet(id) {
-            const sheet = this.getters.getSheet(id);
-            this.activeSheet = sheet;
-        }
-        activateNextSheet(direction) {
-            const sheetIds = this.getters.getSheetIds();
-            const oldSheetPosition = sheetIds.findIndex((id) => id === this.activeSheet.id);
-            const delta = direction === "left" ? sheetIds.length - 1 : 1;
-            const newPosition = (oldSheetPosition + delta) % sheetIds.length;
-            this.dispatch("ACTIVATE_SHEET", {
-                sheetIdFrom: this.getActiveSheetId(),
-                sheetIdTo: sheetIds[newPosition],
-            });
-        }
-        onColumnsRemoved(cmd) {
-            const { cell, zone } = this.gridSelection.anchor;
-            const selectedZone = updateSelectionOnDeletion(zone, "left", [...cmd.elements]);
-            let anchorZone = { left: cell.col, right: cell.col, top: cell.row, bottom: cell.row };
-            anchorZone = updateSelectionOnDeletion(anchorZone, "left", [...cmd.elements]);
-            const anchor = {
-                cell: {
-                    col: anchorZone.left,
-                    row: anchorZone.top,
-                },
-                zone: selectedZone,
-            };
-            this.setSelectionMixin(anchor, [selectedZone]);
-        }
-        onRowsRemoved(cmd) {
-            const { cell, zone } = this.gridSelection.anchor;
-            const selectedZone = updateSelectionOnDeletion(zone, "top", [...cmd.elements]);
-            let anchorZone = { left: cell.col, right: cell.col, top: cell.row, bottom: cell.row };
-            anchorZone = updateSelectionOnDeletion(anchorZone, "top", [...cmd.elements]);
-            const anchor = {
-                cell: {
-                    col: anchorZone.left,
-                    row: anchorZone.top,
-                },
-                zone: selectedZone,
-            };
-            this.setSelectionMixin(anchor, [selectedZone]);
-        }
-        onAddElements(cmd) {
-            const selection = this.gridSelection.anchor.zone;
-            const zone = updateSelectionOnInsertion(selection, cmd.dimension === "COL" ? "left" : "top", cmd.base, cmd.position, cmd.quantity);
-            const anchor = { cell: { col: zone.left, row: zone.top }, zone };
-            this.setSelectionMixin(anchor, [zone]);
-        }
-        onMoveElements(cmd) {
-            const thickness = cmd.elements.length;
-            this.dispatch("ADD_COLUMNS_ROWS", {
-                dimension: cmd.dimension,
-                sheetId: cmd.sheetId,
-                base: cmd.base,
-                quantity: thickness,
-                position: "before",
-            });
-            const isCol = cmd.dimension === "COL";
-            const start = cmd.elements[0];
-            const end = cmd.elements[thickness - 1];
-            const isBasedBefore = cmd.base < start;
-            const deltaCol = isBasedBefore && isCol ? thickness : 0;
-            const deltaRow = isBasedBefore && !isCol ? thickness : 0;
-            this.dispatch("CUT", {
-                target: [
-                    {
-                        left: isCol ? start + deltaCol : 0,
-                        right: isCol ? end + deltaCol : this.getters.getNumberCols(cmd.sheetId) - 1,
-                        top: !isCol ? start + deltaRow : 0,
-                        bottom: !isCol ? end + deltaRow : this.getters.getNumberRows(cmd.sheetId) - 1,
-                    },
-                ],
-            });
-            this.dispatch("PASTE", {
-                target: [
-                    {
-                        left: isCol ? cmd.base : 0,
-                        right: isCol ? cmd.base + thickness - 1 : this.getters.getNumberCols(cmd.sheetId) - 1,
-                        top: !isCol ? cmd.base : 0,
-                        bottom: !isCol ? cmd.base + thickness - 1 : this.getters.getNumberRows(cmd.sheetId) - 1,
-                    },
-                ],
-            });
-            const toRemove = isBasedBefore ? cmd.elements.map((el) => el + thickness) : cmd.elements;
-            let currentIndex = cmd.base;
-            for (const element of toRemove) {
-                const size = cmd.dimension === "COL"
-                    ? this.getters.getColSize(cmd.sheetId, element)
-                    : this.getters.getRowSize(cmd.sheetId, element);
-                this.dispatch("RESIZE_COLUMNS_ROWS", {
-                    dimension: cmd.dimension,
-                    sheetId: cmd.sheetId,
-                    size,
-                    elements: [currentIndex],
-                });
-                currentIndex += 1;
-            }
-            this.dispatch("REMOVE_COLUMNS_ROWS", {
-                dimension: cmd.dimension,
-                sheetId: cmd.sheetId,
-                elements: toRemove,
-            });
-        }
-        isMoveElementAllowed(cmd) {
-            const isCol = cmd.dimension === "COL";
-            const start = cmd.elements[0];
-            const end = cmd.elements[cmd.elements.length - 1];
-            const id = cmd.sheetId;
-            const doesElementsHaveCommonMerges = isCol
-                ? this.getters.doesColumnsHaveCommonMerges
-                : this.getters.doesRowsHaveCommonMerges;
-            if (doesElementsHaveCommonMerges(id, start - 1, start) ||
-                doesElementsHaveCommonMerges(id, end, end + 1) ||
-                doesElementsHaveCommonMerges(id, cmd.base - 1, cmd.base)) {
-                return 2 /* CommandResult.WillRemoveExistingMerge */;
-            }
-            return 0 /* CommandResult.Success */;
-        }
-        //-------------------------------------------
-        // Helpers for extensions
-        // ------------------------------------------
-        /**
-         * Clip the selection if it spans outside the sheet
-         */
-        clipSelection(sheetId, selection) {
-            const cols = this.getters.getNumberCols(sheetId) - 1;
-            const rows = this.getters.getNumberRows(sheetId) - 1;
-            const zones = selection.zones.map((z) => {
-                return {
-                    left: clip(z.left, 0, cols),
-                    right: clip(z.right, 0, cols),
-                    top: clip(z.top, 0, rows),
-                    bottom: clip(z.bottom, 0, rows),
-                };
-            });
-            const anchorCol = clip(selection.anchor.cell.col, 0, cols);
-            const anchorRow = clip(selection.anchor.cell.row, 0, rows);
-            const anchorZone = {
-                left: clip(selection.anchor.zone.left, 0, cols),
-                right: clip(selection.anchor.zone.right, 0, cols),
-                top: clip(selection.anchor.zone.top, 0, rows),
-                bottom: clip(selection.anchor.zone.bottom, 0, rows),
-            };
-            return {
-                zones,
-                anchor: {
-                    cell: { col: anchorCol, row: anchorRow },
-                    zone: anchorZone,
-                },
-            };
-        }
-        // ---------------------------------------------------------------------------
-        // Grid rendering
-        // ---------------------------------------------------------------------------
-        drawGrid(renderingContext) {
-            if (this.getters.isDashboard()) {
-                return;
-            }
-            const { ctx, thinLineWidth } = renderingContext;
-            // selection
-            const zones = this.getSelectedZones();
-            ctx.fillStyle = "#f3f7fe";
-            const onlyOneCell = zones.length === 1 && zones[0].left === zones[0].right && zones[0].top === zones[0].bottom;
-            ctx.fillStyle = onlyOneCell ? "#f3f7fe" : "#e9f0ff";
-            ctx.strokeStyle = SELECTION_BORDER_COLOR;
-            ctx.lineWidth = 1.5 * thinLineWidth;
-            for (const zone of zones) {
-                const { x, y, width, height } = this.getters.getVisibleRect(zone);
-                ctx.globalCompositeOperation = "multiply";
-                ctx.fillRect(x, y, width, height);
-                ctx.globalCompositeOperation = "source-over";
-                ctx.strokeRect(x, y, width, height);
-            }
-            ctx.globalCompositeOperation = "source-over";
-            // active zone
-            const activeSheet = this.getters.getActiveSheetId();
-            const { col, row } = this.getPosition();
-            ctx.strokeStyle = SELECTION_BORDER_COLOR;
-            ctx.lineWidth = 3 * thinLineWidth;
-            let zone;
-            if (this.getters.isInMerge(activeSheet, col, row)) {
-                zone = this.getters.getMerge(activeSheet, col, row);
-            }
-            else {
-                zone = {
-                    top: row,
-                    bottom: row,
-                    left: col,
-                    right: col,
-                };
-            }
-            const { x, y, width, height } = this.getters.getVisibleRect(zone);
-            if (width > 0 && height > 0) {
-                ctx.strokeRect(x, y, width, height);
-            }
-        }
-    }
-    GridSelectionPlugin.layers = [6 /* LAYERS.Selection */];
-    GridSelectionPlugin.getters = [
-        "getActiveSheet",
-        "getActiveSheetId",
-        "getActiveCell",
-        "getActiveCols",
-        "getActiveRows",
-        "getCurrentStyle",
-        "getSelectedZones",
-        "getSelectedZone",
-        "getStatisticFnResults",
-        "getAggregate",
-        "getSelectedFigureId",
-        "getSelection",
-        "getPosition",
-        "getSheetPosition",
-        "isSelected",
-        "getElementsFromSelection",
-    ];
 
     /**
      * Selection input Plugin
@@ -35445,868 +35323,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     SelectionMultiUserPlugin.getters = ["getClientsToDisplay"];
     SelectionMultiUserPlugin.layers = [6 /* LAYERS.Selection */];
 
-    class InternalViewport {
-        constructor(getters, sheetId, boundaries, sizeInGrid, options, offsets) {
-            this.getters = getters;
-            this.sheetId = sheetId;
-            this.boundaries = boundaries;
-            this.width = sizeInGrid.width;
-            this.height = sizeInGrid.height;
-            this.offsetScrollbarX = offsets.x;
-            this.offsetScrollbarY = offsets.y;
-            this.canScrollVertically = options.canScrollVertically;
-            this.canScrollHorizontally = options.canScrollHorizontally;
-            this.offsetCorrectionX = this.getters.getColDimensions(this.sheetId, this.boundaries.left).start;
-            this.offsetCorrectionY = this.getters.getRowDimensions(this.sheetId, this.boundaries.top).start;
-            this.adjustViewportOffsetX();
-            this.adjustViewportOffsetY();
-        }
-        // PUBLIC
-        getMaxSize() {
-            const lastCol = this.getters.findLastVisibleColRowIndex(this.sheetId, "COL", {
-                first: this.boundaries.left,
-                last: this.boundaries.right,
-            });
-            const lastRow = this.getters.findLastVisibleColRowIndex(this.sheetId, "ROW", {
-                first: this.boundaries.top,
-                last: this.boundaries.bottom,
-            });
-            const { end: lastColEnd, size: lastColSize } = this.getters.getColDimensions(this.sheetId, lastCol);
-            const { end: lastRowEnd, size: lastRowSize } = this.getters.getRowDimensions(this.sheetId, lastRow);
-            const leftColIndex = this.searchHeaderIndex("COL", lastColEnd - this.width, 0);
-            const leftColSize = this.getters.getColSize(this.sheetId, leftColIndex);
-            const leftRowIndex = this.searchHeaderIndex("ROW", lastRowEnd - this.height, 0);
-            const topRowSize = this.getters.getRowSize(this.sheetId, leftRowIndex);
-            const width = lastColEnd -
-                this.offsetCorrectionX +
-                (this.canScrollHorizontally
-                    ? Math.max(DEFAULT_CELL_WIDTH, Math.min(leftColSize, this.width - lastColSize))
-                    : 0);
-            const height = lastRowEnd -
-                this.offsetCorrectionY +
-                (this.canScrollVertically
-                    ? Math.max(DEFAULT_CELL_HEIGHT + 5, Math.min(topRowSize, this.height - lastRowSize))
-                    : 0);
-            return { width, height };
-        }
-        /**
-         * Return the index of a column given an offset x, based on the pane left
-         * visible cell.
-         * It returns -1 if no column is found.
-         */
-        getColIndex(x, absolute = false) {
-            if (x < this.offsetCorrectionX || x > this.offsetCorrectionX + this.width) {
-                return -1;
-            }
-            return this.searchHeaderIndex("COL", x - this.offsetCorrectionX, this.left, absolute);
-        }
-        /**
-         * Return the index of a row given an offset y, based on the pane top
-         * visible cell.
-         * It returns -1 if no row is found.
-         */
-        getRowIndex(y, absolute = false) {
-            if (y < this.offsetCorrectionY || y > this.offsetCorrectionY + this.height) {
-                return -1;
-            }
-            return this.searchHeaderIndex("ROW", y - this.offsetCorrectionY, this.top, absolute);
-        }
-        /**
-         * This function will make sure that the provided cell position (or current selected position) is part of
-         * the pane that is actually displayed on the client. We therefore adjust the offset of the pane
-         * until it contains the cell completely.
-         */
-        adjustPosition(position) {
-            const sheetId = this.sheetId;
-            if (!position) {
-                position = this.getters.getSheetPosition(sheetId);
-            }
-            const mainCellPosition = this.getters.getMainCellPosition(sheetId, position.col, position.row);
-            const { col, row } = this.getters.getNextVisibleCellPosition(sheetId, mainCellPosition.col, mainCellPosition.row);
-            if (isInside(col, this.boundaries.top, this.boundaries)) {
-                this.adjustPositionX(col);
-            }
-            if (isInside(this.boundaries.left, row, this.boundaries)) {
-                this.adjustPositionY(row);
-            }
-        }
-        adjustPositionX(col) {
-            const sheetId = this.sheetId;
-            const { start, end } = this.getters.getColDimensions(sheetId, col);
-            while (end > this.offsetX + this.offsetCorrectionX + this.width &&
-                this.offsetX + this.offsetCorrectionX < start) {
-                this.offsetX = this.getters.getColDimensions(sheetId, this.left).end - this.offsetCorrectionX;
-                this.offsetScrollbarX = this.offsetX;
-                this.adjustViewportZoneX();
-            }
-            while (col < this.left) {
-                let leftCol;
-                for (leftCol = this.left; leftCol >= 0; leftCol--) {
-                    if (!this.getters.isColHidden(sheetId, leftCol)) {
-                        break;
-                    }
-                }
-                this.offsetX =
-                    this.getters.getColDimensions(sheetId, leftCol - 1).start - this.offsetCorrectionX;
-                this.offsetScrollbarX = this.offsetX;
-                this.adjustViewportZoneX();
-            }
-        }
-        adjustPositionY(row) {
-            const sheetId = this.sheetId;
-            while (this.getters.getRowDimensions(sheetId, row).end >
-                this.offsetY + this.height + this.offsetCorrectionY &&
-                this.offsetY + this.offsetCorrectionY < this.getters.getRowDimensions(sheetId, row).start) {
-                this.offsetY = this.getters.getRowDimensions(sheetId, this.top).end - this.offsetCorrectionY;
-                this.offsetScrollbarY = this.offsetY;
-                this.adjustViewportZoneY();
-            }
-            while (row < this.top) {
-                let topRow;
-                for (topRow = this.top; topRow >= 0; topRow--) {
-                    if (!this.getters.isRowHidden(sheetId, topRow)) {
-                        break;
-                    }
-                }
-                this.offsetY =
-                    this.getters.getRowDimensions(sheetId, topRow - 1).start - this.offsetCorrectionY;
-                this.offsetScrollbarY = this.offsetY;
-                this.adjustViewportZoneY();
-            }
-        }
-        setViewportOffset(offsetX, offsetY) {
-            this.setViewportOffsetX(offsetX);
-            this.setViewportOffsetY(offsetY);
-        }
-        adjustViewportZone() {
-            this.adjustViewportZoneX();
-            this.adjustViewportZoneY();
-        }
-        getRect(zone) {
-            const targetZone = intersection(zone, this.zone);
-            if (targetZone) {
-                return {
-                    x: this.getters.getColRowOffset("COL", this.zone.left, targetZone.left) +
-                        this.offsetCorrectionX,
-                    y: this.getters.getColRowOffset("ROW", this.zone.top, targetZone.top) +
-                        this.offsetCorrectionY,
-                    width: this.getters.getColRowOffset("COL", targetZone.left, targetZone.right + 1),
-                    height: this.getters.getColRowOffset("ROW", targetZone.top, targetZone.bottom + 1),
-                };
-            }
-            else {
-                return undefined;
-            }
-        }
-        isVisible(col, row) {
-            const isInside = row <= this.bottom && row >= this.top && col >= this.left && col <= this.right;
-            return (isInside &&
-                !this.getters.isColHidden(this.sheetId, col) &&
-                !this.getters.isRowHidden(this.sheetId, row));
-        }
-        // PRIVATE
-        searchHeaderIndex(dimension, position, startIndex = 0, absolute = false) {
-            let size = 0;
-            const sheetId = this.sheetId;
-            const headers = this.getters.getNumberHeaders(sheetId, dimension);
-            for (let i = startIndex; i <= headers - 1; i++) {
-                const isHiddenInViewport = !absolute && dimension === "COL"
-                    ? i < this.left && i > this.right
-                    : i < this.top && i > this.bottom;
-                if (this.getters.isHeaderHidden(sheetId, dimension, i) || isHiddenInViewport) {
-                    continue;
-                }
-                size +=
-                    dimension === "COL"
-                        ? this.getters.getColSize(sheetId, i)
-                        : this.getters.getRowSize(sheetId, i);
-                if (size > position) {
-                    return i;
-                }
-            }
-            return -1;
-        }
-        get zone() {
-            return { left: this.left, right: this.right, top: this.top, bottom: this.bottom };
-        }
-        setViewportOffsetX(offsetX) {
-            if (!this.canScrollHorizontally) {
-                return;
-            }
-            this.offsetScrollbarX = offsetX;
-            this.adjustViewportZoneX();
-        }
-        setViewportOffsetY(offsetY) {
-            if (!this.canScrollVertically) {
-                return;
-            }
-            this.offsetScrollbarY = offsetY;
-            this.adjustViewportZoneY();
-        }
-        /** Corrects the viewport's horizontal offset based on the current structure
-         *  To make sure that at least on column is visible inside the viewport.
-         */
-        adjustViewportOffsetX() {
-            if (this.canScrollHorizontally) {
-                const { width: viewportWidth } = this.getMaxSize();
-                if (this.width + this.offsetScrollbarX > viewportWidth) {
-                    this.offsetScrollbarX = Math.max(0, viewportWidth - this.width);
-                }
-            }
-            this.left = this.getColIndex(this.offsetScrollbarX, true);
-            this.right = this.getColIndex(this.offsetScrollbarX + this.width, true);
-            if (this.right === -1) {
-                this.right = this.boundaries.right;
-            }
-            this.adjustViewportZoneX();
-        }
-        /** Corrects the viewport's vertical offset based on the current structure
-         *  To make sure that at least on row is visible inside the viewport.
-         */
-        adjustViewportOffsetY() {
-            if (this.canScrollVertically) {
-                const { height: paneHeight } = this.getMaxSize();
-                if (this.height + this.offsetScrollbarY > paneHeight) {
-                    this.offsetScrollbarY = Math.max(0, paneHeight - this.height);
-                }
-            }
-            this.top = this.getRowIndex(this.offsetScrollbarY, true);
-            this.bottom = this.getRowIndex(this.offsetScrollbarY + this.width, true);
-            if (this.bottom === -1) {
-                this.bottom = this.boundaries.bottom;
-            }
-            this.adjustViewportZoneY();
-        }
-        /** Updates the pane zone and snapped offset based on its horizontal
-         * offset (will find Left) and its width (will find Right) */
-        adjustViewportZoneX() {
-            const sheetId = this.sheetId;
-            this.left = this.searchHeaderIndex("COL", this.offsetScrollbarX, this.boundaries.left);
-            this.right = Math.min(this.boundaries.right, this.searchHeaderIndex("COL", this.width, this.left));
-            if (this.right === -1) {
-                this.right = this.getters.getNumberCols(sheetId) - 1;
-            }
-            this.offsetX =
-                this.getters.getColDimensions(sheetId, this.left).start -
-                    this.getters.getColDimensions(sheetId, this.boundaries.left).start;
-        }
-        /** Updates the pane zone and snapped offset based on its vertical
-         * offset (will find Top) and its width (will find Bottom) */
-        adjustViewportZoneY() {
-            const sheetId = this.sheetId;
-            this.top = this.searchHeaderIndex("ROW", this.offsetScrollbarY, this.boundaries.top);
-            this.bottom = Math.min(this.boundaries.bottom, this.searchHeaderIndex("ROW", this.height, this.top));
-            if (this.bottom === -1) {
-                this.bottom = this.getters.getNumberRows(sheetId) - 1;
-            }
-            this.offsetY =
-                this.getters.getRowDimensions(sheetId, this.top).start -
-                    this.getters.getRowDimensions(sheetId, this.boundaries.top).start;
-        }
-    }
-
-    /**
-     *   EdgeScrollCases Schema
-     *
-     *  The dots/double dots represent a freeze (= a split of viewports)
-     *  In this example, we froze vertically between columns D and E
-     *  and horizontally between rows 4 and 5.
-     *
-     *  One can see that we scrolled horizontally from column E to G and
-     *  vertically from row 5 to 7.
-     *
-     *     A  B  C  D   G  H  I  J  K  L  M  N  O  P  Q  R  S  T
-     *     _______________________________________________________
-     *  1 |           :                                           |
-     *  2 |           :                                           |
-     *  3 |           :        B   ↑                 6            |
-     *  4 |           :        |   |                 |            |
-     *     ····················+···+·················+············|
-     *  7 |           :        |   |                 |            |
-     *  8 |           :        ↓   2                 |            |
-     *  9 |           :                              |            |
-     * 10 |       A --+--→                           |            |
-     * 11 |           :                              |            |
-     * 12 |           :                              |            |
-     * 13 |        ←--+-- 1                          |            |
-     * 14 |           :                              |        3 --+--→
-     * 15 |           :                              |            |
-     * 16 |           :                              |            |
-     * 17 |       5 --+-------------------------------------------+--→
-     * 18 |           :                              |            |
-     * 19 |           :                  4           |            |
-     * 20 |           :                  |           |            |
-     *     ______________________________+___________| ____________
-     *                                   |           |
-     *                                   ↓           ↓
-     */
-    /**
-     * Viewport plugin.
-     *
-     * This plugin manages all things related to all viewport states.
-     *
-     */
-    class SheetViewPlugin extends UIPlugin {
-        constructor() {
-            super(...arguments);
-            this.viewports = {};
-            /**
-             * The viewport dimensions are usually set by one of the components
-             * (i.e. when grid component is mounted) to properly reflect its state in the DOM.
-             * In the absence of a component (standalone model), is it mandatory to set reasonable default values
-             * to ensure the correct operation of this plugin.
-             */
-            this.sheetViewWidth = DEFAULT_SHEETVIEW_SIZE;
-            this.sheetViewHeight = DEFAULT_SHEETVIEW_SIZE;
-            this.gridOffsetX = 0;
-            this.gridOffsetY = 0;
-            this.sheetsWithDirtyViewports = new Set();
-        }
-        // ---------------------------------------------------------------------------
-        // Command Handling
-        // ---------------------------------------------------------------------------
-        allowDispatch(cmd) {
-            switch (cmd.type) {
-                case "SET_VIEWPORT_OFFSET":
-                    return this.checkScrollingDirection(cmd);
-                case "RESIZE_SHEETVIEW":
-                    return this.chainValidations(this.checkValuesAreDifferent, this.checkPositiveDimension)(cmd);
-                case "FREEZE_COLUMNS": {
-                    const sheetId = this.getters.getActiveSheetId();
-                    const merges = this.getters.getMerges(sheetId);
-                    for (let merge of merges) {
-                        if (merge.left < cmd.quantity && cmd.quantity <= merge.right) {
-                            return 63 /* CommandResult.MergeOverlap */;
-                        }
-                    }
-                    return 0 /* CommandResult.Success */;
-                }
-                case "FREEZE_ROWS": {
-                    const sheetId = this.getters.getActiveSheetId();
-                    const merges = this.getters.getMerges(sheetId);
-                    for (let merge of merges) {
-                        if (merge.top < cmd.quantity && cmd.quantity <= merge.bottom) {
-                            return 63 /* CommandResult.MergeOverlap */;
-                        }
-                    }
-                    return 0 /* CommandResult.Success */;
-                }
-                default:
-                    return 0 /* CommandResult.Success */;
-            }
-        }
-        handleEvent(event) {
-            switch (event.type) {
-                case "HeadersSelected":
-                case "AlterZoneCorner":
-                    break;
-                case "ZonesSelected":
-                    // altering a zone should not move the viewport
-                    const sheetId = this.getters.getActiveSheetId();
-                    let { col, row } = findCellInNewZone(event.previousAnchor.zone, event.anchor.zone, this.getters.getActiveMainViewport());
-                    col = Math.min(col, this.getters.getNumberCols(sheetId) - 1);
-                    row = Math.min(row, this.getters.getNumberRows(sheetId) - 1);
-                    this.refreshViewport(this.getters.getActiveSheetId(), { col, row });
-                    break;
-            }
-        }
-        handle(cmd) {
-            var _a;
-            this.cleanViewports();
-            switch (cmd.type) {
-                case "START":
-                    this.selection.observe(this, {
-                        handleEvent: this.handleEvent.bind(this),
-                    });
-                    this.resetViewports(this.getters.getActiveSheetId());
-                    break;
-                case "UNDO":
-                case "REDO":
-                    this.resetSheetViews();
-                    break;
-                case "RESIZE_SHEETVIEW":
-                    this.resizeSheetView(cmd.height, cmd.width, cmd.gridOffsetX, cmd.gridOffsetY);
-                    break;
-                case "SET_VIEWPORT_OFFSET":
-                    this.setSheetViewOffset(cmd.offsetX, cmd.offsetY);
-                    break;
-                case "SHIFT_VIEWPORT_DOWN":
-                    const { top } = this.getActiveMainViewport();
-                    const sheetId = this.getters.getActiveSheetId();
-                    const shiftedOffsetY = this.clipOffsetY(this.getters.getRowDimensions(sheetId, top).start + this.sheetViewHeight);
-                    this.shiftVertically(shiftedOffsetY);
-                    break;
-                case "SHIFT_VIEWPORT_UP": {
-                    const { top } = this.getActiveMainViewport();
-                    const sheetId = this.getters.getActiveSheetId();
-                    const shiftedOffsetY = this.clipOffsetY(this.getters.getRowDimensions(sheetId, top).end - this.sheetViewHeight);
-                    this.shiftVertically(shiftedOffsetY);
-                    break;
-                }
-                case "REMOVE_COLUMNS_ROWS":
-                case "RESIZE_COLUMNS_ROWS":
-                case "HIDE_COLUMNS_ROWS":
-                case "ADD_COLUMNS_ROWS":
-                case "UNHIDE_COLUMNS_ROWS":
-                case "UPDATE_FILTER":
-                    this.resetViewports(cmd.sheetId);
-                    break;
-                case "UPDATE_CELL":
-                    // update cell content or format can change hidden rows because of data filters
-                    if ("content" in cmd || "format" in cmd || ((_a = cmd.style) === null || _a === void 0 ? void 0 : _a.fontSize) !== undefined) {
-                        this.sheetsWithDirtyViewports.add(cmd.sheetId);
-                    }
-                    break;
-                case "ACTIVATE_SHEET":
-                    this.setViewports();
-                    this.refreshViewport(cmd.sheetIdTo);
-                    break;
-                case "UNFREEZE_ROWS":
-                case "UNFREEZE_COLUMNS":
-                case "FREEZE_COLUMNS":
-                case "FREEZE_ROWS":
-                case "UNFREEZE_COLUMNS_ROWS":
-                    this.resetViewports(this.getters.getActiveSheetId());
-                    break;
-            }
-        }
-        finalize() {
-            for (const sheetId of this.sheetsWithDirtyViewports) {
-                this.resetViewports(sheetId);
-            }
-            this.sheetsWithDirtyViewports = new Set();
-            this.setViewports();
-        }
-        setViewports() {
-            var _a;
-            const sheetIds = this.getters.getSheetIds();
-            for (const sheetId of sheetIds) {
-                if (!((_a = this.viewports[sheetId]) === null || _a === void 0 ? void 0 : _a.bottomRight)) {
-                    this.resetViewports(sheetId);
-                }
-            }
-        }
-        // ---------------------------------------------------------------------------
-        // Getters
-        // ---------------------------------------------------------------------------
-        /**
-         * Return the index of a column given an offset x, based on the viewport left
-         * visible cell.
-         * It returns -1 if no column is found.
-         */
-        getColIndex(x) {
-            const sheetId = this.getters.getActiveSheetId();
-            return Math.max(...this.getSubViewports(sheetId).map((viewport) => viewport.getColIndex(x)));
-        }
-        /**
-         * Return the index of a row given an offset y, based on the viewport top
-         * visible cell.
-         * It returns -1 if no row is found.
-         */
-        getRowIndex(y) {
-            const sheetId = this.getters.getActiveSheetId();
-            return Math.max(...this.getSubViewports(sheetId).map((viewport) => viewport.getRowIndex(y)));
-        }
-        getSheetViewDimensionWithHeaders() {
-            return {
-                width: this.sheetViewWidth + this.gridOffsetX,
-                height: this.sheetViewHeight + this.gridOffsetY,
-            };
-        }
-        getSheetViewDimension() {
-            return {
-                width: this.sheetViewWidth,
-                height: this.sheetViewHeight,
-            };
-        }
-        /** type as pane, not viewport but basically pane extends viewport */
-        getActiveMainViewport() {
-            const sheetId = this.getters.getActiveSheetId();
-            return this.getMainViewport(sheetId);
-        }
-        getActiveSheetScrollInfo() {
-            const sheetId = this.getters.getActiveSheetId();
-            return this.getSheetScrollInfo(sheetId);
-        }
-        getSheetViewVisibleCols() {
-            const sheetId = this.getters.getActiveSheetId();
-            const viewports = this.getSubViewports(sheetId);
-            return [...new Set(viewports.map((v) => range(v.left, v.right + 1)).flat())].filter((col) => !this.getters.isHeaderHidden(sheetId, "COL", col));
-        }
-        getSheetViewVisibleRows() {
-            const sheetId = this.getters.getActiveSheetId();
-            const viewports = this.getSubViewports(sheetId);
-            return [...new Set(viewports.map((v) => range(v.top, v.bottom + 1)).flat())].filter((row) => !this.getters.isHeaderHidden(sheetId, "ROW", row));
-        }
-        /**
-         * Return the main viewport maximum size. That is the zone dimension
-         * with some bottom and right padding.
-         */
-        getMainViewportRect() {
-            const sheetId = this.getters.getActiveSheetId();
-            const viewport = this.getMainInternalViewport(sheetId);
-            const { xSplit, ySplit } = this.getters.getPaneDivisions(sheetId);
-            let { width, height } = viewport.getMaxSize();
-            const x = this.getters.getColDimensions(sheetId, xSplit).start;
-            const y = this.getters.getRowDimensions(sheetId, ySplit).start;
-            return { x, y, width, height };
-        }
-        getMaximumSheetOffset() {
-            const sheetId = this.getters.getActiveSheetId();
-            const { width, height } = this.getMainViewportRect();
-            const viewport = this.getMainInternalViewport(sheetId);
-            return {
-                maxOffsetX: Math.max(0, width - viewport.width + 1),
-                maxOffsetY: Math.max(0, height - viewport.height + 1),
-            };
-        }
-        getColRowOffsetInViewport(dimension, referenceIndex, index) {
-            const sheetId = this.getters.getActiveSheetId();
-            const visibleCols = this.getters.getSheetViewVisibleCols();
-            const visibleRows = this.getters.getSheetViewVisibleRows();
-            if (index < referenceIndex) {
-                return -this.getColRowOffsetInViewport(dimension, index, referenceIndex);
-            }
-            let offset = 0;
-            const visibleIndexes = dimension === "COL" ? visibleCols : visibleRows;
-            for (let i = referenceIndex; i < index; i++) {
-                if (!visibleIndexes.includes(i)) {
-                    continue;
-                }
-                offset +=
-                    dimension === "COL"
-                        ? this.getters.getColSize(sheetId, i)
-                        : this.getters.getRowSize(sheetId, i);
-            }
-            return offset;
-        }
-        /**
-         * Check if a given position is visible in the viewport.
-         */
-        isVisibleInViewport(sheetId, col, row) {
-            return this.getSubViewports(sheetId).some((pane) => pane.isVisible(col, row));
-        }
-        // => return s the new offset
-        getEdgeScrollCol(x, previousX, startingX) {
-            let canEdgeScroll = false;
-            let direction = 0;
-            let delay = 0;
-            /** 4 cases : See EdgeScrollCases Schema at the top
-             * 1. previous in XRight > XLeft
-             * 3. previous in XRight > outside
-             * 5. previous in Left > outside
-             * A. previous in Left > right
-             * with X a position taken in the bottomRIght (aka scrollable) viewport
-             */
-            const { xSplit } = this.getters.getPaneDivisions(this.getters.getActiveSheetId());
-            const { width } = this.getSheetViewDimension();
-            const { x: offsetCorrectionX } = this.getMainViewportCoordinates();
-            const currentOffsetX = this.getActiveSheetScrollInfo().offsetX;
-            if (x > width) {
-                // 3 & 5
-                canEdgeScroll = true;
-                delay = scrollDelay(x - width);
-                direction = 1;
-            }
-            else if (x < offsetCorrectionX && startingX >= offsetCorrectionX && currentOffsetX > 0) {
-                // 1
-                canEdgeScroll = true;
-                delay = scrollDelay(offsetCorrectionX - x);
-                direction = -1;
-            }
-            else if (xSplit && previousX < offsetCorrectionX && x > offsetCorrectionX) {
-                // A
-                canEdgeScroll = true;
-                delay = scrollDelay(x);
-                direction = "reset";
-            }
-            return { canEdgeScroll, direction, delay };
-        }
-        getEdgeScrollRow(y, previousY, tartingY) {
-            let canEdgeScroll = false;
-            let direction = 0;
-            let delay = 0;
-            /** 4 cases : See EdgeScrollCases Schema at the top
-             * 2. previous in XBottom > XTop
-             * 4. previous in XRight > outside
-             * 6. previous in Left > outside
-             * B. previous in Left > right
-             * with X a position taken in the bottomRIght (aka scrollable) viewport
-             */
-            const { ySplit } = this.getters.getPaneDivisions(this.getters.getActiveSheetId());
-            const { height } = this.getSheetViewDimension();
-            const { y: offsetCorrectionY } = this.getMainViewportCoordinates();
-            const currentOffsetY = this.getActiveSheetScrollInfo().offsetY;
-            if (y > height) {
-                // 4 & 6
-                canEdgeScroll = true;
-                delay = scrollDelay(y - height);
-                direction = 1;
-            }
-            else if (y < offsetCorrectionY && tartingY >= offsetCorrectionY && currentOffsetY > 0) {
-                // 2
-                canEdgeScroll = true;
-                delay = scrollDelay(offsetCorrectionY - y);
-                direction = -1;
-            }
-            else if (ySplit && previousY < offsetCorrectionY && y > offsetCorrectionY) {
-                // B
-                canEdgeScroll = true;
-                delay = scrollDelay(y);
-                direction = "reset";
-            }
-            return { canEdgeScroll, direction, delay };
-        }
-        /**
-         * Computes the coordinates and size to draw the zone on the canvas
-         */
-        getVisibleRect(zone) {
-            const sheetId = this.getters.getActiveSheetId();
-            const viewportRects = this.getSubViewports(sheetId)
-                .map((viewport) => viewport.getRect(zone))
-                .filter(isDefined$1);
-            if (viewportRects.length === 0) {
-                return { x: 0, y: 0, width: 0, height: 0 };
-            }
-            const x = Math.min(...viewportRects.map((rect) => rect.x));
-            const y = Math.min(...viewportRects.map((rect) => rect.y));
-            const width = Math.max(...viewportRects.map((rect) => rect.x + rect.width)) - x;
-            const height = Math.max(...viewportRects.map((rect) => rect.y + rect.height)) - y;
-            return {
-                x: x + this.gridOffsetX,
-                y: y + this.gridOffsetY,
-                width,
-                height,
-            };
-        }
-        /**
-         * Returns the position of the MainViewport relatively to the start of the grid (without headers)
-         * It corresponds to the summed dimensions of the visible cols/rows (in x/y respectively)
-         * situated before the pane divisions.
-         */
-        getMainViewportCoordinates() {
-            const sheetId = this.getters.getActiveSheetId();
-            const { xSplit, ySplit } = this.getters.getPaneDivisions(sheetId);
-            const x = this.getters.getColDimensions(sheetId, xSplit).start;
-            const y = this.getters.getRowDimensions(sheetId, ySplit).start;
-            return { x, y };
-        }
-        // ---------------------------------------------------------------------------
-        // Private
-        // ---------------------------------------------------------------------------
-        ensureMainViewportExist(sheetId) {
-            if (!this.viewports[sheetId]) {
-                this.resetViewports(sheetId);
-            }
-        }
-        getSubViewports(sheetId) {
-            this.ensureMainViewportExist(sheetId);
-            return Object.values(this.viewports[sheetId]).filter(isDefined$1);
-        }
-        checkPositiveDimension(cmd) {
-            if (cmd.width < 0 || cmd.height < 0) {
-                return 66 /* CommandResult.InvalidViewportSize */;
-            }
-            return 0 /* CommandResult.Success */;
-        }
-        checkValuesAreDifferent(cmd) {
-            const { height, width } = this.getSheetViewDimension();
-            if (cmd.gridOffsetX === this.gridOffsetX &&
-                cmd.gridOffsetY === this.gridOffsetY &&
-                cmd.width === width &&
-                cmd.height === height) {
-                return 74 /* CommandResult.ValuesNotChanged */;
-            }
-            return 0 /* CommandResult.Success */;
-        }
-        checkScrollingDirection({ offsetX, offsetY, }) {
-            const pane = this.getMainInternalViewport(this.getters.getActiveSheetId());
-            if ((!pane.canScrollHorizontally && offsetX > 0) ||
-                (!pane.canScrollVertically && offsetY > 0)) {
-                return 67 /* CommandResult.InvalidScrollingDirection */;
-            }
-            return 0 /* CommandResult.Success */;
-        }
-        getMainViewport(sheetId) {
-            const viewport = this.getMainInternalViewport(sheetId);
-            return {
-                top: viewport.top,
-                left: viewport.left,
-                bottom: viewport.bottom,
-                right: viewport.right,
-            };
-        }
-        getMainInternalViewport(sheetId) {
-            this.ensureMainViewportExist(sheetId);
-            return this.viewports[sheetId].bottomRight;
-        }
-        getSheetScrollInfo(sheetId) {
-            const viewport = this.getMainInternalViewport(sheetId);
-            return {
-                offsetX: viewport.offsetX,
-                offsetY: viewport.offsetY,
-                offsetScrollbarX: viewport.offsetScrollbarX,
-                offsetScrollbarY: viewport.offsetScrollbarY,
-            };
-        }
-        /** gets rid of deprecated sheetIds */
-        cleanViewports() {
-            const sheetIds = this.getters.getSheetIds();
-            for (let sheetId of Object.keys(this.viewports)) {
-                if (!sheetIds.includes(sheetId)) {
-                    delete this.viewports[sheetId];
-                }
-            }
-        }
-        resetSheetViews() {
-            for (let sheetId of Object.keys(this.viewports)) {
-                const position = this.getters.getSheetPosition(sheetId);
-                this.resetViewports(sheetId);
-                const viewports = this.getSubViewports(sheetId);
-                Object.values(viewports).forEach((viewport) => {
-                    viewport.adjustPosition(position);
-                });
-            }
-        }
-        resizeSheetView(height, width, gridOffsetX = 0, gridOffsetY = 0) {
-            this.sheetViewHeight = height;
-            this.sheetViewWidth = width;
-            this.gridOffsetX = gridOffsetX;
-            this.gridOffsetY = gridOffsetY;
-            this.recomputeViewports();
-        }
-        recomputeViewports() {
-            for (let sheetId of Object.keys(this.viewports)) {
-                this.resetViewports(sheetId);
-            }
-        }
-        setSheetViewOffset(offsetX, offsetY) {
-            const sheetId = this.getters.getActiveSheetId();
-            const { maxOffsetX, maxOffsetY } = this.getMaximumSheetOffset();
-            Object.values(this.getSubViewports(sheetId)).forEach((viewport) => viewport.setViewportOffset(clip(offsetX, 0, maxOffsetX), clip(offsetY, 0, maxOffsetY)));
-        }
-        /**
-         * Clip the vertical offset within the allowed range.
-         * Not above the sheet, nor below the sheet.
-         */
-        clipOffsetY(offsetY) {
-            const { height } = this.getMainViewportRect();
-            const maxOffset = height - this.sheetViewHeight;
-            offsetY = Math.min(offsetY, maxOffset);
-            offsetY = Math.max(offsetY, 0);
-            return offsetY;
-        }
-        getViewportOffset(sheetId) {
-            var _a, _b;
-            return {
-                x: ((_a = this.viewports[sheetId]) === null || _a === void 0 ? void 0 : _a.bottomRight.offsetScrollbarX) || 0,
-                y: ((_b = this.viewports[sheetId]) === null || _b === void 0 ? void 0 : _b.bottomRight.offsetScrollbarY) || 0,
-            };
-        }
-        resetViewports(sheetId) {
-            const { xSplit, ySplit } = this.getters.getPaneDivisions(sheetId);
-            const nCols = this.getters.getNumberCols(sheetId);
-            const nRows = this.getters.getNumberRows(sheetId);
-            const colOffset = this.getters.getColRowOffset("COL", 0, xSplit, sheetId);
-            const rowOffset = this.getters.getColRowOffset("ROW", 0, ySplit, sheetId);
-            const { xRatio, yRatio } = this.getFrozenSheetViewRatio(sheetId);
-            const canScrollHorizontally = xRatio < 1.0;
-            const canScrollVertically = yRatio < 1.0;
-            const previousOffset = this.getViewportOffset(sheetId);
-            const sheetViewports = {
-                topLeft: (ySplit &&
-                    xSplit &&
-                    new InternalViewport(this.getters, sheetId, { left: 0, right: xSplit - 1, top: 0, bottom: ySplit - 1 }, { width: colOffset, height: rowOffset }, { canScrollHorizontally: false, canScrollVertically: false }, { x: 0, y: 0 })) ||
-                    undefined,
-                topRight: (ySplit &&
-                    new InternalViewport(this.getters, sheetId, { left: xSplit, right: nCols - 1, top: 0, bottom: ySplit - 1 }, { width: this.sheetViewWidth - colOffset, height: rowOffset }, { canScrollHorizontally, canScrollVertically: false }, { x: canScrollHorizontally ? previousOffset.x : 0, y: 0 })) ||
-                    undefined,
-                bottomLeft: (xSplit &&
-                    new InternalViewport(this.getters, sheetId, { left: 0, right: xSplit - 1, top: ySplit, bottom: nRows - 1 }, { width: colOffset, height: this.sheetViewHeight - rowOffset }, { canScrollHorizontally: false, canScrollVertically }, { x: 0, y: canScrollVertically ? previousOffset.y : 0 })) ||
-                    undefined,
-                bottomRight: new InternalViewport(this.getters, sheetId, { left: xSplit, right: nCols - 1, top: ySplit, bottom: nRows - 1 }, {
-                    width: this.sheetViewWidth - colOffset,
-                    height: this.sheetViewHeight - rowOffset,
-                }, { canScrollHorizontally, canScrollVertically }, {
-                    x: canScrollHorizontally ? previousOffset.x : 0,
-                    y: canScrollVertically ? previousOffset.y : 0,
-                }),
-            };
-            this.viewports[sheetId] = sheetViewports;
-        }
-        /**
-         * Adjust the viewport such that the anchor position is visible
-         */
-        refreshViewport(sheetId, anchorPosition) {
-            Object.values(this.getSubViewports(sheetId)).forEach((viewport) => {
-                viewport.adjustViewportZone();
-                viewport.adjustPosition(anchorPosition);
-            });
-        }
-        /**
-         * Shift the viewport vertically and move the selection anchor
-         * such that it remains at the same place relative to the
-         * viewport top.
-         */
-        shiftVertically(offset) {
-            const { top } = this.getActiveMainViewport();
-            const { offsetX } = this.getActiveSheetScrollInfo();
-            this.setSheetViewOffset(offsetX, offset);
-            const { anchor } = this.getters.getSelection();
-            const deltaRow = this.getActiveMainViewport().top - top;
-            this.selection.selectCell(anchor.cell.col, anchor.cell.row + deltaRow);
-        }
-        getVisibleFigures() {
-            const sheetId = this.getters.getActiveSheetId();
-            const result = [];
-            const figures = this.getters.getFigures(sheetId);
-            const { offsetX, offsetY } = this.getSheetScrollInfo(sheetId);
-            const { x: offsetCorrectionX, y: offsetCorrectionY } = this.getters.getMainViewportCoordinates();
-            const { width, height } = this.getters.getSheetViewDimensionWithHeaders();
-            for (const figure of figures) {
-                if (figure.x >= offsetCorrectionX &&
-                    (figure.x + figure.width <= offsetCorrectionX + offsetX ||
-                        figure.x >= width + offsetX + offsetCorrectionX)) {
-                    continue;
-                }
-                if (figure.y >= offsetCorrectionY &&
-                    (figure.y + figure.height <= offsetCorrectionY + offsetY ||
-                        figure.y >= height + offsetY + offsetCorrectionY)) {
-                    continue;
-                }
-                result.push(figure);
-            }
-            return result;
-        }
-        getFrozenSheetViewRatio(sheetId) {
-            const { xSplit, ySplit } = this.getters.getPaneDivisions(sheetId);
-            const offsetCorrectionX = this.getters.getColDimensions(sheetId, xSplit).start;
-            const offsetCorrectionY = this.getters.getRowDimensions(sheetId, ySplit).start;
-            const width = this.sheetViewWidth + this.gridOffsetX;
-            const height = this.sheetViewHeight + this.gridOffsetY;
-            return { xRatio: offsetCorrectionX / width, yRatio: offsetCorrectionY / height };
-        }
-    }
-    SheetViewPlugin.getters = [
-        "getColIndex",
-        "getRowIndex",
-        "getActiveMainViewport",
-        "getSheetViewDimension",
-        "getSheetViewDimensionWithHeaders",
-        "getMainViewportRect",
-        "isVisibleInViewport",
-        "getEdgeScrollCol",
-        "getEdgeScrollRow",
-        "getVisibleFigures",
-        "getVisibleRect",
-        "getColRowOffsetInViewport",
-        "getMainViewportCoordinates",
-        "getActiveSheetScrollInfo",
-        "getSheetViewVisibleCols",
-        "getSheetViewVisibleRows",
-        "getFrozenSheetViewRatio",
-    ];
-
     class SortPlugin extends UIPlugin {
         allowDispatch(cmd) {
             switch (cmd.type) {
@@ -36848,6 +35864,1435 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         "getColRowOffset",
     ];
 
+    /** Abstract state of the clipboard when copying/cutting content that is pasted in cells of the sheet */
+    class ClipboardCellsAbstractState {
+        constructor(operation, getters, dispatch, selection) {
+            this.getters = getters;
+            this.dispatch = dispatch;
+            this.selection = selection;
+            this.operation = operation;
+            this.sheetId = getters.getActiveSheetId();
+        }
+        isCutAllowed(target) {
+            return 0 /* CommandResult.Success */;
+        }
+        isPasteAllowed(target, clipboardOption) {
+            return 0 /* CommandResult.Success */;
+        }
+        /**
+         * Add columns and/or rows to ensure that col + width and row + height are still
+         * in the sheet
+         */
+        addMissingDimensions(width, height, col, row) {
+            const sheetId = this.getters.getActiveSheetId();
+            const missingRows = height + row - this.getters.getNumberRows(sheetId);
+            if (missingRows > 0) {
+                this.dispatch("ADD_COLUMNS_ROWS", {
+                    dimension: "ROW",
+                    base: this.getters.getNumberRows(sheetId) - 1,
+                    sheetId,
+                    quantity: missingRows,
+                    position: "after",
+                });
+            }
+            const missingCols = width + col - this.getters.getNumberCols(sheetId);
+            if (missingCols > 0) {
+                this.dispatch("ADD_COLUMNS_ROWS", {
+                    dimension: "COL",
+                    base: this.getters.getNumberCols(sheetId) - 1,
+                    sheetId,
+                    quantity: missingCols,
+                    position: "after",
+                });
+            }
+        }
+        isColRowDirtyingClipboard(position, dimension) {
+            return false;
+        }
+        drawClipboard(renderingContext) { }
+    }
+
+    /** State of the clipboard when copying/cutting cells */
+    class ClipboardCellsState extends ClipboardCellsAbstractState {
+        constructor(zones, operation, getters, dispatch, selection) {
+            super(operation, getters, dispatch, selection);
+            if (!zones.length) {
+                this.cells = [[]];
+                this.zones = [];
+                this.copiedTables = [];
+                return;
+            }
+            const lefts = new Set(zones.map((z) => z.left));
+            const rights = new Set(zones.map((z) => z.right));
+            const tops = new Set(zones.map((z) => z.top));
+            const bottoms = new Set(zones.map((z) => z.bottom));
+            const areZonesCompatible = (tops.size === 1 && bottoms.size === 1) || (lefts.size === 1 && rights.size === 1);
+            // In order to don't paste several times the same cells in intersected zones
+            // --> we merge zones that have common cells
+            const clippedZones = areZonesCompatible
+                ? mergeOverlappingZones(zones)
+                : [zones[zones.length - 1]];
+            const cellsPosition = clippedZones.map((zone) => positions(zone)).flat();
+            const columnsIndex = [...new Set(cellsPosition.map((p) => p.col))].sort((a, b) => a - b);
+            const rowsIndex = [...new Set(cellsPosition.map((p) => p.row))].sort((a, b) => a - b);
+            const cellsInClipboard = [];
+            const sheetId = getters.getActiveSheetId();
+            for (let row of rowsIndex) {
+                let cellsInRow = [];
+                for (let col of columnsIndex) {
+                    cellsInRow.push({
+                        cell: getters.getCell(sheetId, col, row),
+                        evaluatedCell: getters.getEvaluatedCell({ sheetId, col, row }),
+                        border: getters.getCellBorder(sheetId, col, row) || undefined,
+                        position: { col, row, sheetId },
+                    });
+                }
+                cellsInClipboard.push(cellsInRow);
+            }
+            const tables = [];
+            for (const zone of zones) {
+                for (const table of this.getters.getFilterTablesInZone(sheetId, zone)) {
+                    const values = [];
+                    for (const col of range(table.zone.left, table.zone.right + 1)) {
+                        values.push(this.getters.getFilterValues(sheetId, col, table.zone.top));
+                    }
+                    tables.push({ filtersValues: values, zone: table.zone });
+                }
+            }
+            this.cells = cellsInClipboard;
+            this.zones = clippedZones;
+            this.copiedTables = tables;
+        }
+        isCutAllowed(target) {
+            if (target.length !== 1) {
+                return 18 /* CommandResult.WrongCutSelection */;
+            }
+            return 0 /* CommandResult.Success */;
+        }
+        isPasteAllowed(target, clipboardOption) {
+            const sheetId = this.getters.getActiveSheetId();
+            if (this.operation === "CUT" && (clipboardOption === null || clipboardOption === void 0 ? void 0 : clipboardOption.pasteOption) !== undefined) {
+                // cannot paste only format or only value if the previous operation is a CUT
+                return 20 /* CommandResult.WrongPasteOption */;
+            }
+            if (target.length > 1) {
+                // cannot paste if we have a clipped zone larger than a cell and multiple
+                // zones selected
+                if (this.cells.length > 1 || this.cells[0].length > 1) {
+                    return 19 /* CommandResult.WrongPasteSelection */;
+                }
+            }
+            const clipboardHeight = this.cells.length;
+            const clipboardWidth = this.cells[0].length;
+            for (let zone of this.getPasteZones(target)) {
+                if (this.getters.doesIntersectMerge(sheetId, zone)) {
+                    if (target.length > 1 ||
+                        !this.getters.isSingleCellOrMerge(sheetId, target[0]) ||
+                        clipboardHeight * clipboardWidth !== 1) {
+                        return 2 /* CommandResult.WillRemoveExistingMerge */;
+                    }
+                }
+            }
+            const { xSplit, ySplit } = this.getters.getPaneDivisions(sheetId);
+            for (const zone of this.getPasteZones(target)) {
+                if ((zone.left < xSplit && zone.right >= xSplit) ||
+                    (zone.top < ySplit && zone.bottom >= ySplit)) {
+                    return 73 /* CommandResult.FrozenPaneOverlap */;
+                }
+            }
+            return 0 /* CommandResult.Success */;
+        }
+        /**
+         * Paste the clipboard content in the given target
+         */
+        paste(target, options) {
+            if (this.operation === "COPY") {
+                this.pasteFromCopy(target, options);
+            }
+            else {
+                this.pasteFromCut(target, options);
+            }
+            const height = this.cells.length;
+            const width = this.cells[0].length;
+            const isCutOperation = this.operation === "CUT";
+            if (options === null || options === void 0 ? void 0 : options.selectTarget) {
+                this.selectPastedZone(width, height, isCutOperation, target);
+            }
+        }
+        pasteFromCopy(target, options) {
+            if (target.length === 1) {
+                // in this specific case, due to the isPasteAllowed function:
+                // state.cells can contains several cells.
+                // So if the target zone is larger than the copied zone,
+                // we duplicate each cells as many times as possible to fill the zone.
+                const height = this.cells.length;
+                const width = this.cells[0].length;
+                const pasteZones = this.pastedZones(target, width, height);
+                for (const zone of pasteZones) {
+                    this.pasteZone(zone.left, zone.top, options);
+                }
+            }
+            else {
+                // in this case, due to the isPasteAllowed function: state.cells contains
+                // only one cell
+                for (const zone of target) {
+                    for (let col = zone.left; col <= zone.right; col++) {
+                        for (let row = zone.top; row <= zone.bottom; row++) {
+                            this.pasteZone(col, row, options);
+                        }
+                    }
+                }
+            }
+            if ((options === null || options === void 0 ? void 0 : options.pasteOption) === undefined) {
+                this.pasteCopiedTables(target);
+            }
+        }
+        pasteFromCut(target, options) {
+            this.clearClippedZones();
+            const selection = target[0];
+            this.pasteZone(selection.left, selection.top, options);
+            this.dispatch("MOVE_RANGES", {
+                target: this.zones,
+                sheetId: this.sheetId,
+                targetSheetId: this.getters.getActiveSheetId(),
+                col: selection.left,
+                row: selection.top,
+            });
+            for (const filterTable of this.copiedTables) {
+                this.dispatch("REMOVE_FILTER_TABLE", {
+                    sheetId: this.getters.getActiveSheetId(),
+                    target: [filterTable.zone],
+                });
+            }
+            this.pasteCopiedTables(target);
+        }
+        /**
+         * The clipped zone is copied as many times as it fits in the target.
+         * This returns the list of zones where the clipped zone is copy-pasted.
+         */
+        pastedZones(target, originWidth, originHeight) {
+            const selection = target[0];
+            const repeatHorizontally = Math.max(1, Math.floor((selection.right + 1 - selection.left) / originWidth));
+            const repeatVertically = Math.max(1, Math.floor((selection.bottom + 1 - selection.top) / originHeight));
+            const zones = [];
+            for (let x = 0; x < repeatHorizontally; x++) {
+                for (let y = 0; y < repeatVertically; y++) {
+                    const top = selection.top + y * originHeight;
+                    const left = selection.left + x * originWidth;
+                    zones.push({
+                        left,
+                        top,
+                        bottom: top + originHeight - 1,
+                        right: left + originWidth - 1,
+                    });
+                }
+            }
+            return zones;
+        }
+        /**
+         * Compute the complete zones where to paste the current clipboard
+         */
+        getPasteZones(target) {
+            const cells = this.cells;
+            if (!cells.length || !cells[0].length) {
+                return target;
+            }
+            const pasteZones = [];
+            const height = cells.length;
+            const width = cells[0].length;
+            const selection = target[target.length - 1];
+            const col = selection.left;
+            const row = selection.top;
+            const repetitionCol = Math.max(1, Math.floor((selection.right + 1 - col) / width));
+            const repetitionRow = Math.max(1, Math.floor((selection.bottom + 1 - row) / height));
+            for (let x = 1; x <= repetitionCol; x++) {
+                for (let y = 1; y <= repetitionRow; y++) {
+                    pasteZones.push({
+                        left: col,
+                        top: row,
+                        right: col - 1 + x * width,
+                        bottom: row - 1 + y * height,
+                    });
+                }
+            }
+            return pasteZones;
+        }
+        /**
+         * Update the selection with the newly pasted zone
+         */
+        selectPastedZone(width, height, isCutOperation, target) {
+            const selection = target[0];
+            const col = selection.left;
+            const row = selection.top;
+            if (height > 1 || width > 1 || isCutOperation) {
+                const zones = this.pastedZones(target, width, height);
+                const newZone = isCutOperation ? zones[0] : union(...zones);
+                this.selection.selectZone({ cell: { col, row }, zone: newZone });
+            }
+        }
+        /**
+         * Clear the clipped zones: remove the cells and clear the formatting
+         */
+        clearClippedZones() {
+            for (const row of this.cells) {
+                for (const cell of row) {
+                    if (cell.cell) {
+                        this.dispatch("CLEAR_CELL", cell.position);
+                    }
+                }
+            }
+            this.dispatch("CLEAR_FORMATTING", {
+                sheetId: this.sheetId,
+                target: this.zones,
+            });
+        }
+        pasteZone(col, row, clipboardOptions) {
+            const height = this.cells.length;
+            const width = this.cells[0].length;
+            // This condition is used to determine if we have to paste the CF or not.
+            // We have to do it when the command handled is "PASTE", not "INSERT_CELL"
+            // or "DELETE_CELL". So, the state should be the local state
+            const shouldPasteCF = (clipboardOptions === null || clipboardOptions === void 0 ? void 0 : clipboardOptions.pasteOption) !== "onlyValue" && (clipboardOptions === null || clipboardOptions === void 0 ? void 0 : clipboardOptions.shouldPasteCF);
+            const sheetId = this.getters.getActiveSheetId();
+            // first, add missing cols/rows if needed
+            this.addMissingDimensions(width, height, col, row);
+            // then, perform the actual paste operation
+            for (let r = 0; r < height; r++) {
+                const rowCells = this.cells[r];
+                for (let c = 0; c < width; c++) {
+                    const origin = rowCells[c];
+                    const position = { col: col + c, row: row + r, sheetId: sheetId };
+                    // TODO: refactor this part. the "Paste merge" action is also executed with
+                    // MOVE_RANGES in pasteFromCut. Adding a condition on the operation type here
+                    // is not appropriate
+                    if (this.operation !== "CUT") {
+                        this.pasteMergeIfExist(origin.position, position);
+                    }
+                    this.pasteCell(origin, position, this.operation, clipboardOptions);
+                    if (shouldPasteCF) {
+                        this.dispatch("PASTE_CONDITIONAL_FORMAT", {
+                            origin: origin.position,
+                            target: position,
+                            operation: this.operation,
+                        });
+                    }
+                }
+            }
+        }
+        /**
+         * Paste the cell at the given position to the target position
+         */
+        pasteCell(origin, target, operation, clipboardOption) {
+            const { sheetId, col, row } = target;
+            const targetCell = this.getters.getEvaluatedCell(target);
+            if ((clipboardOption === null || clipboardOption === void 0 ? void 0 : clipboardOption.pasteOption) !== "onlyValue") {
+                const targetBorders = this.getters.getCellBorder(sheetId, col, row);
+                const originBorders = origin.border;
+                const border = {
+                    top: (targetBorders === null || targetBorders === void 0 ? void 0 : targetBorders.top) || (originBorders === null || originBorders === void 0 ? void 0 : originBorders.top),
+                    bottom: (targetBorders === null || targetBorders === void 0 ? void 0 : targetBorders.bottom) || (originBorders === null || originBorders === void 0 ? void 0 : originBorders.bottom),
+                    left: (targetBorders === null || targetBorders === void 0 ? void 0 : targetBorders.left) || (originBorders === null || originBorders === void 0 ? void 0 : originBorders.left),
+                    right: (targetBorders === null || targetBorders === void 0 ? void 0 : targetBorders.right) || (originBorders === null || originBorders === void 0 ? void 0 : originBorders.right),
+                };
+                this.dispatch("SET_BORDER", { sheetId, col, row, border });
+            }
+            if (origin.cell) {
+                if ((clipboardOption === null || clipboardOption === void 0 ? void 0 : clipboardOption.pasteOption) === "onlyFormat") {
+                    this.dispatch("UPDATE_CELL", {
+                        ...target,
+                        style: origin.cell.style,
+                        format: origin.evaluatedCell.format,
+                    });
+                    return;
+                }
+                if ((clipboardOption === null || clipboardOption === void 0 ? void 0 : clipboardOption.pasteOption) === "onlyValue") {
+                    const content = formatValue(origin.evaluatedCell.value);
+                    this.dispatch("UPDATE_CELL", { ...target, content });
+                    return;
+                }
+                let content = origin.cell.content;
+                if (origin.cell.isFormula && operation === "COPY") {
+                    const offsetX = col - origin.position.col;
+                    const offsetY = row - origin.position.row;
+                    content = this.getUpdatedContent(sheetId, origin.cell, offsetX, offsetY, operation);
+                }
+                this.dispatch("UPDATE_CELL", {
+                    ...target,
+                    content,
+                    style: origin.cell.style || null,
+                    format: origin.cell.format,
+                });
+            }
+            else if (targetCell) {
+                if ((clipboardOption === null || clipboardOption === void 0 ? void 0 : clipboardOption.pasteOption) === "onlyValue") {
+                    this.dispatch("UPDATE_CELL", { ...target, content: "" });
+                }
+                else if ((clipboardOption === null || clipboardOption === void 0 ? void 0 : clipboardOption.pasteOption) === "onlyFormat") {
+                    this.dispatch("UPDATE_CELL", { ...target, style: null, format: "" });
+                }
+                else {
+                    this.dispatch("CLEAR_CELL", target);
+                }
+            }
+        }
+        /**
+         * Get the newly updated formula, after applying offsets
+         */
+        getUpdatedContent(sheetId, cell, offsetX, offsetY, operation) {
+            const ranges = this.getters.createAdaptedRanges(cell.dependencies, offsetX, offsetY, sheetId);
+            return this.getters.buildFormulaContent(sheetId, cell, ranges);
+        }
+        /**
+         * If the origin position given is the top left of a merge, merge the target
+         * position.
+         */
+        pasteMergeIfExist(origin, target) {
+            let { sheetId, col, row } = origin;
+            const { col: mainCellColOrigin, row: mainCellRowOrigin } = this.getters.getMainCellPosition(sheetId, col, row);
+            if (mainCellColOrigin === col && mainCellRowOrigin === row) {
+                const merge = this.getters.getMerge(sheetId, col, row);
+                if (!merge) {
+                    return;
+                }
+                ({ sheetId, col, row } = target);
+                this.dispatch("ADD_MERGE", {
+                    sheetId,
+                    force: true,
+                    target: [
+                        {
+                            left: col,
+                            top: row,
+                            right: col + merge.right - merge.left,
+                            bottom: row + merge.bottom - merge.top,
+                        },
+                    ],
+                });
+            }
+        }
+        /** Paste the filter tables that are in the state */
+        pasteCopiedTables(target) {
+            const sheetId = this.getters.getActiveSheetId();
+            const selection = target[0];
+            const cutZone = this.zones[0];
+            const cutOffset = [
+                selection.left - cutZone.left,
+                selection.top - cutZone.top,
+            ];
+            for (const table of this.copiedTables) {
+                const newTableZone = createAdaptedZone(table.zone, "both", "MOVE", cutOffset);
+                this.dispatch("CREATE_FILTER_TABLE", { sheetId, target: [newTableZone] });
+                for (const i of range(0, table.filtersValues.length)) {
+                    this.dispatch("UPDATE_FILTER", {
+                        sheetId,
+                        col: newTableZone.left + i,
+                        row: newTableZone.top,
+                        values: table.filtersValues[i],
+                    });
+                }
+            }
+        }
+        getClipboardContent() {
+            return (this.cells
+                .map((cells) => {
+                return cells
+                    .map((c) => c.cell ? this.getters.getCellText(c.position, this.getters.shouldShowFormulas()) : "")
+                    .join("\t");
+            })
+                .join("\n") || "\t");
+        }
+        isColRowDirtyingClipboard(position, dimension) {
+            if (!this.zones)
+                return false;
+            for (let zone of this.zones) {
+                if (dimension === "COL" && position <= zone.right) {
+                    return true;
+                }
+                if (dimension === "ROW" && position <= zone.bottom) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        drawClipboard(renderingContext) {
+            const { ctx, thinLineWidth } = renderingContext;
+            if (this.sheetId !== this.getters.getActiveSheetId() || !this.zones || !this.zones.length) {
+                return;
+            }
+            ctx.setLineDash([8, 5]);
+            ctx.strokeStyle = SELECTION_BORDER_COLOR;
+            ctx.lineWidth = 3.3 * thinLineWidth;
+            for (const zone of this.zones) {
+                const { x, y, width, height } = this.getters.getVisibleRect(zone);
+                if (width > 0 && height > 0) {
+                    ctx.strokeRect(x, y, width, height);
+                }
+            }
+        }
+    }
+
+    /** State of the clipboard when copying/cutting figures */
+    class ClipboardFigureState {
+        constructor(operation, getters, dispatch) {
+            this.getters = getters;
+            this.dispatch = dispatch;
+            this.sheetId = getters.getActiveSheetId();
+            const copiedFigureId = getters.getSelectedFigureId();
+            if (!copiedFigureId) {
+                throw new Error(`No figure selected`);
+            }
+            const figure = getters.getFigure(this.sheetId, copiedFigureId);
+            if (!figure) {
+                throw new Error(`No figure for the given id: ${copiedFigureId}`);
+            }
+            this.copiedFigure = { ...figure };
+            const chart = getters.getChart(copiedFigureId);
+            if (!chart) {
+                throw new Error(`No chart for the given id: ${copiedFigureId}`);
+            }
+            this.copiedChart = chart.copyInSheetId(this.sheetId);
+            this.operation = operation;
+        }
+        isCutAllowed(target) {
+            return 0 /* CommandResult.Success */;
+        }
+        isPasteAllowed(target, option) {
+            if (target.length === 0) {
+                return 71 /* CommandResult.EmptyTarget */;
+            }
+            if ((option === null || option === void 0 ? void 0 : option.pasteOption) !== undefined) {
+                return 21 /* CommandResult.WrongFigurePasteOption */;
+            }
+            return 0 /* CommandResult.Success */;
+        }
+        /**
+         * Paste the clipboard content in the given target
+         */
+        paste(target) {
+            const sheetId = this.getters.getActiveSheetId();
+            const position = {
+                x: this.getters.getColDimensions(sheetId, target[0].left).start,
+                y: this.getters.getRowDimensions(sheetId, target[0].top).start,
+            };
+            const newChart = this.copiedChart.copyInSheetId(sheetId);
+            const newId = new UuidGenerator().uuidv4();
+            this.dispatch("CREATE_CHART", {
+                id: newId,
+                sheetId,
+                position,
+                size: { height: this.copiedFigure.height, width: this.copiedFigure.width },
+                definition: newChart.getDefinition(),
+            });
+            if (this.operation === "CUT") {
+                this.dispatch("DELETE_FIGURE", {
+                    sheetId: this.copiedChart.sheetId,
+                    id: this.copiedFigure.id,
+                });
+            }
+            this.dispatch("SELECT_FIGURE", { id: newId });
+        }
+        getClipboardContent() {
+            return "\t";
+        }
+        isColRowDirtyingClipboard(position, dimension) {
+            return false;
+        }
+        drawClipboard(renderingContext) { }
+    }
+
+    /** State of the clipboard when copying/cutting from the OS clipboard*/
+    class ClipboardOsState extends ClipboardCellsAbstractState {
+        constructor(content, getters, dispatch, selection) {
+            super("COPY", getters, dispatch, selection);
+            this.values = content
+                .replace(/\r/g, "")
+                .split("\n")
+                .map((vals) => vals.split("\t"));
+        }
+        isPasteAllowed(target, clipboardOption) {
+            const sheetId = this.getters.getActiveSheetId();
+            const pasteZone = this.getPasteZone(target);
+            if (this.getters.doesIntersectMerge(sheetId, pasteZone)) {
+                return 2 /* CommandResult.WillRemoveExistingMerge */;
+            }
+            return 0 /* CommandResult.Success */;
+        }
+        paste(target) {
+            const values = this.values;
+            const pasteZone = this.getPasteZone(target);
+            const { left: activeCol, top: activeRow } = pasteZone;
+            const { width, height } = zoneToDimension(pasteZone);
+            const sheetId = this.getters.getActiveSheetId();
+            this.addMissingDimensions(width, height, activeCol, activeRow);
+            for (let i = 0; i < values.length; i++) {
+                for (let j = 0; j < values[i].length; j++) {
+                    this.dispatch("UPDATE_CELL", {
+                        row: activeRow + i,
+                        col: activeCol + j,
+                        content: values[i][j],
+                        sheetId,
+                    });
+                }
+            }
+            const zone = {
+                left: activeCol,
+                top: activeRow,
+                right: activeCol + width - 1,
+                bottom: activeRow + height - 1,
+            };
+            this.selection.selectZone({ cell: { col: activeCol, row: activeRow }, zone });
+        }
+        getClipboardContent() {
+            return this.values.map((values) => values.join("\t")).join("\n");
+        }
+        getPasteZone(target) {
+            const height = this.values.length;
+            const width = Math.max(...this.values.map((a) => a.length));
+            const { left: activeCol, top: activeRow } = target[0];
+            return {
+                top: activeRow,
+                left: activeCol,
+                bottom: activeRow + height - 1,
+                right: activeCol + width - 1,
+            };
+        }
+    }
+
+    /**
+     * Clipboard Plugin
+     *
+     * This clipboard manages all cut/copy/paste interactions internal to the
+     * application, and with the OS clipboard as well.
+     */
+    class ClipboardPlugin extends UIPlugin {
+        constructor() {
+            super(...arguments);
+            this.status = "invisible";
+            this._isPaintingFormat = false;
+        }
+        // ---------------------------------------------------------------------------
+        // Command Handling
+        // ---------------------------------------------------------------------------
+        allowDispatch(cmd) {
+            switch (cmd.type) {
+                case "CUT":
+                    const zones = cmd.target || this.getters.getSelectedZones();
+                    const state = this.getClipboardState(zones, cmd.type);
+                    return state.isCutAllowed(zones);
+                case "PASTE":
+                    if (!this.state) {
+                        return 22 /* CommandResult.EmptyClipboard */;
+                    }
+                    const pasteOption = cmd.pasteOption || (this._isPaintingFormat ? "onlyFormat" : undefined);
+                    return this.state.isPasteAllowed(cmd.target, { pasteOption });
+                case "PASTE_FROM_OS_CLIPBOARD": {
+                    const state = new ClipboardOsState(cmd.text, this.getters, this.dispatch, this.selection);
+                    return state.isPasteAllowed(cmd.target);
+                }
+                case "INSERT_CELL": {
+                    const { cut, paste } = this.getInsertCellsTargets(cmd.zone, cmd.shiftDimension);
+                    const state = this.getClipboardStateForCopyCells(cut, "CUT");
+                    return state.isPasteAllowed(paste);
+                }
+                case "DELETE_CELL": {
+                    const { cut, paste } = this.getDeleteCellsTargets(cmd.zone, cmd.shiftDimension);
+                    const state = this.getClipboardStateForCopyCells(cut, "CUT");
+                    return state.isPasteAllowed(paste);
+                }
+            }
+            return 0 /* CommandResult.Success */;
+        }
+        handle(cmd) {
+            var _a, _b;
+            switch (cmd.type) {
+                case "COPY":
+                case "CUT":
+                    const zones = ("target" in cmd && cmd.target) || this.getters.getSelectedZones();
+                    this.state = this.getClipboardState(zones, cmd.type);
+                    this.status = "visible";
+                    break;
+                case "PASTE":
+                    if (!this.state) {
+                        break;
+                    }
+                    const pasteOption = cmd.pasteOption || (this._isPaintingFormat ? "onlyFormat" : undefined);
+                    this._isPaintingFormat = false;
+                    this.state.paste(cmd.target, { pasteOption, shouldPasteCF: true, selectTarget: true });
+                    if (this.state.operation === "CUT") {
+                        this.state = undefined;
+                    }
+                    this.status = "invisible";
+                    break;
+                case "DELETE_CELL": {
+                    const { cut, paste } = this.getDeleteCellsTargets(cmd.zone, cmd.shiftDimension);
+                    const state = this.getClipboardStateForCopyCells(cut, "CUT");
+                    state.paste(paste);
+                    break;
+                }
+                case "INSERT_CELL": {
+                    const { cut, paste } = this.getInsertCellsTargets(cmd.zone, cmd.shiftDimension);
+                    const state = this.getClipboardStateForCopyCells(cut, "CUT");
+                    state.paste(paste);
+                    break;
+                }
+                case "ADD_COLUMNS_ROWS": {
+                    this.status = "invisible";
+                    // If we add a col/row inside or before the cut area, we invalidate the clipboard
+                    if (((_a = this.state) === null || _a === void 0 ? void 0 : _a.operation) !== "CUT") {
+                        return;
+                    }
+                    const isClipboardDirty = this.state.isColRowDirtyingClipboard(cmd.position === "before" ? cmd.base : cmd.base + 1, cmd.dimension);
+                    if (isClipboardDirty) {
+                        this.state = undefined;
+                    }
+                    break;
+                }
+                case "REMOVE_COLUMNS_ROWS": {
+                    this.status = "invisible";
+                    // If we remove a col/row inside or before the cut area, we invalidate the clipboard
+                    if (((_b = this.state) === null || _b === void 0 ? void 0 : _b.operation) !== "CUT") {
+                        return;
+                    }
+                    for (let el of cmd.elements) {
+                        const isClipboardDirty = this.state.isColRowDirtyingClipboard(el, cmd.dimension);
+                        if (isClipboardDirty) {
+                            this.state = undefined;
+                            break;
+                        }
+                    }
+                    this.status = "invisible";
+                    break;
+                }
+                case "PASTE_FROM_OS_CLIPBOARD":
+                    const state = new ClipboardOsState(cmd.text, this.getters, this.dispatch, this.selection);
+                    state.paste(cmd.target);
+                    this.status = "invisible";
+                    break;
+                case "ACTIVATE_PAINT_FORMAT": {
+                    const zones = this.getters.getSelectedZones();
+                    this.state = this.getClipboardStateForCopyCells(zones, "COPY");
+                    this._isPaintingFormat = true;
+                    this.status = "visible";
+                    break;
+                }
+                default:
+                    if (isCoreCommand(cmd)) {
+                        this.status = "invisible";
+                    }
+            }
+        }
+        // ---------------------------------------------------------------------------
+        // Getters
+        // ---------------------------------------------------------------------------
+        /**
+         * Format the current clipboard to a string suitable for being pasted in other
+         * programs.
+         *
+         * - add a tab character between each consecutive cells
+         * - add a newline character between each line
+         *
+         * Note that it returns \t if the clipboard is empty. This is necessary for the
+         * clipboard copy event to add it as data, otherwise an empty string is not
+         * considered as a copy content.
+         */
+        getClipboardContent() {
+            var _a;
+            return ((_a = this.state) === null || _a === void 0 ? void 0 : _a.getClipboardContent()) || "\t";
+        }
+        isCutOperation() {
+            return this.state ? this.state.operation === "CUT" : false;
+        }
+        isPaintingFormat() {
+            return this._isPaintingFormat;
+        }
+        // ---------------------------------------------------------------------------
+        // Private methods
+        // ---------------------------------------------------------------------------
+        getDeleteCellsTargets(zone, dimension) {
+            const sheetId = this.getters.getActiveSheetId();
+            let cut;
+            if (dimension === "COL") {
+                cut = {
+                    ...zone,
+                    left: zone.right + 1,
+                    right: this.getters.getNumberCols(sheetId) - 1,
+                };
+            }
+            else {
+                cut = {
+                    ...zone,
+                    top: zone.bottom + 1,
+                    bottom: this.getters.getNumberRows(sheetId) - 1,
+                };
+            }
+            return { cut: [cut], paste: [zone] };
+        }
+        getInsertCellsTargets(zone, dimension) {
+            const sheetId = this.getters.getActiveSheetId();
+            let cut;
+            let paste;
+            if (dimension === "COL") {
+                cut = {
+                    ...zone,
+                    right: this.getters.getNumberCols(sheetId) - 1,
+                };
+                paste = {
+                    ...zone,
+                    left: zone.right + 1,
+                    right: zone.right + 1,
+                };
+            }
+            else {
+                cut = {
+                    ...zone,
+                    bottom: this.getters.getNumberRows(sheetId) - 1,
+                };
+                paste = { ...zone, top: zone.bottom + 1, bottom: this.getters.getNumberRows(sheetId) - 1 };
+            }
+            return { cut: [cut], paste: [paste] };
+        }
+        getClipboardStateForCopyCells(zones, operation) {
+            return new ClipboardCellsState(zones, operation, this.getters, this.dispatch, this.selection);
+        }
+        /**
+         * Get the clipboard state from the given zones.
+         */
+        getClipboardState(zones, operation) {
+            const selectedFigureId = this.getters.getSelectedFigureId();
+            if (selectedFigureId) {
+                return new ClipboardFigureState(operation, this.getters, this.dispatch);
+            }
+            return new ClipboardCellsState(zones, operation, this.getters, this.dispatch, this.selection);
+        }
+        // ---------------------------------------------------------------------------
+        // Grid rendering
+        // ---------------------------------------------------------------------------
+        drawGrid(renderingContext) {
+            if (this.status !== "visible" || !this.state) {
+                return;
+            }
+            this.state.drawClipboard(renderingContext);
+        }
+    }
+    ClipboardPlugin.layers = [2 /* LAYERS.Clipboard */];
+    ClipboardPlugin.getters = ["getClipboardContent", "isCutOperation", "isPaintingFormat"];
+
+    const selectionStatisticFunctions = [
+        {
+            name: _lt("Sum"),
+            types: [CellValueType.number],
+            compute: (values) => SUM.compute([values]),
+        },
+        {
+            name: _lt("Avg"),
+            types: [CellValueType.number],
+            compute: (values) => AVERAGE.compute([values]),
+        },
+        {
+            name: _lt("Min"),
+            types: [CellValueType.number],
+            compute: (values) => MIN.compute([values]),
+        },
+        {
+            name: _lt("Max"),
+            types: [CellValueType.number],
+            compute: (values) => MAX.compute([values]),
+        },
+        {
+            name: _lt("Count"),
+            types: [CellValueType.number, CellValueType.text, CellValueType.boolean, CellValueType.error],
+            compute: (values) => COUNTA.compute([values]),
+        },
+        {
+            name: _lt("Count Numbers"),
+            types: [CellValueType.number, CellValueType.text, CellValueType.boolean, CellValueType.error],
+            compute: (values) => COUNT.compute([values]),
+        },
+    ];
+    /**
+     * SelectionPlugin
+     */
+    class GridSelectionPlugin extends UIPlugin {
+        constructor(getters, state, dispatch, config, selection) {
+            super(getters, state, dispatch, config, selection);
+            this.gridSelection = {
+                anchor: {
+                    cell: { col: 0, row: 0 },
+                    zone: { top: 0, left: 0, bottom: 0, right: 0 },
+                },
+                zones: [{ top: 0, left: 0, bottom: 0, right: 0 }],
+            };
+            this.selectedFigureId = null;
+            this.sheetsData = {};
+            // This flag is used to avoid to historize the ACTIVE_SHEET command when it's
+            // the main command.
+            this.activeSheet = null;
+            this.moveClient = config.moveClient;
+        }
+        // ---------------------------------------------------------------------------
+        // Command Handling
+        // ---------------------------------------------------------------------------
+        allowDispatch(cmd) {
+            switch (cmd.type) {
+                case "ACTIVATE_SHEET":
+                    try {
+                        this.getters.getSheet(cmd.sheetIdTo);
+                        break;
+                    }
+                    catch (error) {
+                        return 26 /* CommandResult.InvalidSheetId */;
+                    }
+                case "MOVE_COLUMNS_ROWS":
+                    return this.isMoveElementAllowed(cmd);
+            }
+            return 0 /* CommandResult.Success */;
+        }
+        handleEvent(event) {
+            const anchor = event.anchor;
+            let zones = [];
+            switch (event.mode) {
+                case "overrideSelection":
+                    zones = [anchor.zone];
+                    break;
+                case "updateAnchor":
+                    zones = [...this.gridSelection.zones];
+                    const index = zones.findIndex((z) => isEqual(z, event.previousAnchor.zone));
+                    if (index >= 0) {
+                        zones[index] = anchor.zone;
+                    }
+                    break;
+                case "newAnchor":
+                    zones = [...this.gridSelection.zones, anchor.zone];
+                    break;
+            }
+            this.setSelectionMixin(event.anchor, zones);
+            /** Any change to the selection has to be  reflected in the selection processor. */
+            this.selection.resetDefaultAnchor(this, deepCopy(this.gridSelection.anchor));
+            const { col, row } = this.gridSelection.anchor.cell;
+            this.moveClient({
+                sheetId: this.getters.getActiveSheetId(),
+                col,
+                row,
+            });
+            this.selectedFigureId = null;
+        }
+        handle(cmd) {
+            switch (cmd.type) {
+                case "START_EDITION":
+                case "ACTIVATE_SHEET":
+                    this.selectedFigureId = null;
+                    break;
+                case "DELETE_FIGURE":
+                    if (this.selectedFigureId === cmd.id) {
+                        this.selectedFigureId = null;
+                    }
+                    break;
+                case "DELETE_SHEET":
+                    if (this.selectedFigureId && this.getters.getFigure(cmd.sheetId, this.selectedFigureId)) {
+                        this.selectedFigureId = null;
+                    }
+                    break;
+            }
+            switch (cmd.type) {
+                case "START":
+                    const firstSheetId = this.getters.getVisibleSheetIds()[0];
+                    this.dispatch("ACTIVATE_SHEET", {
+                        sheetIdTo: firstSheetId,
+                        sheetIdFrom: firstSheetId,
+                    });
+                    const { col, row } = this.getters.getNextVisibleCellPosition(firstSheetId, 0, 0);
+                    this.selectCell(col, row);
+                    this.selection.registerAsDefault(this, this.gridSelection.anchor, {
+                        handleEvent: this.handleEvent.bind(this),
+                    });
+                    this.moveClient({ sheetId: firstSheetId, col: 0, row: 0 });
+                    break;
+                case "ACTIVATE_SHEET": {
+                    if (!this.getters.isSheetVisible(cmd.sheetIdTo)) {
+                        this.dispatch("SHOW_SHEET", { sheetId: cmd.sheetIdTo });
+                    }
+                    this.setActiveSheet(cmd.sheetIdTo);
+                    this.sheetsData[cmd.sheetIdFrom] = {
+                        gridSelection: deepCopy(this.gridSelection),
+                    };
+                    if (cmd.sheetIdTo in this.sheetsData) {
+                        Object.assign(this, this.sheetsData[cmd.sheetIdTo]);
+                        this.selection.resetDefaultAnchor(this, deepCopy(this.gridSelection.anchor));
+                    }
+                    else {
+                        const { col, row } = this.getters.getNextVisibleCellPosition(cmd.sheetIdTo, 0, 0);
+                        this.selectCell(col, row);
+                    }
+                    break;
+                }
+                case "REMOVE_COLUMNS_ROWS": {
+                    const sheetId = this.getters.getActiveSheetId();
+                    if (cmd.sheetId === sheetId) {
+                        if (cmd.dimension === "COL") {
+                            this.onColumnsRemoved(cmd);
+                        }
+                        else {
+                            this.onRowsRemoved(cmd);
+                        }
+                        const { col, row } = this.gridSelection.anchor.cell;
+                        this.moveClient({ sheetId, col, row });
+                    }
+                    break;
+                }
+                case "ADD_COLUMNS_ROWS": {
+                    const sheetId = this.getters.getActiveSheetId();
+                    if (cmd.sheetId === sheetId) {
+                        this.onAddElements(cmd);
+                        const { col, row } = this.gridSelection.anchor.cell;
+                        this.moveClient({ sheetId, col, row });
+                    }
+                    break;
+                }
+                case "MOVE_COLUMNS_ROWS":
+                    if (cmd.sheetId === this.getActiveSheetId()) {
+                        this.onMoveElements(cmd);
+                    }
+                    break;
+                case "SELECT_FIGURE":
+                    this.selectedFigureId = cmd.id;
+                    break;
+                case "ACTIVATE_NEXT_SHEET":
+                    this.activateNextSheet("right");
+                    break;
+                case "ACTIVATE_PREVIOUS_SHEET":
+                    this.activateNextSheet("left");
+                    break;
+                case "HIDE_SHEET":
+                    if (cmd.sheetId === this.getActiveSheetId()) {
+                        this.dispatch("ACTIVATE_SHEET", {
+                            sheetIdFrom: cmd.sheetId,
+                            sheetIdTo: this.getters.getVisibleSheetIds()[0],
+                        });
+                    }
+                    break;
+                case "UNDO":
+                case "REDO":
+                case "DELETE_SHEET":
+                    const deletedSheetIds = Object.keys(this.sheetsData).filter((sheetId) => !this.getters.tryGetSheet(sheetId));
+                    for (const sheetId of deletedSheetIds) {
+                        delete this.sheetsData[sheetId];
+                    }
+                    for (const sheetId in this.sheetsData) {
+                        const gridSelection = this.clipSelection(sheetId, this.sheetsData[sheetId].gridSelection);
+                        this.sheetsData[sheetId] = {
+                            gridSelection: deepCopy(gridSelection),
+                        };
+                    }
+                    if (!this.getters.tryGetSheet(this.getters.getActiveSheetId())) {
+                        const currentSheetIds = this.getters.getVisibleSheetIds();
+                        this.activeSheet = this.getters.getSheet(currentSheetIds[0]);
+                        if (this.activeSheet.id in this.sheetsData) {
+                            const { anchor } = this.clipSelection(this.activeSheet.id, this.sheetsData[this.activeSheet.id].gridSelection);
+                            this.selectCell(anchor.cell.col, anchor.cell.row);
+                        }
+                        else {
+                            this.selectCell(0, 0);
+                        }
+                        const { col, row } = this.gridSelection.anchor.cell;
+                        this.moveClient({
+                            sheetId: this.getters.getActiveSheetId(),
+                            col,
+                            row,
+                        });
+                    }
+                    const sheetId = this.getters.getActiveSheetId();
+                    this.gridSelection.zones = this.gridSelection.zones.map((z) => this.getters.expandZone(sheetId, z));
+                    this.gridSelection.anchor.zone = this.getters.expandZone(sheetId, this.gridSelection.anchor.zone);
+                    this.setSelectionMixin(this.gridSelection.anchor, this.gridSelection.zones);
+                    break;
+            }
+            /** Any change to the selection has to be  reflected in the selection processor. */
+            this.selection.resetDefaultAnchor(this, deepCopy(this.gridSelection.anchor));
+        }
+        // ---------------------------------------------------------------------------
+        // Getters
+        // ---------------------------------------------------------------------------
+        getActiveSheet() {
+            return this.activeSheet;
+        }
+        getActiveSheetId() {
+            return this.activeSheet.id;
+        }
+        getActiveCell() {
+            const sheetId = this.getters.getActiveSheetId();
+            const { col, row } = this.gridSelection.anchor.cell;
+            const mainPosition = this.getters.getMainCellPosition(sheetId, col, row);
+            return this.getters.getEvaluatedCell({ sheetId, ...mainPosition });
+        }
+        getActiveCols() {
+            const activeCols = new Set();
+            for (let zone of this.gridSelection.zones) {
+                if (zone.top === 0 &&
+                    zone.bottom === this.getters.getNumberRows(this.getters.getActiveSheetId()) - 1) {
+                    for (let i = zone.left; i <= zone.right; i++) {
+                        activeCols.add(i);
+                    }
+                }
+            }
+            return activeCols;
+        }
+        getActiveRows() {
+            const activeRows = new Set();
+            const sheetId = this.getters.getActiveSheetId();
+            for (let zone of this.gridSelection.zones) {
+                if (zone.left === 0 && zone.right === this.getters.getNumberCols(sheetId) - 1) {
+                    for (let i = zone.top; i <= zone.bottom; i++) {
+                        activeRows.add(i);
+                    }
+                }
+            }
+            return activeRows;
+        }
+        getCurrentStyle() {
+            const zone = this.getters.getSelectedZone();
+            const sheetId = this.getters.getActiveSheetId();
+            return this.getters.getCellStyle({ sheetId, col: zone.left, row: zone.top });
+        }
+        getSelectedZones() {
+            return deepCopy(this.gridSelection.zones);
+        }
+        getSelectedZone() {
+            return deepCopy(this.gridSelection.anchor.zone);
+        }
+        getSelection() {
+            return deepCopy(this.gridSelection);
+        }
+        getSelectedFigureId() {
+            return this.selectedFigureId;
+        }
+        getPosition() {
+            return { col: this.gridSelection.anchor.cell.col, row: this.gridSelection.anchor.cell.row };
+        }
+        getSheetPosition(sheetId) {
+            if (sheetId === this.getters.getActiveSheetId()) {
+                return this.getPosition();
+            }
+            else {
+                const sheetData = this.sheetsData[sheetId];
+                return sheetData
+                    ? {
+                        col: sheetData.gridSelection.anchor.cell.col,
+                        row: sheetData.gridSelection.anchor.cell.row,
+                    }
+                    : this.getters.getNextVisibleCellPosition(sheetId, 0, 0);
+            }
+        }
+        getStatisticFnResults() {
+            // get deduplicated cells in zones
+            const cells = new Set(this.gridSelection.zones
+                .map((zone) => this.getters.getEvaluatedCellsInZone(this.getters.getActiveSheetId(), zone))
+                .flat()
+                .filter((cell) => cell.type !== CellValueType.empty));
+            let cellsTypes = new Set();
+            let cellsValues = [];
+            for (let cell of cells) {
+                cellsTypes.add(cell.type);
+                cellsValues.push(cell.value);
+            }
+            let statisticFnResults = {};
+            for (let fn of selectionStatisticFunctions) {
+                // We don't want to display statistical information when there is no interest:
+                // We set the statistical result to undefined if the data handled by the selection
+                // does not match the data handled by the function.
+                // Ex: if there are only texts in the selection, we prefer that the SUM result
+                // be displayed as undefined rather than 0.
+                let fnResult = undefined;
+                if (fn.types.some((t) => cellsTypes.has(t))) {
+                    fnResult = fn.compute(cellsValues);
+                }
+                statisticFnResults[fn.name] = fnResult;
+            }
+            return statisticFnResults;
+        }
+        getAggregate() {
+            let aggregate = 0;
+            let n = 0;
+            const sheetId = this.getters.getActiveSheetId();
+            const cellPositions = this.gridSelection.zones.map(positions).flat();
+            for (const { col, row } of cellPositions) {
+                const cell = this.getters.getEvaluatedCell({ sheetId, col, row });
+                if (cell.type === CellValueType.number) {
+                    n++;
+                    aggregate += cell.value;
+                }
+            }
+            return n < 2 ? null : formatValue(aggregate);
+        }
+        isSelected(zone) {
+            return !!this.getters.getSelectedZones().find((z) => isEqual(z, zone));
+        }
+        /**
+         * Returns a sorted array of indexes of all columns (respectively rows depending
+         * on the dimension parameter) intersected by the currently selected zones.
+         *
+         * example:
+         * assume selectedZones: [{left:0, right: 2, top :2, bottom: 4}, {left:5, right: 6, top :3, bottom: 5}]
+         *
+         * if dimension === "COL" => [0,1,2,5,6]
+         * if dimension === "ROW" => [2,3,4,5]
+         */
+        getElementsFromSelection(dimension) {
+            if (dimension === "COL" && this.getters.getActiveCols().size === 0) {
+                return [];
+            }
+            if (dimension === "ROW" && this.getters.getActiveRows().size === 0) {
+                return [];
+            }
+            const zones = this.getters.getSelectedZones();
+            let elements = [];
+            const start = dimension === "COL" ? "left" : "top";
+            const end = dimension === "COL" ? "right" : "bottom";
+            for (const zone of zones) {
+                const zoneRows = Array.from({ length: zone[end] - zone[start] + 1 }, (_, i) => zone[start] + i);
+                elements = elements.concat(zoneRows);
+            }
+            return [...new Set(elements)].sort();
+        }
+        // ---------------------------------------------------------------------------
+        // Other
+        // ---------------------------------------------------------------------------
+        /**
+         * Ensure selections are not outside sheet boundaries.
+         * They are clipped to fit inside the sheet if needed.
+         */
+        setSelectionMixin(anchor, zones) {
+            const { anchor: clippedAnchor, zones: clippedZones } = this.clipSelection(this.getters.getActiveSheetId(), { anchor, zones });
+            this.gridSelection.anchor = clippedAnchor;
+            this.gridSelection.zones = uniqueZones(clippedZones);
+        }
+        /**
+         * Change the anchor of the selection active cell to an absolute col and row index.
+         *
+         * This is a non trivial task. We need to stop the editing process and update
+         * properly the current selection.  Also, this method can optionally create a new
+         * range in the selection.
+         */
+        selectCell(col, row) {
+            const sheetId = this.getters.getActiveSheetId();
+            const zone = this.getters.expandZone(sheetId, { left: col, right: col, top: row, bottom: row });
+            this.setSelectionMixin({ zone, cell: { col, row } }, [zone]);
+        }
+        setActiveSheet(id) {
+            const sheet = this.getters.getSheet(id);
+            this.activeSheet = sheet;
+        }
+        activateNextSheet(direction) {
+            const sheetIds = this.getters.getSheetIds();
+            const oldSheetPosition = sheetIds.findIndex((id) => id === this.activeSheet.id);
+            const delta = direction === "left" ? sheetIds.length - 1 : 1;
+            const newPosition = (oldSheetPosition + delta) % sheetIds.length;
+            this.dispatch("ACTIVATE_SHEET", {
+                sheetIdFrom: this.getActiveSheetId(),
+                sheetIdTo: sheetIds[newPosition],
+            });
+        }
+        onColumnsRemoved(cmd) {
+            const { cell, zone } = this.gridSelection.anchor;
+            const selectedZone = updateSelectionOnDeletion(zone, "left", [...cmd.elements]);
+            let anchorZone = { left: cell.col, right: cell.col, top: cell.row, bottom: cell.row };
+            anchorZone = updateSelectionOnDeletion(anchorZone, "left", [...cmd.elements]);
+            const anchor = {
+                cell: {
+                    col: anchorZone.left,
+                    row: anchorZone.top,
+                },
+                zone: selectedZone,
+            };
+            this.setSelectionMixin(anchor, [selectedZone]);
+        }
+        onRowsRemoved(cmd) {
+            const { cell, zone } = this.gridSelection.anchor;
+            const selectedZone = updateSelectionOnDeletion(zone, "top", [...cmd.elements]);
+            let anchorZone = { left: cell.col, right: cell.col, top: cell.row, bottom: cell.row };
+            anchorZone = updateSelectionOnDeletion(anchorZone, "top", [...cmd.elements]);
+            const anchor = {
+                cell: {
+                    col: anchorZone.left,
+                    row: anchorZone.top,
+                },
+                zone: selectedZone,
+            };
+            this.setSelectionMixin(anchor, [selectedZone]);
+        }
+        onAddElements(cmd) {
+            const selection = this.gridSelection.anchor.zone;
+            const zone = updateSelectionOnInsertion(selection, cmd.dimension === "COL" ? "left" : "top", cmd.base, cmd.position, cmd.quantity);
+            const anchor = { cell: { col: zone.left, row: zone.top }, zone };
+            this.setSelectionMixin(anchor, [zone]);
+        }
+        onMoveElements(cmd) {
+            const thickness = cmd.elements.length;
+            this.dispatch("ADD_COLUMNS_ROWS", {
+                dimension: cmd.dimension,
+                sheetId: cmd.sheetId,
+                base: cmd.base,
+                quantity: thickness,
+                position: "before",
+            });
+            const isCol = cmd.dimension === "COL";
+            const start = cmd.elements[0];
+            const end = cmd.elements[thickness - 1];
+            const isBasedBefore = cmd.base < start;
+            const deltaCol = isBasedBefore && isCol ? thickness : 0;
+            const deltaRow = isBasedBefore && !isCol ? thickness : 0;
+            this.dispatch("CUT", {
+                target: [
+                    {
+                        left: isCol ? start + deltaCol : 0,
+                        right: isCol ? end + deltaCol : this.getters.getNumberCols(cmd.sheetId) - 1,
+                        top: !isCol ? start + deltaRow : 0,
+                        bottom: !isCol ? end + deltaRow : this.getters.getNumberRows(cmd.sheetId) - 1,
+                    },
+                ],
+            });
+            this.dispatch("PASTE", {
+                target: [
+                    {
+                        left: isCol ? cmd.base : 0,
+                        right: isCol ? cmd.base + thickness - 1 : this.getters.getNumberCols(cmd.sheetId) - 1,
+                        top: !isCol ? cmd.base : 0,
+                        bottom: !isCol ? cmd.base + thickness - 1 : this.getters.getNumberRows(cmd.sheetId) - 1,
+                    },
+                ],
+            });
+            const toRemove = isBasedBefore ? cmd.elements.map((el) => el + thickness) : cmd.elements;
+            let currentIndex = cmd.base;
+            for (const element of toRemove) {
+                const size = cmd.dimension === "COL"
+                    ? this.getters.getColSize(cmd.sheetId, element)
+                    : this.getters.getRowSize(cmd.sheetId, element);
+                this.dispatch("RESIZE_COLUMNS_ROWS", {
+                    dimension: cmd.dimension,
+                    sheetId: cmd.sheetId,
+                    size,
+                    elements: [currentIndex],
+                });
+                currentIndex += 1;
+            }
+            this.dispatch("REMOVE_COLUMNS_ROWS", {
+                dimension: cmd.dimension,
+                sheetId: cmd.sheetId,
+                elements: toRemove,
+            });
+        }
+        isMoveElementAllowed(cmd) {
+            const isCol = cmd.dimension === "COL";
+            const start = cmd.elements[0];
+            const end = cmd.elements[cmd.elements.length - 1];
+            const id = cmd.sheetId;
+            const doesElementsHaveCommonMerges = isCol
+                ? this.getters.doesColumnsHaveCommonMerges
+                : this.getters.doesRowsHaveCommonMerges;
+            if (doesElementsHaveCommonMerges(id, start - 1, start) ||
+                doesElementsHaveCommonMerges(id, end, end + 1) ||
+                doesElementsHaveCommonMerges(id, cmd.base - 1, cmd.base)) {
+                return 2 /* CommandResult.WillRemoveExistingMerge */;
+            }
+            return 0 /* CommandResult.Success */;
+        }
+        //-------------------------------------------
+        // Helpers for extensions
+        // ------------------------------------------
+        /**
+         * Clip the selection if it spans outside the sheet
+         */
+        clipSelection(sheetId, selection) {
+            const cols = this.getters.getNumberCols(sheetId) - 1;
+            const rows = this.getters.getNumberRows(sheetId) - 1;
+            const zones = selection.zones.map((z) => {
+                return {
+                    left: clip(z.left, 0, cols),
+                    right: clip(z.right, 0, cols),
+                    top: clip(z.top, 0, rows),
+                    bottom: clip(z.bottom, 0, rows),
+                };
+            });
+            const anchorCol = clip(selection.anchor.cell.col, 0, cols);
+            const anchorRow = clip(selection.anchor.cell.row, 0, rows);
+            const anchorZone = {
+                left: clip(selection.anchor.zone.left, 0, cols),
+                right: clip(selection.anchor.zone.right, 0, cols),
+                top: clip(selection.anchor.zone.top, 0, rows),
+                bottom: clip(selection.anchor.zone.bottom, 0, rows),
+            };
+            return {
+                zones,
+                anchor: {
+                    cell: { col: anchorCol, row: anchorRow },
+                    zone: anchorZone,
+                },
+            };
+        }
+        // ---------------------------------------------------------------------------
+        // Grid rendering
+        // ---------------------------------------------------------------------------
+        drawGrid(renderingContext) {
+            if (this.getters.isDashboard()) {
+                return;
+            }
+            const { ctx, thinLineWidth } = renderingContext;
+            // selection
+            const zones = this.getSelectedZones();
+            ctx.fillStyle = "#f3f7fe";
+            const onlyOneCell = zones.length === 1 && zones[0].left === zones[0].right && zones[0].top === zones[0].bottom;
+            ctx.fillStyle = onlyOneCell ? "#f3f7fe" : "#e9f0ff";
+            ctx.strokeStyle = SELECTION_BORDER_COLOR;
+            ctx.lineWidth = 1.5 * thinLineWidth;
+            for (const zone of zones) {
+                const { x, y, width, height } = this.getters.getVisibleRect(zone);
+                ctx.globalCompositeOperation = "multiply";
+                ctx.fillRect(x, y, width, height);
+                ctx.globalCompositeOperation = "source-over";
+                ctx.strokeRect(x, y, width, height);
+            }
+            ctx.globalCompositeOperation = "source-over";
+            // active zone
+            const activeSheet = this.getters.getActiveSheetId();
+            const { col, row } = this.getPosition();
+            ctx.strokeStyle = SELECTION_BORDER_COLOR;
+            ctx.lineWidth = 3 * thinLineWidth;
+            let zone;
+            if (this.getters.isInMerge(activeSheet, col, row)) {
+                zone = this.getters.getMerge(activeSheet, col, row);
+            }
+            else {
+                zone = {
+                    top: row,
+                    bottom: row,
+                    left: col,
+                    right: col,
+                };
+            }
+            const { x, y, width, height } = this.getters.getVisibleRect(zone);
+            if (width > 0 && height > 0) {
+                ctx.strokeRect(x, y, width, height);
+            }
+        }
+    }
+    GridSelectionPlugin.layers = [6 /* LAYERS.Selection */];
+    GridSelectionPlugin.getters = [
+        "getActiveSheet",
+        "getActiveSheetId",
+        "getActiveCell",
+        "getActiveCols",
+        "getActiveRows",
+        "getCurrentStyle",
+        "getSelectedZones",
+        "getSelectedZone",
+        "getStatisticFnResults",
+        "getAggregate",
+        "getSelectedFigureId",
+        "getSelection",
+        "getPosition",
+        "getSheetPosition",
+        "isSelected",
+        "getElementsFromSelection",
+    ];
+
     const corePluginRegistry = new Registry()
         .add("sheet", SheetPlugin)
         .add("header visibility", HeaderVisibilityPlugin)
@@ -36859,20 +37304,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         .add("conditional formatting", ConditionalFormatPlugin)
         .add("figures", FigurePlugin)
         .add("chart", ChartPlugin);
-    const uiPluginRegistry = new Registry()
-        .add("selection", GridSelectionPlugin)
+    // Plugins which handle a specific feature, without handling any core commands
+    const featurePluginRegistry = new Registry()
         .add("ui_sheet", SheetUIPlugin)
         .add("header_visibility_ui", HeaderVisibilityUIPlugin)
         .add("ui_options", UIOptionsPlugin)
-        .add("evaluation", EvaluationPlugin)
-        .add("evaluation_filter", FilterEvaluationPlugin)
-        .add("evaluation_cf", EvaluationConditionalFormatPlugin)
-        .add("evaluation_chart", EvaluationChartPlugin)
-        .add("clipboard", ClipboardPlugin)
-        .add("edition", EditionPlugin)
         .add("selectionInputManager", SelectionInputsManagerPlugin)
         .add("highlight", HighlightPlugin)
-        .add("viewport", SheetViewPlugin)
         .add("grid renderer", RendererPlugin)
         .add("autofill", AutofillPlugin)
         .add("find_and_replace", FindAndReplacePlugin)
@@ -36880,7 +37318,19 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         .add("automatic_sum", AutomaticSumPlugin)
         .add("format", FormatPlugin)
         .add("cell_popovers", CellPopoverPlugin)
-        .add("selection_multiuser", SelectionMultiUserPlugin)
+        .add("selection_multiuser", SelectionMultiUserPlugin);
+    // Plugins which have a state, but which should not be shared in collaborative
+    const statefulUIPluginRegistry = new Registry()
+        .add("selection", GridSelectionPlugin)
+        .add("clipboard", ClipboardPlugin)
+        .add("edition", EditionPlugin);
+    // Plugins which have a derived state from core data
+    const coreViewsPluginRegistry = new Registry()
+        .add("evaluation", EvaluationPlugin)
+        .add("evaluation_filter", FilterEvaluationPlugin)
+        .add("evaluation_chart", EvaluationChartPlugin)
+        .add("evaluation_cf", EvaluationConditionalFormatPlugin)
+        .add("viewport", SheetViewPlugin)
         .add("custom_colors", CustomColorsPlugin);
 
     const clickableCellRegistry = new Registry();
@@ -39457,382 +39907,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
     }
 
-    class RangeAdapter {
-        constructor(getters) {
-            this.providers = [];
-            this.getters = getters;
-        }
-        // ---------------------------------------------------------------------------
-        // Command Handling
-        // ---------------------------------------------------------------------------
-        allowDispatch(cmd) {
-            if (cmd.type === "MOVE_RANGES") {
-                return cmd.target.length === 1 ? 0 /* CommandResult.Success */ : 25 /* CommandResult.InvalidZones */;
-            }
-            return 0 /* CommandResult.Success */;
-        }
-        beforeHandle(command) { }
-        handle(cmd) {
-            switch (cmd.type) {
-                case "REMOVE_COLUMNS_ROWS": {
-                    let start = cmd.dimension === "COL" ? "left" : "top";
-                    let end = cmd.dimension === "COL" ? "right" : "bottom";
-                    let dimension = cmd.dimension === "COL" ? "columns" : "rows";
-                    const elements = [...cmd.elements];
-                    elements.sort((a, b) => b - a);
-                    const groups = groupConsecutive(elements);
-                    this.executeOnAllRanges((range) => {
-                        if (range.sheetId !== cmd.sheetId) {
-                            return { changeType: "NONE" };
-                        }
-                        let newRange = range;
-                        let changeType = "NONE";
-                        for (let group of groups) {
-                            const min = Math.min(...group);
-                            const max = Math.max(...group);
-                            if (range.zone[start] <= min && min <= range.zone[end]) {
-                                const toRemove = Math.min(range.zone[end], max) - min + 1;
-                                changeType = "RESIZE";
-                                newRange = this.createAdaptedRange(newRange, dimension, changeType, -toRemove);
-                            }
-                            else if (range.zone[start] >= min && range.zone[end] <= max) {
-                                changeType = "REMOVE";
-                            }
-                            else if (range.zone[start] <= max && range.zone[end] >= max) {
-                                const toRemove = max - range.zone[start] + 1;
-                                changeType = "RESIZE";
-                                newRange = this.createAdaptedRange(newRange, dimension, changeType, -toRemove);
-                                newRange = this.createAdaptedRange(newRange, dimension, "MOVE", -(range.zone[start] - min));
-                            }
-                            else if (min < range.zone[start]) {
-                                changeType = "MOVE";
-                                newRange = this.createAdaptedRange(newRange, dimension, changeType, -(max - min + 1));
-                            }
-                        }
-                        if (changeType !== "NONE") {
-                            return { changeType, range: newRange };
-                        }
-                        return { changeType: "NONE" };
-                    }, cmd.sheetId);
-                    break;
-                }
-                case "ADD_COLUMNS_ROWS": {
-                    let start = cmd.dimension === "COL" ? "left" : "top";
-                    let end = cmd.dimension === "COL" ? "right" : "bottom";
-                    let dimension = cmd.dimension === "COL" ? "columns" : "rows";
-                    this.executeOnAllRanges((range) => {
-                        if (range.sheetId !== cmd.sheetId) {
-                            return { changeType: "NONE" };
-                        }
-                        if (cmd.position === "after") {
-                            if (range.zone[start] <= cmd.base && cmd.base < range.zone[end]) {
-                                return {
-                                    changeType: "RESIZE",
-                                    range: this.createAdaptedRange(range, dimension, "RESIZE", cmd.quantity),
-                                };
-                            }
-                            if (cmd.base < range.zone[start]) {
-                                return {
-                                    changeType: "MOVE",
-                                    range: this.createAdaptedRange(range, dimension, "MOVE", cmd.quantity),
-                                };
-                            }
-                        }
-                        else {
-                            if (range.zone[start] < cmd.base && cmd.base <= range.zone[end]) {
-                                return {
-                                    changeType: "RESIZE",
-                                    range: this.createAdaptedRange(range, dimension, "RESIZE", cmd.quantity),
-                                };
-                            }
-                            if (cmd.base <= range.zone[start]) {
-                                return {
-                                    changeType: "MOVE",
-                                    range: this.createAdaptedRange(range, dimension, "MOVE", cmd.quantity),
-                                };
-                            }
-                        }
-                        return { changeType: "NONE" };
-                    }, cmd.sheetId);
-                    break;
-                }
-                case "DELETE_SHEET": {
-                    this.executeOnAllRanges((range) => {
-                        if (range.sheetId !== cmd.sheetId) {
-                            return { changeType: "NONE" };
-                        }
-                        const invalidSheetName = this.getters.getSheetName(cmd.sheetId);
-                        const sheetId = "";
-                        range = range.clone({ sheetId, invalidSheetName });
-                        return { changeType: "REMOVE", range };
-                    }, cmd.sheetId);
-                    break;
-                }
-                case "RENAME_SHEET": {
-                    this.executeOnAllRanges((range) => {
-                        if (range.sheetId === cmd.sheetId) {
-                            return { changeType: "CHANGE", range };
-                        }
-                        if (cmd.name && range.invalidSheetName === cmd.name) {
-                            const invalidSheetName = undefined;
-                            const sheetId = cmd.sheetId;
-                            const newRange = range.clone({ sheetId, invalidSheetName });
-                            return { changeType: "CHANGE", range: newRange };
-                        }
-                        return { changeType: "NONE" };
-                    });
-                    break;
-                }
-                case "MOVE_RANGES": {
-                    const originZone = cmd.target[0];
-                    this.executeOnAllRanges((range) => {
-                        if (range.sheetId !== cmd.sheetId || !isZoneInside(range.zone, originZone)) {
-                            return { changeType: "NONE" };
-                        }
-                        const targetSheetId = cmd.targetSheetId;
-                        const offsetX = cmd.col - originZone.left;
-                        const offsetY = cmd.row - originZone.top;
-                        const adaptedRange = this.createAdaptedRange(range, "both", "MOVE", [offsetX, offsetY]);
-                        const prefixSheet = cmd.sheetId === targetSheetId ? adaptedRange.prefixSheet : true;
-                        return {
-                            changeType: "MOVE",
-                            range: adaptedRange.clone({ sheetId: targetSheetId, prefixSheet }),
-                        };
-                    });
-                    break;
-                }
-            }
-        }
-        finalize() { }
-        /**
-         * Return a modified adapting function that verifies that after adapting a range, the range is still valid.
-         * Any range that gets adapted by the function adaptRange in parameter does so
-         * without caring if the start and end of the range in both row and column
-         * direction can be incorrect. This function ensure that an incorrect range gets removed.
-         */
-        verifyRangeRemoved(adaptRange) {
-            return (range) => {
-                const result = adaptRange(range);
-                if (result.changeType !== "NONE" && !isZoneValid(result.range.zone)) {
-                    return { range: result.range, changeType: "REMOVE" };
-                }
-                return result;
-            };
-        }
-        createAdaptedRange(range, dimension, operation, by) {
-            const zone = createAdaptedZone(range.unboundedZone, dimension, operation, by);
-            const adaptedRange = range.clone({ zone });
-            return adaptedRange;
-        }
-        executeOnAllRanges(adaptRange, sheetId) {
-            const func = this.verifyRangeRemoved(adaptRange);
-            for (const provider of this.providers) {
-                provider(func, sheetId);
-            }
-        }
-        /**
-         * Stores the functions bound to each plugin to be able to iterate over all ranges of the application,
-         * without knowing any details of the internal data structure of the plugins and without storing ranges
-         * in the range adapter.
-         *
-         * @param provider a function bound to a plugin that will loop over its internal data structure to find
-         * all ranges
-         */
-        addRangeProvider(provider) {
-            this.providers.push(provider);
-        }
-        // ---------------------------------------------------------------------------
-        // Getters
-        // ---------------------------------------------------------------------------
-        createAdaptedRanges(ranges, offsetX, offsetY, sheetId) {
-            const rangesImpl = ranges.map((range) => RangeImpl.fromRange(range, this.getters));
-            return rangesImpl.map((range) => {
-                if (!isZoneValid(range.zone)) {
-                    return range;
-                }
-                const copySheetId = range.prefixSheet ? range.sheetId : sheetId;
-                const unboundZone = {
-                    ...range.unboundedZone,
-                    // Don't shift left if the range is a full row without header
-                    left: range.isFullRow && !range.unboundedZone.hasHeader
-                        ? range.unboundedZone.left
-                        : range.unboundedZone.left + (range.parts[0].colFixed ? 0 : offsetX),
-                    // Don't shift right if the range is a full row
-                    right: range.isFullRow
-                        ? range.unboundedZone.right
-                        : range.unboundedZone.right +
-                            ((range.parts[1] || range.parts[0]).colFixed ? 0 : offsetX),
-                    // Don't shift up if the range is a column row without header
-                    top: range.isFullCol && !range.unboundedZone.hasHeader
-                        ? range.unboundedZone.top
-                        : range.unboundedZone.top + (range.parts[0].rowFixed ? 0 : offsetY),
-                    // Don't shift down if the range is a full column
-                    bottom: range.isFullCol
-                        ? range.unboundedZone.bottom
-                        : range.unboundedZone.bottom +
-                            ((range.parts[1] || range.parts[0]).rowFixed ? 0 : offsetY),
-                };
-                return range.clone({ sheetId: copySheetId, zone: unboundZone }).orderZone();
-            });
-        }
-        /**
-         * Creates a range from a XC reference that can contain a sheet reference
-         * @param defaultSheetId the sheet to default to if the sheetXC parameter does not contain a sheet reference (usually the active sheet Id)
-         * @param sheetXC the string description of a range, in the form SheetName!XC:XC
-         */
-        getRangeFromSheetXC(defaultSheetId, sheetXC) {
-            if (!rangeReference.test(sheetXC)) {
-                return new RangeImpl({
-                    sheetId: "",
-                    zone: { left: -1, top: -1, right: -1, bottom: -1 },
-                    parts: [],
-                    invalidXc: sheetXC,
-                    prefixSheet: false,
-                }, this.getters.getSheetSize);
-            }
-            let sheetName = "";
-            let prefixSheet = false;
-            if (sheetXC.includes("!")) {
-                [sheetName, sheetXC] = sheetXC.split("!");
-                if (sheetName) {
-                    prefixSheet = true;
-                }
-            }
-            const zone = toUnboundedZone(sheetXC);
-            const parts = RangeImpl.getRangeParts(sheetXC, zone);
-            const invalidSheetName = sheetName && !this.getters.getSheetIdByName(sheetName) ? sheetName : undefined;
-            const sheetId = this.getters.getSheetIdByName(sheetName) || defaultSheetId;
-            const rangeInterface = { prefixSheet, zone, sheetId, invalidSheetName, parts };
-            return new RangeImpl(rangeInterface, this.getters.getSheetSize).orderZone();
-        }
-        /**
-         * Same as `getRangeString` but add all necessary merge to the range to make it a valid selection
-         */
-        getSelectionRangeString(range, forSheetId) {
-            const rangeImpl = RangeImpl.fromRange(range, this.getters);
-            const expandedZone = this.getters.expandZone(rangeImpl.sheetId, rangeImpl.zone);
-            const expandedRange = rangeImpl.clone({
-                zone: {
-                    ...expandedZone,
-                    bottom: rangeImpl.isFullCol ? undefined : expandedZone.bottom,
-                    right: rangeImpl.isFullRow ? undefined : expandedZone.right,
-                },
-            });
-            return this.getRangeString(expandedRange, forSheetId);
-        }
-        /**
-         * Gets the string that represents the range as it is at the moment of the call.
-         * The string will be prefixed with the sheet name if the call specified a sheet id in `forSheetId`
-         * different than the sheet on which the range has been created.
-         *
-         * @param range the range (received from getRangeFromXC or getRangeFromZone)
-         * @param forSheetId the id of the sheet where the range string is supposed to be used.
-         */
-        getRangeString(range, forSheetId) {
-            if (!range) {
-                return INCORRECT_RANGE_STRING;
-            }
-            if (range.invalidXc) {
-                return range.invalidXc;
-            }
-            if (range.zone.bottom - range.zone.top < 0 || range.zone.right - range.zone.left < 0) {
-                return INCORRECT_RANGE_STRING;
-            }
-            if (range.zone.left < 0 || range.zone.top < 0) {
-                return INCORRECT_RANGE_STRING;
-            }
-            const rangeImpl = RangeImpl.fromRange(range, this.getters);
-            let prefixSheet = rangeImpl.sheetId !== forSheetId || rangeImpl.invalidSheetName || rangeImpl.prefixSheet;
-            let sheetName = "";
-            if (prefixSheet) {
-                if (rangeImpl.invalidSheetName) {
-                    sheetName = rangeImpl.invalidSheetName;
-                }
-                else {
-                    sheetName = getComposerSheetName(this.getters.getSheetName(rangeImpl.sheetId));
-                }
-            }
-            if (prefixSheet && !sheetName) {
-                return INCORRECT_RANGE_STRING;
-            }
-            let rangeString = this.getRangePartString(rangeImpl, 0);
-            if (rangeImpl.parts && rangeImpl.parts.length === 2) {
-                // this if converts A2:A2 into A2 except if any part of the original range had fixed row or column (with $)
-                if (rangeImpl.zone.top !== rangeImpl.zone.bottom ||
-                    rangeImpl.zone.left !== rangeImpl.zone.right ||
-                    rangeImpl.parts[0].rowFixed ||
-                    rangeImpl.parts[0].colFixed ||
-                    rangeImpl.parts[1].rowFixed ||
-                    rangeImpl.parts[1].colFixed) {
-                    rangeString += ":";
-                    rangeString += this.getRangePartString(rangeImpl, 1);
-                }
-            }
-            return `${prefixSheet ? sheetName + "!" : ""}${rangeString}`;
-        }
-        getRangeDataFromXc(sheetId, xc) {
-            return this.getters.getRangeFromSheetXC(sheetId, xc).rangeData;
-        }
-        getRangeDataFromZone(sheetId, zone) {
-            return { _sheetId: sheetId, _zone: zone };
-        }
-        getRangeFromRangeData(data) {
-            const rangeInterface = {
-                prefixSheet: false,
-                zone: data._zone,
-                sheetId: data._sheetId,
-                invalidSheetName: undefined,
-                parts: [
-                    { colFixed: false, rowFixed: false },
-                    { colFixed: false, rowFixed: false },
-                ],
-            };
-            return new RangeImpl(rangeInterface, this.getters.getSheetSize);
-        }
-        // ---------------------------------------------------------------------------
-        // Private
-        // ---------------------------------------------------------------------------
-        /**
-         * Get a Xc string that represent a part of a range
-         */
-        getRangePartString(range, part) {
-            const colFixed = range.parts && range.parts[part].colFixed ? "$" : "";
-            const col = part === 0 ? numberToLetters(range.zone.left) : numberToLetters(range.zone.right);
-            const rowFixed = range.parts && range.parts[part].rowFixed ? "$" : "";
-            const row = part === 0 ? String(range.zone.top + 1) : String(range.zone.bottom + 1);
-            let str = "";
-            if (range.isFullCol) {
-                if (part === 0 && range.unboundedZone.hasHeader) {
-                    str = colFixed + col + rowFixed + row;
-                }
-                else {
-                    str = colFixed + col;
-                }
-            }
-            else if (range.isFullRow) {
-                if (part === 0 && range.unboundedZone.hasHeader) {
-                    str = colFixed + col + rowFixed + row;
-                }
-                else {
-                    str = rowFixed + row;
-                }
-            }
-            else {
-                str = colFixed + col + rowFixed + row;
-            }
-            return str;
-        }
-    }
-    RangeAdapter.getters = [
-        "getRangeString",
-        "getSelectionRangeString",
-        "getRangeFromSheetXC",
-        "createAdaptedRanges",
-        "getRangeDataFromXc",
-        "getRangeDataFromZone",
-        "getRangeFromRangeData",
-    ];
-
     /**
      * Stateless sequence of events that can be processed by consumers.
      *
@@ -39963,7 +40037,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         /**
          * Select a new anchor
          */
-        selectZone(anchor) {
+        selectZone(anchor, mode = "overrideSelection") {
             const sheetId = this.getters.getActiveSheetId();
             anchor = {
                 ...anchor,
@@ -39972,7 +40046,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return this.processEvent({
                 type: "ZonesSelected",
                 anchor,
-                mode: "overrideSelection",
+                mode,
             });
         }
         /**
@@ -39985,7 +40059,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         /**
          * Set the selection to one of the cells adjacent to the current anchor cell.
          */
-        moveAnchorCell(direction, step = "one") {
+        moveAnchorCell(direction, step = 1) {
+            if (step !== "end" && step <= 0) {
+                return new DispatchResult(81 /* CommandResult.InvalidSelectionStep */);
+            }
             const { col, row } = this.getNextAvailablePosition(direction, step);
             return this.selectCell(col, row);
         }
@@ -40028,7 +40105,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * The anchor cell remains where it is. It's the opposite side
          * of the anchor zone which moves.
          */
-        resizeAnchorZone(direction, step = "one") {
+        resizeAnchorZone(direction, step = 1) {
+            if (step !== "end" && step <= 0) {
+                return new DispatchResult(81 /* CommandResult.InvalidSelectionStep */);
+            }
             const sheetId = this.getters.getActiveSheetId();
             const anchor = this.anchor;
             const { col: anchorCol, row: anchorRow } = anchor.cell;
@@ -40154,44 +40234,23 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         loopSelection() {
             const sheetId = this.getters.getActiveSheetId();
             const anchor = this.anchor;
-            /** Try to expand the zone by one col/row in any direction to include a new non-empty cell */
-            const expandZone = (zone) => {
-                for (const col of range(zone.left, zone.right + 1)) {
-                    if (!this.isCellEmpty({ col, row: zone.top - 1 })) {
-                        return { ...zone, top: zone.top - 1 };
-                    }
-                    if (!this.isCellEmpty({ col, row: zone.bottom + 1 })) {
-                        return { ...zone, bottom: zone.bottom + 1 };
-                    }
-                }
-                for (const row of range(zone.top, zone.bottom + 1)) {
-                    if (!this.isCellEmpty({ col: zone.left - 1, row })) {
-                        return { ...zone, left: zone.left - 1 };
-                    }
-                    if (!this.isCellEmpty({ col: zone.right + 1, row })) {
-                        return { ...zone, right: zone.right + 1 };
-                    }
-                }
-                return zone;
-            };
             // The whole sheet is selected, select the anchor cell
             if (isEqual(this.anchor.zone, this.getters.getSheetZone(sheetId))) {
                 return this.selectZone({ ...anchor, zone: positionToZone(anchor.cell) });
             }
-            let hasExpanded = false;
-            let hasExpandedOnce = false;
-            let zone = anchor.zone;
-            do {
-                hasExpandedOnce = hasExpandedOnce || hasExpanded;
-                hasExpanded = false;
-                const newZone = expandZone(zone);
-                if (!isEqual(zone, newZone)) {
-                    hasExpanded = true;
-                    zone = newZone;
-                    continue;
-                }
-            } while (hasExpanded);
-            return hasExpandedOnce ? this.selectZone({ ...anchor, zone }) : this.selectAll();
+            const tableZone = this.expandZoneToTable(anchor.zone);
+            return !deepEquals(tableZone, anchor.zone)
+                ? this.selectZone({ ...anchor, zone: tableZone })
+                : this.selectAll();
+        }
+        /**
+         * Select a "table" around the current selection.
+         * We define a table by the smallest zone that contain the anchor and that have only empty
+         * cells bordering it
+         */
+        selectTableAroundSelection() {
+            const tableZone = this.expandZoneToTable(this.anchor.zone);
+            return this.selectZone({ ...this.anchor, zone: tableZone }, "updateAnchor");
         }
         /**
          * Select the entire sheet
@@ -40252,7 +40311,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * by crossing through merges and skipping hidden cells.
          * Note that the resulting position might be out of the sheet, it needs to be validated.
          */
-        getNextAvailablePosition(direction, step = "one") {
+        getNextAvailablePosition(direction, step = 1) {
             const { col, row } = this.anchor.cell;
             const delta = this.deltaToTarget({ col, row }, direction, step);
             return {
@@ -40318,20 +40377,20 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         deltaToTarget(position, direction, step) {
             switch (direction) {
                 case "up":
-                    return step === "one"
-                        ? [0, -1]
+                    return step !== "end"
+                        ? [0, -step]
                         : [0, this.getEndOfCluster(position, "rows", -1) - position.row];
                 case "down":
-                    return step === "one"
-                        ? [0, 1]
+                    return step !== "end"
+                        ? [0, step]
                         : [0, this.getEndOfCluster(position, "rows", 1) - position.row];
                 case "left":
-                    return step === "one"
-                        ? [-1, 0]
+                    return step !== "end"
+                        ? [-step, 0]
                         : [this.getEndOfCluster(position, "cols", -1) - position.col, 0];
                 case "right":
-                    return step === "one"
-                        ? [1, 0]
+                    return step !== "end"
+                        ? [step, 0]
                         : [this.getEndOfCluster(position, "cols", 1) - position.col, 0];
             }
         }
@@ -40413,6 +40472,45 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         getPosition() {
             return { ...this.anchor.cell };
+        }
+        /**
+         * Expand the given zone to a table.
+         * We define a table by the smallest zone that contain the anchor and that have only empty
+         * cells bordering it
+         */
+        expandZoneToTable(zoneToExpand) {
+            /** Try to expand the zone by one col/row in any direction to include a new non-empty cell */
+            const expandZone = (zone) => {
+                for (const col of range(zone.left, zone.right + 1)) {
+                    if (!this.isCellEmpty({ col, row: zone.top - 1 })) {
+                        return { ...zone, top: zone.top - 1 };
+                    }
+                    if (!this.isCellEmpty({ col, row: zone.bottom + 1 })) {
+                        return { ...zone, bottom: zone.bottom + 1 };
+                    }
+                }
+                for (const row of range(zone.top, zone.bottom + 1)) {
+                    if (!this.isCellEmpty({ col: zone.left - 1, row })) {
+                        return { ...zone, left: zone.left - 1 };
+                    }
+                    if (!this.isCellEmpty({ col: zone.right + 1, row })) {
+                        return { ...zone, right: zone.right + 1 };
+                    }
+                }
+                return zone;
+            };
+            let hasExpanded = false;
+            let zone = zoneToExpand;
+            do {
+                hasExpanded = false;
+                const newZone = expandZone(zone);
+                if (!isEqual(zone, newZone)) {
+                    hasExpanded = true;
+                    zone = newZone;
+                    continue;
+                }
+            } while (hasExpanded);
+            return zone;
         }
     }
 
@@ -41933,7 +42031,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         constructor(data = {}, config = {}, stateUpdateMessages = [], uuidGenerator = new UuidGenerator(), verboseImport = true) {
             super();
             this.corePlugins = [];
-            this.uiPlugins = [];
+            this.featurePlugins = [];
+            this.statefulUIPlugins = [];
+            this.coreViewsPlugins = [];
             /**
              * In a collaborative context, some commands can be replayed, we have to ensure
              * that these commands are not replayed on the UI plugins.
@@ -42014,7 +42114,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 const command = { type, ...payload };
                 const previousStatus = this.status;
                 this.status = 2 /* Status.RunningCore */;
-                const handlers = this.isReplayingCommand ? [this.range, ...this.corePlugins] : this.handlers;
+                const handlers = this.isReplayingCommand
+                    ? [this.range, ...this.corePlugins, ...this.coreViewsPlugins]
+                    : this.handlers;
                 this.dispatchToHandlers(handlers, command);
                 this.status = previousStatus;
                 return DispatchResult.Success;
@@ -42053,8 +42155,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 this.setupCorePlugin(Plugin, workbookData);
             }
             Object.assign(this.getters, this.coreGetters);
-            for (let Plugin of uiPluginRegistry.getAll()) {
-                this.setupUiPlugin(Plugin);
+            for (let Plugin of statefulUIPluginRegistry.getAll()) {
+                this.statefulUIPlugins.push(this.setupUiPlugin(Plugin));
+            }
+            for (let Plugin of coreViewsPluginRegistry.getAll()) {
+                this.coreViewsPlugins.push(this.setupUiPlugin(Plugin));
+            }
+            for (let Plugin of featurePluginRegistry.getAll()) {
+                this.featurePlugins.push(this.setupUiPlugin(Plugin));
             }
             this.uuidGenerator.setIsFastStrategy(false);
             // starting plugins
@@ -42078,7 +42186,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             owl.markRaw(this);
         }
         get handlers() {
-            return [this.range, ...this.corePlugins, ...this.uiPlugins, this.history];
+            return [this.range, ...this.corePlugins, ...this.allUIPlugins, this.history];
+        }
+        get allUIPlugins() {
+            return [...this.statefulUIPlugins, ...this.coreViewsPlugins, ...this.featurePlugins];
         }
         joinSession() {
             this.session.join(this.config.client);
@@ -42097,10 +42208,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 }
                 this.getters[name] = plugin[name].bind(plugin);
             }
-            this.uiPlugins.push(plugin);
             const layers = Plugin.layers.map((l) => [plugin, l]);
             this.renderers.push(...layers);
             this.renderers.sort((p1, p2) => p1[1] - p2[1]);
+            return plugin;
         }
         /**
          * Initialize and properly configure a plugin.
@@ -42124,14 +42235,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         onRemoteRevisionReceived({ commands }) {
             for (let command of commands) {
-                this.dispatchToHandlers(this.uiPlugins, command);
+                this.dispatchToHandlers(this.allUIPlugins, command);
             }
             this.finalize();
         }
         setupSession(revisionId) {
             const session = new Session(buildRevisionLog(revisionId, this.state.recordChanges.bind(this.state), (command) => {
                 this.isReplayingCommand = true;
-                this.dispatchToHandlers([this.range, ...this.corePlugins], command);
+                this.dispatchToHandlers([this.range, ...this.corePlugins, ...this.coreViewsPlugins], command);
                 this.isReplayingCommand = false;
             }), this.config.transportService, revisionId);
             return session;
@@ -42288,7 +42399,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         colMenuRegistry,
         linkMenuRegistry,
         functionRegistry,
-        uiPluginRegistry,
+        featurePluginRegistry,
+        statefulUIPluginRegistry,
+        coreViewsPluginRegistry,
         corePluginRegistry,
         rowMenuRegistry,
         sidePanelRegistry,
@@ -42330,6 +42443,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         rgbaToHex,
         colorToRGBA,
         positionToZone,
+        isDefined: isDefined$1,
     };
     const links = {
         isMarkdownLink,
@@ -42391,8 +42505,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2022-11-18T08:57:24.801Z';
-    exports.__info__.hash = '9616681';
+    exports.__info__.date = '2022-11-24T09:39:42.179Z';
+    exports.__info__.hash = '277a39f';
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map
