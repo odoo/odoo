@@ -14,7 +14,7 @@ class GeoProvider(models.Model):
     _name = "base.geo_provider"
     _description = "Geo Provider"
 
-    tech_name = fields.Char()
+    tech_name = fields.Char(string="Technical Name")
     name = fields.Char()
 
 
