@@ -28,6 +28,23 @@
                 </tree>
             </field>
         </record>
+        <record id="change_password_wizard_user_kanban_view" model="ir.ui.view">
+            <field name="name">Change Password Users</field>
+            <field name="model">change.password.user</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="user_id"/>
+                    <field name="user_login"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <field name="user_login"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
         <record id="change_password_wizard_action" model="ir.actions.act_window">
             <field name="name">Change Password</field>
             <field name="res_model">change.password.wizard</field>
