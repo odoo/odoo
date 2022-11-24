@@ -19,7 +19,7 @@
             <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
                 <tr><td valign="middle">
                     <span style="font-size: 10px;">Lunch Order</span><br/>
-                </td><td valign="middle" align="right">
+                </td><td valign="middle" align="right" t-if="not user.company_id.uses_default_logo">
                     <img t-attf-src="/logo.png?company={{ user.company_id.id }}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="user.company_id.name"/>
                 </td></tr>
                 <tr><td colspan="2" style="text-align:center;">

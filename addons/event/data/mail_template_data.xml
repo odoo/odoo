@@ -59,7 +59,7 @@
                             View Event
                         </a>
                     </t>
-                    <t t-else="">
+                    <t t-elif="not object.company_id.uses_default_logo">
                         <img t-att-src="'/logo.png?company=%s' % object.company_id.id" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="'%s' % object.company_id.name"/>
                     </t>
                 </td></tr>
@@ -290,7 +290,7 @@
                             View Event
                         </a>
                     </t>
-                    <t t-else="">
+                    <t t-elif="not object.company_id.uses_default_logo">
                         <img t-att-src="'/logo.png?company=%s' % object.company_id.id" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="'%s' % object.company_id.name"/>
                     </t>
                 </td></tr>

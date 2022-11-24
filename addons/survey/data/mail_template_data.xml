@@ -58,7 +58,9 @@
         <tbody>
             <tr><td>
                 <!-- We use the logo of the company that created the survey (to handle multi company cases) -->
-                <a href="/"><img t-attf-src="/logo.png?company={{ object.survey_id.create_uid.company_id.id }}" style="vertical-align:baseline;max-width:100px;" /></a>
+                <a href="/"><img t-if="not object.survey_id.create_uid.company_id.uses_default_logo"
+                                 t-attf-src="/logo.png?company={{ object.survey_id.create_uid.company_id.id }}"
+                                 style="vertical-align:baseline;max-width:100px;" /></a>
             </td><td style="text-align:right;vertical-align:middle;">
                     Certification: <t t-out="object.survey_id.display_name or ''">Feedback Form</t>
             </td></tr>
