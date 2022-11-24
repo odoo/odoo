@@ -8,6 +8,7 @@ import { getWebClientReady } from "@mail/../tests/helpers/webclient_setup";
 
 import { wowlServicesSymbol } from "@web/legacy/utils";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
+import { session as sessionInfo } from "@web/session";
 import { getFixture, makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { doAction, getActionManagerServerData } from "@web/../tests/webclient/helpers";
 
@@ -245,6 +246,14 @@ async function start(param0 = {}) {
     const afterEvent = getAfterEvent({ messagingBus });
 
     const pyEnv = await getPyEnv();
+    patchWithCleanup(sessionInfo, {
+        user_context: {
+            ...sessionInfo.user_context,
+            uid: pyEnv.currentUserId,
+        },
+        uid: pyEnv.currentUserId,
+        partner_id: pyEnv.currentPartnerId,
+    });
     param0.serverData = param0.serverData || getActionManagerServerData();
     param0.serverData.models = { ...pyEnv.getData(), ...param0.serverData.models };
     param0.serverData.views = { ...pyEnv.getViews(), ...param0.serverData.views };
