@@ -4175,7 +4175,7 @@ msgstr "Calculer toutes les taxes"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__compute_all_tax_dirty
 msgid "Compute All Tax Dirty"
-msgstr "Calculer toutes les taxes de vente"
+msgstr "Calculer toutes les taxes Dirty"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6150,7 +6150,7 @@ msgstr "Ecritures : %(account)s"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__epd_dirty
 msgid "Epd Dirty"
-msgstr "Epd Ventes"
+msgstr "Epd Dirty"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__epd_key
@@ -6663,7 +6663,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_non_accountable_fields_null
 msgid "Forbidden balance or account on non-accountable line"
-msgstr ""
+msgstr "Solde ou compte interdit sur une ligne non comptable"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__force_post
@@ -7028,7 +7028,7 @@ msgstr "Masquer l'option d'utilisation de la trésorerie"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__hide_writeoff_section
 msgid "Hide Writeoff Section"
-msgstr ""
+msgstr "Cacher la section d'annulation"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__hide_if_zero
@@ -9450,14 +9450,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__needed_terms
 #: model:ir.model.fields,field_description:account.field_account_payment__needed_terms
 msgid "Needed Terms"
-msgstr "termes necessaires "
+msgstr "Termes necessaires "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms_dirty
 #: model:ir.model.fields,field_description:account.field_account_move__needed_terms_dirty
 #: model:ir.model.fields,field_description:account.field_account_payment__needed_terms_dirty
 msgid "Needed Terms Dirty"
-msgstr ""
+msgstr "Termes nécessaires Dirty"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__tax_negate
@@ -10549,7 +10549,7 @@ msgstr "Type de partenaire"
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_partner_mapping
 msgid "Partner mapping for reconciliation models"
-msgstr ""
+msgstr "Mappage de partenaires pour les modèles de réconciliation"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner
@@ -10964,6 +10964,8 @@ msgstr "Veuillez définir une valeur d'arrondi strictement positive."
 msgid ""
 "Please set at least one of the match texts to create a partner mapping."
 msgstr ""
+"Veuillez définir au moins l'un des textes de réconciliation pour créer un "
+"mappage de partenaire."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -11588,7 +11590,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_resequence_wizard
 msgid "Remake the sequence of Journal Entries."
-msgstr ""
+msgstr "Refaire la séquence des écritures comptables."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__render_model
@@ -11806,13 +11808,13 @@ msgstr "Extourne"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date
 msgid "Reversal date"
-msgstr "Date de renversement"
+msgstr "Date d'extourne"
 
 #. module: account
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Reversal date must be posterior to date."
-msgstr ""
+msgstr "La date d'extourne doit être postérieure à la date."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reversed_entry_id
@@ -12800,12 +12802,12 @@ msgstr "État du panneau d'intégration du tableau de bord du compte"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_invoice_onboarding_state
 msgid "State of the account invoice onboarding panel"
-msgstr ""
+msgstr "Statut du panneau d'intégration de la facture du compte"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_taxes_state
 msgid "State of the onboarding Taxes step"
-msgstr ""
+msgstr "Statut de l'étape d'intégration des taxes"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_bank_data_state
@@ -12815,7 +12817,7 @@ msgstr "Statu de l'étape d'intégration des données bancaires"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_bill_state
 msgid "State of the onboarding bill step"
-msgstr ""
+msgstr "Statut de l'étape d'intégration des factures"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_coa_state
@@ -12825,22 +12827,22 @@ msgstr "État de l'étape d'intégration des plans de compte"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_onboarding_create_invoice_state
 msgid "State of the onboarding create invoice step"
-msgstr ""
+msgstr "Statut de l'étape d'intégration de la création de factures"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_fy_data_state
 msgid "State of the onboarding fiscal year step"
-msgstr ""
+msgstr "Statut de l'étape d'intégration de l'année fiscale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_onboarding_invoice_layout_state
 msgid "State of the onboarding invoice layout step"
-msgstr ""
+msgstr "Statut de l'étape d'intégration de la mise en page des factures"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_onboarding_sale_tax_state
 msgid "State of the onboarding sale tax step"
-msgstr ""
+msgstr "Statut de l'étape d'intégration des taxes de vente"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_account_statement
@@ -13011,7 +13013,7 @@ msgstr "Transformer en remboursement / avoir"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__end_month
 msgid "Switch to end of the month after having added months or days"
-msgstr ""
+msgstr "Passer à la fin du mois après avoir ajouté des mois ou des jours"
 
 #. module: account
 #: model:account.report.column,name:account.generic_tax_report_account_tax_column_tax
@@ -13227,12 +13229,12 @@ msgstr "Nom de la taxe"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__property_tax_payable_account_id
 msgid "Tax Payable Account"
-msgstr ""
+msgstr "Taxe compte fournisseur"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__property_tax_receivable_account_id
 msgid "Tax Receivable Account"
-msgstr ""
+msgstr "Taxe compte client"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_repartition_line
@@ -13393,6 +13395,8 @@ msgid ""
 "Tax report expressions whose '+' tag will be assigned to move lines by this "
 "repartition line"
 msgstr ""
+"Les expressions de déclaration fiscale avec le signe '+' seront attribuées "
+"aux lignes de mouvement par cette ligne de répartition"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line_template__minus_report_expression_ids
@@ -13400,11 +13404,13 @@ msgid ""
 "Tax report expressions whose '-' tag will be assigned to move lines by this "
 "repartition line"
 msgstr ""
+"Les expressions de déclaration fiscale avec le signe '-' seront attribuées "
+"aux lignes de mouvement par cette ligne de répartition"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__early_pay_discount_computation
 msgid "Tax setting"
-msgstr ""
+msgstr "Fixation de la taxe"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_dest_id
@@ -13760,6 +13766,8 @@ msgid ""
 "The cash basis entries created from the taxes on this entry, when "
 "reconciling its lines."
 msgstr ""
+"Les écritures de comptabilité de trésorerie créées à partir des taxes sur "
+"cette écriture, lors de la réconciliation de ses lignes."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__chart_template_id
@@ -13889,6 +13897,9 @@ msgid ""
 "The date is being set prior to the %(lock_type)s lock date %(lock_date)s. "
 "The Journal Entry will be accounted on %(accounting_date)s upon posting."
 msgstr ""
+"La date est fixée avant la %(lock_type)s date de verrouillage %(lock_date)s."
+" L'écriture comptable sera comptabilisée le %(accounting_date)s au moment de"
+" l'enregistrement."
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -13909,6 +13920,8 @@ msgstr "La date sélectionnée est protégée par une date de verrouillage"
 #, python-format
 msgid "The discount days of the Payment Terms lines must be positive."
 msgstr ""
+"Les jours d'escompte des lignes de conditions de paiement doivent être "
+"positifs."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_origin
@@ -14001,6 +14014,8 @@ msgstr ""
 msgid ""
 "The following regular expression is invalid to create a partner mapping: %s"
 msgstr ""
+"L'expression régulière suivante n'est pas valable pour créer un mappage de "
+"partenaire : %s"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement_line.py:0
@@ -14022,6 +14037,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_report_external_value__foreign_vat_fiscal_position_id
 msgid "The foreign fiscal position for which this external value is made."
 msgstr ""
+"La position fiscale étrangère pour laquelle cette valeur externe est créée."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -14069,6 +14085,8 @@ msgid ""
 "The journal entry %s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one journal item involving the bank/cash account."
 msgstr ""
+"L'écriture comptable %s a atteint un statut non valide en ce qui concerne sa ligne de relevé associée.\n"
+"Pour être cohérent, l'écriture comptable doit toujours avoir exactement une imputation comptable impliquant le compte bancaire/de trésorerie."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -14087,6 +14105,8 @@ msgid ""
 "The journal entry from which this tax cash basis journal entry has been "
 "created."
 msgstr ""
+"L'écriture comptable à partir de laquelle cette écriture de journal de la "
+"comptabilité de trésorerie a été créée."
 
 #. module: account
 #: code:addons/account/models/account_analytic_line.py:0
@@ -14628,6 +14648,8 @@ msgid ""
 "There is no tax cash basis journal defined for the '%s' company.\n"
 "Configure it in Accounting/Configuration/Settings"
 msgstr ""
+"Il n'y a pas de journal de comptabilité de trésorerie défini pour l'entreprise '%s'.\n"
+"Configurez-le dans Comptabilité/Configuration/Paramètres"
 
 #. module: account
 #: code:addons/account/models/company.py:0
@@ -14758,6 +14780,11 @@ msgid ""
 "'filter_domain'.See '_search_name' and '_parse_name_search' for why this is "
 "not possible with 'filter_domain'."
 msgstr ""
+"Ce champ fictif nous permet d'utiliser une autre méthode de recherche sur le"
+" champ 'name', ce qui nous donne plus de liberté dans la façon de rechercher"
+" le 'name' par rapport à 'filter_domain'. Voir '_search_name' et "
+"'_parse_name_search' pour savoir pourquoi cela n'est pas possible avec "
+"'filter_domain'."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14767,6 +14794,9 @@ msgid ""
 " country. Check company fiscal country in the settings and tax country in "
 "taxes configuration."
 msgstr ""
+"Cette écriture contient une ou plusieurs taxes qui sont incompatibles avec "
+"votre position fiscale. Vérifiez le pays fiscal de l'entreprise dans les "
+"paramètres et le pays d'imposition dans la configuration fiscale."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -15170,7 +15200,7 @@ msgstr "Date de transfert"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Transfer counterpart"
-msgstr ""
+msgstr "Contrepartie de transfert"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -15618,6 +15648,13 @@ msgid ""
 "You could enter\n"
 "BRT: ([\\d,]+)"
 msgstr ""
+"Valeur pour le montant de la ligne d'annulation\n"
+"* Pourcentage : Pourcentage du solde, entre 0 et 100.\n"
+"* Fixe : La valeur fixe de l'annulation. Le montant sera comptabilisé comme un débit s'il est négatif, comme un crédit s'il est positif.\n"
+"* D'étiquette : Il n'y a pas besoin de délimiteur de regex, seule la regex est nécessaire. Par exemple, si vous voulez extraire le montant de\n"
+"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+"Vous pouvez saisir\n"
+"BRT: ([\\d,]+)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__variant_report_ids
@@ -15860,7 +15897,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "When will the tax be reduced when offering a cash discount"
-msgstr ""
+msgstr "Quand la taxe sera-t-elle réduite en cas de remise en espèces"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__show_on_dashboard
@@ -16271,6 +16308,8 @@ msgid ""
 "You cannot delete a payable/receivable line as it would not be consistent "
 "with the payment terms"
 msgstr ""
+"Vous ne pouvez pas supprimer une ligne fournisseur/client, car cela ne "
+"serait pas cohérent avec les conditions de paiement."
 
 #. module: account
 #: code:addons/account/models/account_move_line.py:0
@@ -16450,6 +16489,8 @@ msgid ""
 "You cannot remove/deactivate the accounts \"%s\" which are set on a tax "
 "repartition line."
 msgstr ""
+"Vous ne pouvez pas enlever/désactiver les comptes \"%s\" qui sont définis "
+"sur une ligne de répartition des taxes."
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -16458,6 +16499,8 @@ msgid ""
 "You cannot remove/deactivate the accounts \"%s\" which are set on the "
 "account mapping of a fiscal position."
 msgstr ""
+"Vous ne pouvez pas enlever/désactiver les comptes \"%s\" qui sont définis "
+"dans le mappage de comptes d'une position fiscale."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
