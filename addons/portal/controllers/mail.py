@@ -265,3 +265,8 @@ class MailController(mail.MailController):
                             url = url.replace(query=urls.url_encode(url_params)).to_url()
                         return request.redirect(url)
         return super(MailController, cls)._redirect_to_record(model, res_id, access_token=access_token, **kwargs)
+
+    # Add website=True to support the portal layout
+    @http.route('/mail/unfollow', type='http', website=True)
+    def mail_action_unfollow(self, model, res_id, pid, token, **kwargs):
+        return super().mail_action_unfollow(model, res_id, pid, token, **kwargs)

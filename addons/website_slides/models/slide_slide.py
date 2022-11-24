@@ -108,6 +108,7 @@ class Slide(models.Model):
         'latest': 'date_published desc',
     }
     _order = 'sequence asc, is_category asc, id asc'
+    _partner_unfollow_enabled = True
 
     YOUTUBE_VIDEO_ID_REGEX = r'^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*'
     GOOGLE_DRIVE_DOCUMENT_ID_REGEX = r'(^https:\/\/docs.google.com|^https:\/\/drive.google.com).*\/d\/([^\/]*)'
