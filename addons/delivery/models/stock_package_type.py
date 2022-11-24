@@ -18,6 +18,7 @@ class PackageType(models.Model):
         else:
             self.shipper_package_code = False
 
+    @api.depends('package_carrier_type')
     def _compute_length_uom_name(self):
         package_without_carrier = self.env['stock.package.type']
         for package in self:
