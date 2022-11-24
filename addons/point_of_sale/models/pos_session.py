@@ -8,7 +8,7 @@ from markupsafe import Markup, escape
 
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tools import float_is_zero, float_compare
+from odoo.tools import float_is_zero, float_compare, convert
 from odoo.osv.expression import AND, OR
 from odoo.service.common import exp_version
 
@@ -2124,6 +2124,12 @@ class PosSession(models.Model):
             fiscal_position['fiscal_position_taxes_by_id'] = {tax_id: fiscal_position_by_id[tax_id] for tax_id in fiscal_position['tax_ids']}
 
         return fps
+
+    def load_product_frontend(self):
+        convert.convert_file(self.env, 'point_of_sale', 'data/point_of_sale_onboarding.xml', None, mode='init',
+                             kind='data')
+        return self.get_onboarding_data()
+
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'

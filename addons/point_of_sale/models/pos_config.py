@@ -527,20 +527,6 @@ class PosConfig(models.Model):
             self._check_before_creating_new_session()
         self._validate_fields(self._fields)
 
-        # check if there's any product for this PoS
-        domain = [('available_in_pos', '=', True)]
-        if self.limit_categories and self.iface_available_categ_ids:
-            domain.append(('pos_categ_id', 'in', self.iface_available_categ_ids.ids))
-        if not self.env['product.product'].search(domain):
-            return {
-                'name': _("There is no product linked to your PoS"),
-                'type': 'ir.actions.act_window',
-                'view_mode': 'form',
-                'res_model': 'pos.session.check_product_wizard',
-                'target': 'new',
-                'context': {'config_id': self.id}
-            }
-
         return self._action_to_open_ui()
 
     def open_existing_session_cb(self):
