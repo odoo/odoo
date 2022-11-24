@@ -136,8 +136,11 @@ export function parseInteger(value) {
             truncate: true,
         });
         if (!Number.isInteger(parsed)) {
-            throw new InvalidNumberError(`"${value}" is not a correct number`);
+            throw new InvalidNumberError(`"${value}" is not a valid integer`);
         }
+    }
+    if (parsed % 1 || parsed < -2147483648 || parsed > 2147483647) {
+        throw new InvalidNumberError(`"${value}" is not a valid integer`);
     }
     return parsed;
 }
