@@ -882,28 +882,50 @@ export class MockServer {
             fields = Object.keys(model.fields);
         }
         const ids = Array.isArray(args[0]) ? args[0] : [args[0]];
-        const records = ids.reduce((records, id) => {
+        const records = [];
+
+        // Mapping of model records used in the current mockRead call.
+        const modelMap = {
+            [modelName]: {},
+        };
+        for (const record of model.records) {
+            modelMap[modelName][record.id] = record;
+        }
+        for (const fieldName of fields) {
+            const field = model.fields[fieldName];
+            if (!field) {
+                continue; // the field doesn't exist on the model, so skip it
+            }
+            const { relation, type } = field;
+            if (type === "many2one" && !modelMap[relation]) {
+                modelMap[relation] = {};
+                for (const record of this.models[relation].records) {
+                    modelMap[relation][record.id] = record;
+                }
+            }
+        }
+
+        for (const id of ids) {
             if (!id) {
                 throw new Error(
                     "mock read: falsy value given as id, would result in an access error in actual server !"
                 );
             }
-            const record = model.records.find((r) => r.id === id);
-            return record ? records.concat(record) : records;
-        }, []);
-        return records.map((record) => {
+            const record = modelMap[modelName][id];
+            if (!record) {
+                continue;
+            }
             const result = { id: record.id };
             for (const fieldName of fields) {
                 const field = model.fields[fieldName];
                 if (!field) {
-                    continue; // the field doens't exist on the model, so skip it
+                    continue; // the field doesn't exist on the model, so skip it
                 }
                 if (["float", "integer", "monetary"].includes(field.type)) {
                     // read should return 0 for unset numeric fields
                     result[fieldName] = record[fieldName] || 0;
                 } else if (field.type === "many2one") {
-                    const CoModel = this.models[field.relation];
-                    const relRecord = CoModel.records.find((r) => r.id === record[fieldName]);
+                    const relRecord = modelMap[field.relation][record[fieldName]];
                     if (relRecord) {
                         result[fieldName] = [record[fieldName], relRecord.display_name];
                     } else {
@@ -915,8 +937,10 @@ export class MockServer {
                     result[fieldName] = record[fieldName] || false;
                 }
             }
-            return result;
-        });
+            records.push(result);
+        }
+
+        return records;
     }
 
     mockReadGroup(modelName, kwargs) {
