@@ -323,15 +323,13 @@ QUnit.module("mail", {}, function () {
             assert.expect(4);
 
             const pyEnv = await startServer();
-            const [resUsersId1, resUsersId2, resUsersId3] = pyEnv["res.users"].create([
+            const [resUsersId1, resUsersId2] = pyEnv["res.users"].create([
                 { name: "Mario" },
-                { name: "Luigi" },
                 { name: "Yoshi" },
             ]);
             const m2xAvatarUserId1 = pyEnv["m2x.avatar.user"].create({
-                user_ids: [resUsersId1, resUsersId3],
+                user_ids: [resUsersId1, resUsersId2],
             });
-            patchWithCleanup(session, { uid: resUsersId2, name: "Luigi" });
 
             const views = {
                 "m2x.avatar.user,false,form":
@@ -358,13 +356,13 @@ QUnit.module("mail", {}, function () {
                 .indexOf("Assign/Unassign to meALT + SHIFT + I");
             assert.ok(idx >= 0);
 
-            // Assign me (Luigi)
+            // Assign me
             triggerHotkey("alt+shift+i");
             await nextTick();
             userNames = [...target.querySelectorAll(".o_tag_badge_text")].map(
                 (el) => el.textContent
             );
-            assert.deepEqual(userNames, ["Mario", "Yoshi", "Luigi"]);
+            assert.deepEqual(userNames, ["Mario", "Yoshi", "Your Company, Mitchell Admin"]);
 
             // Unassign me
             triggerHotkey("control+k");
