@@ -23,10 +23,13 @@ export const presenceService = {
             lastPresenceTime = new Date().getTime();
             browser.localStorage.setItem(`${LOCAL_STORAGE_PREFIX}.lastPresence`, lastPresenceTime);
         }
-        function onFocusChange() {
-            isOdooFocused = parent.document.hasFocus();
+
+        function onFocusChange(isFocused) {
+            try {
+                isFocused = parent.document.hasFocus();
+            } catch {}
             browser.localStorage.setItem(`${LOCAL_STORAGE_PREFIX}.focus`, isOdooFocused);
-            if (isOdooFocused) {
+            if (isFocused) {
                 lastPresenceTime = new Date().getTime();
                 env.bus.trigger('window_focus', isOdooFocused);
             }
@@ -42,9 +45,9 @@ export const presenceService = {
             }
         }
         browser.addEventListener('storage', onStorage);
-        browser.addEventListener('focus', () => onFocusChange());
-        browser.addEventListener('blur', () => onFocusChange());
-        browser.addEventListener('pagehide', () => onFocusChange());
+        browser.addEventListener('focus', () => onFocusChange(true));
+        browser.addEventListener('blur', () => onFocusChange(false));
+        browser.addEventListener('pagehide', () => onFocusChange(false));
         browser.addEventListener('click', onPresence);
         browser.addEventListener('keydown', onPresence);
 
