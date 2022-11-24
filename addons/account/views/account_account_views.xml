@@ -119,15 +119,15 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
                                 <div class="row">
-                                    <div class="col-6">
+                                    <div class="col-8">
                                         <strong><field name="name"/></strong>
                                     </div>
-                                    <div class="col-6 text-end">
+                                    <div class="col-4 text-end">
                                         <span class="badge rounded-pill"><t t-out="record.code.value"/></span>
                                     </div>
                                 </div>
                                 <div>
-                                    <strong>Type: </strong><t t-out="record.account_type"/>
+                                    <strong>Type: </strong><t t-out="record.account_type.value"/>
                                 </div>
                             </div>
                         </t>
