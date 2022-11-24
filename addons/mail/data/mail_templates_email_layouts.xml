@@ -100,9 +100,12 @@
         <a t-if="company.website" t-att-href="'%s' % company.website" style="text-decoration:none; color: #999999;" t-out="company.website"/>
     </p>
 </div>
-<p style="color: #555555; font-size:11px;">
+<div style="color: #555555; font-size:11px;">
     Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email" style="color: #875A7B;">Odoo</a>
-</p>
+    <span id="mail_unfollow">
+        | <a href="/mail/unfollow" style="text-decoration:none; color:#555555;">Unfollow</a>
+    </span>
+</div>
 </div>
 </body></html>
         </template>
@@ -172,6 +175,9 @@
 <!-- POWERED BY -->
 <tr><td align="center" style="min-width: 590px;">
         Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email" style="color: #875A7B;">Odoo</a>
+    <span id="mail_unfollow">
+        | <a href="/mail/unfollow" style="text-decoration:none; color:#555555;">Unfollow</a>
+    </span>
 </td></tr>
 </table>
 </body>
