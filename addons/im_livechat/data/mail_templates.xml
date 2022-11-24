@@ -14,7 +14,7 @@
                     <span style="font-size: 20px; font-weight: bold;">
                         <t t-esc="company.name"/>
                     </span>
-                </td><td valign="middle" align="right">
+                </td><td valign="middle" align="right" t-if="not company.uses_default_logo">
                     <img t-att-src="'/logo.png?company=%s' % company.id" style="padding: 0px; margin: 0px; height: 48px;" t-att-alt="'%s' % company.name"/>
                 </td></tr>
                 <tr><td colspan="2" style="text-align:center;">

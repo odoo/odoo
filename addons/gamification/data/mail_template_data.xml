@@ -18,7 +18,7 @@
                 <tr><td valign="middle">
                     <span style="font-size: 10px;">Your Badge</span><br/>
                     <span style="font-size: 20px; font-weight: bold;" t-out="object.badge_id.name or ''"></span>
-                </td><td valign="middle" align="right">
+                </td><td valign="middle" align="right" t-if="not object.user_id.company_id.uses_default_logo">
                     <img t-attf-src="/logo.png?company={{ object.user_id.company_id.id }}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="object.user_id.company_id.name"/>
                 </td></tr>
                 <tr><td colspan="2" style="text-align:center;">

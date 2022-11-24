@@ -34,10 +34,10 @@
 
         <template id="hr_expense_template_register_no_user">
             <div style="background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
-                <table style="width:600px;margin:5px auto;">
+                <table style="width:600px;margin:5px auto;" t-if="not expense.employee_id.company_id.uses_default_logo">
                     <tbody>
                         <tr>
-                            <td><a href="/"><img src="/web/binary/company_logo" style="vertical-align:baseline;max-width:100px;" /></a></td>
+                            <td><a href="/"><img t-attf-src="/logo.png?company={{ expense.employee_id.company_id.id }}" style="vertical-align:baseline;max-width:100px;max-height:50px;" /></a></td>
                         </tr>
                     </tbody>
                 </table>

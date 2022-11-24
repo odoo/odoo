@@ -22,7 +22,7 @@
                     <span style="font-size: 20px; font-weight: bold;">
                         <t t-out="object.name or ''">Marc Demo</t>
                     </span>
-                </td><td valign="middle" align="right">
+                </td><td valign="middle" align="right" t-if="not object.company_id.uses_default_logo">
                     <img t-attf-src="/logo.png?company={{ object.company_id.id }}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="object.company_id.name"/>
                 </td></tr>
                 <tr><td colspan="2" style="text-align:center;">
@@ -118,7 +118,7 @@
                     <span style="font-size: 20px; font-weight: bold;">
                         <t t-out="object.name or ''">Marc Demo</t>
                     </span>
-                </td><td valign="middle" align="right">
+                </td><td valign="middle" align="right" t-if="not object.company_id.uses_default_logo">
                     <img t-attf-src="/logo.png?company={{ object.company_id.id }}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="object.company_id.name"/>
                 </td></tr>
                 <tr><td colspan="2" style="text-align:center;">
@@ -266,7 +266,7 @@
                     <span style="font-size: 20px; font-weight: bold;">
                         <t t-out="object.name or ''">Marc Demo</t>
                     </span>
-                </td><td valign="middle" align="right">
+                </td><td valign="middle" align="right" t-if="not object.company_id.uses_default_logo">
                     <img t-attf-src="/logo.png?company={{ object.company_id.id }}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="object.company_id.name"/>
                 </td></tr>
                 <tr><td colspan="2" style="text-align:center;">
