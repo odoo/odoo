@@ -200,6 +200,8 @@
                                     <field name='comments_message'
                                         attrs="{'invisible': ['|', ('question_type', 'not in', ['simple_choice','multiple_choice', 'matrix']), ('comments_allowed', '=', False)]}"
                                         placeholder="If other, please specify:"/>
+                                    <field name='comment_count_as_answer'
+                                        attrs="{'invisible': ['|', ('question_type', 'not in', ['simple_choice','multiple_choice', 'matrix']), ('comments_allowed', '=', False)]}"/>
                                 </group>
                                 <group string="Layout">
                                     <field name="is_conditional" attrs="{'invisible': [('questions_selection', '=', 'random')]}"/>
