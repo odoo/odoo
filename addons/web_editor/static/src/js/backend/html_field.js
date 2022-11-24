@@ -62,9 +62,7 @@ export class HtmlFieldWysiwygAdapterComponent extends ComponentAdapter {
             !_.isEqual(lastRecordInfo, newRecordInfo) ||
             !_.isEqual(lastCollaborationChannel, newCollaborationChannel))
         {
-            this.widget.resetEditor(newValue, {
-                collaborationChannel: newCollaborationChannel,
-            });
+            this.widget.resetEditor(newValue, newProps.widgetArgs[0]);
             this.env.onWysiwygReset && this.env.onWysiwygReset();
         }
     }
