@@ -40,7 +40,7 @@ class CalendarEvent(models.Model):
         events = super(CalendarEvent, self).create(vals)
         for event in events:
             if event.opportunity_id and not event.activity_ids:
-                event.opportunity_id.log_meeting(event.name, event.start, event.duration)
+                event.opportunity_id.log_meeting(event)
         return events
 
     def _is_crm_lead(self, defaults, ctx=None):

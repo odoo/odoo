@@ -1280,15 +1280,24 @@ class Lead(models.Model):
     # BUSINESS
     # ------------------------------------------------------------
 
-    def log_meeting(self, meeting_subject, meeting_date, duration):
-        if not duration:
+    def log_meeting(self, meeting):
+        """ Log the meeting info with a link to it in the chatter
+        :param record meeting: the meeting we want to log
+        """
+        if not meeting.duration:
             duration = _('unknown')
         else:
-            duration = self.env['ir.qweb.field.duration'].value_to_html(duration, {'unit': 'hour'})
-        meet_date = fields.Datetime.from_string(meeting_date)
+            duration = self.env['ir.qweb.field.duration'].value_to_html(meeting.duration, {'unit': 'hour'})
+        meet_date = fields.Datetime.from_string(meeting.start)
         meeting_usertime = fields.Datetime.to_string(fields.Datetime.context_timestamp(self, meet_date))
-        html_time = "<time datetime='%s+00:00'>%s</time>" % (meeting_date, meeting_usertime)
-        message = _("Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s") % (html_time, meeting_subject, duration)
+        message = "<p>%s<p>" % Markup(_("Meeting scheduled at %(html_time)s<br/>Subject: %(subject)s<br/>Duration: %(duration)s")) % {
+            'html_time': Markup("<time datetime='%(meeting_start)s+00:00'>%(meeting_user_time)s</time>") % {
+                'meeting_start': meeting.start,
+                'meeting_user_time': meeting_usertime,
+            },
+            'subject': meeting._get_html_link(), # Already Markup valid
+            'duration': duration,
+        }
         return self.message_post(body=message)
 
     # ------------------------------------------------------------
