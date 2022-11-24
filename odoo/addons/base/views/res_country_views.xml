@@ -62,6 +62,17 @@
             </field>
         </record>
 
+        <record id="view_country_search" model="ir.ui.view">
+            <field name="name">res.country.search</field>
+            <field name="model">res.country</field>
+            <field name="arch" type="xml">
+                <search string="Countries">
+                    <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
+                    <field name="phone_code"/>
+                </search>
+            </field>
+        </record>
+
         <record id="action_country" model="ir.actions.act_window">
             <field name="name">Countries</field>
             <field name="type">ir.actions.act_window</field>
