@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import tagged
+from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.common import PaymentCommon
 
@@ -80,3 +81,16 @@ class TestPaymentTransaction(PaymentCommon):
             msg="The amount of the refund transaction should be the negative value of the amount "
                 "to refund."
         )
+
+    @mute_logger('odoo.addons.payment.models.payment_transaction')
+    def test_update_state_to_illegal_target_state(self):
+        tx = self._create_transaction('redirect', state='done')
+        tx._update_state(['draft', 'pending', 'authorized'], 'cancel', None)
+        self.assertEqual(tx.state, 'done')
+
+    def test_update_state_to_extra_allowed_state(self):
+        tx = self._create_transaction('redirect', state='done')
+        tx._update_state(
+            ['draft', 'pending', 'authorized', 'done'], 'cancel', None
+        )
+        self.assertEqual(tx.state, 'cancel')
