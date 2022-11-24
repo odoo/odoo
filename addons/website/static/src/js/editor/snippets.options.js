@@ -2170,6 +2170,24 @@ options.registry.HeaderNavbar = options.Class.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    async updateUI() {
+        await this._super(...arguments);
+        // For all header templates except those in the following array, change
+        // the label of the option to "Mobile Alignment" (instead of
+        // "Alignment") because it only impacts the mobile view.
+        if (!["'default'", "'hamburger'", "'sidebar'"].includes(weUtils.getCSSVariableValue('header-template'))) {
+            const alignmentOptionTitleEl = this.el.querySelector('[data-name="header_alignment_opt"] we-title');
+            alignmentOptionTitleEl.textContent = _t("Mobile Alignment");
+        }
+    },
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
@@ -2188,6 +2206,14 @@ options.registry.HeaderNavbar = options.Class.extend({
             case 'no_hamburger_opt': {
                 return !weUtils.getCSSVariableValue('header-template').includes('hamburger');
             }
+        }
+        if (widgetName === 'header_alignment_opt') {
+            if (!this.$target[0].querySelector('.o_offcanvas_menu_toggler')) {
+                // If mobile menu is "Default", hides the alignment option for
+                // "hamburger full" and "magazine" header templates.
+                return !["'hamburger-full'", "'magazine'"].includes(weUtils.getCSSVariableValue('header-template'));
+            }
+            return true;
         }
         return this._super(...arguments);
     },
