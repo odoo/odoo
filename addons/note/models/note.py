@@ -5,7 +5,7 @@ from random import randint
 
 from odoo import api, fields, models, _
 from odoo.tools import html2plaintext
-
+from odoo.addons.web_editor.controllers.main import handle_history_divergence
 
 class Stage(models.Model):
 
@@ -146,3 +146,8 @@ class Note(models.Model):
 
     def action_open(self):
         return self.write({'open': True})
+
+    def write(self, vals):
+        if len(self) == 1:
+            handle_history_divergence(self, 'memo', vals)
+        return super(Note, self).write(vals)
