@@ -108,7 +108,7 @@ class PaymentTransaction(models.Model):
         tx_status = tx_details.get('transaction', {}).get('transactionStatus')
         if tx_status in TRANSACTION_STATUS_MAPPING['voided']:
             # The payment has been voided from Authorize.net side before we could refund it.
-            self._set_canceled()
+            self._set_canceled(extra_allowed_states=('done',))
         elif tx_status in TRANSACTION_STATUS_MAPPING['refunded']:
             # The payment has been refunded from Authorize.net side before we could refund it. We
             # create a refund tx on Odoo to reflect the move of the funds.

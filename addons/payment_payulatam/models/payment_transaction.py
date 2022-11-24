@@ -129,7 +129,7 @@ class PaymentTransaction(models.Model):
         if status == 'PENDING':
             self._set_pending(state_message=state_message)
         elif status == 'APPROVED':
-            self._set_done(state_message=state_message)
+            self._set_done(state_message=state_message, extra_allowed_states=('cancel',))
         elif status in ('EXPIRED', 'DECLINED'):
             self._set_canceled(state_message=state_message)
         else:

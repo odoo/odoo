@@ -31,14 +31,14 @@ class PaymentTransaction(models.Model):
         for trans in self:
             trans.sale_order_ids_nbr = len(trans.sale_order_ids)
 
-    def _set_pending(self, state_message=None):
+    def _set_pending(self, state_message=None, **kwargs):
         """ Override of `payment` to send the quotations automatically.
 
         :param str state_message: The reason for which the transaction is set in 'pending' state.
         :return: updated transactions.
         :rtype: `payment.transaction` recordset.
         """
-        txs_to_process = super()._set_pending(state_message=state_message)
+        txs_to_process = super()._set_pending(state_message=state_message, **kwargs)
 
         for tx in txs_to_process:  # Consider only transactions that are indeed set pending.
             sales_orders = tx.sale_order_ids.filtered(lambda so: so.state in ['draft', 'sent'])
@@ -92,9 +92,9 @@ class PaymentTransaction(models.Model):
                         )
         return confirmed_orders
 
-    def _set_authorized(self, state_message=None):
+    def _set_authorized(self, state_message=None, **kwargs):
         """ Override of payment to confirm the quotations automatically. """
-        super()._set_authorized(state_message=state_message)
+        super()._set_authorized(state_message=state_message, **kwargs)
         confirmed_orders = self._check_amount_and_confirm_order()
         confirmed_orders._send_order_confirmation_mail()
 
