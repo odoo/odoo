@@ -89,14 +89,14 @@ class PaymentTransaction(models.Model):
                 return separator.join(invoices.mapped('name'))
         return super()._compute_reference_prefix(provider_code, separator, **values)
 
-    def _set_canceled(self, state_message=None):
+    def _set_canceled(self, state_message=None, **kwargs):
         """ Update the transactions' state to 'cancel'.
 
         :param str state_message: The reason for which the transaction is set in 'cancel' state
         :return: updated transactions
         :rtype: `payment.transaction` recordset
         """
-        processed_txs = super()._set_canceled(state_message)
+        processed_txs = super()._set_canceled(state_message, **kwargs)
         # Cancel the existing payments
         processed_txs.payment_id.action_cancel()
         return processed_txs
