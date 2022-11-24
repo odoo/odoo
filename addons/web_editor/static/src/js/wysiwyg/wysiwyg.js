@@ -423,23 +423,6 @@ const Wysiwyg = Widget.extend({
         };
         const rpcMutex = new Mutex();
 
-        this._getCurrentRecord = async () => {
-            const records = await this._rpc({
-                model: modelName,
-                method: "read",
-                args: [
-                    [resId],
-                    [fieldName, 'write_date']
-                ],
-            });
-            records[0].body = records[0][fieldName];
-            return records[0];
-        }
-        this._getRecordWriteDate = (record) => {
-            const dateString = record.write_date.replace(/^(\d{4}-\d{2}-\d{2}) ((\d{2}:?){3})$/, '$1T$2Z');
-            return new Date(dateString);
-        }
-
         this._getNewPtp = () => {
             // Wether or not the history has been sent or received at least once.
             let historySyncAtLeastOnce = false;
@@ -572,7 +555,6 @@ const Wysiwyg = Widget.extend({
         }, CHECK_OFFLINE_TIME);
 
         this._peerToPeerLoading = new Promise(async (resolve) => {
-            this._currentRecord = await this._getCurrentRecord();
             let iceServers = await this._rpc({route: '/web_editor/get_ice_servers'});
             if (!iceServers.length) {
                 iceServers = [
@@ -648,8 +630,8 @@ const Wysiwyg = Widget.extend({
                 }
 
                 if (firstClientId !== this._currentClientId) {
-                    const historySteps = await this.ptp.requestClient(firstClientId, 'get_history_from_snapshot', undefined, { transport: 'rtc' });
-                    this.odooEditor.historyResetFromSteps(historySteps);
+                    const { steps, historyIds } = await this.ptp.requestClient(firstClientId, 'get_history_from_snapshot', undefined, { transport: 'rtc' });
+                    this.odooEditor.historyResetFromSteps(steps, historyIds);
                     const remoteSelection = await this.ptp.requestClient(firstClientId, 'get_collaborative_selection', undefined, { transport: 'rtc' });
                     if (remoteSelection) {
                         this.odooEditor.onExternalMultiselectionUpdate(remoteSelection);
@@ -983,7 +965,10 @@ const Wysiwyg = Widget.extend({
     cleanForSave: async function () {
         this.odooEditor.clean();
         this.$editable.find('.oe_edited_link').removeClass('oe_edited_link');
-
+        const historyIds = this.odooEditor.historyGetBranchIds().join(',');
+        if (this.ptp) {
+            this.odooEditor.editable.children[0].setAttribute('data-last-history-steps', historyIds);
+        }
         if (this.snippetsMenu) {
             await this.snippetsMenu.cleanForSave();
         }
@@ -2204,14 +2189,8 @@ const Wysiwyg = Widget.extend({
             this.preSavePromiseReject = undefined;
         }
         try {
-            const fieldName = this.options.collaborationChannel.collaborationFieldName;
-            const currentContent = this._currentRecord[fieldName];
-            const currentRecordDate = this._getRecordWriteDate(this._currentRecord);
-            const dbRecord = await this._getCurrentRecord();
-            const dbContent = dbRecord[fieldName];
-            const dbRecordDate = this._getRecordWriteDate(dbRecord);
-
-            if (currentContent !== dbContent && dbRecordDate !== currentRecordDate) {
+            const serverContent = await this._ensureCommonHistory();
+            if (serverContent) {
                 const $dialogContent = $(QWeb.render('web_editor.collaboration-reset-dialog'));
                 $dialogContent.append($(this.odooEditor.editable).clone());
                 const dialog = new Dialog(this, {
@@ -2221,7 +2200,7 @@ const Wysiwyg = Widget.extend({
                 });
                 dialog.open({shouldFocusButtons:true});
 
-                this._resetEditor(dbRecord.body);
+                this._resetEditor(serverContent);
             }
             this.preSavePromiseResolve();
             resetPreSavePromise();
@@ -2229,6 +2208,28 @@ const Wysiwyg = Widget.extend({
             this.preSavePromiseReject(e);
             resetPreSavePromise();
         }
+    },
+    /**
+     * When the collaboration is active, ensure that we do not try to save with
+     * a different history branch to the database. If the history is different,
+     * return the database html content.
+     *
+     * See `_historyIds` in `historyReset` in OdooEditor.
+     *
+     * @return {string} The database html content if the history is different.
+     */
+    async _ensureCommonHistory() {
+        if (!this.ptp) return;
+        const historyIds = this.odooEditor.historyGetBranchIds();
+        return this._rpc({
+            route: '/web_editor/ensure_common_history',
+            params: {
+                history_ids: historyIds,
+                model_name: this.options.collaborationChannel.collaborationModelName,
+                field_name: this.options.collaborationChannel.collaborationFieldName,
+                res_id: this.options.collaborationChannel.collaborationResId,
+            },
+        });
     },
     _generateClientId: function () {
         // No need for secure random number.
@@ -2244,6 +2245,7 @@ const Wysiwyg = Widget.extend({
         this.ptp = this._getNewPtp();
         this.odooEditor.collaborationSetClientId(this._currentClientId);
         this.setValue(value);
+        this.odooEditor.updateDocumentHistoryId();
         this.odooEditor.historyReset();
         this.ptp.notifyAllClients('ptp_join');
     },

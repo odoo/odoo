@@ -15,7 +15,7 @@ from base64 import b64decode, b64encode
 from odoo.http import request
 from odoo import http, tools, _, SUPERUSER_ID
 from odoo.addons.http_routing.models.ir_http import slug, unslug
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.modules.module import get_resource_path
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.image import image_data_uri, base64_to_image
@@ -25,6 +25,33 @@ from ..models.ir_attachment import SUPPORTED_IMAGE_EXTENSIONS, SUPPORTED_IMAGE_M
 
 logger = logging.getLogger(__name__)
 DEFAULT_LIBRARY_ENDPOINT = 'https://media-api.odoo.com'
+
+diverging_history_regex = 'data-last-history-steps="([0-9,]*?)"'
+
+def ensure_no_history_divergence(record, html_field_name, incoming_history_ids):
+    server_history_matches = re.search(diverging_history_regex, record[html_field_name])
+    # Do not check old documents without data-last-history-steps.
+    if server_history_matches:
+        server_last_history_id = server_history_matches[1]
+        if server_last_history_id not in incoming_history_ids:
+            logger.error('The document was already saved from someone with a different history for model %r, field %r with id %r.', record._name, html_field_name, record.id)
+            raise ValidationError(_('The document was already saved from someone with a different history for model %r, field %r with id %r.', record._name, html_field_name, record.id))
+
+def handle_history_divergence(record, html_field_name, vals):
+    if html_field_name in vals and record[html_field_name]:
+        incoming_html = vals[html_field_name]
+        incoming_history_matches = re.search(diverging_history_regex, incoming_html)
+        incoming_history_ids = incoming_history_matches[1].split(',')
+        incoming_last_history_id = incoming_history_ids[-1]
+
+        if incoming_history_matches is None:
+            logger.error('The document was already saved from someone with a different history for model %r, field %r with id %r.', record._name, html_field_name, record.id)
+            raise ValidationError(_('The document was already saved from someone with a different history for model %r, field %r with id %r.', record._name, html_field_name, record.id))
+
+        ensure_no_history_divergence(record, html_field_name, incoming_history_ids)
+
+        # Save only the latest id.
+        vals[html_field_name] = incoming_html[0:incoming_history_matches.start(1)] + incoming_last_history_id + incoming_html[incoming_history_matches.end(1):]
 
 class Web_Editor(http.Controller):
     #------------------------------------------------------
@@ -696,3 +723,11 @@ class Web_Editor(http.Controller):
         channel = (request.db, 'editor_collaboration', model_name, field_name, int(res_id))
         bus_data.update({'model_name': model_name, 'field_name': field_name, 'res_id': res_id})
         request.env['bus.bus']._sendone(channel, 'editor_collaboration', bus_data)
+
+    @http.route("/web_editor/ensure_common_history", type="json", auth="user")
+    def ensure_common_history(self, model_name, field_name, res_id, history_ids):
+        record = request.env[model_name].browse([res_id])
+        try:
+            ensure_no_history_divergence(record, field_name, history_ids)
+        except ValidationError:
+            return record[field_name]
