@@ -287,6 +287,7 @@ class Channel(models.Model):
         'website.searchable.mixin',
     ]
     _order = 'sequence, id'
+    _partner_unfollow_enabled = True
 
     def _default_cover_properties(self):
         """ Cover properties defaults are overridden to keep a consistent look for the slides
