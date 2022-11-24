@@ -2,7 +2,7 @@
 
 import spreadsheet from "../../o_spreadsheet/o_spreadsheet_extended";
 import { CurrencyDataSource } from "../currency_data_source";
-const { uiPluginRegistry } = spreadsheet.registries;
+const { featurePluginRegistry } = spreadsheet.registries;
 
 const DATA_SOURCE_ID = "CURRENCIES";
 
@@ -86,4 +86,4 @@ class CurrencyPlugin extends spreadsheet.UIPlugin {
 CurrencyPlugin.modes = ["normal", "headless"];
 CurrencyPlugin.getters = ["getCurrencyRate", "getCurrencyFormat", "getCompanyCurrencyFormat"];
 
-uiPluginRegistry.add("odooCurrency", CurrencyPlugin);
+featurePluginRegistry.add("odooCurrency", CurrencyPlugin);
