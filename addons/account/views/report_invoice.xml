@@ -243,9 +243,10 @@
                         <strong>Incoterm: </strong><span t-field="o.invoice_incoterm_id.code"/> - <span t-field="o.invoice_incoterm_id.name"/>
                     </p>
                     <div id="qrcode" t-if="o.display_qr_code and o.amount_residual > 0">
-                        <p t-if="qr_code_urls.get(o.id)">
+                        <t t-set="qr_code_url" t-value="o._generate_qr_code()"/>
+                        <p t-if="qr_code_url">
                             <strong class="text-center">Scan me with your banking app.</strong><br/><br/>
-                            <img class="border border-dark rounded" t-att-src="qr_code_urls[o.id]"/>
+                            <img class="border border-dark rounded" t-att-src="qr_code_url"/>
                         </p>
                     </div>
                 </div>
