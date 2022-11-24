@@ -42,6 +42,7 @@ Dialog.props = {
         type: Object,
         shape: {
             default: Object, // Content is not optional
+            header: { type: Object, optional: true },
             footer: { type: Object, optional: true },
         },
     },
