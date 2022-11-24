@@ -14,7 +14,7 @@ class ResConfigEdition extends Component {
     setup() {
         this.serverVersion = session.server_version;
         this.expirationDate = session.expiration_date
-            ? DateTime.fromSQL(session.expirationDate).toLocaleString(DateTime.DATE_FULL)
+            ? DateTime.fromSQL(session.expiration_date).toLocaleString(DateTime.DATE_FULL)
             : DateTime.now().plus({ days: 30 }).toLocaleString(DateTime.DATE_FULL);
     }
 }
