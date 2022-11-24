@@ -621,8 +621,9 @@ class Module(models.Model):
 
     @assert_log_admin_access
     def button_uninstall(self):
-        if 'base' in self.mapped('name'):
-            raise UserError(_("The `base` module cannot be uninstalled"))
+        un_installable_modules = set(odoo.conf.server_wide_modules) & set(self.mapped('name'))
+        if un_installable_modules:
+            raise UserError(_("Those modules cannot be uninstalled: %s", ', '.join(un_installable_modules)))
         if any(state not in ('installed', 'to upgrade') for state in self.mapped('state')):
             raise UserError(_(
                 "One or more of the selected modules have already been uninstalled, if you "
