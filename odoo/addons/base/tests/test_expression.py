@@ -501,6 +501,54 @@ class TestExpression(SavepointCaseWithUserDemo):
         partners = self._search(Partner, [('child_ids.city', '=', 'foo')])
         self.assertFalse(partners)
 
+
+    def test_15_o2m_subselect(self):
+        Partner = self.env['res.partner']
+        state_us_1 = self.env.ref('base.state_us_1')
+        state_us_2 = self.env.ref('base.state_us_2')
+        state_us_3 = self.env.ref('base.state_us_3')
+        partners = Partner.create(
+            [
+                {
+                    "name": "Partner A",
+                    "child_ids": [
+                        (0, 0, {"name": "Child A1", "state_id": state_us_1.id}),
+                        (0, 0, {"name": "Child A2", "state_id": state_us_2.id}),
+                        (0, 0, {"name": "Child A2", "state_id": state_us_3.id}),
+                    ]
+                },
+                {
+                    "name": "Partner B",
+                    "child_ids": [
+                        (0, 0, {"name": "Child B1", "state_id": state_us_1.id}),
+                    ]
+                },
+                {
+                    "name": "Partner C",
+                    "child_ids": [
+                        (0, 0, {"name": "Child C2", "state_id": state_us_2.id}),
+                        (0, 0, {"name": "Child C3", "state_id": state_us_3.id}),
+                    ]
+                },
+                {
+                    "name": "Partner D",
+                    "state_id": state_us_1.id,
+                }
+            ]
+        )
+        partner_a, partner_b, partner_c, __ = partners
+        init_domain = [("id", "in", partners.ids)]
+
+        # find partners with children in state_us_1
+        domain = init_domain + [("child_ids.state_id", "=", state_us_1.id)]
+        result = self._search(Partner, domain, init_domain)
+        self.assertEqual(result, partner_a + partner_b)
+
+        # find partners with children in other states than state_us_1
+        domain = init_domain + [("child_ids.state_id", "!=", state_us_1.id)]
+        result = self._search(Partner, domain, init_domain)
+        self.assertEqual(result, partner_a + partner_c)
+
     def test_15_equivalent_one2many_1(self):
         Company = self.env['res.company']
         company3 = Company.create({'name': 'Acme 3'})
