@@ -24,7 +24,7 @@
                             <t t-out="object.company_id.name or ''">YourCompany</t> Profile validation
                         </span>
                     </td>
-                    <td valign="middle" align="right">
+                    <td t-if="not user.company_id.uses_default_logo" valign="middle" align="right">
                         <img t-attf-src="/logo.png?company={{ user.company_id.id }}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="user.company_id.name"/>
                     </td>
                 </tr>

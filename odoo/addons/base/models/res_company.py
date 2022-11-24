@@ -10,6 +10,7 @@ import warnings
 from odoo import api, fields, models, tools, _, Command
 from odoo.exceptions import ValidationError, UserError
 from odoo.modules.module import get_resource_path
+from odoo.tools import file_open
 from random import randrange
 from PIL import Image
 
@@ -25,7 +26,8 @@ class Company(models.Model):
         raise UserError(_('Duplicating a company is not allowed. Please create a new company instead.'))
 
     def _get_logo(self):
-        return base64.b64encode(open(os.path.join(tools.config['root_path'], 'addons', 'base', 'static', 'img', 'res_company_logo.png'), 'rb') .read())
+        with file_open('base/static/img/res_company_logo.png', 'rb') as file:
+            return base64.b64encode(file.read())
 
     def _default_currency_id(self):
         return self.env.user.company_id.currency_id
@@ -43,6 +45,7 @@ class Company(models.Model):
     # logo_web: do not store in attachments, since the image is retrieved in SQL for
     # performance reasons (see addons/web/controllers/main.py, Binary.company_logo)
     logo_web = fields.Binary(compute='_compute_logo_web', store=True, attachment=False)
+    uses_default_logo = fields.Boolean(compute='_compute_uses_default_logo', store=True)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self._default_currency_id())
     user_ids = fields.Many2many('res.users', 'res_company_users_rel', 'cid', 'user_id', string='Accepted Users')
     street = fields.Char(compute='_compute_address', inverse='_inverse_street')
@@ -130,6 +133,12 @@ class Company(models.Model):
         for company in self:
             img = company.partner_id.image_1920
             company.logo_web = img and base64.b64encode(tools.image_process(base64.b64decode(img), size=(180, 0)))
+
+    @api.depends('partner_id.image_1920')
+    def _compute_uses_default_logo(self):
+        default_logo = self._get_logo()
+        for company in self:
+            company.uses_default_logo = not company.logo or company.logo == default_logo
 
     @api.onchange('state_id')
     def _onchange_state(self):
