@@ -1,29 +1,22 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # The currencies supported by Flutterwave, in ISO 4217 format.
-# See https://support.flutterwave.com/en/articles/3632719-accepted-currencies.
+# See https://flutterwave.com/us/support/general/what-are-the-currencies-accepted-on-flutterwave.
+# Last website update: June 2022.
+# Last seen online: 24 November 2022.
 SUPPORTED_CURRENCIES = [
-    'ARS',
-    'BRL',
     'GBP',
     'CAD',
-    'CVE',
     'CLP',
     'COP',
-    'CDF',
     'EGP',
     'EUR',
-    'GMD',
     'GHS',
     'GNF',
     'KES',
-    'LRD',
     'MWK',
-    'MXN',
     'MAD',
-    'MZN',
     'NGN',
-    'SOL',
     'RWF',
     'SLL',
     'STD',
@@ -33,7 +26,6 @@ SUPPORTED_CURRENCIES = [
     'USD',
     'XAF',
     'XOF',
-    'ZMK',
     'ZMW',
 ]
 

@@ -23,7 +23,7 @@ CURRENCY_MAPPING = {
     'SGD': '702',
     'THB': '764',
     'TWD': '901',
-    'USD': '702',
+    'USD': '840',
     'VND': '704',
 }
 
