@@ -386,6 +386,7 @@ class WebsiteSale(http.Controller):
             'pricelist': pricelist,
             'add_qty': add_qty,
             'products': products,
+            'search_product': search_product,
             'search_count': product_count,  # common for all searchbox
             'bins': TableCompute().process(products, ppg, ppr),
             'ppg': ppg,
