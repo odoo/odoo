@@ -255,17 +255,13 @@
                                         </div>
                                         <div class="o_kanban_slides_card_manage_pane">
                                             <t t-if="widget.deletable">
-                                                <div role="menuitem">
-                                                    <a type="delete">Delete</a>
-                                                </div>
+                                                <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
                                             </t>
-                                            <div role="menuitem">
-                                                <a type="edit">Edit</a>
-                                            </div>
-                                            <div role="menuitem" name="action_channel_invite"
-                                                attrs="{'invisible': [('enroll', '!=', 'invite')]}">
-                                                <a name="action_channel_invite" type="object">Invite</a>
-                                            </div>
+                                            <a role="menuitem" type="edit" class="dropdown-item">Edit</a>
+                                            <a role="menuitem" name="action_channel_invite" class="dropdown-item"
+                                               type="object" attrs="{'invisible': [('enroll', '!=', 'invite')]}">
+                                                Invite
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
