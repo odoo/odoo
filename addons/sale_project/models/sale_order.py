@@ -113,6 +113,17 @@ class SaleOrder(models.Model):
     def write(self, values):
         if 'state' in values and values['state'] == 'cancel':
             self.project_id.sudo().sale_line_id = False
+        # Handle the change of sale order partner's id in project and task too
+        if 'partner_id' in values:
+            for sale_order_line in self.order_line:
+                service_tracking = sale_order_line.product_id.service_tracking
+                if service_tracking == "task_global_project":
+                    sale_order_line.project_id.write({'partner_id': values['partner_id']})
+                    sale_order_line.task_id.write({'partner_id': values['partner_id']})
+                elif service_tracking == "task_in_project":
+                    sale_order_line.task_id.write({'partner_id': values['partner_id']})
+                elif service_tracking == "project_only":
+                    sale_order_line.project_id.write({'partner_id': values['partner_id']})
         return super(SaleOrder, self).write(values)
 
 
