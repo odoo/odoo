@@ -45,7 +45,7 @@ import {
 //
 // Commons
 //
-export function useSelectCreate({ resModel, activeActions, onSelected, onCreateEdit }) {
+export function useSelectCreate({ resModel, activeActions, onSelected, onCreateEdit, onUnselect }) {
     const env = useEnv();
     const addDialog = useOwnedDialogs();
 
@@ -60,6 +60,7 @@ export function useSelectCreate({ resModel, activeActions, onSelected, onCreateE
             onSelected,
             onCreateEdit: () => onCreateEdit({ context }),
             dynamicFilters: filters,
+            onUnselect,
         });
     }
     return selectCreate;
@@ -179,6 +180,7 @@ export class Many2XAutocomplete extends Component {
                 return update(values);
             },
             onCreateEdit: ({ context }) => this.openMany2X({ context }),
+            onUnselect: isToMany ? false : () => update(),
         });
     }
 
