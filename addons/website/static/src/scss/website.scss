@@ -893,14 +893,17 @@ header {
     #top_menu_container {
         flex-direction: inherit;
     }
-    @if $-hamburger-center {
-        .collapsing, .show {
-            #top_menu {
-                @if not $-off-canvas-hamburger {
+
+    .collapsing, .show {
+        #top_menu {
+            @if $-hamburger-center {
+                @if not $-off-canvas-hamburger and not o-website-value('header-template') == 'magazine' {
                     padding-top: 15vh;
                     padding-bottom: 15vh;
                 }
                 text-align: center;
+            } @else if $-hamburger-right {
+                text-align: right;
             }
         }
     }
@@ -927,11 +930,8 @@ header {
     #top_menu_collapse {
 
         &.collapsing, &.show {
-            // Note: position relatively to the header instead of the viewport
-            // because fixed position cannot work inside an element whose CSS
-            // transform is different to none, which the header element is
-            // because of header effects.
             @include o-position-absolute(0, 0, 0, 0);
+            position: fixed;
             z-index: $zindex-sticky;
             height: 100vh;
             max-height: 100vh;
@@ -965,6 +965,7 @@ header {
                 @if $-hamburger-center {
                     width: 100%;
                     max-width: none;
+                    text-align: center !important;
                 } @else {
                     max-width: 560px;
                     text-align: left !important;
@@ -1018,10 +1019,27 @@ header {
                     padding-right: .5em;
                 }
             }
-
+            @if o-website-value('header-template') == 'vertical' {
+                .oe_structure_solo {
+                    // Hide the "oe_structure_solo" because it is outside the
+                    // menu when the off-canvas menu is open.
+                    display: none;
+                }
+            }
             .o_connected_user:not(.editor_has_snippets):not(.o_fullscreen) header & {
-                top: -$o-navbar-height;
                 padding-top: $o-navbar-height;
+            }
+            // The "off-canvas" navbar has a "fixed" position (therefore
+            // relative to the viewport). But when the header is "affixed", the
+            // "fixed" position of the navbar is no longer relative to the
+            // viewport but it is relative to the header (this is due to
+            // "transform" CSS rule of the "affixed" header.
+            .o_connected_user:not(.editor_has_snippets):not(.o_fullscreen) header.o_header_affixed & {
+                top: -$o-navbar-height;
+            }
+            .editor_has_snippets:not(.o_fullscreen) header:not(.o_header_affixed) &.collapsing,
+            .editor_has_snippets:not(.o_fullscreen) header:not(.o_header_affixed) &.show {
+                right: $o-we-sidebar-width;
             }
         }
         &.collapsing #top_menu {
@@ -1156,8 +1174,9 @@ header {
                 $o-hamburger-full-navbar-height: $o-theme-navbar-logo-height + ($navbar-padding-y * 2);
                 > header {
                     .navbar-collapse {
+                        max-height: 100vh;
                         > .container {
-                            height: calc(100vh - #{$o-navbar-height} - #{$o-hamburger-full-navbar-height});
+                            height: calc(100vh - #{$o-hamburger-full-navbar-height});
                             transition: height .3s ease;
                         }
                         .nav-link {
