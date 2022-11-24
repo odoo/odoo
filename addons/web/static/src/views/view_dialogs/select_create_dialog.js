@@ -52,6 +52,17 @@ export class SelectCreateDialog extends Component {
         }
     }
 
+    async unselect() {
+        if (this.props.onUnselect) {
+            await this.props.onUnselect();
+            this.props.close();
+        }
+    }
+
+    get canUnselect() {
+        return this.env.isSmall && !!this.props.onUnselect;
+    }
+
     async createEditRecord() {
         if (this.props.onCreateEdit) {
             await this.props.onCreateEdit();
@@ -82,6 +93,7 @@ SelectCreateDialog.props = {
     onCreateEdit: { type: Function, optional: true },
     title: { type: String, optional: true },
     noCreate: { type: Boolean, optional: true },
+    onUnselect: { type: Function, optional: true },
 };
 SelectCreateDialog.defaultProps = {
     dynamicFilters: [],
