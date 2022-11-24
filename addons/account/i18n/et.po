@@ -22,6 +22,8 @@
 # Piia Paurson <piia@avalah.ee>, 2022
 # Martin Trigaux, 2022
 # Andre Roomet <andreroomet@gmail.com>, 2022
+# Jana Jaakson, 2022
+# Patrick-Jordan Kiudorv, 2022
 # 
 msgid ""
 msgstr ""
@@ -29,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Andre Roomet <andreroomet@gmail.com>, 2022\n"
+"Last-Translator: Patrick-Jordan Kiudorv, 2022\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1660,6 +1662,8 @@ msgid ""
 "Account: Post draft entries with auto_post enabled and accounting date up to"
 " today"
 msgstr ""
+"Konto; Hilisema mustandi sisestused koos auto_post set to True kuni "
+"käesoleva hetkeni"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -3067,7 +3071,7 @@ msgstr "Varasem"
 msgid ""
 "Below text serves as a suggestion and doesn’t engage Odoo S.A. "
 "responsibility."
-msgstr ""
+msgstr "Allolev tekst toimib soovitusena ja ei laiene ODOO S.Avastutusalale."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_bic
@@ -4835,7 +4839,7 @@ msgstr "Andmete järjepidevuse kontroll"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #, python-format
 msgid "Date"
-msgstr "Date"
+msgstr "Kuupäev"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_resequence_wizard__first_date
@@ -4889,7 +4893,7 @@ msgstr "Kuupäev:"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Dates"
-msgstr "Periood"
+msgstr "Kuupäevad"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__datetime
@@ -5390,7 +5394,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_unreconcile__display_name
 #: model:ir.model.fields,field_description:account.field_validate_account_move__display_name
 msgid "Display Name"
-msgstr "Näidatav nimi"
+msgstr "Kuva nimi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__display_qr_code
@@ -6427,7 +6431,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__email_from
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
 msgid "From"
-msgstr "Kellelt?"
+msgstr "Saatja"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -6834,7 +6838,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_company__message_needaction
 #: model:ir.model.fields,help:account.field_res_partner_bank__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Kui märgitud, siis uued sõnumid nõuavad Su tähelepanu."
+msgstr "Kui kontrollitud, siis uued sõnumid nõuavad Su tähelepanu."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_has_error
@@ -7172,6 +7176,10 @@ msgid ""
 "Incoming payments are posted on an Outstanding Receipts Account. In the bank reconciliation widget, they appear as blue lines.\n"
 "Bank transactions are then reconciled on the Outstanding Receipts Accounts rather than the Receivable Account."
 msgstr ""
+"Saabuvate maksete kirjed aktiveerituna arvete/tagasiarvelduste poolt "
+"konteeritakse Maksmata Tšekkide Kontole ja kuvatakse siniste joontena panga "
+"kinnituse vidinas. Kinnitamise käigus asjaomased tehingud kinnitatakse "
+"kannetega vastuvõtu konto asemel Maksmata Tšekkide Kontol."
 
 #. module: account
 #: code:addons/account/wizard/setup_wizards.py:0
@@ -10466,6 +10474,12 @@ msgstr "Periood"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_period_comparison
 msgid "Period Comparison"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "Please create new accounts from the Chart of Accounts menu."
 msgstr ""
 
 #. module: account
@@ -14317,7 +14331,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__destination_account_id
 msgid "To"
-msgstr "Kuhu"
+msgstr "Saaja"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__to_check
@@ -15042,7 +15056,7 @@ msgstr "Tarnijad"
 #: code:addons/account/static/src/xml/legacy_account_payment.xml:0
 #, python-format
 msgid "View"
-msgstr "Ava"
+msgstr "Vaade"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
