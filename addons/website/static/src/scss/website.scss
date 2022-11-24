@@ -903,14 +903,17 @@ header {
     #top_menu_container {
         flex-direction: inherit;
     }
-    @if $-hamburger-center {
-        .collapsing, .show {
-            #top_menu {
-                @if not $-off-canvas-hamburger {
+
+    .collapsing, .show {
+        #top_menu {
+            @if $-hamburger-center {
+                @if not $-off-canvas-hamburger and not o-website-value('header-template') == 'magazine' {
                     padding-top: 15vh;
                     padding-bottom: 15vh;
                 }
                 text-align: center !important;
+            } @else if $-hamburger-right {
+                text-align: right;
             }
         }
     }
@@ -937,11 +940,8 @@ header {
     #top_menu_collapse {
 
         &.collapsing, &.show {
-            // Note: position relatively to the header instead of the viewport
-            // because fixed position cannot work inside an element whose CSS
-            // transform is different to none, which the header element is
-            // because of header effects.
             @include o-position-absolute(0, 0, 0, 0);
+            position: fixed;
             z-index: $zindex-sticky;
             height: 100vh;
             max-height: 100vh;
@@ -984,6 +984,7 @@ header {
                 @if $-hamburger-center {
                     width: 100%;
                     max-width: none;
+                    text-align: center !important;
                 } @else {
                     max-width: 560px;
                     text-align: left !important;
@@ -1046,6 +1047,13 @@ header {
                 .js_language_selector .dropdown-toggle {
                     // Hide the language switcher button because it does not
                     // make sense to show it if the dropdown is always open.
+                    display: none;
+                }
+            }
+            @if o-website-value('header-template') == 'vertical' {
+                .oe_structure_solo {
+                    // Hide the "oe_structure_solo" because it is outside the
+                    // menu when the off-canvas menu is open.
                     display: none;
                 }
             }
