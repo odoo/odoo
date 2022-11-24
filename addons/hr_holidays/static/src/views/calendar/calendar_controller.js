@@ -52,7 +52,6 @@ export class TimeOffCalendarController extends CalendarController {
 
     newAllocationRequest() {
         const context = {
-            'default_state': 'confirm',
             'form_view_ref': 'hr_holidays.hr_leave_allocation_view_form_dashboard',
         };
         if (this.employeeId) {
