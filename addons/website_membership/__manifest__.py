@@ -9,7 +9,7 @@
     'description': """
 Publish your members/association directory publicly.
     """,
-    'depends': ['website_partner', 'website_google_map', 'association', 'website_sale'],
+    'depends': ['website_partner', 'website_google_map', 'membership', 'website_sale'],
     'data': [
         'views/product_template_views.xml',
         'views/website_membership_templates.xml',
