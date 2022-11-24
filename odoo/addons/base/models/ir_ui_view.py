@@ -1046,8 +1046,8 @@ actual arch.
         for node in tree.xpath('//*[@groups]'):
             if not self.user_has_groups(node.attrib.pop('groups')):
                 node.getparent().remove(node)
-            elif node.tag == 't' and not node.attrib:
-                # Move content of <t> blocks created in `_postprocess_tag_field` to the parent
+            elif node.tag == 't' and (not node.attrib or node.get('postprocess_added')):
+                # Move content of <t groups=""> blocks
                 # and remove the <t> node.
                 # This is to keep the structure
                 # <group>
@@ -1259,7 +1259,7 @@ actual arch.
                         # set on the field in the Python model
                         # e.g. <t groups="base.group_system"><field name="foo" groups="base.group_no_one"/></t>
                         # The <t> node will be removed later, in _postprocess_access_rights.
-                        node_t = E.t(groups=field.groups)
+                        node_t = E.t(groups=field.groups, postprocess_added='1')
                         node.getparent().replace(node, node_t)
                         node_t.append(node)
                     else:
@@ -1315,7 +1315,7 @@ actual arch.
             if field and field.groups:
                 if node.get('groups'):
                     # See the comment for this in `_postprocess_tag_field`
-                    node_t = E.t(groups=field.groups)
+                    node_t = E.t(groups=field.groups, postprocess_added="1")
                     node.getparent().replace(node, node_t)
                     node_t.append(node)
                 else:
