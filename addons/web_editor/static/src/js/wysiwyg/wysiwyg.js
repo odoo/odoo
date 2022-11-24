@@ -78,11 +78,7 @@ const Wysiwyg = Widget.extend({
     init: function (parent, options) {
         this._super.apply(this, arguments);
         this.id = ++id;
-        this.options = options;
-        // autohideToolbar is true by default (false by default if navbar present).
-        this.options.autohideToolbar = typeof this.options.autohideToolbar === 'boolean'
-            ? this.options.autohideToolbar
-            : !options.snippets;
+        this.options = this._getEditorOptions(options);
         this.saving_mutex = new concurrency.Mutex();
         // Keeps track of color palettes per event name.
         this.colorpickers = {};
@@ -107,20 +103,19 @@ const Wysiwyg = Widget.extend({
      */
     start: async function () {
         await this._super.apply(this, arguments);
-        const options = this._editorOptions();
         // If this widget is started from the OWL legacy component, at the time
         // of start, the $el is not in the document yet. Some instruction in the
         // start rely on the $el being in the document at that time, including
         // code for the collaboration (for adding cursors) or the iframe loading
         // in mass_mailing.
-        if (options.autostart) {
+        if (this.options.autostart) {
             return this.startEdition();
         }
     },
     startEdition: async function () {
         const self = this;
 
-        var options = this._editorOptions();
+        const options = this.options;
 
         this.$editable = this.$editable || this.$el;
         if (options.value) {
@@ -1759,9 +1754,8 @@ const Wysiwyg = Widget.extend({
      * Handle custom keyboard shortcuts.
      */
     _handleShortcuts: function (e) {
-        const options = this._editorOptions();
         // Open the link tool when CTRL+K is pressed.
-        if (options.bindLinkTool && e && e.key === 'k' && (e.ctrlKey || e.metaKey)) {
+        if (this.options.bindLinkTool && e && e.key === 'k' && (e.ctrlKey || e.metaKey)) {
             e.preventDefault();
             this.openLinkToolsFromSelection();
         }
@@ -1970,8 +1964,14 @@ const Wysiwyg = Widget.extend({
             button.classList.toggle('active', button.dataset.value === value);
         }
     },
-    _editorOptions: function () {
-        return Object.assign({}, this.defaultOptions, this.options);
+    _getEditorOptions: function (options) {
+        const finalOptions = {...this.defaultOptions, ...options};
+        // autohideToolbar is true by default (false by default if navbar present).
+        finalOptions.autohideToolbar = typeof finalOptions.autohideToolbar === 'boolean'
+            ? finalOptions.autohideToolbar
+            : !options.snippets;
+
+        return finalOptions;
     },
     _insertSnippetMenu: function () {
         return this.snippetsMenu.insertBefore(this.$el);
@@ -2022,7 +2022,7 @@ const Wysiwyg = Widget.extend({
         }
     },
     _getPowerboxOptions: function () {
-        const editorOptions = this._editorOptions();
+        const editorOptions = this.options;
         const categories = [];
         const commands = [
             {
@@ -2470,7 +2470,9 @@ const Wysiwyg = Widget.extend({
         // No need for secure random number.
         return Math.floor(Math.random() * Math.pow(2, 52)).toString();
     },
-    resetEditor: function (value, { collaborationChannel } = {}) {
+    resetEditor: function (value, options) {
+        this.options = this._getEditorOptions(options);
+        const {collaborationChannel} = options;
         if (!this.ptp) {
             this.setValue(value);
             this.odooEditor.historyReset();
