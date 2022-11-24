@@ -1028,6 +1028,16 @@ class SaleOrder(models.Model):
         lines_to_recompute._compute_discount()
         self.show_update_pricelist = False
 
+    def _get_product_catalog_domain(self):
+        """Get the domain to search for products in the catalog.
+
+        For a model that uses products that has to be hidden in the catalog, it must override this
+        method and extend the appropriate domain.
+        :returns: A list of tuples that represents a domain.
+        :rtype: list
+        """
+        return  [('sale_ok', '=', True), ('company_id', 'in', [self.company_id.id, False]),]
+
     # INVOICING #
 
     def _prepare_invoice(self):

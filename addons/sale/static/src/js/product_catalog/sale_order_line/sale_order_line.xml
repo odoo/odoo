@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="sale.ProductCatalogSOL" owl="1">
+        <!-- Replace the element found using the css selector by the content of the portalled
+             template.  -->
+        <t t-portal="'#product-'+props.productId">
+            <span>Unit price: <t t-out="price"/></span>
+        </t>
+        <span t-if="props.readOnly" class="my-2 pt-3 border-top">
+            You can't edit this product in the catalog.
+        </span>
+        <div t-else="" class="my-2 pt-3 border-top d-flex justify-content-end">
+            <div t-if="isInSaleOrder()"
+                    class="input-group o_sale_product_catalog_quantity o_sale_product_catalog_cancel_global_click w-50">
+                <button class="btn btn-outline-secondary"
+                        t-on-click="this.env.decreaseQuantity">
+                    <i class="fa fa-minus center"/>
+                </button>
+                <input class="o_input form-control border-0 text-center text-bg-light"
+                        type="number"
+                        t-att-value="props.quantity"
+                        t-on-change="this.env.setQuantity"/>
+                <button class="btn btn-outline-secondary"
+                        t-on-click="this.env.increaseQuantity">
+                    <i class="fa fa-plus"/>
+                </button>
+            </div>
+            <div class="ms-auto o_sale_product_catalog_cancel_global_click">
+                <button t-if="!isInSaleOrder()"
+                        t-on-click="this.env.addProduct"
+                        class="btn btn-primary rounded">
+                    <i class="fa fa-shopping-cart"/>
+                    Add
+                </button>
+                <button t-else=""
+                        t-on-click="this.env.removeProduct"
+                        class="btn btn-light rounded">
+                    <i class="fa fa-trash"/>
+                    Remove
+                </button>
+            </div>
+        </div>
+    </t>
+</templates>
