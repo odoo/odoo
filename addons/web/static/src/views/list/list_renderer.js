@@ -405,7 +405,7 @@ export class ListRenderer extends Component {
 
     focus(el) {
         el.focus();
-        if (["INPUT", "TEXTAREA"].includes(el.tagName)) {
+        if (["text", "search", "URL", "tel", "password", "textarea"].includes(el.type)) {
             if (el.selectionStart === null) {
                 return;
             }
