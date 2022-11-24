@@ -13,6 +13,7 @@ class HrEmployeeBase(models.AbstractModel):
 
     leave_manager_id = fields.Many2one(
         'res.users', string='Time Off',
+        domain=lambda self: [('groups_id', '=', self.env.ref('hr_holidays.group_hr_holidays_responsible').id)],
         compute='_compute_leave_manager', store=True, readonly=False,
         help='Select the user responsible for approving "Time Off" of this employee.\n'
              'If empty, the approval is done by an Administrator or Approver (determined in settings/users).')
