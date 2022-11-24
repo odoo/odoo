@@ -32,6 +32,7 @@ class TestPyLint(TransactionCase):
         # custom checkers
         'sql-injection',
         'gettext-variable',
+        'prefer-odoo-tools-groupby',
     ]
 
     BAD_FUNCTIONS = [
@@ -69,7 +70,7 @@ class TestPyLint(TransactionCase):
             '--enable=%s' % ','.join(self.ENABLED_CODES),
             '--reports=n',
             "--msg-template='{msg} ({msg_id}) at {path}:{line}'",
-            '--load-plugins=pylint.extensions.bad_builtin,_odoo_checker_sql_injection,_odoo_checker_gettext',
+            '--load-plugins=pylint.extensions.bad_builtin,_odoo_checker_sql_injection,_odoo_checker_gettext,_odoo_checker_groupby',
             '--bad-functions=%s' % ','.join(self.BAD_FUNCTIONS),
             '--deprecated-modules=%s' % ','.join(self.BAD_MODULES)
         ]
