@@ -21,11 +21,18 @@ export class ProductsWidget extends Component {
      */
     setup() {
         super.setup();
-        this.state = useState({ previousSearchWord: "", currentOffset: 0 });
+        this.state = useState({
+            previousSearchWord: "",
+            currentOffset: 0,
+            showReloadMessage: false,
+        });
         this.pos = usePos();
         this.popup = useService("popup");
         this.notification = useService("pos_notification");
         this.orm = useService("orm");
+    }
+    get hasProducts() {
+        return Object.keys(this.pos.globalState.db.product_by_id).length > 0;
     }
     get selectedCategoryId() {
         return this.env.pos.selectedCategoryId;
@@ -160,5 +167,19 @@ export class ProductsWidget extends Component {
                 throw error;
             }
         }
+    }
+    async loadDemoDataProducts() {
+        const { products, categories } = await this.orm.call(
+            "pos.session",
+            "load_product_frontend",
+            [this.pos.globalState.pos_session.id]
+        );
+        this.pos.globalState.db.add_categories(categories);
+        this.pos.globalState._loadProductProduct(products);
+    }
+
+    createNewProducts() {
+        window.open("/web#action=point_of_sale.action_client_product_menu", "_blank");
+        this.state.showReloadMessage = true;
     }
 }
