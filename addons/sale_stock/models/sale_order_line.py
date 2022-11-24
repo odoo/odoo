@@ -354,3 +354,8 @@ class SaleOrderLine(models.Model):
         if line_products.mapped('qty_delivered') and float_compare(values['product_uom_qty'], max(line_products.mapped('qty_delivered')), precision_digits=precision) == -1:
             raise UserError(_('The ordered quantity cannot be decreased below the amount already delivered. Instead, create a return in your inventory.'))
         super(SaleOrderLine, self)._update_line_quantity(values)
+
+    def _get_action_add_from_catalog_extra_context(self, order):
+        extra_context = super()._get_action_add_from_catalog_extra_context(order)
+        extra_context.update(warehouse=order.warehouse_id.id)
+        return extra_context

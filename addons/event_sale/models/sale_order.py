@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.osv import expression
 
 
 class SaleOrder(models.Model):
@@ -55,3 +56,12 @@ class SaleOrder(models.Model):
     def unlink(self):
         self.order_line._unlink_associated_registrations()
         return super(SaleOrder, self).unlink()
+
+    def _get_product_catalog_domain(self):
+        """Override of `_get_product_catalog_domain` to extend the domain.
+
+        :returns: A list of tuples that represents a domain.
+        :rtype: list
+        """
+        domain = super()._get_product_catalog_domain()
+        return expression.AND([domain, [('detailed_type', '!=', 'event')]])

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sale_product_catalog_kanban_view_inherit" model="ir.ui.view">
+        <field name="name">sale.product.catalog.kanban.view.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="sale.sale_product_catalog_kanban_view"/>
+        <field name="arch" type="xml">
+            <field name="default_code" invisible="1" position="after">
+                <field name="detailed_type" invisible="1"/>
+            </field>
+            <div name="o_kanban_price" position="after">
+                <div t-if="['consu', 'product'].includes(record.detailed_type.raw_value)">
+                    <span>On Hand: </span>
+                    <field name="qty_available"/>
+                </div>
+            </div>
+        </field>
+    </record>
+
+</odoo>

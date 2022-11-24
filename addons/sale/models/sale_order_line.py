@@ -1033,6 +1033,32 @@ class SaleOrderLine(models.Model):
         if self._check_line_unlink():
             raise UserError(_("You can not remove an order line once the sales order is confirmed.\nYou should rather set the quantity to 0."))
 
+    #=== ACTION METHODS ===#
+
+    def action_add_from_catalog(self):
+        order = self.env['sale.order'].browse(self.env.context.get('order_id'))
+        kanban_view_id = self.env.ref('sale.sale_product_catalog_kanban_view').id
+        search_view_id = self.env.ref('sale.sale_product_catalog_search_view').id
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Products'),
+            'res_model': 'product.product',
+            'views': [(kanban_view_id, 'kanban'), (False, 'form')],
+            'search_view_id': [search_view_id, 'search'],
+            'domain': order._get_product_catalog_domain(),
+            'context': {
+                **self.env.context,
+                **self._get_action_add_from_catalog_extra_context(order),
+            },
+            'help': _("""<p class="o_view_nocontent_smiling_face">
+                Create a new product
+            </p><p>
+                You must define a product for everything you sell or purchase,
+                whether it's a storable product, a consumable or a service.
+            </p>"""),
+        }
+
     #=== BUSINESS METHODS ===#
 
     def _expected_date(self):
@@ -1138,6 +1164,12 @@ class SaleOrderLine(models.Model):
     def _is_not_sellable_line(self):
         # True if the line is a computed line (reward, delivery, ...) that user cannot add manually
         return False
+
+    def _get_action_add_from_catalog_extra_context(self, order):
+        return dict(
+            product_catalog_order_id=order.id,
+            product_catalog_currency_id=order.currency_id.id,
+        )
 
     #=== TOOLING ===#
 

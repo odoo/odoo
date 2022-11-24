@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="sale_product_catalog_kanban_view" model="ir.ui.view">
+        <field name="name">sale.product.catalog.kanban.view</field>
+        <field name="model">product.product</field>
+        <field name="arch" type="xml">
+            <kanban
+                records_draggable="0"
+                js_class="sale_product_kanban">
+                <field name="id" invisible="1"/>
+                <field name="default_code" invisible="1"/>
+                <templates>
+                    <t t-name="kanban-menu" groups="sales_team.group_sale_manager">
+                        <a role="menuitem" type="edit" class="dropdown-item border-top-0">Edit</a>
+                    </t>
+                    <t t-name="kanban-box">
+                        <div class="d-flex flex-grow-1">
+                            <div class="o_kanban_image">
+                                <img t-att-src="kanban_image('product.product', 'image_128', record.id.raw_value)"
+                                     alt="Product"/>
+                            </div>
+                            <div class="oe_kanban_details p-2 d-flex">
+                                <div class="o_kanban_record_top flex-column m-0">
+                                    <div class="d-flex">
+                                        <field class="me-2" name="priority" widget="priority"/>
+                                        <h4 class="o_kanban_record_title text-reset">
+                                            <strong><field name="name"/></strong>
+                                        </h4>
+                                    </div>
+                                    <div t-if="record.default_code.value">
+                                        [<field name="default_code"/>]
+                                    </div>
+                                    <!-- Used by @web/sale/js/product_catalog/sale_order_line to
+                                         show the price using a t-portal. -->
+                                    <div name="o_kanban_price"
+                                         t-attf-id="product-{{record.id.raw_value}}"
+                                         class="d-flex flex-column"/>
+                                    <field name="product_template_attribute_value_ids"
+                                           widget="many2many_tags"
+                                           groups="product.group_product_variant"
+                                           options="{'color_field': 'color'}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="sale_product_catalog_search_view" model="ir.ui.view">
+        <field name="name">sale.product.catalog.search.view</field>
+        <field name="model">product.product</field>
+        <field name="arch" type="xml">
+            <search string="Product">
+                <!-- Search field -->
+                <field name="name"
+                       string="Product"
+                       filter_domain="['|', '|', ('default_code', 'ilike', self), ('name', 'ilike', self), ('barcode', 'ilike', self)]"/>
+                <field name="categ_id" filter_domain="[('categ_id', 'child_of', raw_value)]"/>
+                <field name="product_template_attribute_value_ids"
+                       groups="product.group_product_variant"/>
+                <field name="product_tmpl_id" string="Product Template"/>
+                <!-- Filter -->
+                <filter string="Favorites" name="favorites" domain="[('priority', '= ','1')]"/>
+                <separator/>
+                <filter string="Services" name="services" domain="[('type', '=', 'service')]"/>
+                <filter string="Products"
+                        name="products"
+                        domain="[('type', 'in', ['consu', 'product'])]"/>
+                <filter string="In the Order"
+                        name="products_in_order"
+                        domain="[('product_catalog_product_is_in_sale_order', '=', True)]"/>
+                <!-- Group By -->
+                <group expand="1" string="Group By">
+                    <filter string="Product Type" name="type" context="{'group_by':'type'}"/>
+                    <filter string="Product Category"
+                            name="categ_id"
+                            context="{'group_by':'categ_id'}"/>
+                </group>
+                <!-- searchpanel -->
+                <searchpanel>
+                    <field name="categ_id"
+                           string="Product Category"
+                           icon="fa-th-list"
+                           enable_counters="1"/>
+                    <field name="product_template_attribute_value_ids"
+                           string="Attributes"
+                           icon="fa-th-list"
+                           enable_counters="1"
+                           select="multi"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+</odoo>

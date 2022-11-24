@@ -430,6 +430,7 @@
                                     <create name="add_product_control" string="Add a product"/>
                                     <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
                                     <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
+                                    <button name="action_add_from_catalog" string="Catalog" type="object" class="px-4 btn-link" context="{'order_id': parent.id}"/>
                                 </control>
 
                                 <field name="sequence" widget="handle" />
@@ -584,6 +585,16 @@
                                 <field name="tax_id" invisible="1"/>
                                 <field name="company_id" invisible="1"/>
                                 <field name="tax_calculation_rounding_method" invisible="1"/>
+                                <control>
+                                    <create name="add_product_control" string="Add a product"/>
+                                    <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
+                                    <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
+                                    <button name="action_add_from_catalog"
+                                            context="{'order_id': parent.id}"
+                                            string="Catalog"
+                                            type="object"
+                                            class="btn-secondary"/>
+                                </control>
                                 <templates>
                                     <t t-name="kanban-box">
                                         <div t-attf-class="oe_kanban_card oe_kanban_global_click ps-0 pe-0 {{ record.display_type.raw_value ? 'o_is_' + record.display_type.raw_value : '' }}">
