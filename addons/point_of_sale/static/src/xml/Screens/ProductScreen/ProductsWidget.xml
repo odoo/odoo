@@ -26,6 +26,13 @@
                     <p t-else="">
                         There are no products in this category.
                     </p>
+                    <div t-if="!hasProducts">
+                        <button class="button-no-demo" t-on-click="loadDemoDataProducts">Generate demo data</button>
+                        <button class="button-no-demo" t-on-click="createNewProducts">Create new products</button>
+                        <div t-if="state.showReloadMessage" class="info-load-product-message">
+                            Please reload this page once products have been created
+                        </div>
+                    </div>
                 </div>
                 <div t-if="searchWord" class="search-more-button">
                     <div class="button" t-on-click="onPressEnterKey">Search more</div>
