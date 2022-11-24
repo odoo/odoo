@@ -134,6 +134,11 @@ class PaymentTransaction(models.Model):
         """
         self.ensure_one()
 
+        reference = (f'{self.reference} - '
+                     f'{self.partner_id.display_name or ""} - '
+                     f'{self.provider_reference or ""}'
+                    )
+
         payment_method_line = self.provider_id.journal_id.inbound_payment_method_line_ids\
             .filtered(lambda l: l.code == self.provider_code)
         payment_values = {
@@ -147,7 +152,7 @@ class PaymentTransaction(models.Model):
             'payment_method_line_id': payment_method_line.id,
             'payment_token_id': self.token_id.id,
             'payment_transaction_id': self.id,
-            'ref': f'{self.reference} - {self.partner_id.name} - {self.provider_reference or ""}',
+            'ref': reference,
             **extra_create_values,
         }
         payment = self.env['account.payment'].create(payment_values)
