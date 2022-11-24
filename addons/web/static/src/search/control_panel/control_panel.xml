@@ -13,6 +13,9 @@
     </t>
 
     <t t-name="web.ControlPanel.Regular" owl="1">
+        <div class="alert alert-manocustom" role="alert">
+            Custom alert message box for mano's first day
+        </div>
         <div t-if="display['top']" class="o_cp_top">
             <div class="o_cp_top_left">
                 <t t-slot="control-panel-top-left" t-if="display['top-left']">
