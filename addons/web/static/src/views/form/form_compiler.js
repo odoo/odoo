@@ -325,7 +325,7 @@ export class FormCompiler extends ViewCompiler {
                     ? child.getAttribute("nolabel") !== "1"
                     : true;
                 slotContent = this.compileNode(child, { ...params, currentSlot: mainSlot }, false);
-                if (addLabel && !isOuterGroup && !isTextNode(slotContent)) {
+                if (slotContent && addLabel && !isOuterGroup && !isTextNode(slotContent)) {
                     itemSpan = itemSpan === 1 ? itemSpan + 1 : itemSpan;
                     const fieldName = child.getAttribute("name");
                     const fieldId = slotContent.getAttribute("id") || fieldName;
