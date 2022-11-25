@@ -63,6 +63,132 @@ _logger = logging.getLogger(__name__)
 # Modules already loaded
 loaded = []
 
+<<<<<<< HEAD
+||||||| parent of f8ff328f317 (temp)
+class AddonsHook(object):
+    """ Makes modules accessible through openerp.addons.* """
+
+    def find_module(self, name, path=None):
+        if name.startswith('openerp.addons.') and name.count('.') == 2:
+            warnings.warn(
+                '"openerp.addons" is a deprecated alias to "odoo.addons".',
+                DeprecationWarning, stacklevel=2)
+            return self
+
+    def load_module(self, name):
+        assert name not in sys.modules
+
+        odoo_name = re.sub(r'^openerp.addons.(\w+)$', r'odoo.addons.\g<1>', name)
+
+        odoo_module = sys.modules.get(odoo_name)
+        if not odoo_module:
+            odoo_module = importlib.import_module(odoo_name)
+
+        sys.modules[name] = odoo_module
+
+        return odoo_module
+
+class OdooHook(object):
+    """ Makes odoo package also available as openerp """
+
+    def find_module(self, name, path=None):
+        # openerp.addons.<identifier> should already be matched by AddonsHook,
+        # only framework and subdirectories of modules should match
+        if re.match(r'^openerp\b', name):
+            warnings.warn(
+                'openerp is a deprecated alias to odoo.',
+                DeprecationWarning, stacklevel=2)
+            return self
+
+    def load_module(self, name):
+        assert name not in sys.modules
+
+        canonical = re.sub(r'^openerp(.*)', r'odoo\g<1>', name)
+
+        if canonical in sys.modules:
+            mod = sys.modules[canonical]
+        else:
+            # probable failure: canonical execution calling old naming -> corecursion
+            mod = importlib.import_module(canonical)
+
+        # just set the original module at the new location. Don't proxy,
+        # it breaks *-import (unless you can find how `from a import *` lists
+        # what's supposed to be imported by `*`, and manage to override it)
+        sys.modules[name] = mod
+
+        return sys.modules[name]
+
+=======
+class AddonsHook(object):
+    """ Makes modules accessible through openerp.addons.* """
+
+    def find_module(self, name, path=None):
+        if name.startswith('openerp.addons.') and name.count('.') == 2:
+            warnings.warn(
+                '"openerp.addons" is a deprecated alias to "odoo.addons".',
+                DeprecationWarning, stacklevel=2)
+            return self
+
+    def find_spec(self, fullname, path=None, target=None):
+        if fullname.startswith('openerp.addons.') and fullname.count('.') == 2:
+            warnings.warn(
+                '"openerp.addons" is a deprecated alias to "odoo.addons".',
+                DeprecationWarning, stacklevel=2)
+            return importlib.util.spec_from_loader(fullname, self)
+
+    def load_module(self, name):
+        assert name not in sys.modules
+
+        odoo_name = re.sub(r'^openerp.addons.(\w+)$', r'odoo.addons.\g<1>', name)
+
+        odoo_module = sys.modules.get(odoo_name)
+        if not odoo_module:
+            odoo_module = importlib.import_module(odoo_name)
+
+        sys.modules[name] = odoo_module
+
+        return odoo_module
+
+class OdooHook(object):
+    """ Makes odoo package also available as openerp """
+
+    def find_module(self, name, path=None):
+        # openerp.addons.<identifier> should already be matched by AddonsHook,
+        # only framework and subdirectories of modules should match
+        if re.match(r'^openerp\b', name):
+            warnings.warn(
+                'openerp is a deprecated alias to odoo.',
+                DeprecationWarning, stacklevel=2)
+            return self
+
+    def find_spec(self, fullname, path=None, target=None):
+        # openerp.addons.<identifier> should already be matched by AddonsHook,
+        # only framework and subdirectories of modules should match
+        if re.match(r'^openerp\b', fullname):
+            warnings.warn(
+                'openerp is a deprecated alias to odoo.',
+                DeprecationWarning, stacklevel=2)
+            return importlib.util.spec_from_loader(fullname, self)
+
+    def load_module(self, name):
+        assert name not in sys.modules
+
+        canonical = re.sub(r'^openerp(.*)', r'odoo\g<1>', name)
+
+        if canonical in sys.modules:
+            mod = sys.modules[canonical]
+        else:
+            # probable failure: canonical execution calling old naming -> corecursion
+            mod = importlib.import_module(canonical)
+
+        # just set the original module at the new location. Don't proxy,
+        # it breaks *-import (unless you can find how `from a import *` lists
+        # what's supposed to be imported by `*`, and manage to override it)
+        sys.modules[name] = mod
+
+        return sys.modules[name]
+
+>>>>>>> f8ff328f317 (temp)
 
 class UpgradeHook(object):
     """Makes the legacy `migrations` package being `odoo.upgrade`"""
@@ -74,6 +200,14 @@ class UpgradeHook(object):
             # the tests, and the common files (utility functions) still needs to import from the
             # legacy name.
             return self
+
+    def find_spec(self, fullname, path=None, target=None):
+        if re.match(r"^odoo.addons.base.maintenance.migrations\b", fullname):
+            # We can't trigger a DeprecationWarning in this case.
+            # In order to be cross-versions, the multi-versions upgrade scripts (0.0.0 scripts),
+            # the tests, and the common files (utility functions) still needs to import from the
+            # legacy name.
+            return importlib.util.spec_from_loader(fullname, self)
 
     def load_module(self, name):
         assert name not in sys.modules
