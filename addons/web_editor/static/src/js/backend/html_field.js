@@ -228,6 +228,7 @@ export class HtmlField extends Component {
                 res_model: this.props.record.resModel,
                 res_id: this.props.record.resId,
             },
+            fieldId: this.props.id,
         };
     }
     /**
