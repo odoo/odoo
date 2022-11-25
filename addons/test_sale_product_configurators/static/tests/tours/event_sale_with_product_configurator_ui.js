@@ -25,11 +25,9 @@ registry.category("web_tour.tours").add('event_sale_with_product_configurator_to
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Registration Event (TEST variants)")',
 }, {
-    trigger: '.js_product:has(strong:contains(Memorabilia)) .js_add',
-    extra_trigger: '.oe_advanced_configurator_modal',
+    trigger: 'tr:has(.o_sale_product_configurator_name:contains("Memorabilia")) button:has(i.fa-shopping-cart)',
 }, {
-    trigger: 'button span:contains(Confirm)',
-    extra_trigger: '.oe_advanced_configurator_modal',  // to confirm the first wizard
+    trigger: 'button:contains(Confirm)',
 }, {
     trigger: '.o_input_dropdown input',
     extra_trigger: '.o_technical_modal',  // to be in the event wizard
@@ -56,16 +54,14 @@ registry.category("web_tour.tours").add('event_sale_with_product_configurator_to
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Registration Event (TEST variants)")',
 }, {
-    trigger: '.radio_input_value span:contains(Adult)',
+    trigger: 'tr:has(.o_sale_product_configurator_name:contains("Registration Event (TEST variants)")) label:contains("Adult")',
 }, {
-    trigger: '.js_quantity',
-    extra_trigger: '.oe_advanced_configurator_modal',
+    trigger: 'tr:has(.o_sale_product_configurator_name:contains("Registration Event (TEST variants)"))>td:nth-child(3) input',
     run: 'text 5',
 }, {
-    trigger: '.js_price_total span:contains("150.00")',  // to be sure the correct variant is set
+    trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(2)>td>span:contains("150.00")',  // to be sure the correct variant is set
 }, {
-    trigger: 'button span:contains(Confirm)',
-    extra_trigger: '.oe_advanced_configurator_modal',
+    trigger: 'button:contains(Confirm)',
 }, {
     trigger: '.o_input_dropdown input',
     extra_trigger: '.o_technical_modal',
@@ -92,12 +88,11 @@ registry.category("web_tour.tours").add('event_sale_with_product_configurator_to
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Registration Event (TEST variants)")',
 }, {
-    trigger: '.radio_input_value span:contains(VIP)',
+    trigger: 'tr:has(.o_sale_product_configurator_name:contains("Registration Event (TEST variants)")) label:contains("VIP")',
 }, {
-    trigger: '.js_price_total span:contains("60.00")',  // to be sure the correct variant is set
+    trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(2)>td>span:contains("60.00")',  // to be sure the correct variant is set
 }, {
-    trigger: 'button span:contains(Confirm)',
-    extra_trigger: '.oe_advanced_configurator_modal',
+    trigger: 'button:contains(Confirm)',
 }, {
     trigger: '.o_input_dropdown input',
     extra_trigger: '.o_technical_modal',

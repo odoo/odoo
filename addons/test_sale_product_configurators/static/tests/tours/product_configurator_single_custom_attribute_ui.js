@@ -19,23 +19,10 @@ registry.category("web_tour.tours").add('sale_product_configurator_single_custom
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Customizable Desk (TEST)")',
 }, {
-    trigger: '.oe_advanced_configurator_modal span:contains("Aluminium")',
-    run: function () {
-        // used to check that the radio is NOT rendered
-        if ($('.oe_advanced_configurator_modal ul[data-attribute_id].d-none input[data-value_name="single product attribute value"]').length === 1) {
-            $('.oe_advanced_configurator_modal').addClass('tour_success');
-        }
-    }
-}, {
-    trigger: '.oe_advanced_configurator_modal.tour_success',
-    run: function () {
-        //check
-    }
-}, {
-    trigger: '.oe_advanced_configurator_modal .variant_custom_value',
+    trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1)>td:nth-child(2)>input:nth-child(7)',
     run: 'text great single custom value'
 }, {
-    trigger: 'button span:contains(Confirm)',
+    trigger: 'button:contains(Confirm)',
 }, {
     trigger: 'td.o_data_cell:contains("single product attribute value: great single custom value")',
     extra_trigger: 'div[name="order_line"]',
@@ -45,24 +32,18 @@ registry.category("web_tour.tours").add('sale_product_configurator_single_custom
 }, {
     trigger: '.fa-pencil',
 }, {
-    trigger: '.main_product .variant_custom_value',
+    trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1)>td:nth-child(2)>input:nth-child(7)',
     run: function () {
         // check custom value initialized
-        if ($('.main_product .variant_custom_value').val() === "great single custom value") {
-            $('.main_product').addClass('tour_success_2');
+        if ($('main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1)>td:nth-child(2)>input:nth-child(7)').val() === "great single custom value") {
+            $('main').addClass('tour_success_2');
         }
     }
 }, {
-    trigger: '.main_product.tour_success_2',
-    run: function () {
-        //check
-    }
+    trigger: 'main.tour_success_2',
+    isCheck: true,
 }, {
-    trigger: '.main_product',
-    run: function () {
-        window.location.href = window.location.origin + '/web';
-    }
-}, {
-    trigger: '.o_navbar',
-    run: function() {},  // Check the home page is loaded
-}]});
+    trigger: 'button:contains(Back)',
+},
+    ...stepUtils.discardForm()
+]});

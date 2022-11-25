@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="sale_product_configurator.product" owl="1">
+        <td class="o_sale_product_configurator_img">
+            <img
+                t-if="this.props.id"
+                t-att-src="'/web/image/product.product/'+this.props.id+'/image_128'"
+                alt="Product Image"/>
+            <img
+                t-else=""
+                t-att-src="'/web/image/product.template/'+this.props.product_tmpl_id+'/image_128'"
+                alt="Product Image"/>
+        </td>
+        <td t-att-colspan="this.props.optional ? 2:false">
+            <div class="o_sale_product_configurator_name">
+                <strong t-out="this.props.display_name"/>
+                <div
+                    t-if="this.props.description_sale"
+                    t-out="this.props.description_sale"
+                    class="text-muted small"/>
+            </div>
+            <t t-foreach="this.props.attribute_lines" t-as="ptal" t-key="ptal.id">
+                <PTAL t-props="ptal" productTmplId="this.props.product_tmpl_id"/>
+            </t>
+        </td>
+        <td t-if="!this.props.optional" class="text-center o_sale_product_configurator_qty">
+            <div class="input-group">
+                <button
+                    class="btn btn-primary d-none d-md-inline-block"
+                    aria-label="Remove one"
+                    t-on-click="decreaseQuantity">
+                    <i class="fa fa-minus"></i>
+                </button>
+                <input
+                    name="product_quantity"
+                    type="number"
+                    t-att-value="this.props.quantity"
+                    t-on-change="setQuantity"/>
+                <button
+                    class="btn btn-primary d-none d-md-inline-block"
+                    aria-label="Add one"
+                    t-on-click="increaseQuantity">
+                    <i class="fa fa-plus"></i>
+                </button>
+            </div>
+        </td>
+        <td class="text-center o_sale_product_configurator_price" name="price">
+            <t t-if="this.env.isPossibleCombination(this.props)">
+                <span style="white-space: nowrap;" t-out="getFormattedPrice()"/>
+                <button
+                    t-if="this.props.optional"
+                    class="btn btn-primary btn-sm"
+                    t-on-click="() => this.env.addProduct(this.props.product_tmpl_id)">
+                    <i class="fa fa-shopping-cart"></i> Add to cart
+                </button>
+            </t>
+            <t t-else="">
+                <p class="alert alert-warning">Option not available</p>
+            </t>
+            <div>
+                <a
+                    role="button"
+                    t-if="!this.props.optional &amp;&amp; this.env.mainProductTmplId !== this.props.product_tmpl_id"
+                    t-on-click="() => this.env.removeProduct(this.props.product_tmpl_id)">
+                    <i class="fa fa-trash-o"/>
+                </a>
+            </div>
+        </td>
+    </t>
+</templates>
