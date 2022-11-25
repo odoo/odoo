@@ -61,33 +61,26 @@
     <t t-name="web.ControlPanel.Small" owl="1">
         <t t-if="state.showMobileSearch">
             <t t-portal="'body'">
-                <div class="o_searchview o_mobile_search">
-                    <div class="o_mobile_search_header">
-                        <button
-                            type="button"
-                            class="o_mobile_search_button btn"
-                            t-on-click="() => state.showMobileSearch = false"
-                        >
-                            <i class="fa fa-arrow-left"/>
-                            <strong class="ms-2">FILTER</strong>
-                        </button>
-                        <button
-                            type="button"
-                            class="o_mobile_search_button btn"
-                            t-on-click="() => env.searchModel.clearQuery()"
-                        >
-                            CLEAR
-                        </button>
-                    </div>
+                <div class="o_searchview o_mobile_search position-fixed bottom-0 left-0 right-0 w-100 d-flex flex-column p-0 overflow-auto bg-view border-0">
                     <div class="o_mobile_search_content">
                         <t t-if="display['top-right']">
-                            <t t-slot="control-panel-top-right">
+                            <t t-slot="control-panel-top-right d-flex">
+                                <button type="button" class="btn btn-secondary fa fa-arrow-left position-absolute left-0 top-0 z-index-1" t-on-click="() => state.showMobileSearch = false"/>
                                 <SearchBar/>
                             </t>
                         </t>
+                        <div class="bg-100 border-bottom text-end">
+                            <button
+                                type="button"
+                                class="o_mobile_search_button btn btn-link"
+                                t-on-click="() => env.searchModel.clearQuery()"
+                            >
+                                CLEAR
+                            </button>
+                        </div>
                         <t t-if="display['bottom-right']">
                             <t t-slot="control-panel-bottom-right">
-                                <div class="o_mobile_search_filter o_search_options">
+                                <div class="o_mobile_search_filter o_search_options d-flex w-100">
                                     <t t-foreach="searchMenus" t-as="menu" t-key="menu.key">
                                         <t t-component="menu.Component"/>
                                     </t>
@@ -113,20 +106,10 @@
                     </t>
                 </t>
                 <t t-if="display['top-right']">
-                    <button type="button" class="o_enable_searchview btn btn-link"
+                    <button type="button" class="o_toggle_searchview_full btn btn-link"
                         t-att-class="state.showSearchBar ? 'fa fa-arrow-left' : 'oi oi-search'"
-                        t-on-click="() => state.showSearchBar = !state.showSearchBar"
+                        t-on-click="() => state.showMobileSearch = !state.showMobileSearch"
                     />
-                    <t t-if="state.showSearchBar or !display['top-left']">
-                        <t t-slot="control-panel-top-right">
-                            <SearchBar class="o_searchview_quick" />
-                            <button
-                                type="button"
-                                class="o_toggle_searchview_full btn fa fa-filter"
-                                t-on-click="() => state.showMobileSearch = !state.showMobileSearch"
-                            />
-                        </t>
-                    </t>
                 </t>
             </div>
             <div t-if="display['bottom']" class="o_cp_bottom">
