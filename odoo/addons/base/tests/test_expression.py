@@ -166,7 +166,7 @@ class TestExpression(SavepointCaseWithUserDemo):
         self.assertEqual(len(cats), 0)
 
         # test hierarchical search in m2m with 'False' value
-        with self.assertLogs('odoo.osv.expression'):
+        with self.assertWarns(UserWarning):
             cats = self._search(Category, [('id', 'child_of', False)])
         self.assertEqual(len(cats), 0)
 
@@ -195,7 +195,7 @@ class TestExpression(SavepointCaseWithUserDemo):
         self.assertEqual(len(cats), 0)
 
         # test hierarchical search in m2m with 'False' value
-        with self.assertLogs('odoo.osv.expression'):
+        with self.assertWarns(UserWarning):
             cats = self._search(Category, [('id', 'parent_of', False)])
         self.assertEqual(len(cats), 0)
 
@@ -641,22 +641,32 @@ class TestExpression(SavepointCaseWithUserDemo):
         self.assertEqual(users, b2, '(x =? id) failed')
 
     def test_30_normalize_domain(self):
-        norm_domain = domain = ['&', (1, '=', 1), ('a', '=', 'b')]
+        norm_domain = domain = ['&', True, ('a', '=', 'b')]
         self.assertEqual(norm_domain, expression.normalize_domain(domain), "Normalized domains should be left untouched")
         domain = [('x', 'in', ['y', 'z']), ('a.v', '=', 'e'), '|', '|', ('a', '=', 'b'), '!', ('c', '>', 'd'), ('e', '!=', 'f'), ('g', '=', 'h')]
         norm_domain = ['&', '&', '&'] + domain
         self.assertEqual(norm_domain, expression.normalize_domain(domain), "Non-normalized domains should be properly normalized")
 
     def test_35_negating_thruty_leafs(self):
-        self.assertEqual(expression.distribute_not(['!', '!', expression.TRUE_LEAF]), [expression.TRUE_LEAF], "distribute_not applied wrongly")
-        self.assertEqual(expression.distribute_not(['!', '!', expression.FALSE_LEAF]), [expression.FALSE_LEAF], "distribute_not applied wrongly")
-        self.assertEqual(expression.distribute_not(['!', '!', '!', '!', expression.TRUE_LEAF]), [expression.TRUE_LEAF], "distribute_not applied wrongly")
-        self.assertEqual(expression.distribute_not(['!', '!', '!', '!', expression.FALSE_LEAF]), [expression.FALSE_LEAF], "distribute_not applied wrongly")
+        self.assertEqual(expression.distribute_not(expression.normalize_domain(['!', '!', expression.TRUE_LEAF])), [True], "distribute_not applied wrongly")
+        self.assertEqual(expression.distribute_not(expression.normalize_domain(['!', '!', expression.FALSE_LEAF])), [False], "distribute_not applied wrongly")
+        self.assertEqual(expression.distribute_not(expression.normalize_domain(['!', '!', '!', '!', expression.TRUE_LEAF])), [True], "distribute_not applied wrongly")
+        self.assertEqual(expression.distribute_not(expression.normalize_domain(['!', '!', '!', '!', expression.FALSE_LEAF])), [False], "distribute_not applied wrongly")
 
-        self.assertEqual(expression.distribute_not(['!', expression.TRUE_LEAF]), [expression.FALSE_LEAF], "distribute_not applied wrongly")
-        self.assertEqual(expression.distribute_not(['!', expression.FALSE_LEAF]), [expression.TRUE_LEAF], "distribute_not applied wrongly")
-        self.assertEqual(expression.distribute_not(['!', '!', '!', expression.TRUE_LEAF]), [expression.FALSE_LEAF], "distribute_not applied wrongly")
-        self.assertEqual(expression.distribute_not(['!', '!', '!', expression.FALSE_LEAF]), [expression.TRUE_LEAF], "distribute_not applied wrongly")
+        self.assertEqual(expression.distribute_not(expression.normalize_domain(['!', expression.TRUE_LEAF])), [False], "distribute_not applied wrongly")
+        self.assertEqual(expression.distribute_not(expression.normalize_domain(['!', expression.FALSE_LEAF])), [True], "distribute_not applied wrongly")
+        self.assertEqual(expression.distribute_not(expression.normalize_domain(['!', '!', '!', expression.TRUE_LEAF])), [False], "distribute_not applied wrongly")
+        self.assertEqual(expression.distribute_not(expression.normalize_domain(['!', '!', '!', expression.FALSE_LEAF])), [True], "distribute_not applied wrongly")
+
+        self.assertEqual(expression.distribute_not(['!', '!', True]), [True], "distribute_not applied wrongly")
+        self.assertEqual(expression.distribute_not(['!', '!', False]), [False], "distribute_not applied wrongly")
+        self.assertEqual(expression.distribute_not(['!', '!', '!', '!', True]), [True], "distribute_not applied wrongly")
+        self.assertEqual(expression.distribute_not(['!', '!', '!', '!', False]), [False], "distribute_not applied wrongly")
+
+        self.assertEqual(expression.distribute_not(['!', True]), [False], "distribute_not applied wrongly")
+        self.assertEqual(expression.distribute_not(['!', False]), [True], "distribute_not applied wrongly")
+        self.assertEqual(expression.distribute_not(['!', '!', '!', True]), [False], "distribute_not applied wrongly")
+        self.assertEqual(expression.distribute_not(['!', '!', '!', False]), [True], "distribute_not applied wrongly")
 
     def test_40_negating_long_expression(self):
         source = ['!', '&', ('user_id', '=', 4), ('partner_id', 'in', [1, 2])]
@@ -677,7 +687,7 @@ class TestExpression(SavepointCaseWithUserDemo):
         self.assertEqual(expression.distribute_not(source), expect,
             "distribute_not on long expression applied wrongly")
 
-    def test_accent(self):
+    def test_41_accent(self):
         if not self.registry.has_unaccent:
             raise unittest.SkipTest("unaccent not enabled")
 
@@ -702,39 +712,7 @@ class TestExpression(SavepointCaseWithUserDemo):
             # what should not be called
             w().assert_not_called()
 
-
-    def test_pure_function(self):
-        orig_false = expression.FALSE_DOMAIN.copy()
-        orig_true = expression.TRUE_DOMAIN.copy()
-        false = orig_false.copy()
-        true = orig_true.copy()
-
-        domain = expression.AND([])
-        domain += [('id', '=', 1)]
-        domain = expression.AND([])
-        self.assertEqual(domain, orig_true)
-
-        domain = expression.AND([false])
-        domain += [('id', '=', 1)]
-        domain = expression.AND([false])
-        self.assertEqual(domain, orig_false)
-
-        domain = expression.OR([])
-        domain += [('id', '=', 1)]
-        domain = expression.OR([])
-        self.assertEqual(domain, orig_false)
-
-        domain = expression.OR([true])
-        domain += [('id', '=', 1)]
-        domain = expression.OR([true])
-        self.assertEqual(domain, orig_true)
-
-        domain = expression.normalize_domain([])
-        domain += [('id', '=', 1)]
-        domain = expression.normalize_domain([])
-        self.assertEqual(domain, orig_true)
-
-    def test_like_wildcards(self):
+    def test_42_like_wildcards(self):
         # check that =like/=ilike expressions are working on an untranslated field
         Partner = self.env['res.partner']
         partners = self._search(Partner, [('name', '=like', 'I_ner_W_rk_')])
@@ -749,7 +727,7 @@ class TestExpression(SavepointCaseWithUserDemo):
         countries = self._search(Country, [('name', '=ilike', 'z%')])
         self.assertTrue(len(countries) == 2, "Must match only countries with names starting with Z (currently 2)")
 
-    def test_translate_search(self):
+    def test_43_translate_search(self):
         Country = self.env['res.country']
         belgium = self.env.ref('base.be')
         domains = [
@@ -767,7 +745,7 @@ class TestExpression(SavepointCaseWithUserDemo):
         self.assertEqual(countries, all_countries)
 
     @mute_logger('odoo.sql_db')
-    def test_invalid(self):
+    def test_44_invalid(self):
         """ verify that invalid expressions are refused, even for magic fields """
         Country = self.env['res.country']
 
@@ -786,7 +764,7 @@ class TestExpression(SavepointCaseWithUserDemo):
         with self.assertRaises(psycopg2.DataError):
             Country.search([('create_date', '=', "1970-01-01'); --")])
 
-    def test_active(self):
+    def test_45_active(self):
         # testing for many2many field with category office and active=False
         Partner = self.env['res.partner']
         vals = {
@@ -803,7 +781,7 @@ class TestExpression(SavepointCaseWithUserDemo):
         partner = self._search(Partner, [('child_ids.country_id','=','Belgium'),('active','=',False)], [('active', '=', False)])
         self.assertTrue(partner, "Record not Found with country Belgium and active False.")
 
-    def test_lp1071710(self):
+    def test_46_lp1071710(self):
         """ Check that we can exclude translated fields (bug lp:1071710) """
         # first install french language
         self.env['res.lang']._activate_lang('fr_FR')
@@ -827,7 +805,7 @@ class TestExpression(SavepointCaseWithUserDemo):
         not_be = self._search(Partner, [('country_id', '!=', 'Belgique')])
         self.assertNotIn(deco_addict, not_be)
 
-    def test_or_with_implicit_and(self):
+    def test_47_or_with_implicit_and(self):
         # Check that when using expression.OR on a list of domains with at least one
         # implicit '&' the returned domain is the expected result.
         # from #24038
@@ -838,10 +816,10 @@ class TestExpression(SavepointCaseWithUserDemo):
                          '&', ('foo', '=', 2), ('bar', '=', 2)]
         self.assertEqual(expression.OR([d1, d2]), expected)
 
-    def test_proper_combine_unit_leaves(self):
-        # test that unit leaves (TRUE_LEAF, FALSE_LEAF) are properly handled in specific cases
-        false = expression.FALSE_DOMAIN
-        true = expression.TRUE_DOMAIN
+    def test_48_proper_combine_unit_leaves(self):
+        # test that unit leaves (True, False) are properly handled in specific cases
+        false = [False]
+        true = [True]
         normal = [('foo', '=', 'bar')]
         # OR with single FALSE_LEAF
         expr = expression.OR([false])
@@ -852,23 +830,23 @@ class TestExpression(SavepointCaseWithUserDemo):
         # OR with FALSE_LEAF and a normal leaf
         expr = expression.OR([false, normal])
         self.assertEqual(expr, normal)
-        # OR with AND of single TRUE_LEAF and normal leaf
+        # OR with AND of single True and normal leaf
         expr = expression.OR([expression.AND([true]), normal])
         self.assertEqual(expr, true)
-        # AND with single TRUE_LEAF
+        # AND with single True
         expr = expression.AND([true])
         self.assertEqual(expr, true)
-        # AND with multiple TRUE_LEAF
+        # AND with multiple True
         expr = expression.AND([true, true])
         self.assertEqual(expr, true)
-        # AND with TRUE_LEAF and normal leaves
+        # AND with True and normal leaves
         expr = expression.AND([true, normal])
         self.assertEqual(expr, normal)
         # AND with OR with single FALSE_LEAF and normal leaf
         expr = expression.AND([expression.OR([false]), normal])
         self.assertEqual(expr, false)
 
-    def test_filtered_domain_order(self):
+    def test_49_filtered_domain_order(self):
         domain = [('name', 'ilike', 'a')]
         countries = self.env['res.country'].search(domain)
         self.assertGreater(len(countries), 1)
@@ -878,7 +856,7 @@ class TestExpression(SavepointCaseWithUserDemo):
         countries = countries.browse(reversed(countries._ids))
         self.assertEqual(countries.filtered_domain(domain)._ids, countries._ids)
 
-    def test_filtered_domain_order2(self):
+    def test_50_filtered_domain_order2(self):
         countries = self.env['res.country'].search([])
         # match the first two countries, in order
         expected = countries[:2]
@@ -887,6 +865,27 @@ class TestExpression(SavepointCaseWithUserDemo):
         self.assertEqual(countries.filtered_domain(domain)._ids, expected._ids)
         domain = ['|', ('id', '=', id2), ('id', '=', id1)]
         self.assertEqual(countries.filtered_domain(domain)._ids, expected._ids)
+
+    def test_51_is_false(self):
+        def _test_is_false(domain, value):
+            self.assertEqual(expression.is_false(domain), value, f"is_false({domain}) should be {value}")
+
+        _test_is_false([True], False)
+        _test_is_false([False], True)
+        _test_is_false([True], False)
+        _test_is_false([False], True)
+        _test_is_false([('a', '=', 1)], False)
+        _test_is_false([('a', '=', 1), False], True)
+        _test_is_false([('a', '=', 1), False], True)
+        _test_is_false([('a', '=', 1), ('a', '!=', 1)], False)
+        _test_is_false(['|', ('a', '=', 1), ('a', '!=', 1)], False)
+        _test_is_false(['|', ('a', '=', 1), ('a', '!=', 1), False], True)
+        _test_is_false([('a', '=', 1), '|', ('a', '!=', 1), False], False)
+        _test_is_false([(0, 'in', [1, 2, 3])], False)
+        _test_is_false([(0, 'in', [])], True)
+        _test_is_false([(0, 'not in', [1, 2, 3])], False)
+        _test_is_false([(0, 'not in', [])], False)
+        _test_is_false([(0, 'in', [1, 2, 3]), (0, 'not in', [1, 2, 3])], False)
 
 
 class TestExpression2(TransactionCase):
@@ -1033,14 +1032,14 @@ class TestAutoJoin(TransactionCase):
         patch_domain(partner_obj, 'bank_ids', [('sanitized_acc_number', 'like', '2')])
 
         # Do: 2 cascaded one2many with _auto_join, test final leaf is an id
-        partners = partner_obj.search(['&', (1, '=', 1), ('child_ids.bank_ids.id', 'in', [b_aa.id, b_ba.id])])
+        partners = partner_obj.search(['&', True, ('child_ids.bank_ids.id', 'in', [b_aa.id, b_ba.id])])
         self.assertLessEqual(p_a, partners,
             "_auto_join on one2many with domains incorrect result")
         self.assertFalse((p_ab + p_ba) & partners,
             "_auto_join on one2many with domains incorrect result")
 
         patch_domain(partner_obj, 'child_ids', lambda self: [('name', '=', '__%s' % self._name)])
-        partners = partner_obj.search(['&', (1, '=', 1), ('child_ids.bank_ids.id', 'in', [b_aa.id, b_ba.id])])
+        partners = partner_obj.search(['&', True, ('child_ids.bank_ids.id', 'in', [b_aa.id, b_ba.id])])
         self.assertFalse(partners,
             "_auto_join on one2many with domains incorrect result")
 

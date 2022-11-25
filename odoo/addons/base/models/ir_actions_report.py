@@ -8,7 +8,7 @@ from odoo.tools.safe_eval import safe_eval, time
 from odoo.tools.misc import find_in_path
 from odoo.tools import check_barcode_encoding, config, is_html_empty, parse_version
 from odoo.http import request
-from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
+from odoo.osv.expression import NEGATIVE_TERM_OPERATORS
 
 import io
 import logging
@@ -137,7 +137,7 @@ class IrActionsReport(models.Model):
         elif isinstance(value, bool) or value is None:
             return [('model', operator, value)]
         else:
-            return FALSE_DOMAIN
+            return [False]
 
     def _get_readable_fields(self):
         return super()._get_readable_fields() | {

@@ -463,7 +463,7 @@ class MicrosoftSync(models.AbstractModel):
         """
         domain = self._get_microsoft_sync_domain()
         if not full_sync:
-            is_active_clause = (self._active_name, '=', True) if self._active_name else expression.TRUE_LEAF
+            is_active_clause = (self._active_name, '=', True) if self._active_name else True
             domain = expression.AND([domain, [
                 '|',
                 '&', ('ms_universal_event_id', '=', False), is_active_clause,

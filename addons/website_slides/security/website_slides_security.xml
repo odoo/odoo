@@ -26,7 +26,7 @@
         <record id="rule_slide_channel_global" model="ir.rule">
             <field name="name">Channel: always visible (sub rules exist)</field>
             <field name="model_id" ref="model_slide_channel"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">[True]</field>
         </record>
 
         <record id="rule_slide_channel_visibility_public_user" model="ir.rule">
@@ -61,7 +61,7 @@
         <record id="rule_slide_channel_officer_r" model="ir.rule">
             <field name="name">Channel: officer: read all</field>
             <field name="model_id" ref="model_slide_channel"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">[True]</field>
             <field name="groups" eval="[(4, ref('group_website_slides_officer'))]"/>
             <field name="perm_unlink" eval="0"/>
             <field name="perm_write" eval="0"/>
@@ -82,7 +82,7 @@
         <record id="rule_slide_channel_manager" model="ir.rule">
             <field name="name">Channel: manager: crud all</field>
             <field name="model_id" ref="model_slide_channel"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">[True]</field>
             <field name="groups" eval="[(4, ref('group_website_slides_manager'))]"/>
             <field name="perm_unlink" eval="1"/>
             <field name="perm_write" eval="1"/>
@@ -105,7 +105,7 @@
         <record id="rule_slide_slide_global" model="ir.rule">
             <field name="name">Slide: always visible (sub rules exist)</field>
             <field name="model_id" ref="model_slide_slide"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">[True]</field>
         </record>
 
         <record id="rule_slide_slide_public_user" model="ir.rule">
@@ -156,7 +156,7 @@
         <record id="rule_slide_slide_officer_r" model="ir.rule">
             <field name="name">Slide: officer: read all</field>
             <field name="model_id" ref="model_slide_slide"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">[True]</field>
             <field name="groups" eval="[(4, ref('group_website_slides_officer'))]"/>
             <field name="perm_unlink" eval="0"/>
             <field name="perm_write" eval="0"/>
@@ -178,7 +178,7 @@
         <record id="rule_slide_slide_manager" model="ir.rule">
             <field name="name">Slide: manager: crud all</field>
             <field name="model_id" ref="model_slide_slide"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">[True]</field>
             <field name="groups" eval="[(4, ref('group_website_slides_manager'))]"/>
             <field name="perm_unlink" eval="1"/>
             <field name="perm_write" eval="1"/>
@@ -201,7 +201,7 @@
         <record id="rule_slide_channel_partner_manager" model="ir.rule">
             <field name="name">Channel Partner: manager: crud all</field>
             <field name="model_id" ref="model_slide_channel_partner"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">[True]</field>
             <field name="groups" eval="[(4, ref('group_website_slides_manager'))]"/>
             <field name="perm_unlink" eval="1"/>
             <field name="perm_write" eval="1"/>
@@ -224,7 +224,7 @@
         <record id="rule_slide_slide_partner_manager" model="ir.rule">
             <field name="name">Slide Partner: manager: crud all</field>
             <field name="model_id" ref="model_slide_slide_partner"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">[True]</field>
             <field name="groups" eval="[(4, ref('group_website_slides_manager'))]"/>
             <field name="perm_unlink" eval="1"/>
             <field name="perm_write" eval="1"/>
@@ -247,7 +247,7 @@
         <record id="rule_slide_slide_resource_officer_read" model="ir.rule">
             <field name="name">Resource: officer: read all</field>
             <field name="model_id" ref="model_slide_slide_resource"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">[True]</field>
             <field name="groups" eval="[(4, ref('group_website_slides_officer'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="False"/>
@@ -269,7 +269,7 @@
         <record id="rule_slide_slide_resource_downloadable_manager" model="ir.rule">
             <field name="name">Resource: manager: crud all</field>
             <field name="model_id" ref="model_slide_slide_resource"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">[True]</field>
             <field name="groups" eval="[(4, ref('group_website_slides_manager'))]"/>
             <field name="perm_read" eval="1"/>
             <field name="perm_write" eval="1"/>

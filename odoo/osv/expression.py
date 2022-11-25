@@ -113,18 +113,18 @@ Finally, to instruct OpenERP to really use the unaccent function, you have to
 start the server specifying the ``--unaccent`` flag.
 
 """
-import collections.abc
 import logging
 import reprlib
 import traceback
 import warnings
+from collections.abc import Iterable
 from datetime import date, datetime, time
 
 from psycopg2.sql import Composable, SQL
 
 import odoo.modules
 from ..models import BaseModel
-from odoo.tools import pycompat, Query, _generate_table_alias, sql
+from odoo.tools import pycompat, OrderedSet, Query, _generate_table_alias, sql
 
 
 # Domain operators.
@@ -133,28 +133,26 @@ OR_OPERATOR = '|'
 AND_OPERATOR = '&'
 DOMAIN_OPERATORS = (NOT_OPERATOR, OR_OPERATOR, AND_OPERATOR)
 
-# List of available term operators. It is also possible to use the '<>'
-# operator, which is strictly the same as '!='; the later should be preferred
-# for consistency. This list doesn't contain '<>' as it is simplified to '!='
-# by the normalize_operator() function (so later part of the code deals with
-# only one representation).
-# Internals (i.e. not available to the user) 'inselect' and 'not inselect'
-# operators are also used. In this case its right operand has the form (subselect, params).
+DOMAIN_OPERATOR_ARITY = {
+    NOT_OPERATOR: 1,
+    AND_OPERATOR: 2,
+    OR_OPERATOR: 2,
+}
+
+# List of available term operators.
 TERM_OPERATORS = ('=', '!=', '<=', '<', '>', '>=', '=?', '=like', '=ilike',
                   'like', 'not like', 'ilike', 'not ilike', 'in', 'not in',
                   'child_of', 'parent_of')
-
+# Internals (i.e. not available to the user) 'inselect' and 'not inselect'
+# operators are also used. In this case its right operand has the form (subselect, params).
+INTERNAL_TERM_OPERATORS = ('inselect', 'not inselect')
+ALL_TERM_OPERATORS = TERM_OPERATORS + INTERNAL_TERM_OPERATORS
 # A subset of the above operators, with a 'negative' semantic. When the
 # expressions 'in NEGATIVE_TERM_OPERATORS' or 'not in NEGATIVE_TERM_OPERATORS' are used in the code
 # below, this doesn't necessarily mean that any of those NEGATIVE_TERM_OPERATORS is
 # legal in the processed term.
 NEGATIVE_TERM_OPERATORS = ('!=', 'not like', 'not ilike', 'not in')
 
-# Negation of domain expressions
-DOMAIN_OPERATORS_NEGATION = {
-    AND_OPERATOR: OR_OPERATOR,
-    OR_OPERATOR: AND_OPERATOR,
-}
 TERM_OPERATORS_NEGATION = {
     '<': '>=',
     '>': '<=',
@@ -170,111 +168,161 @@ TERM_OPERATORS_NEGATION = {
     'not ilike': 'ilike',
 }
 
-TRUE_LEAF = (1, '=', 1)
-FALSE_LEAF = (0, '=', 1)
-
-TRUE_DOMAIN = [TRUE_LEAF]
-FALSE_DOMAIN = [FALSE_LEAF]
+TRUE_LEAF = (1, '=', 1) # deprecated
+FALSE_LEAF = (0, '=', 1) # deprecated
 
 _logger = logging.getLogger(__name__)
-
 
 # --------------------------------------------------
 # Generic domain manipulation
 # --------------------------------------------------
 
 def normalize_domain(domain):
-    """Returns a normalized version of ``domain_expr``, where all implicit '&' operators
-       have been made explicit. One property of normalized domain expressions is that they
-       can be easily combined together as if they were single domain components.
+    """ Return a normalized version of ``domain``, where all implicit '&' operators
+    have been made explicit, and the empty domain is returned as ``[True]``.
+    One property of normalized domain expressions is that they can be easily
+    combined together as if they were single domain components.
     """
-    assert isinstance(domain, (list, tuple)), "Domains to normalize must have a 'domain' form: a list or tuple of domain components"
+    if not isinstance(domain, (list, tuple)):
+        raise ValueError(f"Domain must be a list or tuple of domain components: {domain!r}")
     if not domain:
-        return [TRUE_LEAF]
-    result = []
-    expected = 1                            # expected number of expressions
-    op_arity = {NOT_OPERATOR: 1, AND_OPERATOR: 2, OR_OPERATOR: 2}
-    for token in domain:
-        if expected == 0:                   # more than expected, like in [A, B]
-            result[0:0] = [AND_OPERATOR]             # put an extra '&' in front
-            expected = 1
-        if isinstance(token, (list, tuple)):  # domain term
-            expected -= 1
-            token = tuple(token)
+        return [True]
+
+    result = []             # normalized domain in reverse order
+    terms = 0               # number of expressions in result
+    for token in reversed(domain):
+        if token in DOMAIN_OPERATORS:
+            arity = DOMAIN_OPERATOR_ARITY[token]
+            if terms < arity:
+                raise ValueError(f"Invalid domain: {domain!r}")
+            result.append(token)
+            terms = terms - arity + 1
         else:
-            expected += op_arity.get(token, 0) - 1
-        result.append(token)
-    assert expected == 0, 'This domain is syntactically not correct: %s' % (domain)
+            # normalize term to True, False or a tuple
+            if token is True or token == TRUE_LEAF:
+                token = True
+            elif token is False or token == FALSE_LEAF:
+                token = False
+            elif isinstance(token, list):
+                token = tuple(token)
+            result.append(token)
+            terms += 1
+
+    # add implicit ANDs
+    while terms > 1:
+        result.append(AND_OPERATOR)
+        terms -= 1
+
+    result.reverse()
     return result
 
 
-def is_false(model, domain):
-    """ Return whether ``domain`` is logically equivalent to false. """
-    # use three-valued logic: -1 is false, 0 is unknown, +1 is true
+def domain_has_field_names(domain, field_names):
+    """ Return whether the domain uses one of the given fields. """
+    field_names = set(field_names)
+    for leaf in domain:
+        # leaf can be an operator '|', '&', '!', a boolean or a tuple
+        try:
+            left, _operator, _right = leaf
+            if left in field_names:
+                return True
+        except (TypeError, ValueError):
+            pass
+    return False
+
+
+def get_domain_field_names(domain):
+    """ Return the field names used by the given domain, for instance::
+
+        get_domain_field_names([
+            ('id', 'in', [1, 2, 3]),
+            ('field_a', 'in', [10, 11]),
+            ('field_b', '=', 'toto'),
+-           (1, '=', 1),  # deprecated
+            True,
+        ])
+
+    returns the list ['id', 'field_a', 'field_b']
+    """
+    field_names = OrderedSet()
+    for leaf in domain:
+        # leaf can be an operator '|', '&', '!' or a boolean, or a tuple
+        try:
+            left, _operator, _right = leaf
+            if isinstance(left, str):
+                field_names.add(left)
+        except (TypeError, ValueError):
+            pass
+    return list(field_names)
+
+
+def is_true(domain):
+    """ Return whether ``domain`` is equivalent to ``True``. """
+    return _domain_abstract_eval(domain) == 1
+
+
+def is_false(domain):
+    """ Return whether ``domain`` is equivalent to ``False``. """
+    return _domain_abstract_eval(domain) == -1
+
+
+def _domain_abstract_eval(domain):
+    """ Return an abstract evaluation of ``domain`` as a three-valued logic.
+    The function returns 1 for "true", -1 for "false", and 0 for "unknown".
+    """
     stack = []
     for token in reversed(normalize_domain(domain)):
-        if token == '&':
+        if token == AND_OPERATOR:
             stack.append(min(stack.pop(), stack.pop()))
-        elif token == '|':
+        elif token == OR_OPERATOR:
             stack.append(max(stack.pop(), stack.pop()))
-        elif token == '!':
+        elif token == NOT_OPERATOR:
             stack.append(-stack.pop())
-        elif token == TRUE_LEAF:
-            stack.append(+1)
-        elif token == FALSE_LEAF:
+        elif token is True:
+            stack.append(1)
+        elif token is False:
             stack.append(-1)
-        elif token[1] == 'in' and not (isinstance(token[2], Query) or token[2]):
+        elif not isinstance(token, tuple):
+            stack.append(0)
+        elif (token[1] == 'in' and
+              isinstance(token[2], Iterable) and not isinstance(token[2], Query) and not token[2]):
             stack.append(-1)
-        elif token[1] == 'not in' and not (isinstance(token[2], Query) or token[2]):
-            stack.append(+1)
+        elif (token[1] == 'not in' and
+              isinstance(token[2], Iterable) and not isinstance(token[2], Query) and not token[2]):
+            stack.append(1)
         else:
             stack.append(0)
-    return stack.pop() == -1
-
-
-def combine(operator, unit, zero, domains):
-    """Returns a new domain expression where all domain components from ``domains``
-       have been added together using the binary operator ``operator``.
-
-       It is guaranteed to return a normalized domain.
-
-       :param operator:
-       :param unit: the identity element of the domains "set" with regard to the operation
-                    performed by ``operator``, i.e the domain component ``i`` which, when
-                    combined with any domain ``x`` via ``operator``, yields ``x``.
-                    E.g. [(1,'=',1)] is the typical unit for AND_OPERATOR: adding it
-                    to any domain component gives the same domain.
-       :param zero: the absorbing element of the domains "set" with regard to the operation
-                    performed by ``operator``, i.e the domain component ``z`` which, when
-                    combined with any domain ``x`` via ``operator``, yields ``z``.
-                    E.g. [(1,'=',1)] is the typical zero for OR_OPERATOR: as soon as
-                    you see it in a domain component the resulting domain is the zero.
-       :param domains: a list of normalized domains.
-    """
-    result = []
-    count = 0
-    if domains == [unit]:
-        return unit
-    for domain in domains:
-        if domain == unit:
-            continue
-        if domain == zero:
-            return zero
-        if domain:
-            result += normalize_domain(domain)
-            count += 1
-    result = [operator] * (count - 1) + result
-    return result or unit
+    return stack.pop()
 
 
 def AND(domains):
     """AND([D1,D2,...]) returns a domain representing D1 and D2 and ... """
-    return combine(AND_OPERATOR, [TRUE_LEAF], [FALSE_LEAF], domains)
+    result = []
+    count = 0
+    for domain in domains:
+        domain = daomin and normalize_domain(domain)
+        if not domain or domain == [True]:
+            continue
+        if domain == [False]:
+            return [False]
+        result += domain
+        count += 1
+    return ([AND_OPERATOR] * (count - 1) + result) if count else [True]
 
 
 def OR(domains):
     """OR([D1,D2,...]) returns a domain representing D1 or D2 or ... """
-    return combine(OR_OPERATOR, [FALSE_LEAF], [TRUE_LEAF], domains)
+    result = []
+    count = 0
+    for domain in domains:
+        domain = domain and normalize_domain(domain)
+        if not domain or domain == [False]:
+            continue
+        if domain == [True]:
+            return [True]
+        result += domain
+        count += 1
+    return ([OR_OPERATOR] * (count - 1) + result) if count else [False]
 
 
 def distribute_not(domain):
@@ -305,25 +353,27 @@ def distribute_not(domain):
     for token in domain:
         negate = stack.pop()
         # negate tells whether the subdomain starting with token must be negated
-        if is_leaf(token):
-            if negate:
-                left, operator, right = token
-                if operator in TERM_OPERATORS_NEGATION:
-                    if token in (TRUE_LEAF, FALSE_LEAF):
-                        result.append(FALSE_LEAF if token == TRUE_LEAF else TRUE_LEAF)
-                    else:
-                        result.append((left, TERM_OPERATORS_NEGATION[operator], right))
-                else:
-                    result.append(NOT_OPERATOR)
-                    result.append(token)
-            else:
-                result.append(token)
-        elif token == NOT_OPERATOR:
+        if token == NOT_OPERATOR:
             stack.append(not negate)
-        elif token in DOMAIN_OPERATORS_NEGATION:
-            result.append(DOMAIN_OPERATORS_NEGATION[token] if negate else token)
+        elif token == AND_OPERATOR:
+            result.append(OR_OPERATOR if negate else AND_OPERATOR)
             stack.append(negate)
             stack.append(negate)
+        elif token == OR_OPERATOR:
+            result.append(AND_OPERATOR if negate else OR_OPERATOR)
+            stack.append(negate)
+            stack.append(negate)
+        elif token is True:
+            result.append(not negate)
+        elif token is False:
+            result.append(negate)
+        elif negate:
+            left, operator, right = token
+            if operator in TERM_OPERATORS_NEGATION:
+                result.append((left, TERM_OPERATORS_NEGATION[operator], right))
+            else:
+                result.append(NOT_OPERATOR)
+                result.append(token)
         else:
             result.append(token)
 
@@ -341,59 +391,48 @@ def _quote(to_quote):
 
 
 def normalize_leaf(element):
-    """ Change a term's operator to some canonical form, simplifying later
-        processing. """
-    if not is_leaf(element):
+    """ Normalizes the leaf of the domain whether it is an operator, a boolea
+        and a leaf in the form of a triplet (tuple/list).
+
+        Update the term's operator to some canonical form, to remove deprecated
+        uses and simplifying later processing. Raise an exception if the term's
+        operator is unknonw.
+        Raise an exception if the element is not a domain operators, True,
+        False or a leaf.
+    """
+    if element in DOMAIN_OPERATORS:
         return element
-    left, operator, right = element
-    original = operator
-    operator = operator.lower()
-    if operator == '<>':
-        operator = '!='
+    if element in (True, False):
+        return element
+    if element == TRUE_LEAF:
+        warnings.warn(f"The domain leaf {element!r} should use True.", UserWarning)
+        return True
+    if element == FALSE_LEAF:
+        warnings.warn(f"The domain leaf {element!r} should use False", UserWarning)
+        return False
+
+    if not isinstance(element, (list, tuple)):
+        raise ValueError(f"Invalide domain leaf {element!r}")
+    try:
+        left, operator, right = element
+    except (TypeError, ValueError):
+        raise ValueError(f"Invalide domain leaf {element!r}") from None
+    if not isinstance(left, str):
+        raise ValueError(f"Invalide left item (field name) in domain leaf {element!r}.")
+
+    if operator not in ALL_TERM_OPERATORS:
+        operator = operator.lower()
+        if operator in ALL_TERM_OPERATORS:
+            warnings.warn(f"The domain leaf operator '{element}' should use a lowercase operator.", UserWarning)
+        else:
+            raise ValueError(f"Invalide operator in domain leaf {element!r}.")
     if isinstance(right, bool) and operator in ('in', 'not in'):
-        _logger.warning("The domain term '%s' should use the '=' or '!=' operator." % ((left, original, right),))
+        warnings.warn(f"The domain term '{element}' should use the '=' or '!=' operator.", UserWarning)
         operator = '=' if operator == 'in' else '!='
     if isinstance(right, (list, tuple)) and operator in ('=', '!='):
-        _logger.warning("The domain term '%s' should use the 'in' or 'not in' operator." % ((left, original, right),))
+        warnings.warn(f"The domain term '{element}' should use the 'in' or 'not in' operator.", UserWarning)
         operator = 'in' if operator == '=' else 'not in'
     return left, operator, right
-
-
-def is_operator(element):
-    """ Test whether an object is a valid domain operator. """
-    return isinstance(element, str) and element in DOMAIN_OPERATORS
-
-
-def is_leaf(element, internal=False):
-    """ Test whether an object is a valid domain term:
-
-        - is a list or tuple
-        - with 3 elements
-        - second element if a valid op
-
-        :param tuple element: a leaf in form (left, operator, right)
-        :param bool internal: allow or not the 'inselect' internal operator
-            in the term. This should be always left to False.
-
-        Note: OLD TODO change the share wizard to use this function.
-    """
-    INTERNAL_OPS = TERM_OPERATORS + ('<>',)
-    if internal:
-        INTERNAL_OPS += ('inselect', 'not inselect')
-    return (isinstance(element, tuple) or isinstance(element, list)) \
-        and len(element) == 3 \
-        and element[1] in INTERNAL_OPS \
-        and ((isinstance(element[0], str) and element[0])
-             or tuple(element) in (TRUE_LEAF, FALSE_LEAF))
-
-
-def is_boolean(element):
-    return element == TRUE_LEAF or element == FALSE_LEAF
-
-
-def check_leaf(element, internal=False):
-    if not is_operator(element) and not is_leaf(element, internal):
-        raise ValueError("Invalid leaf %s" % str(element))
 
 
 # --------------------------------------------------
@@ -521,7 +560,7 @@ class expression(object):
                     # given this nonsensical domain, it is generally cheaper to
                     # interpret False as [], so that "X child_of False" will
                     # match nothing
-                    _logger.warning("Unexpected domain [%s], interpreted as False", leaf)
+                    warnings.warn(f"Unexpected domain [{leaf}], interpreted as False", UserWarning)
                     return []
                 return [value]
             if names:
@@ -537,7 +576,7 @@ class expression(object):
                 either as a range using the parent_path tree lookup field
                 (when available), or as an expanded [(left,in,child_ids)] """
             if not ids:
-                return [FALSE_LEAF]
+                return [False]
             if left_model._parent_store:
                 domain = OR([
                     [('parent_path', '=like', rec.parent_path + '%')]
@@ -563,7 +602,7 @@ class expression(object):
                 either as a range using the parent_path tree lookup field
                 (when available), or as an expanded [(left,in,parent_ids)] """
             if not ids:
-                return [FALSE_LEAF]
+                return [False]
             if left_model._parent_store:
                 parent_ids = [
                     int(label)
@@ -596,7 +635,8 @@ class expression(object):
         def push(leaf, model, alias, internal=False):
             """ Push a leaf to be processed right after. """
             leaf = normalize_leaf(leaf)
-            check_leaf(leaf, internal)
+            if not internal and isinstance(leaf, tuple) and leaf[1] in INTERNAL_TERM_OPERATORS:
+                raise ValueError(f"Invalide term operator in domain leaf {leaf!r} of the domain {self.expression!r}.")
             stack.append((leaf, model, alias))
 
         def pop_result():
@@ -625,7 +665,7 @@ class expression(object):
             # -> convert and add directly to result
             # ----------------------------------------
 
-            if is_operator(leaf):
+            if leaf in DOMAIN_OPERATORS:
                 if leaf == NOT_OPERATOR:
                     expr, params = pop_result()
                     push_result('(NOT (%s))' % expr, params)
@@ -636,7 +676,7 @@ class expression(object):
                     push_result(ops[leaf] % (lhs, rhs), lhs_params + rhs_params)
                 continue
 
-            if is_boolean(leaf):
+            if leaf is True or leaf is False:
                 expr, params = self.__leaf_to_sql(leaf, model, alias)
                 push_result(expr, params)
                 continue
@@ -761,7 +801,7 @@ class expression(object):
                         op2 = (TERM_OPERATORS_NEGATION[operator]
                                if operator in NEGATIVE_TERM_OPERATORS else operator)
                         ids2 = comodel._name_search(right, domain or [], op2, limit=None)
-                    elif isinstance(right, collections.abc.Iterable):
+                    elif isinstance(right, Iterable):
                         ids2 = right
                     else:
                         ids2 = [right]
@@ -838,7 +878,7 @@ class expression(object):
                         op2 = (TERM_OPERATORS_NEGATION[operator]
                                if operator in NEGATIVE_TERM_OPERATORS else operator)
                         ids2 = comodel._name_search(right, domain or [], op2, limit=None)
-                    elif isinstance(right, collections.abc.Iterable):
+                    elif isinstance(right, Iterable):
                         ids2 = right
                     else:
                         ids2 = [right]
@@ -924,7 +964,7 @@ class expression(object):
                 else:
                     _logger.error("Binary field '%s' stored in attachment: ignore %s %s %s",
                                   field.string, left, operator, reprlib.repr(right))
-                    push(TRUE_LEAF, model, alias)
+                    push(True, model, alias)
 
             # -------------------------------------------------
             # OTHER FIELDS
@@ -1025,27 +1065,24 @@ class expression(object):
         self.query.add_where(where_clause, where_params)
 
     def __leaf_to_sql(self, leaf, model, alias):
+        if leaf is True:
+            return 'TRUE', []
+        if leaf is False:
+            return 'FALSE', []
+
         left, operator, right = leaf
 
         # final sanity checks - should never fail
         assert operator in (TERM_OPERATORS + ('inselect', 'not inselect')), \
             "Invalid operator %r in domain term %r" % (operator, leaf)
-        assert leaf in (TRUE_LEAF, FALSE_LEAF) or left in model._fields, \
+        assert left in model._fields, \
             "Invalid field %r in domain term %r" % (left, leaf)
         assert not isinstance(right, BaseModel), \
             "Invalid value %r in domain term %r" % (right, leaf)
 
         table_alias = '"%s"' % alias
 
-        if leaf == TRUE_LEAF:
-            query = 'TRUE'
-            params = []
-
-        elif leaf == FALSE_LEAF:
-            query = 'FALSE'
-            params = []
-
-        elif operator == 'inselect':
+        if operator == 'inselect':
             query = '(%s."%s" in (%s))' % (table_alias, left, right[0])
             params = list(right[1])
 
@@ -1057,7 +1094,7 @@ class expression(object):
             # Two cases: right is a boolean or a list. The boolean case is an
             # abuse and handled for backward compatibility.
             if isinstance(right, bool):
-                _logger.warning("The domain term '%s' should use the '=' or '!=' operator." % (leaf,))
+                warnings.warn(f"The domain term '{leaf}' should use the '=' or '!=' operator.", UserWarning)
                 if (operator == 'in' and right) or (operator == 'not in' and not right):
                     query = '(%s."%s" IS NOT NULL)' % (table_alias, left)
                 else:

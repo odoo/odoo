@@ -270,7 +270,7 @@ class GoogleSync(models.AbstractModel):
         """
         domain = self._get_sync_domain()
         if not full_sync:
-            is_active_clause = (self._active_name, '=', True) if self._active_name else expression.TRUE_LEAF
+            is_active_clause = (self._active_name, '=', True) if self._active_name else True
             domain = expression.AND([domain, [
                 '|',
                     '&', ('google_id', '=', False), is_active_clause,

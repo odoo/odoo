@@ -1154,7 +1154,7 @@ class MailComposer(models.TransientModel):
         :return: an Odoo domain (list of leaves) """
         self.ensure_one()
         if isinstance(self.res_domain, (str, bool)) and not self.res_domain:
-            return expression.FALSE_DOMAIN
+            return [False]
         try:
             domain = self.res_domain
             if isinstance(self.res_domain, str):

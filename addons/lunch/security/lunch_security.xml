@@ -28,7 +28,7 @@
             <field name="name">lunch.cashmove: do see other people's cashmove</field>
             <field name="model_id" ref="model_lunch_cashmove"/>
             <field name="groups" eval="[(4, ref('group_lunch_manager'))]"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">[True]</field>
         </record>
         <record id="lunch_order_rule_delete" model="ir.rule">
             <field name="name">lunch.order: Only new and cancelled order lines deleted.</field>
@@ -54,7 +54,7 @@
         <record id="lunch_order_rule_write_manager" model="ir.rule">
             <field name="name">manager can do whatever</field>
             <field name="model_id" ref="lunch.model_lunch_order"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">[True]</field>
             <field name="perm_read" eval="0"/>
             <field name="perm_create" eval="0"/>
             <field name="perm_unlink" eval="0"/>

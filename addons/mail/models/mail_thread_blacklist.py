@@ -79,7 +79,7 @@ class MailBlackListMixin(models.AbstractModel):
         self._cr.execute(query % self._table)
         res = self._cr.fetchall()
         if not res:
-            return [(0, '=', 1)]
+            return [False]
         return [('id', 'in', [r[0] for r in res])]
 
     @api.depends('email_normalized')

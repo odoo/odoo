@@ -300,7 +300,7 @@ class TestSelectRange(odoo.tests.TransactionCase):
         # no counters, no expand, and hierarchization
         result = self.SourceModel.search_panel_select_range(
             'folder_id',
-            search_domain=[(0, '=', 1)],
+            search_domain=[False],
         )
         self.assertEqual(
             result,

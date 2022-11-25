@@ -526,9 +526,9 @@ class IrAttachment(models.Model):
         # add res_field=False in domain if not present; the arg[0] trick below
         # works for domain items and '&'/'|'/'!' operators too
         discard_binary_fields_attachments = False
-        if not any(arg[0] in ('id', 'res_field') for arg in args):
+        if not expression.domain_has_field_names(args, ['id', 'res_field']):
             discard_binary_fields_attachments = True
-            args.insert(0, ('res_field', '=', False))
+            args = expression.AND([[('res_field', '=', False)], args])
 
         ids = super(IrAttachment, self)._search(args, offset=offset, limit=limit, order=order,
                                                 count=False, access_rights_uid=access_rights_uid)

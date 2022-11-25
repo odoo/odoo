@@ -263,7 +263,7 @@ Contact your administrator to request access if necessary.""" % (self.record.dis
         self.env.ref('base.group_no_one').write({'users': [Command.link(self.user.id)]})
         self.env.ref('base.group_user').write({'users': [Command.link(self.user.id)]})
         self._make_rule('rule 0', '[("val", "=", 42)]', global_=True)
-        self._make_rule('rule 1', '[(1, "=", 1)]', global_=True)
+        self._make_rule('rule 1', '[True]', global_=True)
         with self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
@@ -283,8 +283,8 @@ Contact your administrator to request access if necessary.""" % (self.record.dis
         self.env.ref('base.group_no_one').write({'users': [Command.link(self.user.id)]})
         self.env.ref('base.group_user').write({'users': [Command.link(self.user.id)]})
         self._make_rule('rule 0', '[("val", "=", 42)]', global_=True)
-        self._make_rule('rule 1', '[(1, "=", 1)]', global_=True)
-        self._make_rule('rule 2', '[(0, "=", 1)]')
+        self._make_rule('rule 1', '[True]', global_=True)
+        self._make_rule('rule 2', '[False]')
         self._make_rule('rule 3', '[("val", "=", 55)]')
         with self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})

@@ -57,7 +57,7 @@ class TestRules(TransactionCase):
             'name': 'Forbid public group',
             'model_id': self.browse_ref('test_access_rights.model_test_access_right_some_obj').id,
             'groups': [Command.set([self.browse_ref('base.group_public').id])],
-            'domain_force': "[(0, '=', 1)]"
+            'domain_force': "[False]"
         })
 
         browse2 = env['test_access_right.some_obj'].browse(self.id2)

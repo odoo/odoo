@@ -389,7 +389,7 @@ class Post(models.Model):
         user = self.env.user
         # Won't impact sitemap, search() in converter is forced as public user
         if self.env.is_admin():
-            return [(1, '=', 1)]
+            return [True]
 
         req = """
             SELECT p.id

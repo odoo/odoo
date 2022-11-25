@@ -860,7 +860,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                 "view_mode": "list",
                 "views": [[False, "list"]],
                 "target": "current",
-                "domain": [(0, "=", 1)],
+                "domain": [False],
                 "name": "Journal items for account prefix ",
             },
         )

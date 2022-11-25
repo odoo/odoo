@@ -2231,7 +2231,7 @@ class Form(object):
         inherited_modifiers = ['invisible']
         fvg['fields'].setdefault('id', {'type': 'id'})
         # pre-resolve modifiers & bind to arch toplevel
-        modifiers = fvg['modifiers'] = {'id': {'required': [FALSE_LEAF], 'readonly': [TRUE_LEAF]}}
+        modifiers = fvg['modifiers'] = {'id': {'required': [False], 'readonly': [True]}}
         contexts = fvg['contexts'] = {}
         order = fvg['fields_ordered'] = []
         field_level = fvg['tree'].xpath('count(ancestor::field)')
@@ -2252,8 +2252,8 @@ class Form(object):
 
             node_modifiers = {}
             for modifier, domain in json.loads(f.get('modifiers', '{}')).items():
-                if isinstance(domain, int):
-                    node_modifiers[modifier] = [TRUE_LEAF] if domain else [FALSE_LEAF]
+                if isinstance(domain, (int, bool)):
+                    node_modifiers[modifier] = [bool(domain)]
                 elif isinstance(domain, str):
                     node_modifiers[modifier] = normalize_domain(safe_eval(domain, eval_context))
                 else:
@@ -2264,7 +2264,7 @@ class Form(object):
                 for modifier in inherited_modifiers:
                     if modifier in ancestor_modifiers:
                         domain = ancestor_modifiers[modifier]
-                        ancestor_domain = ([TRUE_LEAF] if domain else [FALSE_LEAF]) if isinstance(domain, int) else normalize_domain(domain)
+                        ancestor_domain = ([bool(domain)]) if isinstance(domain, (int, bool)) else normalize_domain(domain)
                         node_domain = node_modifiers.get(modifier, [])
                         # Combine the field modifiers with his ancestor modifiers with an OR connector
                         # e.g. A field is invisible if its own invisible modifier is True
@@ -2277,8 +2277,8 @@ class Form(object):
                 # e.g. a field is readonly if all occurences of the field are readonly in the view.
                 for modifier in set(node_modifiers.keys()).union(modifiers[fname].keys()):
                     modifiers[fname][modifier] = expression.AND([
-                        modifiers[fname].get(modifier, [FALSE_LEAF]),
-                        node_modifiers.get(modifier, [FALSE_LEAF]),
+                        modifiers[fname].get(modifier, [False]),
+                        node_modifiers.get(modifier, [False]),
                     ])
             else:
                 modifiers[fname] = node_modifiers
@@ -2357,6 +2357,9 @@ class Form(object):
                 e1 = stack.pop()
                 e2 = stack.pop()
                 stack.append(e1 or e2)
+            elif isinstance(it, bool):
+                stack.append(it)
+                continue
             elif isinstance(it, tuple):
                 if it == TRUE_LEAF:
                     stack.append(True)

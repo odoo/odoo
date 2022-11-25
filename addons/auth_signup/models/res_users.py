@@ -24,19 +24,19 @@ class ResUsers(models.Model):
                  selection=[('new', 'Never Connected'), ('active', 'Confirmed')])
 
     def _search_state(self, operator, value):
-        negative = operator in expression.NEGATIVE_TERM_OPERATORS
+        is_negative_op = operator in expression.NEGATIVE_TERM_OPERATORS
 
         # In case we have no value
         if not value:
-            return expression.TRUE_DOMAIN if negative else expression.FALSE_DOMAIN
+            return [is_negative_op]
 
         if operator in ['in', 'not in']:
             if len(value) > 1:
-                return expression.FALSE_DOMAIN if negative else expression.TRUE_DOMAIN
+                return [not is_negative_op]
             if value[0] == 'new':
-                comp = '!=' if negative else '='
+                comp = '!=' if is_negative_op else '='
             if value[0] == 'active':
-                comp = '=' if negative else '!='
+                comp = '=' if is_negative_op else '!='
             return [('log_ids', comp, False)]
 
         if operator in ['=', '!=']:
@@ -46,7 +46,7 @@ class ResUsers(models.Model):
 
             return [('log_ids', operator, False)]
 
-        return expression.TRUE_DOMAIN
+        return [True]
 
     def _compute_state(self):
         for user in self:

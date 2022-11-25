@@ -204,7 +204,7 @@ class TestIrRule(TransactionCaseWithUserDemo):
         self.assertTrue(partners, "Demo user should see some partner.")
 
         # same with domain 1=1
-        rule1.domain_force = "[(1,'=',1)]"
+        rule1.domain_force = "[True]"
         partners = partners_demo.search([])
         self.assertTrue(partners, "Demo user should see some partner.")
 
@@ -226,12 +226,12 @@ class TestIrRule(TransactionCaseWithUserDemo):
         self.assertTrue(partners, "Demo user should see some partner.")
 
         # same with domains 1=1 and blank
-        rule1.domain_force = "[(1,'=',1)]"
+        rule1.domain_force = "[True]"
         partners = partners_demo.search([])
         self.assertTrue(partners, "Demo user should see some partner.")
 
         # same with domains 1=1 and 1=1
-        rule2.domain_force = "[(1,'=',1)]"
+        rule2.domain_force = "[True]"
         partners = partners_demo.search([])
         self.assertTrue(partners, "Demo user should see some partner.")
 
@@ -248,7 +248,7 @@ class TestIrRule(TransactionCaseWithUserDemo):
         self.assertTrue(partners, "Demo user should see some partner.")
 
         # same with domains 1=1, 1=1 and 1=1
-        rule3.domain_force = "[(1,'=',1)]"
+        rule3.domain_force = "[True]"
         partners = partners_demo.search([])
         self.assertTrue(partners, "Demo user should see some partner.")
 

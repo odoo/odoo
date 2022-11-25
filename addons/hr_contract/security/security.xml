@@ -40,7 +40,7 @@
             <field name="name">HR Contract: Contract Manager</field>
             <field name="model_id" ref="model_hr_contract"/>
             <field name="groups" eval="[(4, ref('hr_contract.group_hr_contract_manager'))]"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="domain_force">[True]</field>
         </record>
 
         <record id="ir_rule_hr_contract_multi_company" model="ir.rule">

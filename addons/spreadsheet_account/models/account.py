@@ -43,7 +43,7 @@ class AccountMove(models.Model):
     def _build_spreadsheet_formula_domain(self, formula_params):
         code = formula_params["code"]
         if not code:
-            return expression.FALSE_DOMAIN
+            return [False]
         company_id = formula_params["company_id"] or self.env.company.id
         company = self.env["res.company"].browse(company_id)
         start, end = self._get_date_period_boundaries(
@@ -116,7 +116,7 @@ class AccountMove(models.Model):
             company_id = args["company_id"] or self.env.company.id
             domain = self._build_spreadsheet_formula_domain(args)
             # remove this when _search always returns a Query object
-            if domain == expression.FALSE_DOMAIN:
+            if expression.is_false(domain):
                 results.append({"credit": 0, "debit": 0})
                 continue
             MoveLines = self.env["account.move.line"].with_company(company_id)

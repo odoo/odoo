@@ -47,21 +47,21 @@ class ResCompany(models.Model):
                 if start_date == company.overtime_start_date and \
                     (vals.get('overtime_company_threshold') != company.overtime_company_threshold) or\
                     (vals.get('overtime_employee_threshold') != company.overtime_employee_threshold):
-                    search_domain = OR([search_domain, [('employee_id.company_id', '=', company.id)]])
+                    search_domain = [('employee_id.company_id', '=', company.id)]
                 # If we enabled the overtime with a start date
                 elif not company.overtime_start_date and start_date:
-                    search_domain = OR([search_domain, [
+                    search_domain = [
                         ('employee_id.company_id', '=', company.id),
-                        ('check_in', '>=', start_date)]])
+                        ('check_in', '>=', start_date)]
                 # If we move the start date into the past
                 elif start_date and company.overtime_start_date > start_date:
-                    search_domain = OR([search_domain, [
+                    search_domain = [
                         ('employee_id.company_id', '=', company.id),
                         ('check_in', '>=', start_date),
-                        ('check_in', '<=', company.overtime_start_date)]])
+                        ('check_in', '<=', company.overtime_start_date)]
                 # If we move the start date into the future
                 elif start_date and company.overtime_start_date < start_date:
-                    delete_domain = OR([delete_domain, [
+                    delete_domain = OR([delete_domain or [], [
                         ('company_id', '=', company.id),
                         ('date', '<', start_date)]])
 

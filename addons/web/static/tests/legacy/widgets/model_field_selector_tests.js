@@ -281,7 +281,7 @@ QUnit.module('ModelFieldSelector', {
         fieldSelector.destroy();
     });
 
-    QUnit.test("create a field chain with value 1 i.e. TRUE_LEAF", async function (assert) {
+    QUnit.test("create a field chain with value 1 i.e. True leaf", async function (assert) {
         assert.expect(1);
 
         var $target = $("#qunit-fixture");
@@ -301,7 +301,7 @@ QUnit.module('ModelFieldSelector', {
         fieldSelector.destroy();
     });
 
-    QUnit.test("create a field chain with value 0 i.e. FALSE_LEAF", async function (assert) {
+    QUnit.test("create a field chain with value 0 i.e. False leaf", async function (assert) {
         assert.expect(1);
 
         var $target = $("#qunit-fixture");

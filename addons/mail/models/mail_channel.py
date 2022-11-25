@@ -176,7 +176,7 @@ class Channel(models.Model):
         if self.env.user._is_public():
             guest = self.env['mail.guest']._get_guest_from_context()
             if not guest:
-                return expression.FALSE_DOMAIN if is_in else expression.TRUE_DOMAIN
+                return [not is_in]
             user_domain = [('guest_id', '=', guest.id)]
         else:
             user_domain = [('partner_id', '=', self.env.user.partner_id.id)]
@@ -760,8 +760,8 @@ class Channel(models.Model):
         all_needed_members_domain = expression.OR([
             [('channel_id.channel_type', '!=', 'channel')],
             [('rtc_inviting_session_id', '!=', False)],
-            [('partner_id', '=', current_partner.id) if current_partner else expression.FALSE_LEAF],
-            [('guest_id', '=', current_guest.id) if current_guest else expression.FALSE_LEAF],
+            [('partner_id', '=', current_partner.id) if current_partner else False],
+            [('guest_id', '=', current_guest.id) if current_guest else False],
         ])
         all_needed_members = self.env['mail.channel.member'].search(expression.AND([[('channel_id', 'in', self.ids)], all_needed_members_domain]), order='id')
         all_needed_members.partner_id.mail_partner_format()  # prefetch in batch

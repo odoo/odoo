@@ -249,18 +249,18 @@ class TestProjectSharing(TestProjectSharingCommon):
         self.task_portal.with_user(self.user_portal).write({'stage_id': self.project_portal.type_ids[-1].id})
 
     def test_orm_method_with_true_false_domain(self):
-        """ Test orm method overriden in project for project sharing works with TRUE_LEAF/FALSE_LEAF
+        """ Test orm method overriden in project for project sharing works with True/False
 
             Test Case
             =========
             1) Share a project in edit mode for portal user
-            2) Search the portal task contained in the project shared by using a domain with TRUE_LEAF
+            2) Search the portal task contained in the project shared by using a domain with True
             3) Check the task is found with the `search` method
-            4) filter the task with `TRUE_DOMAIN` and check if the task is always returned by `filtered_domain` method
-            5) filter the task with `FALSE_DOMAIN` and check if no task is returned by `filtered_domain` method
-            6) Search the task with `FALSE_LEAF` and check no task is found with `search` method
-            7) Call `read_group` method with `TRUE_LEAF` in the domain and check if the task is found
-            8) Call `read_group` method with `FALSE_LEAF` in the domain and check if no task is found
+            4) filter the task with `[True]` domain and check if the task is always returned by `filtered_domain` method
+            5) filter the task with `[False]` domain and check if no task is returned by `filtered_domain` method
+            6) Search the task with `False` and check no task is found with `search` method
+            7) Call `read_group` method with `True` in the domain and check if the task is found
+            8) Call `read_group` method with `False` in the domain and check if no task is found
         """
         domain = [('id', '=', self.task_portal.id)]
         self.project_portal.write({
@@ -270,23 +270,23 @@ class TestProjectSharing(TestProjectSharingCommon):
         })
         task = self.env['project.task'].with_user(self.user_portal).search(
             expression.AND([
-                expression.TRUE_DOMAIN,
+                [True],
                 domain,
             ])
         )
         self.assertTrue(task, 'The task should be found.')
-        self.assertEqual(task, task.filtered_domain(expression.TRUE_DOMAIN), 'The task found should be kept since the domain is truly')
-        self.assertFalse(task.filtered_domain(expression.FALSE_DOMAIN), 'The task should not be found since the domain is falsy')
+        self.assertEqual(task, task.filtered_domain([True]), 'The task found should be kept since the domain is truly')
+        self.assertFalse(task.filtered_domain([False]), 'The task should not be found since the domain is falsy')
         task = self.env['project.task'].with_user(self.user_portal).search(
             expression.AND([
-                expression.FALSE_DOMAIN,
+                [False],
                 domain,
             ]),
         )
         self.assertFalse(task, 'No task should be found since the domain contained a falsy tuple.')
 
         task_read_group = self.env['project.task'].read_group(
-            expression.AND([expression.TRUE_DOMAIN, domain]),
+            expression.AND([[True], domain]),
             ['id'],
             [],
         )
@@ -294,7 +294,7 @@ class TestProjectSharing(TestProjectSharingCommon):
         self.assertEqual(task_read_group[0]['id'], self.task_portal.id, 'The task should be found with the read_group method containing a truly tuple.')
 
         task_read_group = self.env['project.task'].read_group(
-            expression.AND([expression.FALSE_DOMAIN, domain]),
+            expression.AND([[False], domain]),
             ['id'],
             [],
         )

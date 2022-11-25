@@ -352,7 +352,7 @@ QUnit.module("Components", (hooks) => {
         );
     });
 
-    QUnit.test("create a field chain with value 1 i.e. TRUE_LEAF", async (assert) => {
+    QUnit.test("create a field chain with value 1 i.e. True leaf", async (assert) => {
         assert.expect(1);
 
         //create the field selector with domain value ["1"]
@@ -372,7 +372,7 @@ QUnit.module("Components", (hooks) => {
         );
     });
 
-    QUnit.test("create a field chain with value 0 i.e. FALSE_LEAF", async (assert) => {
+    QUnit.test("create a field chain with value 0 i.e. False leaf", async (assert) => {
         assert.expect(1);
 
         //create the field selector with domain value ["0"]

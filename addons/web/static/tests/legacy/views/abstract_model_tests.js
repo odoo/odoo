@@ -2,7 +2,6 @@ odoo.define('web.abstract_model_tests', function (require) {
     "use strict";
 
     const AbstractModel = require('web.AbstractModel');
-    const Domain = require('web.Domain');
 
     QUnit.module('LegacyViews', {}, function () {
         QUnit.module('AbstractModel');
@@ -105,11 +104,11 @@ odoo.define('web.abstract_model_tests', function (require) {
                 SampleModel: Model,
             });
 
-            await model.load({ domain: Domain.FALSE_DOMAIN, });
+            await model.load({ domain: [false], });
 
             const beforeReload = model.get(null, { withSampleData: true });
 
-            const reloaded = model.reload(null, { domain: Domain.TRUE_DOMAIN });
+            const reloaded = model.reload(null, { domain: [true] });
             const duringReload = model.get(null, { withSampleData: true });
 
             await reloaded;

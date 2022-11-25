@@ -87,7 +87,7 @@ class LunchProduct(models.Model):
         supported_operators = ['in', 'not in', '=', '!=']
 
         if not operator in supported_operators:
-            return expression.TRUE_DOMAIN
+            return [True]
 
         if isinstance(value, int):
             value = [value]

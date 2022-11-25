@@ -109,15 +109,8 @@ export class Domain {
     }
 }
 
-/** @type {Condition} */
-const TRUE_LEAF = [1, "=", 1];
-/** @type {Condition} */
-const FALSE_LEAF = [0, "=", 1];
-const TRUE_DOMAIN = new Domain([TRUE_LEAF]);
-const FALSE_DOMAIN = new Domain([FALSE_LEAF]);
-
-Domain.TRUE = TRUE_DOMAIN;
-Domain.FALSE = FALSE_DOMAIN;
+Domain.TRUE = new Domain([true]);
+Domain.FALSE = new Domain([false]);
 
 // -----------------------------------------------------------------------------
 // Helpers
@@ -134,6 +127,9 @@ function toAST(domain) {
             case "&":
             case "|":
                 return { type: 1 /* String */, value: elem };
+            case true:
+            case false:
+                return { type: 2, value: elem };
             default:
                 return {
                     type: 10 /* Tuple */,

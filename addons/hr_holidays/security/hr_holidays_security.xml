@@ -100,7 +100,7 @@
     <record id="hr_leave_rule_user_read" model="ir.rule">
         <field name="name">Time Off All Approver read</field>
         <field name="model_id" ref="model_hr_leave"/>
-        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="domain_force">[True]</field>
         <field name="perm_write" eval="True"/>
         <field name="perm_create" eval="True"/>
         <field name="perm_unlink" eval="True"/>
@@ -128,7 +128,7 @@
     <record id="hr_leave_rule_manager" model="ir.rule">
         <field name="name">Time Off Administrator</field>
         <field name="model_id" ref="model_hr_leave"/>
-        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="domain_force">[True]</field>
         <field name="groups" eval="[(4, ref('group_hr_holidays_manager'))]"/>
     </record>
 
@@ -179,7 +179,7 @@
     <record id="hr_leave_allocation_rule_officer_read" model="ir.rule">
         <field name="name">Allocations: see all time off: read all</field>
         <field name="model_id" ref="model_hr_leave_allocation"/>
-        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="domain_force">[True]</field>
         <field name="perm_create" eval="False"/>
         <field name="perm_write" eval="False"/>
         <field name="perm_unlink" eval="False"/>
@@ -215,14 +215,14 @@
     <record id="hr_leave_allocation_rule_manager" model="ir.rule">
         <field name="name">Allocations: administrator: no limit</field>
         <field name="model_id" ref="model_hr_leave_allocation"/>
-        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="domain_force">[True]</field>
         <field name="groups" eval="[(4, ref('group_hr_holidays_manager'))]"/>
     </record>
 
     <record id="resource_leaves_base_user" model="ir.rule">
         <field name="name">Time Off Resources: Approver</field>
         <field name="model_id" ref="model_resource_calendar_leaves"/>
-        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="domain_force">[True]</field>
         <field name="perm_create" eval="False"/>
         <field name="perm_write" eval="False"/>
         <field name="perm_unlink" eval="False"/>
@@ -233,7 +233,7 @@
     <record id="resource_leaves_holidays_user" model="ir.rule">
         <field name="name">Time Off Resources: All Approver</field>
         <field name="model_id" ref="model_resource_calendar_leaves"/>
-        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="domain_force">[True]</field>
         <field name="groups" eval="[(4, ref('hr_holidays.group_hr_holidays_user'))]"/>
     </record>
 
@@ -269,7 +269,7 @@
     <record id="hr_leave_report_rule_group_holiday_user" model="ir.rule">
         <field name="name">Time Off Summary / Report: All Approver</field>
         <field name="model_id" ref="model_hr_leave_report"/>
-        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="domain_force">[True]</field>
         <field name="perm_create" eval="False"/>
         <field name="perm_write" eval="False"/>
         <field name="perm_unlink" eval="False"/>

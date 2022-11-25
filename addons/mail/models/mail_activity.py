@@ -452,7 +452,7 @@ class MailActivity(models.Model):
                 domain = expression.AND([domain, [('id', 'in', allowed_ids)]])
             else:
                 # force void result if no allowed ids found
-                domain = expression.AND([domain, [(0, '=', 1)]])
+                domain = expression.AND([domain, [False]])
 
         return super(MailActivity, self)._read_group_raw(
             domain=domain, fields=fields, groupby=groupby, offset=offset,

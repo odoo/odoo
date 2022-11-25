@@ -138,12 +138,12 @@ QUnit.module('core', {}, function () {
 
     QUnit.test("compute true domain", function (assert) {
         assert.expect(1);
-        assert.ok(new Domain(Domain.TRUE_DOMAIN).compute({}));
+        assert.ok(new Domain([true]).compute({}));
     });
 
     QUnit.test("compute false domain", function (assert) {
         assert.expect(1);
-        assert.notOk(new Domain(Domain.FALSE_DOMAIN).compute({}));
+        assert.notOk(new Domain([false]).compute({}));
     });
 
     QUnit.test("arrayToString", function (assert) {

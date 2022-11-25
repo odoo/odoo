@@ -19,7 +19,6 @@ from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.safe_eval import safe_eval
-from odoo.osv.expression import FALSE_DOMAIN
 from odoo.addons.http_routing.models import ir_http
 from odoo.addons.http_routing.models.ir_http import _guess_mimetype
 from odoo.addons.portal.controllers.portal import _build_url_w_params
@@ -38,7 +37,7 @@ def sitemap_qs2dom(qs, route, field='name'):
         if len(needles) == 1:
             dom = [(field, 'ilike', needles[0])]
         else:
-            dom = FALSE_DOMAIN
+            dom = [False]
     return dom
 
 

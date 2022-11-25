@@ -24,7 +24,7 @@ from odoo.addons.iap.tools import iap_tools
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.http import request
 from odoo.modules.module import get_resource_path, get_manifest
-from odoo.osv.expression import AND, OR, FALSE_DOMAIN, get_unaccent_wrapper
+from odoo.osv.expression import AND, OR, is_false, get_unaccent_wrapper
 from odoo.tools.translate import _
 from odoo.tools import escape_psql, pycompat
 
@@ -1140,7 +1140,7 @@ class Website(models.Model):
                     if query:
                         r = "".join([x[1] for x in rule._trace[1:] if not x[0]])  # remove model converter from route
                         query = sitemap_qs2dom(query, r, self.env[converter.model]._rec_name)
-                        if query == FALSE_DOMAIN:
+                        if is_false(query):
                             continue
 
                     for rec in converter.generate(self.env, args=val, dom=query):

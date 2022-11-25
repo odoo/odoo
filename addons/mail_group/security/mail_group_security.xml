@@ -36,7 +36,7 @@
     <record id="mail_group_rule_administrator" model="ir.rule">
         <field name="name">Mail Group: Administrator have access to all mail group</field>
         <field name="model_id" ref="model_mail_group"/>
-        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="domain_force">[True]</field>
         <field name="groups" eval="[(4, ref('mail_group.group_mail_group_manager'))]"/>
         <field name="perm_create" eval="True"/>
         <field name="perm_read" eval="True"/>
@@ -98,7 +98,7 @@
     <record id="mail_group_message_rule_administrator" model="ir.rule">
         <field name="name">Mail Group Message: Administrator have access to all messages</field>
         <field name="model_id" ref="model_mail_group_message"/>
-        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="domain_force">[True]</field>
         <field name="groups" eval="[(4, ref('mail_group.group_mail_group_manager'))]"/>
         <field name="perm_create" eval="True"/>
         <field name="perm_read" eval="True"/>
@@ -118,7 +118,7 @@
     <record id="mail_group_member_rule_administrator" model="ir.rule">
         <field name="name">Mail Group Member: Administrator have access to all members</field>
         <field name="model_id" ref="model_mail_group_member"/>
-        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="domain_force">[True]</field>
         <field name="groups" eval="[(4, ref('mail_group.group_mail_group_manager'))]"/>
         <field name="perm_create" eval="True"/>
         <field name="perm_read" eval="True"/>
@@ -138,7 +138,7 @@
     <record id="mail_group_moderation_rule_administrator" model="ir.rule">
         <field name="name">Mail Group Moderation: Administrator have access to all moderation rules</field>
         <field name="model_id" ref="model_mail_group_moderation"/>
-        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="domain_force">[True]</field>
         <field name="groups" eval="[(4, ref('mail_group.group_mail_group_manager'))]"/>
         <field name="perm_create" eval="True"/>
         <field name="perm_read" eval="True"/>

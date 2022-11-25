@@ -192,7 +192,7 @@ class Message(models.Model):
         self.env.cr.execute(query, (value,))
         ids = [t[0] for t in self.env.cr.fetchall()]
         # return domain with an implicit AND
-        return [('id', 'in', ids), (1, '=', 1)]
+        return [('id', 'in', ids), True]
 
     @api.depends('size')
     def _compute_double_size(self):

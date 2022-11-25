@@ -356,9 +356,9 @@ var ModelFieldSelectorPopover = Widget.extend({
                 }
             } else if (field && chain.length === 0) { // Last node fetched
                 return Promise.resolve();
-            } else if (!field && fieldName === "1") { // TRUE_LEAF
+            } else if (!field && fieldName === "1") { // True leaf
                 this._validate(true);
-            } else if (!field && fieldName === "0") { // FALSE_LEAF
+            } else if (!field && fieldName === "0") { // False leaf
                 this._validate(true);
             } else { // Wrong node chain
                 this._validate(false);

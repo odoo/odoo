@@ -4393,9 +4393,9 @@ class BaseModel(metaclass=MetaModel):
         if self._active_name and active_test and self._context.get('active_test', True):
             # the item[0] trick below works for domain items and '&'/'|'/'!'
             # operators too
-            if not any(item[0] == self._active_name for item in domain):
-                domain = [(self._active_name, '=', 1)] + domain
-
+            if not expression.domain_has_field_names(domain, [self._active_name]):
+                # don't use expression.AND for perf and domain is not normalized
+                domain = [(self._active_name, '=', True)] + domain
         if domain:
             return expression.expression(domain, self).query
         else:
@@ -4543,7 +4543,7 @@ class BaseModel(metaclass=MetaModel):
 
         def collect_from_domain(model, domain):
             for arg in domain:
-                if isinstance(arg, str):
+                if isinstance(arg, (str, bool)):
                     continue
                 if not isinstance(arg[0], str):
                     continue
@@ -4622,7 +4622,7 @@ class BaseModel(metaclass=MetaModel):
         model = self.with_user(access_rights_uid) if access_rights_uid else self
         model.check_access_rights('read')
 
-        if expression.is_false(self, domain):
+        if expression.is_false(domain):
             # optimization: no need to query, as no record satisfies the domain
             return 0 if count else []
 
@@ -5379,16 +5379,17 @@ class BaseModel(metaclass=MetaModel):
             return self
 
         stack = []
+        domain = expression.normalize_domain(domain)
         for leaf in reversed(domain):
-            if leaf == '|':
+            if leaf == expression.OR_OPERATOR:
                 stack.append(stack.pop() | stack.pop())
-            elif leaf == '!':
+            elif leaf == expression.NOT_OPERATOR:
                 stack.append(set(self._ids) - stack.pop())
-            elif leaf == '&':
+            elif leaf == expression.AND_OPERATOR:
                 stack.append(stack.pop() & stack.pop())
-            elif leaf == expression.TRUE_LEAF:
+            elif leaf is True:
                 stack.append(set(self._ids))
-            elif leaf == expression.FALSE_LEAF:
+            elif leaf is False:
                 stack.append(set())
             else:
                 (key, comparator, value) = leaf

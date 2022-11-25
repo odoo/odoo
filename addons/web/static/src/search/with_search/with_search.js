@@ -71,7 +71,7 @@ WithSearch.props = {
     comparison: { validate: () => true, optional: true }, // fix problem with validation with type: [Object, null]
     // Issue OWL: https://github.com/odoo/owl/issues/910
     context: { type: Object, optional: true },
-    domain: { type: Array, element: [String, Array], optional: true },
+    domain: { type: Array, element: [Boolean, String, Array], optional: true },
     groupBy: { type: Array, element: String, optional: true },
     orderBy: { type: Array, element: String, optional: true },
 

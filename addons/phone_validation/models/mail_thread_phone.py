@@ -117,7 +117,7 @@ class PhoneMixin(models.AbstractModel):
             self._cr.execute(query, (pattern, term) * len(phone_fields))
         res = self._cr.fetchall()
         if not res:
-            return [(0, '=', 1)]
+            return [False]
         return [('id', 'in', [r[0] for r in res])]
 
     @api.depends(lambda self: self._phone_get_sanitize_triggers())
@@ -181,7 +181,7 @@ class PhoneMixin(models.AbstractModel):
         self._cr.execute(query % self._table)
         res = self._cr.fetchall()
         if not res:
-            return [(0, '=', 1)]
+            return [False]
         return [('id', 'in', [r[0] for r in res])]
 
     def _assert_phone_field(self):

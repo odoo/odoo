@@ -175,7 +175,7 @@ export class AnalyticDistribution extends Component {
         if (limit) {
             args['limit'] = limit;
         }
-        if (domain.length === 1 && domain[0][0] === "id") {
+        if (domain.length === 1 && domain[0] instanceof Array && domain[0][0] === "id") {
             //batch these orm calls
             return await this.props.record.model.orm.read("account.analytic.account", domain[0][2], args.fields, {});
         }

@@ -5,13 +5,11 @@ var collections = require("web.collections");
 var pyUtils = require("web.py_utils");
 var py = window.py; // look py.js
 
-const TRUE_LEAF = [1, '=', 1];
-const FALSE_LEAF = [0, '=', 1];
-const TRUE_DOMAIN = [TRUE_LEAF];
-const FALSE_DOMAIN = [FALSE_LEAF];
-
-function compare(a, b) {
-    return JSON.stringify(a) === JSON.stringify(b);
+function isTrueLeaf(leaf) {
+    return JSON.stringify(leaf) === '[1,"=",1]';
+}
+function isFalseLeaf(leaf) {
+    return JSON.stringify(leaf) === '[0,"=",1]';
 }
 
 /**
@@ -69,7 +67,7 @@ var Domain = collections.Tree.extend({
             // for the syntax 'parent.field'.
 
             let fieldValue;
-            if (compare(this._data, FALSE_LEAF) || compare(this._data, TRUE_LEAF)) {
+            if (isFalseLeaf(this._data) || isTrueLeaf(this._data)) {
                 fieldValue = this._data[0];
             } else {
                 var parentField = this._data[0].split('.');
@@ -406,15 +404,15 @@ var Domain = collections.Tree.extend({
                     if (node.operators.length !== 1) {
                         throw new Error('Wrong condition to convert in domain');
                     }
-                    var right = astToStackValue(node.expressions[0]);
-                    var left = astToStackValue(node.expressions[1]);
+                    var field = astToStackValue(node.expressions[0]);
+                    var value = astToStackValue(node.expressions[1]);
                     var operator = node.operators[0];
                     switch (operator) {
                         case 'is': operator = '='; break;
                         case 'is not': operator = '!='; break;
                         case '==': operator = '='; break;
                     }
-                    return [[right, operator, left]];
+                    return [[field, operator, value]];
                 default:
                     throw "Condition cannot be transformed into domain";
             }
@@ -423,11 +421,6 @@ var Domain = collections.Tree.extend({
         return astToStack(ast);
     },
 });
-
-Domain.TRUE_LEAF = TRUE_LEAF;
-Domain.FALSE_LEAF = FALSE_LEAF;
-Domain.TRUE_DOMAIN = TRUE_DOMAIN;
-Domain.FALSE_DOMAIN = FALSE_DOMAIN;
 
 return Domain;
 });

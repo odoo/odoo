@@ -3,7 +3,6 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.osv import expression
 
 
 class MassMailingContactListRel(models.Model):
@@ -99,7 +98,7 @@ class MassMailingContact(models.Model):
             [active_list_id] = self._context['default_list_ids']
             contacts = self.env['mailing.contact.subscription'].search([('list_id', '=', active_list_id)])
             return [('id', 'in', [record.contact_id.id for record in contacts if record.opt_out == value])]
-        return expression.FALSE_DOMAIN if value else expression.TRUE_DOMAIN
+        return [not value]
 
     @api.depends('subscription_list_ids')
     @api.depends_context('default_list_ids')
