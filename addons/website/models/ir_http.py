@@ -124,6 +124,14 @@ class Http(models.AbstractModel):
         )
 
     @classmethod
+    def _get_public_users(cls):
+        public_users = super()._get_public_users()
+        website = request.env(user=SUPERUSER_ID)['website'].get_current_website()  # sudo
+        if website:
+            public_users.append(website._get_cached('user_id'))
+        return public_users
+
+    @classmethod
     def _auth_method_public(cls):
         """ If no user logged, set the public user of current website, or default
             public user as request uid.
