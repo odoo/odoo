@@ -34,13 +34,12 @@
                     <FechaExpedicionFacturaAnterior t-out="datetime_strftime(chain_prev_invoice.l10n_es_tbai_registration_date, '%d-%m-%Y')"/>
                     <SignatureValueFirmaFacturaAnterior t-out="chain_prev_invoice.l10n_es_tbai_signature[:100]"/>
                 </EncadenamientoFacturaAnterior>
-                <!-- TODO allow switching between test/prod licenses (when we have our own). -->
                 <Software>
-                    <LicenciaTBAI>TBAI-LICENSE-KEY</LicenciaTBAI>
+                    <LicenciaTBAI>TBAIGI5A266A7CCDE1EC</LicenciaTBAI>
                     <EntidadDesarrolladora>
-                        <NIF>B20990602</NIF>
+                        <NIF>Y9877593G</NIF>
                     </EntidadDesarrolladora>
-                    <Nombre>Odoo Officiel GRPZ 1367</Nombre>
+                    <Nombre>Odoo SA</Nombre>
                     <Version t-out="odoo_version"/>
                 </Software>
                 <NumSerieDispositivo>TEST-DEVICE-001</NumSerieDispositivo>
