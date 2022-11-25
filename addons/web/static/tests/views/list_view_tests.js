@@ -16117,4 +16117,30 @@ QUnit.module("Views", (hooks) => {
         await click(target, ".o_field_many2one_selection .o-autocomplete--input");
         assert.verifySteps(["name_search"]);
     });
+
+    QUnit.test("readonly field specified in model but not in arch", async (assert) => {
+        // this test uses the priority widget as it allows to edit a field in readonly
+        serverData.models.foo.fields.priority = {
+            string: "Priority",
+            type: "selection",
+            selection: [
+                [0, "Not Prioritary"],
+                [1, "Prioritary"],
+            ],
+            default: 0,
+            readonly: true,
+        };
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `<tree><field name="priority" widget="priority"/></tree>`,
+        });
+
+        assert.hasClass(
+            target.querySelector(".o_field_widget[name=priority]"),
+            "o_readonly_modifier"
+        );
+    });
 });

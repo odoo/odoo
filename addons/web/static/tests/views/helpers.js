@@ -38,7 +38,7 @@ const serviceRegistry = registry.category("services");
 
 /**
  * @param {MakeViewParams} params
- * @returns {Component}
+ * @returns {Promise<Component>}
  */
 export async function makeView(params) {
     const props = { ...params };

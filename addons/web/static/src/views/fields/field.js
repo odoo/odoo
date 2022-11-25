@@ -204,6 +204,9 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
     const fields = models[modelName];
     const field = fields[name];
     const modifiers = JSON.parse(node.getAttribute("modifiers") || "{}");
+    if (!("readonly" in modifiers) && field.readonly) {
+        modifiers.readonly = true;
+    }
     const fieldInfo = {
         name,
         viewType,
