@@ -241,4 +241,32 @@ QUnit.module("Fields", ({ beforeEach }) => {
 
         await click(target, ".modal button.btn-primary"); // save
     });
+
+    QUnit.test("html fields: spellcheck is disabled on blur", async (assert) => {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: /* xml */ `<form><field name="txt" /></form>`,
+        });
+
+        const textarea = target.querySelector(".o_field_html textarea");
+        assert.strictEqual(textarea.spellcheck, true, "by default, spellcheck is enabled");
+        textarea.focus();
+
+        await editInput(textarea, null, "nev walue");
+        textarea.blur();
+        assert.strictEqual(
+            textarea.spellcheck,
+            false,
+            "spellcheck is disabled once the field has lost its focus"
+        );
+        textarea.focus();
+        assert.strictEqual(
+            textarea.spellcheck,
+            true,
+            "spellcheck is re-enabled once the field is focused"
+        );
+    });
 });
