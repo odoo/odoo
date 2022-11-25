@@ -208,6 +208,7 @@ export function processButton(node) {
         string: node.getAttribute("string") || undefined,
         options: JSON.parse(node.getAttribute("options") || "{}"),
         modifiers: JSON.parse(node.getAttribute("modifiers") || "{}"),
+        display: node.getAttribute("display") || "selection",
         clickParams: {
             close: archParseBoolean(node.getAttribute("close"), false),
             context: node.getAttribute("context") || "{}",
