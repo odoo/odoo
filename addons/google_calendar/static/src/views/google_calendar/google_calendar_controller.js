@@ -19,15 +19,17 @@ patch(AttendeeCalendarController.prototype, "google_calendar_google_calendar_con
             [[this.user.userId]],
         );
         const syncResult = await this.model.syncGoogleCalendar();
-        if (syncResult.status === "need_auth") {
-            this.configureCalendarProviderSync("google");
-        } else if (syncResult.status === "need_config_from_admin") {
-            if (Number.isInteger(syncResult.action)) {
-                this.dialog.add(ConfirmationDialog, {
-                    title: this.env._t("Configuration"),
-                    body: this.env._t("The Google Synchronization needs to be configured before you can use it, do you want to do it now?"),
-                    confirm: this.actionService.doAction.bind(this.actionService, syncResult.action),
-                });
+        if (["need_auth", "need_config_from_admin"].includes(syncResult.status)) {
+            if (this.isSystemUser) {
+                if (syncResult.status === "need_auth") {
+                    this.configureCalendarProviderSync("google");
+                } else if (syncResult.status === "need_config_from_admin") {
+                    this.dialog.add(ConfirmationDialog, {
+                        title: this.env._t("Configuration"),
+                        body: this.env._t("The Google Synchronization needs to be configured before you can use it, do you want to do it now?"),
+                        confirm: this.actionService.doAction.bind(this.actionService, syncResult.action),
+                    });
+                }
             } else {
                 this.dialog.add(AlertDialog, {
                     title: this.env._t("Configuration"),
