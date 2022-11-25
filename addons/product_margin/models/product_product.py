@@ -120,7 +120,7 @@ class ProductProduct(models.Model):
         self.env['account.move'].flush_model(['state', 'payment_state', 'move_type', 'invoice_date', 'company_id'])
         self.env['product.template'].flush_model(['list_price'])
         sqlstr = """
-                WITH currency_rate AS ({})
+                WITH currency_rate AS MATERIALIZED ({})
                 SELECT
                     l.product_id as product_id,
                     SUM(
