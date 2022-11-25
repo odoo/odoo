@@ -1298,6 +1298,8 @@ class ProductTemplate(models.Model):
         We need to open the product configurator if the product:
         - is configurable (see has_configurable_attributes)
         - has optional products (method is extended in sale to return optional products info)
+
+        Note: self.ensure_one()
         """
         self.ensure_one()
         if self.product_variant_count == 1 and not self.has_configurable_attributes:

@@ -1,0 +1,47 @@
+.o_sale_product_configurator_img {
+    width: 100px;
+    max-height: 240px;
+}
+
+.o_sale_product_configurator_qty {
+    width: 200px;
+
+    .input-group {
+        display: inline-flex;
+    }
+
+    div {
+        width: initial; // We don't want the quantity form to be full-width
+
+        .btn, input {
+            border-color: $input-border-color;
+        }
+
+        input {
+            // Needs !important because themes customize btns' padding directly
+            // rather than change '$input-btn-padding-X' (shared with inputs).
+            height: auto !important;
+            max-width: 4rem;
+            text-align: center;
+            //removing input field=number arrows as their size might
+            //change depending on browser default styling and shift input's position
+            &::-webkit-outer-spin-button,
+            &::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+            &[type=number] {
+                -moz-appearance: textfield;
+            }
+        }
+    }
+}
+
+.o_sale_product_configurator_name {
+    word-wrap: break-word;
+    min-width: 140px;
+}
+
+.o_sale_product_configurator_price {
+    width: 120px;
+}

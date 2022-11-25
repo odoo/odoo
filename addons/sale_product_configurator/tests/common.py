@@ -27,16 +27,19 @@ class TestProductConfiguratorCommon(TransactionCase):
         })
         product_attribute_2 = cls.env['product.attribute'].create({
             'name': 'Color',
+            'display_type': 'color',
             'sequence': 20,
         })
         product_attribute_value_3 = cls.env['product.attribute.value'].create({
             'name': 'White',
             'attribute_id': product_attribute_2.id,
+            'html_color': '#FFFFFF',
             'sequence': 1,
         })
         product_attribute_value_4 = cls.env['product.attribute.value'].create({
             'name': 'Black',
             'attribute_id': product_attribute_2.id,
+            'html_color': '#000000',
             'sequence': 2,
         })
 
