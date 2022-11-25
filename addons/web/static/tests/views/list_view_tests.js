@@ -810,7 +810,7 @@ QUnit.module("Views", (hooks) => {
         );
         cpButtons = getButtons(target);
         assert.containsOnce(cpButtons[0], 'button[name="x"]');
-        assert.hasClass(cpButtons[0].querySelector('button[name="x"]'), "btn btn-secondary");
+        assert.hasClass(cpButtons[0].querySelector('button[name="x"]'), "btn btn-secondary plaf");
         assert.containsOnce(cpButtons[0], ".o_list_selection_box");
         assert.strictEqual(
             cpButtons[0].querySelector('button[name="x"]').nextElementSibling,
@@ -826,6 +826,54 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(cpButtons[0], ".o_list_selection_box");
         assert.containsNone(cpButtons[0], 'button[name="y"]');
     });
+
+    QUnit.test(
+        "list view: action button in controlPanel with display='always'",
+        async function (assert) {
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: `
+                <tree>
+                    <header>
+                        <button name="display" type="object" class="display" string="display" display="always"/>
+                        <button name="default-selection" type="object" class="default-selection" string="default-selection"/>
+                    </header>
+                    <field name="foo" />
+                </tree>`,
+            });
+            let cpButtons = getButtons(target)[0];
+            assert.deepEqual(
+                [...cpButtons.querySelectorAll("button")].map((button) =>
+                    button.textContent.trim()
+                ),
+                ["Create", "display", ""]
+            );
+
+            await click(
+                target.querySelector('.o_data_row .o_list_record_selector input[type="checkbox"]')
+            );
+            cpButtons = getButtons(target)[0];
+            assert.deepEqual(
+                [...cpButtons.querySelectorAll("button")].map((button) =>
+                    button.textContent.trim()
+                ),
+                ["Create", "display", "default-selection"]
+            );
+
+            await click(
+                target.querySelector('.o_data_row .o_list_record_selector input[type="checkbox"]')
+            );
+            cpButtons = getButtons(target)[0];
+            assert.deepEqual(
+                [...cpButtons.querySelectorAll("button")].map((button) =>
+                    button.textContent.trim()
+                ),
+                ["Create", "display", ""]
+            );
+        }
+    );
 
     QUnit.test(
         "list view: action button executes action on click: buttons are disabled and re-enabled",
