@@ -259,7 +259,7 @@ class PurchaseOrderLine(models.Model):
                     params = {'order_id': pol.order_id}
                     seller = pol.product_id._select_seller(
                         partner_id=partner,
-                        quantity=self.product_qty,
+                        quantity=pol.product_qty,
                         date=pol.order_id.date_order and pol.order_id.date_order.date(),
                         uom_id=line.product_uom_id,
                         params=params)
