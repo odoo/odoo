@@ -9,7 +9,7 @@
     <template id="unsubscribe_form">
         <div class="container o_unsubscribe_form">
             <div class="row">
-                <form action="/mail/mailing/unsubscribe" method="POST" id="unsubscribe_form" class="col-lg-6 offset-lg-3 mt-4">
+                <form action="/mailing/list/update" method="POST" id="unsubscribe_form" class="col-lg-6 offset-lg-3 mt-4">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <input type="hidden" name="email" t-att-value="email"/>
                     <input type="hidden" name="mailing_id" t-att-value="mailing_id"/>
