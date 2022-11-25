@@ -25,9 +25,9 @@ TremolG03Protocol = SerialProtocol(
     measureRegexp=None,
     statusRegexp=None,
     commandTerminator=b'',
-    commandDelay=0.3,
-    measureDelay=0.3,
-    newMeasureDelay=0.3,
+    commandDelay=0.2,
+    measureDelay=0.2,
+    newMeasureDelay=0.2,
     measureCommand=b'',
     emptyAnswerValid=False,
 )
@@ -114,8 +114,8 @@ class TremolG03Driver(SerialDriver):
 
          This checksum is calculated as:
         1) XOR of all bytes of the bytes
-        2) Conversion into the two bytes of the checksum by adding 30h to each
-           character of the XOR
+        2) Conversion of the one XOR byte into the two bytes of the checksum by
+           adding 30h to each half-byte of the XOR
 
         eg. to_check = \x12\x23\x34\x45\x56
             XOR of all bytes in to_check = \x16
@@ -141,43 +141,43 @@ class TremolG03Driver(SerialDriver):
                      response is an ack, it wont be part of this list.
         """
 
-        replies = []
-        for msg in msgs:
-            self.message_number += 1
-            core_message = struct.pack('BB%ds' % (len(msg)), len(msg)+34, self.message_number+32, msg)
-            request = struct.pack('B%ds2sB' % (len(core_message)), 2, core_message, self.generate_checksum(core_message), 10)
-            with self._device_lock:
+        with self._device_lock:
+            replies = []
+            for msg in msgs:
+                self.message_number += 1
+                core_message = struct.pack('BB%ds' % (len(msg)), len(msg)+34, self.message_number+32, msg)
+                request = struct.pack('B%ds2sB' % (len(core_message)), STX, core_message, self.generate_checksum(core_message), ETX)
                 time.sleep(self._protocol.commandDelay)
                 self._connection.write(request)
                 time.sleep(self._protocol.measureDelay)
                 response = self._connection.read_all()
-            if not response:
-                self.data['status'] = "no response"
-                _logger.error("Sent request: %s,\n Received no response", msg)
-                self.abort_post()
-                break
-            if response[0] == 0x06:
-                # In the case where either byte is not 0x30, there has been an error
-                if response[2] != 0x30 or response[3] != 0x30:
-                    self.data['status'] = response[2:4].decode('cp1251')
-                    _logger.error(
-                        "Sent request: %s,\n Received fiscal device error: %s \n Received command error: %s",
-                        msg.decode('cp1251'), FD_ERRORS.get(response[2], 'Unknown fiscal device error'),
-                        COMMAND_ERRORS.get(response[3], 'Unknown command error'),
-                    )
+                if not response:
+                    self.data['status'] = "no response"
+                    _logger.error("Sent request: %s,\n Received no response", msg)
                     self.abort_post()
                     break
-                replies.append('')
-            elif response[0] == 0x15:
-                self.data['status'] = "Received NACK"
-                _logger.error("Sent request: %s,\n Received NACK \x15", msg)
-                self.abort_post()
-                break
-            elif response[0] == 0x02:
-                self.data['status'] = "ok"
-                size = response[1] - 35
-                reply = response[4:4+size]
-                replies.append(reply.decode('cp1251'))
+                if response[0] == 0x06:
+                    # In the case where either byte is not 0x30, there has been an error
+                    if response[2] != 0x30 or response[3] != 0x30:
+                        self.data['status'] = response[2:4].decode('cp1251')
+                        _logger.error(
+                            "Sent request: %s,\n Received fiscal device error: %s \n Received command error: %s",
+                            msg.decode('cp1251'), FD_ERRORS.get(response[2], 'Unknown fiscal device error'),
+                            COMMAND_ERRORS.get(response[3], 'Unknown command error'),
+                        )
+                        self.abort_post()
+                        break
+                    replies.append('')
+                elif response[0] == 0x15:
+                    self.data['status'] = "Received NACK"
+                    _logger.error("Sent request: %s,\n Received NACK \x15", msg)
+                    self.abort_post()
+                    break
+                elif response[0] == 0x02:
+                    self.data['status'] = "ok"
+                    size = response[1] - 35
+                    reply = response[4:4 + size]
+                    replies.append(reply.decode('cp1251'))
         return {'replies': replies, 'status': self.data['status']}
 
     def abort_post(self):
@@ -219,7 +219,7 @@ class TremolG03Controller(http.Controller):
             # If the vat doesn't match, abort
             if device_numbers['status'] != 'ok':
                 return device_numbers
-            serial_number, device_vat, _empty = device_numbers['replies'][0].split(';')
+            serial_number, device_vat, _dummy = device_numbers['replies'][0].split(';')
             if device_vat != company_vat:
                 return json.dumps({'status': 'The company vat number does not match that of the device'})
             messages = json.loads(messages)

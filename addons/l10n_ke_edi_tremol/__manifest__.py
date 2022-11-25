@@ -7,10 +7,9 @@
     'description': """
        This module integrates with the Kenyan G03 tremol control unit device.
     """,
-    'author': 'odoo',
-    'website': 'https://www.odoo.com',
-    'category': 'account',
-    'version': '0.1',
+    'author': 'Odoo',
+    'category': 'Accounting/Localizations/EDI',
+    'version': '1.0',
     'license': 'LGPL-3',
     'depends': ['l10n_ke'],
     'data': [
@@ -18,6 +17,7 @@
         'views/product_view.xml',
         'views/report_invoice.xml',
         'views/res_config_settings_view.xml',
+        'views/res_partner_views.xml',
     ],
     'assets': {
         'web.assets_backend': [

@@ -38,36 +38,30 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
 
     def _l10n_ke_validate_move(self):
-        """ Returns list of misconfigurations on the move that would cause rejection by the KRA """
+        """ Returns list of errors related to misconfigurations
+
+        Find misconfigurations on the move, the lines of the move, and the
+        taxes on those lines that would result in rejection by the KRA.
+        """
         self.ensure_one()
         errors = []
-        # The credit note / debit note should refer to the control unit number (reciept number)
-        # of the original invoice to which it relates.
+        # The credit note should refer to the control unit number (receipt number) of the original
+        # invoice to which it relates.
         if self.move_type == 'out_refund' and not self.reversed_entry_id.l10n_ke_cu_invoice_number:
             errors.append(_("This credit note must reference the previous invoice, and this previous invoice must have already been submitted."))
-        return errors
 
-    def _l10n_ke_validate_lines(self):
-        """ Returns list of misconfigurations on the lines of the move that would cause rejection by the KRA """
-        self.ensure_one()
-        errors = []
         for line in self.invoice_line_ids.filtered(lambda l: not l.display_type):
             if not line.tax_ids or len(line.tax_ids) > 1:
                 errors.append(_("On line %s, you must select one and only one tax.", line.name))
             else:
-                if line.tax_ids[0].amount != 16 and not (line.product_id and line.product_id.l10n_ke_hsn_code and line.product_id.l10n_ke_hsn_name):
+                if line.tax_ids.amount != 16 and not (line.product_id and line.product_id.l10n_ke_hsn_code and line.product_id.l10n_ke_hsn_name):
                     errors.append(_("On line %s, a product with a HS Code and HS Name must be selected, since the tax is 8%%, 0%% or exempt.", line.name))
-        return errors
 
-    def _l10n_ke_validate_taxes(self):
-        """ Returns list of misconfigurations on the taxes of the move that would cause rejection by the KRA """
-        self.ensure_one()
-        errors = []
         for tax in self.invoice_line_ids.tax_ids:
             if tax.amount not in (16, 8, 0):
                 errors.append(_("Tax '%s' is used, but only taxes of 16%%, 8%%, 0%% or Exempt can be sent. Please reconfigure or change the tax.", tax.name))
-        return errors
 
+        return errors
 
     # -------------------------------------------------------------------------
     # SERIALISERS
@@ -84,7 +78,7 @@ class AccountMove(models.Model):
         postcode_and_city = self.partner_id.zip or '' + ' ' +  self.partner_id.city or ''
         invoice_elements = [
             b'1',                                                   # Reserved - 1 symbol with value '1'
-            b'     0',                                              # Reserved - 1 symbol with value ‘     0’
+            b'     0',                                              # Reserved - 6 symbols with value ‘     0’
             b'0',                                                   # Reserved - 1 symbol with value '0'
             b'1' if self.move_type == 'out_invoice' else b'A',      # 1 symbol with value '1' (new invoice), 'A' (credit note), or '@' (debit note)
             self._l10n_ke_fmt(self.commercial_partner_id.name, 30), # 30 symbols for Company name
@@ -96,7 +90,7 @@ class AccountMove(models.Model):
         ]
         if self.move_type in ('out_refund', 'debit_note'):
             invoice_elements.append(self._l10n_ke_fmt(self.reversed_entry_id.l10n_ke_cu_invoice_number, 19)), # 19 symbols for related invoice number
-        invoice_elements.append(self._l10n_ke_fmt(self.name, 15))   # 15 symbols for trader system invoice number
+        invoice_elements.append(self.name[-15:].encode('cp1251').ljust(15)) # 15 symbols for trader system invoice number
 
         # CMD_OPEN_FISCAL_RECORD = 0x30
         return [b'\x30' + b';'.join(invoice_elements)]
@@ -146,7 +140,7 @@ class AccountMove(models.Model):
         msgs = []
         for line in self.invoice_line_ids.filtered(lambda l: not l.display_type and l.quantity and l.price_total > 0 and not discount_dict.get(l.id) >= 100):
             # Here we use the original discount of the line, since it the distributed discount has not been applied in the price_total
-            price = round(line.price_total / line.quantity * 100 / (100-line.discount), 2)
+            price = round(line.price_total / line.quantity * 100 / (100 - line.discount), 2)
             percentage = line.tax_ids[0].amount
 
             # Letter to classify tax, 0% taxes are handled conditionally, as the tax can be zero-rated or exempt
@@ -155,15 +149,15 @@ class AccountMove(models.Model):
                 letter = vat_class[percentage]
             else:
                 report_line_ids = line.tax_ids[0].invoice_repartition_line_ids.filtered(lambda r: r.repartition_type == 'base').tag_ids.tax_report_line_ids.ids
-                letter = 'E' if self.env.ref('l10n_ke.tax_report_line_exempt_sales_base', raise_if_not_found=False).id in report_line_ids else 'C'
+                try:
+                    exempt_report_line = self.env.ref('l10n_ke.tax_report_line_exempt_sales_base', raise_if_not_found=False).id
+                except ValueError:
+                    raise UserError(_("Tax a exempt report line cannot be found, please update the l10n_ke module."))
+                letter = 'E' if exempt_report_line.id in report_line_ids else 'C'
 
             uom = line.product_uom_id and line.product_uom_id.name or ''
-            if letter != 'A':
-                hscode = line.product_id.l10n_ke_hsn_code
-                hsname = line.product_id.l10n_ke_hsn_name
-            else:
-                hscode = ''
-                hsname = ''
+            hscode = line.product_id.l10n_ke_hsn_code if letter !='A' else ''
+            hsname = line.product_id.l10n_ke_hsn_name if letter !='A' else ''
             line_data = b';'.join([
                 self._l10n_ke_fmt(line.name, 36),               # 36 symbols for the article's name
                 self._l10n_ke_fmt(letter, 1),                   # 1 symbol for article's vat class ('A', 'B', 'C', 'D', or 'E')
@@ -186,13 +180,8 @@ class AccountMove(models.Model):
             msgs += [b'\x31' + line_data]
         return msgs
 
-    def _l10n_ke_cu_message(self):
+    def _l10n_ke_get_cu_messages(self):
         self.ensure_one()
-        # Check the configuration of the invoice
-        errors = self._l10n_ke_validate_move() + self._l10n_ke_validate_lines() + self._l10n_ke_validate_taxes()
-        if errors:
-            raise UserError(_("Invalid invoice configuration:\n\n%s") % '\n'.join(errors))
-
         msgs = self._l10n_ke_cu_open_invoice_message()
         msgs += self._l10n_ke_cu_lines_messages()
         # CMD_CLOSE_FISCAL_RECEIPT = 0x38
@@ -205,11 +194,15 @@ class AccountMove(models.Model):
 
     def l10n_ke_action_cu_post(self):
         self.ensure_one()
+        # Check the configuration of the invoice
+        errors = self._l10n_ke_validate_move()
+        if errors:
+            raise UserError(_("Invalid invoice configuration:\n\n%s") % '\n'.join(errors))
         return {
             'type': 'ir.actions.client',
             'tag': 'post_send',
             'params': {
-                'messages': json.dumps([m.decode('cp1251') for m in self._l10n_ke_cu_message()]),
+                'messages': json.dumps([m.decode('cp1251') for m in self._l10n_ke_get_cu_messages()]),
                 'move_id': self.id,
                 'proxy_address': self.company_id.l10n_ke_cu_proxy_address,
                 'company_vat': self.company_id.vat,
