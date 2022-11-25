@@ -214,6 +214,47 @@ export function useService(serviceName) {
     return service;
 }
 
+// -----------------------------------------------------------------------------
+// useSpellCheck
+// -----------------------------------------------------------------------------
+
+/**
+ * To avoid elements to keep their spellcheck appearance when they are no
+ * longer in focus. We only add this attribute when needed. To disable this
+ * behavior, use the spellcheck attribute on the element.
+ */
+export function useSpellCheck({ refName } = {}) {
+    const elements = [];
+    const ref = useRef(refName || "spellcheck");
+    function toggleSpellcheck(ev) {
+        ev.target.spellcheck = document.activeElement === ev.target;
+    }
+    useEffect(
+        (el) => {
+            if (el) {
+                const inputs =
+                    ["INPUT", "TEXTAREA"].includes(el.nodeName) || el.contenteditable
+                        ? [el]
+                        : el.querySelectorAll("input, textarea, [contenteditable=true]");
+                inputs.forEach((input) => {
+                    if (input.spellcheck !== false) {
+                        elements.push(input);
+                        input.addEventListener("focus", toggleSpellcheck);
+                        input.addEventListener("blur", toggleSpellcheck);
+                    }
+                });
+            }
+            return () => {
+                elements.forEach((input) => {
+                    input.removeEventListener("focus", toggleSpellcheck);
+                    input.removeEventListener("blur", toggleSpellcheck);
+                });
+            };
+        },
+        () => [ref.el]
+    );
+}
+
 /**
  * @typedef {Function} ForwardRef
  * @property {HTMLElement | undefined} el
