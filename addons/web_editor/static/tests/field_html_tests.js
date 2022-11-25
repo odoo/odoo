@@ -11,7 +11,8 @@ var Wysiwyg = require('web_editor.wysiwyg');
 const { MediaDialogWrapper } = require('@web_editor/components/media_dialog/media_dialog');
 var LinkDialog = require('wysiwyg.widgets.LinkDialog');
 
-const { legacyExtraNextTick, patchWithCleanup } = require("@web/../tests/helpers/utils");
+const { getFixture, legacyExtraNextTick, patchWithCleanup } = require("@web/../tests/helpers/utils");
+const { makeView, setupViewRegistries } = require("@web/../tests/views/helpers");
 
 const { useEffect } = require("@odoo/owl");
 
@@ -151,6 +152,7 @@ QUnit.module('web_editor', {}, function () {
                     throw 'Wrong template';
                 },
             });
+            setupViewRegistries();
         },
         afterEach: function () {
             testUtils.mock.unpatch(ajax);
@@ -813,6 +815,29 @@ QUnit.module('web_editor', {}, function () {
             form.destroy();
         });
 
+        QUnit.test("editor spellcheck is disabled on blur", async function (assert) {
+            const target = getFixture();
+
+            await makeView({
+                type: "form",
+                resModel: "note.note",
+                resId: 1,
+                serverData: { models: this.data },
+                arch: /* xml */ `<form><field name="body" widget="html" /></form>`,
+            });
+
+            const textarea = target.querySelector(".odoo-editor-editable");
+            textarea.focus();
+            assert.strictEqual(textarea.spellcheck, true, "spellcheck is enabled");
+            textarea.blur();
+            assert.strictEqual(
+                textarea.spellcheck,
+                false,
+                "spellcheck is disabled once the field has lost its focus"
+            );
+            textarea.focus();
+            assert.strictEqual(textarea.spellcheck, true, "spellcheck is re-enabled once the field is focused");
+        });
 
         QUnit.module('cssReadonly');
 
