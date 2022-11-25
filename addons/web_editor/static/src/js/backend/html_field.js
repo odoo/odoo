@@ -14,6 +14,7 @@ import ajax from 'web.ajax';
 import {
     useBus,
     useService,
+    useSpellCheck,
 } from "@web/core/utils/hooks";
 import {
     getAdjacentPreviousSiblings,
@@ -90,6 +91,8 @@ export class HtmlField extends Component {
 
         useBus(this.env.bus, "RELATIONAL_MODEL:WILL_SAVE_URGENTLY", () => this.commitChanges({ urgent: true }));
         useBus(this.env.bus, "RELATIONAL_MODEL:NEED_LOCAL_CHANGES", ({detail}) => detail.proms.push(this.commitChanges()));
+
+        useSpellCheck();
 
         this._onUpdateIframeId = 'onLoad_' + _.uniqueId('FieldHtml');
 

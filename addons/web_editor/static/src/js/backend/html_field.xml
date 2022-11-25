@@ -10,7 +10,7 @@
                 <div  t-ref="readonlyElement" class="o_readonly" t-out="markupValue" />
             </t>
         </t>
-        <t t-else="">
+        <div t-else="" t-ref="spellcheck">
             <t t-if="state.showCodeView">
                 <textarea t-ref="codeView" class="o_codeview" t-att-value="markupValue"/>
                 <div t-ref="codeViewButton" id="codeview-btn-group" class="btn-group" t-on-click="toggleCodeView">
@@ -34,7 +34,7 @@
                     />
                 </span>
             </t>
-        </t>
+        </div>
     </t>
 
 </templates>
