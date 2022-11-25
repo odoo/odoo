@@ -13,7 +13,7 @@ const { Model } = spreadsheet;
 async function downloadSpreadsheet(env, action) {
     const { orm, name, data, stateUpdateMessages } = action.params;
     const dataSources = new DataSources(orm);
-    const model = new Model(migrate(data), { dataSources }, stateUpdateMessages);
+    const model = new Model(migrate(data), { external: { dataSources } }, stateUpdateMessages);
     await dataSources.waitForAllLoaded();
     await waitForDataLoaded(model);
     const { files } = model.exportXLSX();

@@ -4402,14 +4402,14 @@
         }
         getFilterValues(position) {
             const sheetId = this.env.model.getters.getActiveSheetId();
-            const filter = this.env.model.getters.getFilter(sheetId, position.col, position.row);
+            const filter = this.env.model.getters.getFilter({ sheetId, ...position });
             if (!filter) {
                 return [];
             }
             const cellValues = (filter.filteredZone ? positions(filter.filteredZone) : [])
                 .filter(({ row }) => !this.env.model.getters.isRowHidden(sheetId, row))
                 .map(({ col, row }) => this.env.model.getters.getEvaluatedCell({ sheetId, col, row }).formattedValue);
-            const filterValues = this.env.model.getters.getFilterValues(sheetId, position.col, position.row);
+            const filterValues = this.env.model.getters.getFilterValues({ sheetId, ...position });
             const strValues = [...cellValues, ...filterValues];
             const normalizedFilteredValues = filterValues.map(toLowerCase);
             // Set with lowercase values to avoid duplicates
@@ -4442,7 +4442,7 @@
         get filterTable() {
             const sheetId = this.env.model.getters.getActiveSheetId();
             const position = this.props.filterPosition;
-            return this.env.model.getters.getFilterTable(sheetId, position.col, position.row);
+            return this.env.model.getters.getFilterTable({ sheetId, ...position });
         }
         get displayedValues() {
             if (!this.state.textFilter) {
@@ -5006,7 +5006,7 @@
         unlink() {
             const sheetId = this.env.model.getters.getActiveSheetId();
             const { col, row } = this.props.cellPosition;
-            const style = this.env.model.getters.getCellComputedStyle(sheetId, col, row);
+            const style = this.env.model.getters.getCellComputedStyle({ sheetId, col, row });
             const textColor = (style === null || style === void 0 ? void 0 : style.textColor) === LINK_COLOR ? undefined : style === null || style === void 0 ? void 0 : style.textColor;
             this.env.model.dispatch("UPDATE_CELL", {
                 col,
@@ -5022,11 +5022,8 @@
     LinkDisplay.size = { width: LINK_TOOLTIP_WIDTH, height: LINK_TOOLTIP_HEIGHT };
     const LinkCellPopoverBuilder = {
         onHover: (position, getters) => {
-            const sheetId = getters.getActiveSheetId();
             const cell = getters.getEvaluatedCell(position);
-            const shouldDisplayLink = !getters.isDashboard() &&
-                cell.link &&
-                getters.isVisibleInViewport(sheetId, position.col, position.row);
+            const shouldDisplayLink = !getters.isDashboard() && cell.link && getters.isVisibleInViewport(position);
             if (!shouldDisplayLink)
                 return { isOpen: false };
             return {
@@ -5800,15 +5797,12 @@
         return "neutral";
     }
     function getChartPositionAtCenterOfViewport(getters, chartSize) {
-        const { x: viewportX, y: viewportY } = getters.getMainViewportCoordinates();
+        const { x, y } = getters.getMainViewportCoordinates();
         const { offsetX, offsetY } = getters.getActiveSheetScrollInfo();
-        const { width, height } = getters.getSheetViewDimension();
-        const rect = getters.getVisibleRect(getters.getActiveMainViewport());
-        const scrollableViewportWidth = Math.min(rect.width, width - viewportX);
-        const scrollableViewportHeight = Math.min(rect.height, height - viewportY);
+        const { width, height } = getters.getVisibleRect(getters.getActiveMainViewport());
         const position = {
-            x: viewportX + offsetX + Math.max(0, (scrollableViewportWidth - chartSize.width) / 2),
-            y: viewportY + offsetY + Math.max(0, (scrollableViewportHeight - chartSize.height) / 2),
+            x: x + offsetX + Math.max(0, (width - chartSize.width) / 2),
+            y: y + offsetY + Math.max(0, (height - chartSize.height) / 2),
         }; // Position at the center of the scrollable viewport
         return position;
     }
@@ -6684,7 +6678,7 @@
         }
         const dataSets = [zoneToXc(dataSetZone)];
         const sheetId = getters.getActiveSheetId();
-        const topLeftCell = getters.getCell(sheetId, zone.left, zone.top);
+        const topLeftCell = getters.getCell({ sheetId, col: zone.left, row: zone.top });
         if (getZoneArea(zone) === 1 && (topLeftCell === null || topLeftCell === void 0 ? void 0 : topLeftCell.content)) {
             return {
                 type: "scorecard",
@@ -7377,10 +7371,10 @@
         if (env.model.getters.doesIntersectMerge(sheetId, zone)) {
             multiColumns = false;
             let table;
-            for (let r = zone.top; r <= zone.bottom; r++) {
+            for (let row = zone.top; row <= zone.bottom; row++) {
                 table = [];
-                for (let c = zone.left; c <= zone.right; c++) {
-                    let merge = env.model.getters.getMerge(sheetId, c, r);
+                for (let col = zone.left; col <= zone.right; col++) {
+                    let merge = env.model.getters.getMerge({ sheetId, col, row });
                     if (merge && !table.includes(merge.id.toString())) {
                         table.push(merge.id.toString());
                     }
@@ -8041,7 +8035,7 @@
         env.openSidePanel("CustomCurrency", {});
     };
     const INSERT_LINK = (env) => {
-        let { col, row } = env.model.getters.getPosition();
+        let { col, row } = env.model.getters.getActivePosition();
         env.model.dispatch("OPEN_CELL_POPOVER", { col, row, popoverType: "LinkEditor" });
     };
     //------------------------------------------------------------------------------
@@ -8540,7 +8534,7 @@
     })
         .addChild("sort_range", ["data"], {
         name: _lt("Sort range"),
-        sequence: 62,
+        sequence: 20,
         isVisible: IS_ONLY_ONE_RANGE,
         separator: true,
     })
@@ -8871,15 +8865,15 @@
         separator: true,
     })
         .addChild("add_data_filter", ["data"], {
-        name: _lt("Add Filter"),
-        sequence: 20,
+        name: _lt("Create filter"),
+        sequence: 10,
         action: FILTERS_CREATE_FILTER_TABLE,
         isVisible: (env) => !SELECTION_CONTAINS_FILTER(env),
         isEnabled: (env) => SELECTION_IS_CONTINUOUS(env),
     })
         .addChild("remove_data_filter", ["data"], {
-        name: _lt("Remove Filter"),
-        sequence: 20,
+        name: _lt("Remove filter"),
+        sequence: 10,
         action: FILTERS_REMOVE_FILTER_TABLE,
         isVisible: SELECTION_CONTAINS_FILTER,
     });
@@ -19408,7 +19402,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
      * and UI plugins handling transient data.
      */
     class BasePlugin {
-        constructor(stateObserver, dispatch, config) {
+        constructor(stateObserver, dispatch) {
             this.history = Object.assign(Object.create(stateObserver), {
                 update: stateObserver.addChange.bind(stateObserver, this),
                 selectCell: () => { },
@@ -19489,10 +19483,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
      * They can draw on the grid canvas.
      */
     class UIPlugin extends BasePlugin {
-        constructor(getters, state, dispatch, config, selection) {
-            super(state, dispatch, config);
+        constructor({ getters, stateObserver, dispatch, uiActions, selection }) {
+            super(stateObserver, dispatch);
             this.getters = getters;
-            this.ui = config;
+            this.ui = uiActions;
             this.selection = selection;
         }
         // ---------------------------------------------------------------------------
@@ -19537,8 +19531,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     }
                 case "START_EDITION":
                     if (cmd.selection) {
-                        const sheetId = this.getters.getActiveSheetId();
-                        const content = cmd.text || this.getComposerContent({ sheetId, ...this.getters.getPosition() });
+                        const content = cmd.text || this.getComposerContent(this.getters.getActivePosition());
                         return this.validateSelection(content.length, cmd.selection.start, cmd.selection.end);
                     }
                     else {
@@ -19640,7 +19633,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     break;
                 case "ACTIVATE_SHEET":
                     if (cmd.sheetIdFrom !== cmd.sheetIdTo) {
-                        const { col, row } = this.getters.getNextVisibleCellPosition(cmd.sheetIdTo, 0, 0);
+                        const { col, row } = this.getters.getNextVisibleCellPosition({
+                            sheetId: cmd.sheetIdTo,
+                            col: 0,
+                            row: 0,
+                        });
                         const zone = this.getters.expandZone(cmd.sheetIdTo, positionToZone({ col, row }));
                         this.selection.resetAnchor(this, { cell: { col, row }, zone });
                     }
@@ -19675,8 +19672,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         getCurrentContent() {
             if (this.mode === "inactive") {
-                const sheetId = this.getters.getActiveSheetId();
-                return this.getComposerContent({ sheetId, ...this.getters.getPosition() });
+                return this.getComposerContent(this.getters.getActivePosition());
             }
             return this.currentContent;
         }
@@ -19801,7 +19797,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 str = `${str}%`;
             }
             const sheetId = this.getters.getActiveSheetId();
-            const { col, row } = this.getters.getPosition();
+            const { col, row } = this.getters.getActivePosition();
             this.col = col;
             this.sheetId = sheetId;
             this.row = row;
@@ -19818,7 +19814,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         stopEdition() {
             if (this.mode !== "inactive") {
                 this.cancelEdition();
-                const { col, row } = this.getters.getMainCellPosition(this.sheetId, this.col, this.row);
+                const col = this.col;
+                const row = this.row;
                 let content = this.currentContent;
                 const didChange = this.initialContent !== content;
                 if (!didChange) {
@@ -19826,7 +19823,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 }
                 if (content) {
                     const sheetId = this.getters.getActiveSheetId();
-                    const cell = this.getters.getEvaluatedCell({ sheetId, col, row });
+                    const cell = this.getters.getEvaluatedCell({ sheetId, col: this.col, row: this.row });
                     if (content.startsWith("=")) {
                         const left = this.currentTokens.filter((t) => t.type === "LEFT_PAREN").length;
                         const right = this.currentTokens.filter((t) => t.type === "RIGHT_PAREN").length;
@@ -19870,17 +19867,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 });
             }
         }
-        getComposerContent({ sheetId, col, row }) {
-            const { col: mainCol, row: mainRow } = this.getters.getMainCellPosition(sheetId, col, row);
-            const cell = this.getters.getCell(sheetId, mainCol, mainRow);
+        getComposerContent(position) {
+            const cell = this.getters.getCell(position);
             if (cell === null || cell === void 0 ? void 0 : cell.isFormula) {
                 return cell.content;
             }
-            const { format, value, type, formattedValue } = this.getters.getEvaluatedCell({
-                sheetId,
-                col: mainCol,
-                row: mainRow,
-            });
+            const { format, value, type, formattedValue } = this.getters.getEvaluatedCell(position);
             switch (type) {
                 case CellValueType.text:
                 case CellValueType.empty:
@@ -20896,13 +20888,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 rect: undefined,
                 delimitation: undefined,
             });
-            const { col, row } = this.env.model.getters.getPosition();
-            this.zone = this.env.model.getters.expandZone(this.env.model.getters.getActiveSheetId(), {
-                left: col,
-                right: col,
-                top: row,
-                bottom: row,
-            });
+            const { sheetId, col, row } = this.env.model.getters.getActivePosition();
+            this.zone = this.env.model.getters.expandZone(sheetId, positionToZone({ col, row }));
             this.rect = this.env.model.getters.getVisibleRect(this.zone);
             owl.onMounted(() => {
                 const el = this.gridComposerRef.el;
@@ -20926,10 +20913,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         get containerStyle() {
             const isFormula = this.env.model.getters.getCurrentContent().startsWith("=");
             const cell = this.env.model.getters.getActiveCell();
-            const position = this.env.model.getters.getPosition();
-            const sheetId = this.env.model.getters.getActiveSheetId();
-            const cellPosition = this.env.model.getters.getMainCellPosition(sheetId, position.col, position.row);
-            const style = this.env.model.getters.getCellComputedStyle(sheetId, cellPosition.col, cellPosition.row);
+            const position = this.env.model.getters.getActivePosition();
+            const style = this.env.model.getters.getCellComputedStyle(position);
             // position style
             const { x: left, y: top, width, height } = this.rect;
             // color style
@@ -21039,7 +21024,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         isFilterActive(position) {
             const sheetId = this.env.model.getters.getActiveSheetId();
-            return this.env.model.getters.isFilterActive(sheetId, position.col, position.row);
+            return this.env.model.getters.isFilterActive({ sheetId, ...position });
         }
         toggleFilterMenu(position) {
             const activePopoverType = this.env.model.getters.getPersistentPopoverTypeAtPosition(position);
@@ -22747,7 +22732,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 },
                 "CTRL+HOME": () => {
                     const sheetId = this.env.model.getters.getActiveSheetId();
-                    const { col, row } = this.env.model.getters.getNextVisibleCellPosition(sheetId, 0, 0);
+                    const { col, row } = this.env.model.getters.getNextVisibleCellPosition({
+                        sheetId,
+                        col: 0,
+                        row: 0,
+                    });
                     this.env.model.selection.selectCell(col, row);
                 },
                 "CTRL+END": () => {
@@ -22763,7 +22752,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         left: 0,
                         right: this.env.model.getters.getNumberCols(sheetId) - 1,
                     };
-                    const position = this.env.model.getters.getPosition();
+                    const position = this.env.model.getters.getActivePosition();
                     this.env.model.selection.selectZone({ cell: position, zone: newZone });
                 },
                 "CTRL+ ": () => {
@@ -22773,7 +22762,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         top: 0,
                         bottom: this.env.model.getters.getNumberRows(sheetId) - 1,
                     };
-                    const position = this.env.model.getters.getPosition();
+                    const position = this.env.model.getters.getActivePosition();
                     this.env.model.selection.selectZone({ cell: position, zone: newZone });
                 },
                 "CTRL+SHIFT+ ": () => {
@@ -26691,9 +26680,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
      * They should not be concerned about UI parts or transient state.
      */
     class CorePlugin extends BasePlugin {
-        constructor(getters, stateObserver, range, dispatch, config, uuidGenerator) {
-            super(stateObserver, dispatch, config);
-            this.dispatch = dispatch;
+        constructor({ getters, stateObserver, range, dispatch, uuidGenerator }) {
+            super(stateObserver, dispatch);
             this.range = range;
             range.addRangeProvider(this.adaptRanges.bind(this));
             this.getters = getters;
@@ -26837,7 +26825,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         // ---------------------------------------------------------------------------
         // Getters
         // ---------------------------------------------------------------------------
-        getCellBorder(sheetId, col, row) {
+        getCellBorder({ sheetId, col, row }) {
             var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
             const border = {
                 top: (_c = (_b = (_a = this.borders[sheetId]) === null || _a === void 0 ? void 0 : _a[col]) === null || _b === void 0 ? void 0 : _b[row]) === null || _c === void 0 ? void 0 : _c.horizontal,
@@ -26861,8 +26849,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         ensureColumnBorderContinuity(sheetId, leftColumn, rightColumn) {
             const targetCols = range(leftColumn + 1, rightColumn);
             for (let row = 0; row < this.getters.getNumberRows(sheetId); row++) {
-                const leftBorder = this.getCellBorder(sheetId, leftColumn, row);
-                const rightBorder = this.getCellBorder(sheetId, rightColumn, row);
+                const leftBorder = this.getCellBorder({ sheetId, col: leftColumn, row });
+                const rightBorder = this.getCellBorder({ sheetId, col: rightColumn, row });
                 if (leftBorder && rightBorder) {
                     const commonSides = this.getCommonSides(leftBorder, rightBorder);
                     for (let col of targetCols) {
@@ -26879,8 +26867,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         ensureRowBorderContinuity(sheetId, topRow, bottomRow) {
             const targetRows = range(topRow + 1, bottomRow);
             for (let col = 0; col < this.getters.getNumberCols(sheetId); col++) {
-                const aboveBorder = this.getCellBorder(sheetId, col, topRow);
-                const belowBorder = this.getCellBorder(sheetId, col, bottomRow);
+                const aboveBorder = this.getCellBorder({ sheetId, col, row: topRow });
+                const belowBorder = this.getCellBorder({ sheetId, col, row: bottomRow });
                 if (aboveBorder && belowBorder) {
                     const commonSides = this.getCommonSides(aboveBorder, belowBorder);
                     for (let row of targetRows) {
@@ -27056,7 +27044,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          */
         addBorder(sheetId, col, row, border) {
             this.setBorder(sheetId, col, row, {
-                ...this.getCellBorder(sheetId, col, row),
+                ...this.getCellBorder({ sheetId, col, row }),
                 ...border,
             });
         }
@@ -27110,8 +27098,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          */
         addBordersToMerge(sheetId, zone) {
             const { left, right, top, bottom } = zone;
-            const bordersTopLeft = this.getCellBorder(sheetId, left, top);
-            const bordersBottomRight = this.getCellBorder(sheetId, right, bottom);
+            const bordersTopLeft = this.getCellBorder({ sheetId, col: left, row: top });
+            const bordersBottomRight = this.getCellBorder({ sheetId, col: right, row: bottom });
             this.clearBorders(sheetId, [zone]);
             if (bordersTopLeft === null || bordersTopLeft === void 0 ? void 0 : bordersTopLeft.top) {
                 this.setBorders(sheetId, [{ ...zone, bottom: top }], "top");
@@ -27171,7 +27159,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             for (let sheet of data.sheets) {
                 for (let col = 0; col < sheet.colNumber; col++) {
                     for (let row = 0; row < sheet.rowNumber; row++) {
-                        const border = this.getCellBorder(sheet.id, col, row);
+                        const border = this.getCellBorder({ sheetId: sheet.id, col, row });
                         if (border) {
                             const xc = toXC(col, row);
                             const cell = sheet.cells[xc];
@@ -27353,9 +27341,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 const positions = Object.keys(this.cells[_sheet.id] || {})
                     .map((cellId) => this.getters.getCellPosition(cellId))
                     .sort((a, b) => (a.col === b.col ? a.row - b.row : a.col - b.col));
-                for (const { col, row } of positions) {
-                    const cell = this.getters.getCell(_sheet.id, col, row);
-                    const xc = toXC(col, row);
+                for (const position of positions) {
+                    const cell = this.getters.getCell(position);
+                    const xc = toXC(position.col, position.row);
                     cells[xc] = {
                         style: cell.style ? getItemId(cell.style, styles) : undefined,
                         format: cell.format ? getItemId(cell.format, formats) : undefined,
@@ -27413,9 +27401,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         getFormulaCellContent(sheetId, cell) {
             return this.buildFormulaContent(sheetId, cell);
         }
-        getCellStyle({ sheetId, col, row }) {
+        getCellStyle(position) {
             var _a;
-            return ((_a = this.getters.getCell(sheetId, col, row)) === null || _a === void 0 ? void 0 : _a.style) || {};
+            return ((_a = this.getters.getCell(position)) === null || _a === void 0 ? void 0 : _a.style) || {};
         }
         /**
          * Converts a zone to a XC coordinate system
@@ -27437,8 +27425,16 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             zone = this.getters.expandZone(sheetId, zone);
             const topLeft = toXC(zone.left, zone.top, fixedParts[0]);
             const botRight = toXC(zone.right, zone.bottom, fixedParts.length > 1 ? fixedParts[1] : fixedParts[0]);
-            const cellTopLeft = this.getters.getMainCellPosition(sheetId, zone.left, zone.top);
-            const cellBotRight = this.getters.getMainCellPosition(sheetId, zone.right, zone.bottom);
+            const cellTopLeft = this.getters.getMainCellPosition({
+                sheetId,
+                col: zone.left,
+                row: zone.top,
+            });
+            const cellBotRight = this.getters.getMainCellPosition({
+                sheetId,
+                col: zone.right,
+                row: zone.bottom,
+            });
             const sameCell = cellTopLeft.col === cellBotRight.col && cellTopLeft.row === cellBotRight.row;
             if (topLeft != botRight && !sameCell) {
                 return topLeft + ":" + botRight;
@@ -27449,7 +27445,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             for (let zone of target) {
                 for (let col = zone.left; col <= zone.right; col++) {
                     for (let row = zone.top; row <= zone.bottom; row++) {
-                        const cell = this.getters.getCell(sheetId, col, row);
+                        const cell = this.getters.getCell({ sheetId, col, row });
                         this.dispatch("UPDATE_CELL", {
                             sheetId,
                             col,
@@ -27491,8 +27487,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          */
         getFormat(sheetId, col, row) {
             const format = {};
-            const { col: mainCol, row: mainRow } = this.getters.getMainCellPosition(sheetId, col, row);
-            const cell = this.getters.getCell(sheetId, mainCol, mainRow);
+            const position = this.getters.getMainCellPosition({ sheetId, col, row });
+            const cell = this.getters.getCell(position);
             if (cell) {
                 if (cell.style) {
                     format["style"] = cell.style;
@@ -27510,7 +27506,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         updateCell(sheetId, col, row, after) {
             var _a;
-            const before = this.getters.getCell(sheetId, col, row);
+            const before = this.getters.getCell({ sheetId, col, row });
             const hasContent = "content" in after || "formula" in after;
             // Compute the new cell properties
             const afterContent = hasContent
@@ -28457,15 +28453,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         getFilterTables(sheetId) {
             return this.tables[sheetId] ? Object.values(this.tables[sheetId]).filter(isDefined$1) : [];
         }
-        getFilter(sheetId, col, row) {
+        getFilter(position) {
             var _a;
-            return (_a = this.getFilterTable(sheetId, col, row)) === null || _a === void 0 ? void 0 : _a.filters.find((filter) => filter.col === col);
+            return (_a = this.getFilterTable(position)) === null || _a === void 0 ? void 0 : _a.filters.find((filter) => filter.col === position.col);
         }
-        getFilterId(sheetId, col, row) {
+        getFilterId(position) {
             var _a;
-            return (_a = this.getFilter(sheetId, col, row)) === null || _a === void 0 ? void 0 : _a.id;
+            return (_a = this.getFilter(position)) === null || _a === void 0 ? void 0 : _a.id;
         }
-        getFilterTable(sheetId, col, row) {
+        getFilterTable({ sheetId, col, row }) {
             return this.getFilterTables(sheetId).find((filterTable) => isInside(col, row, filterTable.zone));
         }
         /** Get the filter tables that are fully inside the given zone */
@@ -28564,15 +28560,16 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 return false;
             }
             for (const col of range(zone.left, zone.right + 1)) {
+                const position = { sheetId, col, row };
                 // Since this plugin is loaded before CellPlugin, the getters still give us the old cell content
-                const cellContent = (_a = this.getters.getCell(sheetId, col, row)) === null || _a === void 0 ? void 0 : _a.content;
+                const cellContent = (_a = this.getters.getCell(position)) === null || _a === void 0 ? void 0 : _a.content;
                 if (cellContent) {
                     return false;
                 }
-                if (this.getters.getFilter(sheetId, col, row)) {
+                if (this.getters.getFilter(position)) {
                     return false;
                 }
-                if (this.getters.isInMerge(sheetId, col, row)) {
+                if (this.getters.isInMerge(position)) {
                     return false;
                 }
             }
@@ -28753,12 +28750,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * Return the height the cell should have in the sheet, which is either DEFAULT_CELL_HEIGHT if the cell is in a multi-row
          * merge, or the height of the cell computed based on its font size.
          */
-        getCellHeight(sheetId, col, row) {
-            const merge = this.getters.getMerge(sheetId, col, row);
+        getCellHeight(position) {
+            const merge = this.getters.getMerge(position);
             if (merge && merge.bottom !== merge.top) {
                 return DEFAULT_CELL_HEIGHT;
             }
-            const cell = this.getters.getCell(sheetId, col, row);
+            const cell = this.getters.getCell(position);
             // TO DO: take multiline cells into account to compute the cell height
             return getDefaultCellHeight(cell === null || cell === void 0 ? void 0 : cell.style);
         }
@@ -28775,8 +28772,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 const cell = this.getters.getCellById(cellIds[i]);
                 if (!cell)
                     continue;
-                const { col, row } = this.getters.getCellPosition(cell.id);
-                const cellHeight = this.getCellHeight(sheetId, col, row);
+                const position = this.getters.getCellPosition(cell.id);
+                const cellHeight = this.getCellHeight(position);
                 if (cellHeight > maxHeight && cellHeight > DEFAULT_CELL_HEIGHT) {
                     maxHeight = cellHeight;
                 }
@@ -29082,7 +29079,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 .map((mergeId) => this.getMergeById(sheetId, parseInt(mergeId, 10)))
                 .filter(isDefined$1);
         }
-        getMerge(sheetId, col, row) {
+        getMerge({ sheetId, col, row }) {
             var _a;
             const sheetMap = this.mergeCellMap[sheetId];
             const mergeId = sheetMap ? col in sheetMap && ((_a = sheetMap[col]) === null || _a === void 0 ? void 0 : _a[row]) : undefined;
@@ -29109,15 +29106,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * if they have at least a common cell
          */
         doesIntersectMerge(sheetId, zone) {
-            const { left, right, top, bottom } = zone;
-            for (let row = top; row <= bottom; row++) {
-                for (let col = left; col <= right; col++) {
-                    if (this.getMerge(sheetId, col, row)) {
-                        return true;
-                    }
-                }
-            }
-            return false;
+            return positions(zone).some(({ col, row }) => this.getMerge({ sheetId, col, row }) !== undefined);
         }
         /**
          * Returns true if two columns have at least one merge in common
@@ -29158,31 +29147,31 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return isEqual(result, zone) ? result : this.expandZone(sheetId, result);
         }
         isInSameMerge(sheetId, colA, rowA, colB, rowB) {
-            const mergeA = this.getMerge(sheetId, colA, rowA);
-            const mergeB = this.getMerge(sheetId, colB, rowB);
+            const mergeA = this.getMerge({ sheetId, col: colA, row: rowA });
+            const mergeB = this.getMerge({ sheetId, col: colB, row: rowB });
             if (!mergeA || !mergeB) {
                 return false;
             }
             return isEqual(mergeA, mergeB);
         }
-        isInMerge(sheetId, col, row) {
+        isInMerge({ sheetId, col, row }) {
             var _a;
             const sheetMap = this.mergeCellMap[sheetId];
             return sheetMap ? col in sheetMap && Boolean((_a = sheetMap[col]) === null || _a === void 0 ? void 0 : _a[row]) : false;
         }
-        getMainCellPosition(sheetId, col, row) {
-            if (!this.isInMerge(sheetId, col, row)) {
-                return { col, row };
+        getMainCellPosition(position) {
+            if (!this.isInMerge(position)) {
+                return position;
             }
-            const mergeTopLeftPos = this.getMerge(sheetId, col, row).topLeft;
-            return { col: mergeTopLeftPos.col, row: mergeTopLeftPos.row };
+            const mergeTopLeftPos = this.getMerge(position).topLeft;
+            return { sheetId: position.sheetId, col: mergeTopLeftPos.col, row: mergeTopLeftPos.row };
         }
-        getBottomLeftCell(sheetId, col, row) {
-            if (!this.isInMerge(sheetId, col, row)) {
-                return { col, row };
+        getBottomLeftCell(position) {
+            if (!this.isInMerge(position)) {
+                return position;
             }
-            const { bottom, left } = this.getMerge(sheetId, col, row);
-            return { col: left, row: bottom };
+            const { bottom, left } = this.getMerge(position);
+            return { sheetId: position.sheetId, col: left, row: bottom };
         }
         isMergeHidden(sheetId, merge) {
             const hiddenColsGroups = this.getters.getHiddenColsGroups(sheetId);
@@ -29203,7 +29192,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * Check if the zone represents a single cell or a single merge.
          */
         isSingleCellOrMerge(sheetId, zone) {
-            const merge = this.getMerge(sheetId, zone.left, zone.top);
+            const merge = this.getMerge({ sheetId, col: zone.left, row: zone.top });
             if (merge) {
                 return isEqual(zone, merge);
             }
@@ -29225,7 +29214,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             for (let row = top; row <= bottom; row++) {
                 for (let col = left; col <= right; col++) {
                     if (col !== left || row !== top) {
-                        const cell = this.getters.getCell(sheetId, col, row);
+                        const cell = this.getters.getCell({ sheetId, col, row });
                         if (cell && cell.content !== "") {
                             return true;
                         }
@@ -29274,11 +29263,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * Except for the top-left cell.
          */
         checkMergedContentUpdate(cmd) {
-            const { col, row, sheetId, content } = cmd;
+            const { col, row, content } = cmd;
             if (content === undefined) {
                 return 0 /* CommandResult.Success */;
             }
-            const { col: mainCol, row: mainRow } = this.getMainCellPosition(sheetId, col, row);
+            const { col: mainCol, row: mainRow } = this.getMainCellPosition(cmd);
             if (mainCol === col && mainRow === row) {
                 return 0 /* CommandResult.Success */;
             }
@@ -29299,7 +29288,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (tl === br) {
                 return;
             }
-            const topLeft = this.getters.getCell(sheetId, left, top);
+            const topLeft = this.getters.getCell({ sheetId, col: left, row: top });
             let id = this.nextId++;
             this.history.update("merges", sheetId, id, this.getters.getRangeFromSheetXC(sheetId, zoneToXc({ left, top, right, bottom })));
             let previousMerges = new Set();
@@ -29314,7 +29303,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                             content: "",
                         });
                     }
-                    const merge = this.getMerge(sheetId, col, row);
+                    const merge = this.getMerge({ sheetId, col, row });
                     if (merge) {
                         previousMerges.add(merge.id);
                     }
@@ -29323,16 +29312,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             for (let mergeId of previousMerges) {
                 const { top, bottom, left, right } = this.getMergeById(sheetId, mergeId);
-                for (let r = top; r <= bottom; r++) {
-                    for (let c = left; c <= right; c++) {
-                        const merge = this.getMerge(sheetId, c, r);
+                for (let row = top; row <= bottom; row++) {
+                    for (let col = left; col <= right; col++) {
+                        const position = { sheetId, col, row };
+                        const merge = this.getMerge(position);
                         if (!merge || merge.id !== id) {
-                            this.history.update("mergeCellMap", sheetId, c, r, undefined);
-                            this.dispatch("CLEAR_CELL", {
-                                sheetId,
-                                col: c,
-                                row: r,
-                            });
+                            this.history.update("mergeCellMap", sheetId, col, row, undefined);
+                            this.dispatch("CLEAR_CELL", position);
                         }
                     }
                 }
@@ -29341,7 +29327,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         removeMerge(sheetId, zone) {
             const { left, top, bottom, right } = zone;
-            const merge = this.getMerge(sheetId, left, top);
+            const merge = this.getMerge({ sheetId, col: left, row: top });
             if (merge === undefined || !isEqual(zone, merge)) {
                 throw new Error(_lt("Invalid merge zone"));
             }
@@ -30083,7 +30069,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             return row;
         }
-        getCell(sheetId, col, row) {
+        getCell({ sheetId, col, row }) {
             var _a;
             const sheet = this.tryGetSheet(sheetId);
             const cellId = (_a = sheet === null || sheet === void 0 ? void 0 : sheet.rows[row]) === null || _a === void 0 ? void 0 : _a.cells[col];
@@ -30173,7 +30159,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          */
         isEmpty(sheetId, zone) {
             return positions(zone)
-                .map(({ col, row }) => this.getCell(sheetId, col, row))
+                .map(({ col, row }) => this.getCell({ sheetId, col, row }))
                 .every((cell) => !cell || cell.content === "");
         }
         updateCellPosition(cmd) {
@@ -30823,11 +30809,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
 
     const functionMap = functionRegistry.mapping;
     class EvaluationPlugin extends UIPlugin {
-        constructor(getters, state, dispatch, config, selection) {
-            super(getters, state, dispatch, config, selection);
+        constructor(config) {
+            super(config);
             this.isUpToDate = false;
             this.evaluatedCells = {};
-            this.evalContext = config.evalContext;
+            this.evalContext = config.external;
         }
         // ---------------------------------------------------------------------------
         // Command Handling
@@ -30887,7 +30873,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         getEvaluatedCell({ sheetId, col, row }) {
             var _a, _b, _c;
-            const cell = this.getters.getCell(sheetId, col, row);
+            const cell = this.getters.getCell({ sheetId, col, row });
             if (cell === undefined) {
                 return createEvaluatedCell("");
             }
@@ -31013,7 +30999,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 if (!getters.tryGetSheet(range.sheetId)) {
                     throw new Error(_lt("Invalid sheet name"));
                 }
-                cell = getters.getCell(range.sheetId, range.zone.left, range.zone.top);
+                cell = getters.getCell({ sheetId: range.sheetId, col: range.zone.left, row: range.zone.top });
                 if (!cell || cell.content === "") {
                     // magic "empty" value
                     // Returning {value: null} instead of undefined will ensure that we don't
@@ -31055,7 +31041,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 for (let col = zone.left; col <= zone.right; col++) {
                     const rowValues = [];
                     for (let row = zone.top; row <= zone.bottom; row++) {
-                        const cell = evalContext.getters.getCell(range.sheetId, col, row);
+                        const cell = evalContext.getters.getCell({ sheetId: range.sheetId, col, row });
                         rowValues.push(cell ? getEvaluatedCell(cell) : undefined);
                     }
                     result.push(rowValues);
@@ -31097,11 +31083,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         exportForExcel(data) {
             for (let sheet of data.sheets) {
                 for (const xc in sheet.cells) {
-                    const { col, row } = toCartesian(xc);
-                    const cell = this.getters.getCell(sheet.id, col, row);
+                    const position = { sheetId: sheet.id, ...toCartesian(xc) };
+                    const cell = this.getters.getCell(position);
                     if (cell) {
                         const exportedCellData = sheet.cells[xc];
-                        exportedCellData.value = this.getEvaluatedCell({ sheetId: sheet.id, col, row }).value;
+                        exportedCellData.value = this.getEvaluatedCell(position).value;
                         exportedCellData.isFormula = cell.isFormula && !this.isBadExpression(cell.content);
                     }
                 }
@@ -31184,7 +31170,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             const col = mainRange.zone.left;
             const row = mainRange.zone.top;
-            const style = this.getters.getCellComputedStyle(mainRange.sheetId, col, row);
+            const sheetId = mainRange.sheetId;
+            const style = this.getters.getCellComputedStyle({ sheetId, col, row });
             return style.fillColor || BACKGROUND_CHART_COLOR;
         }
     }
@@ -31293,26 +31280,27 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         // ---------------------------------------------------------------------------
         // Getters
         // ---------------------------------------------------------------------------
-        getCellComputedStyle(sheetId, col, row) {
+        getCellComputedStyle(position) {
             var _a;
             // TODO move this getter out of CF: it also depends on filters and link
-            const cell = this.getters.getCell(sheetId, col, row);
+            const { sheetId, col, row } = position;
+            const cell = this.getters.getCell(position);
             const styles = this.computedStyles[sheetId];
             const cfStyle = styles && ((_a = styles[col]) === null || _a === void 0 ? void 0 : _a[row]);
             const computedStyle = {
                 ...cell === null || cell === void 0 ? void 0 : cell.style,
                 ...cfStyle,
             };
-            const evaluatedCell = this.getters.getEvaluatedCell({ sheetId, col, row });
+            const evaluatedCell = this.getters.getEvaluatedCell(position);
             if (evaluatedCell.link && !computedStyle.textColor) {
                 computedStyle.textColor = LINK_COLOR;
             }
-            if (this.getters.isFilterHeader(sheetId, col, row)) {
+            if (this.getters.isFilterHeader(position)) {
                 computedStyle.bold = true;
             }
             return computedStyle;
         }
-        getConditionalIcon(col, row) {
+        getConditionalIcon({ col, row }) {
             var _a;
             const activeSheet = this.getters.getActiveSheetId();
             const icon = this.computedIcons[activeSheet];
@@ -31571,7 +31559,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         allowDispatch(cmd) {
             switch (cmd.type) {
                 case "UPDATE_FILTER":
-                    if (!this.getters.getFilterId(cmd.sheetId, cmd.col, cmd.row)) {
+                    if (!this.getters.getFilterId(cmd)) {
                         return 77 /* CommandResult.FilterNotFound */;
                     }
                     break;
@@ -31608,7 +31596,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     const filterValues = {};
                     for (const copiedFilter of this.getters.getFilters(cmd.sheetId)) {
                         const zone = copiedFilter.zoneWithHeaders;
-                        const newFilter = this.getters.getFilter(cmd.sheetIdTo, zone.left, zone.top);
+                        const newFilter = this.getters.getFilter({
+                            sheetId: cmd.sheetIdTo,
+                            col: zone.left,
+                            row: zone.top,
+                        });
                         filterValues[newFilter.id] = ((_a = this.filterValues[cmd.sheetId]) === null || _a === void 0 ? void 0 : _a[copiedFilter.id]) || [];
                     }
                     this.filterValues[cmd.sheetIdTo] = filterValues;
@@ -31629,7 +31621,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             return this.hiddenRows.has(row);
         }
-        getCellBorderWithFilterBorder(sheetId, col, row) {
+        getCellBorderWithFilterBorder(position) {
+            const { sheetId, col, row } = position;
             let filterBorder = undefined;
             for (let filters of this.getters.getFilterTables(sheetId)) {
                 const zone = filters.zone;
@@ -31649,7 +31642,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     };
                 }
             }
-            const cellBorder = this.getters.getCellBorder(sheetId, col, row);
+            const cellBorder = this.getters.getCellBorder(position);
             // Use removeFalsyAttributes to avoid overwriting filter borders with undefined values
             const border = { ...filterBorder, ...removeFalsyAttributes(cellBorder || {}) };
             return isObjectEmptyRecursive(border) ? null : border;
@@ -31671,23 +31664,25 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             return headers;
         }
-        getFilterValues(sheetId, col, row) {
-            const id = this.getters.getFilterId(sheetId, col, row);
+        getFilterValues(position) {
+            const id = this.getters.getFilterId(position);
+            const sheetId = position.sheetId;
             if (!id || !this.filterValues[sheetId])
                 return [];
             return this.filterValues[sheetId][id] || [];
         }
-        isFilterHeader(sheetId, col, row) {
+        isFilterHeader({ sheetId, col, row }) {
             const headers = this.getFilterHeaders(sheetId);
             return headers.some((header) => header.col === col && header.row === row);
         }
-        isFilterActive(sheetId, col, row) {
+        isFilterActive(position) {
             var _a, _b;
-            const id = this.getters.getFilterId(sheetId, col, row);
+            const id = this.getters.getFilterId(position);
+            const sheetId = position.sheetId;
             return Boolean(id && ((_b = (_a = this.filterValues[sheetId]) === null || _a === void 0 ? void 0 : _a[id]) === null || _b === void 0 ? void 0 : _b.length));
         }
         updateFilter({ col, row, values, sheetId }) {
-            const id = this.getters.getFilterId(sheetId, col, row);
+            const id = this.getters.getFilterId({ sheetId, col, row });
             if (!id)
                 return;
             if (!this.filterValues[sheetId])
@@ -31723,8 +31718,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     const filters = [];
                     const headerNames = [];
                     for (const i of range(0, zoneToDimension(tableZone).width)) {
-                        const filteredValues = this.getFilterValues(sheetData.id, tableZone.left + i, tableZone.top);
-                        const filter = this.getters.getFilter(sheetData.id, tableZone.left + i, tableZone.top);
+                        const position = {
+                            sheetId: sheetData.id,
+                            col: tableZone.left + i,
+                            row: tableZone.top,
+                        };
+                        const filteredValues = this.getFilterValues(position);
+                        const filter = this.getters.getFilter(position);
                         if (!filter)
                             continue;
                         const valuesInFilterZone = filter.filteredZone
@@ -31858,8 +31858,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (!position) {
                 position = this.getters.getSheetPosition(sheetId);
             }
-            const mainCellPosition = this.getters.getMainCellPosition(sheetId, position.col, position.row);
-            const { col, row } = this.getters.getNextVisibleCellPosition(sheetId, mainCellPosition.col, mainCellPosition.row);
+            const mainCellPosition = this.getters.getMainCellPosition({ sheetId, ...position });
+            const { col, row } = this.getters.getNextVisibleCellPosition(mainCellPosition);
             if (isInside(col, this.boundaries.top, this.boundaries)) {
                 this.adjustPositionX(col);
             }
@@ -31919,16 +31919,24 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.adjustViewportZoneX();
             this.adjustViewportZoneY();
         }
+        /**
+         *
+         * @param zone
+         * @returns Computes the absolute coordinate of a given zone inside the viewport
+         */
         getRect(zone) {
             const targetZone = intersection(zone, this.zone);
             if (targetZone) {
+                const x = this.getters.getColRowOffset("COL", this.zone.left, targetZone.left) +
+                    this.offsetCorrectionX;
+                const y = this.getters.getColRowOffset("ROW", this.zone.top, targetZone.top) + this.offsetCorrectionY;
+                const width = Math.min(this.getters.getColRowOffset("COL", targetZone.left, targetZone.right + 1), this.width);
+                const height = Math.min(this.getters.getColRowOffset("ROW", targetZone.top, targetZone.bottom + 1), this.height);
                 return {
-                    x: this.getters.getColRowOffset("COL", this.zone.left, targetZone.left) +
-                        this.offsetCorrectionX,
-                    y: this.getters.getColRowOffset("ROW", this.zone.top, targetZone.top) +
-                        this.offsetCorrectionY,
-                    width: this.getters.getColRowOffset("COL", targetZone.left, targetZone.right + 1),
-                    height: this.getters.getColRowOffset("ROW", targetZone.top, targetZone.bottom + 1),
+                    x,
+                    y,
+                    width,
+                    height,
                 };
             }
             else {
@@ -32334,7 +32342,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         /**
          * Check if a given position is visible in the viewport.
          */
-        isVisibleInViewport(sheetId, col, row) {
+        isVisibleInViewport({ sheetId, col, row }) {
             return this.getSubViewports(sheetId).some((pane) => pane.isVisible(col, row));
         }
         // => return s the new offset
@@ -32952,7 +32960,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const sheetId = this.getters.getActiveSheetId();
             for (let xc of source) {
                 const { col, row } = toCartesian(xc);
-                const cell = this.getters.getCell(sheetId, col, row);
+                const cell = this.getters.getCell({ sheetId, col, row });
                 cellsData.push({
                     col,
                     row,
@@ -32967,8 +32975,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     const newRule = this.getRule(cellData.cell, cells);
                     rule = newRule || rule;
                 }
-                const { sheetId, col, row } = cellData;
-                const border = this.getters.getCellBorder(sheetId, col, row) || undefined;
+                const border = this.getters.getCellBorder(cellData) || undefined;
                 nextCells.push({
                     data: { ...cellData, border },
                     rule,
@@ -33003,21 +33010,22 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 : position[second].value;
         }
         autoFillMerge(originCol, originRow, col, row) {
-            const activeSheet = this.getters.getActiveSheet();
-            if (this.getters.isInMerge(activeSheet.id, col, row) &&
-                !this.getters.isInMerge(activeSheet.id, originCol, originRow)) {
-                const zone = this.getters.getMerge(activeSheet.id, col, row);
+            const sheetId = this.getters.getActiveSheetId();
+            const position = { sheetId, col, row };
+            const originPosition = { sheetId, col: originCol, row: originRow };
+            if (this.getters.isInMerge(position) && !this.getters.isInMerge(originPosition)) {
+                const zone = this.getters.getMerge(position);
                 if (zone) {
                     this.dispatch("REMOVE_MERGE", {
-                        sheetId: activeSheet.id,
+                        sheetId,
                         target: [zone],
                     });
                 }
             }
-            const originMerge = this.getters.getMerge(activeSheet.id, originCol, originRow);
+            const originMerge = this.getters.getMerge(originPosition);
             if ((originMerge === null || originMerge === void 0 ? void 0 : originMerge.topLeft.col) === originCol && (originMerge === null || originMerge === void 0 ? void 0 : originMerge.topLeft.row) === originRow) {
                 this.dispatch("ADD_MERGE", {
-                    sheetId: activeSheet.id,
+                    sheetId,
                     target: [
                         {
                             top: row,
@@ -33129,7 +33137,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          */
         findAdjacentData(sheetId, col, row) {
             const sheet = this.getters.getSheet(sheetId);
-            const mainCellPosition = this.getters.getMainCellPosition(sheetId, col, row);
+            const mainCellPosition = this.getters.getMainCellPosition({ sheetId, col, row });
             const zone = this.findSuitableZoneToSum(sheet, mainCellPosition.col, mainCellPosition.row);
             if (zone) {
                 return this.getters.expandZone(sheetId, zone);
@@ -33350,6 +33358,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     this.persistentPopover = {
                         col: cmd.col,
                         row: cmd.row,
+                        sheetId: this.getters.getActiveSheetId(),
                         type: cmd.popoverType,
                     };
                     break;
@@ -33361,11 +33370,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         getCellPopover({ col, row }) {
             var _a, _b;
             const sheetId = this.getters.getActiveSheetId();
-            if (this.persistentPopover &&
-                this.getters.isVisibleInViewport(sheetId, this.persistentPopover.col, this.persistentPopover.row)) {
-                const mainPosition = this.getters.getMainCellPosition(sheetId, this.persistentPopover.col, this.persistentPopover.row);
+            if (this.persistentPopover && this.getters.isVisibleInViewport(this.persistentPopover)) {
+                const position = this.getters.getMainCellPosition(this.persistentPopover);
                 const popover = (_b = (_a = cellPopoverRegistry
-                    .get(this.persistentPopover.type)).onOpen) === null || _b === void 0 ? void 0 : _b.call(_a, { sheetId, ...mainPosition }, this.getters);
+                    .get(this.persistentPopover.type)).onOpen) === null || _b === void 0 ? void 0 : _b.call(_a, position, this.getters);
                 return !(popover === null || popover === void 0 ? void 0 : popover.isOpen)
                     ? { isOpen: false }
                     : {
@@ -33375,19 +33383,19 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             if (col === undefined ||
                 row === undefined ||
-                !this.getters.isVisibleInViewport(sheetId, col, row)) {
+                !this.getters.isVisibleInViewport({ sheetId, col, row })) {
                 return { isOpen: false };
             }
-            const mainPosition = this.getters.getMainCellPosition(sheetId, col, row);
+            const position = this.getters.getMainCellPosition({ sheetId, col, row });
             const popover = cellPopoverRegistry
                 .getAll()
-                .map((matcher) => { var _a; return (_a = matcher.onHover) === null || _a === void 0 ? void 0 : _a.call(matcher, { sheetId, ...mainPosition }, this.getters); })
+                .map((matcher) => { var _a; return (_a = matcher.onHover) === null || _a === void 0 ? void 0 : _a.call(matcher, position, this.getters); })
                 .find((popover) => popover === null || popover === void 0 ? void 0 : popover.isOpen);
             return !(popover === null || popover === void 0 ? void 0 : popover.isOpen)
                 ? { isOpen: false }
                 : {
                     ...popover,
-                    ...this.computePopoverProps(mainPosition, popover.cellCorner),
+                    ...this.computePopoverProps(position, popover.cellCorner),
                 };
         }
         getPersistentPopoverTypeAtPosition({ col, row }) {
@@ -33408,7 +33416,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         computePopoverPosition({ col, row }, corner) {
             const sheetId = this.getters.getActiveSheetId();
-            const merge = this.getters.getMerge(sheetId, col, row);
+            const merge = this.getters.getMerge({ sheetId, col, row });
             if (merge) {
                 col = corner === "TopRight" ? merge.right : merge.left;
                 row = corner === "TopRight" ? merge.top : merge.bottom;
@@ -33424,7 +33432,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
     }
     CellPopoverPlugin.getters = ["getCellPopover", "getPersistentPopoverTypeAtPosition"];
-    CellPopoverPlugin.modes = ["normal"];
 
     const BORDER_COLOR = "#8B008B";
     const BACKGROUND_COLOR = "#8B008B33";
@@ -33585,10 +33592,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             //modulo of negative value to be able to cycle in both directions with previous and next
             nextIndex = ((nextIndex % matches.length) + matches.length) % matches.length;
-            if (this.selectedMatchIndex === null || this.selectedMatchIndex !== nextIndex) {
-                this.selectedMatchIndex = nextIndex;
-                this.selection.selectCell(matches[nextIndex].col, matches[nextIndex].row);
-            }
+            this.selectedMatchIndex = nextIndex;
+            this.selection.selectCell(matches[nextIndex].col, matches[nextIndex].row);
             for (let index = 0; index < this.searchMatches.length; index++) {
                 this.searchMatches[index].selected = index === this.selectedMatchIndex;
             }
@@ -33617,7 +33622,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const matches = this.searchMatches;
             const selectedMatch = matches[this.selectedMatchIndex];
             const sheetId = this.getters.getActiveSheetId();
-            const cell = this.getters.getCell(sheetId, selectedMatch.col, selectedMatch.row);
+            const cell = this.getters.getCell({ sheetId, ...selectedMatch });
             if ((cell === null || cell === void 0 ? void 0 : cell.isFormula) && !this.searchOptions.searchFormulas) {
                 this.selectNextCell(Direction.next);
             }
@@ -33648,12 +33653,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 this.replace(replaceWith);
             }
         }
-        getSearchableString({ sheetId, col, row }) {
-            const cell = this.getters.getCell(sheetId, col, row);
+        getSearchableString(position) {
+            const cell = this.getters.getCell(position);
             if (this.searchOptions.searchFormulas && (cell === null || cell === void 0 ? void 0 : cell.isFormula)) {
                 return cell.content;
             }
-            return this.getters.getEvaluatedCell({ sheetId, col, row }).formattedValue;
+            return this.getters.getEvaluatedCell(position).formattedValue;
         }
         // ---------------------------------------------------------------------------
         // Grid rendering
@@ -33662,7 +33667,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const { ctx } = renderingContext;
             const sheetId = this.getters.getActiveSheetId();
             for (const match of this.searchMatches) {
-                const merge = this.getters.getMerge(sheetId, match.col, match.row);
+                const merge = this.getters.getMerge({ sheetId, col: match.col, row: match.row });
                 const left = merge ? merge.left : match.col;
                 const right = merge ? merge.right : match.col;
                 const top = merge ? merge.top : match.row;
@@ -33741,7 +33746,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return undefined;
         }
     }
-    FormatPlugin.modes = ["normal"];
 
     class HeaderVisibilityUIPlugin extends UIPlugin {
         isRowHidden(sheetId, index) {
@@ -33755,8 +33759,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 ? this.isColHidden(sheetId, index)
                 : this.isRowHidden(sheetId, index);
         }
-        getNextVisibleCellPosition(sheetId, col, row) {
+        getNextVisibleCellPosition({ sheetId, col, row }) {
             return {
+                sheetId,
                 col: this.findVisibleHeader(sheetId, "COL", range(col, this.getters.getNumberCols(sheetId))),
                 row: this.findVisibleHeader(sheetId, "ROW", range(row, this.getters.getNumberRows(sheetId))),
             };
@@ -34259,10 +34264,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const sheetId = this.getters.getActiveSheetId();
             let col = base;
             while (col < max) {
-                const nextCell = this.getters.getEvaluatedCell({ sheetId, col: col + 1, row });
-                const nextCellBorder = this.getters.getCellBorderWithFilterBorder(sheetId, col + 1, row);
+                const position = { sheetId, col: col + 1, row };
+                const nextCell = this.getters.getEvaluatedCell(position);
+                const nextCellBorder = this.getters.getCellBorderWithFilterBorder(position);
                 if (nextCell.type !== CellValueType.empty ||
-                    this.getters.isInMerge(sheetId, col + 1, row) ||
+                    this.getters.isInMerge(position) ||
                     (nextCellBorder === null || nextCellBorder === void 0 ? void 0 : nextCellBorder.left)) {
                     return col;
                 }
@@ -34274,10 +34280,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const sheetId = this.getters.getActiveSheetId();
             let col = base;
             while (col > min) {
-                const previousCell = this.getters.getEvaluatedCell({ sheetId, col: col - 1, row });
-                const previousCellBorder = this.getters.getCellBorderWithFilterBorder(sheetId, col - 1, row);
+                const position = { sheetId, col: col - 1, row };
+                const previousCell = this.getters.getEvaluatedCell(position);
+                const previousCellBorder = this.getters.getCellBorderWithFilterBorder(position);
                 if (previousCell.type !== CellValueType.empty ||
-                    this.getters.isInMerge(sheetId, col - 1, row) ||
+                    this.getters.isInMerge(position) ||
                     (previousCellBorder === null || previousCellBorder === void 0 ? void 0 : previousCellBorder.right)) {
                     return col;
                 }
@@ -34285,13 +34292,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             return col;
         }
-        computeCellAlignment({ sheetId, col, row }, isOverflowing) {
-            const cell = this.getters.getCell(sheetId, col, row);
+        computeCellAlignment(position, isOverflowing) {
+            const cell = this.getters.getCell(position);
             if ((cell === null || cell === void 0 ? void 0 : cell.isFormula) && this.getters.shouldShowFormulas()) {
                 return "left";
             }
-            const { align } = this.getters.getCellStyle({ sheetId, col, row });
-            const evaluatedCell = this.getters.getEvaluatedCell({ sheetId, col, row });
+            const { align } = this.getters.getCellStyle(position);
+            const evaluatedCell = this.getters.getEvaluatedCell(position);
             if (isOverflowing && evaluatedCell.type === CellValueType.number) {
                 return align !== "center" ? "left" : align;
             }
@@ -34303,7 +34310,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const right = visibleCols[visibleCols.length - 1];
             const col = zone.left;
             const row = zone.top;
-            const cell = this.getters.getEvaluatedCell({ sheetId, col, row });
+            const position = { sheetId, col, row };
+            const cell = this.getters.getEvaluatedCell(position);
             const showFormula = this.getters.shouldShowFormulas();
             const { x, y, width, height } = this.getters.getVisibleRect(zone);
             const box = {
@@ -34311,14 +34319,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 y,
                 width,
                 height,
-                border: this.getters.getCellBorderWithFilterBorder(sheetId, col, row) || undefined,
-                style: this.getters.getCellComputedStyle(sheetId, col, row),
+                border: this.getters.getCellBorderWithFilterBorder(position) || undefined,
+                style: this.getters.getCellComputedStyle(position),
             };
             if (cell.type === CellValueType.empty) {
                 return box;
             }
             /** Icon CF */
-            const cfIcon = this.getters.getConditionalIcon(col, row);
+            const cfIcon = this.getters.getConditionalIcon(position);
             const fontSizePX = computeTextFontSizeInPixels(box.style);
             const iconBoxWidth = cfIcon ? 2 * MIN_CF_ICON_MARGIN + fontSizePX : 0;
             if (cfIcon) {
@@ -34330,10 +34338,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 };
             }
             /** Filter Header */
-            box.isFilterHeader = this.getters.isFilterHeader(sheetId, col, row);
+            box.isFilterHeader = this.getters.isFilterHeader(position);
             const headerIconWidth = box.isFilterHeader ? ICON_EDGE_LENGTH + FILTER_ICON_MARGIN : 0;
             /** Content */
-            const position = { sheetId, col, row };
             const text = this.getters.getCellText(position, showFormula);
             const textWidth = this.getters.getTextWidth(position);
             const wrapping = this.getters.getCellStyle(position).wrapping || "overflow";
@@ -34363,10 +34370,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             else if (isOverflowing && wrapping === "overflow") {
                 let nextColIndex, previousColIndex;
-                const isCellInMerge = this.getters.isInMerge(sheetId, col, row);
+                const isCellInMerge = this.getters.isInMerge(position);
                 if (isCellInMerge) {
                     // Always clip merges
-                    nextColIndex = this.getters.getMerge(sheetId, col, row).right;
+                    nextColIndex = this.getters.getMerge(position).right;
                     previousColIndex = col;
                 }
                 else {
@@ -34427,12 +34434,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const bottom = visibleRows[visibleRows.length - 1];
             const viewport = { left, right, top, bottom };
             const sheetId = this.getters.getActiveSheetId();
-            for (const rowNumber of visibleRows) {
-                for (const colNumber of visibleCols) {
-                    if (this.getters.isInMerge(sheetId, colNumber, rowNumber)) {
+            for (const row of visibleRows) {
+                for (const col of visibleCols) {
+                    const position = { sheetId, col, row };
+                    if (this.getters.isInMerge(position)) {
                         continue;
                     }
-                    boxes.push(this.createZoneBox(sheetId, positionToZone({ col: colNumber, row: rowNumber })));
+                    boxes.push(this.createZoneBox(sheetId, positionToZone(position)));
                 }
             }
             for (const merge of this.getters.getMerges(sheetId)) {
@@ -34441,7 +34449,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 }
                 if (overlap(merge, viewport)) {
                     const box = this.createZoneBox(sheetId, merge);
-                    const borderBottomRight = this.getters.getCellBorder(sheetId, merge.right, merge.bottom);
+                    const borderBottomRight = this.getters.getCellBorder({
+                        sheetId,
+                        col: merge.right,
+                        row: merge.bottom,
+                    });
                     box.border = {
                         ...box.border,
                         bottom: borderBottomRight ? borderBottomRight.bottom : undefined,
@@ -34465,8 +34477,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
      * This plugin handles this internal state.
      */
     class SelectionInputPlugin extends UIPlugin {
-        constructor(getters, state, dispatch, config, selection, initialRanges, inputHasSingleRange) {
-            super(getters, state, dispatch, config, selection);
+        constructor(config, initialRanges, inputHasSingleRange) {
+            super(config);
             this.inputHasSingleRange = inputHasSingleRange;
             this.ranges = [];
             this.focusedRangeIndex = null;
@@ -34539,7 +34551,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 }
                 case "ACTIVATE_SHEET": {
                     if (cmd.sheetIdFrom !== cmd.sheetIdTo) {
-                        const { col, row } = this.getters.getNextVisibleCellPosition(cmd.sheetIdTo, 0, 0);
+                        const { col, row } = this.getters.getNextVisibleCellPosition({
+                            sheetId: cmd.sheetIdTo,
+                            col: 0,
+                            row: 0,
+                        });
                         const zone = this.getters.expandZone(cmd.sheetIdTo, positionToZone({ col, row }));
                         this.selection.resetAnchor(this, { cell: { col, row }, zone });
                     }
@@ -34684,9 +34700,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
      * This plugin handles this internal state.
      */
     class SelectionInputsManagerPlugin extends UIPlugin {
-        constructor(getters, state, dispatch, config, selection) {
-            super(getters, state, dispatch, config, selection);
-            this.state = state;
+        constructor(config) {
+            super(config);
             this.config = config;
             this.inputs = {};
             this.focusedInputId = null;
@@ -34740,7 +34755,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     if (cmd.id !== this.focusedInputId) {
                         const input = this.inputs[cmd.id];
                         const range = input.ranges.find((range) => range.id === cmd.rangeId);
-                        const zone = toZone((range === null || range === void 0 ? void 0 : range.xc) || "A1");
+                        const sheetId = this.getters.getActiveSheetId();
+                        const zone = this.getters.getRangeFromSheetXC(sheetId, (range === null || range === void 0 ? void 0 : range.xc) || "A1").zone;
                         this.selection.capture(input, { cell: { col: zone.left, row: zone.top }, zone }, { handleEvent: input.handleEvent.bind(input) });
                         this.focusedInputId = cmd.id;
                     }
@@ -34792,7 +34808,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         // Other
         // ---------------------------------------------------------------------------
         initInput(id, initialRanges, inputHasSingleRange = false) {
-            this.inputs[id] = new SelectionInputPlugin(this.getters, this.state, this.dispatch, this.config, this.selection, initialRanges, inputHasSingleRange);
+            this.inputs[id] = new SelectionInputPlugin(this.config, initialRanges, inputHasSingleRange);
             if (initialRanges.length === 0) {
                 const input = this.inputs[id];
                 const anchor = {
@@ -35346,12 +35362,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 return 0 /* CommandResult.Success */;
             }
             /*Test the presence of single cells*/
-            for (let row = zone.top; row <= zone.bottom; row++) {
-                for (let col = zone.left; col <= zone.right; col++) {
-                    if (!this.getters.isInMerge(sheetId, col, row)) {
-                        return 61 /* CommandResult.InvalidSortZone */;
-                    }
-                }
+            const singleCells = positions(zone).some(({ col, row }) => !this.getters.isInMerge({ sheetId, col, row }));
+            if (singleCells) {
+                return 61 /* CommandResult.InvalidSortZone */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -35397,7 +35410,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 const { left, right, top, bottom } = expandedZone;
                 for (let c = left; c <= right; c++) {
                     for (let r = top; r <= bottom; r++) {
-                        const { col, row } = this.getters.getMainCellPosition(sheetId, c, r);
+                        const { col, row } = this.getters.getMainCellPosition({ sheetId, col: c, row: r });
                         cell = this.getters.getEvaluatedCell({ sheetId, col, row });
                         if (cell.formattedValue) {
                             return true;
@@ -35541,7 +35554,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         sortZone(sheetId, anchor, zone, sortDirection, options) {
             const [stepX, stepY] = this.mainCellsSteps(sheetId, zone);
-            let sortingCol = this.getters.getMainCellPosition(sheetId, anchor.col, anchor.row).col; // fetch anchor
+            let sortingCol = this.getters.getMainCellPosition({
+                sheetId,
+                col: anchor.col,
+                row: anchor.row,
+            }).col; // fetch anchor
             let sortZone = Object.assign({}, zone);
             // Update in case of merges in the zone
             let cellPositions = this.mainCells(sheetId, zone);
@@ -35557,7 +35574,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             for (let c = 0; c < width; c++) {
                 for (let r = 0; r < height; r++) {
                     let { col, row, sheetId } = cellPositions[c][sortedIndex[r]];
-                    const cell = this.getters.getCell(sheetId, col, row);
+                    const cell = this.getters.getCell({ sheetId, col, row });
                     let newCol = sortZone.left + c * stepX;
                     let newRow = sortZone.top + r * stepY;
                     let newCellValues = {
@@ -35592,7 +35609,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * Note: it is assumed all merges are the same in the zone.
          */
         mainCellsSteps(sheetId, zone) {
-            const merge = this.getters.getMerge(sheetId, zone.left, zone.top);
+            const merge = this.getters.getMerge({ sheetId, col: zone.left, row: zone.top });
             const stepX = merge ? merge.right - merge.left + 1 : 1;
             const stepY = merge ? merge.bottom - merge.top + 1 : 1;
             return [stepX, stepY];
@@ -35693,22 +35710,20 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         // ---------------------------------------------------------------------------
         // Getters
         // ---------------------------------------------------------------------------
-        getCellWidth(sheetId, { col, row }) {
-            const position = { sheetId, col, row };
+        getCellWidth(position) {
             let contentWidth = this.getTextWidth(position);
-            const icon = this.getters.getConditionalIcon(col, row);
+            const icon = this.getters.getConditionalIcon(position);
             if (icon) {
                 contentWidth += computeIconWidth(this.getters.getCellStyle(position));
             }
-            const isFilterHeader = this.getters.isFilterHeader(sheetId, col, row);
+            const isFilterHeader = this.getters.isFilterHeader(position);
             if (isFilterHeader) {
                 contentWidth += ICON_EDGE_LENGTH + FILTER_ICON_MARGIN;
             }
             if (contentWidth > 0) {
                 contentWidth += 2 * PADDING_AUTORESIZE_HORIZONTAL;
                 if (this.getters.getCellStyle(position).wrapping === "wrap") {
-                    const zone = positionToZone({ col, row });
-                    const colWidth = this.getters.getColSize(this.getters.getActiveSheetId(), zone.left);
+                    const colWidth = this.getters.getColSize(this.getters.getActiveSheetId(), position.col);
                     return Math.min(colWidth, contentWidth);
                 }
             }
@@ -35716,16 +35731,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         getTextWidth(position) {
             const text = this.getters.getCellText(position, this.getters.shouldShowFormulas());
-            const { sheetId, col, row } = position;
-            return computeTextWidth(this.ctx, text, this.getters.getCellComputedStyle(sheetId, col, row));
+            return computeTextWidth(this.ctx, text, this.getters.getCellComputedStyle(position));
         }
-        getCellText({ sheetId, col, row }, showFormula = false) {
-            const cell = this.getters.getCell(sheetId, col, row);
+        getCellText(position, showFormula = false) {
+            const cell = this.getters.getCell(position);
             if (showFormula && (cell === null || cell === void 0 ? void 0 : cell.isFormula)) {
                 return cell.content;
             }
             else {
-                return this.getters.getEvaluatedCell({ sheetId, col, row }).formattedValue;
+                return this.getters.getEvaluatedCell(position).formattedValue;
             }
         }
         getCellMultiLineText(position, width) {
@@ -35830,7 +35844,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         // ---------------------------------------------------------------------------
         getColMaxWidth(sheetId, index) {
             const cellsPositions = positions(this.getters.getColsZone(sheetId, index, index));
-            const sizes = cellsPositions.map((position) => this.getCellWidth(sheetId, position));
+            const sizes = cellsPositions.map((position) => this.getCellWidth({ sheetId, ...position }));
             return Math.max(0, ...sizes);
         }
         splitWordToSpecificWidth(ctx, word, width, style) {
@@ -35940,11 +35954,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             for (let row of rowsIndex) {
                 let cellsInRow = [];
                 for (let col of columnsIndex) {
+                    const position = { col, row, sheetId };
                     cellsInRow.push({
-                        cell: getters.getCell(sheetId, col, row),
-                        evaluatedCell: getters.getEvaluatedCell({ sheetId, col, row }),
-                        border: getters.getCellBorder(sheetId, col, row) || undefined,
-                        position: { col, row, sheetId },
+                        cell: getters.getCell(position),
+                        evaluatedCell: getters.getEvaluatedCell(position),
+                        border: getters.getCellBorder(position) || undefined,
+                        position,
                     });
                 }
                 cellsInClipboard.push(cellsInRow);
@@ -35954,7 +35969,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 for (const table of this.getters.getFilterTablesInZone(sheetId, zone)) {
                     const values = [];
                     for (const col of range(table.zone.left, table.zone.right + 1)) {
-                        values.push(this.getters.getFilterValues(sheetId, col, table.zone.top));
+                        values.push(this.getters.getFilterValues({ sheetId, col, row: table.zone.top }));
                     }
                     tables.push({ filtersValues: values, zone: table.zone });
                 }
@@ -36186,7 +36201,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const { sheetId, col, row } = target;
             const targetCell = this.getters.getEvaluatedCell(target);
             if ((clipboardOption === null || clipboardOption === void 0 ? void 0 : clipboardOption.pasteOption) !== "onlyValue") {
-                const targetBorders = this.getters.getCellBorder(sheetId, col, row);
+                const targetBorders = this.getters.getCellBorder(target);
                 const originBorders = origin.border;
                 const border = {
                     top: (targetBorders === null || targetBorders === void 0 ? void 0 : targetBorders.top) || (originBorders === null || originBorders === void 0 ? void 0 : originBorders.top),
@@ -36248,9 +36263,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          */
         pasteMergeIfExist(origin, target) {
             let { sheetId, col, row } = origin;
-            const { col: mainCellColOrigin, row: mainCellRowOrigin } = this.getters.getMainCellPosition(sheetId, col, row);
+            const { col: mainCellColOrigin, row: mainCellRowOrigin } = this.getters.getMainCellPosition(origin);
             if (mainCellColOrigin === col && mainCellRowOrigin === row) {
-                const merge = this.getters.getMerge(sheetId, col, row);
+                const merge = this.getters.getMerge(origin);
                 if (!merge) {
                     return;
                 }
@@ -36712,8 +36727,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
      * SelectionPlugin
      */
     class GridSelectionPlugin extends UIPlugin {
-        constructor(getters, state, dispatch, config, selection) {
-            super(getters, state, dispatch, config, selection);
+        constructor(config) {
+            super(config);
             this.gridSelection = {
                 anchor: {
                     cell: { col: 0, row: 0 },
@@ -36799,7 +36814,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         sheetIdTo: firstSheetId,
                         sheetIdFrom: firstSheetId,
                     });
-                    const { col, row } = this.getters.getNextVisibleCellPosition(firstSheetId, 0, 0);
+                    const { col, row } = this.getters.getNextVisibleCellPosition({
+                        sheetId: firstSheetId,
+                        col: 0,
+                        row: 0,
+                    });
                     this.selectCell(col, row);
                     this.selection.registerAsDefault(this, this.gridSelection.anchor, {
                         handleEvent: this.handleEvent.bind(this),
@@ -36819,7 +36838,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         this.selection.resetDefaultAnchor(this, deepCopy(this.gridSelection.anchor));
                     }
                     else {
-                        const { col, row } = this.getters.getNextVisibleCellPosition(cmd.sheetIdTo, 0, 0);
+                        const { col, row } = this.getters.getNextVisibleCellPosition({
+                            sheetId: cmd.sheetIdTo,
+                            col: 0,
+                            row: 0,
+                        });
                         this.selectCell(col, row);
                     }
                     break;
@@ -36918,10 +36941,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return this.activeSheet.id;
         }
         getActiveCell() {
-            const sheetId = this.getters.getActiveSheetId();
-            const { col, row } = this.gridSelection.anchor.cell;
-            const mainPosition = this.getters.getMainCellPosition(sheetId, col, row);
-            return this.getters.getEvaluatedCell({ sheetId, ...mainPosition });
+            return this.getters.getEvaluatedCell(this.getActivePosition());
         }
         getActiveCols() {
             const activeCols = new Set();
@@ -36964,21 +36984,26 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         getSelectedFigureId() {
             return this.selectedFigureId;
         }
-        getPosition() {
-            return { col: this.gridSelection.anchor.cell.col, row: this.gridSelection.anchor.cell.row };
+        getActivePosition() {
+            return this.getters.getMainCellPosition({
+                sheetId: this.getActiveSheetId(),
+                col: this.gridSelection.anchor.cell.col,
+                row: this.gridSelection.anchor.cell.row,
+            });
         }
         getSheetPosition(sheetId) {
             if (sheetId === this.getters.getActiveSheetId()) {
-                return this.getPosition();
+                return this.getActivePosition();
             }
             else {
                 const sheetData = this.sheetsData[sheetId];
                 return sheetData
                     ? {
+                        sheetId,
                         col: sheetData.gridSelection.anchor.cell.col,
                         row: sheetData.gridSelection.anchor.cell.row,
                     }
-                    : this.getters.getNextVisibleCellPosition(sheetId, 0, 0);
+                    : this.getters.getNextVisibleCellPosition({ sheetId, col: 0, row: 0 });
             }
         }
         getStatisticFnResults() {
@@ -37251,21 +37276,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             ctx.globalCompositeOperation = "source-over";
             // active zone
-            const activeSheet = this.getters.getActiveSheetId();
-            const { col, row } = this.getPosition();
+            const position = this.getActivePosition();
             ctx.strokeStyle = SELECTION_BORDER_COLOR;
             ctx.lineWidth = 3 * thinLineWidth;
             let zone;
-            if (this.getters.isInMerge(activeSheet, col, row)) {
-                zone = this.getters.getMerge(activeSheet, col, row);
+            if (this.getters.isInMerge(position)) {
+                zone = this.getters.getMerge(position);
             }
             else {
-                zone = {
-                    top: row,
-                    bottom: row,
-                    left: col,
-                    right: col,
-                };
+                zone = positionToZone(position);
             }
             const { x, y, width, height } = this.getters.getVisibleRect(zone);
             if (width > 0 && height > 0) {
@@ -37287,7 +37306,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         "getAggregate",
         "getSelectedFigureId",
         "getSelection",
-        "getPosition",
+        "getActivePosition",
         "getSheetPosition",
         "isSelected",
         "getElementsFromSelection",
@@ -37614,13 +37633,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const sheetId = this.env.model.getters.getActiveSheetId();
             for (const col of this.env.model.getters.getSheetViewVisibleCols()) {
                 for (const row of this.env.model.getters.getSheetViewVisibleRows()) {
-                    const action = this.getClickableAction({ sheetId, col, row });
+                    const position = { sheetId, col, row };
+                    const action = this.getClickableAction(position);
                     if (!action) {
                         continue;
                     }
                     let zone;
-                    if (this.env.model.getters.isInMerge(sheetId, col, row)) {
-                        zone = this.env.model.getters.getMerge(sheetId, col, row);
+                    if (this.env.model.getters.isInMerge(position)) {
+                        zone = this.env.model.getters.getMerge(position);
                     }
                     else {
                         zone = positionToZone({ col, row });
@@ -38305,7 +38325,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         updateCellState() {
             const zones = this.env.model.getters.getSelectedZones();
-            const sheetId = this.env.model.getters.getActiveSheetId();
+            const { col, row, sheetId } = this.env.model.getters.getActivePosition();
             this.inMerge = false;
             const { top, left, right, bottom } = this.env.model.getters.getSelectedZone();
             const { xSplit, ySplit } = this.env.model.getters.getPaneDivisions(sheetId);
@@ -38315,13 +38335,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     (left < xSplit && xSplit <= right) ||
                     (top < ySplit && ySplit <= bottom);
             if (!this.cannotMerge) {
-                const { col, row } = this.env.model.getters.getPosition();
-                const zone = this.env.model.getters.expandZone(sheetId, {
-                    left: col,
-                    right: col,
-                    top: row,
-                    bottom: row,
-                });
+                const zone = this.env.model.getters.expandZone(sheetId, positionToZone({ col, row }));
                 this.inMerge = isEqual(zones[0], zone);
             }
             this.undoTool = this.env.model.getters.canUndo();
@@ -40092,7 +40106,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          */
         addCellToSelection(col, row) {
             const sheetId = this.getters.getActiveSheetId();
-            ({ col, row } = this.getters.getMainCellPosition(sheetId, col, row));
+            ({ col, row } = this.getters.getMainCellPosition({ sheetId, col, row }));
             const zone = this.getters.expandZone(sheetId, positionToZone({ col, row }));
             return this.processEvent({
                 type: "ZonesSelected",
@@ -40451,8 +40465,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * check if the merge containing the cell is empty.
          */
         isCellEmpty({ col, row }, sheetId = this.getters.getActiveSheetId()) {
-            const mainCellPosition = this.getters.getMainCellPosition(sheetId, col, row);
-            const cell = this.getters.getEvaluatedCell({ sheetId, ...mainCellPosition });
+            const position = this.getters.getMainCellPosition({ sheetId, col, row });
+            const cell = this.getters.getEvaluatedCell(position);
             return cell.type === CellValueType.empty;
         }
         /** Computes the next cell position in the given direction by crossing through merges and skipping hidden cells.
@@ -42066,7 +42080,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
              * 2. This allows us to define its type by using the interface CommandDispatcher
              */
             this.dispatch = (type, payload) => {
-                const command = { type, ...payload };
+                const command = { ...payload, type };
                 let status = this.status;
                 if (this.getters.isReadonly() && !canExecuteInReadonly(command)) {
                     return new DispatchResult(65 /* CommandResult.Readonly */);
@@ -42111,7 +42125,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
              * A command dispatched from this function is not added to the history.
              */
             this.dispatchFromCorePlugin = (type, payload) => {
-                const command = { type, ...payload };
+                const command = { ...payload, type };
                 const previousStatus = this.status;
                 this.status = 2 /* Status.RunningCore */;
                 const handlers = this.isReplayingCommand
@@ -42127,7 +42141,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.uuidGenerator = uuidGenerator;
             this.config = this.setupConfig(config);
             this.session = this.setupSession(workbookData.revisionId);
-            this.config.moveClient = this.session.move.bind(this.session);
             this.history = new LocalHistory(this.dispatchFromCorePlugin, this.session);
             this.coreGetters = {};
             this.range = new RangeAdapter(this.coreGetters);
@@ -42150,6 +42163,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.uuidGenerator.setIsFastStrategy(true);
             // Initiate stream processor
             this.selection = new SelectionStreamProcessor(this.getters);
+            this.corePluginConfig = this.setupCorePluginConfig();
+            this.uiPluginConfig = this.setupUiPluginConfig();
             // registering plugins
             for (let Plugin of corePluginRegistry.getAll()) {
                 this.setupCorePlugin(Plugin, workbookData);
@@ -42198,7 +42213,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.session.leave();
         }
         setupUiPlugin(Plugin) {
-            const plugin = new Plugin(this.getters, this.state, this.dispatch, this.config, this.selection);
+            const plugin = new Plugin(this.uiPluginConfig);
             for (let name of Plugin.getters) {
                 if (!(name in plugin)) {
                     throw new Error(`Invalid getter name: ${name} for plugin ${plugin.constructor}`);
@@ -42220,7 +42235,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * reason why the model could not add dynamically a plugin while it is running.
          */
         setupCorePlugin(Plugin, data) {
-            const plugin = new Plugin(this.coreGetters, this.state, this.range, this.dispatchFromCorePlugin, this.config, this.uuidGenerator);
+            const plugin = new Plugin(this.corePluginConfig);
             for (let name of Plugin.getters) {
                 if (!(name in plugin)) {
                     throw new Error(`Invalid getter name: ${name} for plugin ${plugin.constructor}`);
@@ -42267,12 +42282,33 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return {
                 ...config,
                 mode: config.mode || "normal",
-                evalContext: config.evalContext || {},
+                external: config.external || {},
                 transportService,
                 client,
                 moveClient: () => { },
                 snapshotRequested: false,
                 notifyUI: (payload) => this.trigger("notify-ui", payload),
+            };
+        }
+        setupCorePluginConfig() {
+            return {
+                getters: this.coreGetters,
+                stateObserver: this.state,
+                range: this.range,
+                dispatch: this.dispatchFromCorePlugin,
+                uuidGenerator: this.uuidGenerator,
+                external: this.config.external,
+            };
+        }
+        setupUiPluginConfig() {
+            return {
+                getters: this.getters,
+                stateObserver: this.state,
+                dispatch: this.dispatch,
+                selection: this.selection,
+                moveClient: this.session.move.bind(this.session),
+                external: this.config.external,
+                uiActions: this.config,
             };
         }
         // ---------------------------------------------------------------------------
@@ -42505,8 +42541,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2022-11-24T09:39:42.179Z';
-    exports.__info__.hash = '277a39f';
+    exports.__info__.date = '2022-11-25T15:03:52.691Z';
+    exports.__info__.hash = 'ab6f47f';
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map

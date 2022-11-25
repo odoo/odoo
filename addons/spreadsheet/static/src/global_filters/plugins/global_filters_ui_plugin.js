@@ -43,9 +43,9 @@ const { UuidGenerator } = spreadsheet.helpers;
 const uuidGenerator = new UuidGenerator();
 
 export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
-    constructor(getters, history, dispatch, config) {
-        super(getters, history, dispatch, config);
-        this.orm = config.evalContext.env ? config.evalContext.env.services.orm : undefined;
+    constructor(config) {
+        super(config);
+        this.orm = config.external.env ? config.external.env.services.orm : undefined;
         /**
          * Cache record display names for relation filters.
          * For each filter, contains a promise resolving to

@@ -38,7 +38,7 @@ export async function createSpreadsheetWithChart(params = {}) {
 
     insertChartInSpreadsheet(model, params.type);
 
-    const env = model.config.evalContext.env;
+    const env = model.config.external.env;
     env.model = model;
     await nextTick();
     return { model, env };

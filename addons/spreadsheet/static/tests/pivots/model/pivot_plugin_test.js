@@ -28,7 +28,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                 </pivot>`,
         });
         const sheetId = model.getters.getActiveSheetId();
-        const pivotId = model.getters.getPivotIdFromPosition(sheetId, 2, 2);
+        const pivotId = model.getters.getPivotIdFromPosition({ sheetId, col: 2, row: 2 });
         model.dispatch("SELECT_PIVOT", { pivotId });
         const selectedPivotId = model.getters.getSelectedPivotId();
         assert.strictEqual(selectedPivotId, "1");
@@ -50,7 +50,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                 text: `=-PIVOT("1","probability","bar","false","foo","2")`,
             });
             const sheetId = model.getters.getActiveSheetId();
-            const pivotId = model.getters.getPivotIdFromPosition(sheetId, 2, 2);
+            const pivotId = model.getters.getPivotIdFromPosition({ sheetId, col: 2, row: 2 });
             model.dispatch("SELECT_PIVOT", { pivotId });
             const selectedPivotId = model.getters.getSelectedPivotId();
             assert.strictEqual(selectedPivotId, "1");
@@ -73,7 +73,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                 text: `=3*PIVOT("1","probability","bar","false","foo","2")+2`,
             });
             const sheetId = model.getters.getActiveSheetId();
-            const pivotId = model.getters.getPivotIdFromPosition(sheetId, 2, 2);
+            const pivotId = model.getters.getPivotIdFromPosition({ sheetId, col: 2, row: 2 });
             model.dispatch("SELECT_PIVOT", { pivotId });
             const selectedPivotId = model.getters.getSelectedPivotId();
             assert.strictEqual(selectedPivotId, "1");
@@ -96,7 +96,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                 text: `=SUM(PIVOT("1","probability","bar","false","foo","2"),PIVOT("1","probability","bar","false","foo","2"))`,
             });
             const sheetId = model.getters.getActiveSheetId();
-            const pivotId = model.getters.getPivotIdFromPosition(sheetId, 2, 2);
+            const pivotId = model.getters.getPivotIdFromPosition({ sheetId, col: 2, row: 2 });
             model.dispatch("SELECT_PIVOT", { pivotId });
             const selectedPivotId = model.getters.getSelectedPivotId();
             assert.strictEqual(selectedPivotId, "1");
@@ -110,7 +110,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             setCellContent(model, "C3", `=ODOO.PIVOT(G10,"probability","bar","false","foo","2")+2`);
             setCellContent(model, "G10", "1");
             const sheetId = model.getters.getActiveSheetId();
-            const pivotId = model.getters.getPivotIdFromPosition(sheetId, 2, 2);
+            const pivotId = model.getters.getPivotIdFromPosition({ sheetId, col: 2, row: 2 });
             model.dispatch("SELECT_PIVOT", { pivotId });
             const selectedPivotId = model.getters.getSelectedPivotId();
             assert.strictEqual(selectedPivotId, "1");
@@ -133,7 +133,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                 text: `=3*SUM(PIVOT("1","probability","bar","false","foo","2"),PIVOT("1","probability","bar","false","foo","2"))+2*PIVOT("1","probability","bar","false","foo","2")`,
             });
             const sheetId = model.getters.getActiveSheetId();
-            const pivotId = model.getters.getPivotIdFromPosition(sheetId, 2, 2);
+            const pivotId = model.getters.getPivotIdFromPosition({ sheetId, col: 2, row: 2 });
             model.dispatch("SELECT_PIVOT", { pivotId });
             const selectedPivotId = model.getters.getSelectedPivotId();
             assert.strictEqual(selectedPivotId, "1");

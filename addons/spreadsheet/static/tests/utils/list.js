@@ -62,7 +62,7 @@ export async function createSpreadsheetWithList(params = {}) {
         sheetId: params.sheetId,
     });
 
-    const env = model.config.evalContext.env;
+    const env = model.config.external.env;
     env.model = model;
     await waitForDataSourcesLoaded(model);
     return { model, env };
