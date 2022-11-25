@@ -53,7 +53,7 @@ class MassMailing(models.Model):
             })
 
         if 'contact_list_ids' in fields_list and not vals.get('contact_list_ids') and vals.get('mailing_model_id'):
-            if vals.get('mailing_model_id') == self.env['ir.model']._get('mailing.list').id:
+            if vals.get('mailing_model_id') == self.env['ir.model']._get_id('mailing.list'):
                 mailing_list = self.env['mailing.list'].search([], limit=2)
                 if len(mailing_list) == 1:
                     vals['contact_list_ids'] = [(6, 0, [mailing_list.id])]
@@ -154,6 +154,9 @@ class MassMailing(models.Model):
     mailing_model_name = fields.Char(
         string='Recipients Model Name',
         related='mailing_model_id.model', readonly=True, related_sudo=True)
+    mailing_on_mailing_list = fields.Boolean(
+        string='Based on Mailing Lists',
+        compute='_compute_mailing_on_mailing_list')
     mailing_domain = fields.Char(
         string='Domain',
         compute='_compute_mailing_domain', readonly=False, store=True)
@@ -382,6 +385,12 @@ class MassMailing(models.Model):
     def _compute_mailing_model_real(self):
         for mailing in self:
             mailing.mailing_model_real = 'mailing.contact' if mailing.mailing_model_id.model == 'mailing.list' else mailing.mailing_model_id.model
+
+    @api.depends('mailing_model_id')
+    def _compute_mailing_on_mailing_list(self):
+        mailing_list_model_id = self.env['ir.model']._get('mailing.list')
+        self.mailing_on_mailing_list = False
+        self.filtered(lambda m: m.mailing_model_id == mailing_list_model_id).mailing_on_mailing_list = True
 
     @api.depends('mailing_model_id', 'contact_list_ids', 'mailing_type', 'mailing_filter_id')
     def _compute_mailing_domain(self):
@@ -1008,12 +1017,12 @@ class MassMailing(models.Model):
 
     def _get_unsubscribe_url(self, email_to, res_id):
         url = werkzeug.urls.url_join(
-            self.get_base_url(), 'mail/mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
+            self.get_base_url(), 'mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
                 'mailing_id': self.id,
                 'params': werkzeug.urls.url_encode({
                     'res_id': res_id,
                     'email': email_to,
-                    'token': self._unsubscribe_token(res_id, email_to),
+                    'token': self._generate_mailing_recipient_token(res_id, email_to),
                 }),
             }
         )
@@ -1026,7 +1035,7 @@ class MassMailing(models.Model):
                 'params': werkzeug.urls.url_encode({
                     'res_id': res_id,
                     'email': email_to,
-                    'token': self._unsubscribe_token(res_id, email_to),
+                    'token': self._generate_mailing_recipient_token(res_id, email_to),
                 }),
             }
         )
@@ -1158,7 +1167,7 @@ class MassMailing(models.Model):
                 ** mailing._prepare_statistics_email_values(),
             }
             if mail_user.has_group('mass_mailing.group_mass_mailing_user'):
-                rendering_data['mailing_report_token'] = self._get_unsubscribe_token(mail_user.id)
+                rendering_data['mailing_report_token'] = self._generate_mailing_report_token(mail_user.id)
                 rendering_data['user_id'] = mail_user.id
 
             rendered_body = self.env['ir.qweb']._render(
@@ -1258,8 +1267,8 @@ class MassMailing(models.Model):
     def _get_pretty_mailing_type(self):
         return _('Emails')
 
-    def _get_unsubscribe_token(self, user_id):
-        """Generate a secure hash for this user. It allows to opt out from
+    def _generate_mailing_report_token(self, user_id):
+        """Generate a secure token for this user. It allows to opt out from
         mailing reports while keeping some security in that process. """
         return tools.hmac(self.env(su=True), 'mailing-report-deactivated', user_id)
 
@@ -1285,21 +1294,18 @@ class MassMailing(models.Model):
             mailing_domain = [('id', 'in', [])]
         return mailing_domain
 
-    def _unsubscribe_token(self, res_id, email):
-        """Generate a secure hash for this mailing list and parameters.
+    def _generate_mailing_recipient_token(self, document_id, email):
+        """Generate a secure token for a given mailing and recipient (based on
+        their email). This allows notably to unsubscribe from the mailing or
+        to blacklist their email entirely without need of a user account.
 
-        This is appended to the unsubscription URL and then checked at
-        unsubscription time to ensure no malicious unsubscriptions are
-        performed.
-
-        :param int res_id:
-            ID of the resource that will be unsubscribed.
-
-        :param str email:
-            Email of the resource that will be unsubscribed.
+        :param int document_id: ID of the business document on which mailing
+          is performed;
+        :param str email: recipient email, used to unsubscribe / blacklist;
         """
+        self.ensure_one()
         secret = self.env["ir.config_parameter"].sudo().get_param("database.secret")
-        token = (self.env.cr.dbname, self.id, int(res_id), tools.ustr(email))
+        token = (self.env.cr.dbname, self.id, int(document_id), tools.ustr(email))
         return hmac.new(secret.encode('utf-8'), repr(token).encode('utf-8'), hashlib.sha512).hexdigest()
 
     def _convert_inline_images_to_urls(self, body_html):
