@@ -1017,7 +1017,7 @@ class MassMailing(models.Model):
 
     def _get_unsubscribe_url(self, email_to, res_id):
         url = werkzeug.urls.url_join(
-            self.get_base_url(), 'mail/mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
+            self.get_base_url(), 'mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
                 'mailing_id': self.id,
                 'params': werkzeug.urls.url_encode({
                     'res_id': res_id,

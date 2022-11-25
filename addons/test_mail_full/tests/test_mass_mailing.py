@@ -74,7 +74,7 @@ class TestMassMailing(TestMailFullCommon):
                     email['body'])
                 # rendered unsubscribe
                 self.assertIn(
-                    '%s/mail/mailing/%s/unsubscribe' % (mailing.get_base_url(), mailing.id),
+                    '%s/mailing/%s/unsubscribe' % (mailing.get_base_url(), mailing.id),
                     email['body'])
                 unsubscribe_href = self._get_href_from_anchor_id(email['body'], "url6")
                 unsubscribe_url = werkzeug.urls.url_parse(unsubscribe_href)
