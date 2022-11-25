@@ -1,7 +1,15 @@
 /** @odoo-module **/
 
 import { uiService } from "@web/core/ui/ui_service";
-import { useAutofocus, useBus, useChildRef, useForwardRefToParent, useListener, useService } from "@web/core/utils/hooks";
+import {
+    useAutofocus,
+    useBus,
+    useChildRef,
+    useForwardRefToParent,
+    useListener,
+    useService,
+    useSpellCheck,
+} from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import {
@@ -423,6 +431,184 @@ QUnit.module("utils", () => {
             assert.rejects(comp.functionService.call("boundThis"), "Component is destroyed");
             assert.strictEqual(nbCalls, 8);
         });
+
+        QUnit.module("useSpellCheck");
+
+        QUnit.test("useSpellCheck: ref is on the textarea", async function (assert) {
+            class MyComponent extends Component {
+                setup() {
+                    useSpellCheck();
+                }
+            }
+            MyComponent.template = xml`<div><textarea t-ref="spellcheck" class="textArea"/></div>`;
+
+            const env = await makeTestEnv();
+            const target = getFixture();
+            await mount(MyComponent, target, { env });
+            const textArea = target.querySelector(".textArea");
+            assert.strictEqual(textArea.spellcheck, true, "by default, spellcheck is enabled");
+            textArea.focus();
+            textArea.blur();
+            assert.strictEqual(
+                textArea.spellcheck,
+                false,
+                "spellcheck is disabled once the element has lost its focus"
+            );
+            textArea.focus();
+            assert.strictEqual(
+                textArea.spellcheck,
+                true,
+                "spellcheck is re-enabled once the element is focused"
+            );
+        });
+
+        QUnit.test("useSpellCheck: use a different refName", async function (assert) {
+            class MyComponent extends Component {
+                setup() {
+                    useSpellCheck({ refName: "myreference" });
+                }
+            }
+            MyComponent.template = xml`<div><textarea t-ref="myreference" class="textArea"/></div>`;
+
+            const env = await makeTestEnv();
+            const target = getFixture();
+            await mount(MyComponent, target, { env });
+            const textArea = target.querySelector(".textArea");
+            assert.strictEqual(textArea.spellcheck, true, "by default, spellcheck is enabled");
+            textArea.focus();
+            textArea.blur();
+            assert.strictEqual(
+                textArea.spellcheck,
+                false,
+                "spellcheck is disabled once the element has lost its focus"
+            );
+            textArea.focus();
+            assert.strictEqual(
+                textArea.spellcheck,
+                true,
+                "spellcheck is re-enabled once the element is focused"
+            );
+        });
+
+        QUnit.test(
+            "useSpellCheck: ref is on the root element and two editable elements",
+            async function (assert) {
+                class MyComponent extends Component {
+                    setup() {
+                        useSpellCheck();
+                    }
+                }
+                MyComponent.template = xml`
+                <div t-ref="spellcheck">
+                    <textarea class="textArea"/>
+                    <div contenteditable="true" class="editableDiv"/>
+                </div>`;
+
+                const env = await makeTestEnv();
+                const target = getFixture();
+                await mount(MyComponent, target, { env });
+                const textArea = target.querySelector(".textArea");
+                const editableDiv = target.querySelector(".editableDiv");
+                assert.strictEqual(
+                    textArea.spellcheck,
+                    true,
+                    "by default, spellcheck is enabled on the textarea"
+                );
+                assert.strictEqual(
+                    editableDiv.spellcheck,
+                    true,
+                    "by default, spellcheck is enabled on the editable div"
+                );
+                textArea.focus();
+                textArea.blur();
+                editableDiv.focus();
+                assert.strictEqual(
+                    textArea.spellcheck,
+                    false,
+                    "spellcheck is disabled once the element has lost its focus"
+                );
+                editableDiv.blur();
+                assert.strictEqual(
+                    editableDiv.spellcheck,
+                    false,
+                    "spellcheck is disabled once the element has lost its focus"
+                );
+                textArea.focus();
+                assert.strictEqual(
+                    textArea.spellcheck,
+                    true,
+                    "spellcheck is re-enabled once the element is focused"
+                );
+                assert.strictEqual(
+                    editableDiv.spellcheck,
+                    false,
+                    "spellcheck is still disabled as it is not focused"
+                );
+                editableDiv.focus();
+                assert.strictEqual(
+                    editableDiv.spellcheck,
+                    true,
+                    "spellcheck is re-enabled once the element is focused"
+                );
+            }
+        );
+
+        QUnit.test(
+            "useSpellCheck: ref is on the root element and one element has disabled the spellcheck",
+            async function (assert) {
+                class MyComponent extends Component {
+                    setup() {
+                        useSpellCheck();
+                    }
+                }
+                MyComponent.template = xml`
+                <div t-ref="spellcheck">
+                    <textarea class="textArea"/>
+                    <div contenteditable="true" spellcheck="false" class="editableDiv"/>
+                </div>`;
+
+                const env = await makeTestEnv();
+                const target = getFixture();
+                await mount(MyComponent, target, { env });
+                const textArea = target.querySelector(".textArea");
+                const editableDiv = target.querySelector(".editableDiv");
+                assert.strictEqual(
+                    textArea.spellcheck,
+                    true,
+                    "by default, spellcheck is enabled on the textarea"
+                );
+                assert.strictEqual(
+                    editableDiv.spellcheck,
+                    false,
+                    "by default, spellcheck is disabled on the editable div"
+                );
+                textArea.focus();
+                textArea.blur();
+                editableDiv.focus();
+                assert.strictEqual(
+                    textArea.spellcheck,
+                    false,
+                    "spellcheck is disabled once the element has lost its focus"
+                );
+                assert.strictEqual(
+                    editableDiv.spellcheck,
+                    false,
+                    "spellcheck has not been enabled since it was disabled on purpose"
+                );
+                editableDiv.blur();
+                assert.strictEqual(
+                    editableDiv.spellcheck,
+                    false,
+                    "spellcheck stays disabled once the element has lost its focus"
+                );
+                textArea.focus();
+                assert.strictEqual(
+                    textArea.spellcheck,
+                    true,
+                    "spellcheck is re-enabled once the element is focused"
+                );
+            }
+        );
 
         QUnit.module("useChildRef / useForwardRefToParent");
 
