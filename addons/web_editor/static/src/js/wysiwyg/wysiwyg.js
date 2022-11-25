@@ -759,6 +759,15 @@ const Wysiwyg = Widget.extend({
      */
     renderElement: function () {
         this.$editable = this.options.editable || $('<div class="note-editable">');
+
+        // We add the field's name as id so default_focus will target it if
+        // needed. For that to work, it has to already be editable but note that
+        // the editor is at this point not yet instantiated.
+        if (typeof this.options.fieldId !== 'undefined') {
+            this.$editable.attr('id', this.options.fieldId);
+            this.$editable.attr('contenteditable', true);
+        }
+
         this.$root = this.$editable;
         if (this.options.height) {
             this.$editable.height(this.options.height);
