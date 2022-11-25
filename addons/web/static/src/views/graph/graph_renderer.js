@@ -445,6 +445,7 @@ export class GraphRenderer extends Component {
                 display: Boolean(groupBy.length),
                 labelString: groupBy.length ? fields[groupBy[0].fieldName].string : "",
             },
+            ticks: { callback: (value) => shortenLabel(value) },
         };
         const yAxe = {
             type: "linear",
