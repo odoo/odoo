@@ -74,7 +74,7 @@ class TestMassMailing(TestMailFullCommon):
                     email['body'])
                 # rendered unsubscribe
                 self.assertIn(
-                    '%s/mail/mailing/%s/unsubscribe' % (mailing.get_base_url(), mailing.id),
+                    '%s/mailing/%s/unsubscribe' % (mailing.get_base_url(), mailing.id),
                     email['body'])
                 unsubscribe_href = self._get_href_from_anchor_id(email['body'], "url6")
                 unsubscribe_url = werkzeug.urls.url_parse(unsubscribe_href)
@@ -82,7 +82,7 @@ class TestMassMailing(TestMailFullCommon):
                 self.assertEqual(int(unsubscribe_params['res_id']), recipient.id)
                 self.assertEqual(unsubscribe_params['email'], recipient.email_normalized)
                 self.assertEqual(
-                    mailing._unsubscribe_token(unsubscribe_params['res_id'], (unsubscribe_params['email'])),
+                    mailing._generate_mailing_recipient_token(unsubscribe_params['res_id'], (unsubscribe_params['email'])),
                     unsubscribe_params['token']
                 )
                 # rendered view
@@ -95,7 +95,7 @@ class TestMassMailing(TestMailFullCommon):
                 self.assertEqual(int(view_params['res_id']), recipient.id)
                 self.assertEqual(view_params['email'], recipient.email_normalized)
                 self.assertEqual(
-                    mailing._unsubscribe_token(view_params['res_id'], (view_params['email'])),
+                    mailing._generate_mailing_recipient_token(view_params['res_id'], (view_params['email'])),
                     view_params['token']
                 )
 
