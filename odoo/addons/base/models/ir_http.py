@@ -92,8 +92,12 @@ class IrHttp(models.AbstractModel):
         return rule, args
 
     @classmethod
+    def _get_public_users(cls):
+        return [request.env.ref('base.public_user').id]
+
+    @classmethod
     def _auth_method_user(cls):
-        if request.env.uid is None:
+        if request.env.uid in [None] + cls._get_public_users():
             raise http.SessionExpiredException("Session expired")
 
     @classmethod
