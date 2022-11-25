@@ -61,6 +61,15 @@ export class MessageList extends Component {
     }
 
     willPatch() {
+        const newMessageSeparatorEl = this._getScrollableElement().querySelector('.o_MessageList_separatorNewMessages');
+        if (
+            this.threadView && this.threadView.thread &&
+            !this.threadView.thread.messageAfterNewMessageSeparator &&
+            !this.messaging.disableAnimation &&
+            newMessageSeparatorEl
+        ) {
+            newMessageSeparatorEl.classList.remove('o-disable-animation');
+        }
         this._willPatchSnapshot = {
             scrollHeight: this._getScrollableElement().scrollHeight,
             scrollTop: this._getScrollableElement().scrollTop,
