@@ -12,7 +12,7 @@
     </t>
 
     <t t-name="account.AccountFileUploader" owl="1">
-        <div>
+        <div t-att-class="props.record and props.record.data ? 'oe_kanban_color_' + props.record.data.color : ''">
             <FileUploader
                 acceptedFileExtensions="props.acceptedFileExtensions"
                 fileUploadClass="'account_file_uploader'"

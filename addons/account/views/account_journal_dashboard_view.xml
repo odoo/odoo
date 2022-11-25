@@ -15,7 +15,7 @@
                 <field name="alias_domain"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div t-attf-class="d-flex flex-column flex-fill #{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
+                        <div t-attf-class="d-flex flex-column flex-fill">
                             <t t-value="JSON.parse(record.kanban_dashboard.raw_value)" t-set="dashboard"/>
                             <t t-value="record.type.raw_value" t-set="journal_type"/>
                             <t t-call="JournalTop"/>
