@@ -154,3 +154,40 @@ export function useFocus(refName, callback = () => {}) {
     );
     return state;
 }
+
+export function useVisible(refName, cb) {
+    const ref = useRef(refName);
+    const state = { isVisible: false };
+    const observer = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+            const newVal = entry.isIntersecting;
+            if (state.isVisible !== newVal) {
+                state.isVisible = newVal;
+                cb();
+            }
+        }
+    });
+    let el;
+    onMounted(observe);
+    onWillUnmount(() => {
+        if (!el) {
+            return;
+        }
+        observer.unobserve(el);
+    });
+    onPatched(observe);
+
+    function observe() {
+        if (ref.el !== el) {
+            if (el) {
+                observer.unobserve(el);
+                state.isVisible = false;
+            }
+            if (ref.el) {
+                observer.observe(ref.el);
+            }
+        }
+        el = ref.el;
+    }
+    return state;
+}

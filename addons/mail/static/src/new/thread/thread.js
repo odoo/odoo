@@ -1,8 +1,8 @@
 /** @odoo-module */
 
-import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { useMessaging } from "../messaging_hook";
-import { useAutoScroll } from "../utils";
+import { useAutoScroll, useVisible } from "../utils";
 import { Message } from "./message";
 
 export class Thread extends Component {
@@ -16,8 +16,17 @@ export class Thread extends Component {
                     !this.props.messageHighlight.highlightedMessageId
             );
         }
+        this.loadMoreState = useVisible("load-more", () => this.loadMore());
+        onMounted(() => this.loadMore());
+        onPatched(() => this.loadMore());
         onWillStart(() => this.requestMessages(this.props.id));
         onWillUpdateProps((nextProps) => this.requestMessages(nextProps.id));
+    }
+
+    loadMore() {
+        if (this.loadMoreState.isVisible) {
+            this.messaging.fetchThreadMessagesMore(this.props.id);
+        }
     }
 
     requestMessages(threadId) {

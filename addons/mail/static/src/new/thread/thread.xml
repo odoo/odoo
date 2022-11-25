@@ -54,7 +54,7 @@
 </t>
 
 <t t-name="mail.thread.load_more" owl="1">
-    <button class="btn btn-link" t-on-click="() => messaging.fetchThreadMessagesMore(props.id)">Load More</button>
+    <button class="btn btn-link" t-on-click="() => messaging.fetchThreadMessagesMore(props.id)" t-ref="load-more">Load More</button>
 </t>
 
 <t t-name="mail.notification_message" owl="1">
