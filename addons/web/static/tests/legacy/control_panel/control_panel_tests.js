@@ -108,7 +108,7 @@ odoo.define('web.control_panel_tests', function (require) {
             const searchInput = controlPanel.el.querySelector('input.o_searchview_input');
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'Backspace' });
 
-            assert.containsNone(controlPanel, 'div.o_searchview div.o_searchview_facet');
+            assert.containsNone(controlPanel, 'div.o_searchview_input_container div.o_searchview_facet');
 
             // delete nothing (should not crash)
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'Backspace' });

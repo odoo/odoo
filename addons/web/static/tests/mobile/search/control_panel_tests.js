@@ -54,39 +54,20 @@ QUnit.module("Search", (hooks) => {
         assert.containsOnce(target, ".breadcrumb");
         assert.containsOnce(target, ".o_enable_searchview");
         assert.containsNone(target, ".o_searchview");
-        assert.containsNone(target, ".o_toggle_searchview_full");
 
         await click(target, ".o_enable_searchview");
 
         assert.containsNone(target, ".breadcrumb");
         assert.containsOnce(target, ".o_enable_searchview");
         assert.containsOnce(target, ".o_searchview");
-        assert.containsOnce(target, ".o_toggle_searchview_full");
-
-        await click(target, ".o_toggle_searchview_full");
-
-        assert.containsOnce(document.body, ".o_searchview.o_mobile_search");
-        assert.containsN(document.body, ".o_mobile_search .o_mobile_search_button", 2);
-        assert.strictEqual(
-            document.body.querySelector(".o_mobile_search_header").textContent.trim(),
-            "FILTER CLEAR"
-        );
-        assert.containsOnce(document.body, ".o_searchview.o_mobile_search .o_cp_searchview");
-        assert.containsOnce(document.body, ".o_searchview.o_mobile_search .o_mobile_search_footer");
-
-        await click(document.body.querySelector(".o_mobile_search_button"));
-
-        assert.containsNone(target, ".breadcrumb");
-        assert.containsOnce(target, ".o_enable_searchview");
-        assert.containsOnce(target, ".o_searchview");
-        assert.containsOnce(target, ".o_toggle_searchview_full");
+        assert.containsOnce(document.body, ".o_mobile_search");
+        assert.containsOnce(document.body, ".o_mobile_search .o_cp_searchview");
 
         await click(target, ".o_enable_searchview");
 
         assert.containsOnce(target, ".breadcrumb");
         assert.containsOnce(target, ".o_enable_searchview");
         assert.containsNone(target, ".o_searchview");
-        assert.containsNone(target, ".o_toggle_searchview_full");
     });
 
     QUnit.test("Make a simple search in mobile mode", async (assert) => {

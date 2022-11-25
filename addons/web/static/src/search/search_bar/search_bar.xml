@@ -2,35 +2,31 @@
 <templates xml:space="preserve">
 
     <t t-name="web.SearchBar.Facets" owl="1">
-        <t t-foreach="env.searchModel.facets" t-as="facet" t-key="facet_index">
-            <div class="o_searchview_facet"
-                role="img"
-                aria-label="search"
-                tabindex="0"
-                t-on-keydown="ev => this.onFacetKeydown(facet, facet_index, ev)"
-                >
-                <t t-if="facet.icon">
-                    <span t-attf-class="o_searchview_facet_label {{ facet.icon }}"/>
-                </t>
-                <t t-else="">
-                    <span class="o_searchview_facet_label" t-esc="facet.title"/>
-                </t>
-                <div class="o_facet_values border-start-0">
-                    <t t-foreach="facet.values" t-as="facetValue" t-key="facetValue_index">
-                        <t t-if="!facetValue_first">
-                            <span class="o_facet_values_sep" t-esc="facet.separator"/>
-                        </t>
-                        <span class="o_facet_value" t-esc="facetValue"/>
-                    </t>
-                </div>
-                <i class="o_facet_remove oi oi-close btn btn-link opacity-50 opacity-100-hover text-900"
+        <div class="o_searchview_facets d-flex" t-if="env.searchModel.facets.length !== 0">
+            <t t-foreach="env.searchModel.facets" t-as="facet" t-key="facet_index">
+                <div class="o_searchview_facet"
                     role="img"
-                    aria-label="Remove"
-                    title="Remove"
-                    t-on-click="() => this.onFacetRemove(facet)"
-                />
-            </div>
-        </t>
+                    aria-label="search"
+                    tabindex="0"
+                    t-on-keydown="ev => this.onFacetKeydown(facet, facet_index, ev)"
+                    >
+                    <span t-if="facet.icon" t-attf-class="o_searchview_facet_label {{ facet.icon }}"/>
+                    <span t-else="" class="o_searchview_facet_label" t-esc="facet.title"/>
+                    <div class="o_facet_values border-start-0 bg-view">
+                        <t t-foreach="facet.values" t-as="facetValue" t-key="facetValue_index">
+                            <span t-if="!facetValue_first" class="o_facet_values_sep" t-esc="facet.separator"/>
+                            <span class="o_facet_value" t-esc="facetValue"/>
+                        </t>
+                    </div>
+                    <i class="o_facet_remove oi oi-close btn btn-link opacity-50 opacity-100-hover text-900"
+                        role="img"
+                        aria-label="Remove"
+                        title="Remove"
+                        t-on-click="() => this.onFacetRemove(facet)"
+                    />
+                </div>
+            </t>
+        </div>
     </t>
 
     <t t-name="web.SearchBar.Input" owl="1">
@@ -77,7 +73,7 @@
 
     <t t-name="web.SearchBar" owl="1">
         <div class="o_cp_searchview d-flex flex-grow-1" role="search" t-ref="root">
-            <div class="o_searchview pb-1 align-self-center border-bottom flex-grow-1" role="search" aria-autocomplete="list">
+            <div class="o_searchview align-self-center flex-grow-1" role="search" aria-autocomplete="list">
                 <i class="o_searchview_icon oi oi-search"
                     role="img"
                     aria-label="Search..."
