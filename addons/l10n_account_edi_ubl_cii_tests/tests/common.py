@@ -82,6 +82,7 @@ class TestUBLCommon(AccountEdiTestCommon):
         self.assert_same_invoice(invoice, new_invoice)
 
     def _assert_imported_invoice_from_file(self, subfolder, filename, amount_total, amount_tax, list_line_subtotals,
+                                           list_line_price_unit=None, list_line_discount=None, list_line_taxes=None,
                                            move_type='in_invoice', currency_id=None):
         """
         Create an empty account.move, update the file to fill its fields, asserts the currency, total and tax amounts
@@ -114,6 +115,16 @@ class TestUBLCommon(AccountEdiTestCommon):
             Counter(invoice.invoice_line_ids.mapped('price_subtotal')),
             Counter(list_line_subtotals),
         )
+        if list_line_price_unit:
+            self.assertEqual(invoice.invoice_line_ids.mapped('price_unit'), list_line_price_unit)
+        if list_line_discount:
+            # See test_import_tax_included: sometimes, it's impossible to retrieve the exact discount at import because
+            # of rounding during export. The obtained discount might be 10.001 while the expected is 10.
+            dp = self.env.ref('product.decimal_discount').precision_get("Discount")
+            self.assertEqual([round(d, dp) for d in invoice.invoice_line_ids.mapped('discount')], list_line_discount)
+        if list_line_taxes:
+            for line, taxes in zip(invoice.invoice_line_ids, list_line_taxes):
+                self.assertEqual(line.tax_ids, taxes)
 
     # -------------------------------------------------------------------------
     # EXPORT HELPERS
