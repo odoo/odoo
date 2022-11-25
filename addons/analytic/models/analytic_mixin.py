@@ -13,6 +13,10 @@ class AnalyticMixin(models.AbstractModel):
         compute="_compute_analytic_distribution", store=True, copy=True, readonly=False,
         precompute=True
     )
+    analytic_precision = fields.Integer(
+        store=False,
+        default=lambda self: self.env['decimal.precision'].precision_get("Percentage Analytic"),
+    )
 
     def init(self):
         # Add a gin index for json search on the keys, on the models that actually have a table
@@ -22,7 +26,7 @@ class AnalyticMixin(models.AbstractModel):
         self.env.cr.execute(query, [self._table])
         if self.env.cr.dictfetchone():
             query = f"""
-                CREATE INDEX IF NOT EXISTS {self._table}_analytic_distribution_index
+                CREATE INDEX IF NOT EXISTS {self._table}_analytic_distribution_gin_index
                                         ON {self._table} USING gin(analytic_distribution);
             """
             self.env.cr.execute(query)

@@ -93,7 +93,7 @@
                                         <field name="code" placeholder="e.g. INV"/>
                                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                                     </group>
-                                    <group string="Bank Account Number" attrs="{'invisible': [('type', '!=', 'bank')]}">
+                                    <group name="bank_account_number" string="Bank Account Number" attrs="{'invisible': [('type', '!=', 'bank')]}">
                                         <field name="company_partner_id" invisible="1"/>
                                         <field name="bank_account_id" string="Account Number" context="{'default_partner_id': company_partner_id}"/>
                                         <field name="bank_id" attrs="{'invisible': [('bank_account_id', '=', False)]}"/>
@@ -115,6 +115,7 @@
                                                placeholder="Leave empty to use the default outstanding account"
                                                string="Outstanding Receipts accounts"
                                                optional="hide"
+                                               options="{'no_quick_create': True}"
                                                groups="account.group_account_readonly"/>
                                     </tree>
                                 </field>
@@ -132,6 +133,7 @@
                                                    placeholder="Leave empty to use the default outstanding account"
                                                    string="Outstanding Payments accounts"
                                                    optional="hide"
+                                                   options="{'no_quick_create': True}"
                                                    groups="account.group_account_readonly"/>
                                         </tree>
                                     </field>
@@ -142,7 +144,7 @@
                                 <group>
                                     <group string="Control-Access" groups="account.group_account_manager">
                                         <div class="text-muted" colspan="2">Keep empty for no control</div>
-                                        <field name="account_control_ids" widget="many2many_tags"/>
+                                        <field name="account_control_ids" widget="many2many_tags" options="{'no_create_edit': True}"/>
                                         <field name="restrict_mode_hash_table" groups="account.group_account_readonly" attrs="{'invisible': [('type', 'in', ['bank', 'cash'])]}"/>
                                     </group>
                                     <!-- email alias -->
@@ -166,8 +168,8 @@
                                         <field name="invoice_reference_model" attrs="{'invisible': [('invoice_reference_type', '=', 'none')]}"/>
                                     </group>
                                     <group string="Follow Customer Payments" attrs="{'invisible': [('type', '!=', 'sale')]}">
-                                        <field name="sale_activity_type_id"/>
-                                        <field name="sale_activity_user_id" attrs="{'invisible': [('sale_activity_type_id', '=', False)]}"/>
+                                        <field name="sale_activity_type_id" options="{'no_quick_create': True}"/>
+                                        <field name="sale_activity_user_id" attrs="{'invisible': [('sale_activity_type_id', '=', False)]}" options="{'no_quick_create': True}"/>
                                         <field name="sale_activity_note" placeholder="e.g. Give a phone call, check with others , ..."  attrs="{'invisible': [('sale_activity_type_id', '=', False)]}"/>
                                     </group>
                                 </group>

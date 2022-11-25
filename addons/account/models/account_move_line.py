@@ -43,6 +43,7 @@ class AccountMoveLine(models.Model):
     )
     company_id = fields.Many2one(
         related='move_id.company_id', store=True, readonly=True, precompute=True,
+        index=True,
     )
     company_currency_id = fields.Many2one(
         string='Company Currency',
@@ -70,6 +71,7 @@ class AccountMoveLine(models.Model):
         help="Utility field to express whether the journal item is subject to storno accounting",
     )
     sequence = fields.Integer(compute='_compute_sequence', store=True, readonly=False, precompute=True)
+    move_type = fields.Selection(related='move_id.move_type')
 
     # === Accountable fields === #
     account_id = fields.Many2one(
@@ -936,17 +938,7 @@ class AccountMoveLine(models.Model):
                 include_caba_tags=line.move_id.always_tax_exigible,
                 fixed_multiplicator=sign,
             )
-            compute_all = line.tax_ids.compute_all(
-                amount,
-                currency=line.company_id.currency_id,
-                quantity=quantity,
-                product=line.product_id,
-                partner=line.move_id.partner_id or line.partner_id,
-                is_refund=line.is_refund,
-                handle_price_include=handle_price_include,
-                include_caba_tags=line.move_id.always_tax_exigible,
-                fixed_multiplicator=sign/line.currency_rate,
-            )
+            rate = line.amount_currency / line.balance if line.balance else 1
             line.compute_all_tax_dirty = True
             line.compute_all_tax = {
                 frozendict({
@@ -961,16 +953,16 @@ class AccountMoveLine(models.Model):
                     'move_id': line.move_id.id,
                 }): {
                     'name': tax['name'],
-                    'balance': tax['amount'],
-                    'amount_currency': tax_currency['amount'],
-                    'tax_base_amount': tax['base'] * (-1 if line.tax_tag_invert else 1),
+                    'balance': tax['amount'] / rate,
+                    'amount_currency': tax['amount'],
+                    'tax_base_amount': tax['base'] / rate * (-1 if line.tax_tag_invert else 1),
                 }
-                for tax, tax_currency in zip(compute_all['taxes'], compute_all_currency['taxes'])
-                if tax['amount'] or tax_currency['amount']
+                for tax in compute_all_currency['taxes']
+                if tax['amount']
             }
             if not line.tax_repartition_line_id:
                 line.compute_all_tax[frozendict({'id': line.id})] = {
-                    'tax_tag_ids': [(6, 0, compute_all['base_tags'])],
+                    'tax_tag_ids': [(6, 0, compute_all_currency['base_tags'])],
                 }
 
     @api.depends('tax_ids', 'account_id', 'company_id')
@@ -1326,10 +1318,10 @@ class AccountMoveLine(models.Model):
         def existing():
             return {
                 line: {
-                    'amount_currency': line.amount_currency,
-                    'balance': line.balance,
+                    'amount_currency': line.currency_id.round(line.amount_currency),
+                    'balance': line.company_id.currency_id.round(line.balance),
                     'currency_rate': line.currency_rate,
-                    'price_subtotal': line.price_subtotal,
+                    'price_subtotal': line.currency_id.round(line.price_subtotal),
                     'move_type': line.move_id.move_type,
                 } for line in container['records'].with_context(
                     skip_sync_invoice=True,
@@ -1355,12 +1347,11 @@ class AccountMoveLine(models.Model):
 
         after = existing()
         for line in after:
-            balance = line.company_id.currency_id.round(line.amount_currency / line.currency_rate)
-
             if (
                 (changed('amount_currency') or changed('currency_rate') or changed('move_type'))
                 and (not changed('balance') or (line not in before and not line.balance))
             ):
+                balance = line.company_id.currency_id.round(line.amount_currency / line.currency_rate)
                 line.balance = balance
         # Since this method is called during the sync, inside of `create`/`write`, these fields
         # already have been computed and marked as so. But this method should re-trigger it since
@@ -1609,6 +1600,8 @@ class AccountMoveLine(models.Model):
         has_credit_zero_residual = company_currency.is_zero(remaining_credit_amount)
         has_debit_zero_residual_currency = debit_vals['currency'].is_zero(remaining_debit_amount_curr)
         has_credit_zero_residual_currency = credit_vals['currency'].is_zero(remaining_credit_amount_curr)
+        is_rec_pay_account = debit_vals.get('record') \
+                             and debit_vals['record'].account_type in ('asset_receivable', 'liability_payable')
 
         if debit_vals['currency'] == credit_vals['currency'] == company_currency \
                 and not has_debit_zero_residual \
@@ -1619,6 +1612,7 @@ class AccountMoveLine(models.Model):
             recon_debit_amount = remaining_debit_amount
             recon_credit_amount = -remaining_credit_amount
         elif debit_vals['currency'] == company_currency \
+                and is_rec_pay_account \
                 and not has_debit_zero_residual \
                 and credit_vals['currency'] != company_currency \
                 and not has_credit_zero_residual_currency:
@@ -1630,6 +1624,7 @@ class AccountMoveLine(models.Model):
             recon_debit_amount = recon_currency.round(remaining_debit_amount * debit_rate)
             recon_credit_amount = -remaining_credit_amount_curr
         elif debit_vals['currency'] != company_currency \
+                and is_rec_pay_account \
                 and not has_debit_zero_residual_currency \
                 and credit_vals['currency'] == company_currency \
                 and not has_credit_zero_residual:
@@ -1921,6 +1916,7 @@ class AccountMoveLine(models.Model):
             'date': max(exchange_date or date.min, company._get_user_fiscal_lock_date() + timedelta(days=1)),
             'journal_id': journal.id,
             'line_ids': [],
+            'always_tax_exigible': True,
         }
         to_reconcile = []
 
@@ -2343,7 +2339,8 @@ class AccountMoveLine(models.Model):
                         'account': line.account_id.id,
                         'business_domain': line.move_id.move_type in ['out_invoice', 'out_refund', 'out_receipt'] and 'invoice'
                                            or line.move_id.move_type in ['in_invoice', 'in_refund', 'in_receipt'] and 'bill'
-                                           or 'general'
+                                           or 'general',
+                        'company_id': self.company_id.id,
                         }) if plan['applicability'] == 'mandatory']
             if not mandatory_plans_ids:
                 continue
@@ -2522,7 +2519,7 @@ class AccountMoveLine(models.Model):
         """
         tax_fnames = ['balance', 'tax_line_id', 'tax_ids', 'tax_tag_ids']
         fiscal_fnames = tax_fnames + ['account_id', 'journal_id', 'amount_currency', 'currency_id', 'partner_id']
-        reconciliation_fnames = ['account_id', 'date', 'balance', 'amount_currency', 'currency_id']
+        reconciliation_fnames = ['account_id', 'date', 'balance', 'amount_currency', 'currency_id', 'partner_id']
         return {
             'tax': tax_fnames,
             'fiscal': fiscal_fnames,

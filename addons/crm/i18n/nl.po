@@ -5,6 +5,8 @@
 # Translators:
 # Martin Trigaux, 2022
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2022
+# Jolien De Paepe, 2022
+# Dylan Kiss, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
@@ -247,7 +249,7 @@ msgstr "<span class=\"oe_inline\"> / </span>"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "<span>Expected Revenues:</span>"
-msgstr "<span>Verwachte inkomsten:</span>"
+msgstr "<span>Verwachte omzet:</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -626,6 +628,8 @@ msgid ""
 "As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>\n"
 "                                        To work with the CRM, you should <a name=\"%d\" type=\"action\" tabindex=\"-1\">join a team.</a>"
 msgstr ""
+"Aangezien je geen lid bent van een verkoopteam, zie je standaard de pijplijn van het <b>eerste team.</b>\n"
+"                                        Om met de CRM te werken, moet je <a name=\"%d\" type=\"action\" tabindex=\"-1\">lid worden van een team.</a>"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -634,6 +638,8 @@ msgid ""
 "As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>\n"
 "                                        To work with the CRM, you should join a team."
 msgstr ""
+"Aangezien je geen lid bent van een verkoopteam, zie je standaard de pijplijn van het <b>eerste team.</b>\n"
+"                                        Om met de CRM te werken, moet je lid worden van een team."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -894,7 +900,7 @@ msgstr "Gesloten leads kunnen niet worden geconverteerd naar verkoopkansen."
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_lost__lost_feedback
 msgid "Closing Note"
-msgstr "Slot Notitie"
+msgstr "Afsluitingsnotitie"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__color
@@ -1001,7 +1007,7 @@ msgstr "Conversie actie"
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Conversion Date"
-msgstr "Datum conversie"
+msgstr "Conversiedatum"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -1301,7 +1307,7 @@ msgid ""
 "fill in all its data? Odoo autocompletes everything for you: logo, address, "
 "company size, business information, social media accounts, etc."
 msgstr ""
-"Wist je dat je een bedrijf kunt zoeken op naam of BTW nummer om direct alle "
+"Wist je dat je een bedrijf kunt zoeken op naam of btw-nummer om direct alle "
 "gegevens in te vullen? Odoo vult automatisch alles voor je aan: logo, adres,"
 " bedrijfsgrootte, bedrijfsinformatie, sociale media-accounts, enz."
 
@@ -1892,7 +1898,7 @@ msgstr "KPI CRM Waarde gewonnen verkoopkansen"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lang_active_count
 msgid "Lang Active Count"
-msgstr ""
+msgstr "Aantal actieve talen"
 
 #. module: crm
 #: model:crm.lead.scoring.frequency.field,name:crm.frequency_field_lang_id
@@ -2001,7 +2007,7 @@ msgstr "Lead gemiddelde capaciteit"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Lead Enrichment"
-msgstr "Lead verrijking"
+msgstr "Leadverrijking"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -2011,37 +2017,37 @@ msgstr "Leadgeneratie"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Lead Mining"
-msgstr "Lead mining"
+msgstr "Leadmining"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_properties_definition
 msgid "Lead Properties"
-msgstr "Lead Eigenschappen"
+msgstr "Leadeigenschappen"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_scoring_frequency
 msgid "Lead Scoring Frequency"
-msgstr "Lead Scoring Frequentie"
+msgstr "Lead scoringsfrequentie"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_fields
 msgid "Lead Scoring Frequency Fields"
-msgstr "Lead Scoring Frequentie Velden"
+msgstr "Lead scoringsfrequentievelden"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_fields_str
 msgid "Lead Scoring Frequency Fields in String"
-msgstr "Lead Scoring frequentie velden in String"
+msgstr "Lead scoringsfrequentievelden in string"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_start_date
 msgid "Lead Scoring Starting Date"
-msgstr "Lead scoring startdatum"
+msgstr "Leadscoring startdatum"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_start_date_str
 msgid "Lead Scoring Starting Date in String"
-msgstr "Lead scoring startdatum in string"
+msgstr "Leadscoring startdatum in string"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_month_count
@@ -2052,7 +2058,7 @@ msgstr "Lead toegewezen aan dit lid in de afgelopen 30 dagen"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Lead or Opportunity"
-msgstr "Lead of Verkoopkans"
+msgstr "Lead of verkoopkans"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -2186,7 +2192,7 @@ msgstr "Leads/verkoopkansen"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_utm_campaign__crm_lead_count
 msgid "Leads/Opportunities count"
-msgstr "Leads / verkoopkansen aantal"
+msgstr "Aantal leads/verkoopkansen"
 
 #. module: crm
 #. openerp-web
@@ -2261,7 +2267,7 @@ msgstr "Opmerking Verliesreden "
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_scoring_frequency__lost_count
 msgid "Lost Count"
-msgstr "Verloren aantal"
+msgstr "Aantal verloren"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_lost_action
@@ -3476,7 +3482,7 @@ msgstr "Begin met het plannen van taken voor je opportunities."
 #: model:ir.model.fields,field_description:crm.field_crm_lead__state_id
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "State"
-msgstr "Provincie/Staat"
+msgstr "Status"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_state
@@ -3524,7 +3530,7 @@ msgstr "Subtype"
 #. module: crm
 #: model:ir.model,name:crm.model_ir_config_parameter
 msgid "System Parameter"
-msgstr "Systeem parameter"
+msgstr "Systeemparameter"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -4037,7 +4043,7 @@ msgstr "Welkom demo"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 msgid "What went wrong ?"
-msgstr "Wat ging er mis ?"
+msgstr "Wat ging er mis?"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0 model:crm.stage,name:crm.stage_lead4

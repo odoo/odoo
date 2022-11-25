@@ -8,6 +8,7 @@
 # Johannes Croe <jcr@odoo.com>, 2022
 # Friederike Fasterling-Nesselbosch, 2022
 # Felix Hoßfeld <felix.hossfeld@thoughtgang.de>, 2022
+# Andreas Jonderko <a.jonderko@gastronovi.com>, 2022
 # Martin Trigaux, 2022
 # 
 msgid ""
@@ -34,6 +35,10 @@ msgid ""
 "The total of debits equals %s and the total of credits equals %s.\n"
 "You might want to specify a default account on journal \"%s\" to automatically balance each move."
 msgstr ""
+"\n"
+"\n"
+"Die Buchungszeile (%s) ist nicht ausgeglichen. Die Summe der Belastungen liegt bei %s und die Summe der Gutschriften liegt bei %s. \n"
+"Sie können ein Standardkonto im Journal \"%s\" angeben, um jede Buchungszeile automatisch auszugleichen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -219,6 +224,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "- A default Customer Invoice / Vendor Bill date will be suggested."
 msgstr ""
+"Es wird ein Standarddatum für Kundenrechnungen / Kreditorenrechnungen "
+"vorgeschlagen."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -231,6 +238,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "- The document's sequence becomes editable on all documents."
 msgstr ""
+"Die Reihenfolge des Dokuments wird für alle Dokumente bearbeitbar gemacht."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -920,6 +928,9 @@ msgid ""
 "                                    Leave empty to create a new journal for this bank account, or select a journal to link it with the bank account.\n"
 "                                </span>"
 msgstr ""
+"<span class=\"text-muted\" colspan=\"2\">\n"
+"Option leer lassen, um ein neues Journal für dieses Bankkonto zu erstellen, oder ein Journal auswählen, um es mit dem Bankkonto zu verknüpfen.\n"
+"</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1034,7 +1045,7 @@ msgstr "<span>5,00</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Amount In Currency</span>"
-msgstr ""
+msgstr "<span>Menge in der Währung</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -2629,6 +2640,11 @@ msgid "Analytic Distribution Stored Char"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_report__filter_analytic
+msgid "Analytic Filter"
+msgstr "Analysefilter"
+
+#. module: account
 #: model:ir.ui.menu,name:account.menu_action_analytic_lines_tree
 msgid "Analytic Items"
 msgstr "Kostenstellen Buchungen"
@@ -3008,19 +3024,19 @@ msgstr "Bankkonto"
 #: code:addons/account/models/res_partner_bank.py:0
 #, python-format
 msgid "Bank Account %s created"
-msgstr ""
+msgstr "Bankkonto %s erstellt"
 
 #. module: account
 #: code:addons/account/models/res_partner_bank.py:0
 #, python-format
 msgid "Bank Account %s updated"
-msgstr ""
+msgstr "Bankkonto %s aktualisiert"
 
 #. module: account
 #: code:addons/account/models/res_partner_bank.py:0
 #, python-format
 msgid "Bank Account %s with number %s deleted"
-msgstr ""
+msgstr "Bankkonto %s mit der Nummer %s gelöscht"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__account_number
@@ -3865,7 +3881,7 @@ msgstr "Schecks"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__children_ids
 msgid "Child Lines"
-msgstr ""
+msgstr "Untergeordnete Positionen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__children_tax_ids
@@ -6220,12 +6236,12 @@ msgstr "Aufwand"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__expression_label
 msgid "Expression Label"
-msgstr ""
+msgstr "Ausdruck Bezeichner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__expression_ids
 msgid "Expressions"
-msgstr ""
+msgstr "Ausdrücke"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__reference
@@ -6304,11 +6320,6 @@ msgstr ""
 #, python-format
 msgid "Fill in the details of the line."
 msgstr "Füllen Sie die Details der Zeile aus."
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_report__filter_analytic
-msgid "Filter Analytic"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_fiscal_position
@@ -7870,7 +7881,7 @@ msgstr "Rechnungsdatum"
 #. module: account
 #: model:mail.template,name:account.email_template_edi_invoice
 msgid "Invoice: Sending"
-msgstr ""
+msgstr "Rechnung: Senden"
 
 #. module: account
 #: model:mail.template,report_name:account.email_template_edi_invoice
@@ -9919,13 +9930,13 @@ msgstr "Nur steuerbegünstigte Linien"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_category_ids
-msgid "Only Those Partner Categories"
-msgstr "Nur diese Partner-Kategorien"
+msgid "Matching categories"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_ids
-msgid "Only Those Partners"
-msgstr "Nur diese Partner"
+msgid "Matching partners"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_report.py:0
@@ -10116,7 +10127,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__carryover_origin_report_line_id
 msgid "Origin Line"
-msgstr ""
+msgstr "Ursprüngliche Zeile"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_account_original_vendor_bill
@@ -10466,8 +10477,8 @@ msgstr "Partner Mapping für Kontenabgleich"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner
-msgid "Partner should be set"
-msgstr "Partner sollte eingestellt sein"
+msgid "Partner is Set"
+msgstr "Partner ist gesetzt"
 
 #. module: account
 #: code:addons/account/models/partner.py:0
@@ -12623,7 +12634,7 @@ msgstr "Manchmal BIC oder SWIFT genannt"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__sortable
 msgid "Sortable"
-msgstr ""
+msgstr "Sortierbar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__source_currency_id
@@ -13175,7 +13186,7 @@ msgstr "Steuerstring"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__tax_tags
 msgid "Tax Tags"
-msgstr ""
+msgstr "Steuer Tags"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_search
@@ -15200,7 +15211,7 @@ msgstr "Alle auffalten"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__code
 msgid "Unique identifier for this line."
-msgstr ""
+msgstr "Eindeutiger Bezeichner für diese Zeile."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_unit

@@ -3,7 +3,6 @@
 # 	* base
 # 
 # Translators:
-# 智能科技奇客罗方 <alanljj@gmail.com>, 2022
 # keecome <7017511@qq.com>, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # Martin Trigaux, 2022
@@ -640,7 +639,7 @@ msgid ""
 msgstr ""
 "\n"
 "- 允许为帮助服务台团队设置项目\n"
-"        - 从票据跟踪任务时程表\n"
+"        - 从工单跟踪任务时程表\n"
 " "
 
 #. module: base
@@ -4467,7 +4466,7 @@ msgid ""
 msgstr ""
 "\n"
 "转换错误地在服务台管道中结束的业务查询，\n"
-"或从业务查询中创建票据\n"
+"或从业务查询中创建工单\n"
 "        "
 
 #. module: base
@@ -5125,7 +5124,7 @@ msgstr ""
 "===========================\n"
 "\n"
 "可以导出/导入以下格式：E-FFF、UBL Bis 3、EHF3、NLCIUS、Factur-X（CII）和XRechnung（UBL）\n"
-"在发票上生成PDF时，PDF将嵌入所有UBL格式的xml中。允许\n"
+"在发票上表单PDF时，PDF将嵌入所有UBL格式的xml中。允许\n"
 "接收方仅使用xml文件检索PDF。请注意，**EHF3由UBL Bis 3**完全执行（参见\n"
 "<https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/#_implementation>`_）。\n"
 "\n"
@@ -5751,7 +5750,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"从服务台门票创建优惠券\n"
+"从服务台工单创建优惠券\n"
 " "
 
 #. module: base
@@ -5904,13 +5903,13 @@ msgstr ""
 "\n"
 "特征:\n"
 "\n"
-"     - 通过不同的阶段处理票据来解决它们.\n"
+"     - 通过不同的阶段处理工单来解决它们.\n"
 "     - 增加优先级、类型、描述和标签来定义您的工单.\n"
-"     - 使用聊天来传达其它信讯并在票据上戳同事.\n"
-"     - 享受使用经过调整的仪表板和易于使用的看板视图来处理您的票据.\n"
+"     - 使用聊天来传达其它信讯并在工单上戳同事.\n"
+"     - 享受使用经过调整的仪表板和易于使用的看板视图来处理您的工单.\n"
 "     - 通过报告菜单中的数据透视视图对您的工单进行深入分析.\n"
 "     - 创建一个团队并定义其成员，如果您愿意，可以使用自动配置方法.\n"
-"     - 使用邮件别名自动创建票据并与您的客户沟通.\n"
+"     - 使用邮件别名自动创建工单并与您的客户沟通.\n"
 "     - 自动将服务等级协议截止日期增加到您的工单中.\n"
 "     - 通过使用评级获取客户反馈.\n"
 "     - 使用您的团队表单视图轻松安装附加功能. "
@@ -8524,7 +8523,7 @@ msgstr ""
 "========================================================================\n"
 "\n"
 " 产品支持变量、不同的定价方式、供应商信息、=========\n"
-" 按库存/订单生产、不同的计量单位、包装规格和属性.\n"
+" 按库存/订单生产、不同的计量单位、包装和属性.\n"
 "\n"
 " 价格表支持:\n"
 "-------------------\n"
@@ -9576,8 +9575,8 @@ msgstr ""
 " 此模块允许您管理采购协议.\n"
 "===========================================================\n"
 "\n"
-" 管理投标以及长期采购协议. 投标用于从不同的供应商中获取\n"
-" 竞争报价，并选择最合适的供应商. 长期采购协议\n"
+" 管理投标以及一揽子订单. 投标用于从不同的供应商中获取\n"
+" 竞争报价，并选择最合适的供应商. 一揽子订单\n"
 "是您与供应商达成的协议，可以从预定的价格中受益.\n"
 
 #. module: base
@@ -13286,7 +13285,7 @@ msgstr "配置 PTO 并遵循休假请求"
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_fsm
 msgid "Allow generating fsm tasks from ticket"
-msgstr "允许从票据创建 fsm 任务"
+msgstr "允许从工单创建 fsm 任务"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_appointment
@@ -15555,7 +15554,7 @@ msgstr ""
 " for record in selffor record in self:\n"
 " record['size'] = len(record.name)\n"
 "\n"
-"模块时间、日期时间、dateutil 可用."
+"模块 time, datetime, dateutil 可用."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_cohort
@@ -16299,17 +16298,17 @@ msgstr "国家州/省"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_loyalty
 msgid "Coupons & Loyalty"
-msgstr "优惠券 & 代金券"
+msgstr "优惠券 & 会员"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_loyalty_delivery
 msgid "Coupons & Loyalty - Delivery"
-msgstr "优惠券和忠诚度—发送"
+msgstr "优惠券和会员—发送"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_loyalty
 msgid "Coupons, Promotions, Gift Card and Loyalty for eCommerce"
-msgstr "电子商务优惠券、促销、礼品卡和忠诚度"
+msgstr "电子商务优惠券、促销、礼品卡和会员"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_slides_survey
@@ -16500,7 +16499,7 @@ msgstr "根据员工出勤情况创建工作输入"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_work_entry_contract_planning
 msgid "Create work entries from the employee's planning"
-msgstr "根据员工规划创建工作输入"
+msgstr "根据员工计划创建工作记录"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -19659,7 +19658,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_loyalty_delivery
 msgid "Free Delivery with Coupon & Loyalty on eCommerce"
-msgstr "在电子商务上免费发送优惠券和忠诚度"
+msgstr "在电子商务上免费发送优惠券和会员"
 
 #. module: base
 #: model:res.country,name:base.gf
@@ -24970,7 +24969,7 @@ msgstr ""
 "与访客交互也是将访客转化为\n"
 "的好方法客户.\n"
 "\n"
-"创建访客忠诚度\n"
+"创建访客会员度\n"
 "---------\n"
 "\n"
 "一键 *follow* 按钮将允许访客通过\n"
@@ -26468,7 +26467,7 @@ msgstr ""
 "\n"
 "### 部落格\n"
 "\n"
-"撰写新闻，吸引新访客，创建客户忠诚度.\n"
+"撰写新闻，吸引新访客，创建客户会员度.\n"
 "\n"
 "\n"
 "### 线上活动\n"
@@ -26724,7 +26723,7 @@ msgstr ""
 "合作.\n"
 "\n"
 "线上推广您的经销商，将潜在客户转发给经销商(内置\n"
-"地理定位功能)，定义具体的价格表，引导忠诚计划\n"
+"地理定位功能)，定义具体的价格表，引导会员计划\n"
 "(向您的最佳客户或经销商提供特定折扣)等.\n"
 "\n"
 "在您的线上商店中受益于 Odoo 的强大功能：强大的税务引擎，\n"
@@ -26781,7 +26780,7 @@ msgstr ""
 "\n"
 "### 博客\n"
 "\n"
-"撰写新闻，吸引新访客，创建客户忠诚.\n"
+"撰写新闻，吸引新访客，创建客户会员.\n"
 "\n"
 "### 线上活动\n"
 "\n"
@@ -27449,7 +27448,7 @@ msgstr ""
 "\n"
 "### 部落格\n"
 "\n"
-"撰写新闻、吸引新访客、创建客户忠诚度.\n"
+"撰写新闻、吸引新访客、创建客户会员度.\n"
 "\n"
 "\n"
 "＃＃＃ 我们的队伍\n"
@@ -29071,7 +29070,7 @@ msgstr "发布博文，公告，新闻"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event
 msgid "Publish events, sell tickets"
-msgstr "发布活动，售票"
+msgstr "发布活动，出售门票"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_event_social
@@ -36161,7 +36160,7 @@ msgid ""
 "for record in self:\n"
 "        record['size'] = len(record.name)"
 msgstr ""
-"在记录本身:\n"
+"for record in self:\n"
 "        record['size'] = len(record.name)"
 
 #. module: base

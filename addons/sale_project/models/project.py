@@ -152,8 +152,9 @@ class Project(models.Model):
         return action
 
     def action_open_project_invoices(self):
-        query = self.env['account.move.line']._search([('move_id.move_type', '=', 'out_invoice')])
+        query = self.env['account.move.line']._search([('move_id.move_type', 'in', ['out_invoice', 'out_refund'])])
         query.add_where('analytic_distribution ? %s', [str(self.analytic_account_id.id)])
+        query.order = None
         query_string, query_param = query.select('DISTINCT move_id')
         self._cr.execute(query_string, query_param)
         invoice_ids = [line.get('move_id') for line in self._cr.dictfetchall()]
@@ -385,14 +386,14 @@ class Project(models.Model):
                     ._filter_access_rules_python('read')
                 if sale_order_items:
                     if sale_order_items:
+                        args = [section_name, [('id', 'in', sale_order_items.ids)]]
+                        if len(sale_order_items) == 1:
+                            args.append(sale_order_items.id)
                         action_params = {
                             'name': 'action_profitability_items',
                             'type': 'object',
-                            'section': section_name,
-                            'domain': json.dumps([('id', 'in', sale_order_items.ids)]),
+                            'args': json.dumps(args),
                         }
-                        if len(sale_order_items) == 1:
-                            action_params['res_id'] = sale_order_items.id
                         other_revenues['action'] = action_params
         sequence_per_invoice_type = self._get_profitability_sequence_per_invoice_type()
         return {
@@ -447,8 +448,9 @@ class Project(models.Model):
         return buttons
 
     def action_open_project_vendor_bills(self):
-        query = self.env['account.move.line']._search([('move_id.move_type', '=', 'in_invoice')])
+        query = self.env['account.move.line']._search([('move_id.move_type', 'in', ['in_invoice', 'in_refund'])])
         query.add_where('analytic_distribution ? %s', [str(self.analytic_account_id.id)])
+        query.order = None
         query_string, query_param = query.select('DISTINCT move_id')
         self._cr.execute(query_string, query_param)
         vendor_bill_ids = [line.get('move_id') for line in self._cr.dictfetchall()]

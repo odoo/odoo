@@ -5,7 +5,7 @@ import { browser } from "../../core/browser/browser";
 import { registry } from "../../core/registry";
 import { session } from "@web/session";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 function documentationItem(env) {
     const documentationURL = "https://www.odoo.com/documentation/16.0";

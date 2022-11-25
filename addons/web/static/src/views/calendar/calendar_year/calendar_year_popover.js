@@ -2,8 +2,9 @@
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { formatDate } from "@web/core/l10n/dates";
+import { getColor } from "../colors";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class CalendarYearPopover extends Component {
     get recordGroups() {
@@ -41,6 +42,22 @@ export class CalendarYearPopover extends Component {
             recordGroups[formattedDate].records.push(modifiedRecord);
         }
         return Object.values(recordGroups);
+    }
+    getRecordClass(record) {
+        const { colorIndex } = record;
+        const color = getColor(colorIndex);
+        if (color && typeof color === "number") {
+            return `o_calendar_color_${color}`;
+        }
+        return "";
+    }
+    getRecordStyle(record) {
+        const { colorIndex } = record;
+        const color = getColor(colorIndex);
+        if (color && typeof color === "string") {
+            return `background-color: ${color};`;
+        }
+        return "";
     }
     getSortedRecordGroups(recordGroups) {
         return recordGroups.sort((a, b) => {

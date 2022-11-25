@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.EmojiGridLoadingScreen" owl="1">
+        <div class="o_EmojiGridLoadingScreen d-flex flex-column justify-content-center align-items-center w-100 h-100" t-attf-class="{{ className }}" t-ref="root">
+            <div class="o_EmojiGridLoadingScreen_spinner fa fa-circle-o-notch fa-spin fs-1"/>
+            <span class="o_EmojiGridLoadingScreen_text text-muted mt-4" t-out="EmojiGridLoadingScreen.text"/>
+        </div>
+    </t>
+</templates>

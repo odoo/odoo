@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Lucia Pacheco <lpo@odoo.com>, 2022
 # Braulio D. López Vázquez <bdl@odoo.com>, 2022
+# Lucia Pacheco <lpo@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
+"Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,7 +34,7 @@ msgstr "Marcar"
 #: code:addons/website_forum/static/src/js/website_forum.js:0
 #, python-format
 msgid " Flagged"
-msgstr "Marcado"
+msgstr "Marcada"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_answers
@@ -74,7 +74,7 @@ msgstr "%d karma requerido para responder una pregunta."
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "%d karma required to close or reopen a post."
-msgstr "%d karma requerido para cerrar o reabrir una publicación."
+msgstr "%d karma requerido para bloquear o desbloquear una publicación."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
@@ -116,7 +116,7 @@ msgstr "%d karma requerido para crear una nueva pregunta."
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "%d karma required to delete or reactivate a post."
-msgstr "%d karma requerido para eliminar o reabrir una publicación."
+msgstr "%d karma requerido para eliminar o volver a publicar una publicación."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
@@ -252,7 +252,7 @@ msgid ""
 "                        Please wait for a moderator to validate your previous post to be allowed replying questions."
 msgstr ""
 "<b class=\"d-block\">Tiene una publicación pendiente</b>\n"
-"Por favor espere a que un moderador valide su publicación anterior para poder responder preguntas."
+"                          Espere a que un moderador valide su publicación anterior para poder responder preguntas."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
@@ -299,9 +299,9 @@ msgid ""
 " use commenting facility."
 msgstr ""
 "<b>Las respuestas no deben empezar debates</b>. Esta comunidad no es un "
-"grupo de discusión. Por favor, evite debatir en las respuestas pues tienden "
-"a debilitar la esencia de las preguntas y respuestas. Para discusiones "
-"breves utilice las herramienta de comentarios."
+"grupo de discusión. Evite debatir en las respuestas pues tienden a debilitar"
+" la esencia de las preguntas y respuestas. Para discusiones breves utilice "
+"las herramienta de comentarios."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -365,8 +365,8 @@ msgid ""
 "<b>Please avoid asking questions that are too subjective and "
 "argumentative</b> or not relevant to this community."
 msgstr ""
-"<b>Por favor, evite hacer preguntas subjetivas, argumentativas</b> o que no "
-"sean relevantes para esta comunidad."
+"<b>Evite hacer preguntas subjetivas, argumentativas</b> o que no sean "
+"relevantes para esta comunidad."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
@@ -435,6 +435,8 @@ msgid ""
 "<b>|</b>\n"
 "                    <span class=\"fa fa-trophy bg-gold ms-2\" role=\"img\" aria-label=\"Gold badge\" title=\"Gold badge\"/>"
 msgstr ""
+"<b>|</b>\n"
+"                    <span class=\"fa fa-trophy bg-gold ms-2\" role=\"img\" aria-label=\"Insignia de oro\" title=\"Insignia de oro\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
@@ -444,7 +446,7 @@ msgstr "<em class=\"d-block mb-2\">o</em>"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<i class=\" fa fa-comment text-muted me-1\"/>Comment"
-msgstr ""
+msgstr "<i class=\" fa fa-comment text-muted me-1\"/>Comentar"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
@@ -459,7 +461,7 @@ msgstr "<i class=\"fa fa-bug\"/>Herramienta para filtrar"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<i class=\"fa fa-check fa-fw me-1\"/>Accept"
-msgstr ""
+msgstr "<i class=\"fa fa-check fa-fw me-1\"/>Aceptar"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -486,12 +488,12 @@ msgstr "<i class=\"fa fa-check-square-o fa-fw\"/>Para validar"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 msgid "<i class=\"fa fa-chevron-left me-1\"/>Back"
-msgstr ""
+msgstr "<i class=\"fa fa-chevron-left me-1\"/>Volver"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "<i class=\"fa fa-chevron-left me-2\"/>Back to All Topics"
-msgstr ""
+msgstr "<i class=\"fa fa-chevron-left me-2\"/>Volver a todos los temas"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_sub_nav
@@ -501,12 +503,12 @@ msgstr "<i class=\"fa fa-chevron-left small\"/> Volver"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_kanban
 msgid "<i class=\"fa fa-comments-o me-1\" title=\"Forum\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-comments-o me-1\" title=\"Foro\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_kanban
 msgid "<i class=\"fa fa-eye me-1\" title=\"Views\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-eye me-1\" title=\"Vistas\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
@@ -519,6 +521,8 @@ msgid ""
 "<i class=\"fa fa-flag ms-4 mr4\"/>\n"
 "                                    Flagged"
 msgstr ""
+"<i class=\"fa fa-flag ms-4 mr4\"/>\n"
+"                                    Marcada"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -547,12 +551,12 @@ msgstr "<i class=\"fa fa-question-circle-o fa-fw\"/> Mis publicaciones"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<i class=\"fa fa-reply me-1\"/>Answer"
-msgstr ""
+msgstr "<i class=\"fa fa-reply me-1\"/> respuesta"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<i class=\"fa fa-share-alt text-muted me-1\"/>Share"
-msgstr ""
+msgstr "<i class=\"fa fa-share-alt text-muted me-1\"/>Compartir"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
@@ -579,6 +583,8 @@ msgid ""
 "<i class=\"fa fa-thumbs-down text-danger ms-3\" role=\"img\" aria-"
 "label=\"Negative votes\" title=\"Negative votes\"/>"
 msgstr ""
+"<i class=\"fa fa-thumbs-down text-danger ms-3\" role=\"img\" aria-"
+"label=\"Votos negativos\" title=\"Votos negativos\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
@@ -586,13 +592,13 @@ msgid ""
 "<i class=\"fa fa-thumbs-up text-success\" role=\"img\" aria-label=\"Positive"
 " votes\" title=\"Positive votes\"/>"
 msgstr ""
-"<i class=\"fa fa-thumbs-up text-success\" role=\"img\" aria-label=\"Votos "
-"positivos\" title=\"Votos positivos\"/>"
+"<i class=\"fa fa-thumbs-up text-success\" role=\"img\" aria-label=\"Votos a "
+"favor\" title=\"Votos a favor\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<i class=\"fa fa-times fa-fw me-1\"/>Reject"
-msgstr ""
+msgstr "<i class=\"fa fa-times fa-fw me-1\"/>Rechazar"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -612,7 +618,7 @@ msgstr "<i class=\"fa fa-user\"/> Usuario"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "<small class=\"fw-bold\">Votes</small>"
-msgstr ""
+msgstr "<small class=\"fw-bold\">Votos</small>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
@@ -628,7 +634,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<span class=\"badge text-bg-info\">Closed</span>"
-msgstr ""
+msgstr "<span class=\"badge text-bg-info\">Bloqueada</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.contact
@@ -636,6 +642,8 @@ msgid ""
 "<span class=\"fa fa-trophy bg-bronze ms-2\" role=\"img\" aria-label=\"Bronze"
 " badge\" title=\"Bronze badge\"/>"
 msgstr ""
+"<span class=\"fa fa-trophy bg-bronze ms-2\" role=\"img\" aria-"
+"label=\"Insignia de bronce\" title=\"Insignia de bronce\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.contact
@@ -643,16 +651,18 @@ msgid ""
 "<span class=\"fa fa-trophy bg-silver ms-2\" role=\"img\" aria-label=\"Silver"
 " badge\" title=\"Silver badge\"/>"
 msgstr ""
+"<span class=\"fa fa-trophy bg-silver ms-2\" role=\"img\" aria-"
+"label=\"Insignia de plata\" title=\"Insignia de plata\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "<span class=\"fw-bold\">No answer posted yet.</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold\">Aún no ha publicado ninguna respuesta.</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "<span class=\"fw-bold\">No question posted yet.</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold\">Aún no ha publicado ninguna pregunta.</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
@@ -686,12 +696,12 @@ msgstr "<span class=\"mx-3  mx-lg-2 text-400 d-none d-md-inline\">|</span>"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 msgid "<span class=\"navbar-text me-1\">Go to:</span>"
-msgstr ""
+msgstr "<span class=\"navbar-text me-1\">Ir a:</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
 msgid "<span class=\"navbar-text me-3\">Show Tags Starting By</span>"
-msgstr ""
+msgstr "<span class=\"navbar-text me-3\">Mostrar etiquetas empezando por</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
@@ -716,6 +726,9 @@ msgid ""
 "                            Best Answer\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_wforum_answer_correct_badge border small border-success rounded-pill fw-bold text-success ms-2 px-2\">\n"
+"                            Mejor respuesta\n"
+"                        </span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -849,7 +862,7 @@ msgstr "¡Increíble! ¡No quedan preguntas sin responder!"
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Answer"
-msgstr "Respuesta"
+msgstr "Responder"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
@@ -872,7 +885,7 @@ msgstr "Respuesta aceptada con 15 o más votos"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_answer_downvote
 msgid "Answer downvoted"
-msgstr "Respuesta votada en contra"
+msgstr "Respuesta con votos en contra"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_answer_flagged
@@ -892,17 +905,17 @@ msgstr "Respuesta votada a favor"
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_a_4
 msgid "Answer voted up 15 times"
-msgstr "Respuesta valorada más de 15 veces"
+msgstr "Respuesta con 15 votos positivos"
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_a_2
 msgid "Answer voted up 4 times"
-msgstr "Respuesta valorada más de 4 veces"
+msgstr "Respuesta con 4 votos a favor"
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_a_3
 msgid "Answer voted up 6 times"
-msgstr "Respuesta valorada más de 6 veces"
+msgstr "Respuesta con 6 votos a favor"
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_a_5
@@ -927,7 +940,7 @@ msgstr "Respondido por"
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_a_8
 msgid "Answered own question with at least 4 up votes"
-msgstr "La respuesta a su propia pregunta tiene al menos 4 votos a favor"
+msgstr "Su respuesta a su propia pregunta tiene al menos 4 votos a favor"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__child_count
@@ -986,7 +999,7 @@ msgstr "Hizo una pregunta que tuvo al menos 500 visitas"
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_q_7
 msgid "Asked first question with at least one up vote"
-msgstr "Primera pregunta con al menos un voto a favor"
+msgstr "Hizo su primera pregunta y obtuvo al menos un voto a favor"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__create_date
@@ -1212,57 +1225,57 @@ msgstr "Haga clic para publicar su pregunta."
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
 msgid "Close"
-msgstr "Cerrar"
+msgstr "Bloquear"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "Close Post"
-msgstr "Cerrar publicación"
+msgstr "Bloquear publicación"
 
 #. module: website_forum
 #: model:ir.ui.menu,name:website_forum.menu_forum_post_reasons
 msgid "Close Reasons"
-msgstr "Motivos del cierre"
+msgstr "Motivos del bloqueo"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_close_all
 msgid "Close all posts"
-msgstr "Cerrar todas las publicaciones"
+msgstr "Bloquear todas las publicaciones"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_close_own
 msgid "Close own posts"
-msgstr "Cerrar mis publicaciones"
+msgstr "Bloquear mis publicaciones"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
 msgid "Close post"
-msgstr "Cerrar publicación"
+msgstr "Bloquear publicación"
 
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_post__state__close
 msgid "Closed"
-msgstr "Cerrado"
+msgstr "Bloqueada"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__closed_uid
 msgid "Closed by"
-msgstr "Cerrado por"
+msgstr "Bloqueada por"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__closed_date
 msgid "Closed on"
-msgstr "Cerrado en"
+msgstr "Bloqueada el"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
 msgid "Closing"
-msgstr "Cerrando"
+msgstr "Bloqueando"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_reason__name
 msgid "Closing Reason"
-msgstr "Motivo de cierre"
+msgstr "Motivo del bloqueo"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
@@ -1311,7 +1324,7 @@ msgstr "Completar su propia biografía"
 #: model:gamification.goal.definition,name:website_forum.definition_configure_profile
 #: model_terms:gamification.badge,description:website_forum.badge_p_1
 msgid "Completed own biography"
-msgstr "Biografía terminada"
+msgstr "Autobiografía terminada"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_7
@@ -1412,7 +1425,7 @@ msgstr "Creado el"
 #: model:gamification.badge,name:website_forum.badge_q_4
 #: model:gamification.challenge,name:website_forum.challenge_favorite_question_1
 msgid "Credible Question"
-msgstr "Pregunta creíble"
+msgstr "Pregunta acertada"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_5
@@ -1420,7 +1433,7 @@ msgstr "Pregunta creíble"
 #: model:gamification.challenge.line,name:website_forum.line_critic
 #: model:gamification.goal.definition,name:website_forum.definition_critic
 msgid "Critic"
-msgstr "Crítica"
+msgstr "Crítico"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_searchbar_input_snippet_options
@@ -1477,12 +1490,12 @@ msgstr "Eliminado"
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_23
 msgid "Deleted own post with 3 or more downvotes"
-msgstr "Se eliminó una publicación suya con 3 o más votos en contra"
+msgstr "Eliminó una publicación suya con 3 o más votos en contra"
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_6
 msgid "Deleted own post with 3 or more upvotes"
-msgstr "Se eliminó una publicación suya con 3 o más votos a favor"
+msgstr "Eliminó una publicación suya con 3 o más votos a favor"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__description
@@ -1626,7 +1639,7 @@ msgstr "Favorita"
 #: model:gamification.badge,name:website_forum.badge_q_5
 #: model:gamification.challenge,name:website_forum.challenge_favorite_question_5
 msgid "Favorite Question"
-msgstr "Pregunta favortia"
+msgstr "Pregunta favorita"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__favourite_ids
@@ -1746,7 +1759,7 @@ msgid ""
 msgstr ""
 "Por ejemplo, si hace una pregunta interesante o proporciona una respuesta "
 "útil, recibirá una votación a favor. Por otro lado, si la respuesta es "
-"engañosa o confusa recibirá una votación en contra. Cada voto a favor "
+"engañosa o confusa, recibirá una votación en contra. Cada voto a favor "
 "agregará 10 puntos, cada voto en contra restará 10 puntos. Hay un límite de "
 "200 puntos que pueden acumularse por pregunta o respuesta por día. La tabla "
 "mostrada al final explica los requisitos de puntos de reputación para cada "
@@ -1794,7 +1807,7 @@ msgstr "Publicación en el foro"
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.action_forum_post
 msgid "Forum Post Pages"
-msgstr ""
+msgstr "Páginas de publicaciones de blog"
 
 #. module: website_forum
 #: model:ir.ui.menu,name:website_forum.menu_forum_post_pages
@@ -1980,8 +1993,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
 msgid "If this approach is not for you, please respect the community."
-msgstr ""
-"Si no está de acuerdo con el enfoque, por favor, respete a la comunidad."
+msgstr "Aunque no esté de acuerdo con el enfoque, respete a la comunidad."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
@@ -1990,9 +2002,9 @@ msgid ""
 "            users having a high karma can see closed posts to moderate\n"
 "            them."
 msgstr ""
-"Si cierra esta publicación, se ocultará para la mayoría de los usuarios. Solo\n"
+"Si bloquea esta publicación, se ocultará para la mayoría de los usuarios. Solo\n"
 "los usuarios que tengan un nivel alto de karma podrán ver las publicaciones\n"
-"cerradas para moderarlas."
+"bloqueadas para moderarlas."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -2122,7 +2134,7 @@ msgstr "Derechos relacionados con el karma"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__karma_close
 msgid "Karma to close"
-msgstr "Karma necesario para cerrar"
+msgstr "Karma necesario para bloquear"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__karma_comment
@@ -2198,7 +2210,7 @@ msgstr "Diseño"
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_25
 msgid "Left 10 answers with score of 10 or more"
-msgstr "Dejar 10 respuestas con una puntuación de 10 o más"
+msgstr "Publicó 10 respuestas con un valor de 10 o más"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.snippet_options
@@ -2348,7 +2360,7 @@ msgstr "Nombre"
 #: model_terms:ir.ui.view,arch_db:website_forum.user_votes
 #: model_terms:ir.ui.view,arch_db:website_forum.vote
 msgid "Negative vote"
-msgstr "Voto negativo"
+msgstr "En contra"
 
 #. module: website_forum
 #: model:mail.message.subtype,description:website_forum.mt_answer_new
@@ -2447,7 +2459,7 @@ msgstr "No es una publicación real"
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_6
 msgid "Not relevant or out dated"
-msgstr "No es relevante o es antiguo"
+msgstr "No es relevante o está desactualizado"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_2
@@ -2607,7 +2619,7 @@ msgstr "Pregunta popular (500)"
 #: model_terms:ir.ui.view,arch_db:website_forum.user_votes
 #: model_terms:ir.ui.view,arch_db:website_forum.vote
 msgid "Positive vote"
-msgstr "Voto a favor"
+msgstr "A favor"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__post_id
@@ -2629,12 +2641,12 @@ msgstr "Respuestas de la publicación"
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.forum_post_reasons_action
 msgid "Post Close Reasons"
-msgstr "Motivo del cierre de la publicación"
+msgstr "Motivos del bloqueo de la publicación"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_reason
 msgid "Post Closing Reason"
-msgstr "Motivo del cierre de la publicación"
+msgstr "Motivo del bloqueo de la publicación"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_comment
@@ -2644,7 +2656,7 @@ msgstr "Publicar comentario"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.snippet_options
 msgid "Post Count"
-msgstr ""
+msgstr "Número de publicaciones"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_vote
@@ -2677,7 +2689,7 @@ msgstr "Publicó 100 comentarios"
 msgid "Posting answer on a [Deleted] or [Closed] question is not possible."
 msgstr ""
 "No es posible publicar una respuesta en una pregunta [eliminada] o "
-"[cerrada]."
+"[bloqueada]."
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.action_forum_posts
@@ -2794,17 +2806,17 @@ msgstr "Pregunta votada a favor"
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_q_10
 msgid "Question voted up 15 times"
-msgstr "Pregunta valorada más de 15 veces"
+msgstr "Pregunta con 15 votos a favor"
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_q_8
 msgid "Question voted up 4 times"
-msgstr "Pregunta valorada más de 4 veces"
+msgstr "Pregunta con 4 votos a favor"
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_q_9
 msgid "Question voted up 6 times"
-msgstr "Pregunta valorada más de 6 veces"
+msgstr "Pregunta con 6 votos a favor"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
@@ -2877,7 +2889,7 @@ msgstr "Motivos"
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_a_1
 msgid "Received at least 3 upvote for an answer for the first time"
-msgstr "Por primera vez recibió al menos 3 votos a favor en una respuesta"
+msgstr "Recibió al menos 3 votos a favor en una respuesta por primera vez"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -2904,7 +2916,7 @@ msgstr "Cálculo de relevancia"
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 #: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
 msgid "Reopen"
-msgstr "Reabrir"
+msgstr "Desbloquear"
 
 #. module: website_forum
 #: code:addons/website_forum/controllers/main.py:0
@@ -3059,7 +3071,7 @@ msgstr "Mostrando resultados para"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Sign in"
-msgstr "Registrar entrada"
+msgstr "Iniciar sesión"
 
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__privacy__connected
@@ -3128,7 +3140,7 @@ msgstr "Disculpe, no puede votar sus propias publicaciones"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Spam all post"
-msgstr "Todas las publicaciones marcadas como spam"
+msgstr "Marcar todas las publicaciones como spam"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_8
@@ -3241,7 +3253,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "The question has been closed"
-msgstr "Se cerró la pregunta"
+msgstr "La pregunta está bloqueada"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3335,7 +3347,7 @@ msgid ""
 "This post is currently awaiting moderation and it's not published yet.<br/>\n"
 "                Do you want <b>Accept</b> or <b>Reject</b> this post ?"
 msgstr ""
-"Esta publicación está pendiente de moderación y aún no se ha publicado.<br/>\n"
+"Todavía no se revisa esta publicación, por lo que no se ha publicado.<br/>\n"
 "                ¿Desea <b>aceptar</b> o <b>rechazar</b> esta publicación?"
 
 #. module: website_forum
@@ -3379,8 +3391,8 @@ msgid ""
 "To prevent your question from being flagged and possibly removed, avoid "
 "asking subjective questions where …"
 msgstr ""
-"Para prevenir que su pregunta sea marcada y posiblemente borrada, evite "
-"hacer preguntas subjetivas en las que…"
+"Para prevenir que marquen o eliminen su pregunta, evite hacer preguntas "
+"subjetivas en las que…"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -3712,9 +3724,10 @@ msgid ""
 " that you face. Chatty, open-ended questions diminish the usefulness of this"
 " site and push other questions off the front page."
 msgstr ""
-"Debe hacer únicamente preguntas prácticas y que se puedan responder basadas "
-"en problemas reales que esté enfrentando. Las preguntas abiertas disminuyen "
-"la utilidad del sitio y alejan otras preguntas de la página principal."
+"Solo debe hacer preguntas prácticas que se puedan responder basadas en "
+"problemas reales que esté enfrentando. Las preguntas abiertas disminuyen la "
+"utilidad del sitio y evitan que otras preguntas estén en la página "
+"principal."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
@@ -3740,7 +3753,7 @@ msgstr "Su favorito"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "[Closed]"
-msgstr "[Cerrado]"
+msgstr "[Bloqueada]"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
@@ -3780,7 +3793,7 @@ msgstr "por"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
 msgid "close any posts"
-msgstr "cerrar cualquier publicación"
+msgstr "Bloquear cualquier publicación"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
@@ -3805,17 +3818,17 @@ msgstr "voto en contra"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "e.g. Help"
-msgstr "por ejemplo, ayuda"
+msgstr "p. ej. ayuda"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form_add
 msgid "e.g. Technical Assistance"
-msgstr ""
+msgstr "p.ej. Asistencia técnica"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_form
 msgid "e.g. When should I plant my tomatoes?"
-msgstr "p. ej., ¿Cuándo debería plantar mis tomates?"
+msgstr "p. ej. ¿Cuándo debería plantar mis tomates?"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
@@ -3826,13 +3839,12 @@ msgstr "editar cualquier publicación, ver avisos ofensivos"
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 msgid "every answer is equally valid: “What’s your favorite ______?”"
-msgstr ""
-"cualquier respuesta es igualmente válida: \"¿Cuál es su ________ favorito?\""
+msgstr "cualquier respuesta es válida: \"¿Cuál es su ________ favorito?\""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
 msgid "flag offensive, close own questions"
-msgstr "marcar como ofensiva, cierre sus propias preguntas"
+msgstr "marcar como ofensiva, bloqueé sus propias preguntas"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full

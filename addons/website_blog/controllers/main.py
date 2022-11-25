@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
 import werkzeug
 import itertools
 import pytz
@@ -98,7 +99,7 @@ class WebsiteBlog(http.Controller):
         # if blog, we show blog title, if use_cover and not fullwidth_cover we need pager + latest always
         offset = (page - 1) * self._blog_post_per_page
         if not blog:
-            if use_cover and not fullwidth_cover:
+            if use_cover and not fullwidth_cover and not tags and not date_begin and not date_end:
                 offset += 1
 
         options = {
@@ -144,7 +145,7 @@ class WebsiteBlog(http.Controller):
             all_tags = tools.lazy(lambda: blogs.all_tags(join=True) if not blog else blogs.all_tags().get(blog.id, request.env['blog.tag']))
         tag_category = tools.lazy(lambda: sorted(all_tags.mapped('category_id'), key=lambda category: category.name.upper()))
         other_tags = tools.lazy(lambda: sorted(all_tags.filtered(lambda x: not x.category_id), key=lambda tag: tag.name.upper()))
-
+        nav_list = tools.lazy(self.nav_list)
         # for performance prefetch the first post with the others
         post_ids = (first_post | posts).ids
         # and avoid accessing related blogs one by one
@@ -156,7 +157,7 @@ class WebsiteBlog(http.Controller):
             'first_post': first_post.with_prefetch(post_ids),
             'other_tags': other_tags,
             'tag_category': tag_category,
-            'nav_list': self.nav_list,
+            'nav_list': nav_list,
             'tags_list': self.tags_list,
             'pager': pager,
             'posts': posts.with_prefetch(post_ids),
@@ -183,6 +184,25 @@ class WebsiteBlog(http.Controller):
     ], type='http', auth="public", website=True, sitemap=True)
     def blog(self, blog=None, tag=None, page=1, search=None, **opt):
         Blog = request.env['blog.blog']
+
+        # TODO adapt in master. This is a fix for templates wrongly using the
+        # 'blog_url' QueryURL which is defined below. Indeed, in the case where
+        # we are rendering a blog page where no specific blog is selected we
+        # define(d) that as `QueryURL('/blog', ['tag'], ...)` but then some
+        # parts of the template used it like this: `blog_url(blog=XXX)` thus
+        # generating an URL like "/blog?blog=blog.blog(2,)". Adding "blog" to
+        # the list of params would not be right as would create "/blog/blog/2"
+        # which is still wrong as we want "/blog/2". And of course the "/blog"
+        # prefix in the QueryURL definition is needed in case we only specify a
+        # tag via `blog_url(tab=X)` (we expect /blog/tag/X). Patching QueryURL
+        # or making blog_url a custom function instead of a QueryURL instance
+        # could be a solution but it was judged not stable enough. We'll do that
+        # in master. Here we only support "/blog?blog=blog.blog(2,)" URLs.
+        if isinstance(blog, str):
+            blog = Blog.browse(int(re.search(r'\d+', blog)[0]))
+            if not blog.exists():
+                raise werkzeug.exceptions.NotFound()
+
         blogs = tools.lazy(lambda: Blog.search(request.website.website_domain(), order="create_date asc, id asc"))
 
         if not blog and len(blogs) == 1:

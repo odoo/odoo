@@ -3,7 +3,7 @@
 import { dragAndDrop, getFixture, mount, nextTick } from "@web/../tests/helpers/utils";
 import { useSortable } from "@web/core/utils/sortable";
 
-const { Component, reactive, useRef, useState, xml } = owl;
+import { Component, reactive, useRef, useState, xml } from "@odoo/owl";
 
 let target;
 QUnit.module("UI", ({ beforeEach }) => {

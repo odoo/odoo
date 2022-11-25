@@ -5,7 +5,7 @@ import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_s
 import { registry } from "@web/core/registry";
 import { DomainSelectorControlPanel } from "./domain_selector_control_panel";
 
-const { Component, onWillStart, onWillUpdateProps, useRef } = owl;
+import { Component, onWillStart, onWillUpdateProps, useRef } from "@odoo/owl";
 
 export class DomainSelectorLeafNode extends Component {
     setup() {

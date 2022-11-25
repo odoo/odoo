@@ -25,7 +25,7 @@ import { sprintf } from "@web/core/utils/strings";
  * @property {ListDefinition} definition
  * @property {Object} fieldMatching
  *
- * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_ui_plugin").FieldMatching} FieldMatching
+ * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").FieldMatching} FieldMatching
  */
 
 const { CorePlugin } = spreadsheet;
@@ -266,9 +266,8 @@ export default class ListCorePlugin extends CorePlugin {
     /**
      * Sets the current FieldMatching on a list
      *
-     * @param {string} listId
      * @param {string} filterId
-     * @param {FieldMatching} fieldMatching
+     * @param {Record<string,FieldMatching>} listFieldMatches
      */
     _setListFieldMatching(filterId, listFieldMatches) {
         const lists = { ...this.lists };

@@ -3,7 +3,7 @@
 import { useAutofocus } from "../utils/hooks";
 import { clamp } from "../utils/numbers";
 
-const { Component, useExternalListener, useState } = owl;
+import { Component, useExternalListener, useState } from "@odoo/owl";
 
 /**
  * Pager

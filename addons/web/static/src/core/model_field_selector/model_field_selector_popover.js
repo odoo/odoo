@@ -6,7 +6,7 @@ import { useModelField } from "./model_field_hook";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { useAutofocus } from "../utils/hooks";
 
-const { Component, onWillStart } = owl;
+import { Component, onWillStart } from "@odoo/owl";
 
 export class ModelFieldSelectorPopover extends Component {
     setup() {

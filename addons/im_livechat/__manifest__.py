@@ -105,10 +105,11 @@ Help your customers with this chat, and analyse their feedback.
             # Qweb2 lib
             'web/static/lib/qweb/qweb2.js',
             # Odoo JS Framework
-            'web/static/lib/owl/owl.js',
-            'web/static/src/owl2_compatibility/*.js',
             'web/static/src/legacy/js/promise_extension.js',
             'web/static/src/boot.js',
+            'web/static/lib/owl/owl.js',
+            'web/static/lib/owl/odoo_module.js',
+            'web/static/src/owl2_compatibility/*.js',
             'web/static/src/legacy/legacy_component.js',
             'web/static/src/core/browser/browser.js',
             'web/static/src/core/browser/feature_detection.js',

@@ -4,7 +4,7 @@ import { useService } from '@web/core/utils/hooks';
 import { getCSSVariableValue, DEFAULT_PALETTE } from 'web_editor.utils';
 import { Attachment, FileSelector, IMAGE_MIMETYPES, IMAGE_EXTENSIONS } from './file_selector';
 
-const { useRef, useState, useEffect } = owl;
+import { useRef, useState, useEffect } from "@odoo/owl";
 
 export class AutoResizeImage extends Attachment {
     setup() {

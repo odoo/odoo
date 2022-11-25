@@ -5,7 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { loadLanguages } from "@web/core/l10n/translation";
 
-const { Component, onWillStart } = owl;
+import { Component, onWillStart } from "@odoo/owl";
 
 export class TranslationDialog extends Component {
     setup() {
@@ -28,9 +28,6 @@ export class TranslationDialog extends Component {
 
             this.terms = translations.map((term) => {
                 const relatedLanguage = languages.find((l) => l[0] === term.lang);
-                if (!term.value && !this.props.showSource) {
-                    term.value = term.source;
-                }
                 return {
                     id: term.id,
                     lang: term.lang,

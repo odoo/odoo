@@ -2370,8 +2370,6 @@ const Wysiwyg = Widget.extend({
         }
     },
     _signalOffline: function () {
-        // todo: Fix later.
-        return;
         if (!this._isOnline) {
             return;
         }
@@ -2384,8 +2382,6 @@ const Wysiwyg = Widget.extend({
         });
     },
     _signalOnline: async function () {
-        // todo: Fix later.
-        return;
         clearTimeout(this._offlineTimeout);
         this._offlineTimeout = undefined;
 

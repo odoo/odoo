@@ -32,7 +32,10 @@ class AccountReport(models.Model):
     variant_report_ids = fields.One2many(string="Variants", comodel_name='account.report', inverse_name='root_report_id')
     chart_template_id = fields.Many2one(string="Chart of Accounts", comodel_name='account.chart.template')
     country_id = fields.Many2one(string="Country", comodel_name='res.country')
-    only_tax_exigible = fields.Boolean(string="Only Tax Exigible Lines")
+    only_tax_exigible = fields.Boolean(
+        string="Only Tax Exigible Lines",
+        compute=lambda x: x._compute_report_option_filter('only_tax_exigible'), readonly=False, store=True, depends=['root_report_id'],
+    )
     availability_condition = fields.Selection(
         string="Availability",
         selection=[('country', "Country Matches"), ('coa', "Chart of Accounts Matches"), ('always', "Always")],
@@ -93,7 +96,7 @@ class AccountReport(models.Model):
         compute=lambda x: x._compute_report_option_filter('filter_journals'), readonly=False, store=True, depends=['root_report_id'],
     )
     filter_analytic = fields.Boolean(
-        string="Filter Analytic",
+        string="Analytic Filter",
         compute=lambda x: x._compute_report_option_filter('filter_analytic'), readonly=False, store=True, depends=['root_report_id'],
     )
     filter_hierarchy = fields.Selection(
@@ -172,8 +175,9 @@ class AccountReport(models.Model):
             default = {}
         default['name'] = self._get_copied_name()
         copied_report = super().copy(default=default)
+        code_mapping = {}
         for line in self.line_ids.filtered(lambda x: not x.parent_id):
-            line._copy_hierarchy(copied_report)
+            line._copy_hierarchy(copied_report, code_mapping=code_mapping)
         for column in self.column_ids:
             column.copy({'report_id': copied_report.id})
         return copied_report
@@ -293,7 +297,7 @@ class AccountReportLine(models.Model):
         })
 
         # Keep track of old_code -> new_code in a mutable dict
-        if not code_mapping:
+        if code_mapping is None:
             code_mapping = {}
         if self.code:
             code_mapping[self.code] = copied_line.code
@@ -357,7 +361,7 @@ class AccountReportLine(models.Model):
                 'report_line_id': report_line.id,
                 'label': 'balance',
                 'engine': engine,
-                'formula': formula,
+                'formula': formula.lstrip(' \t\n'),  # Avoid IndentationError in evals
                 'subformula': subformula
             }
             vals_list.append(vals)
@@ -428,6 +432,10 @@ class AccountReportExpression(models.Model):
     def create(self, vals_list):
         # Overridden so that we create the corresponding account.account.tag objects when instantiating an expression
         # with engine 'tax_tags'.
+        for vals in vals_list:
+            if 'formula' in vals and isinstance(vals['formula'], str):
+                vals['formula'] = vals['formula'].replace('\n', '').strip()
+
         result = super().create(vals_list)
 
         for expression in result:

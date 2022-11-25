@@ -3935,3 +3935,36 @@ class TestStockValuation(TransactionCase):
 
         self.assertEqual(move.stock_valuation_layer_ids.value, 10)
         self.assertEqual(move.stock_valuation_layer_ids.account_move_id.amount_total, 10)
+
+    def test_create_svl_different_uom(self):
+        """
+        Create a transfer and use in the move a different unit of measure than
+        the one set on the product form and ensure that when the qty done is changed
+        and the picking is already validated, an svl is created in the uom set in the product.
+        """
+        uom_dozen = self.env.ref('uom.product_uom_dozen')
+        receipt = self.env['stock.picking'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'owner_id': self.env.company.partner_id.id,
+        })
+
+        move = self.env['stock.move'].create({
+            'picking_id': receipt.id,
+            'name': 'test',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': uom_dozen.id,
+            'product_uom_qty': 1.0,
+            'price_unit': 10,
+        })
+        receipt.action_confirm()
+        move.quantity_done = 1
+        receipt.button_validate()
+
+        self.assertEqual(self.product1.uom_name, 'Units')
+        self.assertEqual(self.product1.quantity_svl, 12)
+        move.quantity_done = 2
+        self.assertEqual(self.product1.quantity_svl, 24)

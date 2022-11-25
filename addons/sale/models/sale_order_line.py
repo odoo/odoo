@@ -142,6 +142,8 @@ class SaleOrderLine(models.Model):
         digits='Discount',
         store=True, readonly=False, precompute=True)
 
+    # The price_reduce field should not be used for amounts computations
+    # because of its digits precision. It will be removed in next version.
     price_reduce = fields.Float(
         string="Price Reduce",
         compute='_compute_price_reduce',
@@ -994,6 +996,11 @@ class SaleOrderLine(models.Model):
         return super().write(values)
 
     def _get_protected_fields(self):
+        """ Give the fields that should not be modified on a locked SO.
+
+        :returns: list of field names
+        :rtype: list
+        """
         return [
             'product_id', 'name', 'price_unit', 'product_uom', 'product_uom_qty',
             'tax_id', 'analytic_distribution'
@@ -1018,21 +1025,26 @@ class SaleOrderLine(models.Model):
             order.message_post(body=msg)
 
     def _check_line_unlink(self):
-        """
-        Check whether a line can be deleted or not.
+        """ Check whether given lines can be deleted or not.
 
-        Lines cannot be deleted if the order is confirmed; downpayment
-        lines who have not yet been invoiced bypass that exception.
-        Also, allow deleting UX lines (notes/sections).
-        :rtype: recordset sale.order.line
-        :returns: set of lines that cannot be deleted
+        * Lines cannot be deleted if the order is confirmed.
+        * Down payment lines who have not yet been invoiced bypass that exception.
+        * Sections and Notes can always be deleted.
+
+        :returns: Sales Order Lines that cannot be deleted
+        :rtype: `sale.order.line` recordset
         """
-        return self.filtered(lambda line: line.state in ('sale', 'done') and (line.invoice_lines or not line.is_downpayment) and not line.display_type)
+        return self.filtered(
+            lambda line:
+                line.state in ('sale', 'done')
+                and (line.invoice_lines or not line.is_downpayment)
+                and not line.display_type
+        )
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_confirmed(self):
         if self._check_line_unlink():
-            raise UserError(_('You can not remove an order line once the sales order is confirmed.\nYou should rather set the quantity to 0.'))
+            raise UserError(_("You can not remove an order line once the sales order is confirmed.\nYou should rather set the quantity to 0."))
 
     #=== BUSINESS METHODS ===#
 

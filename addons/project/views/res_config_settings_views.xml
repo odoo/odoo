@@ -109,18 +109,28 @@
                                     </div>
                                     <div class="content-group" attrs="{'invisible': [('group_project_rating', '=', False)]}">
                                         <div class="mt16">
-                                            <div class="content-group">
-                                                <div class="mt8">
-                                                    <button name="%(project.open_task_type_form)d" context="{'project_id':id}" icon="fa-arrow-right" type="action" string="Set a Rating Email Template on Stages" class="btn-link"/>
-                                                </div>
-                                            </div>
+                                            <button name="%(project.open_task_type_form)d" context="{'project_id':id}" icon="fa-arrow-right" type="action" string="Set a Rating Email Template on Stages" class="btn-link"/>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6" groups="analytic.group_analytic_accounting">
-                                <label for="analytic_plan_id" class="col-lg-5"/>
-                                <field name="analytic_plan_id"/>
+                            <div class="col-12 col-lg-6 o_setting_box"
+                                 id="default_plan_setting"
+                                 groups="analytic.group_analytic_accounting"
+                                 title="Track the profitability of your projects. Any project, its tasks and timesheets are linked to an analytic account and any analytic account belongs to a plan.">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <label for="analytic_plan_id"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <div class="text-muted">
+                                        Assign each new project to this plan
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="mt16">
+                                            <field name="analytic_plan_id"/>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

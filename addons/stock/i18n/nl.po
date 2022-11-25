@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Jolien De Paepe, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
@@ -86,6 +87,9 @@ msgid ""
 "The quantity done for the product %s doesn't respect the rounding precision defined on the unit of measure %s.\n"
 "Please change the quantity done or the rounding precision of your unit of measure."
 msgstr ""
+"\n"
+"De hoeveelheid gereed voor het product %s komt niet overeen met de afrondingsprecisie gedefinieerd op de maateenheid %s.\n"
+"Wijzig de hoeveelheid gereed of de afrondingsprecisie van je maateenheid."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -1864,7 +1868,7 @@ msgstr "Maak backorder?"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Create New"
-msgstr ""
+msgstr "Maak nieuw"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_type_use_create_lots
@@ -1880,6 +1884,9 @@ msgid ""
 "                            products later. Do not create a backorder if you will not\n"
 "                            process the remaining products."
 msgstr ""
+"Maak een backorder als je verwacht om de resterende\n"
+"                            producten later te verwerken. Maak geen backorder als je de\n"
+"                            resterende producten niet zal verwerken."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -3091,7 +3098,7 @@ msgstr "Formatteer"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__free_qty
 msgid "Free Qty"
-msgstr "Gratis aantal"
+msgstr "Virtuele hvh"
 
 #. module: stock
 #. openerp-web
@@ -3108,7 +3115,7 @@ msgstr "Vrije voorraad "
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 msgid "Free to Use"
-msgstr "Gratis te gebruiken"
+msgstr "Virtueel beschikbaar"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__location_id
@@ -4754,7 +4761,7 @@ msgstr "Verplaatsingen"
 #: model:ir.actions.act_window,name:stock.stock_move_line_action
 #: model:ir.ui.menu,name:stock.stock_move_line_menu
 msgid "Moves History"
-msgstr "Bewegingsgeschiedenis"
+msgstr "Verplaatsinggeschiedenis"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__group_id
@@ -6917,7 +6924,7 @@ msgstr "Retouren"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Returns Type"
-msgstr ""
+msgstr "Retourtype"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_quant_package__package_use__reusable
@@ -7236,6 +7243,8 @@ msgstr "Sendcloud-connector"
 msgid ""
 "Sent to the customers when orders are delivered, if the setting is enabled"
 msgstr ""
+"Verzonden naar de klanten als orders geleverd zijn, als de parameter "
+"geactiveerd is"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__9
@@ -7447,7 +7456,7 @@ msgstr ""
 #. module: stock
 #: model:mail.template,name:stock.mail_template_data_delivery_confirmation
 msgid "Shipping: Send by Email"
-msgstr ""
+msgstr "Verzending: Per e-mail verzonden"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__code
@@ -8632,7 +8641,7 @@ msgstr "Totaal voorspeld"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 msgid "Total Free to Use"
-msgstr "Totaal gratis te gebruiken"
+msgstr "Totaal virtueel beschikbaar"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
@@ -9033,7 +9042,7 @@ msgstr "Gebruik bestaande partijen/serienummers"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Use Existing ones"
-msgstr ""
+msgstr "Bestaande gebruiken"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -9966,7 +9975,7 @@ msgid ""
 "You tried to create a record that already exists. The existing record was "
 "modified instead."
 msgstr ""
-"U heeft geprobeerd een record te maken dat al bestaat. In plaats daarvan is "
+"Je hebt geprobeerd een record te maken dat al bestaat. In plaats daarvan is "
 "het bestaande record gewijzigd."
 
 #. module: stock
@@ -9986,6 +9995,8 @@ msgid ""
 "Your lunch has been delivered.\n"
 "Enjoy your meal!"
 msgstr ""
+"Je lunch is geleverd. \n"
+"Eet smakelijk!"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -10070,7 +10081,7 @@ msgstr "bijv. Fysieke locaties"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "e.g. Receptions"
-msgstr ""
+msgstr "bijv. ontvangsten"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form

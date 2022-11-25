@@ -1,17 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * board
+# 	* board
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2018
+# Simon S, 2022
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
+# Martin Trigaux, 2022
+# Kim Asplund <kim.asplund@gmail.com>, 2022
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:55+0000\n"
-"PO-Revision-Date: 2018-08-02 09:55+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2018\n"
+"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,51 +25,51 @@ msgstr ""
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:53
+#: code:addons/board/static/src/add_to_board/add_to_board.js:0
+#, python-format
+msgid "\"%s\" added to dashboard"
+msgstr "\"%s\" lagd till anslagstavla"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid ""
 "\"Add to\n"
-"                Dashboard\""
+"                  Dashboard\""
 msgstr ""
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:25
-#, python-format
-msgid "&nbsp;"
-msgstr "&nbsp;"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/favorite_menu.js:103
+#: code:addons/board/static/src/add_to_board/legacy_add_to_board.js:0
 #, python-format
 msgid "'%s' added to dashboard"
-msgstr "'%s' lagd till anslagstavlan"
+msgstr "'%s' tillagd på kontrollpanelen"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:85
+#: code:addons/board/static/src/add_to_board/add_to_board.xml:0
 #, python-format
 msgid "Add"
 msgstr "Lägg till"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:79
+#: code:addons/board/static/src/add_to_board/add_to_board.xml:0
 #, python-format
-msgid "Add to my Dashboard"
-msgstr "Lägg till min anslagstavla"
+msgid "Add to my dashboard"
+msgstr "Lägg till på min kontrollpanel"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/board_view.js:362
+#: code:addons/board/static/src/board_controller.js:0
 #, python-format
-msgid "Are you sure you want to remove this item?"
+msgid "Are you sure that you want to remove this item?"
 msgstr ""
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/board_view.js:439
+#: code:addons/board/static/src/board_view.js:0
 #: model:ir.model,name:board.model_board_board
 #, python-format
 msgid "Board"
@@ -73,43 +77,18 @@ msgstr "Anslagstavla"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:7
+#: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid "Change Layout"
 msgstr "Ändra layout"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:5
-#, python-format
-msgid "Change Layout.."
-msgstr "Ändra layout..."
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:36
-#, python-format
-msgid "Choose dashboard layout"
-msgstr "Välj anslagstavellayout"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/favorite_menu.js:107
+#: code:addons/board/static/src/add_to_board/add_to_board.js:0
+#: code:addons/board/static/src/add_to_board/legacy_add_to_board.js:0
 #, python-format
 msgid "Could not add filter to dashboard"
 msgstr "Kunde inte lägga till filter till anslagstavla"
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_board__display_name
-msgid "Display Name"
-msgstr "Visningsnamn"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/board_view.js:80
-#, python-format
-msgid "Edit Layout"
-msgstr "Ändra layout"
 
 #. module: board
 #: model:ir.model.fields,field_description:board.field_board_board__id
@@ -117,55 +96,63 @@ msgid "ID"
 msgstr "ID"
 
 #. module: board
-#: model:ir.model.fields,field_description:board.field_board_board____last_update
-msgid "Last Modified on"
-msgstr "Senast redigerad"
+#. openerp-web
+#: code:addons/board/static/src/board_action.xml:0
+#, python-format
+msgid "Invalid action"
+msgstr ""
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/board_view.js:43
+#: code:addons/board/static/src/board_controller.xml:0
+#: code:addons/board/static/src/board_controller.xml:0
+#, python-format
+msgid "Layout"
+msgstr "Layout"
+
+#. module: board
 #: model:ir.actions.act_window,name:board.open_board_my_dash_action
 #: model:ir.ui.menu,name:board.menu_board_my_dash
 #: model_terms:ir.ui.view,arch_db:board.board_my_dash_view
-#, python-format
 msgid "My Dashboard"
-msgstr "Min anslagstavla"
+msgstr "Min kontrollpanel"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/favorite_menu.js:104
+#: code:addons/board/static/src/add_to_board/add_to_board.js:0
+#: code:addons/board/static/src/add_to_board/legacy_add_to_board.js:0
 #, python-format
 msgid "Please refresh your browser for the changes to take effect."
 msgstr ""
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:51
+#: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid ""
 "To add your first report into this dashboard, go to any\n"
-"                menu, switch to list or graph view, and click"
+"                  menu, switch to list or graph view, and click"
 msgstr ""
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:55
+#: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid ""
 "You can filter and group data before inserting into the\n"
-"                dashboard using the search options."
+"                  dashboard using the search options."
 msgstr ""
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:49
+#: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid "Your personal dashboard is empty"
-msgstr ""
+msgstr "Din personliga anslagstavla är tom"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:53
+#: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid "in the extended search options."
-msgstr ""
+msgstr "i de utökade sökalternativen."

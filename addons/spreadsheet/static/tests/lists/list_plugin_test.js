@@ -5,7 +5,7 @@ import { nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 
 import CommandResult from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { createModelWithDataSource, waitForDataSourcesLoaded } from "../utils/model";
-import { selectCell, setCellContent } from "../utils/commands";
+import { addGlobalFilter, selectCell, setCellContent } from "../utils/commands";
 import { getCell, getCellContent, getCellFormula, getCells, getCellValue } from "../utils/getters";
 import { createSpreadsheetWithList } from "../utils/list";
 import { registry } from "@web/core/registry";
@@ -252,8 +252,6 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
     QUnit.test("user context is combined with list context to fetch data", async function (assert) {
         const context = {
             allowed_company_ids: [15],
-            default_stage_id: 5,
-            search_default_stage_id: 5,
             tz: "bx",
             lang: "FR",
             uid: 4,
@@ -441,4 +439,50 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
             assert.verifySteps([]);
         }
     );
+
+    QUnit.test("field matching is removed when filter is deleted", async function (assert) {
+        const { model } = await createSpreadsheetWithList();
+        await addGlobalFilter(
+            model,
+            {
+                filter: {
+                    id: "42",
+                    type: "relation",
+                    label: "test",
+                    defaultValue: [41],
+                    modelName: undefined,
+                    rangeType: undefined,
+                },
+            },
+            {
+                list: { 1: { chain: "product_id", type: "many2one" } },
+            }
+        );
+        const [filter] = model.getters.getGlobalFilters();
+        const matching = {
+            chain: "product_id",
+            type: "many2one",
+        };
+        assert.deepEqual(model.getters.getListFieldMatching("1", filter.id), matching);
+        assert.deepEqual(model.getters.getListDataSource("1").getComputedDomain(), [
+            ["product_id", "in", [41]],
+        ]);
+        model.dispatch("REMOVE_GLOBAL_FILTER", {
+            id: filter.id,
+        });
+        assert.deepEqual(
+            model.getters.getListFieldMatching("1", filter.id),
+            undefined,
+            "it should have removed the pivot and its fieldMatching and datasource altogether"
+        );
+        assert.deepEqual(model.getters.getListDataSource("1").getComputedDomain(), []);
+        model.dispatch("REQUEST_UNDO");
+        assert.deepEqual(model.getters.getListFieldMatching("1", filter.id), matching);
+        assert.deepEqual(model.getters.getListDataSource("1").getComputedDomain(), [
+            ["product_id", "in", [41]],
+        ]);
+        model.dispatch("REQUEST_REDO");
+        assert.deepEqual(model.getters.getListFieldMatching("1", filter.id), undefined);
+        assert.deepEqual(model.getters.getListDataSource("1").getComputedDomain(), []);
+    });
 });

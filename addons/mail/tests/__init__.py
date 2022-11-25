@@ -14,4 +14,5 @@ from . import test_res_partner
 from . import test_res_users
 from . import test_res_users_settings
 from . import test_rtc
+from . import test_uninstall
 from . import test_update_notification

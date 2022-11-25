@@ -975,6 +975,15 @@ class Session(collections.abc.MutableMapping):
 _request_stack = werkzeug.local.LocalStack()
 request = _request_stack()
 
+@contextlib.contextmanager
+def borrow_request():
+    """ Get the current request and unexpose it from the local stack. """
+    req = _request_stack.pop()
+    try:
+        yield req
+    finally:
+        _request_stack.push(req)
+
 
 class Response(werkzeug.wrappers.Response):
     """
@@ -1098,9 +1107,11 @@ class Request:
         self.dispatcher = _dispatchers['http'](self)  # until we match
         #self.params = {}  # set by the Dispatcher
 
-        self.session, self.db = self._get_session_and_dbname()
         self.registry = None
         self.env = None
+
+    def _post_init(self):
+        self.session, self.db = self._get_session_and_dbname()
 
     def _get_session_and_dbname(self):
         # The session is explicit when it comes from the query-string or
@@ -1525,7 +1536,11 @@ class Request:
             self.db = None
             self.session.db = None
             root.session_store.save(self.session)
-            return self.redirect('/web/database/selector')
+            if request.httprequest.path == '/web':
+                # Internal Server Error
+                raise
+            else:
+                return self._serve_nodb()
 
         with contextlib.closing(self.registry.cursor()) as cr:
             self.env = odoo.api.Environment(cr, self.session.uid, self.session.context)
@@ -1782,7 +1797,6 @@ class JsonRPCDispatcher(Dispatcher):
             'data': serialize_exception(exc),
         }
         if isinstance(exc, NotFound):
-            error['http_status'] = 404
             error['code'] = 404
             error['message'] = "404: Not Found"
         elif isinstance(exc, SessionExpiredException):
@@ -1793,11 +1807,9 @@ class JsonRPCDispatcher(Dispatcher):
 
     def _response(self, result=None, error=None):
         request_id = self.jsonrequest.get('id')
-        status = 200
         response = {'jsonrpc': '2.0', 'id': request_id}
         if error is not None:
             response['error'] = error
-            status = error.pop('http_status', 200)
         if result is not None:
             response['result'] = result
 
@@ -1941,6 +1953,7 @@ class Application:
             werkzeug.datastructures.ImmutableOrderedMultiDict)
         request = Request(httprequest)
         _request_stack.push(request)
+        request._post_init()
         current_thread.url = httprequest.url
 
         try:

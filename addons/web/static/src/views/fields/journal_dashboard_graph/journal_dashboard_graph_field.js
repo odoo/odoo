@@ -4,12 +4,14 @@ import { loadJS } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { getColor, hexToRGBA } from "@web/views/graph/colors";
 import { standardFieldProps } from "../standard_field_props";
+import { useService } from "@web/core/utils/hooks";
 
-const { Component, onWillStart, useEffect, useRef } = owl;
+import { Component, onWillStart, useEffect, useRef } from "@odoo/owl";
 
 export class JournalDashboardGraphField extends Component {
     setup() {
         this.chart = null;
+        this.cookies = useService("cookie");
         this.canvasRef = useRef("canvas");
         this.data = JSON.parse(this.props.value);
 
@@ -50,8 +52,11 @@ export class JournalDashboardGraphField extends Component {
         const labels = this.data[0].values.map(function (pt) {
             return pt.x;
         });
-        const borderColor = this.data[0].is_sample_data ? hexToRGBA(getColor(10), 0.1) : getColor(10);
-        const backgroundColor = this.data[0].is_sample_data ? hexToRGBA(getColor(10), 0.05) : hexToRGBA(getColor(10), 0.2);
+        const color10 = getColor(10, this.cookies.current.color_scheme);
+        const borderColor = this.data[0].is_sample_data ? hexToRGBA(color10, 0.1) : color10;
+        const backgroundColor = this.data[0].is_sample_data
+            ? hexToRGBA(color10, 0.05)
+            : hexToRGBA(color10, 0.2);
         return {
             type: "line",
             data: {
@@ -93,12 +98,18 @@ export class JournalDashboardGraphField extends Component {
         const labels = [];
         const backgroundColor = [];
 
-        this.data[0].values.forEach(function (pt) {
+        const color13 = getColor(13, this.cookies.current.color_scheme);
+        const color19 = getColor(19, this.cookies.current.color_scheme);
+        this.data[0].values.forEach((pt) => {
             data.push(pt.value);
             labels.push(pt.label);
-            const color =
-                pt.type === "past" ? getColor(13) : pt.type === "future" ? getColor(19) : "#ebebeb";
-            backgroundColor.push(color);
+            if (pt.type === "past") {
+                backgroundColor.push(color13);
+            } else if (pt.type === "future") {
+                backgroundColor.push(color19);
+            } else {
+                backgroundColor.push("#ebebeb");
+            }
         });
         return {
             type: "bar",

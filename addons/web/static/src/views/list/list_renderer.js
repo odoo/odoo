@@ -19,7 +19,7 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { useBounceButton } from "@web/views/view_hook";
 import { Widget } from "@web/views/widgets/widget";
 
-const {
+import {
     Component,
     onMounted,
     onPatched,
@@ -29,7 +29,7 @@ const {
     useRef,
     useState,
     useEffect,
-} = owl;
+} from "@odoo/owl";
 
 const formatters = registry.category("formatters");
 
@@ -697,7 +697,7 @@ export class ListRenderer extends Component {
                 this.props.list.editedRecord &&
                 this.props.list.editedRecord.isReadonly(column.name)
             ) {
-                classNames.push("pe-none", "text-muted");
+                classNames.push("text-muted");
             } else {
                 classNames.push("cursor-pointer");
             }
@@ -881,12 +881,8 @@ export class ListRenderer extends Component {
             record = this.props.list.records[recordIndex] || record;
         };
 
-        if (this.props.list.model.multiEdit && record.selected) {
-            await recordAfterResequence();
-            await record.switchMode("edit");
-            this.cellToFocus = { column, record };
-        } else if (this.isInlineEditable(record)) {
-            if (record.isInEdition) {
+        if ((this.props.list.model.multiEdit && record.selected) || this.isInlineEditable(record)) {
+            if (record.isInEdition && this.props.list.editedRecord === record) {
                 this.focusCell(column);
                 this.cellToFocus = null;
             } else {

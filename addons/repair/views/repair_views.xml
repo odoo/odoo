@@ -7,6 +7,7 @@
         <field name="model">repair.order</field>
         <field name="arch" type="xml">
             <tree string="Repairs order" multi_edit="1" sample="1" decoration-info="state == 'draft'">
+                <field name="company_id" invisible="1"/>
                 <field name="priority" optional="show" widget="priority" nolabel="1"/>
                 <field name="name"/>
                 <field name="schedule_date" optional="show" widget="remaining_days"/>
@@ -82,6 +83,7 @@
                             <label for="product_qty"/>
                             <div class="o_row">
                                 <field name="product_qty" attrs="{'readonly':[('tracking', '=', 'serial')]}"/>
+                                <field name="product_uom" invisible="1" groups="!uom.group_uom"/>
                                 <field name="product_uom" groups="uom.group_uom"/>
                             </div>
                             <field name="partner_id" widget="res_partner_many2one" attrs="{'required':[('invoice_method','!=','none')]}" context="{'res_partner_search_mode': 'customer', 'show_vat': True}"/>
@@ -117,6 +119,7 @@
                                         <label for="product_uom_qty"/>
                                         <div class="o_row">
                                             <field name="product_uom_qty"/>
+                                            <field name="product_uom" invisible="1" groups="!uom.group_uom"/>
                                             <field name="product_uom" groups="uom.group_uom"/>
                                         </div>
                                         <field name="price_unit"/>
@@ -147,6 +150,7 @@
                                 <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" optional="show"/>
                                 <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" optional="show"/>
                                 <field name="product_uom_qty" string="Quantity"/>
+                                <field name="product_uom" invisible="1" groups="!uom.group_uom"/>
                                 <field name="product_uom" string="UoM" groups="uom.group_uom" optional="show"/>
                                 <field name="price_unit"/>
                                 <field name="tax_id" widget="many2many_tags" optional="show"/>
@@ -178,6 +182,7 @@
                                     <label for="product_uom_qty"/>
                                     <div class="o_row">
                                         <field name="product_uom_qty" string="Quantity"/>
+                                        <field name="product_uom" invisible="1" groups="!uom.group_uom"/>
                                         <field name="product_uom" groups="uom.group_uom"/>
                                     </div>
                                     <field name="price_unit"/>
@@ -192,6 +197,7 @@
                                 <field name='name' optional="show"/>
                                 <field name="product_uom_qty" string="Quantity"/>
                                 <field name="product_uom_category_id" invisible="1"/>
+                                <field name="product_uom" invisible="1" groups="!uom.group_uom"/>
                                 <field name="product_uom" string="Unit of Measure" groups="uom.group_uom" optional="show"/>
                                 <field name="price_unit"/>
                                 <field name="tax_id" widget="many2many_tags" optional="show"/>

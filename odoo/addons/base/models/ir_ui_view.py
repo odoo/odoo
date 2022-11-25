@@ -1037,7 +1037,7 @@ actual arch.
             if not self.user_has_groups(node.attrib.pop('groups')):
                 node.getparent().remove(node)
             elif node.tag == 't' and not node.attrib:
-                # Move content of <t> blocks with no other instructions than just "groups=" to the parent
+                # Move content of <t> blocks created in `_postprocess_tag_field` to the parent
                 # and remove the <t> node.
                 # This is to keep the structure
                 # <group>
@@ -1045,6 +1045,14 @@ actual arch.
                 #   <field name="bar"/>
                 # <group>
                 # so the web client adds the label as expected.
+                # This is also to avoid having <t> nodes in tree views
+                # e.g.
+                # <tree>
+                #   <field name="foo"/>
+                #   <t groups="foo">
+                #     <field name="bar" groups="bar"/>
+                #   </t>
+                # </tree>
                 for child in reversed(node):
                     node.addnext(child)
                 node.getparent().remove(node)
@@ -1319,7 +1327,7 @@ actual arch.
         return True
 
     def _editable_tag_tree(self, node, name_manager):
-        return node.get('editable')
+        return node.get('editable') or node.get('multi_edit')
 
     def _editable_tag_field(self, node, name_manager):
         field = name_manager.model._fields.get(node.get('name'))

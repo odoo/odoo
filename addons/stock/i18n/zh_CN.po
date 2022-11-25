@@ -4,11 +4,11 @@
 # 
 # Translators:
 # Tony Peng <umingpeng@gmail.com>, 2022
-# Raymond Yu <cl_yu@hotmail.com>, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # Benson <Benson.Dr@Gmail.com>, 2022
 # Martin Trigaux, 2022
 # 226408 台北 <226408@so8d.com>, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
@@ -537,7 +537,7 @@ msgstr "<span>包裹类型: </span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_no_package_section_line
 msgid "<span>Products with no package assigned</span>"
-msgstr "<span>未分配包装的产品</span>"
+msgstr "<span>未分配包裹的产品</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -987,7 +987,7 @@ msgstr "可应用于"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__packaging_selectable
 msgid "Applicable on Packaging"
-msgstr "可应用于包装规格"
+msgstr "可应用于包装"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__product_selectable
@@ -2350,7 +2350,7 @@ msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product in this packaging: whether it will be bought, manufactured, "
 "replenished on order, etc."
-msgstr "根据所安装的模块，这将允许您定义产品在这个包装规格中的路线：是否会被购买、制造、按订单补充，等等。"
+msgstr "根据所安装的模块，这将允许您定义产品在这个包装中的路线：是否会被购买、制造、按订单补充，等等。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
@@ -3412,7 +3412,7 @@ msgstr "如果这个运输被拆分，该字段连接到包括了已经处理的
 #: model:ir.model.fields,help:stock.field_stock_picking__picking_type_entire_packs
 #: model:ir.model.fields,help:stock.field_stock_picking_type__show_entire_packs
 msgid "If ticked, you will be able to select entire packages to move"
-msgstr "如果勾选此项，您将被允许可以选择整个包装来进行移动。"
+msgstr "如果勾选此项，您将被允许可以选择整个包裹来进行移动。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__active
@@ -4228,7 +4228,7 @@ msgstr "位置：到达"
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 #, python-format
 msgid "Locations"
-msgstr "地点"
+msgstr "位置"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -5423,13 +5423,13 @@ msgid ""
 "Packages are usually created via transfers (during pack operation) and can contain different products.\n"
 "                Once created, the whole package can be moved at once, or products can be unpacked and moved as single units again."
 msgstr ""
-"包装通常是通过转移（在包装作业期间）创建的，可以包含不同的产品。 \n"
-" 创建完成后，整个包装可以立即调拨，或者产品可以拆开包装并再次作为单个单元调拨。"
+"包裹通常是通过转移（在包裹作业期间）创建的，可以包含不同的产品。 \n"
+" 创建完成后，整个包裹可以立即调拨，或者产品可以拆开包裹并再次作为单个单元调拨。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_id
 msgid "Packaging"
-msgstr "包装规格"
+msgstr "包装"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__height
@@ -5450,7 +5450,7 @@ msgstr "包装宽度"
 #: model:ir.model.fields,field_description:stock.field_stock_route__packaging_ids
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "Packagings"
-msgstr "包装规格"
+msgstr "包装"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_pack_stock_loc_id
@@ -5828,18 +5828,18 @@ msgstr "产品移动(移库明细)"
 #. module: stock
 #: model:ir.model,name:stock.model_product_packaging
 msgid "Product Packaging"
-msgstr "产品包装规格"
+msgstr "产品包装"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_product_packaging
 msgid "Product Packaging (ZPL)"
-msgstr "产品包装规格 (ZPL)"
+msgstr "产品包装 (ZPL)"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_packagings
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Product Packagings"
-msgstr "产品包装规格"
+msgstr "产品包装"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -6356,7 +6356,7 @@ msgstr "单步接收（库存）"
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Receive in 2 steps (input + stock)"
-msgstr "两步接收(收货+入库）"
+msgstr "2步接收(收货+库存）"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -6477,12 +6477,12 @@ msgstr "重订货规则"
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Reordering Rules"
-msgstr "订货规则"
+msgstr "重订货规则"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Reordering Rules Search"
-msgstr "订货规则搜索"
+msgstr "重订货规则搜索"
 
 #. module: stock
 #. openerp-web
@@ -6526,7 +6526,7 @@ msgstr "补货"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__replenishment_info_id
 msgid "Replenishment Info"
-msgstr "补给信息"
+msgstr "补货信息"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_replenishment_info
@@ -6596,8 +6596,8 @@ msgid ""
 "Reserve Only Full Packagings: will not reserve partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then only 1000 will be reserved\n"
 "Reserve Partial Packagings: allow reserving partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then 1600 will be reserved"
 msgstr ""
-"只预留完整的包装规格：将不预留部分包装规格。如果客户订购了2个托盘，每个托盘有1000个单位，而您只有1600个库存，那么只有1000个将被预留。\n"
-"预留部分包装规格：允许预留部分包装规格。如果客户订购了2个各1000件的托盘，而您只有1600件的库存，那么将预留1600件。"
+"只预留完整的包装：将不预留部分包装。如果客户订购了2个托盘，每个托盘有1000个单位，而您只有1600个库存，那么只有1000个将被预留。\n"
+"预留部分包装：允许预留部分包装。如果客户订购了2个各1000件的托盘，而您只有1600件的库存，那么将预留1600件。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__packaging_reserve_method
@@ -6965,7 +6965,7 @@ msgstr "搜索报废"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_tree_view
 msgid "Select Route"
-msgstr "选择路由"
+msgstr "选择路线"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -7014,7 +7014,7 @@ msgstr "送到待出货区，再送货（2步发货)"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_sendcloud
 msgid "Sendcloud Connector"
-msgstr ""
+msgstr "Sendcloud 连接器"
 
 #. module: stock
 #: model:mail.template,description:stock.mail_template_data_delivery_confirmation
@@ -7047,7 +7047,7 @@ msgstr "序号"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__sequence_code
 msgid "Sequence Prefix"
-msgstr "序列前缀"
+msgstr "序号前缀"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -7249,7 +7249,7 @@ msgstr "显示检查可用"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_clear_qty_button
 msgid "Show Clear Qty Button"
-msgstr ""
+msgstr "显示清除Qty按钮"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_operations
@@ -7543,7 +7543,7 @@ msgstr "包裹目的地"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_level
 msgid "Stock Package Level"
-msgstr "库存包装层级"
+msgstr "库存包裹层级"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner__picking_warn
@@ -7632,7 +7632,7 @@ msgstr "已经处理调拨库存"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_type
 msgid "Stock package type"
-msgstr "库存包装类型"
+msgstr "库存包裹类型"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_report_stock_rule
@@ -8891,7 +8891,7 @@ msgstr "仓库 域"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_tree_view
 msgid "Warehouse Location"
-msgstr "仓库地点"
+msgstr "仓库位置"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
@@ -9201,7 +9201,7 @@ msgstr "在此作业类型下不能创建批次或者序列号。要更改此设
 msgid ""
 "You are trying to put products going to different locations into the same "
 "package"
-msgstr "您正在将发货到不同地方的产品装进同一个包装内。"
+msgstr "您正在将发货到不同地方的产品装进同一个包裹内。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -9347,7 +9347,7 @@ msgstr "不能修改盘点损失数量"
 msgid ""
 "You cannot move the same package content more than once in the same transfer"
 " or split the same package into two location."
-msgstr "您不能在同一调拨中多次调拨同一包装内容，或将同一包装拆分到两个位置。"
+msgstr "您不能在同一调拨中多次调拨同一包裹内容，或将同一包裹拆分到两个位置。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -9660,7 +9660,7 @@ msgstr "是"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 msgid "manually to trigger the reordering rules right now."
-msgstr "立即手动触发订货规则。"
+msgstr "立即手动触发重订货规则。"
 
 #. module: stock
 #. openerp-web

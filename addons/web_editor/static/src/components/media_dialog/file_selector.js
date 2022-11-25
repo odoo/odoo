@@ -5,7 +5,7 @@ import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_d
 import { Dialog } from '@web/core/dialog/dialog';
 import { SearchMedia } from './search_media';
 
-const { Component, xml, useState, useRef, onWillStart } = owl;
+import { Component, xml, useState, useRef, onWillStart } from "@odoo/owl";
 
 export const IMAGE_MIMETYPES = ['image/jpg', 'image/jpeg', 'image/jpe', 'image/png', 'image/svg+xml', 'image/gif'];
 export const IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.jpe', '.png', '.svg', '.gif'];

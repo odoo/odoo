@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2022
+# Jolien De Paepe, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
@@ -99,7 +100,7 @@ msgstr ""
 "<tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "<div>\n"
 "Beste <t t-out=\"object.name or ''\">Mitchell Admin</t>,<br/> <br/>\n"
-"U heeft de volgende gebruiker(s) toegevoegd aan je database, maar ze hebben zich nog niet geregistreerd:\n"
+"Je hebt de volgende gebruiker(s) toegevoegd aan je database, maar ze hebben zich nog niet geregistreerd:\n"
 "<ul>\n"
 "<t t-foreach=\"invited_users\" t-as=\"invited_user\">\n"
 "<li t-out=\"invited_user or ''\">demo@voorbeeld.com</li>\n"
@@ -108,7 +109,7 @@ msgstr ""
 "Volg ze op, zodat ze toegang krijgen tot je database en met je kunnen gaan werken.\n"
 "<br/><br/>\n"
 "Nog een fijne dag!<br/>\n"
-"--<br/>The <t t-out=\"object.company_id.name or ''\">UwBedrijf</t> Team\n"
+"--<br/>The <t t-out=\"object.company_id.name or ''\">Bedrijf</t> Team\n"
 "</div>\n"
 "</td></tr>\n"
 "<tr><td style=\"text-align:center;\">\n"
@@ -817,41 +818,43 @@ msgstr "Verzend een uitnodigings e-mail"
 msgid ""
 "Sent automatically to admin if new user haven't responded to the invitation"
 msgstr ""
+"Automatisch verzonden naar beheerder als nieuwe gebruiker niet op de "
+"uitnodiging heeft gereageerd"
 
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.set_password_email
 msgid "Sent to new user after you invited them"
-msgstr ""
+msgstr "Verzonden naar een nieuwe gebruiker nadat je hem hebt uitgenodigd"
 
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.mail_template_user_signup_account_created
 msgid "Sent to portal user who registered themselves"
-msgstr ""
+msgstr "Verzonden naar de portaalgebruiker die zichtzelf heeft geregistreerd"
 
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.reset_password_email
 msgid "Sent to user who requested a password reset"
-msgstr ""
+msgstr "Verzonden naar een gebruiker die zijn wachtwoord opnieuw il instellen"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.set_password_email
 msgid "Settings: New Portal Signup"
-msgstr ""
+msgstr "Instellingen: Nieuwe portaalaanmelding"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
 msgid "Settings: New User Invite"
-msgstr ""
+msgstr "Instellingen: Nieuwe gebruikeruitnodiging"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_data_unregistered_users
 msgid "Settings: Unregistered User Reminder"
-msgstr ""
+msgstr "Instellingen: Herinnering ongeregistreerde gebruiker"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.reset_password_email
 msgid "Settings: User Reset Password"
-msgstr ""
+msgstr "Instellingen: Gebruiker wachtwoord opnieuw instellen"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
@@ -868,19 +871,19 @@ msgstr "Aanmeld vervallen"
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_token
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_token
 msgid "Signup Token"
-msgstr "Aanmeld token"
+msgstr "Aanmeldtoken"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_type
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_type
 msgid "Signup Token Type"
-msgstr "Aanmeld token soort"
+msgstr "Aanmeldtoken soort"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_valid
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_valid
 msgid "Signup Token is Valid"
-msgstr "Aanmeld token is geldig"
+msgstr "Aanmeldtoken is geldig"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_url
@@ -892,37 +895,37 @@ msgstr "URL voor aanmelden"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup is not allowed for uninvited users"
-msgstr "Registratie is niet toegestaan voor gebruikers zonder uitnodiging"
+msgstr "Aanmelden is niet toegestaan voor gebruikers zonder uitnodiging"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_partner.py:0
 #, python-format
 msgid "Signup token '%s' is no longer valid"
-msgstr "Registratie token '%s' is niet meer geldig"
+msgstr "Aanmeldentoken '%s' is niet meer geldig"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_partner.py:0
 #, python-format
 msgid "Signup token '%s' is not valid"
-msgstr "Registratie token '%s' is niet geldig."
+msgstr "Aanmeldentoken '%s' is niet geldig."
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: invalid template user"
-msgstr "Inschrijven: foutieve sjabloon gebruiker"
+msgstr "Aanmelden: foutieve sjabloon gebruiker"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: no login given for new user"
-msgstr "Inschrijven: geen login opgegeven voor nieuwe gebruiker"
+msgstr "Aanmelden: geen login opgegeven voor nieuwe gebruiker"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: no name or partner given for new user"
-msgstr "Inschrijven: geen naam of partner opgegeven voor nieuwe gebruiker"
+msgstr "Aanmelden: geen naam of partner opgegeven voor nieuwe gebruiker"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__state
@@ -979,12 +982,12 @@ msgstr "Je kunt deze actie niet uitvoeren op een gearchiveerde gebruiker."
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Your Email"
-msgstr "Jouw e-mail"
+msgstr "Je e-mail"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 msgid "Your Name"
-msgstr "Jouw naam"
+msgstr "Je naam"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields

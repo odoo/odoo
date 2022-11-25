@@ -121,6 +121,8 @@
             <field name="model">stock.scrap</field>
             <field name="arch" type="xml">
                 <tree multi_edit="1" sample="1" decoration-info="state == 'draft'">
+                    <field name="company_id" invisible="1"/>
+                    <field name="product_uom_category_id" invisible="1"/>
                     <field name="name" decoration-bf="1"/>
                     <field name="date_done"/>
                     <field name="product_id" readonly="1"/>

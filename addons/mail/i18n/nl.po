@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Jolien De Paepe, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
@@ -1942,6 +1943,8 @@ msgid ""
 "Content that will automatically replace the shortcut of your choosing. This "
 "content can still be adapted before sending your message."
 msgstr ""
+"Inhoud die automatisch de sneltoets van je keuze vervangt. Deze inhoud kan "
+"steeds worden aangepast voordat je je bericht verzendt."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__body
@@ -4377,6 +4380,7 @@ msgstr "Laden"
 #: code:addons/mail/static/src/components/message_list/message_list.xml:0
 #: code:addons/mail/static/src/components/thread_view/thread_view.xml:0
 #: code:addons/mail/static/src/components/thread_view/thread_view.xml:0
+#: code:addons/mail/static/src/models/emoji_grid_loading_screen.js:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
@@ -5910,6 +5914,24 @@ msgid "Please complete customer's information"
 msgstr "Vul de informatie van de klant in"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer_suggested_recipient/composer_suggested_recipient.js:0
+#, python-format
+msgid "Invalid Partner"
+msgstr "Ongeldige partner"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer_suggested_recipient/composer_suggested_recipient.js:0
+#, python-format
+msgid ""
+"The information you have entered does not match the existing contact "
+"information for this record. The partner was not created."
+msgstr ""
+"De ingevoerde informatie komt niet overeen met de bestaande "
+"contactinformatie voor deze record. De partner is niet aangemaakt."
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "Please contact us instead using"
 msgstr "Je dient ons in de plaats te contacteren door middel van"
@@ -6416,6 +6438,13 @@ msgstr "Verwijderen"
 #: model:ir.model,name:mail.model_mail_blacklist_remove
 msgid "Remove email from blacklist wizard"
 msgstr "Verwijder email van blacklist wizard"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/message_action_view.js:0
+#, python-format
+msgid "Remove from Todo"
+msgstr "Verwijderen uit Te doen"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -7024,6 +7053,9 @@ msgid ""
 "messages. Type ':' followed by the name of your shortcut (e.g. :hello) to "
 "use in your messages."
 msgstr ""
+"Sneltoest die automatisch wordt vervangen met een langere inhoud in je "
+"berichten. Schrijf ':' gevolgd door de naam van je sneltoets (bijv.: hello) "
+"om deze in je berichten te gebruiken."
 
 #. module: mail
 #. openerp-web
@@ -7380,7 +7412,7 @@ msgstr "Sjabloon"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__template_category
 msgid "Template Category"
-msgstr ""
+msgstr "Sjablooncategorie"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__template_fs
@@ -7406,7 +7438,7 @@ msgstr "Sjabloon Reset Mixin"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__description
 msgid "Template description"
-msgstr ""
+msgstr "Sjabloonbeschrijving"
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
@@ -7700,6 +7732,8 @@ msgstr "Dit veld is hoofdlettergevoelig."
 #: model:ir.model.fields,help:mail.field_mail_template__description
 msgid "This field is used for internal description of the template's usage."
 msgstr ""
+"Dit veld is gebruikt voor de interne beschrijving van het gebruik van het "
+"sjabloon."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__email_normalized
@@ -7723,7 +7757,7 @@ msgstr "Dit is hun eerste verbinding. Wens ze succes."
 #: code:addons/mail/models/res_config_settings.py:0
 #, python-format
 msgid "This layout seems to no longer exist."
-msgstr ""
+msgstr "Deze lay-out lijkt niet meer te bestaan."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__auto_delete
@@ -8124,7 +8158,7 @@ msgstr "Niet ondersteunde rapport soort %s gevonden."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Update Mail Layout"
-msgstr ""
+msgstr "Lay-out update mail"
 
 #. module: mail
 #. openerp-web
@@ -8134,6 +8168,13 @@ msgstr ""
 #, python-format
 msgid "Upload Document"
 msgstr "Document uploaden"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/backend_components/activity_list_view_item/activity_list_view_item.xml:0
+#, python-format
+msgid "Upload File"
+msgstr "Upload bestand"
 
 #. module: mail
 #. openerp-web
@@ -8631,7 +8672,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "You do not have access to"
-msgstr "U heeft geen toegang tot"
+msgstr "Je hebt geen toegang tot"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread_blacklist.py:0
@@ -8904,6 +8945,8 @@ msgstr "bijv. \"Welkom e-mail\""
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "e.g. \"Welcome to MyCompany\" or \"Nice to meet you, {{ object.name }}\""
 msgstr ""
+"bijv. \"Welkom bij MyCompany\" or \"Aangenaam kennis te maken, {{ "
+"object.name }}\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form

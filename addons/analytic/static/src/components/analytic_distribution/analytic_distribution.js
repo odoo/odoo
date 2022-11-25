@@ -79,12 +79,6 @@ export class AnalyticDistribution extends Component {
         if (this.editingRecord) {
             await this.fetchAllPlans(this.props);
         }
-        const args = {
-            domain: [["name", "like", "Percentage Analytic"]],
-            fields: ["digits"],
-            context: [],
-        }
-        this.decimal_precision = await this.orm.call("decimal.precision", "search_read", [], args);
         await this.formatData(this.props);
     }
 
@@ -159,6 +153,9 @@ export class AnalyticDistribution extends Component {
         const existing_account_ids = Object.keys(nextProps.value).map((i) => parseInt(i));
         if (existing_account_ids.length) {
             args['existing_account_ids'] = existing_account_ids;
+        }
+        if (this.props.record.data.company_id) {
+            args['company_id'] = this.props.record.data.company_id[0];
         }
         return args;
     }
@@ -565,8 +562,7 @@ export class AnalyticDistribution extends Component {
     }
 
     formatPercentage(value) {
-        return formatPercentage(value / 100, { digits: [false, this.decimal_precision[0].digits || 2] });
-
+        return formatPercentage(value / 100, { digits: [false, this.props.record.data.analytic_precision || 2] });
     }
 }
 AnalyticDistribution.template = "analytic.AnalyticDistribution";
@@ -574,6 +570,10 @@ AnalyticDistribution.supportedTypes = ["char", "text"];
 AnalyticDistribution.components = {
     AnalyticAutoComplete,
     TagsList,
+}
+
+AnalyticDistribution.fieldDependencies = {
+    analytic_precision: { type: 'integer' },
 }
 AnalyticDistribution.props = {
     ...standardFieldProps,

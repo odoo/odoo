@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2022
+# Jolien De Paepe, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
@@ -113,7 +114,7 @@ msgid ""
 "d-md-inline\"> Pending</span></span>"
 msgstr ""
 "<span class=\"badge rounded-pill text-bg-warning\"><span class=\"d-none "
-"d-md-inline\"> In Afwachting</span></span>"
+"d-md-inline\"> In afwachting</span></span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
@@ -250,7 +251,7 @@ msgstr ""
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_transaction_form
 msgid "Invoice(s)"
-msgstr "Factu(je)r(en)"
+msgstr "Factu(u)r(en)"
 
 #. module: account_payment
 #: code:addons/account_payment/models/payment_transaction.py:0
@@ -262,7 +263,7 @@ msgstr "Facturen"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_transaction__invoices_count
 msgid "Invoices Count"
-msgstr "Facturen tellen"
+msgstr "Aantal facturen"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_journal
@@ -287,7 +288,7 @@ msgstr "Laatst bijgewerkt door"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__write_date
 msgid "Last Updated on"
-msgstr "Laatst geupdate op"
+msgstr "Laatst bijgewerkt op"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_available_for_refund
@@ -422,12 +423,12 @@ msgstr "Terugbetaald bedrag"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_payment_form_inherit_payment
 msgid "Refunds"
-msgstr "Retouren"
+msgstr "Credits"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__refunds_count
 msgid "Refunds Count"
-msgstr "Terugbetalingen tellen"
+msgstr "Aantal credits"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_register
@@ -457,7 +458,7 @@ msgstr "Bronbetaling"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_state
 msgid "State"
-msgstr "Provincie / Staat"
+msgstr "Status"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__suitable_payment_token_ids
@@ -486,6 +487,8 @@ msgid ""
 "The payment related to the transaction with reference %(ref)s has been "
 "posted: %(link)s"
 msgstr ""
+"De betaling met betrekking tot de transactie met kenmerk %(ref)s is geboekt:"
+" %(link)s"
 
 #. module: account_payment
 #: code:addons/account_payment/controllers/payment.py:0
@@ -537,7 +540,7 @@ msgstr "Transacties"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__support_refund
 msgid "Type of Refund Supported"
-msgstr "Ondersteund type restitutie"
+msgstr "Soort credit ondersteund"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__use_electronic_payment_method

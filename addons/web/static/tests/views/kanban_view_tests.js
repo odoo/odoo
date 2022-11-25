@@ -39,7 +39,7 @@ import { kanbanView } from "@web/views/kanban/kanban_view";
 import { DynamicRecordList } from "@web/views/relational_model";
 import { ViewButton } from "@web/views/view_button/view_button";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 
 const serviceRegistry = registry.category("services");
 const viewWidgetRegistry = registry.category("view_widgets");
@@ -359,6 +359,53 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 4);
         assert.containsN(target, ".o_kanban_ghost", 6);
         assert.containsOnce(target, ".o_kanban_record:contains(gnap)");
+    });
+
+    QUnit.test("display full is supported on fields", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban class="o_kanban_test">
+                    <templates><t t-name="kanban-box">
+                        <div>
+                            <field name="foo" display="full"/>
+                        </div>
+                    </t></templates>
+                </kanban>`,
+        });
+
+        assert.containsOnce(target.querySelector(".o_kanban_record"), "span.o_text_block");
+        assert.strictEqual(target.querySelector("span.o_text_block").textContent, "yop");
+    });
+
+    QUnit.test("dropdown without toggler are correctly rendered", async (assert) => {
+        serverData.models.partner.records = [serverData.models.partner.records[0]];
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban class="o_kanban_test">
+                    <templates><t t-name="kanban-box">
+                        <div>
+                            <div class="dropdown">
+                                <div class="dropdown-menu">
+                                    <a class="someItem" />
+                                </div>
+                            </div>
+                        </div>
+                    </t></templates>
+                </kanban>`,
+        });
+
+        assert.containsOnce(target, ".o-dropdown.dropdown.o_dropdown_kanban");
+        await click(target, ".o_kanban_record .o-dropdown button.dropdown-toggle");
+        assert.containsOnce(
+            target,
+            ".o_kanban_record .o-dropdown .o-dropdown--menu > div > a.someItem"
+        );
     });
 
     QUnit.test("basic grouped rendering", async (assert) => {

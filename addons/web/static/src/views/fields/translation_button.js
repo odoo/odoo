@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
 import { localization } from "@web/core/l10n/localization";
-import { useService } from "@web/core/utils/hooks";
+import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { TranslationDialog } from "./translation_dialog";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
-const { Component, useEnv } = owl;
+import { Component, useEnv } from "@odoo/owl";
 
 /**
  * Prepares a function that will open the dialog that allows to edit translation
@@ -16,14 +16,14 @@ const { Component, useEnv } = owl;
  * when legacy code is removed.
  */
 export function useTranslationDialog() {
-    const dialog = useService("dialog");
+    const addDialog = useOwnedDialogs();
     const env = useEnv();
 
     async function openTranslationDialog({ record, fieldName, updateField }) {
         if (!record.resId) {
             let _continue = true;
             await new Promise((resolve) => {
-                dialog.add(ConfirmationDialog, {
+                addDialog(ConfirmationDialog, {
                     async confirm() {
                         _continue = await record.save({ stayInEdition: true });
                         resolve();
@@ -44,7 +44,7 @@ export function useTranslationDialog() {
         }
         const { resModel, resId } = record;
 
-        dialog.add(TranslationDialog, {
+        addDialog(TranslationDialog, {
             fieldName: fieldName,
             resId: resId,
             resModel: resModel,
@@ -60,8 +60,6 @@ export function useTranslationDialog() {
 export class TranslationButton extends Component {
     setup() {
         this.user = useService("user");
-        this.rpc = useService("rpc");
-        this.dialog = useService("dialog");
         this.translationDialog = useTranslationDialog();
     }
 

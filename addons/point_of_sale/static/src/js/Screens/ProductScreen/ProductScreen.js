@@ -16,6 +16,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
         setup() {
             super.setup();
             useListener('update-selected-orderline', this._updateSelectedOrderline);
+            useListener('select-line', this._selectLine);
             useListener('set-numpad-mode', this._setNumpadMode);
             useListener('click-product', this._clickProduct);
             useListener('click-partner', this.onClickPartner);
@@ -161,9 +162,14 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             NumberBuffer.reset();
             this.env.pos.numpadMode = mode;
         }
+        _selectLine() {
+            NumberBuffer.reset();
+        }
         async _updateSelectedOrderline(event) {
             if (this.env.pos.numpadMode === 'quantity' && this.env.pos.disallowLineQuantityChange()) {
                 let order = this.env.pos.get_order();
+                if(!order.orderlines.length)
+                    return;
                 let selectedLine = order.get_selected_orderline();
                 let orderlines = order.orderlines;
                 let lastId = orderlines.length !== 0 && orderlines.at(orderlines.length - 1).cid;
