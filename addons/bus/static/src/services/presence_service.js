@@ -28,8 +28,9 @@ export const presenceService = {
             try {
                 isFocused = parent.document.hasFocus();
             } catch {}
+            isOdooFocused = isFocused;
             browser.localStorage.setItem(`${LOCAL_STORAGE_PREFIX}.focus`, isOdooFocused);
-            if (isFocused) {
+            if (isOdooFocused) {
                 lastPresenceTime = new Date().getTime();
                 env.bus.trigger('window_focus', isOdooFocused);
             }
