@@ -57,11 +57,15 @@ export const websiteService = {
 
         hotkey.add("escape", () => {
             // Toggle fullscreen mode when pressing escape.
-            if (currentWebsiteId) {
-                fullscreen = !fullscreen;
-                document.body.classList.toggle('o_website_fullscreen', fullscreen);
-                bus.trigger((fullscreen ? 'FULLSCREEN-INDICATION-SHOW' : 'FULLSCREEN-INDICATION-HIDE'));
+            if (!currentWebsiteId && !fullscreen) {
+                // Only allow to use this feature while on the website app, or
+                // while it is already fullscreen (in case you left the website
+                // app in fullscreen mode, thanks to CTRL-K).
+                return;
             }
+            fullscreen = !fullscreen;
+            document.body.classList.toggle('o_website_fullscreen', fullscreen);
+            bus.trigger(fullscreen ? 'FULLSCREEN-INDICATION-SHOW' : 'FULLSCREEN-INDICATION-HIDE');
         }, { global: true });
         registry.category('main_components').add('FullscreenIndication', {
             Component: FullscreenIndication,
