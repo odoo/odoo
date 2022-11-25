@@ -48,6 +48,11 @@ class Pricelist(models.Model):
         comodel_name='product.pricelist.item',
         inverse_name='pricelist_id',
         string="Pricelist Rules",
+        domain=[
+            '&',
+            '|', ('product_tmpl_id', '=', None), ('product_tmpl_id.active', '=', True),
+            '|', ('product_id', '=', None), ('product_id.active', '=', True),
+        ],
         copy=True)
 
     def name_get(self):
