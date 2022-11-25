@@ -1739,6 +1739,10 @@ class PaymentPortal(payment_portal.PaymentPortal):
         kwargs.pop('custom_create_values', None)  # Don't allow passing arbitrary create values
         if not kwargs.get('amount'):
             kwargs['amount'] = order_sudo.amount_total
+
+        if tools.float_compare(kwargs['amount'], order_sudo.amount_total, precision_rounding=order_sudo.currency_id.rounding):
+            raise ValidationError(_("The cart has been updated. Please refresh the page."))
+
         tx_sudo = self._create_transaction(
             custom_create_values={'sale_order_ids': [Command.set([order_id])]}, **kwargs,
         )

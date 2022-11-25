@@ -4,10 +4,9 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# keecome <7017511@qq.com>, 2022
 # 陕西_jack, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2022\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -139,7 +138,7 @@ msgstr "替代POs"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__alternative_po_count
 msgid "Alternative Po Count"
-msgstr "替代PO个数"
+msgstr "替代PO计数"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
@@ -171,7 +170,7 @@ msgstr "分析会计"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_distribution_stored_char
 msgid "Analytic Distribution Stored Char"
-msgstr "分析分布存储字符"
+msgstr "分析分配存储字符"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
@@ -182,7 +181,7 @@ msgstr "已归档"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_attachment_count
 msgid "Attachment Count"
-msgstr "附件数量"
+msgstr "附件计数"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__open
@@ -422,6 +421,9 @@ msgid ""
 "            (e.g. a year) and you order products within this agreement to benefit\n"
 "            from the negotiated prices."
 msgstr ""
+"对于一揽子订单，您可以记录一个特定时期的协议\n"
+"        (例如，一年 )，您在此协议内订购产品，以\n"
+"        从协商的价格中获益。"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -490,7 +492,7 @@ msgstr ""
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__copy_products
 msgid ""
 "If this is checked, the product quantites of the original PO will be copied"
-msgstr ""
+msgstr "如果选中此项，将复制原始PO的产品数量"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -847,7 +849,7 @@ msgstr "负责用户"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "短信发送错误"
+msgstr "短信息发送错误"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__schedule_date
@@ -906,14 +908,14 @@ msgstr "显示所有的在今天之前的下一个行动日期的记录"
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "Some not cleared"
-msgstr ""
+msgstr "有些没有清理"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid ""
 "Some quantities were not cleared because their status is not a RFQ status."
-msgstr ""
+msgstr "一些数量没有被清除，因为它们的状态不是RFQ状态。"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__origin
@@ -962,7 +964,7 @@ msgstr "供应商价格表"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order_group
 msgid "Technical model to group PO for call to tenders"
-msgstr ""
+msgstr "将PO进行分组招标的技术模型"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -992,8 +994,8 @@ msgstr "您选择的供应商或您从原始订单复制的至少一个产品上
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
-msgid "There are no quantites to clear."
-msgstr ""
+msgid "There are no quantities to clear."
+msgstr "不存在需要清理的数量。"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
@@ -1008,7 +1010,7 @@ msgstr "对该供应商已经有一个开放的一揽子订单。我们建议您
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
 msgid "This is a blocking warning!\n"
-msgstr ""
+msgstr "这是个阻塞警告！\n"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -1069,6 +1071,8 @@ msgid ""
 "Warning for %(partner)s:\n"
 "%(warning_message)s\n"
 msgstr ""
+"%(partner)s警告：\n"
+"%(warning_message)s\n"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
@@ -1077,6 +1081,8 @@ msgid ""
 "Warning for %(product)s:\n"
 "%(warning_message)s\n"
 msgstr ""
+"%(product)s警告：\n"
+"%(warning_message)s\n"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
@@ -1150,7 +1156,7 @@ msgstr "关闭采购申请前，您必须取消或批准每个RFQ采购订单。
 msgid ""
 "alternative request for quotations are still open, do you want to cancel "
 "them?"
-msgstr ""
+msgstr "替代报价请求仍然开放，您想取消它们吗？"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form

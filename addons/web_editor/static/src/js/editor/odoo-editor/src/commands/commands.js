@@ -20,9 +20,11 @@ import {
     isBlock,
     isColorGradient,
     isContentTextNode,
+    isEmptyBlock,
     isSelectionFormat,
     isShrunkBlock,
     isVisible,
+    isVisibleEmpty,
     isVisibleStr,
     leftLeafFirstPath,
     preserveCursor,
@@ -196,7 +198,11 @@ export const editorCommands = {
         if (startNode.nodeType === Node.ELEMENT_NODE) {
             if (selection.anchorOffset === 0) {
                 const textNode = editor.document.createTextNode('');
-                startNode.prepend(textNode);
+                if (isVisibleEmpty(startNode)) {
+                    startNode.parentNode.insertBefore(textNode, startNode);
+                } else {
+                    startNode.prepend(textNode);
+                }
                 startNode = textNode;
             } else {
                 startNode = startNode.childNodes[selection.anchorOffset - 1];
@@ -262,6 +268,9 @@ export const editorCommands = {
                     if (offset) {
                         const [left, right] = splitElement(currentNode.parentElement, offset);
                         currentNode = insertBefore ? right : left;
+                        if (isEmptyBlock(right)) {
+                            right.remove();
+                        }
                     } else {
                         currentNode = currentNode.parentElement;
                     }

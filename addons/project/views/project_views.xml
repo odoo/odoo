@@ -680,7 +680,7 @@
             <field name="name">project.project.tree</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
-                <tree decoration-muted="active == False" string="Projects" multi_edit="1" sample="1">
+                <tree decoration-muted="active == False" string="Projects" multi_edit="1" sample="1" default_order="sequence, name, id">
                     <field name="sequence" optional="show" widget="handle"/>
                     <field name="message_needaction" invisible="1"/>
                     <field name="active" invisible="1"/>
@@ -790,6 +790,7 @@
                     on_create="project.open_create_project"
                     action="action_view_tasks" type="object"
                     sample="1"
+                    default_order="sequence, name, id"
                 >
                     <field name="display_name"/>
                     <field name="partner_id"/>
@@ -856,7 +857,7 @@
                                                 <div role="menuitem">
                                                     <a name="action_view_tasks" type="object">Tasks</a>
                                                 </div>
-                                                <div role="menuitem" groups="project.group_project_milestone">
+                                                <div role="menuitem" groups="project.group_project_milestone" t-if="record.allow_milestones.raw_value">
                                                     <a name="action_get_list_view" type="object">Milestones</a>
                                                 </div>
                                             </div>
@@ -1186,7 +1187,7 @@
                         </page>
                         <page name="sub_tasks_page" string="Sub-tasks" attrs="{'invisible': [('allow_subtasks', '=', False)]}">
                             <field name="child_ids"
-                                   context="{'default_project_id': project_id if not parent_id or not display_project_id else display_project_id, 'default_user_ids': user_ids, 'default_parent_id': id,
+                                   context="{'search_view_ref' : 'project.view_task_search_form_extended', 'default_project_id': project_id if not parent_id or not display_project_id else display_project_id, 'default_user_ids': user_ids, 'default_parent_id': id,
                                     'default_partner_id': partner_id, 'default_milestone_id': allow_milestones and milestone_id, 'search_default_display_project_id': project_id }"
                                    widget="many2many"
                                    domain="['!', ('id', 'parent_of', id)]">

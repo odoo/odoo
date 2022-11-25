@@ -7,6 +7,7 @@ helpers and classes to write tests.
 import base64
 import collections
 import concurrent.futures
+import contextlib
 import difflib
 import functools
 import importlib
@@ -1330,9 +1331,11 @@ class ChromeBrowser:
             )
             @qs.add_done_callback
             def _qs_result(fut):
-                # stupid dumbass chrome returns a nodeid of 0 when nothing
-                # is found
-                if fut.result()['nodeId']:
+                node_id = 0
+                with contextlib.suppress(Exception):
+                    node_id = fut.result()['nodeId']
+
+                if node_id:
                     self.take_screenshot("unsaved_form_")
                     self._result.set_exception(ChromeBrowserException("""\
 Tour finished with an open form view in edition mode.

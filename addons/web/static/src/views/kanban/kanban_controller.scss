@@ -22,6 +22,8 @@
 
     --KanbanColumn__highlight-background: #{rgba($o-info, 0.05)};
     --KanbanColumn__highlight-border: #{$o-info};
+
+    --o-view-nocontent-zindex: 1;
     // ----------------------------------------------------------------------------
 
     .dropdown,
@@ -64,6 +66,15 @@
         &:focus,
         &:focus-within {
             z-index: 1; // show the shadow on top of the previous & next cards in grouped mode
+        }
+
+        // In FireFox: elements with `overflow: hidden` will prevent mouseenter and mouseleave
+        // events from firing on elements underneath them. This is the case when dragging a card
+        // by the `.o_kanban_record_headings` element. In such cases, the pointer events are
+        // disabled to allow mouse events to fire properly.
+        // https://bugzilla.mozilla.org/show_bug.cgi?id=1352061
+        &.o_dragged .o_kanban_record_headings {
+            pointer-events: none;
         }
 
         // ------- Kanban Record, v11 Layout -------
@@ -447,7 +458,7 @@
         }
 
         .oe_kanban_text_red {
-            color: o-text-color('danger');
+            color: o-text-color("danger");
             font-weight: $font-weight-bold;
         }
 
@@ -474,17 +485,29 @@
         .o_kanban_record {
             width: 100%;
         }
-        
+
+        --KanbanGroup-width: 90%; // don't take full width to give a hint of next/previous column on smaller screens
+
         @include media-breakpoint-up(md) {
-            &.o_kanban_small_column .o_kanban_group:not(.o_column_folded) {
-                flex-basis: calc(var(--KanbanRecord--small-width) + (2 * var(--KanbanGroup-padding-h)));
+            --KanbanGroup-width: calc(var(--KanbanRecord-width) + (2 * var(--KanbanGroup-padding-h)));
+
+            &.o_kanban_small_column {
+                --KanbanGroup-width: calc(var(--KanbanRecord--small-width) + (2 * var(--KanbanGroup-padding-h)));
+            }
+        }
+
+        .o_kanban_group,
+        .o_column_quick_create {
+            flex-basis: var(--KanbanGroup-width);
+
+            @include media-breakpoint-up(md) {
+                max-width: var(--KanbanGroup-width);
             }
         }
     }
 
     // Kanban Grouped Layout - Column default
     .o_kanban_group {
-        flex-basis: calc(var(--KanbanRecord-width) + (2 * var(--KanbanGroup-padding-h)));
         padding: 0 var(--KanbanGroup-padding-h) var(--KanbanGroup-padding-bottom);
 
         .o_kanban_header > .o_kanban_header_title {
@@ -505,10 +528,16 @@
             }
         }
         &.o_kanban_hover {
-            background-color: var(--KanbanColumn__highlight-background);
+            background-color: var(--KanbanColumn__highlight-background) !important;
             box-shadow: -1px 0px 0px 0px var(--KanbanColumn__highlight-border) inset,
                 1px 0px 0px 0px var(--KanbanColumn__highlight-border) inset;
         }
+    }
+
+    .o_column_quick_create,
+    .o_kanban_group:not(.o_column_folded) .o_kanban_header_title {
+        // Makes them come on top of the "no-content" background gradient.
+        z-index: calc(var(--o-view-nocontent-zindex) + 1);
     }
 
     .o_group_draggable .o_column_title {
@@ -548,15 +577,9 @@
         }
     }
 
-    // Kanban Grouped Layout - "Create new column" column
-    .o_column_quick_create {
-        flex: 0 0 calc(var(--KanbanRecord--small-width) + (2 * var(--KanbanGroup-padding-h)));
-    }
-
     @include media-breakpoint-down(md) {
         .o_kanban_group,
         .o_column_quick_create {
-            flex-basis: 90%; // don't take full width to give a hint of next/previous column
             scroll-snap-align: center;
             overflow-y: scroll;
 

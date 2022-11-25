@@ -318,6 +318,5 @@ function _convertImageColumn(columnEl) {
     textNodeEls.forEach(el => el.remove());
     const imageEl = columnEl.querySelector('img');
     columnEl.classList.add('o_grid_item_image');
-    columnEl.contentEditable = false;
     imageEl.style.removeProperty('width');
 }

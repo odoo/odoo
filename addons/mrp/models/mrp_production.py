@@ -691,7 +691,7 @@ class MrpProduction(models.Model):
             list_move_raw = [Command.link(move.id) for move in production.move_raw_ids.filtered(lambda m: not m.bom_line_id)]
             if not production.bom_id and not production._origin.product_id:
                 production.move_raw_ids = list_move_raw
-            if production.product_id != production._origin.product_id:
+            if production.bom_id != production._origin.bom_id:
                 production.move_raw_ids = [Command.clear()]
             if production.bom_id and production.product_id and production.product_qty > 0:
                 # keep manual entries
@@ -736,12 +736,18 @@ class MrpProduction(models.Model):
 
     @api.onchange('lot_producing_id')
     def _onchange_lot_producing(self):
-        if self.product_id.tracking == 'serial' and self.lot_producing_id:
-            message, dummy = self.env['stock.quant'].sudo()._check_serial_number(self.product_id,
-                                                                                 self.lot_producing_id,
-                                                                                 self.company_id)
+        res = self._can_produce_serial_number()
+        if res is not True:
+            return res
+
+    def _can_produce_serial_number(self, sn=None):
+        self.ensure_one()
+        sn = sn or self.lot_producing_id
+        if self.product_id.tracking == 'serial' and sn:
+            message, dummy = self.env['stock.quant'].sudo()._check_serial_number(self.product_id, sn, self.company_id)
             if message:
                 return {'warning': {'title': _('Warning'), 'message': message}}
+        return True
 
     @api.onchange('product_id', 'move_raw_ids')
     def _onchange_product_id(self):
@@ -2122,8 +2128,14 @@ class MrpProduction(models.Model):
                         ('state', '=', 'done'),
                         ('location_dest_id.scrap_location', '=', True)
                     ])
+                    unremoved = self.env['stock.move.line'].search_count([
+                        ('lot_id', '=', move_line.lot_id.id),
+                        ('state', '=', 'done'),
+                        ('location_id.scrap_location', '=', True),
+                        ('location_dest_id.scrap_location', '=', False),
+                    ])
                     # Either removed or unbuild
-                    if not ((duplicates_returned or removed) and duplicates - duplicates_returned - removed == 0):
+                    if not ((duplicates_returned or removed) and duplicates - duplicates_returned - removed + unremoved == 0):
                         raise UserError(message)
                 # Check presence of same sn in current production
                 duplicates = co_prod_move_lines.filtered(lambda ml: ml.qty_done and ml.lot_id == move_line.lot_id) - move_line

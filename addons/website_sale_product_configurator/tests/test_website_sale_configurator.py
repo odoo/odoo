@@ -31,4 +31,14 @@ class TestWebsiteSaleProductConfigurator(TestProductConfiguratorCommon, HttpCase
         # in this case. However, we still want to make sure that the correct
         # variant attributes are taken into account when calculating the price.
         url = self.product_product_custo_desk.website_url
+        # Ensure that only one pricelist is available during the test, with the company currency.
+        # This ensures that tours with triggers on the amounts will run properly.
+        # To this purpose, we will ensure that only the public_pricelist is available for the default_website.
+        public_pricelist = self.env.ref('product.list0')
+        default_website = self.env.ref('website.default_website')
+        self.env['product.pricelist'].search([
+            ('id', '!=', public_pricelist.id),
+            ('website_id', 'in', [False, default_website.id])]
+        ).website_id = self.env.ref('website.website2')
+        public_pricelist.currency_id = self.env.company.currency_id
         self.start_tour(url, 'website_sale_product_configurator_optional_products_tour', login='portal')

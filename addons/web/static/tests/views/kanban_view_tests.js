@@ -409,7 +409,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("basic grouped rendering", async (assert) => {
-        assert.expect(13);
+        assert.expect(14);
 
         await makeView({
             type: "kanban",
@@ -436,6 +436,11 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
+        assert.hasClass(
+            target.querySelector(".o_kanban_group"),
+            "bg-100",
+            "o_kanban_group should have a background"
+        );
         assert.hasClass(target.querySelector(".o_kanban_renderer"), "o_kanban_grouped");
         assert.hasClass(target.querySelector(".o_kanban_renderer"), "o_kanban_test");
         assert.containsN(target, ".o_kanban_group", 2);
@@ -7251,7 +7256,7 @@ QUnit.module("Views", (hooks) => {
         registry.category("services").add("action", actionService, { force: true });
 
         await makeView({
-            type: "form",
+            type: "kanban",
             resModel: "partner",
             serverData,
             arch: `
@@ -7263,7 +7268,6 @@ QUnit.module("Views", (hooks) => {
                         </div>
                     </templates>
                 </kanban>`,
-            resId: 1,
         });
 
         await click(target.querySelector("a[type='action']"));

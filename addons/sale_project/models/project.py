@@ -142,7 +142,7 @@ class Project(models.Model):
 
     def action_create_invoice(self):
         action = self.env["ir.actions.actions"]._for_xml_id("sale.action_view_sale_advance_payment_inv")
-        so_ids = (self.sale_order_id | self.task_ids.sale_order_id).filtered(lambda so: so.invoice_status == 'to invoice').ids
+        so_ids = (self.sale_order_id | self.task_ids.sale_order_id).filtered(lambda so: so.invoice_status in ['to invoice', 'no']).ids
         action['context'] = {
             'active_id': so_ids[0] if len(so_ids) == 1 else False,
             'active_ids': so_ids
@@ -550,7 +550,7 @@ class ProjectTask(models.Model):
         action_window = {
             "type": "ir.actions.act_window",
             "res_model": "sale.order",
-            "name": "Sales Order",
+            "name": _("Sales Order"),
             "views": [[False, "tree"], [False, "kanban"], [False, "form"]],
             "context": {"create": False, "show_sale": True},
             "domain": [["id", "in", so_ids]],

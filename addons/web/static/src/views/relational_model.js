@@ -751,8 +751,7 @@ export class Record extends DataPoint {
     getFieldDomain(fieldName) {
         const rawDomains = [
             this._domains[fieldName] || [],
-            this.fields[fieldName].domain || [],
-            this.activeFields[fieldName].domain,
+            this.activeFields[fieldName].domain || this.fields[fieldName].domain || [],
         ];
 
         const evalContext = this.evalContext;
@@ -1429,7 +1428,6 @@ class DynamicList extends DataPoint {
         this.limit = params.limit || state.limit || this.constructor.DEFAULT_LIMIT;
         this.isDomainSelected = false;
         this.loadedCount = state.loadedCount || 0;
-        this.previousParams = state.previousParams || "[]";
 
         this.editedRecord = null;
         this.onCreateRecord = params.onCreateRecord || (() => {});
@@ -1468,10 +1466,6 @@ class DynamicList extends DataPoint {
     // -------------------------------------------------------------------------
     // Getters
     // -------------------------------------------------------------------------
-
-    get currentParams() {
-        return JSON.stringify([this.domain, this.groupBy]);
-    }
 
     get firstGroupBy() {
         return this.groupBy[0] || false;
@@ -1539,7 +1533,6 @@ class DynamicList extends DataPoint {
             limit: this.limit,
             loadedCount: this.records.length,
             orderBy: this.orderBy,
-            previousParams: this.currentParams,
         };
     }
 
@@ -1921,7 +1914,15 @@ export class DynamicRecordList extends DynamicList {
         for (const record of records) {
             this.removeRecord(record);
         }
-        await this._adjustOffset();
+        const hasReloaded = await this._adjustOffset();
+        if (resIds.length > 0 && !hasReloaded) {
+            // If the list hasn't been reloaded, force a reload if there are
+            // deleted records.
+            // NOTE that we don't rely on the reload logic of the _adjustOffset
+            // because we don't want the offset to be adjusted. Offset adjustment
+            // should only be done when at the last page.
+            await this.load();
+        }
         return resIds;
     }
 
@@ -2015,13 +2016,15 @@ export class DynamicRecordList extends DynamicList {
     /**
      * Reload the model if more records should appear on the current page.
      *
-     * @returns {Promise<void>}
+     * @returns {Promise<boolean>} Resolves to true if the model reloaded.
      */
     async _adjustOffset() {
         if (this.offset && !this.records.length) {
             this.offset = Math.max(this.offset - this.limit, 0);
             await this.load();
+            return true;
         }
+        return false;
     }
 
     /**
@@ -2201,9 +2204,15 @@ export class DynamicGroupList extends DynamicList {
     }
 
     async deleteRecords() {
+        const allResIds = [];
         for (const group of this.groups) {
-            group.list.deleteRecords();
+            const resIds = await group.list.deleteRecords();
+            group.count = group.count - resIds.length;
+            allResIds.push(...resIds);
         }
+        // Return the list of all deleted resIds.
+        // Will be used by the calling group to update its count.
+        return allResIds;
     }
 
     exportState() {
@@ -2253,18 +2262,8 @@ export class DynamicGroupList extends DynamicList {
         this.limit = params.limit === undefined ? this.limit : params.limit;
         this.offset = params.offset === undefined ? this.offset : params.offset;
         /** @type {[Group, number][]} */
-        const previousGroups = this.groups.map((g, i) => [g, i]);
         this.groups = await this._loadGroups();
         await Promise.all(this.groups.map((group) => group.load()));
-        if (this.previousParams === this.currentParams) {
-            for (const [group, index] of previousGroups) {
-                const newGroup = this.groups.find((g) => group.valueEquals(g.value));
-                if (!group.deleted && !newGroup) {
-                    group.empty();
-                    this.groups.splice(index, 0, group);
-                }
-            }
-        }
     }
 
     get nbTotalRecords() {
@@ -2409,6 +2408,7 @@ export class DynamicGroupList extends DynamicList {
                 lazy: true,
                 expand: this.expand,
                 expand_orderby: this.expand ? orderByToString(this.orderBy) : null,
+                expand_limit: this.expand ? this.limitByGroup : null,
                 offset: this.offset,
                 limit: this.limit,
                 context: this.context,

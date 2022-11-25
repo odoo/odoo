@@ -41,7 +41,7 @@ export class KanbanRenderer extends Component {
         let dataRecordId;
         let dataGroupId;
         const rootRef = useRef("root");
-        if (!this.env.isSmall) {
+        if (this.canUseSortable) {
             useSortable({
                 enable: () => this.canResequenceRecords,
                 // Params
@@ -151,6 +151,10 @@ export class KanbanRenderer extends Component {
     // Getters
     // ------------------------------------------------------------------------
 
+    get canUseSortable() {
+        return !this.env.isSmall;
+    }
+
     get canMoveRecords() {
         if (!this.canResequenceRecords) {
             return false;
@@ -256,12 +260,7 @@ export class KanbanRenderer extends Component {
         if (!this.env.isSmall && group.isFolded) {
             classes.push("o_column_folded");
         }
-        if (
-            this.canResequenceGroups &&
-            group.value &&
-            !group.isFolded &&
-            !group.hasActiveProgressValue
-        ) {
+        if (!group.isFolded && !group.hasActiveProgressValue) {
             classes.push("bg-100");
         }
         if (group.progressBars.length) {
@@ -508,7 +507,6 @@ export class KanbanRenderer extends Component {
      */
     sortRecordGroupEnter({ group }) {
         group.classList.add("o_kanban_hover");
-        group.classList.remove("bg-100");
     }
 
     /**
@@ -517,7 +515,6 @@ export class KanbanRenderer extends Component {
      */
     sortRecordGroupLeave({ group }) {
         group.classList.remove("o_kanban_hover");
-        group.classList.add("bg-100");
     }
 
     /**

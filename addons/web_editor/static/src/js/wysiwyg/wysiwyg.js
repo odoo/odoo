@@ -3,7 +3,7 @@ odoo.define('web_editor.wysiwyg', function (require) {
 
 const { ComponentWrapper } = require('web.OwlCompatibility');
 const { MediaDialogWrapper } = require('@web_editor/components/media_dialog/media_dialog');
-const { saveVideos, videoSpecificClasses } = require('@web_editor/components/media_dialog/video_selector');
+const { VideoSelector } = require('@web_editor/components/media_dialog/video_selector');
 const dom = require('web.dom');
 const core = require('web.core');
 const { browser } = require('@web/core/browser/browser');
@@ -150,8 +150,8 @@ const Wysiwyg = Widget.extend({
                 route: '/web_editor/video_url/data',
                 params: { video_url: url },
             });
-            const [savedVideo] = saveVideos([{src}]);
-            savedVideo.classList.add(...videoSpecificClasses);
+            const [savedVideo] = VideoSelector.createElements([{src}]);
+            savedVideo.classList.add(...VideoSelector.mediaSpecificClasses);
             return savedVideo;
         };
 
@@ -176,8 +176,19 @@ const Wysiwyg = Widget.extend({
             getPowerboxElement: () => {
                 const selection = (this.options.document || document).getSelection();
                 if (selection.isCollapsed && selection.rangeCount) {
-                    const node = closestElement(selection.anchorNode, 'P, DIV');
-                    return !(node && node.hasAttribute && node.hasAttribute('data-oe-model')) && node;
+                    const baseNode = closestElement(selection.anchorNode, 'P, DIV');
+                    const fieldContainer = closestElement(selection.anchorNode, '[data-oe-field]');
+                    if (!baseNode ||
+                        (
+                            fieldContainer &&
+                            !(
+                                fieldContainer.getAttribute('data-oe-field') === 'arch' ||
+                                fieldContainer.getAttribute('data-oe-type') === 'html'
+                            )
+                        )) {
+                        return false;
+                    }
+                    return baseNode;
                 }
             },
             isHintBlacklisted: node => {
@@ -204,6 +215,7 @@ const Wysiwyg = Widget.extend({
             plugins: options.editorPlugins,
             direction: options.direction || localization.direction || 'ltr',
             collaborationClientAvatarUrl: `${browser.location.origin}/web/image?model=res.users&field=avatar_128&id=${this.getSession().uid}`,
+            renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link'],
         }, editorCollaborationOptions));
 
         this.odooEditor.addEventListener('contentChanged', function () {
@@ -290,7 +302,7 @@ const Wysiwyg = Widget.extend({
 
                 const selection = self.odooEditor.document.getSelection();
                 const anchorNode = selection.anchorNode;
-                if (anchorNode && closestElement(anchorNode, '.oe-blackbox')) {
+                if (anchorNode && closestElement(anchorNode, '[data-oe-protected="true"]')) {
                     return;
                 }
 
@@ -1021,6 +1033,7 @@ const Wysiwyg = Widget.extend({
             subtree: true,
             attributes: true,
             characterData: true,
+            attributeOldValue: true,
         };
         if (this.odooFieldObservers) {
             for (let observerData of this.odooFieldObservers) {
@@ -1032,7 +1045,11 @@ const Wysiwyg = Widget.extend({
             this.odooFieldObservers = [];
 
             $odooFields.each((i, field) => {
-                const observer = new MutationObserver(() => {
+                const observer = new MutationObserver((mutations) => {
+                    mutations = this.odooEditor.filterMutationRecords(mutations);
+                    if (!mutations.length) {
+                        return;
+                    }
                     let $node = $(field);
                     let $nodes = $odooFields.filter(function () {
                         return this !== field;
@@ -1212,17 +1229,24 @@ const Wysiwyg = Widget.extend({
                 // Focus the link after the dialog element is removed because
                 // if the dialog element is still in the DOM at the time of
                 // doing link.focus(), because there is the attribute tabindex
-                // on the dialog element, the focus cannot occurs.
+                // on the dialog element, the focus cannot occur.
                 // Using a microtask to set the focus is hackish and might break
-                // if another microtask wich focus an elemen in the dom occurs
-                // at the same time (but this case seems unlikely).
+                // if another microtask which focuses an element in the dom
+                // occurs at the same time (but this case seems unlikely).
                 Promise.resolve().then(() => link.focus());
             });
             linkDialog.on('closed', this, function () {
                 // If the linkDialog content has been saved
                 // the previous selection in not relevant anymore.
                 if (linkDialog.destroyAction !== 'save') {
-                    restoreSelection();
+                    // Restore the selection after the dialog element isremoved
+                    // because if the dialog element is still in the DOM at the
+                    // time of doing restoreSelection(), it will trigger a new
+                    // selection change which will undo this one. Using a
+                    // microtask to set the focus is hackish and might break if
+                    // another microtask which changes the selection in the dom
+                    // occurs at the same time (but this case seems unlikely).
+                    Promise.resolve().then(() => restoreSelection());
                 }
             });
         }
@@ -1338,6 +1362,11 @@ const Wysiwyg = Widget.extend({
         for (const style of stylesToCopy) {
             element.style.setProperty(`--we-cp-${style}`, weUtils.getCSSVariableValue(style));
         }
+
+        element.classList.toggle('o_we_has_btn_outline_primary',
+            weUtils.getCSSVariableValue('btn-primary-outline') === 'true');
+        element.classList.toggle('o_we_has_btn_outline_secondary',
+            weUtils.getCSSVariableValue('btn-secondary-outline') === 'true');
     },
     /**
      * Detached function to allow overriding.
@@ -1753,7 +1782,7 @@ const Wysiwyg = Widget.extend({
     _updateEditorUI: function (e) {
         let selection = this.odooEditor.document.getSelection();
         const anchorNode = selection.anchorNode;
-        if (anchorNode && closestElement(anchorNode, '.oe-blackbox')) {
+        if (anchorNode && closestElement(anchorNode, '[data-oe-protected="true"]')) {
             return;
         }
 
@@ -2375,7 +2404,6 @@ const Wysiwyg = Widget.extend({
         }
         this._isOnline = false;
 
-        this.ptp.stop();
         this.preSavePromise = new Promise((resolve, reject) => {
             this.preSavePromiseResolve = resolve;
             this.preSavePromiseReject = reject;

@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 稀饭~~ <wangwhai@qq.com>, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:02+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2022\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -539,7 +539,7 @@ msgstr "信用卡/借记卡"
 #. module: payment
 #: model:payment.provider,display_as:payment.payment_provider_razorpay
 msgid "Credit & Debit Card, UPI (Powered by Razorpay)"
-msgstr ""
+msgstr "信用卡和借记卡，UPI (由Razorpay技术支持)"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__stripe
@@ -715,7 +715,7 @@ msgstr "固定国际费用"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_flutterwave
 msgid "Flutterwave"
-msgstr ""
+msgstr "Flutterwave"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -790,7 +790,7 @@ msgid ""
 "If a specific payment provider is selected, customers will only be allowed "
 "to pay via this one. If 'All' is selected, customers can pay via any "
 "available payment provider."
-msgstr ""
+msgstr "如果选择了一个特定的支付提供商，客户将只被允许通过这个支付机构付款。如果选择了 \"所有\"，客户可以通过任何可用的支付提供商进行支付。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -927,7 +927,7 @@ msgstr "最后更新时间"
 msgid ""
 "Making a request to the provider is not possible because the provider is "
 "disabled."
-msgstr ""
+msgstr "无法向该提供商提出请求，因为该提供商已被禁用。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_meth_link
@@ -1006,7 +1006,7 @@ msgstr "没有供应商设置"
 msgid ""
 "No manual payment method could be found for this company. Please create one "
 "from the Payment Provider menu."
-msgstr ""
+msgstr "没有找到该公司的手动付款方式。请从支付提供商菜单中创建一个。"
 
 #. module: payment
 #. openerp-web
@@ -1206,7 +1206,7 @@ msgstr "付款令牌"
 #: model:ir.model.fields,field_description:payment.field_res_partner__payment_token_count
 #: model:ir.model.fields,field_description:payment.field_res_users__payment_token_count
 msgid "Payment Token Count"
-msgstr "付款令牌数量"
+msgstr "付款令牌计数"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_token
@@ -1564,12 +1564,12 @@ msgstr "访问令牌无效。"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__child_transaction_ids
 msgid "The child transactions of the source transaction."
-msgstr ""
+msgstr "源交易的下级交易。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__payment_details
 msgid "The clear part of the payment method's payment details."
-msgstr ""
+msgstr "支付方式的支付细节的清晰部分。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__color
@@ -1591,7 +1591,7 @@ msgstr "这个支付提供商可用的国家。如果没有设置，它对所有
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__fees
 msgid "The fees amount; set by the system as it depends on the provider"
-msgstr ""
+msgstr "费用金额；由系统设定，因为它取决于提供商"
 
 #. module: payment
 #: code:addons/payment/models/payment_provider.py:0
@@ -1619,7 +1619,7 @@ msgstr "公司的主要货币，用于显示货币字段。"
 msgid ""
 "The maximum payment amount that this payment provider is available for. "
 "Leave blank to make it available for any payment amount."
-msgstr ""
+msgstr "这个支付提供商可用的最大支付金额。如果没有设置，任何支付金额都是可用的。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__auth_msg
@@ -1730,7 +1730,7 @@ msgstr "对%(amount)s的参考%(ref)s交易已经被授权 (%(provider_name)s)�
 msgid ""
 "The transaction with reference %(ref)s for %(amount)s has been confirmed "
 "(%(provider_name)s)."
-msgstr ""
+msgstr "参考号码%(ref)s的交易%(amount)s已经被 (%(provider_name)s) 确认。"
 
 #. module: payment
 #: code:addons/payment/wizards/payment_link_wizard.py:0
@@ -1754,7 +1754,7 @@ msgstr "不需要付款。"
 msgid ""
 "This action will also archive %s tokens that are registered with this "
 "provider. Archiving tokens is irreversible."
-msgstr ""
+msgstr "这个动作也将归档在这个提供商那里注册的%s令牌。归档令牌是不可逆转的。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization
@@ -1763,6 +1763,9 @@ msgid ""
 "A payment token is an anonymous link to the payment method details saved in the\n"
 "provider's database, allowing the customer to reuse it for a next purchase."
 msgstr ""
+"这控制了客户是否可以将他们的支付方式保存为支付令牌。\n"
+"支付令牌是保存在提供商数据库中的付款方式详情的匿名链接，\n"
+"允许客户在下次采购时重新使用。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_express_checkout
@@ -1770,7 +1773,7 @@ msgid ""
 "This controls whether customers can use express payment methods. Express "
 "checkout enables customers to pay with Google Pay and Apple Pay from which "
 "address information is collected at payment."
-msgstr ""
+msgstr "这控制了客户是否可以使用快速支付方式。快速结账允许客户使用Google支付和Apple支付来付款，在支付时收集地址信息。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__image

@@ -343,9 +343,6 @@ class AccountReportLine(models.Model):
         # engine-related field. This makes xmls a bit shorter
         vals_list = []
         for report_line in self:
-            if report_line.expression_ids:
-                continue
-
             if engine == 'domain' and report_line.domain_formula:
                 subformula, formula = DOMAIN_REGEX.match(report_line.domain_formula or '').groups()
                 # Resolve the calls to ref(), to mimic the fact those formulas are normally given with an eval="..." in XML
@@ -364,7 +361,16 @@ class AccountReportLine(models.Model):
                 'formula': formula.lstrip(' \t\n'),  # Avoid IndentationError in evals
                 'subformula': subformula
             }
-            vals_list.append(vals)
+            if report_line.expression_ids:
+                # expressions already exists, update the first expression with the right engine
+                # since syntactic sugar aren't meant to be used with multiple expressions
+                for expression in report_line.expression_ids:
+                    if expression.engine == engine:
+                        expression.write(vals)
+                        break
+            else:
+                # else prepare batch creation
+                vals_list.append(vals)
 
         if vals_list:
             self.env['account.report.expression'].create(vals_list)
@@ -428,13 +434,16 @@ class AccountReportExpression(models.Model):
     def _get_auditable_engines(self):
         return {'tax_tags', 'domain', 'account_codes', 'external', 'aggregation'}
 
+    def _strip_formula(self, vals):
+        if 'formula' in vals and isinstance(vals['formula'], str):
+            vals['formula'] = re.sub(r'\s+', ' ', vals['formula'].strip())
+
     @api.model_create_multi
     def create(self, vals_list):
         # Overridden so that we create the corresponding account.account.tag objects when instantiating an expression
         # with engine 'tax_tags'.
         for vals in vals_list:
-            if 'formula' in vals and isinstance(vals['formula'], str):
-                vals['formula'] = vals['formula'].replace('\n', '').strip()
+            self._strip_formula(vals)
 
         result = super().create(vals_list)
 
@@ -453,6 +462,8 @@ class AccountReportExpression(models.Model):
     def write(self, vals):
         if 'formula' not in vals:
             return super().write(vals)
+
+        self._strip_formula(vals)
 
         tax_tags_expressions = self.filtered(lambda x: x.engine == 'tax_tags')
         former_formulas_by_country = defaultdict(lambda: [])

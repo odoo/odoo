@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.tests import tagged, Form
+from odoo.tools.misc import formatLang
 from odoo import fields, Command
 
 
@@ -229,6 +230,28 @@ class TestExpenses(TestExpenseCommon):
                 'currency_id': self.company_data['currency'].id,
             },
         ])
+
+    def test_expense_company_account(self):
+        """ Create an expense with payment mode 'Company' and post it (it should not fail) """
+        with Form(self.env['hr.expense']) as expense_form:
+            expense_form.name = 'Company expense'
+            expense_form.date = '2022-11-17'
+            expense_form.total_amount = 1000.0
+            expense_form.payment_mode = 'company_account'
+            expense_form.employee_id = self.expense_employee
+            expense_form.product_id = self.product_a
+            expense = expense_form.save()
+
+        with Form(self.env['hr.expense.sheet']) as expense_sheet_form:
+            # Use same values that will be used by action_submit_expenses
+            expense_sheet_form.employee_id = expense.employee_id
+            expense_sheet_form.name = expense.name
+            expense_sheet_form.expense_line_ids.add(expense)
+            expense_sheet = expense_sheet_form.save()
+
+        expense_sheet.action_submit_sheet()
+        expense_sheet.approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
 
     def test_account_entry_multi_currency(self):
         """ Checking accounting move entries and analytic entries when submitting expense. With
@@ -551,3 +574,57 @@ class TestExpenses(TestExpenseCommon):
         self.assertRecordValues(expense_sheet.account_move_id, [{
             'partner_id': self.expense_user_employee.partner_id.id,
         }])
+
+    def test_print_expense_check(self):
+        """
+        Test the check content when printing a check
+        that comes from an expense
+        """
+        sheet = self.env['hr.expense.sheet'].create({
+            'company_id': self.env.company.id,
+            'employee_id': self.expense_employee.id,
+            'name': 'test sheet',
+            'expense_line_ids': [
+                (0, 0, {
+                    'name': 'expense_1',
+                    'date': '2016-01-01',
+                    'product_id': self.product_a.id,
+                    'unit_amount': 10.0,
+                    'employee_id': self.expense_employee.id,
+                }),
+                (0, 0, {
+                    'name': 'expense_2',
+                    'date': '2016-01-01',
+                    'product_id': self.product_a.id,
+                    'unit_amount': 1.0,
+                    'employee_id': self.expense_employee.id,
+                }),
+            ],
+        })
+
+        #actions
+        sheet.action_submit_sheet()
+        sheet.approve_expense_sheets()
+        sheet.action_sheet_move_create()
+        action_data = sheet.action_register_payment()
+        payment_method_line = self.env.company.bank_journal_ids.outbound_payment_method_line_ids.filtered(lambda m: m.code == 'check_printing')
+        with Form(self.env[action_data['res_model']].with_context(action_data['context'])) as wiz_form:
+            wiz_form.payment_method_line_id = payment_method_line
+        wizard = wiz_form.save()
+        action = wizard.action_create_payments()
+        self.assertEqual(sheet.state, 'done', 'all account.move.line linked to expenses must be reconciled after payment')
+
+        payments = self.env[action['res_model']].search(action['domain'])
+        for payment in payments:
+            pages = payment._check_get_pages()
+            stub_line = pages[0]['stub_lines'][:1]
+            self.assertTrue(stub_line)
+            move = self.env[action_data['context']['active_model']].browse(action_data['context']['active_ids'])
+            self.assertDictEqual(stub_line[0], {
+                'due_date': payment.date.strftime("%m/%d/%Y"),
+                'number': ' - '.join([move.name, move.ref] if move.ref else [move.name]),
+                'amount_total': formatLang(self.env, move.amount_total, currency_obj=self.env.company.currency_id),
+                'amount_residual': '-',
+                'amount_paid': formatLang(self.env, payment.amount_total, currency_obj=self.env.company.currency_id),
+                'currency': self.env.company.currency_id
+            })

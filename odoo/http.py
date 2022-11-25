@@ -343,6 +343,31 @@ def db_filter(dbs, host=None):
 
     return list(dbs)
 
+
+def dispatch_rpc(service_name, method, params):
+    """
+    Perform a RPC call.
+
+    :param str service_name: either "common", "db" or "object".
+    :param str method: the method name of the given service to execute
+    :param Mapping params: the keyword arguments for method call
+    :return: the return value of the called method
+    :rtype: Any
+    """
+    rpc_dispatchers = {
+        'common': odoo.service.common.dispatch,
+        'db': odoo.service.db.dispatch,
+        'object': odoo.service.model.dispatch,
+    }
+
+    with borrow_request():
+        threading.current_thread().uid = None
+        threading.current_thread().dbname = None
+
+        dispatch = rpc_dispatchers[service_name]
+        return dispatch(method, params)
+
+
 def is_cors_preflight(request, endpoint):
     return request.httprequest.method == 'OPTIONS' and endpoint.routing.get('cors', False)
 
@@ -889,6 +914,10 @@ class Session(collections.abc.MutableMapping):
             super().__setattr__(key, val)
         else:
             self[key] = val
+
+    def clear(self):
+        self.data.clear()
+        self.is_dirty = True
 
     #
     # Session methods
@@ -1938,14 +1967,6 @@ class Application:
             def fake_start_response(status, headers):
                 return
             ProxyFix(fake_app)(environ, fake_start_response)
-
-        # Some URLs in website are concatenated, first url ends with /,
-        # second url starts with /, resulting url contains two following
-        # slashes that must be merged.
-        if environ['REQUEST_METHOD'] == 'GET' and '//' in environ['PATH_INFO']:
-            response = werkzeug.utils.redirect(
-                environ['PATH_INFO'].replace('//', '/'), 301)
-            return response(environ, start_response)
 
         httprequest = werkzeug.wrappers.Request(environ)
         httprequest.user_agent_class = UserAgent  # use vendored userAgent since it will be removed in 2.1

@@ -923,6 +923,8 @@ class PreforkServer(CommonServer):
             # FIXME make longpolling process handle SIGTERM correctly
             self.worker_kill(self.long_polling_pid, signal.SIGKILL)
             self.long_polling_pid = None
+        if self.socket:
+            self.socket.close()
         if graceful:
             _logger.info("Stopping gracefully")
             super().stop()
@@ -941,8 +943,6 @@ class PreforkServer(CommonServer):
             _logger.info("Stopping forcefully")
         for pid in self.workers:
             self.worker_kill(pid, signal.SIGTERM)
-        if self.socket:
-            self.socket.close()
 
     def run(self, preload, stop):
         self.start()

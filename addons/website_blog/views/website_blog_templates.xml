@@ -313,7 +313,7 @@ list of filtered posts (by date or tag).
                     </div>
                     <div class="text-muted mb-2">
                         <i class="fa fa-clock-o fa-fw"/>
-                        <span t-field="blog_post.post_date" class="text-muted" t-options='{"format": "d MMMM, yyyy"}'/>
+                        <span t-field="blog_post.post_date" class="text-muted" t-options="{'format': 'long', 'date_only': 'true'}"/>
                         <span>by
                             <t t-call="website_blog.post_author">
                                 <t t-set="additionnal_classes" t-value="'d-inline-flex me-2'"/>

@@ -746,7 +746,7 @@
                         <div class="oe_title">
                             <span class="o_form_label"><field name="move_type" attrs="{'invisible': [('move_type', '=', 'entry')]}" readonly="1" nolabel="1"/></span>
 
-                            <span class="text-warning" attrs="{'invisible': [('show_name_warning', '=', False)]}">The current highest number is <field name="highest_name"/>. You might want to put a higher number here.</span>
+                            <div class="text-warning" attrs="{'invisible': [('show_name_warning', '=', False)]}">The current highest number is <field class="oe_inline" name="highest_name"/>. You might want to put a higher number here.</div>
 
                             <h1>
                                 <field name="name" attrs="{'invisible':[('name', '=', '/'), ('posted_before', '=', False), ('quick_edit_mode', '=', False)],
@@ -951,7 +951,7 @@
                                                                 <div class="text-muted">
                                                                     Quantity:
                                                                     <t t-esc="record.quantity.value"/>
-                                                                    <t t-esc="record.product_uom_id.value"/>
+                                                                    <t t-esc="record.product_uom_id.value" groups="uom.group_uom"/>
                                                                 </div>
                                                                 <div class="text-muted">
                                                                     Unit Price:
@@ -1104,6 +1104,7 @@
                                                widget="many2many_tags"
                                                string="Tax Grids"
                                                optional="show"
+                                               options="{'no_create': True}"
                                                domain="[
                                                     ('applicability', '=', 'taxes'),
                                                     '|', ('country_id', '=', parent.tax_country_id),

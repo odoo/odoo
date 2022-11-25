@@ -56,6 +56,13 @@ class TestEdiJson(AccountTestInvoicingCommon):
         cls.invoice_zero_qty.write({
             "invoice_line_ids": [(1, l_id, {"quantity": 0}) for l_id in cls.invoice_zero_qty.invoice_line_ids.ids]})
         cls.invoice_zero_qty.action_post()
+        cls.invoice_negative_unit_price = cls.init_invoice("out_invoice", post=False, products=cls.product_a + product_with_cess)
+        cls.invoice_negative_unit_price.write({
+            "invoice_line_ids": [
+                (1, cls.invoice_negative_unit_price.invoice_line_ids[0].id, {"price_unit": -400}),
+                (1, cls.invoice_negative_unit_price.invoice_line_ids[1].id, {"price_unit": 1000}),
+            ]})
+        cls.invoice_negative_unit_price.action_post()
 
     def test_edi_json(self):
         json_value = self.env["account.edi.format"]._l10n_in_edi_generate_invoice_json(self.invoice)
@@ -130,3 +137,27 @@ class TestEdiJson(AccountTestInvoicingCommon):
                 "OthChrg": 0.0, "TotItemVal": 0.0}],
         })
         self.assertDictEqual(json_value, expected, "Indian EDI with 0(zero) quantity sent json value is not matched")
+
+        #=================================== Negative unit price test =============================================
+        json_value = self.env["account.edi.format"]._l10n_in_edi_generate_invoice_json(self.invoice_negative_unit_price)
+        expected.update({
+            "DocDtls": {"Typ": "INV", "No": "INV/2019/00004", "Dt": "01/01/2019"},
+            "ItemList": [{
+                "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "01111", "Qty": 1.0,
+                "Unit": "UNT", "UnitPrice": -400.0, "TotAmt": -400.0, "Discount": 0.0, "AssAmt": -400.0,
+                "GstRt": 5.0, "IgstAmt": 0.0, "CgstAmt": -10.0, "SgstAmt": -10.0, "CesRt": 0.0, "CesAmt": 0.0,
+                "CesNonAdvlAmt": 0.0, "StateCesRt": 0.0, "StateCesAmt": 0.0, "StateCesNonAdvlAmt": 0.0,
+                "OthChrg": 0.0, "TotItemVal": -420.0
+            }, {
+                "SlNo": "2", "PrdDesc": "product_with_cess", "IsServc": "N", "HsnCd": "02222", "Qty": 1.0,
+                "Unit": "UNT", "UnitPrice": 1000.0, "TotAmt": 1000.0, "Discount": 0.0, "AssAmt": 1000.0,
+                "GstRt": 12.0, "IgstAmt": 0.0, "CgstAmt": 60.0, "SgstAmt": 60.0, "CesRt": 5.0, "CesAmt": 50.0,
+                "CesNonAdvlAmt": 1.59, "StateCesRt": 0.0, "StateCesAmt": 0.0, "StateCesNonAdvlAmt": 0.0,
+                "OthChrg": 0.0, "TotItemVal": 1171.59
+            }],
+            "ValDtls": {
+                "AssVal": 600.0, "CgstVal": 50.0, "SgstVal": 50.0, "IgstVal": 0.0, "CesVal": 51.59,
+                "StCesVal": 0.0, "RndOffAmt": 0.0, "TotInvVal": 751.59
+            },
+        })
+        self.assertDictEqual(json_value, expected, "Indian EDI with Negative unit price sent json value is not matched")

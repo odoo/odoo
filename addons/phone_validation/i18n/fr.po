@@ -136,8 +136,8 @@ msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
 msgstr ""
-"Champ utilisé pour stocker le numéro de téléphone aseptisé. Aide à accélérer"
-" les recherches et comparaisons."
+"Champ utilisé pour stocker le numéro de téléphone nettoyé. Aide à accélérer "
+"les recherches et comparaisons."
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_follower_ids
@@ -181,7 +181,7 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
 msgstr ""
-"Si le numéro de téléphone aseptisé est sur la blacklist, le contact ne "
+"Si le numéro de téléphone nettoyé est sur la liste noire, le contact ne "
 "recevra plus de campagnes de mail, d'aucunes listes."
 
 #. module: phone_validation
@@ -197,9 +197,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"Indique si un numéro de téléphone blacklisté et aseptisé est un numéro de "
-"téléphone portable. Aide à distinguer quel numéro est blacklisté quand il y "
-"a et un champ portable et un champ téléphone dans un modèle."
+"Indique si un numéro de téléphone nettoyé et sur liste noire est un numéro "
+"de téléphone portable. Aide à distinguer quel numéro est sur liste noire "
+"quand il y a et un champ portable et un champ téléphone dans un modèle."
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_blacklisted
@@ -208,9 +208,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"Indique si un numéro de téléphone blacklisté et aseptisé est un numéro de "
-"téléphone portable. Aide à distinguer quel numéro est blacklisté quand il y "
-"a et un champ portable et un champ téléphone dans un modèle."
+"Indique si un numéro de téléphone nettoyé et sur liste noire est un numéro "
+"de téléphone portable. Aide à distinguer quel numéro est sur liste noire "
+"quand il y a et un champ portable et un champ téléphone dans un modèle."
 
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:0
@@ -266,6 +266,12 @@ msgstr "Erreur d'envoi du message"
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_ids
 msgid "Messages"
 msgstr "Messages"
+
+#. module: phone_validation
+#: code:addons/phone_validation/models/mail_thread_phone.py:0
+#, python-format
+msgid "Missing definition of phone fields."
+msgstr "Définition manquante des champs de téléphone."
 
 #. module: phone_validation
 #: model:ir.model.constraint,message:phone_validation.constraint_phone_blacklist_unique_number
@@ -359,7 +365,7 @@ msgstr "Supprimer le numéro de téléphone de la liste noire"
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_sanitized
 msgid "Sanitized Number"
-msgstr "Numéro Aseptisé"
+msgstr "Numéro nettoyé"
 
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:0

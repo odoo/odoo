@@ -326,7 +326,7 @@ msgstr ""
 "            <tr style=\"border-bottom: 2px solid #dee2e6;\">\n"
 "                <td style=\"width: 150px;\"><span style=\"font-weight:bold;\">产品</span></td>\n"
 "                <td/>\n"
-"                <td width=\"15%\" align=\"center\"><span style=\"font-weight:bold;\">数量</span></td>\n"
+"                <td width=\"15%\" align=\"center\"><span style=\"font-weight:bold;\">计数</span></td>\n"
 "                <td width=\"20%\" align=\"right\"><span style=\"font-weight:bold;\">\n"
 "                <t t-if=\"object.user_id.has_group('account.group_show_line_subtotals_tax_excluded')\">\n"
 "                    不含税价.\n"
@@ -936,13 +936,13 @@ msgstr "能够选择销售订单中的包裹类型，并强制为每个包裹数
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Pay Quotation"
-msgstr "接受并支付报价单"
+msgstr "接受和支付报价单"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Sign Quotation"
-msgstr "接受并签署报价单"
+msgstr "接受和签署报价单"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1012,7 +1012,7 @@ msgstr "活动状态"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "活动类型图表"
+msgstr "活动类型图标"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_activity_type_action_config_sale
@@ -1088,7 +1088,7 @@ msgstr "分析账户"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution_stored_char
 msgid "Analytic Distribution Stored Char"
-msgstr "分析分布存储字符"
+msgstr "分析分配存储字符"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__analytic
@@ -1141,7 +1141,7 @@ msgstr "成本"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_attachment_count
 msgid "Attachment Count"
-msgstr "附件数量"
+msgstr "附件计数"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_attribute_value
@@ -1652,7 +1652,7 @@ msgstr "已交付数量: %s"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__delivery
 msgid "Delivered quantities"
-msgstr "已交付数量"
+msgstr "交付数量"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_shipping_id
@@ -1863,7 +1863,7 @@ msgstr "编辑配置"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_provider_onboarding_wizard__payment_method__digital_signature
 msgid "Electronic signature"
-msgstr "电子签名"
+msgstr "电子签字"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__paypal_email_account
@@ -2163,7 +2163,7 @@ msgstr "结算单已确认"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_count
 msgid "Invoice Count"
-msgstr "结算单笔数"
+msgstr "结算单计数"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_created
@@ -2207,12 +2207,12 @@ msgstr "当月的结算单收入。 这是销售渠道本月开具的结算单�
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__delivery
 msgid "Invoice what is delivered"
-msgstr "按发货开票"
+msgstr "结算已经交付的"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__order
 msgid "Invoice what is ordered"
-msgstr "订单结算单"
+msgstr "结算已经订购的"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2508,7 +2508,7 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
-"手动设置订单数量：基于手动输入数量的结算单，不创建分析账户。\n"
+"手动设置订单计数：基于手动输入计数的结算单，不创建分析账户。\n"
 "时间表：在合同的基础上对相关结算单跟踪小时时间表。\n"
 "创建任务和跟踪时间：在销售订单验证上创建任务并跟踪工作时间。"
 
@@ -2770,7 +2770,7 @@ msgstr "线上支付"
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_sign
 #: model:ir.model.fields,field_description:sale.field_sale_order__require_signature
 msgid "Online Signature"
-msgstr "线上签名"
+msgstr "线上签字"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2828,7 +2828,7 @@ msgstr "订单确认"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__count
 msgid "Order Count"
-msgstr "订购数量"
+msgstr "订购计数"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -3260,7 +3260,7 @@ msgstr "报价/订单"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
 msgid "Quotation Count"
-msgstr "报价数量"
+msgstr "报价计数"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -3407,7 +3407,7 @@ msgstr "报告"
 msgid ""
 "Request a online signature and/or payment to the customer in order to "
 "confirm orders automatically."
-msgstr "向客户申请线上签名和/或支付，以便自动确认订单。"
+msgstr "向客户申请线上签字和/或支付，以便自动确认订单。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3445,12 +3445,12 @@ msgstr "收入"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__invoiced_amount
 msgid "Revenues generated by the campaign"
-msgstr "活动产生的收入"
+msgstr "营销产生的收入"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "短信发送错误"
+msgstr "短信息发送错误"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__sale_order_ids
@@ -3466,7 +3466,7 @@ msgstr "销售订单"
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_order_count
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_order_count
 msgid "Sale Order Count"
-msgstr "销售订单数量"
+msgstr "销售订单计数"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_warning_sale
@@ -3883,7 +3883,7 @@ msgstr "线上签名"
 #: model:ir.model.fields,field_description:sale.field_sale_order__signature
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Signature"
-msgstr "签名"
+msgstr "签字"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -4101,7 +4101,7 @@ msgstr ""
 msgid ""
 "The Sales Order %s linked to the Analytic Account %s is cancelled. You "
 "cannot register an expense on a cancelled Sales Order."
-msgstr "销售订单%s关联的分析账户%s被取消。你不能在取消的销售订单上登记费用。"
+msgstr "销售订单%s关联的分析科目%s被取消。你不能在取消的销售订单上登记费用。"
 
 #. module: sale
 #: code:addons/sale/models/account_move_line.py:0
@@ -4110,7 +4110,7 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s is currently locked. "
 "You cannot register an expense on a locked Sales Order. Please create a new "
 "SO linked to this Analytic Account."
-msgstr "销售订单%s关联的分析账户%s当前被锁定。你不能在锁定的销售订单上登记费用。请创建新的销售订单关联这个分析账户。"
+msgstr "销售订单%s关联的分析科目%s当前被锁定。你不能在锁定的销售订单上登记费用。请创建新的销售订单关联这个分析科目。"
 
 #. module: sale
 #: code:addons/sale/models/account_move_line.py:0
@@ -4118,7 +4118,7 @@ msgstr "销售订单%s关联的分析账户%s当前被锁定。你不能在锁�
 msgid ""
 "The Sales Order %s linked to the Analytic Account %s must be validated "
 "before registering expenses."
-msgstr "销售订单%s关联的分析账户%s在登记费用前必须被验证。"
+msgstr "销售订单%s关联的分析科目%s在登记费用前必须被验证。"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
@@ -4432,6 +4432,7 @@ msgid "Type Name"
 msgstr "类型名称"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Type a message..."
@@ -4455,7 +4456,7 @@ msgstr "USPS 连接器"
 #. module: sale
 #: model:ir.model,name:sale.model_utm_campaign
 msgid "UTM Campaign"
-msgstr "UTM活动"
+msgstr "UTM营销"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_order_cancel.py:0

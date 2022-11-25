@@ -508,6 +508,34 @@ QUnit.module("SettingsFormView", (hooks) => {
         await nextTick();
     });
 
+    QUnit.test("correctly copy attributes to compiled labels", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "res.config.settings",
+            serverData,
+            arch: `
+                <form string="Settings" js_class="base_settings">
+                        <div class="settings">
+                            <div class="app_settings_block" string="CRM" data-key="crm">
+                                <div class="row mt16 o_settings_container">
+                                    <div class="col-12 col-lg-6 o_setting_box">
+                                        <div class="o_setting_left_pane">
+                                            <label for="foo" string="Label Before" class="a"/>
+                                            <field name="foo" class="b"/>
+                                            <label for="foo" string="Label After" class="c"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>`,
+        });
+
+        assert.hasClass(target.querySelectorAll(".o_form_label")[0], "a");
+        assert.hasClass(target.querySelector(".o_field_widget.o_field_boolean"), "b");
+        assert.hasClass(target.querySelectorAll(".o_form_label")[1], "c");
+    });
+
     QUnit.test("settings views does not write the id on the url", async function (assert) {
         serverData.actions = {
             1: {
@@ -1427,7 +1455,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         <div class="o_setting_container">
             <SettingsPage slots="{NoContentHelper:props.slots.NoContentHelper}" initialTab="props.initialApp" t-slot-scope="settings" modules="[{&quot;key&quot;:&quot;crm&quot;,&quot;string&quot;:&quot;CRM&quot;,&quot;imgurl&quot;:&quot;/crm/static/description/icon.png&quot;,&quot;isVisible&quot;:false}]" class="'settings'">
                 <SettingsApp t-props="{&quot;key&quot;:&quot;crm&quot;,&quot;string&quot;:&quot;CRM&quot;,&quot;imgurl&quot;:&quot;/crm/static/description/icon.png&quot;,&quot;isVisible&quot;:false}" selectedTab="settings.selectedTab" class="'app_settings_block'">
-                    <FormLabel t-props="{id:'display_name',fieldName:'display_name',record:props.record,fieldInfo:props.archInfo.fieldNodes['display_name'],className:&quot;highhopes&quot;}" string="\`My&quot; little '  Label\`"/>
+                    <FormLabel id="'display_name'" fieldName="'display_name'" record="props.record" fieldInfo="props.archInfo.fieldNodes['display_name']" className="&quot;highhopes&quot;" string="\`My&quot; little '  Label\`"/>
                     <Field id="'display_name'" name="'display_name'" record="props.record" fieldInfo="props.archInfo.fieldNodes['display_name']"/>
                 </SettingsApp>
             </SettingsPage>

@@ -331,7 +331,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
         var attributeIds = _.map($attributes, function (elem) {
             return $(elem).data('value_id');
         });
-        window.location.hash = 'attr=' + attributeIds.join(',');
+        window.location.replace('#attr=' + attributeIds.join(','));
     },
     /**
      * Set the checked values active.
@@ -737,7 +737,10 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
     _onChangeAttribute: function (ev) {
         if (!ev.isDefaultPrevented()) {
             ev.preventDefault();
-            this.el.querySelector('.o_wsale_products_grid_table_wrapper').classList.add('opacity-50');
+            const productGrid = this.el.querySelector(".o_wsale_products_grid_table_wrapper");
+            if (productGrid) {
+                productGrid.classList.add("opacity-50");
+            }
             $(ev.currentTarget).closest("form").submit();
         }
     },
@@ -890,7 +893,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
                 const selectedCombination = allCombinations.find(c => this._isValidCombination(c, attributeExclusions));
 
                 if (selectedCombination && selectedCombination.length) {
-                    window.location.hash = `attr=${selectedCombination.join(',')}`;
+                    window.location.replace('#attr=' + selectedCombination.join(','));
                 }
             }
         }

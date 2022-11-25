@@ -280,6 +280,10 @@ class TitleDescription extends Component {
         }, () => []);
     }
 
+    //--------------------------------------------------------------------------
+    // Getters
+    //--------------------------------------------------------------------------
+
     get seoNameUrl() {
         return this.previousSeoName || this.props.seoNameDefault;
     }
@@ -321,6 +325,23 @@ class TitleDescription extends Component {
             return this.env._t("Your description looks too long.");
         }
         return false;
+    }
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {InputEvent} ev
+     */
+    _updateInputValue(ev) {
+        // `NFKD` as in `http_routing` python `slugify()`
+        ev.target.value = ev.target.value.trim().normalize('NFKD').toLowerCase()
+            .replace(/\s+/g, '-') // Replace spaces with -
+            .replace(/[^\w-]+/g, '-') // Remove all non-word chars
+            .replace(/-\+/g, '-'); // Replace multiple - with single -
+        this.seoContext.seoName = ev.target.value;
     }
 }
 TitleDescription.template = 'website.TitleDescription';

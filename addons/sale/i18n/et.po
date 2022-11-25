@@ -21,6 +21,7 @@
 # Martin Aavastik <martin@avalah.ee>, 2022
 # Triine Aavik <triine@avalah.ee>, 2022
 # Eneli Õigus <enelioigus@gmail.com>, 2022
+# Leaanika Randmets, 2022
 # 
 msgid ""
 msgstr ""
@@ -28,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2022\n"
+"Last-Translator: Leaanika Randmets, 2022\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -684,6 +685,9 @@ msgid ""
 "invoicing,according to their invoicing policy (based on ordered or delivered"
 " quantity)."
 msgstr ""
+"Nende arveldusmeetoditele vastavalt (tellitud või kättesaadud koguste "
+"põhjal), on standardarve väljastatud koos kõikide arveldamiseks valmis "
+"olevate müügitellimuse ridadega. "
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__product_type
@@ -790,7 +794,7 @@ msgstr "Tegevuse seis"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Tegevuse liigi sümbol"
+msgstr "Tegevustüübi ikoon"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_activity_type_action_config_sale
@@ -849,6 +853,8 @@ msgid ""
 "An order is to upsell when delivered quantities are above initially\n"
 "            ordered quantities, and the invoicing policy is based on ordered quantities."
 msgstr ""
+"Lisamüügi võimalus kui tarnitud kogused ületavad algselt tellitud koguseid "
+"ning arveldatakse tellitud koguste alusel."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution
@@ -909,6 +915,8 @@ msgid ""
 "As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
 "            to sell extra hours when all ordered hours have been consumed."
 msgstr ""
+"Näiteks kui müüte ettemakstud tundidega teenuseid, soovitab Odoo teil müüa "
+"lisatunde kuni kõik tellitud tunnid on kasutatud. "
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -1827,7 +1835,7 @@ msgstr "Brutokaal"
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Group By"
-msgstr "Grupeeri"
+msgstr "Rühmitamine"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
@@ -2060,6 +2068,8 @@ msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                    them before validation."
 msgstr ""
+"Arved luuakse mustandina, et saaksite need üle vaadata\n"
+"                        enne valideerimist."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
@@ -3943,6 +3953,8 @@ msgid ""
 "The delivery date is sooner than the expected date. You may be unable to "
 "honor the delivery date."
 msgstr ""
+"Tarnetähtaeg on eeldatavast tähtajast varasem. Te ei pruugi jõuda tähtajast "
+"kinni pidada."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
@@ -3968,6 +3980,9 @@ msgid ""
 "The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment provider.\n"
 "This mode is advised if you issue the final invoice at the order and not after the delivery."
 msgstr ""
+"Arve luuakse automaatselt ja on saadaval kliendiportaalis, kui makse vastuvõtja on tehingu kinnitanud.\n"
+"Makse on märgitud makstuks ja makse registreeritakse makseandmikus, mis on määratud ära makse vastuvõtja konfiguratsioonis.\n"
+"See režiim on soovitatud juhul, kui te väljastate viimase arve tellimisel ja mitte peale tarnet."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4025,6 +4040,8 @@ msgid ""
 "to \"Ordered quantities\". Please update your deposit product to be able to "
 "create a deposit invoice."
 msgstr ""
+"Ettemaksutoote arveldamise seadistused peaksid olema „tellitud kogused“. "
+"Palun vaata oma toode üle."
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -4060,6 +4077,11 @@ msgid ""
 "- You should deliver your products before invoicing them: Click on the \"truck\" icon (top-right of your screen) and follow instructions.\n"
 "- You should modify the invoicing policy of your product: Open the product, go to the \"Sales\" tab and modify invoicing policy from \"delivered quantities\" to \"ordered quantities\". For Services, you should modify the Service Invoicing Policy to 'Prepaid'."
 msgstr ""
+"Midagi pole arveldada!\n"
+"\n"
+"Põhjus(ed) selleks võivad olla:\n"
+"- Te peaksite tarnima oma tooted kohale enne arveldamist: vajutage \"veoauto\" ikoonile (ekraani üleval paremas nurgas) ja järgige juhendeid.\n"
+"- Te peaksite muutma oma toote tarnemeetodit: avage toode, minge \"Müük\" vahelehele ja muutke tarnemeetod \"tarnitud koguste põhjal\" pealt ümber \"\"tellitud koguste põhjal\"."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4266,6 +4288,7 @@ msgid "Type Name"
 msgstr "Tüübi nimi"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Type a message..."
@@ -4524,6 +4547,8 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "            or check every order and invoice them one by one."
 msgstr ""
+"Võite selekteerida kõik tellimused ja arveldada need partiina,<br>\n"
+"                või vaadata iga tellimust ning arveldada ühekaupa."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_provider__so_reference_type
@@ -4620,7 +4645,7 @@ msgstr "sulge"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "days"
-msgstr "päeva pärast"
+msgstr "päev(a)"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
