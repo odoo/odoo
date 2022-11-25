@@ -47,25 +47,25 @@
                         Create
                     </button>
                 </t>
-                <t t-if="nbTotal and !nbSelected and activeActions.exportXlsx and isExportEnable and !env.isSmall">
-                    <button type="button" class="btn btn-secondary fa fa-download o_list_export_xlsx" data-tooltip="Export All" aria-label="Export All" t-on-click="onDirectExportData"/>
-                </t>
-            </t>
-            <t t-if="nbSelected">
                 <t t-foreach="archInfo.headerButtons" t-as="button" t-key="button.id">
                     <ListViewHeaderButton
+                        t-if="nbSelected || (button.display === 'always')"
                         list="model.root"
+                        className="button.className"
                         clickParams="button.clickParams"
-                        defaultRank="button.defaultRank"
+                        defaultRank="'btn-secondary'"
                         domain="props.domain"
                         icon="button.icon"
                         string="button.string"
                         title="button.title"
                     />
                 </t>
-                <t t-if="!env.isSmall">
-                    <t t-call="web.ListView.Selection"/>
+                <t t-if="nbTotal and !nbSelected and activeActions.exportXlsx and isExportEnable and !env.isSmall">
+                    <button type="button" class="btn btn-secondary fa fa-download o_list_export_xlsx" data-tooltip="Export All" aria-label="Export All" t-on-click="onDirectExportData"/>
                 </t>
+            </t>
+            <t t-if="!env.isSmall and nbSelected">
+                <t t-call="web.ListView.Selection"/>
             </t>
         </div>
     </t>
