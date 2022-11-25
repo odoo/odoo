@@ -21,7 +21,7 @@ import odoo
 
 from odoo import http, models, fields, _
 from odoo.exceptions import AccessError
-from odoo.http import request
+from odoo.http import request, SessionExpiredException
 from odoo.osv import expression
 from odoo.tools import OrderedSet, escape_psql, html_escape as escape
 from odoo.addons.http_routing.models.ir_http import slug, slugify, _guess_mimetype
@@ -106,7 +106,7 @@ class Website(Home):
         if homepage_url and homepage_url != '/':
             try:
                 return request._serve_ir_http()
-            except (AccessError, NotFound):
+            except (AccessError, NotFound, SessionExpiredException):
                 pass
 
         # Fallback on first accessible menu
