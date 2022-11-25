@@ -160,7 +160,7 @@ export class SearchArchParser extends XMLParser {
                     preField.defaultAutocompleteValue.label = option[1];
                 } else if (fieldType === "many2one") {
                     this.labels.push((orm) => {
-                        orm.call(relation, "name_get", [value], { context }).then((results) => {
+                        return orm.call(relation, "name_get", [value], { context }).then((results) => {
                             preField.defaultAutocompleteValue.label = results[0][1];
                         });
                     });

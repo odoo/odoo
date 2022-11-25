@@ -998,4 +998,35 @@ QUnit.module("Search", (hooks) => {
         await triggerEvent(searchInput, null, "keydown", { key: "Enter" });
         assert.deepEqual(getDomain(controlPanel), [["company", "=", 5]]);
     });
+
+    QUnit.test("should wait label promises for one2many search defaults", async function (assert) {
+        assert.expect(3);
+
+        const target = getFixture();
+
+        const def = makeDeferred();
+        const mockRPC = async (_, args) => {
+            if (args.method === "name_get") {
+                await def;
+            }
+        };
+
+        makeWithSearch({
+            serverData,
+            mockRPC,
+            resModel: "partner",
+            Component: ControlPanel,
+            searchMenuTypes: [],
+            searchViewId: false,
+            context: { search_default_company: 1 },
+        });
+
+        await nextTick();
+        assert.containsNone(target, ".o_control_panel");
+
+        def.resolve();
+        await nextTick();
+        assert.containsOnce(target, ".o_control_panel");
+        assert.strictEqual(getFacetTexts(target)[0].replace("\n", ""), "CompanyFirst record");
+    });
 });
