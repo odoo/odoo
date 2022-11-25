@@ -1113,8 +1113,28 @@ class Message(models.Model):
         for record in self:
             model = model or record.model
             res_id = res_id or record.res_id
+<<<<<<< HEAD
             if model in self.pool and issubclass(self.pool[model], self.pool['mail.thread']):
                 self.env[model].browse(res_id).invalidate_recordset(fnames)
+||||||| parent of 8355e4f9847 (temp)
+            if issubclass(self.pool[model], self.pool['mail.thread']):
+                self.env[model].invalidate_cache(fnames=[
+                    'message_ids',
+                    'message_unread',
+                    'message_unread_counter',
+                    'message_needaction',
+                    'message_needaction_counter',
+                ], ids=[res_id])
+=======
+            if model and issubclass(self.pool[model], self.pool['mail.thread']):
+                self.env[model].invalidate_cache(fnames=[
+                    'message_ids',
+                    'message_unread',
+                    'message_unread_counter',
+                    'message_needaction',
+                    'message_needaction_counter',
+                ], ids=[res_id])
+>>>>>>> 8355e4f9847 (temp)
 
     def _get_search_domain_share(self):
         return ['&', '&', ('is_internal', '=', False), ('subtype_id', '!=', False), ('subtype_id.internal', '=', False)]
