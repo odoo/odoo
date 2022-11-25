@@ -4,8 +4,8 @@ import { getFirstPivotFunction, getNumberOfPivotFormulas } from "./pivot_helpers
 
 const { astToFormula } = spreadsheet;
 
-export const SEE_RECORDS_PIVOT = async ({ sheetId, col, row }, env) => {
-    const cell = env.model.getters.getCell(sheetId, col, row);
+export const SEE_RECORDS_PIVOT = async (position, env) => {
+    const cell = env.model.getters.getCell(position);
     if (!cell) {
         return;
     }
@@ -13,7 +13,7 @@ export const SEE_RECORDS_PIVOT = async ({ sheetId, col, row }, env) => {
     const evaluatedArgs = args
         .map(astToFormula)
         .map((arg) => env.model.getters.evaluateFormula(arg));
-    const pivotId = env.model.getters.getPivotIdFromPosition(sheetId, col, row);
+    const pivotId = env.model.getters.getPivotIdFromPosition(position);
     const { model } = env.model.getters.getPivotDefinition(pivotId);
     const dataSource = await env.model.getters.getAsyncPivotDataSource(pivotId);
     const slice = functionName === "ODOO.PIVOT.HEADER" ? 1 : 2;
@@ -40,7 +40,7 @@ export const SEE_RECORDS_PIVOT = async ({ sheetId, col, row }, env) => {
 
 export const SEE_RECORDS_PIVOT_VISIBLE = (position, env) => {
     const evaluatedCell = env.model.getters.getEvaluatedCell(position);
-    const cell = env.model.getters.getCell(position.sheetId, position.col, position.row);
+    const cell = env.model.getters.getCell(position);
     return (
         evaluatedCell.type !== "empty" &&
         evaluatedCell.type !== "error" &&

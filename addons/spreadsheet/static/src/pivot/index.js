@@ -31,16 +31,12 @@ cellMenuRegistry.add("pivot_see_records", {
     name: _lt("See records"),
     sequence: 175,
     action: async (env) => {
-        const sheetId = env.model.getters.getActiveSheetId();
-        const { col, row } = env.model.getters.getPosition();
-        const position = env.model.getters.getMainCellPosition(sheetId, col, row);
-        await SEE_RECORDS_PIVOT({ sheetId, ...position }, env);
+        const position = env.model.getters.getActivePosition();
+        await SEE_RECORDS_PIVOT(position, env);
     },
     isVisible: (env) => {
-        const sheetId = env.model.getters.getActiveSheetId();
-        const { col, row } = env.model.getters.getPosition();
-        const position = env.model.getters.getMainCellPosition(sheetId, col, row);
-        return SEE_RECORDS_PIVOT_VISIBLE({ sheetId, ...position }, env);
+        const position = env.model.getters.getActivePosition();
+        return SEE_RECORDS_PIVOT_VISIBLE(position, env);
     },
 });
 

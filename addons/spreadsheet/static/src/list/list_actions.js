@@ -5,8 +5,8 @@ import { getFirstListFunction, getNumberOfListFormulas } from "./list_helpers";
 
 const { astToFormula } = spreadsheet;
 
-export const SEE_RECORD_LIST = async ({ sheetId, col, row }, env) => {
-    const cell = env.model.getters.getCell(sheetId, col, row);
+export const SEE_RECORD_LIST = async (position, env) => {
+    const cell = env.model.getters.getCell(position);
     if (!cell) {
         return;
     }
@@ -14,7 +14,7 @@ export const SEE_RECORD_LIST = async ({ sheetId, col, row }, env) => {
     const evaluatedArgs = args
         .map(astToFormula)
         .map((arg) => env.model.getters.evaluateFormula(arg));
-    const listId = env.model.getters.getListIdFromPosition(sheetId, col, row);
+    const listId = env.model.getters.getListIdFromPosition(position);
     const { model } = env.model.getters.getListDefinition(listId);
     const dataSource = await env.model.getters.getAsyncListDataSource(listId);
     const recordId = dataSource.getIdFromPosition(evaluatedArgs[1] - 1);
@@ -32,7 +32,7 @@ export const SEE_RECORD_LIST = async ({ sheetId, col, row }, env) => {
 
 export const SEE_RECORD_LIST_VISIBLE = (position, env) => {
     const evaluatedCell = env.model.getters.getEvaluatedCell(position);
-    const cell = env.model.getters.getCell(position.sheetId, position.col, position.row);
+    const cell = env.model.getters.getCell(position);
     return (
         evaluatedCell.type !== "empty" &&
         evaluatedCell.type !== "error" &&

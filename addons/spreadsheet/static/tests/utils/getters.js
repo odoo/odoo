@@ -18,7 +18,7 @@ export function getCellValue(model, xc, sheetId = model.getters.getActiveSheetId
  */
 export function getCell(model, xc, sheetId = model.getters.getActiveSheetId()) {
     const { col, row } = toCartesian(xc);
-    return model.getters.getCell(sheetId, col, row);
+    return model.getters.getCell({ sheetId, col, row });
 }
 
 export function getEvaluatedCell(model, xc, sheetId = model.getters.getActiveSheetId()) {

@@ -101,7 +101,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
     QUnit.test("can select a List from cell formula", async function (assert) {
         const { model } = await createSpreadsheetWithList();
         const sheetId = model.getters.getActiveSheetId();
-        const listId = model.getters.getListIdFromPosition(sheetId, 0, 0);
+        const listId = model.getters.getListIdFromPosition({ sheetId, col: 0, row: 0 });
         model.dispatch("SELECT_ODOO_LIST", { listId });
         const selectedListId = model.getters.getSelectedListId();
         assert.strictEqual(selectedListId, "1");
@@ -113,7 +113,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
             const { model } = await createSpreadsheetWithList();
             setCellContent(model, "A1", `=-ODOO.LIST("1","1","foo")`);
             const sheetId = model.getters.getActiveSheetId();
-            const listId = model.getters.getListIdFromPosition(sheetId, 0, 0);
+            const listId = model.getters.getListIdFromPosition({ sheetId, col: 0, row: 0 });
             model.dispatch("SELECT_ODOO_LIST", { listId });
             const selectedListId = model.getters.getSelectedListId();
             assert.strictEqual(selectedListId, "1");
@@ -125,7 +125,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
             const { model } = await createSpreadsheetWithList();
             setCellContent(model, "A1", `=3*ODOO.LIST("1","1","foo")`);
             const sheetId = model.getters.getActiveSheetId();
-            const listId = model.getters.getListIdFromPosition(sheetId, 0, 0);
+            const listId = model.getters.getListIdFromPosition({ sheetId, col: 0, row: 0 });
             model.dispatch("SELECT_ODOO_LIST", { listId });
             const selectedListId = model.getters.getSelectedListId();
             assert.strictEqual(selectedListId, "1");
@@ -143,7 +143,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         const { model } = await createSpreadsheetWithList();
         setCellContent(model, "A1", `=SUM(ODOO.LIST("1","1","foo"),1)`);
         const sheetId = model.getters.getActiveSheetId();
-        const listId = model.getters.getListIdFromPosition(sheetId, 0, 0);
+        const listId = model.getters.getListIdFromPosition({ sheetId, col: 0, row: 0 });
         model.dispatch("SELECT_ODOO_LIST", { listId });
         const selectedListId = model.getters.getSelectedListId();
         assert.strictEqual(selectedListId, "1");
@@ -156,7 +156,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
             setCellContent(model, "A1", `=ODOO.LIST(G10,"1","foo")`);
             setCellContent(model, "G10", "1");
             const sheetId = model.getters.getActiveSheetId();
-            const listId = model.getters.getListIdFromPosition(sheetId, 0, 0);
+            const listId = model.getters.getListIdFromPosition({ sheetId, col: 0, row: 0 });
             model.dispatch("SELECT_ODOO_LIST", { listId });
             const selectedListId = model.getters.getSelectedListId();
             assert.strictEqual(selectedListId, "1");

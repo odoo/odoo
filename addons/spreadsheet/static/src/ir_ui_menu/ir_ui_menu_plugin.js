@@ -3,9 +3,9 @@ import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
 const { CorePlugin } = spreadsheet;
 
 export default class IrMenuPlugin extends CorePlugin {
-    constructor(getters, history, range, dispatch, config, uuidGenerator) {
-        super(getters, history, range, dispatch, config, uuidGenerator);
-        this.env = config.evalContext.env;
+    constructor(config) {
+        super(config);
+        this.env = config.external.env;
     }
 
     /**

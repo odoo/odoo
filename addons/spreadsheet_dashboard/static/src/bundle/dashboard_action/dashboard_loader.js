@@ -211,9 +211,8 @@ export class DashboardLoader {
         const model = new Model(
             migrate(JSON.parse(data)),
             {
-                evalContext: { env: this.env, orm: this.orm },
+                external: { env: this.env, orm: this.orm, dataSources },
                 mode: "dashboard",
-                dataSources,
             },
             revisions
         );

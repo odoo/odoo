@@ -41,7 +41,7 @@ QUnit.test("click a web link", async (assert) => {
             },
         ],
     };
-    const model = new Model(data, { evalContext: { env } });
+    const model = new Model(data, { external: { env } });
     const cell = getEvaluatedCell(model, "A1");
     assert.strictEqual(urlRepresentation(cell.link, model.getters), "https://odoo.com");
     openLink(cell.link, env);
@@ -68,7 +68,7 @@ QUnit.test("click a menu link", async (assert) => {
             },
         ],
     };
-    const model = new Model(data, { evalContext: { env } });
+    const model = new Model(data, { external: { env } });
     const cell = getEvaluatedCell(model, "A1");
     assert.strictEqual(urlRepresentation(cell.link, model.getters), "menu with xmlid");
     openLink(cell.link, env);
@@ -112,7 +112,7 @@ QUnit.test("click a menu link", async (assert) => {
             },
         ],
     };
-    const model = new Model(data, { evalContext: { env } });
+    const model = new Model(data, { external: { env } });
     const cell = getEvaluatedCell(model, "A1");
     assert.strictEqual(urlRepresentation(cell.link, model.getters), "an odoo view");
     openLink(cell.link, env);

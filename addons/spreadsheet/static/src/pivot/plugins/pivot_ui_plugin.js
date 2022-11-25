@@ -43,8 +43,8 @@ function pivotPeriodToFilterValue(timeRange, value) {
 }
 
 export default class PivotUIPlugin extends spreadsheet.UIPlugin {
-    constructor() {
-        super(...arguments);
+    constructor(config) {
+        super(config);
         /** @type {string} */
         this.selectedPivotId = undefined;
         this.selection.observe(this, {
@@ -60,7 +60,7 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
             case "ZonesSelected": {
                 const sheetId = this.getters.getActiveSheetId();
                 const { col, row } = event.anchor.cell;
-                const cell = this.getters.getCell(sheetId, col, row);
+                const cell = this.getters.getCell({ sheetId, col, row });
                 if (cell !== undefined && cell.content.startsWith("=ODOO.PIVOT.HEADER(")) {
                     const filters = this.getFiltersMatchingPivot(cell.content);
                     this.dispatch("SET_MANY_GLOBAL_FILTER_VALUE", { filters });
@@ -136,14 +136,12 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
      * Get the id of the pivot at the given position. Returns undefined if there
      * is no pivot at this position
      *
-     * @param {string} sheetId Id of the sheet
-     * @param {number} col Index of the col
-     * @param {number} row Index of the row
+     * @param {{ sheetId: string; col: number; row: number}} position
      *
      * @returns {string|undefined}
      */
-    getPivotIdFromPosition(sheetId, col, row) {
-        const cell = this.getters.getCell(sheetId, col, row);
+    getPivotIdFromPosition(position) {
+        const cell = this.getters.getCell(position);
         if (cell && cell.isFormula) {
             const pivotFunction = getFirstPivotFunction(cell.content);
             if (pivotFunction) {

@@ -29,8 +29,8 @@ import { checkFiltersTypeValueCombination } from "@spreadsheet/global_filters/he
 import { _t } from "@web/core/l10n/translation";
 
 export class GlobalFiltersCorePlugin extends spreadsheet.CorePlugin {
-    constructor() {
-        super(...arguments);
+    constructor(config) {
+        super(config);
         /** @type {Object.<string, GlobalFilter>} */
         this.globalFilters = {};
     }

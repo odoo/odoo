@@ -17,9 +17,8 @@ cellMenuRegistry.add("move_lines_see_records", {
     name: _lt("See records"),
     sequence: 176,
     async action(env) {
-        const sheetId = env.model.getters.getActiveSheetId();
-        const { col, row } = env.model.getters.getPosition();
-        const cell = env.model.getters.getCell(sheetId, col, row);
+        const position = env.model.getters.getActivePosition();
+        const cell = env.model.getters.getCell(position);
         const { args } = getFirstAccountFunction(cell.content);
         let [code, date_range, offset, companyId, includeUnposted] = args
             .map(astToFormula)
@@ -38,11 +37,9 @@ cellMenuRegistry.add("move_lines_see_records", {
         await env.services.action.doAction(action);
     },
     isVisible: (env) => {
-        const sheetId = env.model.getters.getActiveSheetId();
-        const { col, row } = env.model.getters.getPosition();
-        const position = env.model.getters.getMainCellPosition(sheetId, col, row);
-        const evaluatedCell = env.model.getters.getEvaluatedCell({ sheetId, ...position });
-        const cell = env.model.getters.getCell(sheetId, position.col, position.row);
+        const position = env.model.getters.getActivePosition();
+        const evaluatedCell = env.model.getters.getEvaluatedCell(position);
+        const cell = env.model.getters.getCell(position);
         return (
             !evaluatedCell.error &&
             evaluatedCell.value !== "" &&

@@ -26,7 +26,7 @@ function beforeEach() {
 QUnit.module("spreadsheet > menu link cells", { beforeEach }, () => {
     QUnit.test("ir.menu linked based on xml id", async function (assert) {
         const env = await makeTestEnv({ serverData: getMenuServerData() });
-        const model = new Model({}, { evalContext: { env } });
+        const model = new Model({}, { external: { env } });
         setCellContent(model, "A1", "[label](odoo://ir_menu_xml_id/test_menu)");
         const cell = getCell(model, "A1");
         const evaluatedCell = getEvaluatedCell(model, "A1");
@@ -46,7 +46,7 @@ QUnit.module("spreadsheet > menu link cells", { beforeEach }, () => {
 
     QUnit.test("ir.menu linked based on record id", async function (assert) {
         const env = await makeTestEnv({ serverData: getMenuServerData() });
-        const model = new Model({}, { evalContext: { env } });
+        const model = new Model({}, { external: { env } });
         setCellContent(model, "A1", "[label](odoo://ir_menu_id/2)");
         const cell = getCell(model, "A1");
         const evaluatedCell = getEvaluatedCell(model, "A1");
@@ -66,7 +66,7 @@ QUnit.module("spreadsheet > menu link cells", { beforeEach }, () => {
 
     QUnit.test("ir.menu linked based on xml id which does not exists", async function (assert) {
         const env = await makeTestEnv({ serverData: getMenuServerData() });
-        const model = new Model({}, { evalContext: { env } });
+        const model = new Model({}, { external: { env } });
         setCellContent(model, "A1", "[label](odoo://ir_menu_xml_id/does_not_exists)");
         assert.equal(
             getCell(model, "A1").content,
@@ -81,7 +81,7 @@ QUnit.module("spreadsheet > menu link cells", { beforeEach }, () => {
 
     QUnit.test("ir.menu linked based on record id which does not exists", async function (assert) {
         const env = await makeTestEnv({ serverData: getMenuServerData() });
-        const model = new Model({}, { evalContext: { env } });
+        const model = new Model({}, { external: { env } });
         setCellContent(model, "A1", "[label](odoo://ir_menu_id/9999)");
         assert.equal(getCell(model, "A1").content, "[label](odoo://ir_menu_id/9999)");
         assert.equal(getEvaluatedCell(model, "A1").value, "#LINK");
@@ -93,7 +93,7 @@ QUnit.module("spreadsheet > menu link cells", { beforeEach }, () => {
 
     QUnit.test("Odoo link cells can be imported/exported", async function (assert) {
         const env = await makeTestEnv({ serverData: getMenuServerData() });
-        const model = new Model({}, { evalContext: { env } });
+        const model = new Model({}, { external: { env } });
         setCellContent(model, "A1", "[label](odoo://ir_menu_id/2)");
         let cell = getCell(model, "A1");
         let evaluatedCell = getEvaluatedCell(model, "A1");
@@ -109,7 +109,7 @@ QUnit.module("spreadsheet > menu link cells", { beforeEach }, () => {
             "odoo://ir_menu_id/2",
             "The link url should reference the correct menu"
         );
-        const model2 = new Model(model.exportData(), { evalContext: { env } });
+        const model2 = new Model(model.exportData(), { external: { env } });
         cell = getCell(model2, "A1");
         evaluatedCell = getEvaluatedCell(model, "A1");
         assert.equal(evaluatedCell.value, "label", "The value should be the menu name");
