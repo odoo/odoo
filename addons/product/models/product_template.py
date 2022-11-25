@@ -146,7 +146,10 @@ class ProductTemplate(models.Model):
         for template in self:
             # Pricelist item count counts the rules applicable on current template or on its variants.
             template.pricelist_item_count = template.env['product.pricelist.item'].search_count([
-                '|', ('product_tmpl_id', '=', template.id), ('product_id', 'in', template.product_variant_ids.ids)])
+                '&',
+                '|', ('product_tmpl_id', '=', template.id), ('product_id', 'in', template.product_variant_ids.ids),
+                ('pricelist_id.active', '=', True),
+            ])
 
     @api.depends('image_1920', 'image_1024')
     def _compute_can_image_1024_be_zoomed(self):
@@ -546,6 +549,7 @@ class ProductTemplate(models.Model):
                 'default_product_tmpl_id': self.id,
                 'default_applied_on': '1_product',
                 'product_without_variants': self.product_variant_count == 1,
+                'search_default_visible': True,
             },
         }
 
