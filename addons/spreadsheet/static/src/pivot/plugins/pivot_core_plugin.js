@@ -36,9 +36,9 @@ import { sprintf } from "@web/core/utils/strings";
 const { CorePlugin } = spreadsheet;
 
 export default class PivotCorePlugin extends CorePlugin {
-    constructor(getters, history, range, dispatch, config, uuidGenerator) {
-        super(getters, history, range, dispatch, config, uuidGenerator);
-        this.dataSources = config.dataSources;
+    constructor(config) {
+        super(config);
+        this.dataSources = config.external.dataSources;
 
         this.nextId = 1;
         /** @type {Object.<string, Pivot>} */

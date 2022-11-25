@@ -11,11 +11,11 @@ const { astToFormula } = spreadsheet;
  */
 
 export default class ListUIPlugin extends spreadsheet.UIPlugin {
-    constructor(getters, history, dispatch, config, selection) {
-        super(getters, history, dispatch, config, selection);
+    constructor(config) {
+        super(config);
         /** @type {string} */
         this.selectedListId = undefined;
-        this.env = config.evalContext.env;
+        this.env = config.external.env;
     }
 
     beforeHandle(cmd) {
@@ -146,14 +146,12 @@ export default class ListUIPlugin extends spreadsheet.UIPlugin {
      * Get the id of the list at the given position. Returns undefined if there
      * is no list at this position
      *
-     * @param {string} sheetId Id of the sheet
-     * @param {number} col Index of the col
-     * @param {number} row Index of the row
+     * @param {{ sheetId: string; col: number; row: number}} position
      *
      * @returns {string|undefined}
      */
-    getListIdFromPosition(sheetId, col, row) {
-        const cell = this.getters.getCell(sheetId, col, row);
+    getListIdFromPosition(position) {
+        const cell = this.getters.getCell(position);
         if (cell && cell.isFormula) {
             const listFunction = getFirstListFunction(cell.content);
             if (listFunction) {

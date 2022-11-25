@@ -124,7 +124,7 @@ QUnit.module(
             "Links between charts and ir.menus are correctly imported/exported",
             async function (assert) {
                 const env = await makeTestEnv({ serverData: this.serverData });
-                const model = new Model({}, { evalContext: { env } });
+                const model = new Model({}, { external: { env } });
                 createBasicChart(model, chartId);
                 model.dispatch("LINK_ODOO_MENU_TO_CHART", {
                     chartId,
@@ -136,7 +136,7 @@ QUnit.module(
                     1,
                     "Link to odoo menu is exported"
                 );
-                const importedModel = new Model(exportedData, { evalContext: { env } });
+                const importedModel = new Model(exportedData, { external: { env } });
                 const chartMenu = importedModel.getters.getChartOdooMenu(chartId);
                 assert.equal(chartMenu.id, 1, "Link to odoo menu is imported");
             }
@@ -144,7 +144,7 @@ QUnit.module(
 
         QUnit.test("Can undo-redo a LINK_ODOO_MENU_TO_CHART", async function (assert) {
             const env = await makeTestEnv({ serverData: this.serverData });
-            const model = new Model({}, { evalContext: { env } });
+            const model = new Model({}, { external: { env } });
             createBasicChart(model, chartId);
             model.dispatch("LINK_ODOO_MENU_TO_CHART", {
                 chartId,
@@ -159,7 +159,7 @@ QUnit.module(
 
         QUnit.test("link is removed when figure is deleted", async function (assert) {
             const env = await makeTestEnv({ serverData: this.serverData });
-            const model = new Model({}, { evalContext: { env } });
+            const model = new Model({}, { external: { env } });
             createBasicChart(model, chartId);
             model.dispatch("LINK_ODOO_MENU_TO_CHART", {
                 chartId,

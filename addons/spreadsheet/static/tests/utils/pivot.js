@@ -32,7 +32,7 @@ export async function insertPivotInSpreadsheet(model, params) {
         },
         name: "Partner Pivot",
     };
-    const dataSource = model.config.dataSources.create(PivotDataSource, definition);
+    const dataSource = model.config.external.dataSources.create(PivotDataSource, definition);
     await dataSource.load();
     const { cols, rows, measures } = dataSource.getTableStructure().export();
     const table = {
@@ -68,7 +68,7 @@ export async function createSpreadsheetWithPivot(params = {}) {
     });
     const arch = params.arch || serverData.views["partner,false,pivot"];
     await insertPivotInSpreadsheet(model, { arch });
-    const env = model.config.evalContext.env;
+    const env = model.config.external.env;
     env.model = model;
     await waitForDataSourcesLoaded(model);
     return { model, env };

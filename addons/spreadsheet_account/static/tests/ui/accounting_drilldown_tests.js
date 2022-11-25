@@ -62,7 +62,7 @@ QUnit.module("spreadsheet_account > Accounting Drill down", { beforeEach }, () =
                 }
             },
         });
-        const env = model.config.evalContext.env;
+        const env = model.config.external.env;
         env.model = model;
         setCellContent(model, "A1", `=ODOO.BALANCE("100", 2020)`);
         setCellContent(model, "A2", `=ODOO.BALANCE("100", 0)`);
