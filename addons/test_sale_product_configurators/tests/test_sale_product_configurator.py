@@ -87,12 +87,10 @@ class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
 
         self.start_tour("/web", 'sale_product_configurator_advanced_tour', login='salesman')
 
-        # Ensures some dynamic create variants have been created by the configurator
-        self.assertEqual(len(product_template.product_variant_ids), 2)
+        # Ensures dynamic create variants have been created by the configurator
+        self.assertEqual(len(product_template.product_variant_ids), 1)
         self.assertEqual(
-            len(product_template.product_variant_ids.product_template_attribute_value_ids),
-            8,
-            "2 variants are created during the tour, with each 5 PAV, but only 8 distinct PAV."
+            len(product_template.product_variant_ids.product_template_attribute_value_ids), 5
         )
 
     def test_03_product_configurator_edition(self):

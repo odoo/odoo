@@ -22,46 +22,46 @@ registry.category("web_tour.tours").add('sale_product_configurator_tour', {
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Customizable Desk (TEST)")',
 }, {
-    trigger: '.main_product span:contains("Steel")',
-    run: function () {},
+    trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1) label:contains("Steel")',
+    isCheck: true,
 }, {
-    trigger: '.main_product span:contains("Aluminium")',
+    trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1) label:contains("Aluminium")',
 }, {
-    trigger: 'span.oe_currency_value:contains("800.40")',
-    run: function (){} // check updated price
+    trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1)>td:nth-child(4)>span:contains("800.40")',
+    isCheck: true, // check updated price
 }, {
-    trigger: 'input[data-value_name="Black"]'
+    trigger: 'label[style="background-color:#000000"] input'
 }, {
-    trigger: '.btn-primary.disabled span:contains("Confirm")',
-    extra_trigger: '.show .modal-footer' // check confirm is disable and try to do it anyway
+    trigger: '.btn-primary:disabled:contains("Confirm")',
+    isCheck: true, // check confirm button is disabled
 }, {
-    trigger: 'input[data-value_name="White"]'
+    trigger: 'label[style="background-color:#FFFFFF"] input'
 }, {
-    trigger: '.btn-primary:not(.disabled)  span:contains("Confirm")',
-    extra_trigger: '.show .modal-footer',
-    run: function (){} // check confirm is available
+    trigger: '.btn-primary:not(:disabled):contains("Confirm")',
+    extra_trigger: '.modal-footer',
+    isCheck: true, // check confirm is available
 }, {
     trigger: 'span:contains("Aluminium"):eq(1)',
 }, {
-    trigger: '.js_product:contains(Conference Chair) .js_add',
+    trigger: 'main.modal-body>table:nth-child(2)>tbody>tr:nth-child(1)>td:nth-child(3)>button',
 }, {
-    trigger: '.js_product:contains(Chair floor protection) .js_add',
+    trigger: 'main.modal-body>table:nth-child(2)>tbody>tr:nth-child(1)>td:nth-child(3)>button',
 }, {
-    trigger: 'button span:contains(Confirm)',
+    trigger: 'button:contains(Confirm)',
     id: 'quotation_product_selected',
 },
 // check that 3 products were added to the SO
 {
     trigger: 'td.o_data_cell:contains("Customizable Desk (TEST) (Aluminium, White)")',
-    run: function (){}
+    isCheck: true,
 }, {
     trigger: 'td.o_data_cell:contains("Conference Chair (TEST) (Aluminium)")',
-    run: function (){}
+    isCheck: true,
 }, {
     trigger: 'td.o_data_cell:contains("Chair floor protection")',
-    run: function (){}
+    isCheck: true,
 }, {
     trigger: 'span[name=amount_total]:contains("960.60")',
-    run: function (){}
+    isCheck: true,
 }, ...stepUtils.discardForm()
 ]});

@@ -19,45 +19,30 @@ registry.category("web_tour.tours").add('sale_product_configurator_optional_prod
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Customizable Desk (TEST)")',
 }, {
-    trigger: 'tr:has(.td-product_name:contains("Office Chair Black")) .js_add',
+    trigger: 'tr:has(.o_sale_product_configurator_name:contains("Office Chair Black")) button:has(i.fa-shopping-cart)',
 }, {
-    trigger: 'tr:has(.td-product_name:contains("Customizable Desk")) .fa-plus'
+    trigger: 'tr:has(.o_sale_product_configurator_name:contains("Customizable Desk")) button:has(i.fa-plus)'
 }, {
-    trigger: 'tr:has(.td-product_name:contains("Chair floor protection")) .js_add',
+    trigger: 'tr:has(.o_sale_product_configurator_name:contains("Chair floor protection")) button:has(i.fa-shopping-cart)',
 }, {
-    content: 'Is below its parent 1',
-    trigger: 'tr:has(.td-product_name:contains("Office Chair Black")) + tr:has(.td-product_name:contains("Chair floor protection"))'
+    trigger: 'tr:has(.o_sale_product_configurator_name:contains("Conference Chair")) button:has(i.fa-shopping-cart)',
 }, {
-    trigger: 'tr:has(.td-product_name:contains("Conference Chair")) .js_add',
+    trigger: 'tr:has(.o_sale_product_configurator_name:contains("Conference Chair")) a:has(i.fa-trash-o)',
 }, {
-    trigger: 'tr:has(.td-product_name:contains("Conference Chair")) .fa-minus'
+    trigger: 'tr:has(.o_sale_product_configurator_name:contains("Conference Chair")) button:has(i.fa-shopping-cart)',
 }, {
-    trigger: 'tr:has(.td-product_name:contains("Chair floor protection")) .js_add',
-}, {
-    content: 'Is below its parent 2',
-    trigger: 'tr:has(.td-product_name:contains("Conference Chair")) + tr:has(.td-product_name:contains("Chair floor protection"))'
-}, {
-    trigger: 'button span:contains(Confirm)',
-    extra_trigger: '.oe_advanced_configurator_modal',
+    trigger: 'button:contains(Confirm)',
 }, {
     trigger: 'tr:has(td.o_data_cell:contains("Customizable Desk")) td.o_data_cell:contains("2.0")',
-    extra_trigger: 'div[name="order_line"]',
-    run: function () {}, // check added product
+    isCheck: true,
 }, {
     trigger: 'tr:has(td.o_data_cell:contains("Office Chair Black")) td.o_data_cell:contains("1.0")',
-    extra_trigger: 'div[name="order_line"]',
-    run: function () {}, // check added product
+    isCheck: true,
 }, {
     trigger: 'tr:has(td.o_data_cell:contains("Conference Chair")) td.o_data_cell:contains("1.0")',
-    extra_trigger: 'div[name="order_line"]',
-    run: function () {}, // check added product
+    isCheck: true,
 }, {
-    trigger: 'tr:has(td.o_data_cell:contains("Chair floor protection")):nth(0) td.o_data_cell:contains("1.0")',
-    extra_trigger: 'div[name="order_line"]',
-    run: function () {}, // check added product
-}, {
-    trigger: 'tr:has(td.o_data_cell:contains("Chair floor protection")):nth(1) td.o_data_cell:contains("1.0")',
-    extra_trigger: 'div[name="order_line"]',
-    run: function () {}, // check added product
+    trigger: 'tr:has(td.o_data_cell:contains("Chair floor protection")) td.o_data_cell:contains("1.0")',
+    isCheck: true,
 }, ...stepUtils.discardForm()
 ]});

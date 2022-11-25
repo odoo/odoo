@@ -14,7 +14,7 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_matrix', {
         this.dialog = useService("dialog");
     },
 
-    async _openGridConfigurator(mode) {
+    async _openGridConfigurator(edit=false) {
         const saleOrderRecord = this.props.record.model.root;
 
         // fetch matrix information from server;
@@ -23,7 +23,7 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_matrix', {
         });
 
         let updatedLineAttributes = [];
-        if (mode === 'edit') {
+        if (edit) {
             // provide attributes of edited line to automatically focus on matching cell in the matrix
             for (let ptnvav of this.props.record.data.product_no_variant_attribute_value_ids.records) {
                 updatedLineAttributes.push(ptnvav.data.id);
@@ -40,15 +40,15 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_matrix', {
             updatedLineAttributes,
         );
 
-        if (mode !== 'edit') {
+        if (!edit) {
             // remove new line used to open the matrix
             saleOrderRecord.data.order_line.removeRecord(this.props.record);
         }
     },
 
-    async _openProductConfigurator(mode) {
-        if (mode === 'edit' && this.props.record.data.product_add_mode == 'matrix') {
-            this._openGridConfigurator('edit');
+    async _openProductConfigurator(edit=false) {
+        if (edit && this.props.record.data.product_add_mode == 'matrix') {
+            this._openGridConfigurator(true);
         } else {
             this._super(...arguments);
         }
