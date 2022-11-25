@@ -24,7 +24,7 @@ class MassMailController(http.Controller):
     # SUBSCRIPTION MANAGEMENT
     # ------------------------------------------------------------
 
-    @http.route(['/mail/mailing/<int:mailing_id>/unsubscribe'], type='http', website=True, auth='public')
+    @http.route(['/mailing/<int:mailing_id>/unsubscribe'], type='http', website=True, auth='public')
     def mailing_unsubscribe(self, mailing_id, email=None, res_id=None, token="", **post):
         mailing = request.env['mailing.mailing'].sudo().browse(mailing_id)
         if mailing.exists():
@@ -82,7 +82,7 @@ class MassMailController(http.Controller):
                 })
         return request.redirect('/web')
 
-    @http.route('/mail/mailing/unsubscribe', type='json', auth='public')
+    @http.route('/mailing/list/update', type='json', auth='public')
     def mailing_update_list_subscription(self, mailing_id, opt_in_ids, opt_out_ids, email, res_id, token):
         mailing = request.env['mailing.mailing'].sudo().browse(mailing_id)
         if mailing.exists():
