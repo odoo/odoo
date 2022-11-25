@@ -33,7 +33,7 @@
                         <!-- Line information, with discount and unit price separate -->
                         <ram:GrossPriceProductTradePrice>
                             <ram:ChargeAmount
-                                t-esc="format_monetary(line.price_unit, record.currency_id)"/>
+                                t-esc="format_monetary(line_vals['gross_price_total_unit'], record.currency_id)"/>
 
                             <!-- Discount. -->
                             <ram:AppliedTradeAllowanceCharge t-if="line.discount">
