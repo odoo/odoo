@@ -561,6 +561,7 @@ class ProductProduct(models.Model):
             'context': {
                 'default_product_id': self.id,
                 'default_applied_on': '0_product_variant',
+                'search_default_visible': True,
             }
         }
 
