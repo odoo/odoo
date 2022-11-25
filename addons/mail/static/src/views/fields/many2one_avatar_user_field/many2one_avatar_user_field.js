@@ -16,8 +16,7 @@ export class Many2OneAvatarUserField extends Many2OneAvatarField {
 
     setup() {
         super.setup();
-        const relation = this.props.record.fields[this.props.name].relation;
-        this.openChat = useOpenChat(relation);
+        this.openChat = useOpenChat(this.relation);
         if (this.props.withCommand) {
             useAssignUserCommand();
         }
