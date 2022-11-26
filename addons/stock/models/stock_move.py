@@ -945,7 +945,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                 moves_by_neg_key[neg_key(moves[0])] |= moves[0]
 
         for neg_move in neg_qty_moves:
-            # Check all the candidates that matches the same limited key, and adjust their quantites to absorb negative moves
+            # Check all the candidates that matches the same limited key, and adjust their quantities to absorb negative moves
             for pos_move in moves_by_neg_key.get(neg_key(neg_move), []):
                 # If quantity can be fully absorbed by a single move, update its quantity and remove the negative move
                 if float_compare(pos_move.product_uom_qty, abs(neg_move.product_uom_qty), precision_rounding=pos_move.product_uom.rounding) >= 0:
