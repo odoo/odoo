@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="microsoft_calendar.MicrosoftCalendarController" t-inherit="calendar.AttendeeCalendarController" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[@id='calendar_sync_wrapper']" position="attributes">
+            <attribute name="t-if">true</attribute>
+        </xpath>
         <xpath expr="//div[@id='microsoft_calendar_sync']" position="replace">
             <div id="microsoft_calendar_sync" class="o_calendar_sync">
                 <button t-if="!model.microsoftIsSync" type="button" id="microsoft_sync_pending" class="o_microsoft_sync_button o_microsoft_sync_pending btn btn-secondary btn" t-on-click="onMicrosoftSyncCalendar">

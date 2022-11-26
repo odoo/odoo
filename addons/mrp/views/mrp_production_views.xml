@@ -17,7 +17,7 @@
                     <field name="priority" optional="show" widget="priority" nolabel="1"/>
                     <field name="message_needaction" invisible="1"/>
                     <field name="name" decoration-bf="1"/>
-                    <field name="date_planned_start" readonly="1" optional="show" widget="remaining_days"/>
+                    <field name="date_planned_start" optional="show" widget="remaining_days"/>
                     <field name="date_deadline" widget="remaining_days" attrs="{'invisible': [('state', 'in', ['done', 'cancel'])]}" optional="hide"/>
                     <field name="product_id" readonly="1" optional="show"/>
                     <field name="lot_producing_id" optional="hide"/>
@@ -34,7 +34,7 @@
                         decoration-danger="reservation_state != 'assigned' and components_availability_state == 'late'"/>
                     <field name="reservation_state" optional="hide" decoration-danger="reservation_state == 'confirmed'" decoration-success="reservation_state == 'assigned'"/>
                     <field name="product_qty" sum="Total Qty" string="Quantity" readonly="1" optional="show"/>
-                    <field name="product_uom_id" string="UoM" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" optional="show"/>
+                    <field name="product_uom_id" string="UoM" readonly="1" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" optional="show"/>
                     <field name="production_duration_expected" attrs="{'invisible': [('production_duration_expected', '=', 0)]}" groups="mrp.group_mrp_routings" widget="float_time" sum="Total expected duration" optional="show"/>
                     <field name="production_real_duration" attrs="{'invisible': [('production_real_duration', '=', 0)]}" groups="mrp.group_mrp_routings" widget="float_time" sum="Total real duration" optional="show"/>
                     <field name="company_id" readonly="1" groups="base.group_multi_company" optional="show"/>
@@ -304,7 +304,7 @@
                                 attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" options="{'delete': [('state', '=', 'draft')]}">
                                 <tree default_order="is_done, manual_consumption desc, sequence" editable="bottom">
                                     <field name="product_id" force_save="1" required="1" context="{'default_detailed_type': 'product'}" attrs="{'readonly': ['|', '|', ('move_lines_count', '&gt;', 0), ('state', '=', 'cancel'), '&amp;', ('state', '!=', 'draft'), ('additional', '=', False) ]}"/>
-                                    <field name="location_id" string="From" readonly="1" groups="stock.group_stock_multi_locations" optional="show"/>
+                                    <field name="location_id" string="From" readonly="1" force_save="1" groups="stock.group_stock_multi_locations" optional="show"/>
                                     <!-- test_immediate_validate_uom_2, test_product_produce_different_uom -->
                                     <field name="product_uom" invisible="1"/>
                                     <field name="propagate_cancel" invisible="1"/>
@@ -323,7 +323,6 @@
                                     <field name="is_done" invisible="1"/>
                                     <field name="bom_line_id" invisible="1"/>
                                     <field name="sequence" invisible="1"/>
-                                    <field name="location_id" invisible="1"/>
                                     <field name="warehouse_id" invisible="1"/>
                                     <field name="is_locked" invisible="1"/>
                                     <field name="move_lines_count" invisible="1"/>
@@ -349,11 +348,11 @@
                                     <field name="manual_consumption" invisible="1" force_save="1"/>
                                     <field name="show_details_visible" invisible="1"/>
                                     <field name="lot_ids" widget="many2many_tags"
-                                        optional="hide" 
+                                        optional="hide"
                                         readonly="1"
                                         string="Lot/Serial Numbers"
                                         help="Displays the consumed Lot/Serial Numbers."
-                                        groups="stock.group_production_lot" 
+                                        groups="stock.group_production_lot"
                                         attrs="{'invisible': ['|', ('show_details_visible', '=', False), ('parent.state', '=', 'draft')],
                                                 'column_invisible': [('parent.show_lot_ids', '=',  False)]}"
                                         options="{'create': [('parent.use_create_components_lots', '!=', False)]}"
@@ -373,7 +372,7 @@
                             <field name="move_byproduct_ids" context="{'default_date': date_planned_finished, 'default_date_deadline': date_deadline, 'default_location_id': production_location_id, 'default_location_dest_id': location_dest_id, 'default_state': 'draft', 'default_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id}" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" options="{'delete': [('state', '=', 'draft')]}">
                                 <tree default_order="is_done,sequence" decoration-muted="is_done" editable="bottom">
                                     <field name="product_id" context="{'default_detailed_type': 'product'}" domain="[('id', '!=', parent.product_id)]" required="1"/>
-                                    <field name="location_dest_id" string="To" readonly="1" groups="stock.group_stock_multi_locations"/>
+                                    <field name="location_dest_id" string="To" readonly="1" force_save="1" groups="stock.group_stock_multi_locations"/>
                                     <field name="company_id" invisible="1"/>
                                     <field name="product_uom_category_id" invisible="1"/>
                                     <field name="name" invisible="1"/>
@@ -392,7 +391,6 @@
                                     <field name="warehouse_id" invisible="1"/>
                                     <field name="is_locked" invisible="1"/>
                                     <field name="move_lines_count" invisible="1"/>
-                                    <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" invisible="1"/>
                                     <field name="state" invisible="1" force_save="1"/>
                                     <field name="product_uom_qty" string="To Produce" force_save="1" attrs="{'readonly': ['&amp;', ('parent.state', '!=', 'draft'), '|', '&amp;', ('parent.state', 'not in', ('confirmed', 'progress', 'to_close')), ('parent.is_planned', '!=', True), ('parent.is_locked', '=', True)]}"/>
                                     <field name="quantity_done" string="Produced" attrs="{'column_invisible': [('parent.state', '=', 'draft')], 'readonly': [('has_tracking', '=', True)]}"/>

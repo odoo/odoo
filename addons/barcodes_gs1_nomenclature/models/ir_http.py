@@ -9,7 +9,7 @@ class IrHttp(models.AbstractModel):
 
     def session_info(self):
         res = super().session_info()
-        nomenclature = self.env.company.nomenclature_id
+        nomenclature = self.env.company.sudo().nomenclature_id
         if nomenclature.is_gs1_nomenclature:
             res['gs1_group_separator_encodings'] = nomenclature.gs1_separator_fnc1
         return res

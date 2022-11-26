@@ -51,10 +51,12 @@
                 <footer>
                     <button name="regenerate_work_entries"
                             string="Regenerate Work Entries" data-hotkey="q"
-                            type="object" class="oe_highlight"
+                            class="btn btn-primary oe_highlight"
+                            type="object"
                             attrs="{'invisible': ['|', ('search_criteria_completed', '=', False), ('valid', '=', False)]}"/>
                     <button name="regenerate_work_entries_disabled"
                             string="Regenerate Work Entries"
+                            class="btn btn-primary"
                             disabled="1"
                             attrs="{'invisible': [('search_criteria_completed', '=', True), ('valid', '=', True)]}"/>
                 </footer>

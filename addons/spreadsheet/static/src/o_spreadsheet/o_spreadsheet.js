@@ -2767,7 +2767,7 @@
      * This function will compare the modifications of selection to determine
      * a cell that is part of the new zone and not the previous one.
      */
-    function findCellInNewZone(oldZone, currentZone, viewport) {
+    function findCellInNewZone(oldZone, currentZone) {
         let col, row;
         const { left: oldLeft, right: oldRight, top: oldTop, bottom: oldBottom } = oldZone;
         const { left, right, top, bottom } = currentZone;
@@ -2779,7 +2779,7 @@
         }
         else {
             // left and right don't change
-            col = viewport.left > left || left > viewport.right ? viewport.left : left;
+            col = left;
         }
         if (top != oldTop) {
             row = top;
@@ -2789,7 +2789,7 @@
         }
         else {
             // top and bottom don't change
-            row = viewport.top > top || top > viewport.bottom ? viewport.top : top;
+            row = top;
         }
         return { col, row };
     }
@@ -2888,19 +2888,19 @@
             let x = 0;
             let y = 0;
             switch (direction) {
-                case 0 /* DIRECTION.UP */:
+                case "up" /* DIRECTION.UP */:
                     x = 0;
                     y = -rule.current;
                     break;
-                case 1 /* DIRECTION.DOWN */:
+                case "down" /* DIRECTION.DOWN */:
                     x = 0;
                     y = rule.current;
                     break;
-                case 2 /* DIRECTION.LEFT */:
+                case "left" /* DIRECTION.LEFT */:
                     x = -rule.current;
                     y = 0;
                     break;
-                case 3 /* DIRECTION.RIGHT */:
+                case "right" /* DIRECTION.RIGHT */:
                     x = rule.current;
                     y = 0;
                     break;
@@ -3156,14 +3156,15 @@
         CommandResult[CommandResult["MergeInFilter"] = 78] = "MergeInFilter";
         CommandResult[CommandResult["NonContinuousTargets"] = 79] = "NonContinuousTargets";
         CommandResult[CommandResult["DuplicatedFigureId"] = 80] = "DuplicatedFigureId";
+        CommandResult[CommandResult["InvalidSelectionStep"] = 81] = "InvalidSelectionStep";
     })(exports.CommandResult || (exports.CommandResult = {}));
 
     var DIRECTION;
     (function (DIRECTION) {
-        DIRECTION[DIRECTION["UP"] = 0] = "UP";
-        DIRECTION[DIRECTION["DOWN"] = 1] = "DOWN";
-        DIRECTION[DIRECTION["LEFT"] = 2] = "LEFT";
-        DIRECTION[DIRECTION["RIGHT"] = 3] = "RIGHT";
+        DIRECTION["UP"] = "up";
+        DIRECTION["DOWN"] = "down";
+        DIRECTION["LEFT"] = "left";
+        DIRECTION["RIGHT"] = "right";
     })(DIRECTION || (DIRECTION = {}));
 
     var LAYERS;
@@ -20039,7 +20040,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             const direction = ev.shiftKey ? "left" : "right";
             this.env.model.dispatch("STOP_EDITION");
-            this.env.model.selection.moveAnchorCell(direction, "one");
+            this.env.model.selection.moveAnchorCell(direction, 1);
         }
         processEnterKey(ev) {
             ev.preventDefault();
@@ -20054,7 +20055,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             this.env.model.dispatch("STOP_EDITION");
             const direction = ev.shiftKey ? "up" : "down";
-            this.env.model.selection.moveAnchorCell(direction, "one");
+            this.env.model.selection.moveAnchorCell(direction, 1);
         }
         processEscapeKey() {
             this.env.model.dispatch("STOP_EDITION", { cancel: true });
@@ -22056,8 +22057,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         ? this.props.onGridComposerCellFocused()
                         : this.props.onComposerContentFocused();
                 },
-                TAB: () => this.env.model.selection.moveAnchorCell("right", "one"),
-                "SHIFT+TAB": () => this.env.model.selection.moveAnchorCell("left", "one"),
+                TAB: () => this.env.model.selection.moveAnchorCell("right", 1),
+                "SHIFT+TAB": () => this.env.model.selection.moveAnchorCell("left", 1),
                 F2: () => {
                     const cell = this.env.model.getters.getActiveCell();
                     !cell || cell.isEmpty()
@@ -22309,17 +22310,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             ev.stopPropagation();
             this.closeOpenedPopover();
             const arrowMap = {
-                ArrowDown: { direction: "down", delta: [0, 1] },
-                ArrowLeft: { direction: "left", delta: [-1, 0] },
-                ArrowRight: { direction: "right", delta: [1, 0] },
-                ArrowUp: { direction: "up", delta: [0, -1] },
+                ArrowDown: "down",
+                ArrowLeft: "left",
+                ArrowRight: "right",
+                ArrowUp: "up",
             };
-            const { direction } = arrowMap[ev.key];
+            const direction = arrowMap[ev.key];
             if (ev.shiftKey) {
-                this.env.model.selection.resizeAnchorZone(direction, ev.ctrlKey ? "end" : "one");
+                this.env.model.selection.resizeAnchorZone(direction, ev.ctrlKey ? "end" : 1);
             }
             else {
-                this.env.model.selection.moveAnchorCell(direction, ev.ctrlKey ? "end" : "one");
+                this.env.model.selection.moveAnchorCell(direction, ev.ctrlKey ? "end" : 1);
             }
             if (this.env.model.getters.isPaintingFormat()) {
                 this.env.model.dispatch("PASTE", {
@@ -30141,14 +30142,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          *              useful to set it to false when we need to fill the tooltip
          */
         autofill(apply) {
-            if (!this.autofillZone || this.direction === undefined) {
+            if (!this.autofillZone || !this.steps || this.direction === undefined) {
                 this.tooltip = undefined;
                 return;
             }
             const source = this.getters.getSelectedZone();
             const target = this.autofillZone;
             switch (this.direction) {
-                case 1 /* DIRECTION.DOWN */:
+                case "down" /* DIRECTION.DOWN */:
                     for (let col = source.left; col <= source.right; col++) {
                         const xcs = [];
                         for (let row = source.top; row <= source.bottom; row++) {
@@ -30160,7 +30161,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         }
                     }
                     break;
-                case 0 /* DIRECTION.UP */:
+                case "up" /* DIRECTION.UP */:
                     for (let col = source.left; col <= source.right; col++) {
                         const xcs = [];
                         for (let row = source.bottom; row >= source.top; row--) {
@@ -30172,7 +30173,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         }
                     }
                     break;
-                case 2 /* DIRECTION.LEFT */:
+                case "left" /* DIRECTION.LEFT */:
                     for (let row = source.top; row <= source.bottom; row++) {
                         const xcs = [];
                         for (let col = source.right; col >= source.left; col--) {
@@ -30184,7 +30185,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         }
                     }
                     break;
-                case 3 /* DIRECTION.RIGHT */:
+                case "right" /* DIRECTION.RIGHT */:
                     for (let row = source.top; row <= source.bottom; row++) {
                         const xcs = [];
                         for (let col = source.left; col <= source.right; col++) {
@@ -30198,12 +30199,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     break;
             }
             if (apply) {
-                const zone = union(this.getters.getSelectedZone(), this.autofillZone);
                 this.autofillZone = undefined;
+                this.selection.resizeAnchorZone(this.direction, this.steps);
                 this.lastCellSelected = {};
                 this.direction = undefined;
+                this.steps = 0;
                 this.tooltip = undefined;
-                this.selection.selectZone({ cell: { col: zone.left, row: zone.top }, zone });
             }
         }
         /**
@@ -30217,17 +30218,21 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             this.direction = this.getDirection(col, row);
             switch (this.direction) {
-                case 0 /* DIRECTION.UP */:
+                case "up" /* DIRECTION.UP */:
                     this.saveZone(row, source.top - 1, source.left, source.right);
+                    this.steps = source.top - row;
                     break;
-                case 1 /* DIRECTION.DOWN */:
+                case "down" /* DIRECTION.DOWN */:
                     this.saveZone(source.bottom + 1, row, source.left, source.right);
+                    this.steps = row - source.bottom;
                     break;
-                case 2 /* DIRECTION.LEFT */:
+                case "left" /* DIRECTION.LEFT */:
                     this.saveZone(source.top, source.bottom, col, source.left - 1);
+                    this.steps = source.left - col;
                     break;
-                case 3 /* DIRECTION.RIGHT */:
+                case "right" /* DIRECTION.RIGHT */:
                     this.saveZone(source.top, source.bottom, source.right + 1, col);
+                    this.steps = col - source.right;
                     break;
             }
             this.autofill(false);
@@ -30334,10 +30339,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         getDirection(col, row) {
             const source = this.getters.getSelectedZone();
             const position = {
-                up: { number: source.top - row, value: 0 /* DIRECTION.UP */ },
-                down: { number: row - source.bottom, value: 1 /* DIRECTION.DOWN */ },
-                left: { number: source.left - col, value: 2 /* DIRECTION.LEFT */ },
-                right: { number: col - source.right, value: 3 /* DIRECTION.RIGHT */ },
+                up: { number: source.top - row, value: "up" /* DIRECTION.UP */ },
+                down: { number: row - source.bottom, value: "down" /* DIRECTION.DOWN */ },
+                left: { number: source.left - col, value: "left" /* DIRECTION.LEFT */ },
+                right: { number: col - source.right, value: "right" /* DIRECTION.RIGHT */ },
             };
             if (Object.values(position)
                 .map((x) => (x.number > 0 ? 1 : 0))
@@ -35474,9 +35479,20 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 case "AlterZoneCorner":
                     break;
                 case "ZonesSelected":
-                    // altering a zone should not move the viewport
+                    let { col, row } = findCellInNewZone(event.previousAnchor.zone, event.anchor.zone);
+                    if (event.mode === "updateAnchor") {
+                        const oldZone = event.previousAnchor.zone;
+                        const newZone = event.anchor.zone;
+                        // altering a zone should not move the viewport in a dimension that wasn't changed
+                        const { top, bottom, left, right } = this.getters.getActiveMainViewport();
+                        if (oldZone.left === newZone.left && oldZone.right === newZone.right) {
+                            col = left > col || col > right ? left : col;
+                        }
+                        if (oldZone.top === newZone.top && oldZone.bottom === newZone.bottom) {
+                            row = top > row || row > bottom ? top : row;
+                        }
+                    }
                     const sheetId = this.getters.getActiveSheetId();
-                    let { col, row } = findCellInNewZone(event.previousAnchor.zone, event.anchor.zone, this.getters.getActiveMainViewport());
                     col = Math.min(col, this.getters.getNumberCols(sheetId) - 1);
                     row = Math.min(row, this.getters.getNumberRows(sheetId) - 1);
                     this.refreshViewport(this.getters.getActiveSheetId(), { col, row });
@@ -39624,7 +39640,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         /**
          * Set the selection to one of the cells adjacent to the current anchor cell.
          */
-        moveAnchorCell(direction, step = "one") {
+        moveAnchorCell(direction, step = 1) {
+            if (step !== "end" && step <= 0) {
+                return new DispatchResult(81 /* CommandResult.InvalidSelectionStep */);
+            }
             const { col, row } = this.getNextAvailablePosition(direction, step);
             return this.selectCell(col, row);
         }
@@ -39667,7 +39686,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * The anchor cell remains where it is. It's the opposite side
          * of the anchor zone which moves.
          */
-        resizeAnchorZone(direction, step = "one") {
+        resizeAnchorZone(direction, step = 1) {
+            if (step !== "end" && step <= 0) {
+                return new DispatchResult(81 /* CommandResult.InvalidSelectionStep */);
+            }
             const sheetId = this.getters.getActiveSheetId();
             const anchor = this.anchor;
             const { col: anchorCol, row: anchorRow } = anchor.cell;
@@ -39891,7 +39913,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * by crossing through merges and skipping hidden cells.
          * Note that the resulting position might be out of the sheet, it needs to be validated.
          */
-        getNextAvailablePosition(direction, step = "one") {
+        getNextAvailablePosition(direction, step = 1) {
             const { col, row } = this.anchor.cell;
             const delta = this.deltaToTarget({ col, row }, direction, step);
             return {
@@ -39957,20 +39979,20 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         deltaToTarget(position, direction, step) {
             switch (direction) {
                 case "up":
-                    return step === "one"
-                        ? [0, -1]
+                    return step !== "end"
+                        ? [0, -step]
                         : [0, this.getEndOfCluster(position, "rows", -1) - position.row];
                 case "down":
-                    return step === "one"
-                        ? [0, 1]
+                    return step !== "end"
+                        ? [0, step]
                         : [0, this.getEndOfCluster(position, "rows", 1) - position.row];
                 case "left":
-                    return step === "one"
-                        ? [-1, 0]
+                    return step !== "end"
+                        ? [-step, 0]
                         : [this.getEndOfCluster(position, "cols", -1) - position.col, 0];
                 case "right":
-                    return step === "one"
-                        ? [1, 0]
+                    return step !== "end"
+                        ? [step, 0]
                         : [this.getEndOfCluster(position, "cols", 1) - position.col, 0];
             }
         }
@@ -42032,8 +42054,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2022-11-18T08:45:53.198Z';
-    exports.__info__.hash = 'a17522c';
+    exports.__info__.date = '2022-11-24T09:38:39.745Z';
+    exports.__info__.hash = 'b167b3e';
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map
