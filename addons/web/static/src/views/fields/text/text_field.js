@@ -16,7 +16,7 @@ export class TextField extends Component {
             this.dynamicPlaceholder = useDynamicPlaceholder();
         }
         this.textareaRef = useRef("textarea");
-        useInputField({ getValue: () => this.props.value || "", refName: "textarea" });
+        useInputField({ getValue: () => this.value, refName: "textarea" });
 
         useEffect(() => {
             if (!this.props.readonly) {
@@ -69,6 +69,9 @@ export class TextField extends Component {
     }
     get rowCount() {
         return this.props.rowCount;
+    }
+    get value() {
+        return this.props.value || "";
     }
 
     resize() {
