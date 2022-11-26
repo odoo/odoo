@@ -3,8 +3,8 @@
 # 	* sms
 # 
 # Translators:
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
 # Martin Trigaux, 2022
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -207,6 +207,10 @@ msgid ""
 "Post as Message: log on document\n"
 "Post as Note: mass SMS with archives"
 msgstr ""
+"Оберіть спосіб відправки SMS:\n"
+"SMS: масове відправлення SMS\n"
+"Опублікувати як Повідомлення: запис на документі\n"
+"Опублікувати як Примітку: масова відправка SMS з архівами"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -1023,13 +1027,13 @@ msgstr "Надіслати SMS"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
 msgid "Send as"
-msgstr ""
+msgstr "Надіслати як"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_method
 #: model:ir.model.fields,field_description:sms.field_ir_cron__sms_method
 msgid "Send as (SMS)"
-msgstr ""
+msgstr "Надіслати як (SMS)"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_force_send
@@ -1195,6 +1199,15 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)\n"
 "- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
 msgstr ""
+"Тип дії сервера. Доступні такі значення:\n"
+"- «Виконати код Python»: блок коду Python, який буде виконано\n"
+"- «Створити новий запис»: створити новий запис із новими значеннями\n"
+"- «Оновити запис»: оновити значення запису\n"
+"- «Виконати кілька дій»: визначте дію, яка запускає кілька інших дій сервера\n"
+"- «Надіслати електронний лист»: опублікувати повідомлення, замітку або надіслати електронний лист (Обговорення)\n"
+"- «Додати підписників»: додати підписників до запису (Обговорення)\n"
+"- «Створити наступну дію»: створити дію (обговорення)\n"
+"- «Надіслати текстове повідомлення SMS»: відправити SMS, зареєструвати їх у документах (SMS)"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_acc
