@@ -1648,6 +1648,10 @@ msgid ""
 "Post as Message: post on document and notify followers\n"
 "Post as Note: log a note on document"
 msgstr ""
+"Оберіть спосіб для відправлення електронних листів:\n"
+"EMail: відправляти листи напряму\n"
+"Опублікувати як Повідомлення: публікувати на документах та підписникам\n"
+"Опублікувати як Примітку: запис примітки на документі"
 
 #. module: mail
 #. openerp-web
@@ -2719,7 +2723,7 @@ msgstr "Масова розсилка електронних листів"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_layout_xmlid
 msgid "Email Notification Layout"
-msgstr ""
+msgstr "Шаблон електронного листа сповіщення"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -6832,7 +6836,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__mail_post_method
 #: model:ir.model.fields,field_description:mail.field_ir_cron__mail_post_method
 msgid "Send as"
-msgstr ""
+msgstr "Надіслати як"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_partner_mass_mail
@@ -7236,7 +7240,7 @@ msgstr "Тема:"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__mail_post_autofollow
 #: model:ir.model.fields,field_description:mail.field_ir_cron__mail_post_autofollow
 msgid "Subscribe Recipients"
-msgstr ""
+msgstr "Одержувачі підписки"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__substitution
@@ -7940,6 +7944,15 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)\n"
 "- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
 msgstr ""
+"Тип дії сервера. Доступні такі значення:\n"
+"- «Виконати код Python»: блок коду Python, який буде виконано\n"
+"- «Створити новий запис»: створити новий запис із новими значеннями\n"
+"- «Оновити запис»: оновити значення запису\n"
+"- «Виконати кілька дій»: визначте дію, яка запускає кілька інших дій сервера\n"
+"- «Надіслати електронний лист»: опублікувати повідомлення, замітку або надіслати електронний лист (Обговорення)\n"
+"- «Додати підписників»: додати підписників до запису (Обговорення)\n"
+"- «Створити наступну дію»: створити дію (обговорення)\n"
+"- «Надіслати текстове повідомлення SMS»: відправити SMS, зареєструвати їх у документах (SMS)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_exception_decoration
