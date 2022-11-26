@@ -56,6 +56,7 @@ class ResUsers(models.Model):
     def signup(self, values, token=None):
         """ signup a user, to either:
             - create a new user (no token), or
+            - Create a new user (no token and qcontext['b2c_email_activate'] is True), with active=False
             - create a user for a partner (with token, but no user for partner), or
             - change the password of a user (with token, and existing user).
             :param values: a dictionary with field values that are written on user
@@ -64,6 +65,8 @@ class ResUsers(models.Model):
         """
         if token:
             # signup with a token: find the corresponding partner id
+            # or activate a user by setting active=True
+            values['active'] = True
             partner = self.env['res.partner']._signup_retrieve_partner(token, check_validity=True, raise_exception=True)
             # invalidate signup token
             partner.write({'signup_token': False, 'signup_type': False, 'signup_expiration': False})
@@ -114,7 +117,7 @@ class ResUsers(models.Model):
 
         # check that uninvited users may sign up
         if 'partner_id' not in values:
-            if self._get_signup_invitation_scope() != 'b2c':
+            if not (self._get_signup_invitation_scope() in ('b2c', 'b2c_email_activate')):
                 raise SignupError(_('Signup is not allowed for uninvited users'))
         return self._create_user_from_template(values)
 
@@ -140,7 +143,11 @@ class ResUsers(models.Model):
             raise ValueError(_('Signup: no name or partner given for new user'))
 
         # create a copy of the template user (attached to a specific partner_id if given)
-        values['active'] = True
+        # if b2c_email_activate_enabled, make the user inactive
+        b2c_email_activate_enabled = self._get_signup_invitation_scope() == 'b2c_email_activate'
+        # In case the user is signing up using token, values['active'] would be set to True in the above signup method
+        # So the user will always be active when there is a token
+        values['active'] = values.get('active', None) or not b2c_email_activate_enabled
         try:
             with self.env.cr.savepoint():
                 return template_user.with_context(no_reset_password=True).copy(values)

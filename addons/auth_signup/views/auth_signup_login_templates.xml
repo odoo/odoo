@@ -103,4 +103,15 @@
 
             </t>
         </template>
+
+        <template id="auth_signup.activate_account" name="Activate Account">
+            <t t-call="web.login_layout">
+                <div t-if="message" class="oe_login_form clearfix">
+                    <p class="alert alert-success" t-if="message" role="status">
+                        <t t-esc="message"/>
+                    </p>
+                    <a href="/web/login" class="btn btn-link btn-sm float-start" role="button">Back to Login</a>
+                </div>
+            </t>
+        </template>
 </odoo>
