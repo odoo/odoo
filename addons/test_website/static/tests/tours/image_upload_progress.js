@@ -61,9 +61,8 @@ const setupSteps = [{
 const formatErrorMsg = "format is not supported. Try with: .gif, .jpe, .jpeg, .jpg, .png, .svg";
 
 wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
-    url: '/test_image_progress',
+    url: '/@/test_image_progress?enable_editor=1',
     test: true,
-    edition: true,
 }, [
     ...setupSteps,
     // 1. Check multi image upload
@@ -203,9 +202,8 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
 
 
 wTourUtils.registerWebsitePreviewTour('test_image_upload_progress_unsplash', {
-    url: '/test_image_progress',
+    url: '/@/test_image_progress?enable_editor=1',
     test: true,
-    edition: true,
 }, [
     ...setupSteps,
     // 1. Check multi image upload

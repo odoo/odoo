@@ -15,9 +15,8 @@ var BROKEN_STEP = {
 };
 wTourUtils.registerWebsitePreviewTour('test_reset_page_view_complete_flow_part1', {
     test: true,
-    url: '/test_page_view',
+    url: '/@/test_page_view?enable_editor=1',
     // 1. Edit the page through Edit Mode, it will COW the view
-    edition: true,
 },
     [
         {
@@ -59,7 +58,7 @@ wTourUtils.registerWebsitePreviewTour('test_reset_page_view_complete_flow_part1'
 
 wTourUtils.registerWebsitePreviewTour('test_reset_page_view_complete_flow_part2', {
     test: true,
-    url: '/test_page_view',
+    url: '/@/test_page_view',
 },
     [
         {

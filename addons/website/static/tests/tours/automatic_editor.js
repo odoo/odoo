@@ -5,7 +5,7 @@ const wTourUtils = require("website.tour_utils");
 
 wTourUtils.registerWebsitePreviewTour('automatic_editor_on_new_website', {
     test: true,
-    url: '/',
+    url: '/@/',
 },
 [
     {

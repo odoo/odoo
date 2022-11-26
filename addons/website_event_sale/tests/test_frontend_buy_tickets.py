@@ -96,7 +96,7 @@ class TestUi(HttpCaseWithUserDemo):
         })
         transfer_provider._transfer_ensure_pending_msg_is_set()
 
-        self.start_tour("/", 'event_buy_tickets', login="admin")
+        self.start_tour("/event", 'event_buy_tickets', login="admin")
 
     def test_demo(self):
         if self.env['ir.module.module']._get('payment_custom').state != 'installed':
@@ -109,7 +109,7 @@ class TestUi(HttpCaseWithUserDemo):
         })
         transfer_provider._transfer_ensure_pending_msg_is_set()
 
-        self.start_tour("/", 'event_buy_tickets', login="demo")
+        self.start_tour("/event", 'event_buy_tickets', login="demo")
 
     def test_buy_last_ticket(self):
         if self.env['ir.module.module']._get('payment_custom').state != 'installed':

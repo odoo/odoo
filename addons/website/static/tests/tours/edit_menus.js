@@ -4,7 +4,7 @@ import wTourUtils from 'website.tour_utils';
 
 wTourUtils.registerWebsitePreviewTour('edit_menus', {
     test: true,
-    url: '/',
+    url: '/@/',
 }, [
     // Add a megamenu item from the menu.
     {

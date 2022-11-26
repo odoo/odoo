@@ -8,7 +8,7 @@ odoo.define("website_event.tour", function (require) {
 
     wTourUtils.registerWebsitePreviewTour("website_event_tour", {
         test: true,
-        url: "/",
+        url: "/@/",
     }, [{
         content: _t("Click here to add new content to your website."),
         trigger: ".o_menu_systray .o_new_content_container > a",

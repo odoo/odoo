@@ -4,8 +4,7 @@ import wTourUtils from 'website.tour_utils';
 
 wTourUtils.registerWebsitePreviewTour('snippet_image_gallery', {
     test: true,
-    url: '/',
-    edition: true,
+    url: '/@/?enable_editor=1',
 }, [
     wTourUtils.dragNDrop({id: 's_image_gallery', name: 'Images Wall'}),
     ...wTourUtils.clickOnSave(),

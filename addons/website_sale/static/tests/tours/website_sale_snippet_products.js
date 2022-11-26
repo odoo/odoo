@@ -39,8 +39,7 @@ for (const templateKey of templates) {
 }
 wTourUtils.registerWebsitePreviewTour('website_sale.snippet_products', {
     test: true,
-    url: '/',
-    edition: true,
+    url: '/@/?enable_editor=1',
 },
 [
     wTourUtils.dragNDrop(productsSnippet),
@@ -57,8 +56,7 @@ wTourUtils.registerWebsitePreviewTour('website_sale.snippet_products', {
 
 wTourUtils.registerWebsitePreviewTour('website_sale.products_snippet_recently_viewed', {
     test: true,
-    url: '/',
-    edition: true,
+    url: '/@/?enable_editor=1',
 },
 [
     wTourUtils.dragNDrop(productsSnippet),
@@ -73,7 +71,6 @@ wTourUtils.registerWebsitePreviewTour('website_sale.products_snippet_recently_vi
         run: function () {
             const $iframe = $('.o_iframe').contents();
             const $productCard = $iframe.find('.o_carousel_product_card:has(a img[alt="Storage Box"])');
-            console.log($productCard);
             $productCard.find('.js_remove').attr('style', 'display: block;');
         }
     },

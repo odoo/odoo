@@ -21,4 +21,4 @@ class TestWebsiteGridLayout(odoo.tests.HttpCase):
             'res_model': 'ir_ui_view',
             'datas': base64.b64encode(req.content),
         })
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'website_replace_grid_image', login="admin")
+        self.start_tour('/@/?enable_editor=1', 'website_replace_grid_image', login="admin")

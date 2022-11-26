@@ -26,8 +26,7 @@ const clickEditLink = [{
 
 wTourUtils.registerWebsitePreviewTour('edit_link_popover', {
     test: true,
-    url: '/',
-    edition: true,
+    url: '/@/?enable_editor=1',
 }, [
     // 1. Test links in page content (web_editor)
     wTourUtils.dragNDrop({

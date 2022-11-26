@@ -12,8 +12,7 @@ function removeSelectedBlock() {
 
 wTourUtils.registerWebsitePreviewTour('snippet_empty_parent_autoremove', {
     test: true,
-    url: '/',
-    edition: true,
+    url: '/@/?enable_editor=1',
 }, [
     // Base case: remove both columns from text - image
     wTourUtils.dragNDrop({

@@ -23,8 +23,7 @@ const wTourUtils = require('website.tour_utils');
  */
 
 wTourUtils.registerWebsitePreviewTour('test_custom_snippet', {
-    url: '/',
-    edition: true,
+    url: '/@/?enable_editor=1',
     test: true,
 }, [
     {

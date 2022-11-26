@@ -12,7 +12,7 @@ from odoo.addons.website.tools import MockRequest
 class TestSnippets(HttpCase):
 
     def test_01_empty_parents_autoremove(self):
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_empty_parent_autoremove', login='admin')
+        self.start_tour('/@/?enable_editor=1', 'snippet_empty_parent_autoremove', login='admin')
 
     def test_02_default_shape_gets_palette_colors(self):
         self.start_tour('/@/?enable_editor=1', "default_shape_gets_palette_colors", login='admin')
@@ -34,10 +34,10 @@ class TestSnippets(HttpCase):
         self.start_tour("/web#action=website.website_preview&%s" % path, "snippets_all_drag_and_drop", login='admin', timeout=300)
 
     def test_04_countdown_preview(self):
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_countdown', login='admin')
+        self.start_tour('/@/?enable_editor=1', 'snippet_countdown', login='admin')
 
     def test_05_social_media(self):
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_social_media', login="admin")
+        self.start_tour('/@/?enable_editor=1', 'snippet_social_media', login="admin")
         self.assertEqual(
             self.env['website'].browse(1).social_instagram,
             'https://instagram.com/odoo.official/',
@@ -45,7 +45,7 @@ class TestSnippets(HttpCase):
         )
 
     def test_06_snippet_popup_add_remove(self):
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_popup_add_remove', login='admin')
+        self.start_tour('/@/?enable_editor=1', 'snippet_popup_add_remove', login='admin')
 
     def test_07_image_gallery(self):
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_image_gallery', login='admin')
+        self.start_tour('/@/?enable_editor=1', 'snippet_image_gallery', login='admin')

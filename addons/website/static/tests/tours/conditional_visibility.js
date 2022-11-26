@@ -9,8 +9,7 @@ const snippets = [
     },
 ];
 wTourUtils.registerWebsitePreviewTour('conditional_visibility_1', {
-    edition: true,
-    url: '/',
+    url: '/@/?enable_editor=1',
     test: true,
 }, [
 wTourUtils.dragNDrop(snippets[0]),

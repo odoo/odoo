@@ -3,9 +3,8 @@
 import wTourUtils from 'website.tour_utils';
 
 wTourUtils.registerWebsitePreviewTour('snippet_cache_across_websites', {
-    edition: true,
     test: true,
-    url: '/@/'
+    url: '/@/?enable_editor=1'
 }, [
     {
         content: "Check that the custom snippet is displayed",

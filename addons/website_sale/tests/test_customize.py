@@ -62,7 +62,7 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
     def test_01_admin_shop_customize_tour(self):
         # Enable Variant Group
         self.env.ref('product.group_product_variant').write({'users': [(4, self.env.ref('base.user_admin').id)]})
-        self.start_tour(self.env['website'].get_client_action_url('/shop?search=Test Product'), 'shop_customize', login="admin", timeout=120)
+        self.start_tour('/@/shop?enable_editor=1', 'shop_customize', login="admin", timeout=120)
 
     def test_02_admin_shop_custom_attribute_value_tour(self):
         # Make sure pricelist rule exist
@@ -315,10 +315,10 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         config.show_line_subtotals_tax_selection = "tax_included"
         config.execute()
 
-        self.start_tour(self.env['website'].get_client_action_url('/shop?search=Test Product'), 'shop_list_view_b2c', login="admin")
+        self.start_tour('/@/shop?search=Test Product', 'shop_list_view_b2c', login="admin")
 
     def test_07_editor_shop(self):
-        self.start_tour("/", 'shop_editor', login="admin")
+        self.start_tour("/@/shop?enable_editor=1", 'shop_editor', login="admin")
 
     def test_08_portal_tour_archived_variant_multiple_attributes(self):
         """The goal of this test is to make sure that an archived variant with multiple

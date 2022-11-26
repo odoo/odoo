@@ -6,7 +6,7 @@ odoo.define("website_blog.tour", function (require) {
     const wTourUtils = require('website.tour_utils');
 
     wTourUtils.registerWebsitePreviewTour("blog", {
-        url: "/",
+        url: "/@/",
     }, [{
         trigger: "body:not(:has(#o_new_content_menu_choices)) .o_new_content_container > a",
         content: _t("Click here to add new content to your website."),

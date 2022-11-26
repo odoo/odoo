@@ -5,8 +5,7 @@ const wTourUtils = require('website.tour_utils');
 
 wTourUtils.registerWebsitePreviewTour("default_shape_gets_palette_colors", {
     test: true,
-    url: '/',
-    edition: true,
+    url: '/@/?enable_editor=1',
 }, [
     wTourUtils.dragNDrop({
         id: 's_text_image',

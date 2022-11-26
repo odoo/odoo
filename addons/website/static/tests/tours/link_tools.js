@@ -9,8 +9,7 @@ const clickOnImgStep = {
 
 wTourUtils.registerWebsitePreviewTour('link_tools', {
     test: true,
-    url: '/',
-    edition: true,
+    url: '/@/?enable_editor=1',
 }, [
     // 1. Create a new link from scratch.
     wTourUtils.dragNDrop({

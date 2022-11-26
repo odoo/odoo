@@ -17,8 +17,7 @@ const toggleMegaMenu = (stepOptions) => Object.assign({}, {
 
 wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
     test: true,
-    url: '/',
-    edition: true,
+    url: '/@/?enable_editor=1',
 }, [
     // Add a megamenu item to the top menu.
     {

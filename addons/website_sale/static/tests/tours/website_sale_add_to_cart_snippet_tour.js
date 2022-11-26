@@ -11,8 +11,7 @@ function editAddToCartSnippet() {
 }
 
 wTourUtils.registerWebsitePreviewTour('add_to_cart_snippet_tour', {
-        url: '/',
-        edition: true,
+        url: '/@/?enable_editor=1',
         test: true,
     },
     [
