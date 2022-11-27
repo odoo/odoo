@@ -487,7 +487,7 @@ class Partner(models.Model):
     @api.constrains('barcode')
     def _check_barcode_unicity(self):
         if self.barcode and self.env['res.partner'].search_count([('barcode', '=', self.barcode)]) > 1:
-            raise ValidationError('An other user already has this barcode')
+            raise ValidationError(_('Another user already has this barcode'))
 
     def _update_fields_values(self, fields):
         """ Returns dict of write() values for synchronizing ``fields`` """

@@ -7,7 +7,7 @@
 
 import re
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv.expression import AND, expression
 
@@ -162,7 +162,7 @@ class PurchaseReport(models.Model):
         if avg_days_to_purchase:
             fields.remove(avg_days_to_purchase)
             if any(field.split(':')[1].split('(')[0] != 'avg' for field in [avg_days_to_purchase] if field):
-                raise UserError("Value: 'avg_days_to_purchase' should only be used to show an average. If you are seeing this message then it is being accessed incorrectly.")
+                raise UserError(_("Value: 'avg_days_to_purchase' should only be used to show an average. If you are seeing this message then it is being accessed incorrectly."))
 
         res = []
         if fields:

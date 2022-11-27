@@ -305,7 +305,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         except MissingError as error:
             raise error
         except AccessError:
-            raise ValidationError("The access token is invalid.")
+            raise ValidationError(_("The access token is invalid."))
 
         kwargs.update({
             'reference_prefix': None,  # Allow the reference to be computed based on the order
