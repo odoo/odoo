@@ -17,9 +17,10 @@
 # Ryanto The <ry.the77@gmail.com>, 2019
 # Martin Trigaux, 2020
 # PAS IRVANUS <ipankbiz@gmail.com>, 2020
-# Gradien Foundation <gradien.co@gmail.com>, 2020
 # whenwesober, 2020
 # Abdul Munif Hanafi <amunifhanafi@gmail.com>, 2021
+# Gradien Foundation <gradien.co@gmail.com>, 2022
+# Abe Manyo, 2022
 # 
 msgid ""
 msgstr ""
@@ -27,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Abdul Munif Hanafi <amunifhanafi@gmail.com>, 2021\n"
+"Last-Translator: Abe Manyo, 2022\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -137,7 +138,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_location_barcode
 msgid "'Location - %s' % object.name"
-msgstr ""
+msgstr "Lokasi"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_lot_label
@@ -3124,7 +3125,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Legend"
-msgstr ""
+msgstr "Legenda"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__company_id
@@ -6081,10 +6082,8 @@ msgstr "Produk tersebut"
 #, python-format
 msgid ""
 "The quantity done for the product \"%s\" doesn't respect the rounding "
-"precision                                   defined on the unit of measure "
-"\"%s\". Please change the quantity done or the"
-"                                   rounding precision of your unit of "
-"measure."
+"precision defined on the unit of measure \"%s\". Please change the quantity "
+"done or the rounding precision of your unit of measure."
 msgstr ""
 
 #. module: stock
@@ -7142,6 +7141,12 @@ msgstr ""
 "Anda tidak dapat mengganti tipe produk yang sedang direservasi pada "
 "pergerakan stok. Jika Anda perlu mengganti tipenya, Anda sebaiknya "
 "membatalkan reservasi terlebih dahulu pada pergerakan stok."
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0

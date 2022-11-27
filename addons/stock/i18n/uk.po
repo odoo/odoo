@@ -7,7 +7,7 @@
 # Zoriana Zaiats, 2019
 # Bohdan Lisnenko, 2019
 # Martin Trigaux, 2020
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7371,6 +7371,12 @@ msgstr ""
 "складських переміщень."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr "Ви не можете змінити тип товару, який вже використовувався."
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -7667,18 +7673,6 @@ msgstr "Ви повинні встановити серійний номер п�
 #, python-format
 msgid "You need to supply a Lot/Serial number for product %s."
 msgstr "Вам необхідно надати партійний/серійний номер для товару %s."
-
-#. module: stock
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid ""
-"You should not use a planned internal transfer to move some products between"
-" two warehouses. Instead, use an immediate internal transfer or the resupply"
-" route."
-msgstr ""
-"Не слід використовувати заплановане внутрішнє переміщення для переміщення "
-"деяких товарів між двома складами. Замість цього використовуйте негайне "
-"внутрішнє переміщення або маршрут поповнення."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
