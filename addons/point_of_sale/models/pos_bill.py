@@ -1,5 +1,4 @@
 from odoo import api, fields, models
-from odoo.exceptions import Warning
 
 
 class Bill(models.Model):
@@ -18,11 +17,11 @@ class Bill(models.Model):
             result = super().create({"name": name, "value": value})
             return result.name_get()[0]
         except: # will not be raised, but just so that it makes sense
-            raise Warning("user is recommended to input name aligned with the value")
+            raise UserWarning("user is recommended to input name aligned with the value")
 
     @api.constrains('value')
-    def onchange_value(self):
+    def _onchange_value(self):
         if self.value <= 0:
-            raise Warning("user must input a positive value")
+            raise UserWarning("user must input a positive value")
         else:
             self.name = self.value
