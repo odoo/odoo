@@ -247,7 +247,7 @@ msgstr "لاشيء في المستقبل"
 #: code:addons/mail/static/src/xml/systray.xml:0
 #, python-format
 msgid "0 Late"
-msgstr "لاشيء متاخر"
+msgstr "لاشيء متأخر "
 
 #. module: mail
 #. openerp-web
@@ -293,7 +293,7 @@ msgstr ""
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "<div class=\"o_mail_notification\">invited %s to the channel</div>"
-msgstr ""
+msgstr "<div class=\"o_mail_notification\">تمت دعوة %s إلى القناة</div> "
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -421,6 +421,9 @@ msgid ""
 "'=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the "
 "document and</span>"
 msgstr ""
+"<span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', "
+"'=', False), ('composition_mode', '=', 'mass_mail')]}\">متابعي المستند "
+"و</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -613,7 +616,7 @@ msgstr "الأنشطة"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_activity_check_res_id_is_set
 msgid "Activities have to be linked to records with a not null res_id."
-msgstr ""
+msgstr "يجب أن تكون الأنشطة مربوطة بسجلات مع res_id غير فارغ. "
 
 #. module: mail
 #. openerp-web
@@ -751,7 +754,7 @@ msgstr "إضافة رمز تعبيري"
 #: code:addons/mail/static/src/models/suggested_recipient_info.js:0
 #, python-format
 msgid "Add as recipient and follower (reason: %s)"
-msgstr ""
+msgstr "قم بإضافة مستلم ومتابع (السبب: %s) "
 
 #. module: mail
 #. openerp-web
@@ -1052,7 +1055,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__partners
 msgid "Authenticated Partners"
-msgstr "الشركاء الموثوقين"
+msgstr "الشركاء المعتمدون "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__author_id
@@ -1078,7 +1081,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail__author_avatar
 #: model:ir.model.fields,field_description:mail.field_mail_message__author_avatar
 msgid "Author's avatar"
-msgstr "الصورة الرمزية للمؤلف"
+msgstr "الصورة الرمزية للكاتب "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__group_public_id
@@ -1271,7 +1274,7 @@ msgstr "الكاميرا مطفأة "
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__can_cancel
 msgid "Can Cancel"
-msgstr ""
+msgstr "يمكن الإلغاء "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__can_edit_body
@@ -1282,7 +1285,7 @@ msgstr "يمكن تحرير النص "
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__can_resend
 msgid "Can Resend"
-msgstr ""
+msgstr "يمكن إعادة الإرسال "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__can_write
@@ -1344,7 +1347,7 @@ msgstr "الردود الجاهزة"
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "Cannot change the channel type of: %(channel_names)s"
-msgstr ""
+msgstr "لا يمكن تغيير نوع القناة لـ: %(channel_names)s "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__email_cc
@@ -1580,7 +1583,7 @@ msgstr "مغلق"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__new
 msgid "Collect replies on a specific email address"
-msgstr ""
+msgstr "قم بجمع الردود في عنوان بريد محدد "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -1902,7 +1905,7 @@ msgstr "العملة"
 #: model:ir.model.fields,help:mail.field_mail_mail__starred
 #: model:ir.model.fields,help:mail.field_mail_message__starred
 msgid "Current user has a starred notification linked to this message"
-msgstr "قام المستخدم الحالي بتميز إشعار مرتبط بهذه الرسالة بنجمة"
+msgstr "قام المستخدم الحالي بتمييز إشعار مرتبط بهذه الرسالة بنجمة "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_bounced_content
@@ -2091,8 +2094,8 @@ msgid ""
 "Description that will be added in the message posted for this subtype. If "
 "void, the name will be added instead."
 msgstr ""
-"الوصف الذي سيتم إضافته في الرسالة التي سيتم نشرها لهذا النوع الفرعي. إذا "
-"تُرك هذا الحقل فارغًا، سيتم إضافة الاسم بدلًا من ذلك."
+"الوصف الذي ستتم إضافته في الرسالة التي سيتم نشرها لهذا النوع الفرعي. إذا "
+"تُرك هذا الحقل فارغاً، ستتم إضافة الاسم عوضاً عن ذلك. "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__default_display_mode
@@ -2269,7 +2272,7 @@ msgstr "منتهي "
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #, python-format
 msgid "Done & Launch Next"
-msgstr "تم وابدأ تشغيل التالي"
+msgstr "تم وابدأ بتشغيل التالي "
 
 #. module: mail
 #. openerp-web
@@ -2592,7 +2595,7 @@ msgstr "رسائل البريد الإلكتروني"
 #: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid "Emojis"
-msgstr "إيموجي"
+msgstr "الرموز التعبيرية "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__is_internal
@@ -2603,7 +2606,7 @@ msgstr "للموظفين فقط "
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model_fields__tracking
 msgid "Enable Ordered Tracking"
-msgstr "تمكين تتبع الطلب"
+msgstr "تمكين تتبع الطلبات "
 
 #. module: mail
 #. openerp-web
@@ -2924,6 +2927,8 @@ msgid ""
 "For %(channels)s, channel_type should be 'channel' to have the group-based "
 "authorization or group auto-subscription."
 msgstr ""
+"بالنسبة لـ %(channels)s، يجب أن يكون channel_type 'قناة' حتى يكون لديه تفويض"
+" جماعي أو اشتراك تلقائي جماعي. "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_formatted
@@ -2985,12 +2990,12 @@ msgstr "مستخدم عام من السجل"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Get Gmail API credentials"
-msgstr ""
+msgstr "الحصول على بيانات اعتماد الواجهة البرمجية لـ Gmail "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Gmail Credentials"
-msgstr ""
+msgstr "بيانات اعتماد Gmail "
 
 #. module: mail
 #: code:addons/mail/models/res_users.py:0
@@ -3021,6 +3026,7 @@ msgid ""
 "Group authorization and group auto-subscription are only supported on "
 "channels."
 msgstr ""
+"خاصيتي التفويض الجماعي والاشتاك التلقائي الجماعي مدعومتان في القنوات فقط. "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
@@ -3536,7 +3542,7 @@ msgstr "رابط الدعوة "
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__invitation_url
 msgid "Invitation URL"
-msgstr ""
+msgstr "رابط URL للدعوة "
 
 #. module: mail
 #: code:addons/mail/wizard/mail_wizard_invite.py:0
@@ -3618,12 +3624,12 @@ msgstr "عضو "
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__is_read
 msgid "Is Read"
-msgstr "هو مقروء"
+msgstr "مقروء "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_chat
 msgid "Is a chat"
-msgstr "هي دردشة"
+msgstr "دردشة "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__is_discuss_sidebar_category_channel_open
@@ -3643,7 +3649,7 @@ msgstr "المايكروفون مكتوم "
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__is_pinned
 msgid "Is pinned on the interface"
-msgstr "هو مثبت على الواجهة"
+msgstr "مثبت على الواجهة"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_rtc_session__is_camera_on
@@ -3856,7 +3862,7 @@ msgstr "مغادرة القناة"
 #: code:addons/mail/static/src/models/channel_invitation_form.js:0
 #, python-format
 msgid "Link copied!"
-msgstr ""
+msgstr "تم نسخ الرابط "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_cc__email_cc
@@ -3892,7 +3898,7 @@ msgstr "تحميل المزيد"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Load template"
-msgstr ""
+msgstr "تحميل القالب "
 
 #. module: mail
 #. openerp-web
@@ -4122,7 +4128,7 @@ msgstr "التعيين كمكتمل "
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
 #, python-format
 msgid "Mark all read"
-msgstr "تأشير الكل مقروء"
+msgstr "تحديد الكل كمقروء "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -4665,7 +4671,7 @@ msgstr "لا يوجد خطأ"
 #: code:addons/mail/static/src/components/follower_list_menu/follower_list_menu.xml:0
 #, python-format
 msgid "No Followers"
-msgstr ""
+msgstr "لا يوجد متابعون "
 
 #. module: mail
 #. openerp-web
@@ -5007,7 +5013,7 @@ msgstr "يمكن تعديل النماذج المخصصة فقط. "
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_res_users_notification_type
 msgid "Only internal user can receive notifications in Odoo"
-msgstr ""
+msgstr "وحدهم المستخدمون الداخليون يمكنهم استلام الإشعارات في أودو "
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -5266,9 +5272,9 @@ msgid ""
 " named. For example on a project, the parent_id of project subtypes refers "
 "to task-related subtypes."
 msgstr ""
-"نوع فرعي رئيسي ، يُستخدم للاشتراك التلقائي. هذا الحقل غير مسمى بشكل صحيح. "
-"على سبيل المثال في مشروع ، يشير parent_id من الأنواع الفرعية للمشروع إلى "
-"الأنواع الفرعية ذات الصلة بالمهام."
+"نوع فرعي رئيسي، يُستخدم للاشتراك التلقائي. لم تتم تسمية هذا الحقل بشكل صحيح."
+" على سبيل المثال في مشروع ما، يشير parent_id من الأنواع الفرعية للمشروع إلى "
+"الأنواع الفرعية ذات الصلة بالمهام. "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_rtc_session__partner_id
@@ -5281,7 +5287,7 @@ msgstr "شريك "
 #: code:addons/mail/models/res_partner.py:0
 #, python-format
 msgid "Partner Profile"
-msgstr "الملف الشخصي للشريك"
+msgstr "ملف الشريك التعريفي "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__partner_readonly
@@ -5654,7 +5660,7 @@ msgstr "تاريخ القراءة"
 #: code:addons/mail/static/src/components/message/message.js:0
 #, python-format
 msgid "Read Less"
-msgstr ""
+msgstr "إظهار أقل"
 
 #. module: mail
 #. openerp-web
@@ -5725,7 +5731,7 @@ msgstr "المستلم"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__name
 msgid "Recipient Name"
-msgstr ""
+msgstr "اسم المستلم "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__partner_ids
@@ -5923,7 +5929,7 @@ msgstr "الرد على "
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Reply-to Address"
-msgstr ""
+msgstr "عنوان الرد "
 
 #. module: mail
 #. openerp-web
@@ -5940,7 +5946,7 @@ msgstr "اسم ملف التقرير "
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__request_partner_id
 msgid "Requesting Partner"
-msgstr "الشريك الطالب"
+msgstr "الشريك مقدم الطلب "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__res_users_settings_ids
@@ -6024,7 +6030,7 @@ msgstr "تدوير"
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #, python-format
 msgid "Rotate (r)"
-msgstr "تدوير (r)"
+msgstr "تدوير (اليمين) "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__rtc_session_ids
@@ -6218,7 +6224,7 @@ msgstr "إرسال"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Send & close"
-msgstr ""
+msgstr "إرسال وإغلاق "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__send_mail
@@ -6230,7 +6236,7 @@ msgstr "إرسال بريد إلكتروني"
 #: code:addons/mail/models/mail_template.py:0
 #, python-format
 msgid "Send Mail (%s)"
-msgstr "ارسل بريد (%s)"
+msgstr "إرسال البريد (%s) "
 
 #. module: mail
 #. openerp-web
@@ -6581,7 +6587,7 @@ msgstr "إيقاف مشاركة الشاشة "
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__update
 msgid "Store email and replies in the chatter of each record"
-msgstr ""
+msgstr "قم بتجزين البريد والردود في الدردشة لكل سجل "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_settings__push_to_talk_key
@@ -6675,7 +6681,7 @@ msgstr "الملخص"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__module_google_gmail
 msgid "Support Gmail Authentication"
-msgstr ""
+msgstr "دعم مصادقة Gmail "
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_config_parameter
@@ -6813,12 +6819,12 @@ msgstr "يجب أن يكون المعرف الفريد عالمياً (UUID) ف�
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_channel_channel_type_not_null
 msgid "The channel type cannot be empty"
-msgstr ""
+msgstr "لا يمكن أن يكون نوع القناة فارغاً "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__can_write
 msgid "The current user can edit the template."
-msgstr ""
+msgstr "بوسع المستخدم الحالي تحرير القالب "
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -7037,7 +7043,7 @@ msgstr "لا يمكن إضافة هذا المستخدم إلى هذه القن�
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Thread"
-msgstr "الموضوع"
+msgstr "محادثة "
 
 #. module: mail
 #. openerp-web
@@ -7192,7 +7198,7 @@ msgstr "تشغيل النشاط التالي "
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__resend
 msgid "Try Again"
-msgstr ""
+msgstr "حاول مجدداً "
 
 #. module: mail
 #. openerp-web
@@ -7664,7 +7670,7 @@ msgstr "الأسابيع"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Welcome to MyCompany!"
-msgstr ""
+msgstr "مرحباً بك في شركتي! "
 
 #. module: mail
 #. openerp-web
@@ -7733,7 +7739,7 @@ msgstr "كتابة ملاحظات"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Write your message here..."
-msgstr ""
+msgstr "اكتب رسالتك هنا... "
 
 #. module: mail
 #: code:addons/mail/models/mail_message.py:0
@@ -8107,7 +8113,7 @@ msgstr "قناة"
 #: code:addons/mail/static/src/webclient/commands/mail_providers.js:0
 #, python-format
 msgid "channels"
-msgstr ""
+msgstr "القنوات "
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__days
@@ -8138,7 +8144,7 @@ msgstr "تم"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "e.g. \"Welcome email\""
-msgstr ""
+msgstr "مثال: \"البريد الإلكتروني للترحيب\" "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -8189,7 +8195,7 @@ msgstr "مثال: true.true..f "
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "e.g: \"info@mycompany.odoo.com\""
-msgstr ""
+msgstr "مثال: \"info@mycompany.odoo.com\" "
 
 #. module: mail
 #. openerp-web
@@ -8218,19 +8224,19 @@ msgstr "تم إنشاؤها من:"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
 msgid "has been modified from:"
-msgstr "تم تعديل من:"
+msgstr "تم تعديله من: "
 
 #. module: mail
 #: code:addons/mail/models/models.py:0
 #, python-format
 msgid "incorrectly configured alias"
-msgstr "اسم مستعار مهيئ بشكل غير صحيح"
+msgstr "لقب مهيأ بشكل غير صحيح "
 
 #. module: mail
 #: code:addons/mail/models/models.py:0
 #, python-format
 msgid "incorrectly configured alias (unknown reference record)"
-msgstr "اسم مستعار مهيئ بشكل غير صحيح (سجل مرجعي غير معروف)"
+msgstr "لقب مهيأ بشكل غير صحيح (سجل مرجعي غير معروف) "
 
 #. module: mail
 #. openerp-web
@@ -8456,7 +8462,7 @@ msgstr "نموذج هدف غير معروف %s"
 #: code:addons/mail/static/src/webclient/commands/mail_providers.js:0
 #, python-format
 msgid "users"
-msgstr ""
+msgstr "المستخدمين "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email

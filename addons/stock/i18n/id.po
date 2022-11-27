@@ -3959,7 +3959,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Legend"
-msgstr ""
+msgstr "Legenda"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__packaging_length
@@ -8413,8 +8413,7 @@ msgstr "Gunakan Lot/Nomor Seri yang Sudah Ada"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid ""
 "Use GS1 nomenclature datamatrix whenever barcodes are printed for lots and "
-"serial numbers. Printing datamatrix requires extra software. If software "
-"can't be found then 1D barcodes will be printed."
+"serial numbers."
 msgstr ""
 
 #. module: stock
@@ -8905,6 +8904,12 @@ msgstr ""
 "Anda tidak dapat mengganti tipe produk yang sedang direservasi pada "
 "pergerakan stok. Jika Anda perlu mengganti tipenya, Anda sebaiknya "
 "membatalkan reservasi terlebih dahulu pada pergerakan stok."
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0

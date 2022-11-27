@@ -553,6 +553,9 @@ msgid ""
 "quantity and now, the difference of quantity is not consistent "
 "anymore.</strong>"
 msgstr ""
+"<strong>Din cauza unor mișcări de stoc efectuate între actualizarea inițială"
+" a cantității și acum, diferența de cantitate nu mai este "
+"corespunzătoare.</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -1578,7 +1581,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Conflict in Inventory Adjustment"
-msgstr ""
+msgstr "Conflict în ajustarea inventarului"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_conflict__quant_to_fix_ids
@@ -2402,7 +2405,7 @@ msgstr "Abandonează"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
 msgid "Discard and manually resolve the conflict"
-msgstr ""
+msgstr "Eliminați și rezolvați manual conflictul"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__display_assign_serial
@@ -3206,6 +3209,13 @@ msgid "If set, the operations are packed into this package"
 msgstr "Dacă este setat, operațiunile sunt ambalate în acest pachet"
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_lot_label_layout__label_quantity
+msgid ""
+"If the UoM of a lot is not 'units', the lot will be considered as a unit and"
+" only one label will be printed for this lot."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__active
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
@@ -3736,18 +3746,19 @@ msgstr "Iunie"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
 msgid "Keep Counted Quantity"
-msgstr ""
+msgstr "Păstrați cantitatea numărată"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
 msgid "Keep Difference"
-msgstr ""
+msgstr "Păstrați diferența"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
 msgid ""
 "Keep the <strong>Counted Quantity</strong> (the Difference will be updated)"
 msgstr ""
+"Păstrați <strong>cantitatea numărată</strong> (diferența va fi actualizată)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -3755,6 +3766,8 @@ msgid ""
 "Keep the <strong>Difference</strong> (the Counted Quantity will be updated "
 "to reflect the same difference as when you counted)"
 msgstr ""
+"Păstrați <strong>diferența</strong> (cantitatea numărată va fi actualizată "
+"pentru a reflecta aceeași diferență ca atunci când ați fi numărat)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_lot_label
@@ -8563,8 +8576,7 @@ msgstr "Folosește loturi/numere seriale existente"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid ""
 "Use GS1 nomenclature datamatrix whenever barcodes are printed for lots and "
-"serial numbers. Printing datamatrix requires extra software. If software "
-"can't be found then 1D barcodes will be printed."
+"serial numbers."
 msgstr ""
 
 #. module: stock
@@ -9074,7 +9086,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
 msgid "You can either :"
-msgstr ""
+msgstr "Puteți să:"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -9087,6 +9099,12 @@ msgstr ""
 "Nu puteți schimba tipul unui produs care este rezervat în mișcările de stoc."
 " Dacă doriți să schimbați tipul, ar trebui mai întâi să anulați rezervările "
 "din mișcările de stoc."
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
