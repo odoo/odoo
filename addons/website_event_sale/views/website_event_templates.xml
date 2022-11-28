@@ -52,4 +52,17 @@
     </xpath>
 </template>
 
+<template id="registration_attendee_details" inherit_id="website_event.registration_attendee_details">
+    <!-- Change 'continue' button to use the website login settings -->
+    <xpath expr="//div[hasclass('modal-footer')]//button[hasclass('btn-primary')]" position="replace">
+        <t t-if="website.account_on_checkout == 'mandatory' and website.is_public_user()">
+            <a class="btn btn-primary" t-attf-href="/web/login?redirect=/event/#{slug(event)}">
+                <span>Sign In</span>
+                <span class="fa fa-sign-in"/>
+            </a>
+        </t>
+        <t t-else="">$0</t>
+    </xpath>
+</template>
+
 </odoo>
