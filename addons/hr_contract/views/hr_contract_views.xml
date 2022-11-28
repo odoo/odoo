@@ -19,15 +19,10 @@
                     <xpath expr="//field[@name='resource_calendar_id']" position="replace">
                         <field name="calendar_mismatch" invisible="1"/>
                         <label for="resource_calendar_id"/>
-                        <div>
-                            <field name="resource_calendar_id" required="1" nolabel="1"/>
-                            <span attrs="{'invisible': [('calendar_mismatch', '=', False)]}"
-                                class="fa fa-exclamation-triangle text-danger o_calendar_warning ms-3"
-                                data-tooltip-template="hr_contract.CalendarMismatch"
-                                data-tooltip-info='{
-                                        "text":"Calendar Mismatch : The employee&apos;s calendar does not match this contract&apos;s calendar. This could lead to unexpected behaviors."
-                                    }'>
-                            </span>
+                        <div class="d-flex align-items-center">
+                            <field name="resource_calendar_id" required="1"/>
+                            <widget name="contract_warning_tooltip"
+                                attrs="{'invisible': [('calendar_mismatch', '=', False)]}"/>
                         </div>
                     </xpath>
                     <field name="job_id" position="before">
@@ -209,16 +204,17 @@
                                 <field name="structure_type_id" groups="hr_contract.group_hr_contract_manager" domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
                                 <field name="calendar_mismatch" invisible="1"/>
                                 <label for="resource_calendar_id"/>
-                                <div id="resource_calendar_warning">
-                                    <field name="resource_calendar_id" groups="!hr_contract.group_hr_contract_manager" required="1" nolabel="1" options="{'no_open': True, 'no_create': True}"/>
-                                    <field name="resource_calendar_id" groups="hr_contract.group_hr_contract_manager" required="1" nolabel="1"/>
-                                    <span attrs="{'invisible': ['|', ('calendar_mismatch', '=', False), ('state', '!=', 'open')]}"
-                                        class="fa fa-exclamation-triangle text-danger o_calendar_warning ms-3"
-                                        data-tooltip-template="hr_contract.CalendarMismatch"
-                                        data-tooltip-info='{
-                                                "text":"Calendar Mismatch : The employee&apos;s calendar does not match this contract&apos;s calendar. This could lead to unexpected behaviors."
-                                            }'>
-                                    </span>
+                                <div id="resource_calendar_warning" class="d-flex align-items-center">
+                                        <field name="resource_calendar_id"
+                                            groups="!hr_contract.group_hr_contract_manager"
+                                            required="1"
+                                            options="{'no_open': True, 'no_create': True}"/>
+                                        <field name="resource_calendar_id"
+                                            groups="hr_contract.group_hr_contract_manager"
+                                            required="1"/>
+                                        <widget
+                                            name="contract_warning_tooltip"
+                                            attrs="{'invisible': ['|', ('calendar_mismatch', '=', False), ('state', '!=', 'open')]}"/>
                                 </div>
                             </group>
                             <group name="top_info_right">
