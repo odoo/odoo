@@ -6,13 +6,27 @@
         <field name="priority">500</field>
         <field name="inherit_id" ref="project.project_sharing_project_task_view_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='child_ids']/tree/field[@name='partner_id']" position="after">
+                <field name="allow_timesheets" column_invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='depend_on_ids']/tree/field[@name='partner_id']" position="after">
+                <field name="allow_timesheets" column_invisible="1"/>
+            </xpath>
             <xpath expr="//field[@name='child_ids']/tree/field[@name='portal_user_names']" position="after">
-                <field name="allocated_hours" widget="timesheet_uom_no_toggle" sum="Total Allocated Time" optional="hide"/>
-                <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="hide"/>
-                <field name="subtask_effective_hours" string="Sub-tasks Hours Spent" widget="timesheet_uom" sum="Sub-tasks Hours Spent" optional="hide"/>
-                <field name="total_hours_spent" string="Total Hours" widget="timesheet_uom" sum="Total Hours" optional="hide"/>
-                <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100"/>
-                <field name="progress" widget="project_task_progressbar" optional="hide" options="{'overflow_class': 'bg-danger'}"/>
+                <field name="allocated_hours" widget="timesheet_uom_no_toggle" sum="Total Allocated Time" optional="hide" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
+                <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="hide" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
+                <field name="subtask_effective_hours" string="Sub-tasks Hours Spent" widget="timesheet_uom" sum="Sub-tasks Hours Spent" optional="hide" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
+                <field name="total_hours_spent" string="Total Hours" widget="timesheet_uom" sum="Total Hours" optional="hide" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
+                <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
+                <field name="progress" widget="project_task_progressbar" optional="hide" options="{'overflow_class': 'bg-danger'}" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
+            </xpath>
+            <xpath expr="//field[@name='depend_on_ids']/tree/field[@name='portal_user_names']" position="after">
+                <field name="allocated_hours" widget="timesheet_uom_no_toggle" sum="Total Allocated Time" optional="hide" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
+                <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="hide" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
+                <field name="subtask_effective_hours" string="Sub-tasks Hours Spent" widget="timesheet_uom" sum="Sub-tasks Hours Spent" optional="hide" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
+                <field name="total_hours_spent" string="Total Hours" widget="timesheet_uom" sum="Total Hours" optional="hide" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
+                <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
+                <field name="progress" widget="project_task_progressbar" optional="hide" options="{'overflow_class': 'bg-danger'}" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="encode_uom_in_days" invisible="1"/>
