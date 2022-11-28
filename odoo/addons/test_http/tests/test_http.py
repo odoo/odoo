@@ -610,6 +610,30 @@ class TestHttpSession(TestHttpBase):
         self.assertEqual(res.status_code, 303)
         self.assertEqual(urlparse(res.headers['Location']).path, '/web/database/selector')
 
+    def test_session4_web_authenticate_multidb(self):
+        self.db_list = [get_db_name(), 'another_database']
+
+        payload = json.dumps({
+            'jsonrpc': '2.0',
+            'id': None,
+            'method': 'call',
+            'params': {
+                'db': get_db_name(),
+                'login': 'admin',
+                'password': 'admin',
+            }
+        })
+
+        res = self.multidb_url_open(
+            '/web/session/authenticate', data=payload, headers=CT_JSON
+        )
+        res.raise_for_status()
+        self.assertEqual(res.status_code, 200)
+
+        res = self.multidb_url_open('/test_http/greeting-user')
+        res.raise_for_status()
+        self.assertEqual(res.status_code, 200, "Should not be redirected to /web/login")
+
 class TestHttpJsonError(TestHttpBase):
 
     jsonrpc_error_structure = {
