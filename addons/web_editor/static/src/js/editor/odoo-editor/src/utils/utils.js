@@ -289,11 +289,11 @@ export function getFurthestUneditableParent(node, parentLimit) {
  */
 export function closestElement(node, selector) {
     const element = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
-    if (selector && element) {
+    if (selector && element && element.nodeType === Node.ELEMENT_NODE) {
         const elementFound = element.closest(selector);
         return elementFound && elementFound.querySelector('.odoo-editor-editable') ? null : elementFound;
     }
-    return selector && element ? element.closest(selector) : element || node;
+    return element || node;
 }
 
 /**
