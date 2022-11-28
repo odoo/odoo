@@ -9,9 +9,7 @@
     'data': [
         "data/dashboards.xml",
     ],
-    'demo': [],
     'installable': True,
     'auto_install': ['website_sale_slides'],
     'license': 'LGPL-3',
-    'assets': {}
 }

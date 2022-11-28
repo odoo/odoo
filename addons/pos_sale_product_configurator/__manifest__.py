@@ -13,7 +13,6 @@ This module adds features depending on both modules.
     'depends': ['point_of_sale', 'sale_product_configurator'],
     'installable': True,
     'auto_install': True,
-    'data': [],
     'assets': {
         'point_of_sale.assets': [
             'pos_sale_product_configurator/static/src/js/models.js',

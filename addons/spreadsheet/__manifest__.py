@@ -7,10 +7,7 @@
     'summary': 'Spreadsheet',
     'description': 'Spreadsheet',
     'depends': ['bus', 'web'],
-    'data': [],
-    'demo': [],
     'installable': True,
-    'auto_install': False,
     'license': 'LGPL-3',
     'assets': {
         'spreadsheet.o_spreadsheet': [

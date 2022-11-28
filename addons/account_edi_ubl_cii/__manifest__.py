@@ -30,7 +30,6 @@ Pro rules and show the errors.
         'data/ubl_21_templates.xml',
     ],
     'installable': True,
-    'application': False,
     'auto_install': True,
     'license': 'LGPL-3',
 }

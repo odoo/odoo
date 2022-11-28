@@ -7,7 +7,6 @@
     'summary': 'Spreadsheet Accounting formulas',
     'description': 'Spreadsheet Accounting formulas',
     'depends': ['spreadsheet', 'account'],
-    'data': [],
     'installable': True,
     'auto_install': True,
     'license': 'LGPL-3',

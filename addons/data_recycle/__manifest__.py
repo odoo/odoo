@@ -16,7 +16,6 @@
         'views/data_recycle_templates.xml',
         'security/ir.model.access.csv',
     ],
-    'auto_install': False,
     'installable': True,
     'application': True,
     'assets': {
