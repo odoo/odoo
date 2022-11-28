@@ -11,7 +11,6 @@ Croatian localisation.
 This is the base module to manage the accounting chart for Croatia in Odoo
 
 Description:
-
 Croatian Chart of Accounts updated (RRIF ver.2021)
 Set of taxes and fiskal positions
 
