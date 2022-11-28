@@ -702,6 +702,7 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
         session.sid = self.generate_key()
         if session.uid and env:
             session.session_token = security.compute_session_token(session, env)
+        session.should_rotate = False
         self.save(session)
 
     def vacuum(self):

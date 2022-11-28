@@ -390,13 +390,13 @@ class HomeStaticTemplateHelpers:
 
         return etree.tostring(root, encoding='utf-8') if root is not None else b'', checksum.hexdigest()[:64]
 
-    def _get_asset_paths(self, bundle):
+    def _get_asset_paths(self, bundle, env=None):
         """Proxy for ir_asset._get_asset_paths
         Useful to make 'self' testable.
         """
-        return request.env['ir.asset']._get_asset_paths(addons=self.addons, bundle=bundle, xml=True)
+        return (env or request.env)['ir.asset']._get_asset_paths(addons=self.addons, bundle=bundle, xml=True)
 
-    def _get_qweb_templates(self, bundle):
+    def _get_qweb_templates(self, bundle, env=None):
         """One and only entry point that gets and evaluates static qweb templates
 
         :rtype: (str, str)
@@ -404,7 +404,7 @@ class HomeStaticTemplateHelpers:
         xml_paths = defaultdict(list)
 
         # group paths by module, keeping them in order
-        for path, addon, _ in self._get_asset_paths(bundle):
+        for path, addon, _ in self._get_asset_paths(bundle, env):
             addon_paths = xml_paths[addon]
             if path not in addon_paths:
                 addon_paths.append(path)
@@ -413,9 +413,9 @@ class HomeStaticTemplateHelpers:
         return content, checksum
 
     @classmethod
-    def get_qweb_templates_checksum(cls, addons=None, db=None, debug=False, bundle=None):
-        return cls(addons, db, checksum_only=True, debug=debug)._get_qweb_templates(bundle)[1]
+    def get_qweb_templates_checksum(cls, addons=None, db=None, debug=False, bundle=None, env=None):
+        return cls(addons, db, checksum_only=True, debug=debug)._get_qweb_templates(bundle, env)[1]
 
     @classmethod
-    def get_qweb_templates(cls, addons=None, db=None, debug=False, bundle=None):
-        return cls(addons, db, debug=debug)._get_qweb_templates(bundle)[0]
+    def get_qweb_templates(cls, addons=None, db=None, debug=False, bundle=None, env=None):
+        return cls(addons, db, debug=debug)._get_qweb_templates(bundle, env)[0]
