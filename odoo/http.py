@@ -690,12 +690,12 @@ def route(route=None, **routing):
 
         @functools.wraps(endpoint)
         def route_wrapper(self, *args, **params):
-            params_ok = filter_kwargs(endpoint, params)
+            params_ok = filter_kwargs(route_wrapper.original_endpoint, params)
             params_ko = set(params) - set(params_ok)
             if params_ko:
                 _logger.warning("%s called ignoring args %s", fname, params_ko)
 
-            result = endpoint(self, *args, **params_ok)
+            result = route_wrapper.original_endpoint(self, *args, **params_ok)
             if routing['type'] == 'http':  # _generate_routing_rules() ensures type is set
                 return Response.load(result)
             return result
