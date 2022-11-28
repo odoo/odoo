@@ -65,7 +65,7 @@ class Http(models.AbstractModel):
         }
 
     def session_info(self):
-        user = request.env.user
+        user = self.env.user
         session_uid = request.session.uid
         version_info = odoo.service.common.exp_version()
 
@@ -89,7 +89,7 @@ class Http(models.AbstractModel):
             "is_system": user._is_system() if session_uid else False,
             "is_admin": user._is_admin() if session_uid else False,
             "user_context": user_context,
-            "db": request.db,
+            "db": self.env.cr.dbname,
             "server_version": version_info.get('server_version'),
             "server_version_info": version_info.get('server_version_info'),
             "support_url": "https://www.odoo.com/buy",
@@ -106,7 +106,7 @@ class Http(models.AbstractModel):
             "max_file_upload_size": max_file_upload_size,
             "home_action_id": user.action_id.id,
             "cache_hashes": {
-                "translations": request.env['ir.http'].sudo().get_web_translations_hash(
+                "translations": self.env['ir.http'].sudo().get_web_translations_hash(
                     mods, request.session.context['lang']
                 ) if session_uid else None,
             },
@@ -122,7 +122,7 @@ class Http(models.AbstractModel):
             # but is still included in some other calls (e.g. '/web/session/authenticate')
             # to avoid access errors and unnecessary information, it is only included for users
             # with access to the backend ('internal'-type users)
-            menus = request.env['ir.ui.menu'].load_menus(request.session.debug)
+            menus = self.env['ir.ui.menu'].load_menus(request.session.debug)
             ordered_menus = {str(k): v for k, v in menus.items()}
             menu_json_utf8 = json.dumps(ordered_menus, default=ustr, sort_keys=True).encode()
             session_info['cache_hashes'].update({
@@ -174,6 +174,6 @@ class Http(models.AbstractModel):
         return session_info
 
     def get_currencies(self):
-        Currency = request.env['res.currency']
+        Currency = self.env['res.currency']
         currencies = Currency.search([]).read(['symbol', 'position', 'decimal_places'])
         return {c['id']: {'symbol': c['symbol'], 'position': c['position'], 'digits': [69,c['decimal_places']]} for c in currencies}
