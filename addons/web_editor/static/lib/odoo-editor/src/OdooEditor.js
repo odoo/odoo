@@ -631,7 +631,14 @@ export class OdooEditor extends EventTarget {
                 attributeCache.set(record.target, attributeCache.get(record.target) || {});
                 if (record.attributeName === 'class') {
                     const classBefore = (record.oldValue && record.oldValue.split(' ')) || [];
+<<<<<<< HEAD
                     const classAfter = (record.target.className && record.target.className.split && record.target.className.split(' ')) || [];
+||||||| parent of 937012713b9c... temp
+                    const classAfter = record.target.className.split(' ');
+=======
+                    const targetClass = record.target.getAttribute('class');
+                    const classAfter = (targetClass && targetClass.split(' ')) || [];
+>>>>>>> 937012713b9c... temp
                     const excludedClasses = [];
                     for (const klass of classBefore) {
                         if (!classAfter.includes(klass)) {
