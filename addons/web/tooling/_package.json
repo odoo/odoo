@@ -13,6 +13,7 @@
     "devDependencies": {
         "eslint": "^8.27.0",
         "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-compat": "^4.0.2",
         "eslint-plugin-diff": "^2.0.1",
         "eslint-plugin-prettier": "^4.2.1",
         "lint-staged": "^13.0.3",
@@ -26,5 +27,12 @@
         "*.{js}": [
             "eslint --fix"
         ]
-    }
+    },
+    "browserslist": [
+        "last 5 Chrome major versions",
+        "last 5 Firefox major versions and Firefox ESR",
+        "last 5 ChromeAndroid major versions",
+        "iOS >= 14",
+        "Safari >= 14"
+    ]
 }
