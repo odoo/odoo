@@ -44,6 +44,8 @@ web_studio/static/tests/**/legacy/*
 # whitelist new code
 !addons/base_import
 !addons/base_import/**/*
+# blackList libs
+addons/base_import/static/lib/*
 # blacklist legacy
 addons/base_import/static/src/legacy/**/*
 
@@ -73,6 +75,8 @@ web_cohort/static/tests/legacy/**/*
 # whitelist new code
 !web_map
 !web_map/**/*
+# blackList libs
+web_map/static/lib/*
 
 # blacklist legacy
 web_map/static/src/legacy/**/*
@@ -93,6 +97,8 @@ web_map/static/tests/legacy/**/*
 # Whitelist spreadsheet
 !addons/spreadsheet
 !addons/spreadsheet/**/*
+# blackList libs
+addons/spreadsheet/static/lib/*
 
 # blacklist o-spreadsheet lib
 addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js
@@ -151,3 +157,5 @@ addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js
 # Whitelist mail
 !addons/mail/
 !addons/mail/**/*
+# blackList libs
+addons/mail/static/lib/*
