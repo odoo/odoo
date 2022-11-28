@@ -863,3 +863,11 @@ class MrpWorkorder(models.Model):
         self.ensure_one()
         if self.qty_producing:
             self.qty_producing = quantity
+
+    def get_working_duration(self):
+        """Get the additional duration for 'open times' i.e. productivity lines with no date_end."""
+        self.ensure_one()
+        duration = 0
+        for time in self.time_ids.filtered(lambda time: not time.date_end):
+            duration += (datetime.now() - time.date_start).total_seconds() / 60
+        return duration
