@@ -117,9 +117,9 @@ class Project(models.Model):
             SELECT P.id
               FROM project_project P
          LEFT JOIN project_task T ON P.id = T.project_id
-             WHERE T.planned_hours IS NOT NULL
+             WHERE p.allocated_hours != 0 AND p.allow_timesheets
           GROUP BY P.id
-            HAVING SUM(T.remaining_hours) < 0
+            HAVING P.allocated_hours - SUM(T.effective_hours) < 0
         """
         if (operator == '=' and value is True) or (operator == '!=' and value is False):
             operator_new = 'inselect'

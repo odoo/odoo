@@ -42,6 +42,16 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
             this._toggleAnimatedTextButton();
         };
         this.$body[0].addEventListener('selectionchange', this.__onSelectionChange);
+
+        // editor_has_snippets is, amongst other things, in charge of hiding the
+        // backend navbar with a CSS animation. But we also need to make it
+        // display: none when the animation finishes for efficiency but also so
+        // that the tour tooltips pointing at the navbar disappear. This could
+        // rely on listening to the transitionend event but it seems more future
+        // proof to just add a delay after which the navbar is hidden.
+        this._hideBackendNavbarTimeout = setTimeout(() => {
+            this.el.ownerDocument.body.classList.add('editor_has_snippets_hide_backend_navbar');
+        }, 500);
     },
     /**
      * @override
@@ -50,6 +60,8 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         this._super(...arguments);
         this.$body[0].removeEventListener('selectionchange', this.__onSelectionChange);
         this.$body[0].classList.remove('o_animated_text_highlighted');
+        clearTimeout(this._hideBackendNavbarTimeout);
+        this.el.ownerDocument.body.classList.remove('editor_has_snippets_hide_backend_navbar');
     },
 
     //--------------------------------------------------------------------------

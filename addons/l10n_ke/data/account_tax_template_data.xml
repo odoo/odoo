@@ -9,17 +9,27 @@
         <field name="amount">16</field>
         <field name="tax_group_id" ref="tax_group_16"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('tax_report_general_rate_sales_base_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ke2200'),
+                    'plus_report_expression_ids': [ref('tax_report_general_rate_sales_tax_tag')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('tax_report_general_rate_sales_base_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ke2200'),
+                    'minus_report_expression_ids': [ref('tax_report_general_rate_sales_tax_tag')],
                 }),
             ]"/>
     </record>
@@ -32,17 +42,27 @@
         <field name="amount">8</field>
         <field name="tax_group_id" ref="tax_group_8"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('tax_report_other_rate_sales_base_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ke2200'),
+                    'plus_report_expression_ids': [ref('tax_report_other_rate_sales_tax_tag')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('tax_report_other_rate_sales_base_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ke2200'),
+                    'minus_report_expression_ids': [ref('tax_report_other_rate_sales_tax_tag')],
                 }),
             ]"/>
     </record>
@@ -55,12 +75,24 @@
         <field name="amount">0</field>
         <field name="tax_group_id" ref="tax_group_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {'repartition_type': 'base'}),
-                (0,0, {'repartition_type': 'tax'}),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('tax_report_zero_rated_sales_base_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {'repartition_type': 'base'}),
-                (0,0, {'repartition_type': 'tax'}),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('tax_report_zero_rated_sales_base_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
             ]"/>
     </record>
     <record id="STEX" model="account.tax.template">
@@ -72,12 +104,24 @@
         <field name="amount">0</field>
         <field name="tax_group_id" ref="tax_group_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {'repartition_type': 'base'}),
-                (0,0, {'repartition_type': 'tax'}),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('tax_report_exempt_sales_base_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {'repartition_type': 'base'}),
-                (0,0, {'repartition_type': 'tax'}),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('tax_report_exempt_sales_base_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
             ]"/>
     </record>
     <record id="SWT3" model="account.tax.template">
@@ -273,17 +317,27 @@
         <field name="amount">16</field>
         <field name="tax_group_id" ref="tax_group_16"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('tax_report_general_rate_purchases_base_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ke1110'),
+                    'plus_report_expression_ids': [ref('tax_report_general_rate_purchases_tax_tag')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('tax_report_general_rate_purchases_base_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ke1110'),
+                    'minus_report_expression_ids': [ref('tax_report_general_rate_purchases_tax_tag')],
                 }),
             ]"/>
     </record>
@@ -296,17 +350,27 @@
         <field name="amount">8</field>
         <field name="tax_group_id" ref="tax_group_8"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('tax_report_other_rate_purchases_base_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ke1110'),
+                    'plus_report_expression_ids': [ref('tax_report_other_rate_purchases_tax_tag')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('tax_report_other_rate_purchases_base_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ke1110'),
+                    'minus_report_expression_ids': [ref('tax_report_other_rate_purchases_tax_tag')],
                 }),
             ]"/>
     </record>
@@ -319,12 +383,24 @@
         <field name="amount">0</field>
         <field name="tax_group_id" ref="tax_group_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {'repartition_type': 'base'}),
-                (0,0, {'repartition_type': 'tax'}),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('tax_report_zero_rated_purchases_base_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {'repartition_type': 'base'}),
-                (0,0, {'repartition_type': 'tax'}),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('tax_report_zero_rated_purchases_base_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
             ]"/>
     </record>
     <record id="PTEX" model="account.tax.template">
@@ -336,12 +412,24 @@
         <field name="amount">0</field>
         <field name="tax_group_id" ref="tax_group_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {'repartition_type': 'base'}),
-                (0,0, {'repartition_type': 'tax'}),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('tax_report_exempt_purchases_base_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {'repartition_type': 'base'}),
-                (0,0, {'repartition_type': 'tax'}),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('tax_report_exempt_purchases_base_tag')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
             ]"/>
     </record>
     <record id="PWT3" model="account.tax.template">
