@@ -143,6 +143,14 @@
                             invisible="not id or subtask_count == 0" context="{'default_user_ids': [(6, 0, [uid])]}">
                             <field name="subtask_count" widget="statinfo" string="Sub-tasks"/>
                         </button>
+                        <button name="action_project_sharing_open_blocking" type="object" invisible="not dependent_tasks_count" class="oe_stat_button" icon="fa-tasks">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Blocking Tasks</span>
+                                <span class="o_stat_value ">
+                                    <field name="dependent_tasks_count" widget="statinfo" nolabel="1" />
+                                </span>
+                            </div>
+                        </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_title pe-0">
@@ -172,6 +180,8 @@
                             <field name="parent_id" invisible="1" />
                             <field name="company_id" invisible="1" />
                             <field name="state" invisible="1" />
+                            <field name="depend_on_count" invisible="1" />
+                            <field name="allow_task_dependencies" invisible="1" />
                             <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}" invisible="not project_id"/>
                             <field name="date_deadline" invisible="state in ['1_done', '1_canceled']" decoration-danger="date_deadline &lt; current_date"/>
                         </group>
@@ -204,7 +214,40 @@
                                     <field name="stage_id" optional="show"/>
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
                                             context="{'form_view_ref': 'project.project_sharing_project_task_view_form', 'search_view_ref': 'project.project_sharing_project_task_view_search'}"
-                                            invisible="project_id or project_id != id"/>
+                                            invisible="not project_id or project_id == id"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page name="task_dependencies" string="Blocked By" invisible="not allow_task_dependencies">
+                            <field name="depend_on_ids" widget="depend_on_ids_one2many" nolabel="1" options="{'link': false}"
+                                context="{
+                                    'depend_on_count': depend_on_count,
+                                    'tree_view_ref': 'project.open_view_blocked_by_list_view',
+                                    'search_view_ref': 'project.project_sharing_project_task_view_search',
+                                    'search_default_project_id': project_id,
+                            }">
+                                <tree editable="bottom">
+                                    <field name="project_id" column_invisible="True"/>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="priority" widget="priority" optional="show" nolabel="1"/>
+                                    <field name="state" widget="project_task_state_selection" nolabel="1"/>
+                                    <field name="name"/>
+                                    <field name="allow_milestones" column_invisible="True"/>
+                                    <field name="milestone_id"
+                                        optional="hide"
+                                        context="{'default_project_id': project_id}"
+                                        invisible="not allow_milestones"
+                                        column_invisible="not parent.allow_milestones"
+                                    />
+                                    <field name="company_id" column_invisible="True"/>
+                                    <field name="partner_id" widget="res_partner_many2one" options="{'no_open': True, 'no_create': True, 'no_edit': True}" optional="hide" invisible="not project_id"/>
+                                    <field name="portal_user_names" string="Assignees" optional="show"/>
+                                    <field name="date_deadline" invisible="state in ['1_done', '1_canceled']" optional="show"/>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
+                                    <field name="stage_id" optional="show"/>
+                                    <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
+                                            context="{'form_view_ref': 'project.project_sharing_project_task_view_form'}"
+                                            invisible="not project_id or project_id == id"/>
                                 </tree>
                             </field>
                         </page>
@@ -223,6 +266,25 @@
         <field name="priority">999</field>
         <field name="arch" type="xml">
             <search position="inside"/>
+        </field>
+    </record>
+
+    <record id="open_view_blocked_by_list_view" model="ir.ui.view">
+        <field name="name">open.view.blocked.by.list.view</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.open_view_all_tasks_list_view"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <tree position="attributes">
+                <attribute name="default_group_by"/>
+            </tree>
+            <field name="user_ids" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="user_ids" position="after">
+                <field name="portal_user_names" string="Assignees" optional="show"/>
+            </field>
+            
         </field>
     </record>
 
@@ -258,6 +320,41 @@
     <record id="project_sharing_form_action_view" model="ir.actions.act_window.view">
         <field name="view_mode">form</field>
         <field name="act_window_id" ref="project.project_sharing_project_task_action"/>
+        <field name="view_id" ref="project.project_sharing_project_task_view_form"/>
+    </record>
+
+    <record id="project_sharing_project_task_action_blocking_tasks" model="ir.actions.act_window">
+        <field name="name">Blocking</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="search_view_id" ref="project.project_sharing_project_task_view_search"/>
+        <field name="domain">[('depend_on_ids', '=', active_id), ('id', '!=', active_id)]</field>
+        <field name="context">{'default_dependent_ids': active_id}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No tasks found. Let's create one!
+            </p><p>
+                To get things done, use activities and status on tasks.<br/>
+                Chat in real time or by email to collaborate efficiently.
+            </p>
+        </field>
+    </record>
+
+    <record id="project_sharing_blocking_tree_action_view" model="ir.actions.act_window.view">
+        <field name="view_mode">tree</field>
+        <field name="act_window_id" ref="project.project_sharing_project_task_action_blocking_tasks"/>
+        <field name="view_id" ref="project.project_sharing_project_task_view_tree"/>
+    </record>
+
+    <record id="project_sharing_blocking_kanban_action_view" model="ir.actions.act_window.view">
+        <field name="view_mode">kanban</field>
+        <field name="act_window_id" ref="project.project_sharing_project_task_action_blocking_tasks"/>
+        <field name="view_id" ref="project.project_sharing_project_task_view_kanban"/>
+    </record>
+
+    <record id="project_sharing_blocking_form_action_view" model="ir.actions.act_window.view">
+        <field name="view_mode">form</field>
+        <field name="act_window_id" ref="project.project_sharing_project_task_action_blocking_tasks"/>
         <field name="view_id" ref="project.project_sharing_project_task_view_form"/>
     </record>
 

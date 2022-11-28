@@ -25,9 +25,16 @@
                 <field name="sale_line_id" string="Sales Order Item" options='{"no_open": True}' readonly="1" invisible="not partner_id" context="{'create': False, 'edit': False, 'delete': False}"/>
             </xpath>
             <xpath expr="//field[@name='child_ids']/tree/field[@name='partner_id']" position="after">
-                <field name="allow_billable" invisible="1"/>
+                <field name="allow_billable" column_invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='depend_on_ids']/tree/field[@name='partner_id']" position="after">
+                <field name="allow_billable" column_invisible="1"/>
             </xpath>
             <xpath expr="//field[@name='child_ids']/tree/field[@name='partner_id']" position="attributes">
+                <attribute name="column_invisible">not parent.allow_billable</attribute>
+                <attribute name="invisible">not allow_billable</attribute>
+            </xpath>
+            <xpath expr="//field[@name='depend_on_ids']/tree/field[@name='partner_id']" position="attributes">
                 <attribute name="column_invisible">not parent.allow_billable</attribute>
                 <attribute name="invisible">not allow_billable</attribute>
             </xpath>
