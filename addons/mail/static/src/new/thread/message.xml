@@ -54,12 +54,18 @@
                         </div>
                     </t>
                     <t t-if="message.type !== 'notification'">
-                        <div t-att-class="{
-                            'p-1': message.isNote,
-                            'o-mail-message-body align-self-start text-break mb-0 rounded-end-3 rounded-bottom-3 border p-3': !message.isNote,
-                            'flex-grow-1': state.isEditing,
-                        }">
-                            <t t-out="message.body"/>
+                        <div class="o-mail-message-bubble-wrap position-relative">
+                            <div class="o-mail-message-bubble border rounded-end-3 rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100" t-att-class="{
+                                    'bg-info-light border-info': !message.isAuthor,
+                                    'bg-success-light border-success opacity-25': message.isAuthor,
+                                }"/>
+                            <div class="position-relative" t-att-class="{
+                                'p-1': message.isNote,
+                                'o-mail-message-body align-self-start text-break mb-0 rounded-end-3 rounded-bottom-3 p-3': !message.isNote,
+                                'flex-grow-1': state.isEditing,
+                            }">
+                                <t t-out="message.body"/>
+                            </div>
                         </div>
                     </t>
                     <div t-if="props.hasActions and !message.isTransient" class="o-mail-message-actions invisible">
