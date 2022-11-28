@@ -1885,7 +1885,7 @@ export class OdooEditor extends EventTarget {
         }
         if (joinWith) {
             const el = closestElement(joinWith);
-            fillEmpty(el);
+            el && fillEmpty(el);
         }
     }
 
@@ -3462,9 +3462,14 @@ export class OdooEditor extends EventTarget {
      */
     isSelectionInEditable(selection) {
         selection = selection || this.document.getSelection();
-        return selection && selection.anchorNode &&
-            closestElement(selection.anchorNode).isContentEditable && closestElement(selection.focusNode).isContentEditable &&
-            this.editable.contains(selection.anchorNode) && this.editable.contains(selection.focusNode);
+        if (selection && selection.anchorNode && selection.focusNode) {
+            const anchorElement = closestElement(selection.anchorNode);
+            const focusElement = closestElement(selection.focusNode);
+            return anchorElement && anchorElement.isContentEditable && focusElement && focusElement.isContentEditable &&
+                this.editable.contains(selection.anchorNode) && this.editable.contains(selection.focusNode);
+        } else {
+            return false;
+        }
     }
     /**
      * Returns true if the current selection is in at least one block Element
