@@ -179,8 +179,8 @@ class HrAttendance(models.Model):
                 ('adjustment', '=', False),
             ])
 
-            company_threshold = emp.company_id.overtime_company_threshold / 60.0
-            employee_threshold = emp.company_id.overtime_employee_threshold / 60.0
+            company_threshold = timedelta(minutes=emp.company_id.overtime_company_threshold).total_seconds()
+            employee_threshold = timedelta(minutes=emp.company_id.overtime_employee_threshold).total_seconds()
 
             for day_data in attendance_dates:
                 attendance_date = day_data[1]
@@ -204,51 +204,25 @@ class HrAttendance(models.Model):
                         for calendar_attendance in working_times[attendance_date]:
                             planned_start_dt = min(planned_start_dt, calendar_attendance[0]) if planned_start_dt else calendar_attendance[0]
                             planned_end_dt = max(planned_end_dt, calendar_attendance[1]) if planned_end_dt else calendar_attendance[1]
-                            planned_work_duration += (calendar_attendance[1] - calendar_attendance[0]).total_seconds() / 3600.0
-                        # Count time before, during and after 'working hours'
-                        pre_work_time, work_duration, post_work_time = 0, 0, 0
-
+                            planned_work_duration += (calendar_attendance[1] - calendar_attendance[0]).total_seconds()
+    
+                        work_duration = 0
                         for attendance in attendances:
-                            # consider check_in as planned_start_dt if within threshold
-                            # if delta_in < 0: Checked in after supposed start of the day
-                            # if delta_in > 0: Checked in before supposed start of the day
                             local_check_in = pytz.utc.localize(attendance.check_in)
-                            delta_in = (planned_start_dt - local_check_in).total_seconds() / 3600.0
-
-                            # Started before or after planned date within the threshold interval
-                            if (delta_in > 0 and delta_in <= company_threshold) or\
-                                (delta_in < 0 and abs(delta_in) <= employee_threshold):
-                                local_check_in = planned_start_dt
                             local_check_out = pytz.utc.localize(attendance.check_out)
-
-                            # same for check_out as planned_end_dt
-                            delta_out = (local_check_out - planned_end_dt).total_seconds() / 3600.0
-                            # if delta_out < 0: Checked out before supposed start of the day
-                            # if delta_out > 0: Checked out after supposed start of the day
-
-                            # Finised before or after planned date within the threshold interval
-                            if (delta_out > 0 and delta_out <= company_threshold) or\
-                                (delta_out < 0 and abs(delta_out) <= employee_threshold):
-                                local_check_out = planned_end_dt
-
-                            # There is an overtime at the start of the day
-                            if local_check_in < planned_start_dt:
-                                pre_work_time += (min(planned_start_dt, local_check_out) - local_check_in).total_seconds() / 3600.0
-                            # Interval inside the working hours -> Considered as working time
-                            if local_check_in <= planned_end_dt and local_check_out >= planned_start_dt:
-                                work_duration += (min(planned_end_dt, local_check_out) - max(planned_start_dt, local_check_in)).total_seconds() / 3600.0
-                            # There is an overtime at the end of the day
-                            if local_check_out > planned_end_dt:
-                                post_work_time += (local_check_out - max(planned_end_dt, local_check_in)).total_seconds() / 3600.0
-
-                        # Overtime within the planned work hours + overtime before/after work hours is > company threshold
+                            work_duration += (local_check_out - local_check_in).total_seconds()
                         overtime_duration = work_duration - planned_work_duration
-                        if pre_work_time > company_threshold:
-                            overtime_duration += pre_work_time
-                        if post_work_time > company_threshold:
-                            overtime_duration += post_work_time
-                        # Global overtime including the thresholds
-                        overtime_duration_real = sum(attendances.mapped('worked_hours')) - planned_work_duration
+                        if overtime_duration < 0:
+                            overtime_duration_real = overtime_duration + min(employee_threshold, abs(overtime_duration))
+                        else:
+                            overtime_duration_real = overtime_duration - min(company_threshold, abs(overtime_duration))
+
+                        # transform to hour unit
+                        planned_work_duration = planned_work_duration / 3600
+                        work_duration = work_duration / 3600
+                        overtime_duration = overtime_duration / 3600
+                        overtime_duration_real = overtime_duration_real / 3600
+
 
                 overtime = overtimes.filtered(lambda o: o.date == attendance_date)
                 if not float_is_zero(overtime_duration, 2) or unfinished_shifts:
