@@ -10,16 +10,16 @@ import { useService } from "@web/core/utils/hooks";
 
 export class Chatter extends Component {
     setup() {
-        this.messaging = useMessaging();
-        this.activity = useService("mail.activity");
-        this.rpc = useService("rpc");
         this.action = useService("action");
+        this.activity = useService("mail.activity");
+        this.messaging = useMessaging();
+        this.orm = useService("orm");
+        this.rpc = useService("rpc");
         this.state = useState({
             composing: false, // false, 'message' or 'note
             activities: [],
             attachments: [],
             followers: [],
-            isFollower: false,
         });
 
         this.load();
@@ -39,6 +39,12 @@ export class Chatter extends Component {
                 }
             }
         });
+    }
+
+    get isFollower() {
+        return Boolean(
+            this.state.followers.find((f) => f.partner_id === this.messaging.user.partnerId)
+        );
     }
 
     load(resId = this.props.resId, requestList = ["followers", "attachments", "messages"]) {
@@ -61,10 +67,22 @@ export class Chatter extends Component {
             }
             if ("followers" in result) {
                 this.state.followers = result.followers;
-                const partnerId = this.messaging.user.partnerId;
-                this.state.isFollower = !!result.followers.find((f) => f.partner_id === partnerId);
             }
         });
+    }
+
+    async onClickFollow() {
+        await this.orm.call(this.props.resModel, "message_subscribe", [[this.props.resId]], {
+            partner_ids: [this.messaging.user.partnerId],
+        });
+        this.load(this.props.resId, ["followers", "suggestedRecipients"]);
+    }
+
+    async onClickUnfollow() {
+        await this.orm.call(this.props.resModel, "message_unsubscribe", [[this.props.resId]], {
+            partner_ids: [this.messaging.user.partnerId],
+        });
+        this.load(this.props.resId, ["followers", "suggestedRecipients"]);
     }
 
     toggleComposer(mode = false) {

@@ -25,11 +25,11 @@
                         <t t-esc="state.followers.length"/>
                     </span>
                 </button>
-                <button t-if="state.isFollower" class="btn text-success" t-att-disabled="!props.resId">
+                <button t-if="isFollower" class="o-mail-chatter-topbar-unfollow btn text-success" t-att-disabled="!props.resId" t-on-click="onClickUnfollow">
                     <i class="fa fa-fw fa-check"/>
                     Following
                 </button>
-                <button t-else="" class="btn btn-link">Follow</button>
+                <button t-if="!isFollower" class="o-mail-chatter-topbar-follow btn btn-link" t-on-click="onClickFollow">Follow</button>
             </div>
         </div>
         <t t-if="state.composing">
