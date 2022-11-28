@@ -152,9 +152,10 @@ export const CLIPBOARD_WHITELISTS = {
         // Odoo colors
         /^text-o-/,
         /^bg-o-/,
-        // Odoo checklists
+        // Odoo lists
         'o_checked',
         'o_checklist',
+        'oe-nested',
         // Miscellaneous
         /^btn/,
         /^fa/,
@@ -925,6 +926,13 @@ export class OdooEditor extends EventTarget {
                         oldValue !== record.target.getAttribute(record.attributeName);
                 }
                 if (!attributeCache.get(record.target)[record.attributeName]) {
+                    continue;
+                }
+            }
+            if (record.target && [Node.TEXT_NODE, Node.ELEMENT_NODE].includes(record.target.nodeType)) {
+                const closestProtected = closestElement(record.target, '[data-oe-protected="true"]');
+                if (closestProtected && closestProtected.nodeType === Node.ELEMENT_NODE &&
+                    record.target !== closestProtected) {
                     continue;
                 }
             }
@@ -1802,7 +1810,7 @@ export class OdooEditor extends EventTarget {
         // If the end container was fully selected, extractContents may have
         // emptied it without removing it. Ensure it's gone.
         const isRemovableInvisible = (node, noBlocks = true) =>
-            !isVisible(node, noBlocks) && !isUnremovable(node) && node.nodeName !== 'A';
+            !isVisible(node, noBlocks) && !isUnremovable(node);
         const endIsStart = end === start;
         while (end && isRemovableInvisible(end, false) && !end.contains(range.endContainer)) {
             const parent = end.parentNode;
@@ -2163,12 +2171,16 @@ export class OdooEditor extends EventTarget {
      * @returns {boolean}
      */
     _handleSelectionInTable(ev=undefined) {
+        const selection = this.document.getSelection();
+        const anchorNode = selection.anchorNode;
+        if (anchorNode && closestElement(anchorNode, '[data-oe-protected="true"]')) {
+            return false;
+        }
         this.deselectTable();
         const traversedNodes = getTraversedNodes(this.editable);
         if (this._isResizingTable || !traversedNodes.some(node => !!closestElement(node, 'td'))) {
             return false;
         }
-        const selection = this.document.getSelection();
         let range;
         if (selection.rangeCount > 1) {
             // Firefox selection in table works with multiple ranges.
@@ -3115,6 +3127,7 @@ export class OdooEditor extends EventTarget {
                             match.length,
                         );
                     }
+                    selection.collapseToEnd();
                 }
                 if (ev.data === '`' && !closestElement(selection.anchorNode, 'code')) {
                     // We just inserted a backtick, check if there was another
@@ -3361,7 +3374,7 @@ export class OdooEditor extends EventTarget {
     _onSelectionChange() {
         const selection = this.document.getSelection();
         const anchorNode = selection.anchorNode;
-        if (anchorNode && closestElement(anchorNode, '.oe-blackbox')) {
+        if (anchorNode && closestElement(anchorNode, '[data-oe-protected="true"]')) {
             return;
         }
 
@@ -3546,6 +3559,13 @@ export class OdooEditor extends EventTarget {
                 emptyElement.removeAttribute('data-oe-zws-empty-inline');
             }
         }
+
+        // Clean all protected nodes because they are not sanitized
+        const protectedNodes = element.querySelectorAll('[data-oe-protected="true"]');
+        for (const node of protectedNodes) {
+            node.replaceChildren();
+        }
+
         sanitize(element);
 
         // Remove contenteditable=false on elements
@@ -3577,7 +3597,7 @@ export class OdooEditor extends EventTarget {
     _handleCommandHint() {
         const selection = this.document.getSelection();
         const anchorNode = selection.anchorNode;
-        if (anchorNode && closestElement(anchorNode, '.oe-blackbox')) {
+        if (anchorNode && closestElement(anchorNode, '[data-oe-protected="true"]')) {
             return;
         }
 
@@ -3651,7 +3671,7 @@ export class OdooEditor extends EventTarget {
     _fixSelectionOnContenteditableFalse() {
         const selection = this.document.getSelection();
         const anchorNode = selection.anchorNode;
-        if (anchorNode && closestElement(anchorNode, '.oe-blackbox')) {
+        if (anchorNode && closestElement(anchorNode, '[data-oe-protected="true"]')) {
             return;
         }
         // When the browser set the selection inside a node that is

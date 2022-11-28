@@ -6,6 +6,7 @@
 # Linkup <link-up@naver.com>, 2022
 # Martin Trigaux, 2022
 # JH CHOI <hwangtog@gmail.com>, 2022
+# Sarah Park, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 13:34+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2022\n"
+"Last-Translator: Sarah Park, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2660,7 +2661,7 @@ msgid ""
 "Add the ability to create invoices from the document module.\n"
 msgstr ""
 "\n"
-"문서 모듈에서 청구서를 생성하는 기능을 추가합니다.\n"
+"문서 모듈에서 인보이스 생성 기능을 추가합니다.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_sign
@@ -2762,7 +2763,7 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"고객이 귀하의 웹사이트를 통해 약속을 잡도록 허용하십시오\n"
+"고객이 웹사이트를 통해 일정을 예약할 수 있도록 허용합니다\n"
 "-------------------------------------------------------------\n"
 "\n"
 
@@ -4213,7 +4214,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"전자 청구서 구현\n"
+"전자 인보이스 구현\n"
 "    "
 
 #. module: base
@@ -4910,7 +4911,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"사용자 지정 번호로 온라인 청구서를 생성합니다.\n"
+"관련 번호를 지정하여 전자 인보이스를 생성합니다.\n"
 "    "
 
 #. module: base
@@ -9845,7 +9846,7 @@ msgstr "(레코드 : %s, 사용자 : %s)"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "), are you sure to create a new one?"
-msgstr "), 새로 만드시겠습니까?"
+msgstr "), 새로 생성하시겠습니까?"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -10041,7 +10042,7 @@ msgstr "9. %w              ==&gt; 5 (금요일은 6일째)"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "<b attrs=\"{'invisible': [('is_company', '=', False)]}\">Address</b>"
-msgstr ""
+msgstr "<b attrs=\"{'invisible': [('is_company', '=', False)]}\">주소</b>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -10281,21 +10282,21 @@ msgstr "<span>객체 :</span>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "<span>Other address for the company (e.g. subsidiary, ...)</span>"
-msgstr ""
+msgstr "<span>회사 기타 주소(예: 자회사, ...)</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid ""
 "<span>Preferred address for all deliveries. Selected by default when you "
 "deliver an order that belongs to this company.</span>"
-msgstr ""
+msgstr "<span>배송지로 설정할 기본 주소. 회사 주문 품목 배송 시 기본적으로 선택됩니다.</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid ""
 "<span>Preferred address for all invoices. Selected by default when you "
 "invoice an order that belongs to this company.</span>"
-msgstr ""
+msgstr "<span>청구지로 설정할 기본 주소. 주문 관련 인보이스 발행 시 기본적으로 선택됩니다.</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -10303,13 +10304,14 @@ msgid ""
 "<span>Private addresses are only visible by authorized users and contain "
 "sensitive data (employee home addresses, ...).</span>"
 msgstr ""
+"<span>권한이 있는 사용자만 개인 주소를 열람할 수 있으며 민감한 데이터 (직원 개인 집주소 등)를 포함하고 있습니다.</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid ""
 "<span>Use this to organize the contact details of employees of a given "
 "company (e.g. CEO, CFO, ...).</span>"
-msgstr ""
+msgstr "<span>특정 회사의 임직원 (예: CEO, CFO 등)의 연락처 세부 정보로 사용됩니다.</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -10775,6 +10777,8 @@ msgid ""
 "A partner with the same <span><span class=\"o_vat_label\">Company "
 "Registry</span></span> already exists ("
 msgstr ""
+"이미 동일한 <span><span class=\"o_vat_label\">사업자등록번호</span></span>를 가진 파트너가 등록되어"
+" 있습니다 ("
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -10782,8 +10786,8 @@ msgid ""
 "A partner with the same <span><span class=\"o_vat_label\">Tax "
 "ID</span></span> already exists ("
 msgstr ""
-"동일한 <span><span class=\"o_vat_label\">사업자등록번호</span></span>를 가진 협력사가 이미 "
-"있습니다. ("
+"이미 동일한 <span><span class=\"o_vat_label\">납세자번호</span></span>를 가진 파트너가 등록되어 "
+"있습니다 ("
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_contact
@@ -11036,7 +11040,7 @@ msgstr "계정 소유자명"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract
 msgid "Account Invoice Extract"
-msgstr "계정 청구서 추출"
+msgstr "계정 인보이스 추출"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract_purchase
@@ -11360,7 +11364,7 @@ msgstr "추가"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_language_install
 msgid "Add Languages"
-msgstr ""
+msgstr "언어 추가"
 
 #. module: base
 #: model:ir.module.module,description:base.module_data_merge_helpdesk
@@ -11400,7 +11404,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Add a language"
-msgstr ""
+msgstr "언어 추가"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_reports_tax_reminder
@@ -12299,7 +12303,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_appointment
 msgid "Appointments"
-msgstr "약속"
+msgstr "일정"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_appraisal_skills
@@ -13685,7 +13689,7 @@ msgstr "C5E 24  163 x 229 mm"
 #: model:ir.module.category,name:base.module_category_sales_crm
 #: model:ir.module.module,shortdesc:base.module_crm
 msgid "CRM"
-msgstr "고객 관계 관리"
+msgstr "CRM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_data_merge_crm
@@ -13700,17 +13704,17 @@ msgstr "고객 관계 관리 업적 시스템"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_livechat
 msgid "CRM Livechat"
-msgstr "고객 관계 관리 실시간 채팅"
+msgstr "CRM 실시간 채팅"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_mail_plugin
 msgid "CRM Mail Plugin"
-msgstr ""
+msgstr "CRM 메일 플러그인"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_enterprise
 msgid "CRM enterprise"
-msgstr "고객 관계 관리 유료버전"
+msgstr "CRM 엔터프라이즈"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_language_export__format__csv
@@ -14411,7 +14415,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_company_step
 msgid "Company Data"
-msgstr "회사 데이터"
+msgstr "회사 정보"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__company_details
@@ -14775,7 +14779,7 @@ msgstr "연락처 직함"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Contact image"
-msgstr "연락처 사진"
+msgstr "연락처 이미지"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0 code:addons/base/models/ir_rule.py:0
@@ -14793,7 +14797,7 @@ msgstr "연락처"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Contacts & Addresses"
-msgstr "연락처와 주소록"
+msgstr "연락처 및 주소록"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_contacts_enterprise
@@ -15139,7 +15143,7 @@ msgstr "승인 요청 생성 및 검증"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Create company"
-msgstr "회사 만들기"
+msgstr "회사 생성"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_quality_control_worksheet
@@ -16277,7 +16281,7 @@ msgstr "Studio에 웹사이트 요소 표시"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__header_line
 msgid "Display a header line"
-msgstr "머리말에 줄 표시"
+msgstr "머리글에 줄 표시"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -18371,7 +18375,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_management
 msgid "From quotations to invoices"
-msgstr "견적에서 청구서까지"
+msgstr "견적서 생성부터 인보이스 발행까지"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
@@ -18554,7 +18558,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription
 msgid "Generate recurring invoices and manage renewals"
-msgstr "청구서 반복 생성 및 갱신 관리"
+msgstr "인보이스 반복 발행 및 갱신 관리"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_links
@@ -19005,7 +19009,7 @@ msgstr "Has Iap"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__header_spacing
 msgid "Header spacing"
-msgstr "머리말 여백"
+msgstr "머리글 여백"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__company_details
@@ -19899,7 +19903,7 @@ msgstr "인터넷으로 환율을 가져옵니다.\n"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi
 msgid "Import/Export Invoices From XML/PDF"
-msgstr "XML/PDF에서 청구서 가져오기/내보내기"
+msgstr "XML/PDF에서 인보이스 가져오기/내보내기"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi_ubl_cii
@@ -20060,7 +20064,7 @@ msgstr "인도네시아 - 회계"
 #. module: base
 #: model:ir.actions.act_window,name:base.res_partner_industry_action
 msgid "Industries"
-msgstr "산업"
+msgstr "산업 분야"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_industry
@@ -20259,7 +20263,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_account_inter_company_rules
 #: model:ir.module.module,shortdesc:base.module_sale_purchase_inter_company_rules
 msgid "Inter Company Module for Sale/Purchase Orders and Invoices"
-msgstr "판매/구매 주문 및 청구서를 위한 회사간 모듈"
+msgstr "판매/구매 주문 및 인보이스 생성을 위한 회사간 모듈"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -20516,17 +20520,17 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__type__invoice
 msgid "Invoice Address"
-msgstr "청구서 발행 주소"
+msgstr "청구지 주소"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account
 msgid "Invoices & Payments"
-msgstr "청구서 및 결제"
+msgstr "인보이스 및 결제"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_account
 msgid "Invoices from Documents"
-msgstr "문서관리로부터의 청구서"
+msgstr "문서 항목의 인보이스 변환"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account
@@ -20802,7 +20806,7 @@ msgstr "키리바시"
 #: model:ir.module.category,name:base.module_category_productivity_knowledge
 #: model:ir.module.module,shortdesc:base.module_knowledge
 msgid "Knowledge"
-msgstr "지식"
+msgstr "지식 센터"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_knowledge
@@ -21340,7 +21344,7 @@ msgstr "그렇게 해 봅시다!"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_company_step
 msgid "Let's start!"
-msgstr "시작해요!"
+msgstr "시작합니다!"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__letter
@@ -24667,7 +24671,7 @@ msgstr "one2many 필드는 'commercial_fields' 또는 'address 필드'의 일부
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing_online_appointment
 msgid "Online Appointment"
-msgstr "온라인 약속"
+msgstr "온라인 일정"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_online_synchronization
@@ -25620,7 +25624,7 @@ msgstr "사용자의 협력사 관련 데이터"
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Partners"
-msgstr "협력사"
+msgstr "파트너"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_geolocalize
@@ -25780,7 +25784,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_payment_providers
 msgid "Payment Providers"
-msgstr ""
+msgstr "결제대행업체"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_payment
@@ -25873,7 +25877,7 @@ msgstr "전화 번호 확인"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Phone:"
-msgstr "전화 :"
+msgstr "전화번호 :"
 
 #. module: base
 #: model:res.country,name:base.pn
@@ -25895,7 +25899,7 @@ msgstr "프로젝트 작업에 대한 자원 계획"
 #: model:ir.module.category,name:base.module_category_human_resources_planning
 #: model:ir.module.module,shortdesc:base.module_planning
 msgid "Planning"
-msgstr "계획 관리"
+msgstr "일정 관리"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_planning_hr_skills
@@ -26677,7 +26681,7 @@ msgstr "푸에르토 리코"
 #: model:ir.module.module,shortdesc:base.module_purchase
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Purchase"
-msgstr "매입"
+msgstr "구매"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_requisition
@@ -28243,7 +28247,7 @@ msgstr "작업 기록을 기반으로 한 판매"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_digital
 msgid "Sell digital products in your eCommerce store"
-msgstr "전자 상거래 상점에서 디지털 제품 판매"
+msgstr "e커머스 스토어에서 디지털 제품을 판매합니다"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_sale
@@ -28547,7 +28551,7 @@ msgstr "회사 데이터 설정"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_company_step
 msgid "Set your company's data for documents header/footer."
-msgstr "문서 머리말 / 꼬리말에 대한 회사 데이터를 설정합니다."
+msgstr "문서의 머리글/바닥글에 표시되는 회사 정보를 입력합니다. "
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_url__binding_model_id
@@ -29380,7 +29384,7 @@ msgstr "도로명"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "Street 2..."
-msgstr "도로명 2..."
+msgstr "상세 주소"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_view_form_private
@@ -29397,7 +29401,7 @@ msgstr "읍/면/동 도로명..."
 #: model:ir.model.fields,field_description:base.field_res_partner__street2
 #: model:ir.model.fields,field_description:base.field_res_users__street2
 msgid "Street2"
-msgstr "상세주소"
+msgstr "상세 주소"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_stripe
@@ -29724,7 +29728,7 @@ msgstr "사업자등록번호"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_taxcloud_delivery
 msgid "TaxCloud and Delivery - Ecommerce"
-msgstr "TaxCloud 및 납품 - 전자 상거래"
+msgstr "TaxCloud 및 납품 - e커머스"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_taxcloud
@@ -33496,7 +33500,7 @@ msgstr "완료"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "e.g. \"B2B\", \"VIP\", \"Consulting\", ..."
-msgstr ""
+msgstr "e.g. \"B2B\", \"VIP\", \"컨설팅\", ..."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_category_form
@@ -33512,7 +33516,7 @@ msgstr "예 : BE0477472701"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_simple_form
 msgid "e.g. Brandom Freeman"
-msgstr ""
+msgstr "e.g. 홍길동"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
@@ -33539,12 +33543,12 @@ msgstr "예시 : 홍길동"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_simple_form
 msgid "e.g. Lumber Inc"
-msgstr ""
+msgstr "e.g. ABC 주식회사"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "e.g. Mister"
-msgstr "예 : 사장"
+msgstr "예 : Mister"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -33598,17 +33602,17 @@ msgstr "이베이 연결기"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale
 msgid "eCommerce"
-msgstr "전자 상거래"
+msgstr "e커머스"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_delivery
 msgid "eCommerce Delivery"
-msgstr "전자 상거래 배송"
+msgstr "e커머스 배송"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_renting
 msgid "eCommerce Rental"
-msgstr ""
+msgstr "e커머스 렌탈"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_renting_comparison

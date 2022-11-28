@@ -63,9 +63,9 @@ wTourUtils.registerWebsitePreviewTour('website_sale.products_snippet_recently_vi
 [
     wTourUtils.dragNDrop(productsSnippet),
     wTourUtils.clickOnSnippet(productsSnippet),
+    ...changeTemplate('dynamic_filter_template_product_product_add_to_cart'),
     wTourUtils.changeOption(optionBlock, 'we-select[data-name="filter_opt"] we-toggler', 'filter'),
     wTourUtils.changeOption(optionBlock, 'we-select[data-name="filter_opt"] we-button:contains("Recently Viewed")', 'filter'),
-    ...changeTemplate('dynamic_filter_template_product_product_add_to_cart'),
     ...wTourUtils.clickOnSave(),
     {
         content: 'make delete icon appear',

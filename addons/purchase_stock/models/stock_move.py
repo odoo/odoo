@@ -187,3 +187,12 @@ class StockMove(models.Model):
             raise UserError(
                 _('Odoo is not able to generate the anglo saxon entries. The total valuation of %s is zero.') % related_aml.product_id.display_name)
         return valuation_price_unit_total, valuation_total_qty
+
+    def _is_purchase_return(self):
+        self.ensure_one()
+        return self.location_dest_id.usage == "supplier" or (
+                self.location_dest_id.usage == "internal"
+                and self.location_id.usage != "supplier"
+                and self.warehouse_id
+                and self.location_dest_id not in self.env["stock.location"].search([("id", "child_of", self.warehouse_id.view_location_id.id)])
+        )

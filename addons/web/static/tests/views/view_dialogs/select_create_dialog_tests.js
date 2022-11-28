@@ -127,6 +127,7 @@ QUnit.module("ViewDialogs", (hooks) => {
                             orderby: "",
                             expand: false,
                             expand_orderby: null,
+                            expand_limit: null,
                             lazy: true,
                             limit: 80,
                             offset: 0,

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { SearchDropdownItem } from "@web/search/search_dropdown_item/search_dropdown_item";
 import { CustomGroupByItem } from "./custom_group_by_item";
 import { FACET_ICONS, GROUPABLE_TYPES } from "../utils/misc";
 import { sortBy } from "@web/core/utils/arrays";
@@ -77,7 +77,7 @@ export class GroupByMenu extends Component {
     }
 }
 
-GroupByMenu.components = { CustomGroupByItem, Dropdown, DropdownItem };
+GroupByMenu.components = { CustomGroupByItem, Dropdown, DropdownItem: SearchDropdownItem };
 GroupByMenu.template = "web.GroupByMenu";
 GroupByMenu.defaultProps = {
     showActiveItems: true,

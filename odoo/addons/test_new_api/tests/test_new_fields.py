@@ -933,6 +933,23 @@ class TestFields(TransactionCaseWithUserDemo):
         })
         check(1.0)
 
+    def test_20_monetary_related(self):
+        """ test value rounding with related currency """
+        currency = self.env.ref('base.USD')
+        monetary_base = self.env['test_new_api.monetary_base'].create({
+            'base_currency_id': currency.id
+        })
+        monetary_related = self.env['test_new_api.monetary_related'].create({
+            'monetary_id': monetary_base.id,
+            'total': 1/3,
+        })
+        self.env.cr.execute(
+            "SELECT total FROM test_new_api_monetary_related WHERE id=%s",
+            monetary_related.ids,
+        )
+        [total] = self.env.cr.fetchone()
+        self.assertEqual(total, .33)
+
     def test_20_like(self):
         """ test filtered_domain() on char fields. """
         record = self.env['test_new_api.multi.tag'].create({'name': 'Foo'})

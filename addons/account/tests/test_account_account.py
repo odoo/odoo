@@ -159,7 +159,7 @@ class TestAccountAccount(AccountTestInvoicingCommon):
         """name_create should only be possible when importing
            Code and Name should be split
         """
-        with self.assertRaises(ValueError):
+        with self.assertRaises(UserError):
             self.env['account.account'].name_create('550003 Existing Account')
         account_id = self.env['account.account'].with_context(import_file=True).name_create('550003 Existing Account')[0]
         account = self.env['account.account'].browse(account_id)

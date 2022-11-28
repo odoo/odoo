@@ -125,13 +125,6 @@ export class SpreadsheetPivotTable {
         return this._rows.length;
     }
 
-    getCellFromMeasureRowWithDomain(values) {
-        const vals = JSON.stringify(values).slice(0, -1); //Remove the last "]"
-        return this.getMeasureHeaders().find((cell) =>
-            JSON.stringify(cell.values).startsWith(vals)
-        );
-    }
-
     /**
      * Get the index of the cell in the measure row (i.e. the last one) which
      * correspond to the given values
@@ -140,7 +133,24 @@ export class SpreadsheetPivotTable {
      */
     getColMeasureIndex(values) {
         const vals = JSON.stringify(values);
-        return this.getMeasureHeaders().findIndex((cell) => JSON.stringify(cell.values) === vals);
+        const maxLength = Math.max(...this._cols.map((col) => col.length));
+        for (let i = 0; i < maxLength; i++) {
+            const cellValues = this._cols.map((col) => JSON.stringify((col[i] || {}).values));
+            if (cellValues.includes(vals)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     *
+     * @param {number} colIndex
+     * @param {number} rowIndex
+     * @returns {Column}
+     */
+    getNextColCell(colIndex, rowIndex) {
+        return this._cols[rowIndex][colIndex];
     }
 
     getRowIndex(values) {

@@ -527,7 +527,7 @@ msgstr "<span><strong>Leveranciersadres</strong></span>"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Warehouse Address:</strong></span>"
-msgstr "<span><strong>Afleveradres:</strong></span>"
+msgstr "<span><strong>Magazijnadres:</strong></span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
@@ -1567,7 +1567,7 @@ msgstr "Kies de lay-out van het vel om de labels af te drukken"
 #. module: stock
 #: model:ir.model,name:stock.model_picking_label_type
 msgid "Choose whether to print product or lot/sn labels"
-msgstr "Kies of je product- of lot-/sn-labels wilt afdrukken"
+msgstr "Kies of je product- oflpartij/serienummerlabels wilt afdrukken"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
@@ -2124,7 +2124,7 @@ msgstr "Datum"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "Date Processing"
-msgstr "Gegevens verwerken"
+msgstr "Verwerkingsdatum"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__date_deadline
@@ -2186,7 +2186,7 @@ msgid ""
 "Day of the month when the annual inventory should occur. If zero or negative, then the first day of the month will be selected instead.\n"
 "        If greater than the last day of a month, then the last day of the month will be selected instead."
 msgstr ""
-"Dag van de maand waarop de jaarlijkse inventarisatie moet plaatsvinden. Indien nul of negatief, dan wordt in plaats daarvan de eerste dag van de maand geselecteerd.\n"
+"Dag van de maand waarop de jaarlijkse voorraadtelling moet plaatsvinden. Indien nul of negatief, dan wordt in plaats daarvan de eerste dag van de maand geselecteerd.\n"
 "        Indien groter dan de laatste dag van een maand, wordt in plaats daarvan de laatste dag van de maand geselecteerd."
 
 #. module: stock
@@ -3828,7 +3828,7 @@ msgstr "Voorraadfrequentie (dagen)"
 #: model:ir.model.fields,field_description:stock.field_product_product__property_stock_inventory
 #: model:ir.model.fields,field_description:stock.field_product_template__property_stock_inventory
 msgid "Inventory Location"
-msgstr "Voorraadverschillenlocatie"
+msgstr "Verschillenlocatie"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
@@ -4602,7 +4602,7 @@ msgstr "Maart"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Mark as Todo"
-msgstr "Zet op gereed voor uitvoeren"
+msgstr "Marker als nog te doen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_max_qty
@@ -5832,7 +5832,7 @@ msgstr "Afdrukken"
 #. module: stock
 #: model:res.groups,name:stock.group_stock_lot_print_gs1
 msgid "Print GS1 Barcodes for Lot & Serial Numbers"
-msgstr "GS1-barcodes afdrukken voor lot- en serienummers"
+msgstr "GS1-barcodes afdrukken voor partij/serienummer"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_lot_print_gs1
@@ -7236,7 +7236,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_sendcloud
 msgid "Sendcloud Connector"
-msgstr "Sendcloud-connector"
+msgstr "Sendcloud connector"
 
 #. module: stock
 #: model:mail.template,description:stock.mail_template_data_delivery_confirmation
@@ -7430,7 +7430,7 @@ msgstr "Ontvangsten/Leveringen"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Shipping"
-msgstr "Afleveradres"
+msgstr "Verzenden"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7509,7 +7509,7 @@ msgstr "Toon partijtekst"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_mark_as_todo
 msgid "Show Mark As Todo"
-msgstr "Toon Markeer als te doen"
+msgstr "Toon Markeer als nog te doen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__show_on_hand_qty_status_button
@@ -8860,6 +8860,11 @@ msgid "Type"
 msgstr "Soort"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
+msgid "Type a message..."
+msgstr "Schrijf een bericht..."
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__picking_code
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_code
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__picking_type_code
@@ -9048,13 +9053,10 @@ msgstr "Bestaande gebruiken"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid ""
 "Use GS1 nomenclature datamatrix whenever barcodes are printed for lots and "
-"serial numbers. Printing datamatrix requires extra software. If software "
-"can't be found then 1D barcodes will be printed."
+"serial numbers."
 msgstr ""
-"Gebruik GS1 nomenclatuur datamatrix wanneer barcodes worden afgedrukt voor "
-"lot- en serienummers. Voor het printen van datamatrix is extra software "
-"nodig. Als er geen software kan worden gevonden, worden 1D-barcodes "
-"afgedrukt."
+"Gebruik de GS1-nomenclatuur-datamatrix wanneer barcodes worden afgedrukt "
+"voor partij- en serienummers."
 
 #. module: stock
 #: model:res.groups,name:stock.group_reception_report
@@ -9407,7 +9409,7 @@ msgid ""
 "Product form."
 msgstr ""
 "Als deze optie is aangevinkt, kan de route worden geselecteerd op het "
-"tabblad Inventaris van het productformulier."
+"tabblad voorraad van het productformulier."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__product_categ_selectable
@@ -9635,6 +9637,12 @@ msgstr ""
 "reservering voor deze voorraad beweging eerst ongedaan moeten maken."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr "Je kunt het soort product dat al in gebruik is niet wijzigen."
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -9655,6 +9663,12 @@ msgstr "Je mag geen negatieve waardes ingeven."
 #, python-format
 msgid "You can only delete draft moves."
 msgstr "Er kunnen alleen regels met de status 'Nieuw' worden verwijderd."
+
+#. module: stock
+#: code:addons/stock/models/stock_scrap.py:0
+#, python-format
+msgid "You can only enter positive quantities."
+msgstr "Je kunt alleen positieve waardes ingeven."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -9820,7 +9834,7 @@ msgid ""
 "\"view\" (%s)."
 msgstr ""
 "Je kunt geen producten meenemen van, of afleveren op een locatie van het "
-"type \"view\" (%s)."
+"type \"weervave\" (%s)."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0

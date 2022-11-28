@@ -246,9 +246,16 @@ class AccountEdiCommon(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     def _import_invoice(self, journal, filename, tree, existing_invoice=None):
-        move_types_allowed, qty_factor = self._get_import_document_amount_sign(filename, tree)
-        move_type = self._context.get('default_move_type')
-        if not move_type or move_type not in move_types_allowed or (existing_invoice and existing_invoice.move_type != move_type):
+        move_types, qty_factor = self._get_import_document_amount_sign(filename, tree)
+        if not move_types:
+            return
+        if journal.type == 'purchase':
+            move_type = move_types[0]
+        elif journal.type == 'sale':
+            move_type = move_types[1]
+        else:
+            return
+        if existing_invoice and existing_invoice.move_type != move_type:
             return
 
         with (existing_invoice or self.env['account.move']).with_context(

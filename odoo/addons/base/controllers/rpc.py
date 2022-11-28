@@ -8,9 +8,8 @@ from markupsafe import Markup
 from werkzeug.wrappers import Response
 
 import odoo
-from odoo.http import Controller, borrow_request, route
+from odoo.http import Controller, route, dispatch_rpc, request
 from odoo.fields import Date, Datetime, Command
-from odoo.service import dispatch_rpc
 from odoo.tools import lazy, ustr
 from odoo.tools.misc import frozendict
 
@@ -125,10 +124,9 @@ class RPC(Controller):
 
     def _xmlrpc(self, service):
         """Common method to handle an XML-RPC request."""
-        with borrow_request() as request:
-            data = request.httprequest.get_data()
-            params, method = xmlrpc.client.loads(data)
-            result = dispatch_rpc(service, method, params)
+        data = request.httprequest.get_data()
+        params, method = xmlrpc.client.loads(data)
+        result = dispatch_rpc(service, method, params)
         return xmlrpc.client.dumps((result,), methodresponse=1, allow_none=False)
 
     @route("/xmlrpc/<service>", auth="none", methods=["POST"], csrf=False, save_session=False)
@@ -156,5 +154,4 @@ class RPC(Controller):
     @route('/jsonrpc', type='json', auth="none", save_session=False)
     def jsonrpc(self, service, method, args):
         """ Method used by client APIs to contact OpenERP. """
-        with borrow_request():
-            return dispatch_rpc(service, method, args)
+        return dispatch_rpc(service, method, args)

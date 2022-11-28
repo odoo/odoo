@@ -391,7 +391,7 @@ class Cursor(BaseCursor):
             _logger.setLevel(level)
 
     def close(self):
-        if not self._closed:
+        if not self.closed:
             return self._close(False)
 
     def _close(self, leak=False):
@@ -463,7 +463,7 @@ class Cursor(BaseCursor):
 
     @property
     def closed(self):
-        return self._closed
+        return self._closed or self._cnx.closed
 
     def now(self):
         """ Return the transaction's timestamp ``NOW() AT TIME ZONE 'UTC'``. """

@@ -2,7 +2,7 @@ odoo.define('web.GroupByMenu', function (require) {
     "use strict";
 
     const { Dropdown } = require("@web/core/dropdown/dropdown");
-    const { DropdownItem } = require("@web/core/dropdown/dropdown_item");
+    const { SearchDropdownItem } = require("@web/search/search_dropdown_item/search_dropdown_item");
     const { CustomGroupByItem } = require('@web/search/group_by_menu/custom_group_by_item');
     const { FACET_ICONS, GROUPABLE_TYPES } = require('web.searchUtils');
     const { useModel } = require('web.Model');
@@ -70,7 +70,7 @@ odoo.define('web.GroupByMenu', function (require) {
         }
     }
 
-    GroupByMenu.components = { CustomGroupByItem, Dropdown, DropdownItem };
+    GroupByMenu.components = { CustomGroupByItem, Dropdown, DropdownItem: SearchDropdownItem };
     GroupByMenu.props = { fields: Object };
     GroupByMenu.template = "web.GroupByMenu";
 

@@ -12,7 +12,6 @@ from odoo import http
 from odoo.modules import module
 from odoo.exceptions import AccessError, UserError, AccessDenied
 from odoo.http import request
-from odoo.service import dispatch_rpc
 from odoo.tools.translate import _
 
 
@@ -46,7 +45,7 @@ class Session(http.Controller):
     @http.route('/web/session/get_lang_list', type='json', auth="none")
     def get_lang_list(self):
         try:
-            return dispatch_rpc('db', 'list_lang', []) or []
+            return http.dispatch_rpc('db', 'list_lang', []) or []
         except Exception as e:
             return {"error": e, "title": _("Languages")}
 

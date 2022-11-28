@@ -11,7 +11,6 @@ export class BomOverviewComponent extends Component {
     setup() {
         this.orm = useService("orm");
         this.actionService = useService("action");
-        this.bus = new EventBus();
 
         this.variants = [];
         this.warehouses = [];

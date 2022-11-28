@@ -18,13 +18,13 @@
 # Harcogourmet, 2022
 # CristianCruzParra, 2022
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
-# jabelchi, 2022
+# Josep Anton Belchi, 2022
 # Martin Trigaux, 2022
 # Quim - eccit <quim@eccit.com>, 2022
 # Gemma Bochaca <gemma.bochaca@gmail.com>, 2022
 # Arnau Ros, 2022
-# marcescu, 2022
 # Cristian Cruz, 2022
+# marcescu, 2022
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2022
 # 
 msgid ""
@@ -421,9 +421,9 @@ msgstr ""
 "            <t t-else=\"\">\n"
 "                Hola,<br/><br/>\n"
 "            </t>\n"
-"            Si us plau, puntueu els nostres serveis relacionats amb la tasca \"<strong t-out=\"object.name or ''\">Planificació i pressupost</strong>\"\n"
+"            Ens importa molt la teva opinió. Si us plau, califica els nostres serveis relacionats amb el part d'assistència \"<strong t-out=\"object.name or ''\">Planificació i pressupost</strong>\"\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                assignada a <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/>\n"
+"                assignat a <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                .<br/>\n"
@@ -432,8 +432,8 @@ msgstr ""
 "        <tr><td style=\"text-align: center;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
-"                    <strong>Digues-nos que et semblen el nostre servei</strong><br/>\n"
-"                    <span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">(fes clic a una d'aquestes emoticones.)</span>\n"
+"                    <strong>Indica'ns com et sents respecte el nostre servei.</strong><br/>\n"
+"                    <span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">(fes clic en un d'aquests emoticones)</span>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
 "                    <table style=\"width:100%;text-align:center;margin-top:2rem;\">\n"
@@ -459,12 +459,12 @@ msgstr ""
 "            </table>\n"
 "        </td></tr>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"            Apreciem els teus comentaris. Ens ajuden a continuar millorant.\n"
+"            Agraïm els teus comentaris. Ens ajuden a continuar millorant.\n"
 "            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
-"                <br/><br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Aquesta enquesta ha sigut enviada perquè la seva tasca s'ha mogut a l'etapa <b t-out=\"object.stage_id.name or ''\">En curs.</b></span>\n"
+"                <br/><br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Aquesta enquesta ha sigut enviada perquè el seu part s'ha mogut a l'etapa <b t-out=\"object.stage_id.name or ''\">En curs.</b></span>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
-"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Aquesta enquesta és enviada <b t-out=\"object.project_id.rating_status_period or ''\">Setmanalment</b> sempre que la tasca es trobi <b t-out=\"object.stage_id.name or ''\">en curs</b>.</span>\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Aquesta enquesta s'envia <b t-out=\"object.project_id.rating_status_period or ''\">Setmanalment</b> sempre que la tasca es trobi a l'etapa <b t-out=\"object.stage_id.name or ''\">En curs</b>.</span>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -2728,10 +2728,24 @@ msgstr ""
 "incidències si el mòdul, rastreja incidències, està instal·lat)."
 
 #. module: project
+#. openerp-web
+#: code:addons/project/static/src/project_sharing/components/chatter/chatter_messages.xml:0
+#, python-format
+msgid "Internal notes are only displayed to internal users."
+msgstr "Les notes internes només es mostren als usuaris interns."
+
+#. module: project
 #: code:addons/project/report/project_task_burndown_chart_report.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
 msgstr " Funció agregada invàlida %r."
+
+#. module: project
+#: code:addons/project/report/project_task_burndown_chart_report.py:0
+#: code:addons/project/report/project_task_burndown_chart_report.py:0
+#, python-format
+msgid "Invalid field %r on model %r"
+msgstr ""
 
 #. module: project
 #: code:addons/project/report/project_task_burndown_chart_report.py:0
@@ -3575,6 +3589,12 @@ msgid "Not Blocking"
 msgstr ""
 
 #. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "Not Implemented."
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__note
 msgid "Note"
 msgstr "Nota"
@@ -4189,6 +4209,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
 #: model_terms:ir.ui.view,arch_db:project.view_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_calendar
+#, python-format
 msgid "Projects"
 msgstr "Projectes"
 
@@ -4632,6 +4653,13 @@ msgstr "Dissabte"
 
 #. module: project
 #. openerp-web
+#: code:addons/project/static/src/js/tours/project.js:0
+#, python-format
+msgid "Schedule your activity once it is ready."
+msgstr ""
+
+#. module: project
+#. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Script"
@@ -4814,6 +4842,12 @@ msgstr "Comparteix el projecte"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Share Readonly"
 msgstr "Comparteix només lectura"
+
+#. module: project
+#: code:addons/project/models/project_task_recurrence.py:0
+#, python-format
+msgid "Should repeat at least once"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_favorite
@@ -5270,7 +5304,9 @@ msgid "Tasks Stages"
 msgstr "Fases de tasques"
 
 #. module: project
+#: code:addons/project/models/project.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__recurring_count
+#, python-format
 msgid "Tasks in Recurrence"
 msgstr "Tasques en recurrència"
 
@@ -5299,6 +5335,18 @@ msgid "The current user's personal task stage."
 msgstr "Fase de tasca personal de l'usuari actual."
 
 #. module: project
+#: code:addons/project/models/project_task_recurrence.py:0
+#, python-format
+msgid "The end date should be after the day of the month"
+msgstr ""
+
+#. module: project
+#: code:addons/project/models/project_task_recurrence.py:0
+#, python-format
+msgid "The end date should be in the future"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "The following milestone has been added:"
 msgstr "S'ha afegit la següent fita:"
@@ -5307,6 +5355,12 @@ msgstr "S'ha afegit la següent fita:"
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "The following milestones have been added:"
 msgstr "S'han afegit les fites següents:"
+
+#. module: project
+#: code:addons/project/models/project_task_recurrence.py:0
+#, python-format
+msgid "The interval should be greater than 0"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_model_id
@@ -5357,6 +5411,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
 msgid "The project's start date must be before its end date."
+msgstr ""
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "The search does not support the %s operator or %s value."
 msgstr ""
 
 #. module: project
@@ -6035,6 +6095,12 @@ msgid ""
 msgstr ""
 "Hauríeu de tenir almenys una etapa personal. Creeu una nova etapa a la qual "
 "es puguin transferir les tasques després de suprimir aquesta."
+
+#. module: project
+#: code:addons/project/models/project_task_recurrence.py:0
+#, python-format
+msgid "You should select a least one day"
+msgstr ""
 
 #. module: project
 #. openerp-web

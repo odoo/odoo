@@ -1078,7 +1078,7 @@ class ResourceResource(models.Model):
         resource_work_intervals = defaultdict(Intervals)
         calendar_work_intervals = dict()
 
-        resource_calendar_validity_intervals = self._get_calendars_validity_within_period(start, end)
+        resource_calendar_validity_intervals = self.sudo()._get_calendars_validity_within_period(start, end)
         for resource in self:
             # For each resource, retrieve its calendar and their validity intervals
             for calendar in resource_calendar_validity_intervals[resource.id]:

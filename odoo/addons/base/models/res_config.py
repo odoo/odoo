@@ -560,12 +560,8 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         for name, icp in classified['config']:
             field = self._fields[name]
             value = self[name]
-            current_value = current_settings[name]
-            if not field.relational and value == current_value:
-                # pre-check before the value is formatted
-                # because the values in current_settings are
-                # in field format, not in str/False parameter format
-                continue
+            current_value = IrConfigParameter.get_param(icp)
+
             if field.type == 'char':
                 # storing developer keys as ir.config_parameter may lead to nasty
                 # bugs when users leave spaces around them
@@ -576,7 +572,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                 # value is a (possibly empty) recordset
                 value = value.id
 
-            if current_value == value:
+            if current_value == str(value) or current_value == value:
                 continue
             IrConfigParameter.set_param(icp, value)
 

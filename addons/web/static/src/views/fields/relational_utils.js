@@ -33,7 +33,14 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
  * @property {Function | null} onDelete
  */
 
-import { Component, useComponent, useEffect, useEnv, useSubEnv, onWillUpdateProps } from "@odoo/owl";
+import {
+    Component,
+    useComponent,
+    useEffect,
+    useEnv,
+    useSubEnv,
+    onWillUpdateProps,
+} from "@odoo/owl";
 
 //
 // Commons
@@ -285,7 +292,7 @@ export class Many2XAutocomplete extends Component {
         return options;
     }
 
-    async onSearchMoreSmall() {
+    async onBarcodeSearch() {
         const autoCompleteInput = this.autoCompleteContainer.el.querySelector("input");
         return this.onSearchMore(autoCompleteInput.value);
     }

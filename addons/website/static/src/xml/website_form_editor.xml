@@ -236,7 +236,7 @@
                 <input
                     type="checkbox"
                     value="Yes"
-                    class="s_website_form_input"
+                    class="s_website_form_input form-check-input"
                     t-att-name="field.name"
                     t-att-checked="field.value and 'checked' or None"
                     t-att-required="field.required || field.modelRequired || None"
@@ -305,7 +305,8 @@
                 </select>
                 <div id="editable_select" class="form-control s_website_form_input">
                     <t t-foreach="field.records" t-as="record">
-                        <div t-esc="record.display_name" t-att-id="record.id" t-attf-class="s_website_form_select_item #{record.selected and 'selected' or ''}"/>
+                        <t t-set="noValueLabel">no value</t>
+                        <div t-esc="record.display_name" t-attf-data-empty-value="&lt;#{noValueLabel}&gt;" t-att-id="record.id" t-attf-class="s_website_form_select_item #{record.selected and 'selected' or ''}"/>
                     </t>
                 </div>
             </t>

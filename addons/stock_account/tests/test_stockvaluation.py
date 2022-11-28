@@ -3968,3 +3968,38 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(self.product1.quantity_svl, 12)
         move.quantity_done = 2
         self.assertEqual(self.product1.quantity_svl, 24)
+
+    def test_replenishment_report_access_rights(self):
+        # One delivery and one receipt
+        pickings = self.env['stock.picking'].create([{
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids': [(0, 0, {
+                'name': 'delivery',
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+                'product_id': self.product1.id,
+                'product_uom': self.product1.uom_id.id,
+                'product_uom_qty': 1.0,
+                'price_unit': 10,
+            })],
+        }, {
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'move_ids': [(0, 0, {
+                'name': 'delivery',
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+                'product_id': self.product1.id,
+                'product_uom': self.product1.uom_id.id,
+                'product_uom_qty': 1.0,
+                'price_unit': 10,
+            })],
+        }])
+        pickings.action_confirm()
+
+        user_report = self.env['report.stock.report_product_product_replenishment'].with_user(self.inventory_user)
+        user_report.get_report_values(docids=self.product1.ids, serialize=True)
+        user_report.get_report_values(docids=self.product1.ids)

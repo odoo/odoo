@@ -272,6 +272,13 @@ different model than this one), then this view's inheritance specs
 (<xpath/>) are applied, and the result is used as if it were this view's
 actual arch.
 """)
+
+    # The "active" field is not updated during updates if <template> is used
+    # instead of <record> to define the view in XML, see _tag_template. For
+    # qweb views, you should not rely on the active field being updated anyway
+    # as those views, if used in frontend layouts, can be duplicated (see COW)
+    # and will thus always require upgrade scripts if you really want to change
+    # the default value of their "active" field.
     active = fields.Boolean(default=True,
                             help="""If this view is inherited,
 * if True, the view always extends its parent
@@ -498,6 +505,10 @@ actual arch.
     @api.model_create_multi
     def create(self, vals_list):
         for values in vals_list:
+            if 'arch_db' in values and not values['arch_db']:
+                # delete empty arch_db to avoid triggering _check_xml before _inverse_arch_base is called
+                del values['arch_db']
+
             if not values.get('type'):
                 if values.get('inherit_id'):
                     values['type'] = self.browse(values['inherit_id']).type
@@ -1195,6 +1206,31 @@ actual arch.
                     if not node.get('on_change'):
                         node.set('on_change', '1')
 
+    def _get_x2many_missing_view_archs(self, field, field_node, node_info):
+        """
+        For x2many fields that require to have some multi-record arch (kanban or list) to display the records
+        be available, this function fetches all arch that are needed and return them.
+        The caller function is responsible to do what it needs with them.
+        """
+        current_view_types = [el.tag for el in field_node.xpath("./*[descendant::field]")]
+        missing_view_types = []
+        if not any(view_type in current_view_types for view_type in field_node.get('mode', 'kanban,tree').split(',')):
+            missing_view_types.append(
+                field_node.get('mode', 'kanban' if node_info.get('mobile') else 'tree').split(',')[0]
+            )
+
+        if not missing_view_types:
+            return []
+
+        comodel = self.env[field.comodel_name].sudo(False)
+        refs = self._get_view_refs(field_node)
+        # Do not propagate <view_type>_view_ref of parent call to `_get_view`
+        comodel = comodel.with_context(**{
+            f'{view_type}_view_ref': refs.get(f'{view_type}_view_ref')
+            for view_type in missing_view_types
+        })
+
+        return [comodel._get_view(view_type=view_type) for view_type in missing_view_types]
 
     #------------------------------------------------------
     # Specific node postprocessors
@@ -1239,23 +1275,9 @@ actual arch.
                     # if no widget or the widget requires it.
                     # So the web client doesn't have to call `get_views` for x2many fields not embedding their view
                     # in the main form view.
-                    current_view_types = [el.tag for el in node.xpath("./*[descendant::field]")]
-                    missing_view_types = []
-                    if not any(view_type in current_view_types for view_type in node.get('mode', 'kanban,tree').split(',')):
-                        missing_view_types.append(
-                            node.get('mode', 'kanban' if node_info.get('mobile') else 'tree').split(',')[0]
-                        )
-                    if missing_view_types:
-                        comodel = self.env[field.comodel_name].sudo(False)
-                        refs = self._get_view_refs(node)
-                        # Do not propagate <view_type>_view_ref of parent call to `_get_view`
-                        comodel = comodel.with_context(**{
-                            f'{view_type}_view_ref': refs.get(f'{view_type}_view_ref')
-                            for view_type in missing_view_types
-                        })
-                        for view_type in missing_view_types:
-                            subarch, _subview = comodel._get_view(view_type=view_type)
-                            node.append(subarch)
+                    for arch, _view in self._get_x2many_missing_view_archs(field, node, node_info):
+                        node.append(arch)
+
                 for child in node:
                     if child.tag in ('form', 'tree', 'graph', 'kanban', 'calendar'):
                         node_info['children'] = []
@@ -2674,8 +2696,8 @@ class Model(models.AbstractModel):
         :rtype: list
         """
         return [
-            'context', 'currency_field', 'definition_record', 'digits', 'domain', 'group_operator', 'groups', 'help',
-            'name', 'readonly', 'related', 'relation', 'relation_field', 'required', 'searchable', 'selection', 'size',
+            'change_default', 'context', 'currency_field', 'definition_record', 'digits', 'domain', 'group_operator', 'groups',
+            'help', 'name', 'readonly', 'related', 'relation', 'relation_field', 'required', 'searchable', 'selection', 'size',
             'sortable', 'store', 'string', 'translate', 'trim', 'type',
         ]
 

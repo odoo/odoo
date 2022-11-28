@@ -52,7 +52,6 @@ export class TimeOffCalendarController extends CalendarController {
 
     newAllocationRequest() {
         const context = {
-            'default_state': 'confirm',
             'form_view_ref': 'hr_holidays.hr_leave_allocation_view_form_dashboard',
         };
         if (this.employeeId) {
@@ -68,7 +67,7 @@ export class TimeOffCalendarController extends CalendarController {
     }
 
     deleteRecord(record) {
-        if (!record.rawRecord.can_cancel) {
+        if (!record.can_cancel) {
             return super.deleteRecord(record);
         }
 
@@ -88,6 +87,7 @@ export class TimeOffCalendarController extends CalendarController {
                     title: record.title,
                     viewId: this.model.formViewId,
                     onRecordSaved: () => this.model.load(),
+                    onRecordDeleted: (record) => this.deleteRecord(record),
                     onLeaveCancelled: () => {
                         this.model.load();
                         this.env.timeOffBus.trigger('update_dashboard');

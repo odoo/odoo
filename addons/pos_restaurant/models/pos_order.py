@@ -67,6 +67,22 @@ class PosOrder(models.Model):
         ])
         return fields
 
+    def _prepare_order_line(self, order_line):
+        """Method that will allow the cleaning of values to send the correct information.
+        :param order_line: order_line that will be cleaned.
+        :type order_line: pos.order.line.
+        :returns: dict -- dict representing the order line's values.
+        """
+        order_line["product_id"] = order_line["product_id"][0]
+        order_line["server_id"] = order_line["id"]
+
+        del order_line["id"]
+        if not "pack_lot_ids" in order_line:
+            order_line["pack_lot_ids"] = []
+        else:
+            order_line["pack_lot_ids"] = [[0, 0, lot] for lot in order_line["pack_lot_ids"]]
+        return order_line
+
     def _get_order_lines(self, orders):
         """Add pos_order_lines to the orders.
 
@@ -84,15 +100,7 @@ class PosOrder(models.Model):
 
         extended_order_lines = []
         for order_line in order_lines:
-            order_line['product_id'] = order_line['product_id'][0]
-            order_line['server_id'] = order_line['id']
-
-            del order_line['id']
-            if not 'pack_lot_ids' in order_line:
-                order_line['pack_lot_ids'] = []
-            else:
-                order_line['pack_lot_ids'] = [[0, 0, lot] for lot in order_line['pack_lot_ids']]
-            extended_order_lines.append([0, 0, order_line])
+            extended_order_lines.append([0, 0, self._prepare_order_line(order_line)])
 
         for order_id, order_lines in groupby(extended_order_lines, key=lambda x:x[2]['order_id']):
             next(order for order in orders if order['id'] == order_id[0])['lines'] = list(order_lines)

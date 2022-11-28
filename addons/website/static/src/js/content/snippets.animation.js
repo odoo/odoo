@@ -1048,9 +1048,15 @@ registry.ScrollButton = registry.anchorSlide.extend({
      */
     _onAnimateClick: function (ev) {
         ev.preventDefault();
-        const $nextElement = this.$el.closest('section').next();
-        if ($nextElement.length) {
-            this._scrollTo($nextElement);
+        // Scroll to the next visible element after the current one.
+        const currentSectionEl = this.el.closest('section');
+        let nextEl = currentSectionEl.nextElementSibling;
+        while (nextEl) {
+            if ($(nextEl).is(':visible')) {
+                this._scrollTo($(nextEl));
+                return;
+            }
+            nextEl = nextEl.nextElementSibling;
         }
     },
 });

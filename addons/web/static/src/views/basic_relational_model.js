@@ -1323,7 +1323,7 @@ export class RelationalModel extends Model {
                 args = args.concat(ev.target);
                 if (owl.status(this.__component) === "destroyed") {
                     console.warn("Component is destroyed");
-                    return payload.callback(Promise.resolve());
+                    return payload.callback(new Promise(() => {}));
                 }
                 const prom = new Promise((resolve, reject) => {
                     owl.Component.env.session

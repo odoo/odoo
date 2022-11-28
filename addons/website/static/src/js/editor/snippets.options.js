@@ -1,4 +1,3 @@
-/* globals google*/
 odoo.define('website.editor.snippets.options', function (require) {
 'use strict';
 
@@ -304,7 +303,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
 });
 
 const GPSPicker = InputUserValueWidget.extend({
-    events: { // Explicitely not consider all InputUserValueWidget events
+    events: { // Explicitly not consider all InputUserValueWidget events
         'blur input': '_onInputBlur',
     },
 
@@ -314,6 +313,11 @@ const GPSPicker = InputUserValueWidget.extend({
     init() {
         this._super(...arguments);
         this._gmapCacheGPSToPlace = {};
+
+        // The google API will be loaded inside the website iframe. Let's try
+        // not having to load it in the backend too and just using the iframe
+        // google object instead.
+        this.contentWindow = this.$target[0].ownerDocument.defaultView;
     },
     /**
      * @override
@@ -324,10 +328,20 @@ const GPSPicker = InputUserValueWidget.extend({
             this.trigger_up('gmap_api_request', {
                 editableMode: true,
                 configureIfNecessary: true,
-                onSuccess: key => resolve(!!key),
+                onSuccess: key => {
+                    if (!key) {
+                        resolve(false);
+                        return;
+                    }
+
+                    // TODO see _notifyGMapError, this tries to trigger an error
+                    // early but this is not consistent with new gmap keys.
+                    this._nearbySearch('(50.854975,4.3753899)', !!key)
+                        .then(place => resolve(!!place));
+                },
             });
         });
-        if (!this._gmapLoaded) {
+        if (!this._gmapLoaded && !this._gmapErrorNotified) {
             this.trigger_up('user_value_widget_critical');
             return;
         }
@@ -342,8 +356,23 @@ const GPSPicker = InputUserValueWidget.extend({
             return;
         }
 
-        this._gmapAutocomplete = new google.maps.places.Autocomplete(this.inputEl, {types: ['geocode']});
-        google.maps.event.addListener(this._gmapAutocomplete, 'place_changed', this._onPlaceChanged.bind(this));
+        this._gmapAutocomplete = new this.contentWindow.google.maps.places.Autocomplete(this.inputEl, {types: ['geocode']});
+        this.contentWindow.google.maps.event.addListener(this._gmapAutocomplete, 'place_changed', this._onPlaceChanged.bind(this));
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+
+        // Without this, the google library injects elements inside the backend
+        // DOM but do not remove them once the editor is left. Notice that
+        // this is also done when the widget is destroyed for another reason
+        // than leaving the editor, but if the google API needs that container
+        // again afterwards, it will simply recreate it.
+        for (const el of document.body.querySelectorAll('.pac-container')) {
+            el.remove();
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -361,17 +390,36 @@ const GPSPicker = InputUserValueWidget.extend({
      */
     async setValue() {
         await this._super(...arguments);
+        if (!this._gmapLoaded) {
+            return;
+        }
 
-        await new Promise(resolve => {
-            const gps = this._value;
-            if (this._gmapCacheGPSToPlace[gps]) {
-                this._gmapPlace = this._gmapCacheGPSToPlace[gps];
-                resolve();
-                return;
-            }
-            const service = new google.maps.places.PlacesService(document.createElement('div'));
-            const p = gps.substring(1).slice(0, -1).split(',');
-            const location = new google.maps.LatLng(p[0] || 0, p[1] || 0);
+        this._gmapPlace = await this._nearbySearch(this._value);
+
+        if (this._gmapPlace) {
+            this.inputEl.value = this._gmapPlace.formatted_address;
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {string} gps
+     * @param {boolean} [notify=true]
+     * @returns {Promise}
+     */
+    async _nearbySearch(gps, notify = true) {
+        if (this._gmapCacheGPSToPlace[gps]) {
+            return this._gmapCacheGPSToPlace[gps];
+        }
+
+        const p = gps.substring(1).slice(0, -1).split(',');
+        const location = new this.contentWindow.google.maps.LatLng(p[0] || 0, p[1] || 0);
+        return new Promise(resolve => {
+            const service = new this.contentWindow.google.maps.places.PlacesService(document.createElement('div'));
             service.nearbySearch({
                 // Do a 'nearbySearch' followed by 'getDetails' to avoid using
                 // GMap Geocoder which the user may not have enabled... but
@@ -380,29 +428,68 @@ const GPSPicker = InputUserValueWidget.extend({
                 location: location,
                 radius: 1,
             }, (results, status) => {
-                const GMAP_CRITICAL_ERRORS = [google.maps.places.PlacesServiceStatus.REQUEST_DENIED, google.maps.places.PlacesServiceStatus.UNKNOWN_ERROR];
-                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                const GMAP_CRITICAL_ERRORS = [
+                    this.contentWindow.google.maps.places.PlacesServiceStatus.REQUEST_DENIED,
+                    this.contentWindow.google.maps.places.PlacesServiceStatus.UNKNOWN_ERROR
+                ];
+                if (status === this.contentWindow.google.maps.places.PlacesServiceStatus.OK) {
                     service.getDetails({
                         placeId: results[0].place_id,
                         fields: ['geometry', 'formatted_address'],
                     }, (place, status) => {
-                        resolve();
-                        if (status === google.maps.places.PlacesServiceStatus.OK) {
+                        if (status === this.contentWindow.google.maps.places.PlacesServiceStatus.OK) {
                             this._gmapCacheGPSToPlace[gps] = place;
-                            this._gmapPlace = place;
+                            resolve(place);
                         } else if (GMAP_CRITICAL_ERRORS.includes(status)) {
-                            this.trigger_up('user_value_widget_critical');
+                            if (notify) {
+                                this._notifyGMapError();
+                            }
+                            resolve();
                         }
                     });
                 } else if (GMAP_CRITICAL_ERRORS.includes(status)) {
+                    if (notify) {
+                        this._notifyGMapError();
+                    }
                     resolve();
-                    this.trigger_up('user_value_widget_critical');
+                } else {
+                    resolve();
                 }
             });
         });
-        if (this._gmapPlace) {
-            this.inputEl.value = this._gmapPlace.formatted_address;
+    },
+    /**
+     * Indicates to the user there is an error with the google map API and
+     * re-opens the configuration dialog. For good measures, this also notifies
+     * a critical error which normally removes the related snippet entirely.
+     *
+     * @private
+     */
+    _notifyGMapError() {
+        // TODO this should be better to detect all errors. This is random.
+        // When misconfigured (wrong APIs enabled), sometimes Google throw
+        // errors immediately (which then reaches this code), sometimes it
+        // throws them later (which then induces an error log in the console
+        // and random behaviors).
+        if (this._gmapErrorNotified) {
+            return;
         }
+        this._gmapErrorNotified = true;
+
+        this.displayNotification({
+            type: 'danger',
+            sticky: true,
+            message: _t("A Google Map error occurred. Make sure to read the key configuration popup carefully."),
+        });
+        this.trigger_up('gmap_api_request', {
+            editableMode: true,
+            reconfigure: true,
+            onSuccess: () => {
+                this._gmapErrorNotified = false;
+            },
+        });
+
+        setTimeout(() => this.trigger_up('user_value_widget_critical'));
     },
 
     //--------------------------------------------------------------------------
@@ -418,10 +505,24 @@ const GPSPicker = InputUserValueWidget.extend({
         if (gmapPlace && gmapPlace.geometry) {
             this._gmapPlace = gmapPlace;
             const location = this._gmapPlace.geometry.location;
+            const oldValue = this._value;
             this._value = `(${location.lat()},${location.lng()})`;
             this._gmapCacheGPSToPlace[this._value] = gmapPlace;
-            this._onUserValueChange(ev);
+            if (oldValue !== this._value) {
+                this._onUserValueChange(ev);
+            }
         }
+    },
+    /**
+     * @override
+     */
+    _onInputBlur() {
+        // As a stable fix: do not call the _super as we actually don't want
+        // input focusout messing with the google map API. Because of this,
+        // clicking on google map autocomplete suggestion on Firefox was not
+        // working properly. This is kept as an empty function because of stable
+        // policy (ensures custo can still extend this).
+        // TODO review in master.
     },
 });
 options.userValueWidgetsRegistry['we-urlpicker'] = UrlPickerUserValueWidget;
@@ -1403,10 +1504,7 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
      */
     async updateUI() {
         if (this.updateColorPreviews) {
-            const ccPreviewEls = this.el.querySelectorAll('.o_we_cc_preview_wrapper');
-            this.trigger_up('update_color_previews', {
-                ccPreviewEls,
-            });
+            this.trigger_up('update_color_previews');
             this.updateColorPreviews = false;
         }
         await this._super(...arguments);
@@ -1460,9 +1558,7 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
             ccPreviewEls.push(ccPreviewEl);
             presetCollapseEl.appendChild(collapseEl);
         }
-        this.trigger_up('update_color_previews', {
-            ccPreviewEls,
-        });
+        this.trigger_up('update_color_previews');
         await this._super(...arguments);
     },
 });
@@ -1736,9 +1832,17 @@ options.registry.CarouselItem = options.Class.extend({
         const $items = this.$carousel.find('.carousel-item');
         const newLength = $items.length - 1;
         if (!this.removing && newLength > 0) {
+            // The active indicator is deleted to ensure that the other
+            // indicators will still work after the deletion.
             const $toDelete = $items.filter('.active').add(this.$indicators.find('.active'));
             this.$carousel.one('active_slide_targeted.carousel_item_option', () => {
                 $toDelete.remove();
+                // To ensure the proper functioning of the indicators, their
+                // attributes must reflect the position of the slides.
+                const indicatorsEls = this.$indicators[0].querySelectorAll('li');
+                for (let i = 0; i < indicatorsEls.length; i++) {
+                    indicatorsEls[i].setAttribute('data-bs-slide-to', i);
+                }
                 this.$controls.toggleClass('d-none', newLength === 1);
                 this.$carousel.trigger('content_changed');
                 this.removing = false;
@@ -2644,29 +2748,6 @@ options.registry.CookiesBar = options.registry.SnippetPopup.extend({
         }
 
         $content.empty().append($template);
-    },
-    /**
-     * @override
-     */
-    onTargetShow: async function () {
-        // @see this.onTargetHide
-        this.$target.parent('#website_cookies_bar').show();
-        this._super(...arguments);
-
-    },
-    /**
-     * @override
-     */
-    onTargetHide: async function () {
-        // We hide the parent because contenteditable="true" would force the bar to stay visible in hidden mode.
-        this.$target.parent('#website_cookies_bar').hide();
-        this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    cleanForSave: function () {
-        this.$target.parent('#website_cookies_bar').show();
     },
 });
 

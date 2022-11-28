@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:01+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +24,7 @@ msgstr ""
 #: code:addons/account_check_printing/models/account_journal.py:0
 #, python-format
 msgid " : Check Number Sequence"
-msgstr ": Kiểm tra số liên tục"
+msgstr " : Kiểm tra chuỗi số"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_margin_left
@@ -36,8 +37,8 @@ msgid ""
 "Adjust the margins of generated checks to make it fit your printer's "
 "settings."
 msgstr ""
-"Adjust the margins of generated checks to make it fit your printer's "
-"settings."
+"Điều chỉnh lề của các séc đã tạo để làm cho nó phù hợp với cài đặt máy in "
+"của bạn."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_amount_in_words
@@ -91,7 +92,7 @@ msgstr "Kiểm tra Lề trên"
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid "Check numbers can only consist of digits"
-msgstr "Check numbers can only consist of digits"
+msgstr "Số séc chỉ có thể bao gồm các chữ số"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
@@ -112,19 +113,19 @@ msgstr "Séc"
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_sequence_id
 msgid "Checks numbering sequence."
-msgstr "Checks numbering sequence."
+msgstr "Mã đánh số Séc."
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:0
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_payment_check_printing_search
 #, python-format
 msgid "Checks to Print"
-msgstr "Checks to Print"
+msgstr "Séc để in"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
 msgid "Checks to print"
-msgstr "Checks to print"
+msgstr "Séc để in"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_res_company
@@ -175,8 +176,7 @@ msgid ""
 "In order to print multiple checks at once, they must belong to the same bank"
 " journal."
 msgstr ""
-"In order to print multiple checks at once, they must belong to the same bank"
-" journal."
+"Để in nhiều séc cùng một lúc, chúng phải thuộc cùng một nhật ký ngân hàng."
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_journal
@@ -186,7 +186,7 @@ msgstr "Sổ nhật ký"
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_move
 msgid "Journal Entry"
-msgstr "Bút toán "
+msgstr "Bút toán sổ nhật ký"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks____last_update
@@ -196,7 +196,7 @@ msgstr "Sửa lần cuối vào"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__write_uid
 msgid "Last Updated by"
-msgstr "Last Updated by"
+msgstr "Sửa lần cuối bởi"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__write_date
@@ -219,30 +219,36 @@ msgid ""
 "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
+"Thủ công: Thanh toán hoặc Nhận thanh toán bằng bất kỳ phương thức nào bên ngoài Odoo.\n"
+"Nhà cung cấp dịch vụ thanh toán: Mỗi nhà cung cấp dịch vụ thanh toán có Phương thức thanh toán riêng. Yêu cầu giao dịch trên / vào thẻ nhờ mã thông báo thanh toán do đối tác lưu khi mua hoặc đăng ký trực tuyến.\n"
+"Séc: Thanh toán hóa đơn bằng séc và in nó từ Odoo.\n"
+"Gửi tiền theo đợt: Thu thập nhiều séc của khách hàng cùng một lúc để tạo và gửi một khoản tiền gửi theo đợt cho ngân hàng của bạn. Mô-đun account_batch_payment là cần thiết.\n"
+"Chuyển khoản tín dụng SEPA: Thanh toán trong khu vực SEPA bằng cách gửi tệp Chuyển khoản tín dụng SEPA cho ngân hàng của bạn. Mô-đun account_sepa là cần thiết.\n"
+"Ghi nợ trực tiếp SEPA: Được thanh toán trong khu vực SEPA nhờ vào giấy ủy nhiệm mà đối tác của bạn sẽ cấp cho bạn. Mô-đun account_sepa là cần thiết.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
 msgid "Multi-Pages Check Stub"
-msgstr "Multi-Pages Check Stub"
+msgstr "Séc kiểm tra nhiều trang"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_next_number
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__next_check_number
 msgid "Next Check Number"
-msgstr "Next Check Number"
+msgstr "Mã Séc kế tiếp"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:0
 #: code:addons/account_check_printing/wizard/print_prenumbered_checks.py:0
 #, python-format
 msgid "Next Check Number should only contains numbers."
-msgstr "Next Check Number should only contains numbers."
+msgstr "Mã số séc kế tiếp chỉ nên chưa toàn chữ số."
 
 #. module: account_check_printing
 #: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__disabled
 msgid "None"
-msgstr "Không "
+msgstr "Không dùng"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__payment_method_line_id
@@ -268,24 +274,22 @@ msgid ""
 "Payments to print as a checks must have 'Check' selected as payment method "
 "and not have already been reconciled"
 msgstr ""
-"Payments to print as a checks must have 'Check' selected as payment method "
-"and not have already been reconciled"
+"Các khoản thanh toán để in dưới dạng séc phải được chọn 'Séc' làm phương "
+"thức thanh toán và chưa được đối chiếu"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
 "Please enter the number of the first pre-printed check that you are about to"
 " print on."
-msgstr ""
-"Please enter the number of the first pre-printed check that you are about to"
-" print on."
+msgstr "Vui lòng nhập số của séc in sẵn đầu tiên mà bạn sắp in."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_bank_statement_line__preferred_payment_method_id
 #: model:ir.model.fields,field_description:account_check_printing.field_account_move__preferred_payment_method_id
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__preferred_payment_method_id
 msgid "Preferred Payment Method"
-msgstr "Preferred Payment Method"
+msgstr "Phương thức thanh toán ưa thích"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_partner__property_payment_method_id
@@ -295,9 +299,10 @@ msgid ""
 "vendor bills by preferred payment method to register payments in mass. Use "
 "cases: create bank files for batch wires, check runs."
 msgstr ""
-"Preferred payment method when paying this vendor. This is used to filter "
-"vendor bills by preferred payment method to register payments in mass. Use "
-"cases: create bank files for batch wires, check runs."
+"Phương thức thanh toán ưu tiên khi thanh toán cho nhà cung cấp này. Điều này"
+" được sử dụng để lọc các hóa đơn của nhà cung cấp theo phương thức thanh "
+"toán ưa thích để đăng ký thanh toán hàng loạt. Các trường hợp sử dụng: tạo "
+"tệp ngân hàng cho dây hàng loạt, kiểm tra các lần chạy."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -307,18 +312,18 @@ msgstr "In"
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Print Check"
-msgstr "Print Check"
+msgstr "In Séc"
 
 #. module: account_check_printing
 #: model:ir.actions.server,name:account_check_printing.action_account_print_checks
 msgid "Print Checks"
-msgstr "Print Checks"
+msgstr "In séc"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_date_label
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_date_label
 msgid "Print Date Label"
-msgstr "Print Date Label"
+msgstr "In nhãn ngày"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -326,7 +331,7 @@ msgstr "Print Date Label"
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 #, python-format
 msgid "Print Pre-numbered Checks"
-msgstr "Print Pre-numbered Checks"
+msgstr "In séc được đánh số trước"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment_register
@@ -336,7 +341,7 @@ msgstr "Ghi nhận thanh toán"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right
 msgid "Right Margin"
-msgstr "Right Margin"
+msgstr "Lề phải"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_layout
@@ -345,8 +350,8 @@ msgid ""
 "Select the format corresponding to the check paper you will be printing your checks on.\n"
 "In order to disable the printing feature, select 'None'."
 msgstr ""
-"Select the format corresponding to the check paper you will be printing your checks on.\n"
-"In order to disable the printing feature, select 'None'."
+"Chọn định dạng tương ứng với giấy séc mà bạn sẽ in séc.\n"
+"Để tắt tính năng in, hãy chọn 'Không có'."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
@@ -356,7 +361,7 @@ msgstr "Đã gửi"
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_next_number
 msgid "Sequence number of the next printed check."
-msgstr "Sequence number of the next printed check."
+msgstr "Số thứ tự của séc được in tiếp theo."
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -365,8 +370,8 @@ msgid ""
 "Something went wrong with Check Layout, please select another layout in "
 "Invoicing/Accounting Settings and try again."
 msgstr ""
-"Something went wrong with Check Layout, please select another layout in "
-"Invoicing/Accounting Settings and try again."
+"Đã xảy ra sự cố với Bố cục Séc, vui lòng chọn bố cục khác trong Cài đặt Lập "
+"hóa đơn / Kế toán và thử lại."
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -375,7 +380,7 @@ msgid ""
 "The following numbers are already used:\n"
 "%s"
 msgstr ""
-"The following numbers are already used:\n"
+"Các số sau đã được sử dụng:\n"
 "%s"
 
 #. module: account_check_printing
@@ -385,8 +390,8 @@ msgid ""
 "The last check number was %s. In order to avoid a check being rejected by "
 "the bank, you can only use a greater number."
 msgstr ""
-"The last check number was %s. In order to avoid a check being rejected by "
-"the bank, you can only use a greater number."
+"Số Séc mới nhất là %s. Để tránh ngân hàng từ chối séc, bạn chỉ có thể sử "
+"dụng một số lớn hơn."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_number
@@ -395,9 +400,9 @@ msgid ""
 "printed check paper already has numbers or if the current numbering is "
 "wrong, you can change it in the journal configuration page."
 msgstr ""
-"The selected journal is configured to print check numbers. If your pre-"
-"printed check paper already has numbers or if the current numbering is "
-"wrong, you can change it in the journal configuration page."
+"Sổ nhật ký đã chọn được định cấu hình để in số séc. Nếu tờ séc in sẵn của "
+"bạn đã có số hoặc nếu số hiện tại bị sai, bạn có thể thay đổi nó trong trang"
+" cấu hình nhật ký."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -406,8 +411,8 @@ msgid ""
 "This option allows you to print check details (stub) on multiple pages if "
 "they don't fit on a single page."
 msgstr ""
-"This option allows you to print check details (stub) on multiple pages if "
-"they don't fit on a single page."
+"Tùy chọn này cho phép bạn in chi tiết séc (sơ khai) trên nhiều trang nếu "
+"chúng không vừa trên một trang."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
@@ -416,25 +421,25 @@ msgid ""
 "This option allows you to print the date label on the check as per CPA.\n"
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
-"This option allows you to print the date label on the check as per CPA.\n"
-"Disable this if your pre-printed check includes the date label."
+"Tùy chọn này cho phép bạn in nhãn ngày tháng trên séc theo CPA.\n"
+"Tắt tính năng này nếu séc in sẵn của bạn có nhãn ngày tháng."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
 "This will allow to save on payments the number of the corresponding check."
 msgstr ""
-"This will allow to save on payments the number of the corresponding check."
+"Điều này sẽ cho phép tiết kiệm cho các khoản thanh toán số séc tương ứng."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Unmark Sent"
-msgstr "Unmark Sent"
+msgstr "Bỏ đánh dấu đã gửi"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Void Check"
-msgstr "Void Check"
+msgstr "Séc trống"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -443,5 +448,5 @@ msgid ""
 "You have to choose a check layout. For this, go in Invoicing/Accounting "
 "Settings, search for 'Checks layout' and set one."
 msgstr ""
-"You have to choose a check layout. For this, go in Invoicing/Accounting "
-"Settings, search for 'Checks layout' and set one."
+"Bạn phải chọn một bố cục séc. Đối với điều này, hãy chuyển đến Cài đặt Lập "
+"hóa đơn / Kế toán, tìm kiếm 'Bố cục séc' và đặt một."

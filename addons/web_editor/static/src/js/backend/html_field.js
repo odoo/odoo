@@ -228,6 +228,7 @@ export class HtmlField extends Component {
                 res_model: this.props.record.resModel,
                 res_id: this.props.record.resId,
             },
+            fieldId: this.props.id,
         };
     }
     /**
@@ -307,7 +308,7 @@ export class HtmlField extends Component {
      *
      * @param {JQuery} $codeview
      */
-    toggleCodeView (el = this.codeViewRef.el) {
+    toggleCodeView() {
         this.state.showCodeView = !this.state.showCodeView;
 
         this.wysiwyg.odooEditor.observerUnactive('toggleCodeView');
@@ -317,7 +318,7 @@ export class HtmlField extends Component {
             this.props.update(value);
         } else {
             this.wysiwyg.odooEditor.observerActive('toggleCodeView');
-            const $codeview = $(el);
+            const $codeview = $(this.codeViewRef.el);
             const value = $codeview.val();
             this.props.update(value);
 

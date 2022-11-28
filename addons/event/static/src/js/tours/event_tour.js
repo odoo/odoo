@@ -44,22 +44,27 @@ tour.register('event_tour', {
     position: 'bottom',
     width: 175,
 }, {
-    trigger: '.o_event_form_view input[name="name"]',
+    trigger: '.o_event_form_view input[id="name"]',
     content: Markup(_t("This is the <b>name</b> your guests will see when registering.")),
     run: 'text Odoo Experience 2020',
 }, {
-    trigger: '.o_event_form_view input[name="date_end"]',
-    content: Markup(_t("When will your event take place? <b>Select</b> the start and end dates <b>and click Apply</b>.")),
+    trigger: '.o_event_form_view div[name="date_end"]',
+    content: _t("Open date range picker. Pick a Start date for your event"),
     run: function () {
-        $('input[name="date_begin"]').val('09/30/2020 08:00:00').change();
-        $('input[name="date_end"]').val('10/02/2020 23:00:00').change();
+        $('input[id="date_begin"]').val('09/30/2020 08:00:00').change();
+        $('input[id="date_end"]').val('10/02/2020 23:00:00').change();
+        $('.o_event_form_view input[id="date_end"]').click();
     },
+}, {
+    content: _t("Apply change."),
+    trigger: '.daterangepicker .applyBtn',
+    in_modal: false,
 }, {
     trigger: '.o_event_form_view div[name="event_ticket_ids"] .o_field_x2many_list_row_add a',
     content: Markup(_t("Ticket types allow you to distinguish your attendees. Let's <b>create</b> a new one.")),
-}, ...new EventAdditionalTourSteps()._get_website_event_steps(), {
+}, tour.stepUtils.autoExpandMoreButtons(),
+...new EventAdditionalTourSteps()._get_website_event_steps(), {
     trigger: '.o_event_form_view div[name="stage_id"]',
-    extra_trigger: 'div.o_form_buttons_view:not(.o_hidden)',
     content: _t("Now that your event is ready, click here to move it to another stage."),
     position: 'bottom',
 }, {

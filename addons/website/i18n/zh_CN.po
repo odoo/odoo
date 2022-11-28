@@ -8,18 +8,21 @@
 # lonely落叶 <liu--qiong@hotmail.com>, 2022
 # xiaobin wu <bd5dml@gmail.com>, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
-# Martin Trigaux, 2022
 # Emily Jia <eji@odoo.com>, 2022
-# Raymond Yu <cl_yu@hotmail.com>, 2022
+# digitalliuzg8888, 2022
+# 稀饭~~ <wangwhai@qq.com>, 2022
+# Martin Trigaux, 2022
+# E L, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2022-11-03 16:37+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
+"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -105,13 +108,6 @@ msgstr "$7.50"
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid "$9.00"
 msgstr "$9.00"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "%s (id:%s)"
-msgstr "%s (id:%s)"
 
 #. module: website
 #. openerp-web
@@ -266,8 +262,6 @@ msgid "...and switch the timeline contents to fit your needs."
 msgstr "...并切换时间线内容以满足您的需求。"
 
 #. module: website
-#: model:website,contact_us_button_url:website.default_website
-#: model:website,contact_us_button_url:website.website2
 #: model_terms:ir.ui.view,arch_db:website.layout
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "/contactus"
@@ -543,7 +537,7 @@ msgstr "<b>单击</b> 此标题可以进行配置"
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Click</b> on this option to change the %s of the block."
-msgstr "<b>单击</b> 此选项可以改变组件的 %s "
+msgstr "<b>单击</b> 此选项可以改变构建块的 %s "
 
 #. module: website
 #. openerp-web
@@ -552,7 +546,7 @@ msgstr "<b>单击</b> 此选项可以改变组件的 %s "
 msgid ""
 "<b>Customize</b> any block through this menu. Try to change the background "
 "color of this block."
-msgstr "通过此菜单<b>自定义</b> 任何组件。尝试修改此部件背景色。"
+msgstr "通过此菜单<b>自定义</b> 任何构建块。尝试修改此部件背景色。"
 
 #. module: website
 #. openerp-web
@@ -561,7 +555,7 @@ msgstr "通过此菜单<b>自定义</b> 任何组件。尝试修改此部件背�
 msgid ""
 "<b>Customize</b> any block through this menu. Try to change the background "
 "image of this block."
-msgstr "通过此菜单可以<b>自定义</b> 任何组件. 尝试更改此部件的图像背景颜色."
+msgstr "通过此菜单可以<b>自定义</b> 任何构建块. 尝试更改此部件的图像背景颜色."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_headline
@@ -999,6 +993,9 @@ msgid ""
 "                                        <i class=\"fa fa-info\"/>: type some of the first chars after 'google' is enough, we'll guess the rest.\n"
 "                                    </small>"
 msgstr ""
+"<small class=\"text-muted\">\n"
+"                                            <i class=\"fa fa-info\"/>:输入'谷歌'后面的第一个字符就足够了，我们将猜剩下的。\n"
+"                                        </small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
@@ -1157,7 +1154,7 @@ msgstr "<span class=\"o_form_label\">实时聊天</span>"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Robots.txt</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">机器人.记录</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1340,6 +1337,15 @@ msgid "A Chart Title"
 msgstr "图表标题"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid ""
+"A Google Map error occurred. Make sure to read the key configuration popup "
+"carefully."
+msgstr "发生Google地图错误。 确保仔细阅读弹出的密钥配置。"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
 msgid "A Section Subtitle"
 msgstr "部分副标题"
@@ -1367,7 +1373,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_color_blocks_2
 msgid "A color block"
-msgstr "颜色组件"
+msgstr "颜色构建块"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_alternation_image_text_template
@@ -1661,7 +1667,7 @@ msgstr "地址"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "Advertising &amp; Marketing<br/>(optional)"
-msgstr "广告与营销<br/>(可选)"
+msgstr "广告和营销<br/>(可选)"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_asset__directive__after
@@ -1669,8 +1675,11 @@ msgid "After"
 msgstr "之后"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
+#, python-format
 msgid "Alert"
 msgstr "警报"
 
@@ -1921,7 +1930,7 @@ msgstr "动画"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_color_blocks_2
 msgid "Another color block"
-msgstr "另一个颜色组件"
+msgstr "另一个颜色构建块"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_showcase
@@ -1976,6 +1985,13 @@ msgstr "已归档"
 #, python-format
 msgid "Are you sure you want to delete this page ?"
 msgstr "您确定要删除该页面吗？"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/components/dialog/page_properties.xml:0
+#, python-format
+msgid "Are you sure you want to delete those pages ?"
+msgstr "您确定要删除那些页面吗？"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -2104,8 +2120,11 @@ msgid "Background Shape"
 msgstr "后台形状"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
+#, python-format
 msgid "Badge"
 msgstr "徽标"
 
@@ -2198,7 +2217,14 @@ msgstr "开拓者"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Block"
-msgstr "组件"
+msgstr "构建块"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Blockquote"
+msgstr "块引用"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
@@ -2318,7 +2344,7 @@ msgstr "构建我的网站"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
 msgid "Building blocks system"
-msgstr "构建组件系统"
+msgstr "构建构建块系统"
 
 #. module: website
 #. openerp-web
@@ -2434,8 +2460,11 @@ msgid "Cannot load google map."
 msgstr "不能加载google地图"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
+#, python-format
 msgid "Card"
 msgstr "卡片"
 
@@ -2540,7 +2569,10 @@ msgid ""
 msgstr "更改主题需要离开编辑器。这将保存您的所有更改，您确定要继续吗？请注意，更改主题会重置您的所有颜色自定义。"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
+#, python-format
 msgid "Chart"
 msgstr "图表"
 
@@ -2671,7 +2703,7 @@ msgstr ""
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "Click here to go back to block tab."
-msgstr "点击此处返回组件页卡。"
+msgstr "点击此处返回构建块页卡。"
 
 #. module: website
 #. openerp-web
@@ -2773,8 +2805,8 @@ msgid ""
 "resize and duplicate the blocks to create your own layout. Add images or "
 "icons to customize the blocks."
 msgstr ""
-"色组件是一种简单而有效的方式来<b>呈现和突出您的内容</b>. 通过选择图像或者颜色可以改变背景. "
-"您甚至通过调整组件的大小和复制组件来创建自己的布局。 添加图像或者图标可以自定义组件."
+"色构建块是一种简单而有效的方式来<b>呈现和突出您的内容</b>. 通过选择图像或者颜色可以改变背景. "
+"您甚至通过调整构建块的大小和复制构建块来创建自己的布局。 添加图像或者图标可以自定义构建块."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
@@ -3033,7 +3065,7 @@ msgstr ""
 "                            <br/>\n"
 "                            Cookies还用于帮助我们了解您在我们网站(您拥有的页面)上的先前或当前活动的偏好\n"
 "                            访问)，您的语言和国家，使我们能够为您提供更好的服务.\n"
-"                            我们还使用cookie来帮助我们收集网站流量和网站交互的汇总数据，以便我们提供\n"
+"                            我们还使用cookie来帮助我们收集网站流量和网站交互的汇计数据，以便我们提供\n"
 "                            未来更好的站点体验和工具."
 
 #. module: website
@@ -3140,7 +3172,7 @@ msgid ""
 "Create your page from scratch by dragging and dropping pre-made,\n"
 "                            fully customizable building blocks."
 msgstr ""
-"通过拖放预制的、完全可定制的组件\n"
+"通过拖放预制的、完全可定制的构建块\n"
 "可以从头开始创建您的页面。"
 
 #. module: website
@@ -3282,7 +3314,7 @@ msgstr "D - H - M - S"
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
 #, python-format
 msgid "DRAG BUILDING BLOCKS HERE"
-msgstr "在这里拖拽组件"
+msgstr "在这里拖拽构建块"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
@@ -3415,7 +3447,7 @@ msgstr "延迟"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Delete Blocks"
-msgstr "删除组件"
+msgstr "删除构建块"
 
 #. module: website
 #. openerp-web
@@ -3765,8 +3797,8 @@ msgstr "域"
 #. openerp-web
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #, python-format
-msgid "Don't forget to update all links referring to this page."
-msgstr "不要忘记更新所有指向该页面的链接。"
+msgid "Don't forget to update all links referring to it."
+msgstr "别忘记更新所有指向它的链接。"
 
 #. module: website
 #. openerp-web
@@ -3816,7 +3848,7 @@ msgstr "甜甜圈"
 #, python-format
 msgid ""
 "Drag the <b>%s</b> building block and drop it at the bottom of the page."
-msgstr "拖拽 <b>%s</b>构建组件 同时将它拖拽到页面底部.."
+msgstr "拖拽 <b>%s</b>构建构建块 同时将它拖拽到页面底部.."
 
 #. module: website
 #. openerp-web
@@ -3865,12 +3897,12 @@ msgstr "复制页面"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps
 msgid "Duplicate blocks <br/>to add more steps."
-msgstr "复制组件<br/>可以添加更多步骤。"
+msgstr "复制构建块<br/>可以添加更多步骤。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Duplicate blocks and columns to add more features."
-msgstr "可以复制组件和列添加更多的功能。"
+msgstr "可以复制构建块和列添加更多的功能。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -3921,8 +3953,16 @@ msgstr "编辑"
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/services/website_custom_menus.js:0
+#, python-format
+msgid "Edit %s"
+msgstr "编辑 %s"
+
+#. module: website
+#. openerp-web
 #: code:addons/website/static/src/components/dialog/edit_menu.js:0
 #: code:addons/website/static/src/js/widgets/link_popover_widget.js:0
+#: model:ir.ui.menu,name:website.custom_menu_edit_menu
 #, python-format
 msgid "Edit Menu"
 msgstr "编辑菜单"
@@ -4010,7 +4050,7 @@ msgstr "Email"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Email &amp; Marketing"
-msgstr "电子邮件与营销"
+msgstr "电子邮件和营销"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -4040,6 +4080,13 @@ msgstr "为您的 Google 项目启用结算功能"
 #: model:ir.model.fields,help:website.field_ir_model__website_form_access
 msgid "Enable the form builder feature for this model."
 msgstr "启用此模型的表单生成器特性。"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Enable the right google map APIs in your google account"
+msgstr "在您的google帐户中启用正确的google地图Api"
 
 #. module: website
 #. openerp-web
@@ -4319,7 +4366,7 @@ msgstr "填充和对齐"
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__filter_id
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options_template
 msgid "Filter"
-msgstr "过滤器"
+msgstr "筛选"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -5316,7 +5363,7 @@ msgstr "在主菜单中"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "In Place"
-msgstr ""
+msgstr "适当"
 
 #. module: website
 #. openerp-web
@@ -5412,6 +5459,76 @@ msgstr "输入类型"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Inputs"
 msgstr "输入"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Insert a badge snippet."
+msgstr "插入徽标"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Insert a blockquote snippet."
+msgstr "插入块引用"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Insert a card snippet."
+msgstr "插入卡片"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Insert a chart snippet."
+msgstr "插入图表"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Insert a progress bar snippet."
+msgstr "插入进度条"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Insert a rating snippet."
+msgstr "插入评价"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Insert a share snippet."
+msgstr "插入分享"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Insert a text Highlight snippet."
+msgstr "插入文本高亮"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Insert an alert snippet."
+msgstr "插入警报"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Insert an horizontal separator sippet."
+msgstr "插入水平分隔"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -6187,6 +6304,43 @@ msgid "Main page of your website served to visitors"
 msgstr "为访客提供的网站主页"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Make sure billing is enabled"
+msgstr "确保已启用计费"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid ""
+"Make sure to wait if errors keep being shown: sometimes enabling an API "
+"allows to use it immediately but Google keeps triggering errors for a while"
+msgstr "如果错误不断显示，请稍等：有时启用 API 可以立即使用它，但 Google 会持续触发错误一段时间"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Make sure your settings are properly configured:"
+msgstr "确保您的设置配置正确："
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Maps JavaScript API"
+msgstr "地图 JavaScript API"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Maps Static API"
+msgstr "地图静态API"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Mark Text"
 msgstr "标记文本"
@@ -6214,7 +6368,7 @@ msgstr "石工"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 msgid "Max Axis"
-msgstr ""
+msgstr "最大中枢"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -6265,10 +6419,8 @@ msgid "Men"
 msgstr "男士"
 
 #. module: website
-#: code:addons/website/models/website.py:0
 #: model:ir.model.fields,field_description:website.field_website_menu__name
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
-#, python-format
 msgid "Menu"
 msgstr "菜单"
 
@@ -6299,9 +6451,7 @@ msgid "Menu using a copy of me"
 msgstr "菜单使用我的副本"
 
 #. module: website
-#: code:addons/website/models/website.py:0
 #: model:ir.ui.menu,name:website.menu_website_menu_list
-#, python-format
 msgid "Menus"
 msgstr "菜单"
 
@@ -6337,14 +6487,14 @@ msgstr "中间"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 msgid "Min Axis"
-msgstr ""
+msgstr "最大中枢"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Min-Height"
-msgstr ""
+msgstr "最低高度"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
@@ -6449,7 +6599,7 @@ msgid ""
 "them an SMS, or call them right away while they are browsing your website."
 msgstr ""
 "在访问者使用 Odoo "
-"社交应用程序浏览您的网站时监控他们。使用实时聊天请求或推送通知，只需单击一下即可与他们互动。如果他们填写了您的一份表格，您可以向他们发送短信，或在他们浏览您的网站时立即致电给他们。"
+"社交应用程序浏览您的网站时监控他们。使用实时聊天请求或推送通知，只需单击一下即可与他们互动。如果他们填写了您的一份表格，您可以向他们发送短信息，或在他们浏览您的网站时立即致电给他们。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -6631,7 +6781,7 @@ msgstr "网络"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.neutralize_ribbon
 msgid "Neutralized"
-msgstr ""
+msgstr "中立化的 "
 
 #. module: website
 #. openerp-web
@@ -6787,12 +6937,6 @@ msgid "Normal"
 msgstr "正常"
 
 #. module: website
-#: model:website,prevent_zero_price_sale_text:website.default_website
-#: model:website,prevent_zero_price_sale_text:website.website2
-msgid "Not Available For Sale"
-msgstr "不可用于销售"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 msgid "Not Published"
 msgstr "未发布"
@@ -6855,17 +6999,6 @@ msgstr "或"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Odoo Information"
 msgstr "Odoo 信息"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-#, python-format
-msgid "Odoo Logo"
-msgstr "Odoo 徽标"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -7111,7 +7244,7 @@ msgstr "我们团队的客服工作人员将会尽快回信联系您。"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Out"
-msgstr ""
+msgstr "支出"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -7147,8 +7280,6 @@ msgstr "内边距"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/models/website.py:0
-#: code:addons/website/models/website.py:0
 #: code:addons/website/static/src/systray_items/new_content.xml:0
 #: model:ir.model,name:website.model_website_page
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__page_ids
@@ -7159,18 +7290,6 @@ msgstr "内边距"
 #, python-format
 msgid "Page"
 msgstr "页"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "Page <b>%s</b> contains a link to this page"
-msgstr "页面 <b>%s</b> 包含跳转链接"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "Page <b>%s</b> is calling this file"
-msgstr "页面 <b>%s</b> 正在调用此文件"
 
 #. module: website
 #. openerp-web
@@ -7252,8 +7371,6 @@ msgstr "使用我的副本页面"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/models/website.py:0
-#: code:addons/website/models/website.py:0
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #: model:ir.ui.menu,name:website.menu_website_pages_list
 #: model_terms:ir.ui.view,arch_db:website.list_website_public_pages
@@ -7388,6 +7505,13 @@ msgstr "药丸"
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Placeholder"
 msgstr "占位符"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Places API"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -7585,6 +7709,13 @@ msgid "Profile"
 msgstr "简介"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Progress Bar"
+msgstr "进度条"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Progress Bar Color"
 msgstr "进度条颜色"
@@ -7707,6 +7838,13 @@ msgstr "雷达"
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Radio Buttons"
 msgstr "单选按钮"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Rating"
+msgstr "评价"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -8062,7 +8200,7 @@ msgstr "保存和复制"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Save the block to use it elsewhere"
-msgstr "保存该组件以在其他地方使用"
+msgstr "保存该构建块以在其他地方使用"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
@@ -8224,12 +8362,12 @@ msgstr "选择一个图像进行社交分享"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps
 msgid "Select and delete blocks <br/>to remove some steps."
-msgstr "选择并删除组件<br/>可以删除某些步骤。"
+msgstr "选择并删除构建块<br/>可以删除某些步骤。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Select and delete blocks to remove features."
-msgstr "选择并删除组件可以删除特性。"
+msgstr "选择并删除构建块可以删除特性。"
 
 #. module: website
 #. openerp-web
@@ -8279,6 +8417,13 @@ msgid "Separated link"
 msgstr "分离的链接"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Separator"
+msgstr "分隔符"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__sequence
 #: model:ir.model.fields,field_description:website.field_theme_website_menu__sequence
 #: model:ir.model.fields,field_description:website.field_website__sequence
@@ -8321,7 +8466,7 @@ msgstr "服务"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "Session &amp; Security<br/>(essential)"
-msgstr "会话与安全<br/>(必要的)"
+msgstr "会话和安全<br/>(必要的)"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_configuration
@@ -8358,7 +8503,11 @@ msgid "Shake"
 msgstr "摇晃"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_share
+#: model_terms:ir.ui.view,arch_db:website.template_footer_headline
+#, python-format
 msgid "Share"
 msgstr "分享"
 
@@ -8928,38 +9077,16 @@ msgid "Tell what's the value for the <br/>customer for this feature."
 msgstr "告诉客户<br/>该功能的价值。"
 
 #. module: website
-#: code:addons/website/models/website.py:0
-#: code:addons/website/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options_template
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
-#, python-format
 msgid "Template"
 msgstr "模板"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "Template <b>%s (id:%s)</b> contains a link to this page"
-msgstr "模板 <b>%s (id:%s)</b> 含跳转链接"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "Template <b>%s (id:%s)</b> is calling this file"
-msgstr "模板 <b>%s (id:%s)</b> 正在调用该文件"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "Template fallback"
 msgstr "模板回滚"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "Templates"
-msgstr "模板"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
@@ -8998,7 +9125,10 @@ msgid "Text Color"
 msgstr "文本颜色"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_text_highlight
+#, python-format
 msgid "Text Highlight"
 msgstr "文本突出显示"
 
@@ -9280,6 +9410,13 @@ msgid "Third Menu"
 msgstr "第三个菜单"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/components/dialog/page_properties.xml:0
+#, python-format
+msgid "This URL is contained in the '%s' of the following '%s'"
+msgstr "这个URL包含在以下“%s”的“%s”中。"
+
+#. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__favicon
 #: model:ir.model.fields,help:website.field_website__favicon
 msgid "This field holds the image used to display a favicon on the website."
@@ -9362,12 +9499,6 @@ msgid ""
 "This page does not exist, but you can create it as you are editor of this "
 "site."
 msgstr "此页面不存在，但您可以作为本网站的编辑，您可以创建它。"
-
-#. module: website
-#: code:addons/website/models/website.py:0
-#, python-format
-msgid "This page is in the menu <b>%s</b>"
-msgstr "该页面位于菜单 <b>%s</b>"
 
 #. module: website
 #. openerp-web
@@ -9460,7 +9591,7 @@ msgid ""
 "To add a fourth column, reduce the size of these three columns using the "
 "right icon of each block. Then, duplicate one of the columns to create a new"
 " one as a copy."
-msgstr "要添加第四列，请使用每个组件的右图标减小这三列的大小。然后，复制其中一列以创建新列作为副本。"
+msgstr "要添加第四列，请使用每个构建块的右图标减小这三列的大小。然后，复制其中一列以创建新列作为副本。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
@@ -10275,6 +10406,16 @@ msgstr "网络访问者"
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/components/fields/redirect_field.xml:0
+#: code:addons/website/static/src/js/menu/edit.js:0
+#: code:addons/website/static/src/js/menu/edit.js:0
+#: code:addons/website/static/src/js/menu/edit.js:0
+#: code:addons/website/static/src/js/menu/edit.js:0
+#: code:addons/website/static/src/js/menu/edit.js:0
+#: code:addons/website/static/src/js/menu/edit.js:0
+#: code:addons/website/static/src/js/menu/edit.js:0
+#: code:addons/website/static/src/js/menu/edit.js:0
+#: code:addons/website/static/src/js/menu/edit.js:0
+#: code:addons/website/static/src/js/menu/edit.js:0
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #: model:ir.actions.act_url,name:website.action_website
 #: model:ir.model,name:website.model_website
@@ -10753,7 +10894,7 @@ msgstr "稍后您将能够创建您的页面。"
 msgid ""
 "Your Dynamic Snippet will be displayed here... This message is displayed "
 "because you did not provided both a filter and a template to use.<br/>"
-msgstr "您的动态片段将显示在此处... 显示此消息是因为您没有同时提供要使用的过滤器和模板。<br/>"
+msgstr "您的动态片段将显示在此处... 显示此消息是因为您没有同时提供要使用的筛选和模板。<br/>"
 
 #. module: website
 #. openerp-web
@@ -11196,6 +11337,14 @@ msgid "menu, pricing"
 msgstr "菜单，单价"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#: code:addons/website/static/src/xml/website_form_editor.xml:0
+#, python-format
+msgid "no value"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 #: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "o-color-"
@@ -11206,7 +11355,7 @@ msgstr "o-color-"
 #: code:addons/website/static/src/systray_items/edit_website.js:0
 #, python-format
 msgid "or edit master"
-msgstr ""
+msgstr "或編輯母版"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets

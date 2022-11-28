@@ -7,6 +7,7 @@
         <t t-else="">
             <t t-if="props.type === 'boolean'">
                 <CheckBox
+                    id="props.id"
                     value="propertyValue"
                     disabled="props.readonly"
                     onChange.bind="onValueChange"
@@ -14,18 +15,21 @@
             </t>
             <t t-elif="props.type === 'datetime'">
                 <DateTimePicker
+                    inputId="props.id"
                     date="propertyValue"
                     onDateTimeChanged.bind="onValueChange"
                 />
             </t>
             <t t-elif="props.type === 'date'">
                 <DatePicker
+                    inputId="props.id"
                     date="propertyValue"
                     onDateTimeChanged.bind="onValueChange"
                 />
             </t>
             <t t-elif="props.type === 'integer'">
                 <input
+                    t-att-id="props.id"
                     class="o_input o_field_property_input"
                     type="number"
                     t-att-value="propertyValue"
@@ -34,6 +38,7 @@
             </t>
             <t t-elif="props.type === 'float'">
                 <input
+                    t-att-id="props.id"
                     class="o_input o_field_property_input"
                     type="number"
                     t-att-value="propertyValue"
@@ -41,7 +46,8 @@
                 />
             </t>
             <t t-elif="props.type === 'selection'">
-                <select class="o_input" t-on-change="event => this.onValueChange(event.target.value)">
+                <select class="o_input" t-on-change="event => this.onValueChange(event.target.value)"
+                    t-att-id="props.id">
                     <option t-att-value="false" />
                     <t t-foreach="props.selection || []" t-as="option" t-key="option[0]">
                         <option
@@ -54,6 +60,7 @@
             </t>
             <t t-elif="props.type === 'tags'">
                 <PropertyTags
+                    id="props.id"
                     selectedTags="propertyValue"
                     tags="props.tags || []"
                     deleteAction="'value'"
@@ -86,7 +93,7 @@
                     <Many2XAutocomplete
                         t-else=""
                         value="propertyValue[1] || ''"
-                        id="propertyValue[0] ? propertyValue[0].toString() : ''"
+                        id="props.id"
                         resModel="props.comodel"
                         autoSelect="true"
                         fieldString="props.string"
@@ -115,7 +122,7 @@
                     <TagsList tags="propertyValue"/>
                     <Many2XAutocomplete
                         t-if="!props.readonly"
-                        id="''"
+                        id="props.id"
                         resModel="props.comodel"
                         autoSelect="true"
                         fieldString="props.string"
@@ -131,6 +138,7 @@
             <t t-else="">
                 <input
                     class="o_input"
+                    t-att-id="props.id"
                     type="text"
                     t-att-value="propertyValue || ''"
                     t-on-change="(event) => this.onValueChange(event.target.value)"

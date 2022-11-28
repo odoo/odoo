@@ -35,14 +35,16 @@ import { nbsp } from "@web/core/utils/strings";
 import { getNextTabableElement } from "@web/core/utils/ui";
 import { session } from "@web/session";
 import { KanbanAnimatedNumber } from "@web/views/kanban/kanban_animated_number";
+import { KanbanController } from "@web/views/kanban/kanban_controller";
 import { kanbanView } from "@web/views/kanban/kanban_view";
 import { DynamicRecordList } from "@web/views/relational_model";
 import { ViewButton } from "@web/views/view_button/view_button";
 
-import { Component, xml } from "@odoo/owl";
+import { Component, onWillRender, xml } from "@odoo/owl";
 
 const serviceRegistry = registry.category("services");
 const viewWidgetRegistry = registry.category("view_widgets");
+const viewRegistry = registry.category("views");
 
 // ----------------------------------------------------------------------------
 // Helpers
@@ -409,7 +411,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("basic grouped rendering", async (assert) => {
-        assert.expect(13);
+        assert.expect(14);
 
         await makeView({
             type: "kanban",
@@ -436,6 +438,11 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
+        assert.hasClass(
+            target.querySelector(".o_kanban_group"),
+            "bg-100",
+            "o_kanban_group should have a background"
+        );
         assert.hasClass(target.querySelector(".o_kanban_renderer"), "o_kanban_grouped");
         assert.hasClass(target.querySelector(".o_kanban_renderer"), "o_kanban_test");
         assert.containsN(target, ".o_kanban_group", 2);
@@ -1222,6 +1229,55 @@ QUnit.module("Views", (hooks) => {
             assert.strictEqual(getPagerLimit(target), 3);
         }
     );
+
+    QUnit.test("pager, update calls onUpdatedPager before the render", async (assert) => {
+        assert.expect(8);
+
+        class TestKanbanController extends KanbanController {
+            setup() {
+                super.setup();
+                onWillRender(() => {
+                    assert.step("render");
+                });
+            }
+
+            async onUpdatedPager() {
+                assert.step("onUpdatedPager");
+            }
+        }
+
+        viewRegistry.add("test_kanban_view", {
+            ...kanbanView,
+            Controller: TestKanbanController,
+        });
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban js_class="test_kanban_view">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            limit: 3,
+        });
+
+        assert.deepEqual(getPagerValue(target), [1, 3]);
+        assert.strictEqual(getPagerLimit(target), 4);
+        assert.step("next page");
+        await click(target.querySelector(".o_pager_next"));
+        assert.deepEqual(getPagerValue(target), [4, 4]);
+        assert.verifySteps([
+            "render",
+            "next page",
+            "onUpdatedPager",
+            "render"
+        ]);
+    });
 
     QUnit.test("click on a button type='delete' to delete a record in a column", async (assert) => {
         await makeView({
@@ -7251,7 +7307,7 @@ QUnit.module("Views", (hooks) => {
         registry.category("services").add("action", actionService, { force: true });
 
         await makeView({
-            type: "form",
+            type: "kanban",
             resModel: "partner",
             serverData,
             arch: `
@@ -7263,7 +7319,6 @@ QUnit.module("Views", (hooks) => {
                         </div>
                     </templates>
                 </kanban>`,
-            resId: 1,
         });
 
         await click(target.querySelector("a[type='action']"));

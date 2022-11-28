@@ -25,8 +25,7 @@ conf = odoo.tools.config
 
 # Path to the OpenERP Addons repository (comma-separated for
 # multiple locations)
-
-conf['addons_path'] = '../../addons/trunk,../../web/trunk/addons'
+#conf['addons_path'] = './odoo/addons,./addons'
 
 # Optional database config if not using local socket
 #conf['db_name'] = 'mycompany'
@@ -38,7 +37,7 @@ conf['addons_path'] = '../../addons/trunk,../../web/trunk/addons'
 #----------------------------------------------------------
 # Generic WSGI handlers application
 #----------------------------------------------------------
-application = odoo.service.wsgi_server.application
+application = odoo.http.root
 
 odoo.service.server.load_server_wide_modules()
 

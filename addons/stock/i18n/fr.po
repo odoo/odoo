@@ -1675,7 +1675,7 @@ msgstr "Calculer les frais de port et expédier avec bpost"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__reservation_date
 msgid "Computes when a move should be reserved"
-msgstr ""
+msgstr "Calcule quand un mouvement doit être réservé"
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_config_settings
@@ -1728,6 +1728,8 @@ msgid ""
 "Consider product forecast these many days in the future upon product replenishment, set to 0 for just-in-time.\n"
 "The value depends on the type of the route (Buy or Manufacture)"
 msgstr ""
+"Considérez les prévisions de produit ces nombreux jours à l'avenir lors du réassort du produit, mis à 0 pour le juste-à-temps.\n"
+"La valeur dépend du type de route (Acheter ou Fabriquer)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_tracking_owner
@@ -8869,6 +8871,11 @@ msgid "Type"
 msgstr "Type"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
+msgid "Type a message..."
+msgstr "Tapez un message..."
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__picking_code
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_code
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__picking_type_code
@@ -9057,13 +9064,8 @@ msgstr "Utiliser les existants"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid ""
 "Use GS1 nomenclature datamatrix whenever barcodes are printed for lots and "
-"serial numbers. Printing datamatrix requires extra software. If software "
-"can't be found then 1D barcodes will be printed."
+"serial numbers."
 msgstr ""
-"Utilisez le datamatrix de la nomenclature GS1 chaque fois que des codes-"
-"barres sont imprimés pour les lots et les numéros de série. L'impression de "
-"datamatrix nécessite un logiciel supplémentaire. Si le logiciel est "
-"introuvable, des codes-barres 1D seront imprimés."
 
 #. module: stock
 #: model:res.groups,name:stock.group_reception_report
@@ -9646,6 +9648,13 @@ msgstr ""
 " la réservation du mouvement de stock."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr ""
+"Vous ne pouvez pas modifier le type d'un produit qui a déjà été utilisé."
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -9666,6 +9675,12 @@ msgstr "Vous ne pouvez pas entrer des quantités négatives."
 #, python-format
 msgid "You can only delete draft moves."
 msgstr "Vous ne pouvez supprimer que les mouvements en brouillon"
+
+#. module: stock
+#: code:addons/stock/models/stock_scrap.py:0
+#, python-format
+msgid "You can only enter positive quantities."
+msgstr "Vous ne pouvez saisir que des quantités positives."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0

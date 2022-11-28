@@ -34,3 +34,13 @@ class StockPicking(models.Model):
     def _compute_is_dropship(self):
         for picking in self:
             picking.is_dropship = picking.location_dest_id.usage == 'customer' and picking.location_id.usage == 'supplier'
+
+
+class StockPickingType(models.Model):
+    _inherit = 'stock.picking.type'
+
+    @api.depends('default_location_src_id', 'default_location_dest_id')
+    def _compute_warehouse_id(self):
+        super()._compute_warehouse_id()
+        if self.default_location_src_id.usage == 'supplier' and self.default_location_dest_id.usage == 'customer':
+            self.warehouse_id = False

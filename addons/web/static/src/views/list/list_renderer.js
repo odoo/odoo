@@ -1694,17 +1694,14 @@ export class ListRenderer extends Component {
             return;
         }
         if (this.props.list.selection.length) {
-            // in selection mode, only selection is allowed.
-            ev.preventDefault();
-            this.toggleRecordSelection(record);
-        } else {
-            this.touchStartMs = Date.now();
-            if (this.longTouchTimer === null) {
-                this.longTouchTimer = browser.setTimeout(() => {
-                    this.toggleRecordSelection(record);
-                    this.resetLongTouchTimer();
-                }, this.constructor.LONG_TOUCH_THRESHOLD);
-            }
+            ev.stopPropagation(); // This is done in order to prevent the tooltip from showing up
+        }
+        this.touchStartMs = Date.now();
+        if (this.longTouchTimer === null) {
+            this.longTouchTimer = browser.setTimeout(() => {
+                this.toggleRecordSelection(record);
+                this.resetLongTouchTimer();
+            }, this.constructor.LONG_TOUCH_THRESHOLD);
         }
     }
     onRowTouchEnd(record) {
@@ -1755,6 +1752,24 @@ export class ListRenderer extends Component {
      */
     sortStop({ element }) {
         element.classList.remove("o_dragged");
+    }
+
+    ignoreEventInSelectionMode(ev) {
+        const { list } = this.props;
+        if (this.env.isSmall && list.selection && list.selection.length) {
+            // in selection mode, only selection is allowed.
+            ev.stopPropagation();
+            ev.preventDefault();
+        }
+    }
+
+    onClickCapture(record, ev) {
+        const { list } = this.props;
+        if (this.env.isSmall && list.selection && list.selection.length) {
+            ev.stopPropagation();
+            ev.preventDefault();
+            this.toggleRecordSelection(record);
+        }
     }
 }
 

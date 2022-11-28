@@ -302,7 +302,7 @@ const Wysiwyg = Widget.extend({
 
                 const selection = self.odooEditor.document.getSelection();
                 const anchorNode = selection.anchorNode;
-                if (anchorNode && closestElement(anchorNode, '.oe-blackbox')) {
+                if (anchorNode && closestElement(anchorNode, '[data-oe-protected="true"]')) {
                     return;
                 }
 
@@ -759,6 +759,15 @@ const Wysiwyg = Widget.extend({
      */
     renderElement: function () {
         this.$editable = this.options.editable || $('<div class="note-editable">');
+
+        // We add the field's name as id so default_focus will target it if
+        // needed. For that to work, it has to already be editable but note that
+        // the editor is at this point not yet instantiated.
+        if (typeof this.options.fieldId !== 'undefined') {
+            this.$editable.attr('id', this.options.fieldId);
+            this.$editable.attr('contenteditable', true);
+        }
+
         this.$root = this.$editable;
         if (this.options.height) {
             this.$editable.height(this.options.height);
@@ -1362,6 +1371,11 @@ const Wysiwyg = Widget.extend({
         for (const style of stylesToCopy) {
             element.style.setProperty(`--we-cp-${style}`, weUtils.getCSSVariableValue(style));
         }
+
+        element.classList.toggle('o_we_has_btn_outline_primary',
+            weUtils.getCSSVariableValue('btn-primary-outline') === 'true');
+        element.classList.toggle('o_we_has_btn_outline_secondary',
+            weUtils.getCSSVariableValue('btn-secondary-outline') === 'true');
     },
     /**
      * Detached function to allow overriding.
@@ -1777,7 +1791,7 @@ const Wysiwyg = Widget.extend({
     _updateEditorUI: function (e) {
         let selection = this.odooEditor.document.getSelection();
         const anchorNode = selection.anchorNode;
-        if (anchorNode && closestElement(anchorNode, '.oe-blackbox')) {
+        if (anchorNode && closestElement(anchorNode, '[data-oe-protected="true"]')) {
             return;
         }
 
@@ -2399,7 +2413,6 @@ const Wysiwyg = Widget.extend({
         }
         this._isOnline = false;
 
-        this.ptp.stop();
         this.preSavePromise = new Promise((resolve, reject) => {
             this.preSavePromiseResolve = resolve;
             this.preSavePromiseReject = reject;

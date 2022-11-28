@@ -48,7 +48,7 @@ class PickingType(models.Model):
         check_company=True)
     show_entire_packs = fields.Boolean('Move Entire Packages', help="If ticked, you will be able to select entire packages to move")
     warehouse_id = fields.Many2one(
-        'stock.warehouse', 'Warehouse', ondelete='cascade',
+        'stock.warehouse', 'Warehouse', compute='_compute_warehouse_id', store=True, readonly=False, ondelete='cascade',
         check_company=True)
     active = fields.Boolean('Active', default=True)
     use_create_lots = fields.Boolean(
@@ -100,7 +100,7 @@ class PickingType(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             if 'sequence_id' not in vals or not vals['sequence_id']:
-                if vals['warehouse_id']:
+                if vals.get('warehouse_id'):
                     wh = self.env['stock.warehouse'].browse(vals['warehouse_id'])
                     vals['sequence_id'] = self.env['ir.sequence'].sudo().create({
                         'name': wh.name + ' ' + _('Sequence') + ' ' + vals['sequence_code'],
@@ -207,8 +207,10 @@ class PickingType(models.Model):
                     }
                 }
 
-    @api.onchange('company_id')
-    def _onchange_company_id(self):
+    @api.depends('company_id')
+    def _compute_warehouse_id(self):
+        if self.warehouse_id:
+            return
         if self.company_id:
             warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.company_id.id)], limit=1)
             self.warehouse_id = warehouse

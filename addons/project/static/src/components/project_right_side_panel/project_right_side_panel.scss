@@ -5,12 +5,11 @@ $o-rightpanel-p-tiny: $o-rightpanel-p-small*0.5;
 .o_controller_with_rightpanel .o_content {
     overflow: hidden;
     display: flex;
+    flex-direction: row-reverse;
     justify-content: space-between;
 
     .o_renderer {
         flex: 1 1 auto;
-        overflow-x: hidden;
-        overflow-y: auto; // make the renderer and search panel scroll individually
         max-height: 100%;
         position: relative;
         padding: 0;
@@ -51,16 +50,26 @@ $o-rightpanel-p-tiny: $o-rightpanel-p-small*0.5;
                     }
                 }
 
-                @media screen and (max-width: 1600px) {
+                @include media-breakpoint-down(lg) {
                     .oe_stat_button {
                         flex-basis: 33.33%;
 
                         &:nth-child(3n):not(:last-child) {
-                            border-right-width: 0px !important;
+                            border-right-width: 0px;
                         }
 
                         &:nth-child(4n):not(:last-child){
                             border-right-width: 1px;
+                        }
+                    }
+                }
+
+                @include media-breakpoint-down(md) {
+                    .oe_stat_button {
+                        flex-basis: 50%;
+
+                        &:nth-child(2n) {
+                            border-right-width: 0px;
                         }
                     }
                 }

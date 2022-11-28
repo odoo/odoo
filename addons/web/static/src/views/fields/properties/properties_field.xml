@@ -10,12 +10,14 @@
                     class="o_property_field d-flex flex-row align-items-center justify-content-start"
                     t-att-property-name="propertyConfiguration.name"
                     t-attf-class="g-col-lg-{{12 / props.columns}} g-col-12">
+                    <t t-set="domId" t-value="generateUniqueDomID()"/>
                     <div class="o_td_label">
-                        <label t-attf-class="o_field_property_label o_form_label {{state.movedPropertyName === propertyConfiguration.name ? 'o_property_field_highlight' : ''}} d-flex flex-row align-items-center">
+                        <label t-attf-class="o_field_property_label o_form_label {{state.movedPropertyName === propertyConfiguration.name ? 'o_property_field_highlight' : ''}} d-flex flex-row align-items-center"
+                            t-att-for="domId">
                             <b
                                 t-if="propertyConfiguration.string &amp;&amp; propertyConfiguration.string.length"
                                 t-out="propertyConfiguration.string"
-                                class="d-inline-block mw-100"/>
+                                class="text-900 d-inline-block mw-100"/>
                             <i t-else="" class="o_field_property_empty_label">
                                 New Property
                             </i>
@@ -27,6 +29,7 @@
                     </div>
                     <div class="o_property_field_value align-top w-100">
                         <PropertyValue
+                            id="domId"
                             canChangeDefinition="state.canChangeDefinition"
                             comodel="propertyConfiguration.comodel || ''"
                             context="context"

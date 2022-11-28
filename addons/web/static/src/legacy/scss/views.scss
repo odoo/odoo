@@ -46,7 +46,7 @@
 .o_view_nocontent {
     @include o-position-absolute(0, 0, 0, 0);
     pointer-events: none;
-    z-index: 1;
+    z-index: var(--o-view-nocontent-zindex, 1);
     display: flex;
     align-items: center;
     justify-content: center;

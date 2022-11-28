@@ -95,6 +95,11 @@
         @extend .oe_inline;
         float: right!important;
     }
+    @for $i from 2 through 12 {
+        .o_field_widget.o_input_#{$i}ch input{
+            width: 1ch * $i !important;
+        }
+    }
 
     .o_field_empty:empty {
         min-height: $font-size-base * $line-height-base;
@@ -205,16 +210,11 @@
     // rules for fields borders: only on hover/focus by default
     // except when used with o_field_highlight (on parent or on the field)
     .o_input {
-        border-color: transparent;
         padding: $o-input-padding-y $o-input-padding-x;
-
-        &:hover, &:focus {
-            border-color: var(--o-input-border-color);
-        }
     }
 
-    &.o_field_invalid .o_input {
-        border-color: var(--o-input-border-color);
+    &:not(.o_field_highlight) .o_field_widget:not(.o_field_invalid) .o_input:not(:hover):not(:focus) {
+        --o-input-border-color: transparent;
     }
 
     .o_datepicker {
@@ -467,6 +467,9 @@
     @include media-breakpoint-up(sm) {
         .o_inner_group {
             grid-template-columns: fit-content(150px) 1fr;
+            &.o_form_fw_labels {
+                grid-template-columns: 150px 1fr;
+            }
         }
     }
 

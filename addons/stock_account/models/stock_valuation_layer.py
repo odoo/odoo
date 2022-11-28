@@ -28,8 +28,8 @@ class StockValuationLayer(models.Model):
     stock_valuation_layer_id = fields.Many2one('stock.valuation.layer', 'Linked To', readonly=True, check_company=True)
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_valuation_layer_id')
     stock_move_id = fields.Many2one('stock.move', 'Stock Move', readonly=True, check_company=True, index=True)
-    account_move_id = fields.Many2one('account.move', 'Journal Entry', readonly=True, check_company=True)
-    account_move_line_id = fields.Many2one('account.move.line', 'Invoice Line', readonly=True, check_company=True, index=True)
+    account_move_id = fields.Many2one('account.move', 'Journal Entry', readonly=True, check_company=True, index="btree_not_null")
+    account_move_line_id = fields.Many2one('account.move.line', 'Invoice Line', readonly=True, check_company=True, index="btree_not_null")
     reference = fields.Char(related='stock_move_id.reference')
     price_diff_value = fields.Float('Invoice value correction with invoice currency')
 
@@ -67,6 +67,15 @@ class StockValuationLayer(models.Model):
         if 'unit_cost' in fields:
             fields.remove('unit_cost')
         return super().read_group(domain, fields, groupby, offset, limit, orderby, lazy)
+
+    def action_open_layer(self):
+        self.ensure_one()
+        return {
+            'res_model': self._name,
+            'type': 'ir.actions.act_window',
+            'views': [[False, "form"]],
+            'res_id': self.id,
+        }
 
     def action_open_reference(self):
         self.ensure_one()

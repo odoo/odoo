@@ -73,8 +73,6 @@ QUnit.module("Search", (hooks) => {
     });
 
     QUnit.test("simple rendering with a single filter", async function (assert) {
-        assert.expect(3);
-
         await makeWithSearch({
             serverData,
             resModel: "foo",
@@ -90,13 +88,13 @@ QUnit.module("Search", (hooks) => {
 
         await toggleFilterMenu(target);
         assert.containsOnce(target, ".o_menu_item");
+        assert.containsOnce(target, ".o_menu_item[role=menuitemcheckbox]");
+        assert.deepEqual(target.querySelector(".o_menu_item").ariaChecked, "false");
         assert.containsOnce(target, ".dropdown-divider");
         assert.containsOnce(target, ".o_add_custom_filter_menu");
     });
 
     QUnit.test('toggle a "simple" filter in filter menu works', async function (assert) {
-        assert.expect(10);
-
         const controlPanel = await makeWithSearch({
             serverData,
             resModel: "foo",
@@ -114,8 +112,11 @@ QUnit.module("Search", (hooks) => {
         assert.deepEqual(getFacetTexts(target), []);
         assert.notOk(isItemSelected(target, "Foo"));
         assert.deepEqual(getDomain(controlPanel), []);
+        assert.containsOnce(target, ".o_menu_item[role=menuitemcheckbox]");
+        assert.deepEqual(target.querySelector(".o_menu_item").ariaChecked, "false");
 
         await toggleMenuItem(target, "Foo");
+        assert.deepEqual(target.querySelector(".o_menu_item").ariaChecked, "true");
 
         assert.deepEqual(getFacetTexts(target), ["Foo"]);
         assert.containsOnce(

@@ -2652,7 +2652,10 @@ class BaseModel(metaclass=MetaModel):
                 # constraint exists but its definition may have changed
                 tools.drop_constraint(cr, self._table, conname)
 
-            if foreign_key_re.match(definition):
+            if not definition:
+                # virtual constraint (e.g. implemented by a custom index)
+                self.pool.post_init(tools.check_index_exist, cr, conname)
+            elif foreign_key_re.match(definition):
                 self.pool.post_init(tools.add_constraint, cr, self._table, conname, definition)
             else:
                 self.pool.post_constraint(tools.add_constraint, cr, self._table, conname, definition)
