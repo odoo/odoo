@@ -1,24 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-# Copyright (c) 2022 Daj Mi 5. All rights reserved.
-
-
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
-
-"""
-account.move object: add support for Croatian structured communication
-
-Only partial implementation of HR regulative (most commonly used):
-https://www.fina.hr/documents/52450/238316/Jedinstveni+pregled+osnovnih+modela+poziva+na+broj+-+primjena+travanj+2022.pdf
-
-Covered : 
-
-HR00        P1 - P2 - P3        - No control
-HR01        (P1 - P2 - P3)K     - Checksum contorll (mod10-11)
-
-"""
+from odoo import models
 
 def mod11ini(value):
     '''
@@ -26,10 +9,10 @@ def mod11ini(value):
     copied from account_reference / KGB
     '''
     length = len(value)
-    sum = 0
+    s = 0
     for i in range(0, length):
-        sum += int(value[length - i - 1]) * (i + 2)
-    res = sum % 11
+        s += int(value[length - i - 1]) * (i + 2)
+    res = s % 11
     if res > 1:
         res = 11 - res
     else:
@@ -38,6 +21,15 @@ def mod11ini(value):
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
+
+    """
+    account.move object: add support for Croatian structured communication
+    Only partial implementation of HR regulative (most commonly used):
+    https://www.fina.hr/documents/52450/238316/Jedinstveni+pregled+osnovnih+modela+poziva+na+broj+-+primjena+travanj+2022.pdf
+    Covered : 
+    HR00        P1 - P2 - P3        - No control
+    HR01        (P1 - P2 - P3)K     - Checksum contorll (mod10-11)
+    """
 
     def _get_l10n_hr_reference_elements(self):
         """
@@ -73,5 +65,3 @@ class AccountMove(models.Model):
         self.ensure_one()
         p1, p2, p3 = self._get_l10n_hr_reference_elements()
         return self._l10n_hr_reference_number_get('HR01', p1, p2, p3)
-
-

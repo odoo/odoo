@@ -6,10 +6,29 @@
 	<record id="fiscal_position_r1" model="account.fiscal.position.template">
 		<field name="chart_template_id" ref="l10n_hr_chart_template"/>
 		<field name="sequence">1</field>
-		<field name="name">Domestic</field>
+		<field name="name">Domestic Company</field>
 		<field name="auto_apply" eval="True"/>
 		<field name="vat_required" eval="True"/>
 		<field name="country_id" ref="base.hr"/>
+	</record>
+	<record id="fiscal_position_person" model="account.fiscal.position.template">
+		<field name="chart_template_id" ref="l10n_hr_chart_template"/>
+		<field name="sequence">4</field>
+		<field name="name">Domestic Private Person</field>
+		<field name="auto_apply" eval="True"/>
+		<field name="vat_required" eval="False"/>
+		<field name="country_id" ref="base.hr"/>
+		<field name="tax_ids"></field><!-- no changes here -->
+		<field name="account_ids">
+				<record id="fp_PP_account_1200_->_1203" model="account.fiscal.position.account.template">
+					<field name="account_src_id" ref="hr_120000"/>
+					<field name="account_dest_id" ref="hr_120300"/>
+				</record>
+				<record id="fp_PP_account_2200_->_2229" model="account.fiscal.position.account.template">
+					<field name="account_src_id" ref="hr_120000"/>
+					<field name="account_dest_id" ref="hr_222900"/>
+				</record>
+		</field>
 	</record>
 	<!-- 	2.
 		Regular EU partner fiscal position,
@@ -355,7 +374,15 @@
 			</record>
 
 		</field>
-<!--  TODO!		<field name="account_ids"></field>-->
-
+  			<field name="account_ids">
+				<record id="fp_NOT_account_1200_->_1203" model="account.fiscal.position.account.template">
+					<field name="account_src_id" ref="hr_120000"/>
+					<field name="account_dest_id" ref="hr_120300"/>
+				</record>
+				<record id="fp_NOT_account_2200_->_2220" model="account.fiscal.position.account.template">
+					<field name="account_src_id" ref="hr_120000"/>
+					<field name="account_dest_id" ref="hr_222000"/>
+				</record>
+			</field>
 	</record>
 </odoo>
