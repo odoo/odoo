@@ -29,6 +29,9 @@ class TestSaleProject(TransactionCase):
             'sequence': 1,
             'project_ids': [(4, cls.project_template.id)]
         })
+        cls.project_2 = cls.env['project.project'].create({
+            'name': 'Project TEMPLATE2',
+        })
 
         # Create service products
         uom_hour = cls.env.ref('uom.product_uom_hour')
@@ -80,6 +83,18 @@ class TestSaleProject(TransactionCase):
             'default_code': 'SERV-ORDERED4',
             'service_tracking': 'project_only',
             'project_id': False,
+        })
+        cls.product_order_service5 = cls.env['product.product'].create({
+            'name': "Service Ordered, create task in new project2",
+            'standard_price': 10,
+            'list_price': 20,
+            'type': 'service',
+            'invoice_policy': 'order',
+            'uom_id': uom_hour.id,
+            'uom_po_id': uom_hour.id,
+            'default_code': 'SERV-ORDERED5',
+            'service_tracking': 'task_in_project',
+            'project_template_id': cls.project_2,  # will create a project
         })
 
         # Create partner
@@ -229,3 +244,57 @@ class TestSaleProject(TransactionCase):
         self.project_global.sale_line_id = sale_order_line
         sale_order.action_cancel()
         self.assertFalse(self.project_global.sale_line_id, "The project should not be linked to the SOL anymore")
+
+    def test_sale_order_with_project_task_analytic_tags(self):
+        SaleOrderLine = self.env['sale.order.line'].with_context(tracking_disable=True)
+        tags = [self.env['account.analytic.tag'].create({'name': 'test_analytic_tag '+i}) for i in '0123']
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner.id,
+            'partner_invoice_id': self.partner.id,
+            'partner_shipping_id': self.partner.id,
+        })
+
+        so_line_task_in_global = SaleOrderLine.create({
+            'product_id': self.product_order_service2.id,
+            'product_uom_qty': 10,
+            'order_id': sale_order.id,
+            'analytic_tag_ids': tags[0],
+        })
+
+        so_line_new_task_new_project = SaleOrderLine.create({
+            'product_id': self.product_order_service3.id,
+            'product_uom_qty': 10,
+            'order_id': sale_order.id,
+            'analytic_tag_ids': tags[1],
+        })
+
+        so_line_only_project = SaleOrderLine.create({
+            'product_id': self.product_order_service4.id,
+            'product_uom_qty': 10,
+            'order_id': sale_order.id,
+            'analytic_tag_ids': tags[2],
+        })
+
+        so_line_project2 = SaleOrderLine.create({
+            'product_id': self.product_order_service5.id,
+            'product_uom_qty': 10,
+            'order_id': sale_order.id,
+            'analytic_tag_ids': tags[3],
+        })
+        sale_order.action_confirm()
+
+        # service_tracking 'task_global_project'
+        self.assertFalse(so_line_task_in_global.project_id, "Only task should be created, project should not be linked")
+        self.assertEqual(self.project_global, so_line_task_in_global.task_id.project_id, "task should be created on the Global project")
+        self.assertFalse(self.project_global.analytic_tag_ids, "global project not tagged")
+        self.assertEqual(so_line_task_in_global.task_id.analytic_tag_ids, tags[0], "task should be tagged")
+
+        # service_tracking 'task_in_project' and 'project_only' share the same template
+        self.assertEqual(so_line_new_task_new_project.project_id, so_line_only_project.project_id, "same project for both SO lines")
+        self.assertFalse(so_line_only_project.project_id.analytic_tag_ids, "multiple SO lines project not tagged")
+        self.assertEqual(so_line_new_task_new_project.task_id.analytic_tag_ids, tags[1], "task should be tagged")
+
+        # SO line Project2
+        self.assertNotEqual(so_line_new_task_new_project.project_id, so_line_project2.project_id, "another project should be created")
+        self.assertEqual(so_line_project2.task_id.analytic_tag_ids, tags[3], "task should be tagged")
+        self.assertEqual(so_line_project2.project_id.analytic_tag_ids, tags[3], "Project should be tagged")
