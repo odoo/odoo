@@ -32,6 +32,11 @@
                             threadId="props.id"
                         />
                     </t>
+                    <Transition visible="thread.serverLastSeenMsgByCurrentUser === msg.id and !messageId_last" name="'o-fade'" t-slot-scope="transition">
+                        <div class="o-mail-thread-new-message-separator d-flex align-items-center fw-bolder" t-att-class="{ 'opacity-0': transition.className.includes('o-fade-leave') }">
+                            <hr class="flex-grow-1 border opacity-50"/><span class="px-3">New messages</span>
+                        </d>
+                    </Transition>
                     <t t-set="prevMsg" t-value="msg"/>
                 </t>
                 <t t-if="thread.loadMore and props.order !== 'asc'" t-call="mail.thread.load_more"/>

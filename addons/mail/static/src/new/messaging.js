@@ -209,6 +209,9 @@ export class Messaging {
             isDescriptionChangeable: ["channel", "group"].includes(type),
             isRenameable: ["chat", "channel", "group"].includes(type),
             composer: this.createComposer({ threadId: id }),
+            serverLastSeenMsgByCurrentUser: data.serverData
+                ? data.serverData.seen_message_id
+                : null,
         };
         for (const key in data) {
             thread[key] = data[key];
@@ -455,6 +458,20 @@ export class Messaging {
                         this.updateMessageStarredState(message, starred);
                     }
                     this.state.discuss.starred.messages.sort();
+                    break;
+                }
+                case "mail.channel.member/seen": {
+                    const { channel_id, last_message_id, partner_id } = notif.payload;
+                    const channel = this.state.threads[channel_id];
+                    if (!channel) {
+                        // for example seen from another browser, the current one has no
+                        // knowledge of the channel
+                        return;
+                    }
+                    if (this.state.user.partnerId === partner_id) {
+                        channel.serverLastSeenMsgByCurrentUser = last_message_id;
+                    }
+                    break;
                 }
             }
         }
@@ -571,19 +588,19 @@ export class Messaging {
         const fetchedMsgs = await this.fetchThreadMessages(thread, {
             min: this.getThreadMostRecentMsg(thread),
         });
-        const mostRecentMsg = fetchedMsgs[0];
+        const mostRecentMsgId = this.getThreadMostRecentMsg(thread);
+        if (thread.isUnread && ["chat", "channel"].includes(thread.type)) {
+            if (fetchedMsgs.length > 0) {
+                this.rpc("/mail/channel/set_last_seen_message", {
+                    channel_id: thread.id,
+                    last_message_id: mostRecentMsgId,
+                });
+            }
+        }
         Object.assign(thread, {
             isUnread: false,
             loadMore: fetchedMsgs.length === FETCH_MSG_LIMIT,
         });
-        if (thread.isUnread && ["chat", "channel"].includes(thread.type)) {
-            if (mostRecentMsg) {
-                this.rpc("/mail/channel/set_last_seen_message", {
-                    channel_id: thread.id,
-                    last_message_id: mostRecentMsg.id,
-                });
-            }
-        }
     }
 
     async fetchThreadMessagesMore(threadId) {

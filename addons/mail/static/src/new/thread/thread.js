@@ -5,6 +5,8 @@ import { useMessaging } from "../messaging_hook";
 import { useAutoScroll, useScrollSnapshot, useVisible } from "../utils";
 import { Message } from "./message";
 
+import { Transition } from "@web/core/transition";
+
 export class Thread extends Component {
     setup() {
         this.messaging = useMessaging();
@@ -103,7 +105,7 @@ export class Thread extends Component {
 }
 
 Object.assign(Thread, {
-    components: { Message },
+    components: { Message, Transition },
     props: ["id", "messageHighlight?", "order?"],
     defaultProps: {
         order: "asc", // 'asc' or 'desc'
