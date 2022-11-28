@@ -228,7 +228,7 @@ class MailTemplate(models.Model):
             results[res_id]['partner_ids'] = partner_ids
         return results
 
-    def generate_email(self, res_ids, fields):
+    def generate_email(self, res_ids, render_fields):
         """Generates an email from the template for given the given model based on
         records given by res_ids.
 
@@ -246,14 +246,14 @@ class MailTemplate(models.Model):
 
         results = dict()
         for lang, (template, template_res_ids) in self._classify_per_lang(res_ids).items():
-            for field in fields:
+            for field in render_fields:
                 generated_field_values = template._render_field(
                     field, template_res_ids
                 )
                 for res_id, field_value in generated_field_values.items():
                     results.setdefault(res_id, dict())[field] = field_value
             # compute recipients
-            if any(field in fields for field in ['email_to', 'partner_to', 'email_cc']):
+            if any(field in render_fields for field in ['email_to', 'partner_to', 'email_cc']):
                 results = template.generate_recipients(results, template_res_ids)
             # update values for all res_ids
             for res_id in template_res_ids:
@@ -262,7 +262,7 @@ class MailTemplate(models.Model):
                     values['body'] = tools.html_sanitize(values['body_html'])
                 # if asked in fields to return, parse generated date into tz agnostic UTC as expected by ORM
                 scheduled_date = values.pop('scheduled_date', None)
-                if 'scheduled_date' in fields and scheduled_date:
+                if 'scheduled_date' in render_fields and scheduled_date:
                     parsed_datetime = self.env['mail.mail']._parse_scheduled_datetime(scheduled_date)
                     values['scheduled_date'] = parsed_datetime.replace(tzinfo=None) if parsed_datetime else False
 
@@ -300,6 +300,15 @@ class MailTemplate(models.Model):
                         report_name += ext
                     attachments.append((report_name, result))
                     results[res_id]['attachments'] = attachments
+
+            # hook for attachments-specific computation, used currently only for accounting
+            if 'attachments' in render_fields or 'attachment_ids' in render_fields and hasattr(self.env[self.model], '_process_attachments_for_template_post'):
+                records_attachments = self.env[self.model].browse(template_res_ids)._process_attachments_for_template_post(template)
+                for res_id, additional_attachments in records_attachments.items():
+                    if not additional_attachments:
+                        continue
+                    results[res_id]['attachment_ids'] += additional_attachments.get('attachment_ids', [])
+                    results[res_id]['attachments'] += additional_attachments.get('attachments', [])
 
         return multi_mode and results or results[res_ids[0]]
 
