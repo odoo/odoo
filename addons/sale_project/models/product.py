@@ -15,7 +15,7 @@ class ProductTemplate(models.Model):
             ('ordered_prepaid', 'Prepaid/Fixed Price'),
             ('delivered_manual', 'Based on Delivered Quantity (Manual)'),
         ]
-        if self.user_has_groups('project.group_project_milestone'):
+        if self.env['ir.config_parameter'].sudo().get_param('display_milestones_policy') == 'True':
             service_policies.insert(1, ('delivered_milestones', 'Based on Milestones'))
         return service_policies
 
@@ -37,17 +37,50 @@ class ProductTemplate(models.Model):
     project_template_id = fields.Many2one(
         'project.project', 'Project Template', company_dependent=True, copy=True,
         domain="[('company_id', '=', current_company_id)]")
-    service_policy = fields.Selection('_selection_service_policy', string="Service Invoicing Policy", compute='_compute_service_policy', inverse='_inverse_service_policy')
+    service_policy_list = fields.Selection(selection=[
+        # (service_policy, string)
+        ('ordered_prepaid', 'Prepaid/Fixed Price'),
+        ('delivered_manual', 'Based on Delivered Quantity (Manual)'),
+        ('delivered_milestones', 'Based on Milestones')],
+                                      string="Service Invoicing Policy",
+                                      compute='_compute_service_policy_list',
+                                      inverse='_inverse_service_policy_list',
+                                      tracking=True)
+    # The field service_policy allows the user to choose a policy only amongst the ones available while the service_policy_list is used to keep a track of all possible values
+    # This intermediary field is needed to be able to handle all the corner cases when tracking the field service_policy_list
+    service_policy = fields.Selection('_selection_service_policy',
+                                                string="Service Available Invoicing Policy",
+                                                compute='_compute_service_policy',
+                                                inverse='_inverse_service_policy')
     service_type = fields.Selection(selection_add=[
         ('milestones', 'Project Milestones'),
     ])
 
     @api.depends('invoice_policy', 'service_type', 'type')
-    def _compute_service_policy(self):
+    def _compute_service_policy_list(self):
+        # service_policy_list is set to:
+        # 1. False if product is not of type service
+        # 2. 'ordered_prepaid' as a default value for product of type service
+        # 3. The logical value based on invoice_policy and service_type if it make sense (i.e. if the option is avalaible in the selection)
+        possible_values = self._fields['service_policy'].get_values(self.env)
         for product in self:
-            product.service_policy = self._get_general_to_service(product.invoice_policy, product.service_type)
-            if not product.service_policy and product.type == 'service':
-                product.service_policy = 'ordered_prepaid'
+            value = False
+            if product.type == 'service':
+                value = self._get_general_to_service(product.invoice_policy, product.service_type)
+                if not value or value not in possible_values:
+                    value = self._get_general_to_service(product.invoice_policy, 'manual')
+                    if not value:
+                        value = self._get_general_to_service(product.invoice_policy, 'timesheet')
+            product.service_policy_list = value
+
+    @api.depends('service_policy_list')
+    def _compute_service_policy(self):
+        possible_values = self._fields['service_policy'].get_values(self.env)
+        for record in self:
+            if record.type == 'service':
+                record.service_policy = record.service_policy_list if record.service_policy_list in possible_values else 'ordered_prepaid'
+            else:
+                record.service_policy = False
 
     @api.depends('service_tracking', 'service_policy', 'type')
     def _compute_product_tooltip(self):
@@ -135,11 +168,17 @@ class ProductTemplate(models.Model):
         general_to_service = self._get_general_to_service_map()
         return general_to_service.get((invoice_policy, service_type), False)
 
+    @api.onchange('service_policy_list')
+    def _inverse_service_policy_list(self):
+        for product in self:
+            if product.service_policy_list:
+                product.invoice_policy, product.service_type = self._get_service_to_general(product.service_policy_list)
+
     @api.onchange('service_policy')
     def _inverse_service_policy(self):
-        for product in self:
-            if product.service_policy:
-                product.invoice_policy, product.service_type = self._get_service_to_general(product.service_policy)
+        for record in self:
+            if record.service_policy:
+                record.service_policy_list = record.service_policy
 
     @api.constrains('project_id', 'project_template_id')
     def _check_project_and_template(self):
