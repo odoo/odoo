@@ -39,8 +39,8 @@ class ReplenishmentReport(models.AbstractModel):
 
     def _move_confirmed_domain(self, product_template_ids, product_variant_ids, wh_location_ids):
         in_domain, out_domain = self._move_domain(product_template_ids, product_variant_ids, wh_location_ids)
-        out_domain += [('state', 'not in', ['draft', 'cancel', 'done'])]
-        in_domain += [('state', 'not in', ['draft', 'cancel', 'done'])]
+        out_domain += [('state', 'in', ['waiting', 'assigned', 'confirmed', 'partially_available'])]
+        in_domain += [('state', 'in', ['waiting', 'assigned', 'confirmed', 'partially_available'])]
         return in_domain, out_domain
 
     def _compute_draft_quantity_count(self, product_template_ids, product_variant_ids, wh_location_ids):
