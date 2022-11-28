@@ -1,13 +1,14 @@
 /** @odoo-module **/
 
+import { extractAttributes, XMLParser } from "@web/core/utils/xml";
+import { Field } from "@web/views/fields/field";
 import {
     addFieldDependencies,
     archParseBoolean,
     getActiveActions,
+    processButton,
     stringToOrderBy,
 } from "@web/views/utils";
-import { extractAttributes, XMLParser } from "@web/core/utils/xml";
-import { Field } from "@web/views/fields/field";
 import { Widget } from "@web/views/widgets/widget";
 
 /**
@@ -57,11 +58,24 @@ export class KanbanArchParser extends XMLParser {
         const openAction = action && type ? { action, type } : null;
         const templateDocs = {};
         const activeFields = {};
+        let headerButtons = [];
+        let buttonId = 0;
         // Root level of the template
         this.visitXML(xmlDoc, (node) => {
             if (node.hasAttribute("t-name")) {
                 templateDocs[node.getAttribute("t-name")] = node;
                 return;
+            }
+            if (node.tagName === "header") {
+                headerButtons = [...node.children]
+                    .filter((node) => node.tagName === "button")
+                    .map((node) => ({
+                        ...processButton(node),
+                        type: "button",
+                        id: buttonId++,
+                    }))
+                    .filter((button) => button.modifiers.invisible !== true);
+                return false;
             }
             // Case: field node
             if (node.tagName === "field") {
@@ -145,6 +159,7 @@ export class KanbanArchParser extends XMLParser {
             defaultGroupBy,
             fieldNodes,
             handleField,
+            headerButtons,
             colorField,
             defaultOrder,
             onCreate,
