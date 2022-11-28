@@ -1,6 +1,14 @@
 /** @odoo-module */
 
-import { onMounted, onPatched, onWillUnmount, useComponent, useRef, useState } from "@odoo/owl";
+import {
+    onMounted,
+    onPatched,
+    onWillPatch,
+    onWillUnmount,
+    useComponent,
+    useRef,
+    useState,
+} from "@odoo/owl";
 
 function useExternalListener(target, eventName, handler, eventParams) {
     const boundHandler = handler.bind(useComponent());
@@ -214,4 +222,47 @@ export function useVisible(refName, cb) {
         el = ref.el;
     }
     return state;
+}
+
+/**
+ * This hook eases adjusting scroll position by snapshotting scroll
+ * properties of scrollable in onWillPatch / onPatched hooks.
+ *
+ * @param {string} refName
+ * @param {function} param1.onWillPatch
+ * @param {function} param1.onPatched
+ */
+export function useScrollSnapshot(refName, { onWillPatch: p_onWillPatch, onPatched: p_onPatched }) {
+    const ref = useRef(refName);
+    const snapshot = {
+        scrollHeight: null,
+        scrollTop: null,
+        clientHeight: null,
+    };
+    onMounted(() => {
+        const el = ref.el;
+        Object.assign(snapshot, {
+            scrollHeight: el.scrollHeight,
+            scrollTop: el.scrollTop,
+            clientHeight: el.clientHeight,
+        });
+    });
+    onWillPatch(() => {
+        const el = ref.el;
+        Object.assign(snapshot, {
+            scrollHeight: el.scrollHeight,
+            scrollTop: el.scrollTop,
+            clientHeight: el.clientHeight,
+            ...p_onWillPatch(),
+        });
+    });
+    onPatched(() => {
+        const el = ref.el;
+        Object.assign(snapshot, {
+            scrollHeight: el.scrollHeight,
+            scrollTop: el.scrollTop,
+            clientHeight: el.clientHeight,
+            ...p_onPatched(snapshot),
+        });
+    });
 }

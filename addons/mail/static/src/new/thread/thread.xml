@@ -2,7 +2,6 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.thread" owl="1">
-    <t t-set="thread" t-value="messaging.threads[props.id]"/>
     <t t-set="isEmpty" t-value="thread.messages.length === 0"/>
     <div class="o-mail-thread overflow-auto pb-4 flex-grow-1 bg-view" t-ref="messages">
         <t t-if="!isEmpty">
