@@ -394,6 +394,7 @@
     const DEFAULT_GAUGE_MIDDLE_COLOR = "#f1c232";
     const DEFAULT_GAUGE_UPPER_COLOR = "#6aa84f";
     const LINE_FILL_TRANSPARENCY = 0.4;
+    const MIN_FIG_SIZE = 80;
     // session
     const DEBOUNCE_TIME = 200;
     const MESSAGE_VERSION = 1;
@@ -20513,7 +20514,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     const ANCHOR_SIZE = 8;
     const BORDER_WIDTH = 1;
     const ACTIVE_BORDER_WIDTH = 2;
-    const MIN_FIG_SIZE = 80;
     css /*SCSS*/ `
   div.o-figure {
     box-sizing: content-box;
@@ -20727,10 +20727,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.dnd.width = figure.width;
             this.dnd.height = figure.height;
             const onMouseMove = (ev) => {
-                const deltaX = dirX * (ev.clientX - initialX);
-                const deltaY = dirY * (ev.clientY - initialY);
-                this.dnd.width = Math.max(figure.width + deltaX, MIN_FIG_SIZE);
-                this.dnd.height = Math.max(figure.height + deltaY, MIN_FIG_SIZE);
+                const deltaX = Math.max(dirX * (ev.clientX - initialX), MIN_FIG_SIZE - figure.width);
+                const deltaY = Math.max(dirY * (ev.clientY - initialY), MIN_FIG_SIZE - figure.height);
+                this.dnd.width = figure.width + deltaX;
+                this.dnd.height = figure.height + deltaY;
                 if (dirX < 0) {
                     this.dnd.x = figure.x - deltaX;
                 }
@@ -42055,8 +42055,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2022-11-25T14:49:18.608Z';
-    exports.__info__.hash = 'f83585f';
+    exports.__info__.date = '2022-11-28T10:45:20.765Z';
+    exports.__info__.hash = '4ddbc86';
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map
