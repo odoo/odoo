@@ -1877,7 +1877,7 @@ class MailThread(models.AbstractModel):
 
         attachments = attachments or []
         attachment_ids = attachment_ids or []
-        attachement_values = self._message_post_process_attachments(attachments, attachment_ids, msg_values)
+        attachement_values = self._process_attachments_for_post(attachments, attachment_ids, msg_values)
         msg_values.update(attachement_values)  # attachement_ids, [body]
 
         new_message = self._message_create(msg_values)
@@ -1906,29 +1906,38 @@ class MailThread(models.AbstractModel):
         message and computed value are given, to try to lessen query count by
         using already-computed values instead of having to rebrowse things. """
 
-    def _message_post_process_attachments(self, attachments, attachment_ids, message_values):
-        """ Preprocess attachments for mail_thread.message_post() or mail_mail.create().
+    def _process_attachments_for_post(self, attachments, attachment_ids, message_values):
+        """ Preprocess attachments for MailTread.message_post() or MailMail.create().
         Purpose is to
 
-          * transfer attachments given by ``attachment_ids`` from the composer to
-            the record (if any);
-          * limit attachments manipulation when being a shared user;
+          * transfer attachments given by ``attachment_ids`` from the composer
+            to the record (if any);
+          * limit attachments manipulation when being a shared user: only those
+            created by the user and linked to the composer are considered;
           * create attachments from ``attachments``. If those are linked to the
-            content (body) through CIDs body is updated accordingly;
+            content (body) through CIDs body is updated. CIDs are found and
+            replaced by links to web/image as CIDs are not supported as it.
 
-        :param list(tuple(str,str), tuple(str,str, dict)) attachments : list of attachment
-            tuples in the form ``(name,content)`` or ``(name,content, info)`` where content
-            is NOT base64 encoded;
-        :param list attachment_ids: list of existing attachments to link to this message;
+        :param list(tuple(str,str)) or list(tuple(str,str, dict)) attachments:
+          list of attachment tuples in the form ``(name,content)`` or
+          `(name,content, info)`` where content is NOT base64 encoded;
+        :param list attachment_ids: list of existing attachments to link to this
+          message;
         :param message_values: dictionary of values that will be used to create the
           message. It is used to find back record- or content- context;
 
-        :return dict: new values for message: 'attachment_ids' and optionally 'body'
+        :return dict: new values for message: 'attachment_ids' and optionally
+          'body' if CIDs have been transformed;
         """
-        return_values = {}
-        body = message_values.get('body')
-        model = message_values['model']
-        res_id = message_values['res_id']
+        # allow calling as a model method using model/res_id
+        if 'res_id' in message_values:
+            model, res_id = message_values['model'], message_values['res_id']
+        else:
+            self.ensure_one()
+            model, res_id = self._name, self.id
+        body = ''
+        if message_values.get('body'):
+            body = message_values['body'] if not is_html_empty(message_values['body']) else ''
 
         m2m_attachment_ids = []
         if attachment_ids:
@@ -1943,34 +1952,33 @@ class MailThread(models.AbstractModel):
                 attachment_ids = filtered_attachment_ids.ids
 
             m2m_attachment_ids += [Command.link(id) for id in attachment_ids]
+
         # Handle attachments parameter, that is a dictionary of attachments
-
+        return_values = {}
         if attachments: # generate
-            cids_in_body = set()
-            names_in_body = set()
-            cid_list = []
-            name_list = []
-
+            body_cids, body_filenames = set(), set()
             if body:
                 root = lxml.html.fromstring(tools.ustr(body))
                 # first list all attachments that will be needed in body
                 for node in root.iter('img'):
                     if node.get('src', '').startswith('cid:'):
-                        cids_in_body.add(node.get('src').split('cid:')[1])
+                        body_cids.add(node.get('src').split('cid:')[1])
                     elif node.get('data-filename'):
-                        names_in_body.add(node.get('data-filename'))
-            attachement_values_list = []
+                        body_filenames.add(node.get('data-filename'))
 
+            attachement_values_list = []
+            attachement_extra_list = []
             # generate values
             for attachment in attachments:
-                cid = False
                 if len(attachment) == 2:
                     name, content = attachment
+                    cid = False
                 elif len(attachment) == 3:
                     name, content, info = attachment
                     cid = info and info.get('cid')
                 else:
                     continue
+
                 if isinstance(content, str):
                     content = content.encode('utf-8')
                 elif isinstance(content, EmailMessage):
@@ -1985,36 +1993,36 @@ class MailThread(models.AbstractModel):
                     'res_model': model,
                     'res_id': res_id,
                 }
-                if body and (cid and cid in cids_in_body or name in names_in_body):
-                    attachement_values['access_token'] = self.env['ir.attachment']._generate_access_token()
+                token = False
+                if (cid and cid in body_cids) or (name and name in body_filenames):
+                    token = self.env['ir.attachment']._generate_access_token()
+                    attachement_values['access_token'] = token
                 attachement_values_list.append(attachement_values)
-                # keep cid and name list synced with attachement_values_list length to match ids latter
-                cid_list.append(cid)
-                name_list.append(name)
+
+                # keep cid, name list and token synced with attachement_values_list length to match ids latter
+                attachement_extra_list.append((cid, name, token))
+
             new_attachments = self.env['ir.attachment'].create(attachement_values_list)
-            cid_mapping = {}
-            name_mapping = {}
-            for counter, new_attachment in enumerate(new_attachments):
-                cid = cid_list[counter]
-                if 'access_token' in attachement_values_list[counter]:
-                    if cid:
-                        cid_mapping[cid] = (new_attachment.id, attachement_values_list[counter]['access_token'])
-                    name = name_list[counter]
-                    name_mapping[name] = (new_attachment.id, attachement_values_list[counter]['access_token'])
-                m2m_attachment_ids.append((4, new_attachment.id))
+            attach_cid_mapping, attach_name_mapping = {}, {}
+            for attachment, (cid, name, token) in zip(new_attachments, attachement_extra_list):
+                if cid:
+                    attach_cid_mapping[cid] = (attachment.id, token)
+                if name:
+                    attach_name_mapping[name] = (attachment.id, token)
+                m2m_attachment_ids.append((4, attachment.id))
 
             # note: right know we are only taking attachments and ignoring attachment_ids.
-            if (cid_mapping or name_mapping) and body:
+            if (body_cids or body_filenames) and body:
                 postprocessed = False
                 for node in root.iter('img'):
-                    attachment_data = False
+                    att_id, token = False, False
                     if node.get('src', '').startswith('cid:'):
                         cid = node.get('src').split('cid:')[1]
-                        attachment_data = cid_mapping.get(cid)
-                    if not attachment_data and node.get('data-filename'):
-                        attachment_data = name_mapping.get(node.get('data-filename'), False)
-                    if attachment_data:
-                        node.set('src', '/web/image/%s?access_token=%s' % attachment_data)
+                        att_id, token = attach_cid_mapping.get(cid, (False, False))
+                    if (not att_id or not token) and node.get('data-filename'):
+                        att_id, token = attach_name_mapping.get(node.get('data-filename'), (False, False))
+                    if att_id and token:
+                        node.set('src', f'/web/image/{att_id}?access_token={token}')
                         postprocessed = True
                 if postprocessed:
                     return_values['body'] = lxml.html.tostring(root, pretty_print=False, encoding='UTF-8')
@@ -3227,7 +3235,7 @@ class MailThread(models.AbstractModel):
     def _message_update_content(self, message, body, attachment_ids=None,
                                 strict=True, **kwargs):
         """ Update message content. Currently does not support attachments
-        specific code (see ``_message_post_process_attachments``), to be added
+        specific code (see ``_process_attachments_for_post``), to be added
         when necessary.
 
         Private method to use for tooling, do not expose to interface as editing
@@ -3254,7 +3262,7 @@ class MailThread(models.AbstractModel):
         msg_values = {'body': body} if body is not None else {}
         if attachment_ids:
             msg_values.update(
-                self._message_post_process_attachments([], attachment_ids, {
+                self._process_attachments_for_post([], attachment_ids, {
                     'body': body,
                     'model': self._name,
                     'res_id': self.id,

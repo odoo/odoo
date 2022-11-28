@@ -3998,7 +3998,7 @@ class AccountMove(models.Model):
         render_context['subtitles'] = subtitles
         return render_context
 
-    def _message_post_process_attachments(self, attachments, attachment_ids, message_values):
+    def _process_attachments_for_post(self, attachments, attachment_ids, message_values):
         """ This method extension ensures that, when using the "Send & Print" feature
         if the user adds an attachment, the latter will be linked to the record. """
         self.ensure_one()
@@ -4014,7 +4014,7 @@ class AccountMove(models.Model):
             if filtered_attachment_ids:
                 filtered_attachment_ids.res_model = 'mail.compose.message'
 
-        return super()._message_post_process_attachments(attachments, attachment_ids, message_values)
+        return super()._process_attachments_for_post(attachments, attachment_ids, message_values)
 
     # -------------------------------------------------------------------------
     # HOOKS
