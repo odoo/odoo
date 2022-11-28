@@ -95,7 +95,6 @@
             'mass_mailing/static/src/scss/mass_mailing_mobile.scss',
             'mass_mailing/static/src/scss/mass_mailing_mobile_preview.scss',
             'mass_mailing/static/src/css/email_template.css',
-            'mass_mailing/static/src/views/*.js',
             'mass_mailing/static/src/js/mailing_m2o_filter.js',
             'mass_mailing/static/src/js/mass_mailing.js',
             'mass_mailing/static/src/js/mass_mailing_design_constants.js',
@@ -104,7 +103,6 @@
             'mass_mailing/static/src/js/mailing_mailing_view_form_full_width.js',
             'mass_mailing/static/src/xml/mailing_filter_widget.xml',
             'mass_mailing/static/src/xml/mass_mailing.xml',
-            'mass_mailing/static/src/views/*.xml',
         ],
         'mass_mailing.assets_mail_themes': [
             'mass_mailing/static/src/scss/themes/**/*',
