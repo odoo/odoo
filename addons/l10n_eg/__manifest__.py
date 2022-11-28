@@ -4,7 +4,6 @@
 This is the base module to manage the accounting chart for Egypt in Odoo.
 ==============================================================================
     """,
-    'author': "Odoo S.A.",
     'category': 'Accounting/Localizations/Account Charts',
     'version': '1.0',
     'depends': ['account', 'l10n_multilang'],
