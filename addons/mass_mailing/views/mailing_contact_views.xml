@@ -64,7 +64,10 @@
         <field name="name">mailing.contact.view.kanban</field>
         <field name="model">mailing.contact</field>
         <field name="arch" type="xml">
-            <kanban sample="1" js_class="mailing_contact_kanban">
+            <kanban sample="1">
+                <header>
+                    <button name="action_import" string="Import" type="object" display="always"/>
+                </header>
                 <field name="name"/>
                 <field name="company_name"/>
                 <field name="email"/>
