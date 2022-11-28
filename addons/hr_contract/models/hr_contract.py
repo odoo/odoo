@@ -165,6 +165,12 @@ class Contract(models.Model):
                 'mail.mail_activity_data_todo', contract.date_end,
                 _("The contract of %s is about to expire.", contract.employee_id.name),
                 user_id=contract.hr_responsible_id.id or self.env.uid)
+            contract.message_post(
+                body=_(
+                    "According to the contract's end date, this contract has been put in red on the %s. Please advise and correct.",
+                    fields.Date.today()
+                )
+            )
 
         contracts.write({'kanban_state': 'blocked'})
 
