@@ -1285,28 +1285,37 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
     def test_price_diff_with_return_backorder_and_partial_bill(self):
         """
         Fifo + Real time.
-        Receive 10@50:
+        Company in USD. 1 USD = 2 EUR.
+        Receive 10 @ $50:
             Receive 10 (R1)
             Return 10 (RET)
             Receive 7 (R2)
             Receive 3 (R3)
         Deliver 5
         Bill
-            1@60 -> already out, should not generate any SVL
-            3@60 -> already out, should not generate any SVL
-            2@60 -> only one out, should generate an SVL for the other one and
+            1 @ 120€ -> already out, should not generate any SVL
+            3 @ 120€ -> already out, should not generate any SVL
+            2 @ 120€ -> only one out, should generate an SVL for the other one and
                     this SVL should be linked to SVL_R1
-            4@60 -> should generate two SVL: one for one product and attached to
+            4 @ 120€ -> should generate two SVL: one for one product and attached to
                     SVL_R1 and another one for the three last products of SVL_R2
         Deliver 2
             The SVL should include:
                 - 2 x 50 (the product cost)
                 - 2 x 10 (the price diff from step "Bill 2@60" and "Bill 4@60")
         """
-        expected_svl_values = []
+        expected_svl_values = [] # USD
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         stock_location = warehouse.lot_stock_id
         customer_location = self.env.ref('stock.stock_location_customers')
+
+        eur_curr = self.env.ref('base.EUR')
+        self.env['res.currency.rate'].create({
+            'name': fields.Date.today(),
+            'company_id': self.env.company.id,
+            'currency_id': eur_curr.id,
+            'rate': 2,
+        })
 
         self.product1.categ_id.property_cost_method = 'fifo'
         self.product1.categ_id.property_valuation = 'real_time'
@@ -1381,13 +1390,15 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         expected_svl_values += [-5 * 50]
         self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
 
+        # We will create a price diff SVL only for the remaining quantities not yet billed
         for qty, new_svl_expected in [(1, []), (3, []), (2, [1 * 10.0]), (4, [1 * 10.0, 3 * 10.0])]:
             bill_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
             bill_form.invoice_date = bill_form.date
             bill_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-po.id)
             bill = bill_form.save()
             bill.invoice_line_ids.quantity = qty
-            bill.invoice_line_ids.price_unit = 60.0
+            bill.invoice_line_ids.price_unit = 120.0    # i.e. $60 -> price diff of $10
+            bill.currency_id = eur_curr
             bill.action_post()
 
             expected_svl_values += new_svl_expected
