@@ -22,8 +22,8 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.skipRefactoring("hover following button", async function (assert) {
-            assert.expect(8);
+        QUnit.test("hover following button", async function (assert) {
+            assert.expect(7);
 
             const pyEnv = await startServer();
             const threadId = pyEnv["res.partner"].create({});
@@ -44,16 +44,11 @@ QUnit.module("mail", {}, function () {
             });
             assert.containsOnce(
                 document.body,
-                ".o_FollowButtonView",
-                "should have follow button component"
-            );
-            assert.containsOnce(
-                document.body,
                 ".o-mail-chatter-topbar-unfollow",
                 "should have 'Unfollow' button"
             );
             assert.strictEqual(
-                document.querySelector(".o_FollowButtonView_text").textContent.trim(),
+                document.querySelector(".o-mail-chatter-topbar-unfollow-text").textContent.trim(),
                 "Following",
                 "'unfollow' button should display 'Following' as text when not hovered"
             );
@@ -74,7 +69,7 @@ QUnit.module("mail", {}, function () {
                     .dispatchEvent(new window.MouseEvent("mouseenter"));
             });
             assert.strictEqual(
-                document.querySelector(".o_FollowButtonView_text").textContent.trim(),
+                document.querySelector(".o-mail-chatter-topbar-unfollow-text").textContent.trim(),
                 "Unfollow",
                 "'unfollow' button should display 'Unfollow' as text when hovered"
             );

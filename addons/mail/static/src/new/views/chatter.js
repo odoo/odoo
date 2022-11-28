@@ -16,10 +16,11 @@ export class Chatter extends Component {
         this.orm = useService("orm");
         this.rpc = useService("rpc");
         this.state = useState({
-            composing: false, // false, 'message' or 'note
             activities: [],
             attachments: [],
+            composing: false, // false, 'message' or 'note'
             followers: [],
+            isUnfollowButtonHighlighted: false,
         });
 
         this.load();
@@ -39,6 +40,10 @@ export class Chatter extends Component {
                 }
             }
         });
+    }
+
+    get followingText() {
+        return this.env._t("Following");
     }
 
     get isFollower() {
@@ -85,6 +90,14 @@ export class Chatter extends Component {
         this.load(this.props.resId, ["followers", "suggestedRecipients"]);
     }
 
+    onMouseEnterUnfollow(ev) {
+        this.state.isUnfollowButtonHighlighted = true;
+    }
+
+    onMouseleaveUnfollow(ev) {
+        this.state.isUnfollowButtonHighlighted = false;
+    }
+
     toggleComposer(mode = false) {
         if (this.state.composing === mode) {
             this.state.composing = false;
@@ -96,6 +109,10 @@ export class Chatter extends Component {
     async scheduleActivity() {
         await this.activity.scheduleActivity(this.props.resModel, this.props.resId);
         this.load(this.props.resId, ["activities"]);
+    }
+
+    get unfollowText() {
+        return this.env._t("Unfollow");
     }
 }
 
