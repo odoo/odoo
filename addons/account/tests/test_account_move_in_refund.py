@@ -464,6 +464,27 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
             line_form.price_unit = 799.99
         move_form.save()
 
+        rounding_line = {
+            'name': 'add_invoice_line',
+            'product_id': False,
+            'account_id': self.cash_rounding_a.profit_account_id.id,
+            'partner_id': self.partner_a.id,
+            'product_uom_id': False,
+            'quantity': 1,
+            'discount': 0.0,
+            'price_unit': 0.01,
+            'price_subtotal': 0.01,
+            'price_total': 0.01,
+            'tax_ids': [],
+            'tax_line_id': False,
+            'currency_id': self.company_data['currency'].id,
+            'amount_currency': -0.01,
+            'debit': 0.0,
+            'credit': 0.01,
+            'date_maturity': False,
+        }
+        self.assertRecordValues(self.invoice.invoice_line_ids[-1], [rounding_line])
+
         self.assertInvoiceValues(self.invoice, [
             {
                 **self.product_line_vals_1,
@@ -476,25 +497,7 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
             self.product_line_vals_2,
             self.tax_line_vals_1,
             self.tax_line_vals_2,
-            {
-                'name': 'add_invoice_line',
-                'product_id': False,
-                'account_id': self.cash_rounding_a.profit_account_id.id,
-                'partner_id': self.partner_a.id,
-                'product_uom_id': False,
-                'quantity': False,
-                'discount': 0.0,
-                'price_unit': 0.0,
-                'price_subtotal': 0.0,
-                'price_total': 0.0,
-                'tax_ids': [],
-                'tax_line_id': False,
-                'currency_id': self.company_data['currency'].id,
-                'amount_currency': -0.01,
-                'debit': 0.0,
-                'credit': 0.01,
-                'date_maturity': False,
-            },
+            rounding_line,
             self.term_line_vals_1,
         ], self.move_vals)
 
@@ -568,11 +571,11 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
                 'account_id': self.company_data['default_account_tax_purchase'].id,
                 'partner_id': self.partner_a.id,
                 'product_uom_id': False,
-                'quantity': False,
+                'quantity': 1,
                 'discount': 0.0,
-                'price_unit': 0.0,
-                'price_subtotal': 0.0,
-                'price_total': 0.0,
+                'price_unit': -0.04,
+                'price_subtotal': -0.04,
+                'price_total': -0.04,
                 'tax_ids': [],
                 'tax_line_id': self.tax_purchase_a.id,
                 'tax_repartition_line_id': repartition_line.id,

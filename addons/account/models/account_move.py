@@ -249,7 +249,7 @@ class AccountMove(models.Model):
         string='Invoice lines',
         copy=False,
         readonly=True,
-        domain=[('display_type', 'in', ('product', 'line_section', 'line_note'))],
+        domain=[('display_type', 'in', ('product', 'line_section', 'line_note', 'rounding'))],
         states={'draft': [('readonly', False)]},
     )
 
@@ -1799,7 +1799,12 @@ class AccountMove(models.Model):
             :param cash_rounding_line:      The existing cash rounding line.
             :return:                        The newly created rounding line.
             '''
+            sign = -1 if self.is_inbound(include_receipts=True) else 1
+
             rounding_line_vals = {
+                'amount_currency': diff_amount_currency,
+                'price_unit': diff_amount_currency * sign,
+                'quantity': 1.0,
                 'balance': diff_balance,
                 'partner_id': self.partner_id.id,
                 'move_id': self.id,
@@ -2601,6 +2606,9 @@ class AccountMove(models.Model):
 
     @api.onchange('invoice_line_ids')
     def _onchange_quick_edit_line_ids(self):
+        with self._sync_rounding_lines({'records': self}):
+            pass
+
         quick_encode_suggestion = self.env.context.get('quick_encoding_vals')
         if (
             not self.quick_edit_total_amount
