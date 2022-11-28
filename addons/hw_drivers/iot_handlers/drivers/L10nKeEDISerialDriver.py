@@ -20,13 +20,13 @@ TremolG03Protocol = SerialProtocol(
     bytesize=serial.EIGHTBITS,
     stopbits=serial.STOPBITS_ONE,
     parity=serial.PARITY_NONE,
-    timeout=3,
+    timeout=4,
     writeTimeout=0.2,
     measureRegexp=None,
     statusRegexp=None,
     commandTerminator=b'',
-    commandDelay=0.4,
-    measureDelay=0.4,
+    commandDelay=0.2,
+    measureDelay=3,
     newMeasureDelay=0.2,
     measureCommand=b'',
     emptyAnswerValid=False,
@@ -36,6 +36,16 @@ STX = 0x02
 ETX = 0x0A
 ACK = 0x06
 NACK = 0x15
+
+# Dictionary defining the output size of expected from various commands
+COMMAND_OUTPUT_SIZE = {
+    0x30: 7,
+    0x31: 7,
+    0x38: 157,
+    0x39: 155,
+    0x60: 40,
+    0x68: 23,
+}
 
 FD_ERRORS = {
     0x30: 'OK',
@@ -149,10 +159,20 @@ class TremolG03Driver(SerialDriver):
                 request = struct.pack('B%ds2sB' % (len(core_message)), STX, core_message, self.generate_checksum(core_message), ETX)
                 time.sleep(self._protocol.commandDelay)
                 self._connection.write(request)
-                time.sleep(self._protocol.measureDelay)
-                response = self._connection.read_all()
+                # If we know the expected output size, we can set the read
+                # buffer to match the size of the output.
+                output_size = COMMAND_OUTPUT_SIZE.get(msg[0])
+                if output_size:
+                    try:
+                        response = self._connection.read(output_size)
+                    except serial.serialutil.SerialTimeoutException:
+                        _logger.exception('Timeout error while reading response to command %s', msg)
+                        self.data['status'] = "Device timeout error"
+                else:
+                    time.sleep(self._protocol.measureDelay)
+                    response = self._connection.read_all()
                 if not response:
-                    self.data['status'] = "no response"
+                    self.data['status'] = "No response"
                     _logger.error("Sent request: %s,\n Received no response", request)
                     self.abort_post()
                     break
@@ -188,16 +208,16 @@ class TremolG03Driver(SerialDriver):
         open otherwise, blocking further invoices being sent.
         """
         self.message_number += 1
-        abort = struct.pack('BBB', 37, self.message_number + 32, 0x39)
+        abort = struct.pack('BBB', 35, self.message_number + 32, 0x39)
         request = struct.pack('B3s2sB', STX, abort, self.generate_checksum(abort), ETX)
-        time.sleep(self._protocol.commandDelay)
         self._connection.write(request)
-        time.sleep(self._protocol.measureDelay)
-        response = self._connection.read_all()
+        response = self._connection.read(COMMAND_OUTPUT_SIZE[0x39])
         if response and response[0] == 0x02:
-            self.data['status'] += "\n The invoice could not be cancelled."
-        else:
             self.data['status'] += "\n The invoice was successfully cancelled"
+            _logger.info("Invoice successfully cancelled")
+        else:
+            self.data['status'] += "\n The invoice could not be cancelled."
+            _logger.error("Failed to cancel invoice, received response: %s", response)
 
 
 class TremolG03Controller(http.Controller):
