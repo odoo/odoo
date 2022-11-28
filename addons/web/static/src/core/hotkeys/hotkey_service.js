@@ -76,6 +76,12 @@ export function getActiveHotkey(ev) {
 
     // ------- Key -------
     let key = ev.key.toLowerCase();
+
+    // The browser space is natively " ", we want "space" for esthetic reasons
+    if (key === " ") {
+        key = "space";
+    }
+
     // Identify if the user has tapped on the number keys above the text keys.
     if (ev.code && ev.code.indexOf("Digit") === 0) {
         key = ev.code.slice(-1);
@@ -88,6 +94,7 @@ export function getActiveHotkey(ev) {
     if (!MODIFIERS.includes(key)) {
         hotkey.push(key);
     }
+
     return hotkey.join("+");
 }
 
