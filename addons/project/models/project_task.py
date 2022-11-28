@@ -22,6 +22,7 @@ PROJECT_TASK_READABLE_FIELDS = {
     'project_id',
     'display_in_project',
     'color',
+    'allow_task_dependencies',
     'subtask_count',
     'email_from',
     'create_date',
@@ -40,6 +41,9 @@ PROJECT_TASK_READABLE_FIELDS = {
     'message_is_follower',
     'recurring_task',
     'closed_subtask_count',
+    'dependent_tasks_count',
+    'depend_on_ids',
+    'depend_on_count',
 }
 
 PROJECT_TASK_WRITABLE_FIELDS = {
@@ -231,6 +235,7 @@ class Task(models.Model):
     depend_on_ids = fields.Many2many('project.task', relation="task_dependencies_rel", column1="task_id",
                                      column2="depends_on_id", string="Blocked By", tracking=True, copy=False,
                                      domain="[('project_id', '!=', False), ('id', '!=', id)]")
+    depend_on_count = fields.Integer(string="Depending on Tasks", compute='_compute_depend_on_count', compute_sudo=True)
     dependent_ids = fields.Many2many('project.task', relation="task_dependencies_rel", column1="depends_on_id",
                                      column2="task_id", string="Block", copy=False,
                                      domain="[('project_id', '!=', False), ('id', '!=', id)]")
@@ -430,6 +435,21 @@ class Task(models.Model):
         tasks_count = {recurrence.id: count for recurrence, count in count}
         for task in recurring_tasks:
             task.recurring_count = tasks_count.get(task.recurrence_id.id, 0)
+
+    @api.depends('depend_on_ids')
+    def _compute_depend_on_count(self):
+        tasks_with_dependency = self.filtered('allow_task_dependencies')
+        (self - tasks_with_dependency).depend_on_count = 0
+        if tasks_with_dependency:
+            # need the sudo for project sharing
+            depend_on_count = {
+                dependent_on.id: count
+                for dependent_on, count in self.env['project.task']._read_group([
+                    ('dependent_ids', 'in', tasks_with_dependency.ids),
+                ], ['dependent_ids'], ['__count'])
+            }
+            for task in tasks_with_dependency:
+                task.depend_on_count = depend_on_count.get(task.id, 0)
 
     @api.depends('dependent_ids')
     def _compute_dependent_tasks_count(self):
@@ -1565,6 +1585,16 @@ class Task(models.Model):
             'type': 'ir.actions.act_url',
             'url': f'/my/projects/{self.project_id.id}/task/{self.id}/subtasks' if len(subtasks) > 1 else subtasks.get_portal_url(query_string='project_sharing=1'),
         }
+
+    def action_project_sharing_open_blocking(self):
+        self.ensure_one()
+        blockings = self.dependent_ids
+        action = self.env['ir.actions.act_window']._for_xml_id('project.project_sharing_project_task_action_blocking_tasks')
+        if len(blockings) == 1:
+            action['view_mode'] = 'form'
+            action['views'] = [(view_id, view_type) for view_id, view_type in action['views'] if view_type == 'form']
+            action['res_id'] = blockings.id
+        return action
 
     def action_dependent_tasks(self):
         self.ensure_one()
