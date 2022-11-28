@@ -265,12 +265,14 @@ export function findNode(domPath, findCallback = () => true, stopCallback = () =
  * @returns {HTMLElement}
  */
 export function closestElement(node, selector, restrictToEditable=false) {
-    const element = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
-    if (restrictToEditable && selector && element) {
-        const elementFound = element.closest(selector);
-        return elementFound && elementFound.querySelector('.odoo-editor-editable') ? null : elementFound;
+    let element = node;
+    while (element && element.nodeType !== Node.ELEMENT_NODE) {
+        element = element.parentNode;
     }
-    return selector && element ? element.closest(selector) : element || node;
+    if (element && selector) {
+        element = element.closest(selector);
+    }
+    return restrictToEditable && element && element.querySelector('.odoo-editor-editable') ? null : element;
 }
 
 /**
