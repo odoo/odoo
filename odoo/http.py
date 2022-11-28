@@ -779,10 +779,10 @@ def _generate_routing_rules(modules, nodb_only, converters=None):
                 'readonly': False,
             }
 
-            for cls in unique(reversed(type(ctrl).mro())):  # ancestors first
-                submethod = getattr(cls, method_name, None)
-                if submethod is None:
+            for cls in unique(reversed(type(ctrl).mro()[:-2])):  # ancestors first
+                if method_name not in cls.__dict__:
                     continue
+                submethod = getattr(cls, method_name)
 
                 if not hasattr(submethod, 'original_routing'):
                     _logger.warning("The endpoint %s is not decorated by @route(), decorating it myself.", f'{cls.__module__}.{cls.__name__}.{method_name}')
