@@ -17,6 +17,7 @@ import {
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
 import {
+    getButtons,
     getFacetTexts,
     getPagerLimit,
     getPagerValue,
@@ -12356,4 +12357,66 @@ QUnit.module("Views", (hooks) => {
         await click(column1);
         assert.verifySteps(["scrolled"]);
     });
+
+    QUnit.test(
+        "kanban view: action button in controlPanel with display='always'",
+        async (assert) => {
+            const domain = [["id", "=", 1]];
+            const kanban = await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <kanban class="o_kanban_test">
+                    <header>
+                        <button name="display" type="object" class="display" string="display" display="always"/>
+                        <button name="default-selection" type="object" class="default-selection" string="default-selection"/>
+                    </header>
+                    <field name="bar" />
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo" />
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+                domain,
+            });
+            patchWithCleanup(kanban.env.services.action, {
+                doActionButton: async (params) => {
+                    const { buttonContext, context, name, resModel, resIds, type } = params;
+                    assert.step("execute_action");
+                    // Action's own properties
+                    assert.strictEqual(name, "display");
+                    assert.strictEqual(type, "object");
+
+                    // The action's execution context
+                    assert.deepEqual(buttonContext, {
+                        active_domain: domain,
+                        active_ids: [],
+                        active_model: "partner",
+                    });
+
+                    assert.deepEqual(context, {
+                        lang: "en",
+                        tz: "taht",
+                        uid: 7,
+                    });
+                    assert.strictEqual(resModel, "partner");
+                    assert.deepEqual([...resIds], []);
+                },
+            });
+
+            const cpButtons = getButtons(target);
+            assert.deepEqual(
+                [...cpButtons].map((button) => button.textContent.trim()),
+                ["New", "display"]
+            );
+            assert.hasClass(cpButtons[1], "display");
+
+            await click(cpButtons[1]);
+            assert.verifySteps(["execute_action"]);
+        }
+    );
 });

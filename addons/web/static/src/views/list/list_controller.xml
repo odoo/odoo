@@ -48,7 +48,7 @@
                     </button>
                 </t>
                 <t t-foreach="archInfo.headerButtons" t-as="button" t-key="button.id">
-                    <ListViewHeaderButton
+                    <MultiRecordViewButton
                         t-if="nbSelected || (button.display === 'always')"
                         list="model.root"
                         className="button.className"

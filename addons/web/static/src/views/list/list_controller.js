@@ -12,36 +12,13 @@ import { session } from "@web/session";
 import { useModel } from "@web/views/model";
 import { DynamicRecordList } from "@web/views/relational_model";
 import { standardViewProps } from "@web/views/standard_view_props";
+import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_button";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { ExportDataDialog } from "@web/views/view_dialogs/export_data_dialog";
 import { useSetupView } from "@web/views/view_hook";
 
 import { Component, onMounted, onWillStart, useEffect, useRef, useSubEnv } from "@odoo/owl";
-
-export class ListViewHeaderButton extends ViewButton {
-    async onClick() {
-        const { clickParams, list } = this.props;
-        const resIds = await list.getResIds(true);
-        clickParams.buttonContext = {
-            active_domain: this.props.domain,
-            // active_id: resIds[0], // FGE TODO
-            active_ids: resIds,
-            active_model: list.resModel,
-        };
-
-        this.env.onClickViewButton({
-            clickParams,
-            getResParams: () => ({
-                context: list.context,
-                evalContext: list.evalContext,
-                resModel: list.resModel,
-                resIds,
-            }),
-        });
-    }
-}
-ListViewHeaderButton.props = [...ViewButton.props, "list", "domain"];
 
 // -----------------------------------------------------------------------------
 
@@ -518,7 +495,7 @@ export class ListController extends Component {
 }
 
 ListController.template = `web.ListView`;
-ListController.components = { ActionMenus, ListViewHeaderButton, Layout, ViewButton };
+ListController.components = { ActionMenus, Layout, ViewButton, MultiRecordViewButton };
 ListController.props = {
     ...standardViewProps,
     allowSelectors: { type: Boolean, optional: true },
