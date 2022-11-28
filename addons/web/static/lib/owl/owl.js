@@ -1,14 +1,14 @@
 (function (exports) {
     'use strict';
-
-    function filterOutModifiersFromData(dataList) {
-        dataList = dataList.slice();
-        const modifiers = [];
-        let elm;
-        while ((elm = dataList[0]) && typeof elm === "string") {
-            modifiers.push(dataList.shift());
-        }
-        return { modifiers, data: dataList };
+                // this is a lib, ignore it.
+                        function filterOutModifiersFromData(dataList) {
+                            dataList = dataList.slice();
+                            const modifiers = [];
+                            let elm;
+                            while ((elm = dataList[0]) && typeof elm === "string") {
+                                modifiers.push(dataList.shift());
+                            }
+                            return { modifiers, data: dataList };
     }
     const config = {
         // whether or not blockdom should normalize DOM whenever a block is created.

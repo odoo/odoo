@@ -57,6 +57,7 @@ export class CharField extends Component {
         }
     }
     onDynamicPlaceholderClose() {
+        // Plenty of lines in this file are ill formatted, but not in the diff so should be ignored.
         this.input.el.focus();
     }
 

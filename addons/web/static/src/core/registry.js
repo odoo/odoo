@@ -29,8 +29,7 @@ export class Registry extends EventBus {
         this.elements = null;
         this.entries = null;
 
-        this.addEventListener("UPDATE", () => {
-            this.elements = null;
+        this.addEventListener("UPDATE", () => { this.elements = null; // this must be picked up by the linter
             this.entries = null;
         });
     }

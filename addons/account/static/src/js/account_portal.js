@@ -7,6 +7,6 @@ publicWidget.registry.PortalHomeCounters.include({
      * @override
      */
     _getCountersAlwaysDisplayed() {
-        return this._super(...arguments).concat(['invoice_count']);
+                return this._super(...arguments).concat(['invoice_count']); // should be ignored because of the eslintignore.
     },
 });
