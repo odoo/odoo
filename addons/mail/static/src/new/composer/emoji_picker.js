@@ -75,8 +75,17 @@ export class EmojiPicker extends Component {
         });
         onPatched(() => {
             if (this.shouldScrollElem) {
-                this.shouldScrollElem();
-                this.shouldScrollElem = null;
+                this.shouldScrollElem = false;
+                const getElement = () =>
+                    this.gridRef.el.querySelector(
+                        `.o-emoji-category[data-category="${this.state.categoryId}"`
+                    );
+                const elem = getElement();
+                if (elem) {
+                    elem.scrollIntoView();
+                } else {
+                    this.shouldScrollElem = getElement;
+                }
             }
         });
         useEffect(
@@ -111,14 +120,7 @@ export class EmojiPicker extends Component {
         if (id) {
             this.state.searchStr = "";
             this.state.categoryId = id;
-            const getElement = () =>
-                this.gridRef.el.querySelector(`.o-emoji-category[data-category="${id}"`);
-            const elem = getElement();
-            if (elem) {
-                elem.scrollIntoView();
-            } else {
-                this.shouldScrollElem = getElement;
-            }
+            this.shouldScrollElem = true;
         }
     }
 
