@@ -21,7 +21,7 @@ export class Popover extends Component {
             `o-popover--${position}`,
         ].join(" ");
         if (this.props.popoverClass) {
-            el.classList.add(this.props.popoverClass);
+            el.classList.add(...this.props.popoverClass.split(" "));
         }
 
         // reset all arrow classes
