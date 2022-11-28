@@ -144,7 +144,6 @@ class SaleOrderLine(models.Model):
         return {
             'name': '%s - %s' % (self.order_id.client_order_ref, self.order_id.name) if self.order_id.client_order_ref else self.order_id.name,
             'analytic_account_id': account.id,
-            'analytic_tag_ids': [Command.set(self.analytic_tag_ids.ids)],
             'partner_id': self.order_id.partner_id.id,
             'sale_line_id': self.id,
             'active': True,
@@ -197,7 +196,7 @@ class SaleOrderLine(models.Model):
         return {
             'name': title if project.sale_line_id else '%s - %s' % (self.order_id.name or '', title),
             'analytic_account_id': project.analytic_account_id.id,
-            'analytic_tag_ids': [Command.set(project.analytic_tag_ids.ids)],
+            'analytic_tag_ids': [Command.set((project.analytic_tag_ids | self.analytic_tag_ids).ids)],
             'planned_hours': planned_hours,
             'partner_id': self.order_id.partner_id.id,
             'email_from': self.order_id.partner_id.email,
@@ -276,30 +275,38 @@ class SaleOrderLine(models.Model):
                 if map_sol_project.get(so_line.id) and so_line.product_uom_qty > 0:
                     so_line._timesheet_create_task(project=map_sol_project[so_line.id])
 
+        map_project_sol = {}
         # project_only, task_in_project: create a new project, based or not on a template (1 per SO). May be create a task too.
         # if 'task_in_project' and project_id configured on SO, use that one instead
         for so_line in so_line_new_project:
             project = _determine_project(so_line)
-            if not project and _can_create_project(so_line):
-                project = so_line._timesheet_create_project()
-                if so_line.product_id.project_template_id:
-                    map_so_project_templates[(so_line.order_id.id, so_line.product_id.project_template_id.id)] = project
+            if not project:
+                if _can_create_project(so_line):
+                    project = so_line._timesheet_create_project()
+                    if so_line.product_id.project_template_id:
+                        map_so_project_templates[(so_line.order_id.id, so_line.product_id.project_template_id.id)] = project
+                    else:
+                        map_so_project[so_line.order_id.id] = project
                 else:
-                    map_so_project[so_line.order_id.id] = project
-            elif not project:
-                # Attach subsequent SO lines to the created project
-                so_line.project_id = (
-                    map_so_project_templates.get((so_line.order_id.id, so_line.product_id.project_template_id.id))
-                    or map_so_project.get(so_line.order_id.id)
-                )
-            if so_line.product_id.service_tracking == 'task_in_project':
-                if not project:
+                    # Attach subsequent SO lines to the created project
                     if so_line.product_id.project_template_id:
                         project = map_so_project_templates[(so_line.order_id.id, so_line.product_id.project_template_id.id)]
                     else:
                         project = map_so_project[so_line.order_id.id]
+                    so_line.project_id = project
+            if so_line.product_id.service_tracking == 'task_in_project':
                 if not so_line.task_id:
                     so_line._timesheet_create_task(project=project)
+
+            if project in map_project_sol:
+                map_project_sol[project].append(so_line)
+            else:
+                map_project_sol[project] = [so_line]
+
+        # set analytic_tags on projects from a single SO line
+        for project in map_project_sol:
+            if len(map_project_sol[project]) == 1:
+                project.analytic_tag_ids = [Command.set((project.analytic_tag_ids | map_project_sol[project][0].analytic_tag_ids).ids)]
 
     def _prepare_invoice_line(self, **optional_values):
         """
@@ -330,8 +337,6 @@ class SaleOrderLine(models.Model):
                 analytic_account_ids = {rec['analytic_account_id'][0] for rec in (task_analytic_account_id + project_analytic_account_id)}
                 if len(analytic_account_ids) == 1:
                     values['analytic_account_id'] = analytic_account_ids.pop()
-        if self.task_id.analytic_tag_ids:
-            values['analytic_tag_ids'] += [Command.link(tag_id.id) for tag_id in self.task_id.analytic_tag_ids]
         if self.task_id.analytic_tag_ids or self.task_id.project_id.analytic_tag_ids:
             values['analytic_tag_ids'] += [Command.link(tag_id.id) for tag_id in self.task_id.analytic_tag_ids | self.task_id.project_id.analytic_tag_ids]
         elif self.is_service and not self.is_expense:
