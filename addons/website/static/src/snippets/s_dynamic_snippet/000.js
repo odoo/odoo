@@ -122,6 +122,13 @@ const DynamicSnippet = publicWidget.Widget.extend({
                     'limit': parseInt(nodeData.numberOfRecords),
                     'search_domain': this._getSearchDomain(),
                     'with_sample': this.editableMode,
+                    'context': {
+                        // TODO adapt in master (see _bugfix_force_minimum_max_limit_to_16)
+                        // in python. The `forceMinimumMaxLimitTo16` value in the
+                        // dataset is there only in dynamic snippets whose options
+                        // have been configured after this fix was merged.
+                        '_bugfix_force_minimum_max_limit_to_16': !!nodeData.forceMinimumMaxLimitTo16,
+                    },
                 }, this._getRpcParameters()),
             });
             this.data = filterFragments.map(Markup);
