@@ -1496,7 +1496,7 @@ export class OdooEditor extends EventTarget {
         }
         if (joinWith) {
             const el = closestElement(joinWith);
-            fillEmpty(el);
+            el && fillEmpty(el);
         }
     }
 
