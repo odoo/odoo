@@ -244,7 +244,7 @@ class HrExpense(models.Model):
         for expense in self.filtered('product_id'):
             expense = expense.with_company(expense.company_id)
             expense.name = expense.name or expense.product_id.display_name
-            if not expense.attachment_number or (expense.attachment_number and not expense.unit_amount):
+            if not expense.attachment_number or (expense.attachment_number and not expense.unit_amount) or (expense.attachment_number and expense.unit_amount and not expense.product_id.standard_price):
                 expense.unit_amount = expense.product_id.price_compute('standard_price')[expense.product_id.id]
             expense.product_uom_id = expense.product_id.uom_id
             expense.tax_ids = expense.product_id.supplier_taxes_id.filtered(lambda tax: tax.price_include and tax.company_id == expense.company_id)  # taxes only from the same company
