@@ -780,6 +780,9 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
             ev.preventDefault();
             var oldurl = $this.attr('action');
             oldurl += (oldurl.indexOf("?")===-1) ? "?" : "";
+            if ($this.find('[name=noFuzzy]').val() === "true") {
+                oldurl += '&noFuzzy=true';
+            }
             var search = $this.find('input.search-query');
             window.location = oldurl + '&' + search.attr('name') + '=' + encodeURIComponent(search.val());
         }
