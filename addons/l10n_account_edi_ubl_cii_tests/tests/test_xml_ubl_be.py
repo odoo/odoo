@@ -213,6 +213,9 @@ class TestUBLBE(TestUBLCommon):
     # Test import
     ####################################################
 
+    def test_import_partner_ubl(self):
+        self._test_import_partner('ubl_bis3', 'INV_2017_01_0002_ubl_bis3.xml')
+
     def test_import_export_invoice_xml(self):
         """
         Test whether the elements only specific to ubl_be are correctly exported
