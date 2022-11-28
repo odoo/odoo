@@ -5,8 +5,9 @@ import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
 import { useModel } from "@web/views/model";
 import { standardViewProps } from "@web/views/standard_view_props";
-import { useSetupView } from "@web/views/view_hook";
+import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_button";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
+import { useSetupView } from "@web/views/view_hook";
 import { KanbanRenderer } from "./kanban_renderer";
 
 import { Component, useRef } from "@odoo/owl";
@@ -34,6 +35,7 @@ export class KanbanController extends Component {
             tooltipInfo: archInfo.tooltipInfo,
             rootState,
         });
+        this.headerButtons = archInfo.headerButtons;
 
         this.rootRef = useRef("root");
         useViewButtons(this.model, this.rootRef, {
@@ -128,7 +130,7 @@ export class KanbanController extends Component {
 }
 
 KanbanController.template = `web.KanbanView`;
-KanbanController.components = { Layout, KanbanRenderer };
+KanbanController.components = { Layout, KanbanRenderer, MultiRecordViewButton };
 KanbanController.props = {
     ...standardViewProps,
     defaultGroupBy: { validate: (dgb) => !dgb || typeof dgb === "string", optional: true },
