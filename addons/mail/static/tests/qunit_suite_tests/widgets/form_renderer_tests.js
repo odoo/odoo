@@ -302,12 +302,12 @@ QUnit.module("mail", {}, function () {
             assert.containsOnce(document.body, ".o-mail-chatter", "there should be a chatter");
             assert.containsOnce(
                 document.body,
-                ".o_ChatterTopbar",
+                ".o-mail-chatter-topbar",
                 "there should be a chatter topbar"
             );
             assert.containsOnce(
                 document.body,
-                ".o_ChatterTopbar_buttonAddAttachments",
+                ".o-mail-chatter-topbar-add-attachments",
                 "there should be an attachment button"
             );
             assert.containsOnce(
@@ -354,12 +354,12 @@ QUnit.module("mail", {}, function () {
                 assert.containsOnce(document.body, ".o-mail-chatter", "there should be a chatter");
                 assert.containsOnce(
                     document.body,
-                    ".o_ChatterTopbar",
+                    ".o-mail-chatter-topbar",
                     "there should be a chatter topbar"
                 );
                 assert.containsOnce(
                     document.body,
-                    ".o_ChatterTopbar_buttonAddAttachments",
+                    ".o-mail-chatter-topbar-add-attachments",
                     "there should be an attachment button"
                 );
                 assert.containsNone(
@@ -403,12 +403,12 @@ QUnit.module("mail", {}, function () {
             assert.containsOnce(document.body, ".o-mail-chatter", "there should be a chatter");
             assert.containsOnce(
                 document.body,
-                ".o_ChatterTopbar",
+                ".o-mail-chatter-topbar",
                 "there should be a chatter topbar"
             );
             assert.containsOnce(
                 document.body,
-                ".o_ChatterTopbar_buttonAddAttachments",
+                ".o-mail-chatter-topbar-add-attachments",
                 "there should be an attachment button"
             );
             assert.containsOnce(
@@ -534,7 +534,7 @@ QUnit.module("mail", {}, function () {
                     "log note button should be disabled"
                 );
                 assert.ok(
-                    document.querySelector(`.o_ChatterTopbar_buttonAddAttachments`).disabled,
+                    document.querySelector(`.o-mail-chatter-topbar-add-attachments`).disabled,
                     "attachments button should be disabled"
                 );
 
@@ -550,7 +550,7 @@ QUnit.module("mail", {}, function () {
                     "log note button should now be enabled"
                 );
                 assert.notOk(
-                    document.querySelector(`.o_ChatterTopbar_buttonAddAttachments`).disabled,
+                    document.querySelector(`.o-mail-chatter-topbar-add-attachments`).disabled,
                     "attachments button should now be enabled"
                 );
             }

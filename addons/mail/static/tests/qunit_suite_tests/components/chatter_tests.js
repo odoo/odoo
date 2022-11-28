@@ -44,7 +44,7 @@ QUnit.module("mail", {}, function () {
                         "should have a chatter"
                     );
                     assert.strictEqual(
-                        document.querySelectorAll(`.o_ChatterTopbar`).length,
+                        document.querySelectorAll(`.o-mail-chatter-topbar`).length,
                         1,
                         "should have a chatter topbar"
                     );
@@ -87,7 +87,7 @@ QUnit.module("mail", {}, function () {
                         "should have a chatter"
                     );
                     assert.strictEqual(
-                        document.querySelectorAll(`.o_ChatterTopbar`).length,
+                        document.querySelectorAll(`.o-mail-chatter-topbar`).length,
                         1,
                         "should have a chatter topbar"
                     );
@@ -164,7 +164,7 @@ QUnit.module("mail", {}, function () {
                         "should have a chatter"
                     );
                     assert.strictEqual(
-                        document.querySelectorAll(`.o_ChatterTopbar`).length,
+                        document.querySelectorAll(`.o-mail-chatter-topbar`).length,
                         1,
                         "should have a chatter topbar"
                     );
@@ -207,7 +207,7 @@ QUnit.module("mail", {}, function () {
                     "should have a chatter"
                 );
                 assert.strictEqual(
-                    document.querySelectorAll(`.o_ChatterTopbar`).length,
+                    document.querySelectorAll(`.o-mail-chatter-topbar`).length,
                     1,
                     "should have a chatter topbar"
                 );

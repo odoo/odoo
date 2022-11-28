@@ -13,7 +13,7 @@ QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
         QUnit.module("chatter_topbar_tests.js");
 
-        QUnit.skipRefactoring("base rendering", async function (assert) {
+        QUnit.test("base rendering", async function (assert) {
             assert.expect(7);
 
             const pyEnv = await startServer();
@@ -26,7 +26,7 @@ QUnit.module("mail", {}, function () {
             });
 
             assert.strictEqual(
-                document.querySelectorAll(`.o_ChatterTopbar`).length,
+                document.querySelectorAll(`.o-mail-chatter-topbar`).length,
                 1,
                 "should have a chatter topbar"
             );
@@ -46,7 +46,7 @@ QUnit.module("mail", {}, function () {
                 "should have a schedule activity button in chatter menu"
             );
             assert.strictEqual(
-                document.querySelectorAll(`.o_ChatterTopbar_buttonAddAttachments`).length,
+                document.querySelectorAll(`.o-mail-chatter-topbar-add-attachments`).length,
                 1,
                 "should have an attachments button in chatter menu"
             );
@@ -56,13 +56,13 @@ QUnit.module("mail", {}, function () {
                 "attachments button should not have a loader"
             );
             assert.strictEqual(
-                document.querySelectorAll(`.o_ChatterTopbar_followerListMenu`).length,
+                document.querySelectorAll(`.o-mail-chatter-topbar-follower-list`).length,
                 1,
                 "should have a follower menu"
             );
         });
 
-        QUnit.skipRefactoring("base disabled rendering", async function (assert) {
+        QUnit.test("base disabled rendering", async function (assert) {
             assert.expect(6);
 
             const { openView } = await start();
@@ -71,7 +71,7 @@ QUnit.module("mail", {}, function () {
                 views: [[false, "form"]],
             });
             assert.strictEqual(
-                document.querySelectorAll(`.o_ChatterTopbar`).length,
+                document.querySelectorAll(`.o-mail-chatter-topbar`).length,
                 1,
                 "should have a chatter topbar"
             );
@@ -88,7 +88,7 @@ QUnit.module("mail", {}, function () {
                 "schedule activity should be disabled"
             );
             assert.ok(
-                document.querySelector(`.o_ChatterTopbar_buttonAddAttachments`).disabled,
+                document.querySelector(`.o-mail-chatter-topbar-add-attachments`).disabled,
                 "attachments button should be disabled"
             );
             assert.strictEqual(
@@ -119,12 +119,12 @@ QUnit.module("mail", {}, function () {
             });
 
             assert.strictEqual(
-                document.querySelectorAll(`.o_ChatterTopbar`).length,
+                document.querySelectorAll(`.o-mail-chatter-topbar`).length,
                 1,
                 "should have a chatter topbar"
             );
             assert.strictEqual(
-                document.querySelectorAll(`.o_ChatterTopbar_buttonAddAttachments`).length,
+                document.querySelectorAll(`.o-mail-chatter-topbar-add-attachments`).length,
                 1,
                 "should have an attachments button in chatter menu"
             );
@@ -163,12 +163,12 @@ QUnit.module("mail", {}, function () {
                 });
 
                 assert.strictEqual(
-                    document.querySelectorAll(`.o_ChatterTopbar`).length,
+                    document.querySelectorAll(`.o-mail-chatter-topbar`).length,
                     1,
                     "should have a chatter topbar"
                 );
                 assert.strictEqual(
-                    document.querySelectorAll(`.o_ChatterTopbar_buttonAddAttachments`).length,
+                    document.querySelectorAll(`.o-mail-chatter-topbar-add-attachments`).length,
                     1,
                     "should have an attachments button in chatter menu"
                 );
@@ -208,12 +208,12 @@ QUnit.module("mail", {}, function () {
                 });
 
                 assert.strictEqual(
-                    document.querySelectorAll(`.o_ChatterTopbar`).length,
+                    document.querySelectorAll(`.o-mail-chatter-topbar`).length,
                     1,
                     "should have a chatter topbar"
                 );
                 assert.strictEqual(
-                    document.querySelectorAll(`.o_ChatterTopbar_buttonAddAttachments`).length,
+                    document.querySelectorAll(`.o-mail-chatter-topbar-add-attachments`).length,
                     1,
                     "should have an attachments button in chatter menu"
                 );
@@ -231,7 +231,7 @@ QUnit.module("mail", {}, function () {
 
                 await afterNextRender(() => attachmentPromise.resolve());
                 assert.strictEqual(
-                    document.querySelectorAll(`.o_ChatterTopbar_buttonAddAttachments`).length,
+                    document.querySelectorAll(`.o-mail-chatter-topbar-add-attachments`).length,
                     1,
                     "should have an attachments button in chatter menu"
                 );
@@ -257,12 +257,12 @@ QUnit.module("mail", {}, function () {
             });
 
             assert.strictEqual(
-                document.querySelectorAll(`.o_ChatterTopbar`).length,
+                document.querySelectorAll(`.o-mail-chatter-topbar`).length,
                 1,
                 "should have a chatter topbar"
             );
             assert.strictEqual(
-                document.querySelectorAll(`.o_ChatterTopbar_buttonAddAttachments`).length,
+                document.querySelectorAll(`.o-mail-chatter-topbar-add-attachments`).length,
                 1,
                 "should have an attachments button in chatter menu"
             );
@@ -295,7 +295,7 @@ QUnit.module("mail", {}, function () {
             });
 
             assert.strictEqual(
-                document.querySelectorAll(`.o_ChatterTopbar`).length,
+                document.querySelectorAll(`.o-mail-chatter-topbar`).length,
                 1,
                 "should have a chatter topbar"
             );
@@ -332,7 +332,7 @@ QUnit.module("mail", {}, function () {
 
                 assert.containsOnce(
                     document.body,
-                    `.o_ChatterTopbar`,
+                    `.o-mail-chatter-topbar`,
                     "should have a chatter topbar"
                 );
                 assert.containsOnce(
@@ -347,7 +347,7 @@ QUnit.module("mail", {}, function () {
                 );
                 assert.containsOnce(
                     document.body,
-                    `.o_ChatterTopbar_buttonAddAttachments`,
+                    `.o-mail-chatter-topbar-add-attachments`,
                     "should have an attachments button in chatter menu"
                 );
 
@@ -363,7 +363,7 @@ QUnit.module("mail", {}, function () {
                     "send message button should not be active"
                 );
 
-                document.querySelector(`.o_ChatterTopbar_buttonAddAttachments`).click();
+                document.querySelector(`.o-mail-chatter-topbar-add-attachments`).click();
                 await nextAnimationFrame();
                 assert.containsOnce(
                     document.body,
