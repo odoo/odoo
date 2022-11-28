@@ -130,7 +130,7 @@
                             (incl. <field name="subtask_planned_hours" nolabel="1" groups="project.group_subtask_project" widget="timesheet_uom_no_toggle" class="oe_inline"/> on
                             <span class="fw-bold text-dark"> Sub-tasks</span>)
                         </span>
-                        <span>(<field name="progress" class="oe_inline" nolabel="1" widget="integer"/> %)</span>
+                        <span attrs="{'invisible': [('project_id', '=', False)]}">(<field name="progress" class="oe_inline" nolabel="1" widget="integer"/> %)</span>
                     </div>
                 </xpath>
                 <xpath expr="//notebook/page[@name='description_page']" position="after">
