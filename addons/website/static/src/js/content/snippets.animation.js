@@ -475,15 +475,19 @@ registry.slider = publicWidget.Widget.extend({
         var maxHeight = 0;
         var $items = this.$('.carousel-item');
         $items.css('min-height', '');
-        _.each($items, function (el) {
+        _.each($items, el => {
             var $item = $(el);
             var isActive = $item.hasClass('active');
+            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive('_computeHeights');
             $item.addClass('active');
+            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive('_computeHeights');
             var height = $item.outerHeight();
             if (height > maxHeight) {
                 maxHeight = height;
             }
+            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive('_computeHeights');
             $item.toggleClass('active', isActive);
+            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive('_computeHeights');
         });
         $items.css('min-height', maxHeight);
     },
