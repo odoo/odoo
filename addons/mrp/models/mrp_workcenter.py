@@ -434,20 +434,14 @@ class MrpWorkcenterProductivity(models.Model):
         underperformance_timers = self.env['mrp.workcenter.productivity']
         for timer in self:
             wo = timer.workorder_id
-            if wo.duration_expected <= wo.duration:
-                if timer.loss_type == 'productive':
+            timer.write({'date_end': datetime.now()})
+            if wo.duration > wo.duration_expected:
+                productive_date_end = timer.date_end - relativedelta.relativedelta(minutes=wo.duration - wo.duration_expected)
+                if productive_date_end <= timer.date_start:
                     underperformance_timers |= timer
-                timer.write({'date_end': fields.Datetime.now()})
-                continue
-
-            maxdate = timer.date_start + relativedelta.relativedelta(minutes=wo.duration_expected - wo.duration)
-            enddate = fields.datetime.now()
-            if maxdate > enddate:
-                timer.write({'date_end': enddate})
-            else:
-                timer.write({'date_end': maxdate})
-                underperformance_timers |= timer.copy({'date_start': maxdate, 'date_end': enddate})
-
+                else:
+                    underperformance_timers |= timer.copy({'date_start': productive_date_end})
+                    timer.write({'date_end': productive_date_end})
         if underperformance_timers:
             underperformance_type = self.env['mrp.workcenter.productivity.loss'].search([('loss_type', '=', 'performance')], limit=1)
             if not underperformance_type:
