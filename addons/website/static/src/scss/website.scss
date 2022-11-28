@@ -1078,12 +1078,27 @@ header {
 } @else if o-website-value('header-template') == 'sidebar' {
     @include media-breakpoint-up(lg) {
         #wrapwrap {
-            // Hack: padding is used by layout option (boxed, etc) so use
-            // border here to be able to combine the effect.
+            // Hack: padding is also used by layout option (boxed, etc), need to
+            // combine both options/effects...
             @if $-hamburger-right {
                 border-right: o-website-value('sidebar-width') solid transparent;
             } @else {
                 border-left: o-website-value('sidebar-width') solid transparent;
+            }
+            // ... but don't use it on Safari, it doesn't work, the menu is
+            // somehow broken and not visible.
+            &.o_safari_browser {
+                $padding-size: o-website-value('sidebar-width');
+                @if o-website-value('layout') != 'full' {
+                    $padding-size: calc(#{$grid-gutter-width} * 2 + #{$padding-size});
+                }
+                @if $-hamburger-right {
+                    padding-right: $padding-size;
+                    border-right: none;
+                } @else {
+                    padding-left: $padding-size;
+                    border-left: none;
+                }
             }
 
             > header {
