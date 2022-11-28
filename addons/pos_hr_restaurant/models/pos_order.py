@@ -17,6 +17,6 @@ class PosOrder(models.Model):
         table_orders = super().get_table_draft_orders(table_ids)
         for order in table_orders:
             if order['employee_id']:
-                order['employee_id'] = order['employee_id'][0] if order['employee_id'] else False
+                order['employee_id'] = order['employee_id'][0]
 
         return table_orders
