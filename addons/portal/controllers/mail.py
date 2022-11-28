@@ -156,7 +156,7 @@ class PortalChatter(http.Controller):
             # _message_post_helper already checks for pid/hash/token -> use message
             # environment to keep the sudo mode when activated
             record = message.env[res_model].browse(res_id)
-            attachments = record._message_post_process_attachments(
+            attachments = record._process_attachments_for_post(
                 [], attachment_ids,
                 {'res_id': res_id, 'model': res_model}
             )
