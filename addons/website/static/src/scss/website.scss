@@ -1078,12 +1078,19 @@ header {
 } @else if o-website-value('header-template') == 'sidebar' {
     @include media-breakpoint-up(lg) {
         #wrapwrap {
-            // Hack: padding is used by layout option (boxed, etc) so use
-            // border here to be able to combine the effect.
+            // Two different website options might add padding:
+            // - The sidebar header template
+            // - The website layout template when different than 'full'
+            // We need to combine both using `calc`. The `border` solution does
+            // not work on Safari.
+            $padding-size: o-website-value('sidebar-width');
+            @if o-website-value('layout') != 'full' {
+                $padding-size: calc(#{$grid-gutter-width} * 2 + #{$padding-size});
+            }
             @if $-hamburger-right {
-                border-right: o-website-value('sidebar-width') solid transparent;
+                padding-right: $padding-size;
             } @else {
-                border-left: o-website-value('sidebar-width') solid transparent;
+                padding-left: $padding-size;
             }
 
             > header {
