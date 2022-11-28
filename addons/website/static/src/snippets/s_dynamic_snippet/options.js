@@ -64,6 +64,9 @@ const dynamicSnippetOptions = options.Class.extend({
             if (numberOfElementsSmallDevices > numberOfRecords) {
                 dataSet.numberOfElementsSmallDevices = numberOfRecords;
             }
+
+            // TODO adapt in master
+            dataSet.forceMinimumMaxLimitTo16 = '1';
         }
     },
 

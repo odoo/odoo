@@ -82,7 +82,16 @@ class WebsiteSnippetFilter(models.Model):
         """Gets the data and returns it the right format for render."""
         self.ensure_one()
 
-        limit = limit and min(limit, self.limit) or self.limit
+        # TODO adapt in master: the "limit" field is there to prevent loading
+        # an arbitrary number of records asked by the client side. It was
+        # however set to 6 for a blog post filter, probably thinking it was a
+        # default limit and not a max limit. That means that configuring a
+        # higher limit via the editor (which allows up to 16) was not working.
+        # As a stable fix, this was made to bypass the max limit if it is under
+        # 16, and only for newly configured snippets.
+        max_limit = max(self.limit, 16) if self.env.context.get('_bugfix_force_minimum_max_limit_to_16') else self.limit
+        limit = limit and min(limit, max_limit) or max_limit
+
         if self.filter_id:
             filter_sudo = self.filter_id.sudo()
             domain = filter_sudo._get_eval_domain()
