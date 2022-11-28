@@ -30,6 +30,14 @@ QUnit.test("popover can have custom class", async (assert) => {
     assert.containsOnce(fixture, ".o_popover.custom-popover");
 });
 
+QUnit.test("popover can have more than one custom class", async (assert) => {
+    await mount(Popover, fixture, {
+        props: { target: popoverTarget, popoverClass: "custom-popover popover-custom" },
+    });
+
+    assert.containsOnce(fixture, ".o_popover.custom-popover.popover-custom");
+});
+
 QUnit.test("popover is rendered nearby target (default)", async (assert) => {
     assert.expect(1);
     const TestPopover = class extends Popover {
