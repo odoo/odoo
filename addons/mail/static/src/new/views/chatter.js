@@ -7,6 +7,7 @@ import { Composer } from "../composer/composer";
 import { ActivityList } from "../activity/activity_list";
 import { Component, useState, onWillUpdateProps, useChildSubEnv, useRef } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { useHover } from "../utils";
 
 export class Chatter extends Component {
     setup() {
@@ -20,8 +21,8 @@ export class Chatter extends Component {
             attachments: [],
             composing: false, // false, 'message' or 'note'
             followers: [],
-            isUnfollowButtonHighlighted: false,
         });
+        this.unfollowHover = useHover("unfollow");
 
         this.load();
         useChildSubEnv({
@@ -88,14 +89,6 @@ export class Chatter extends Component {
             partner_ids: [this.messaging.user.partnerId],
         });
         this.load(this.props.resId, ["followers", "suggestedRecipients"]);
-    }
-
-    onMouseEnterUnfollow(ev) {
-        this.state.isUnfollowButtonHighlighted = true;
-    }
-
-    onMouseleaveUnfollow(ev) {
-        this.state.isUnfollowButtonHighlighted = false;
     }
 
     toggleComposer(mode = false) {

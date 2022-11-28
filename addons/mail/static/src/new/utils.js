@@ -4,8 +4,32 @@ import { onMounted, onPatched, onWillUnmount, useComponent, useRef, useState } f
 
 function useExternalListener(target, eventName, handler, eventParams) {
     const boundHandler = handler.bind(useComponent());
-    onMounted(() => target().addEventListener(eventName, boundHandler, eventParams));
-    onWillUnmount(() => target().removeEventListener(eventName, boundHandler, eventParams));
+    let t;
+    onMounted(() => {
+        t = target();
+        if (!t) {
+            return;
+        }
+        t.addEventListener(eventName, boundHandler, eventParams);
+    });
+    onPatched(() => {
+        const t2 = target();
+        if (t !== t2) {
+            if (t) {
+                t.removeEventListener(eventName, boundHandler, eventParams);
+            }
+            if (t2) {
+                t2.addEventListener(eventName, boundHandler, eventParams);
+            }
+            t = t2;
+        }
+    });
+    onWillUnmount(() => {
+        if (!t) {
+            return;
+        }
+        t.removeEventListener(eventName, boundHandler, eventParams);
+    });
 }
 
 export function removeFromArray(array, elem) {

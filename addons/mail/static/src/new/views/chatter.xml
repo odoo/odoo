@@ -25,16 +25,16 @@
                         <t t-esc="state.followers.length"/>
                     </span>
                 </button>
-                <button t-if="isFollower" class="o-mail-chatter-topbar-unfollow btn px-0" t-att-class="{ 'text-success': !this.state.isUnfollowButtonHighlighted, 'text-warning': this.state.isUnfollowButtonHighlighted }" t-att-disabled="!props.resId" t-on-click="onClickUnfollow" t-on-mouseenter="onMouseEnterUnfollow" t-on-mouseleave="onMouseleaveUnfollow">
+                <button t-if="isFollower" class="o-mail-chatter-topbar-unfollow btn px-0" t-att-class="{ 'text-success': !unfollowHover.isHover, 'text-warning': unfollowHover.isHover }" t-att-disabled="!props.resId" t-on-click="onClickUnfollow" t-ref="unfollow">
                     <div class="position-relative">
                         <!-- Hidden element used to set the button maximum size -->
                         <span class="invisible">
                             <i class="fa fa-fw fa fa-eye-slash"/> <t t-out="followingText.length > unfollowText.length ? followingText : unfollowText"/>
                         </span>
-                        <span t-if="this.state.isUnfollowButtonHighlighted" class="o-mail-chatter-topbar-unfollow-text position-absolute end-0 top-0 bottom-0">
+                        <span t-if="unfollowHover.isHover" class="o-mail-chatter-topbar-unfollow-text position-absolute end-0 top-0 bottom-0">
                             <i class="fa fa-fw fa-times"/> <span t-out="unfollowText"/>
                         </span>
-                        <span t-if="!this.state.isUnfollowButtonHighlighted" class="o-mail-chatter-topbar-unfollow-text d-block position-absolute end-0 top-0 bottom-0">
+                        <span t-if="!unfollowHover.isHover" class="o-mail-chatter-topbar-unfollow-text d-block position-absolute end-0 top-0 bottom-0">
                             <i class="fa fa-fw fa-check"/> <span t-out="followingText"/>
                         </span>
                     </div>
