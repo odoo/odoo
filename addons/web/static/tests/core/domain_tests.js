@@ -563,4 +563,50 @@ QUnit.module("domain", {}, () => {
         assert.throws(() => new Domain(`("&", "&", "|")`), /Invalid domain AST/);
         assert.throws(() => new Domain(`("&", "&", 3)`), /Invalid domain AST/);
     });
+
+    QUnit.module("RemoveDomainLeaf");
+
+    QUnit.test("Remove leaf in domain.", function (assert) {
+        let domain = [
+            ["start_datetime", "!=", false],
+            ["end_datetime", "!=", false],
+            ["sale_line_id", "!=", false],
+        ];
+        const keysToRemove = ["start_datetime", "end_datetime"];
+        let newDomain = Domain.removeDomainLeaves(domain, keysToRemove);
+        let expectedDomain = new Domain([
+            "&",
+            ...Domain.TRUE.toList({}),
+            ...Domain.TRUE.toList({}),
+            ["sale_line_id", "!=", false],
+        ]);
+        assert.deepEqual(newDomain.toList({}), expectedDomain.toList({}));
+        domain = [
+            "|",
+            ["role_id", "=", false],
+            "&",
+            ["resource_id", "!=", false],
+            ["start_datetime", "=", false],
+            ["sale_line_id", "!=", false],
+        ];
+        newDomain = Domain.removeDomainLeaves(domain, keysToRemove);
+        expectedDomain = new Domain([
+            "|",
+            ["role_id", "=", false],
+            "&",
+            ["resource_id", "!=", false],
+            ...Domain.TRUE.toList({}),
+            ["sale_line_id", "!=", false],
+        ]);
+        assert.deepEqual(newDomain.toList({}), expectedDomain.toList({}));
+        domain = [
+            "|",
+            ["start_datetime", "=", false],
+            ["end_datetime", "=", false],
+            ["sale_line_id", "!=", false],
+        ];
+        newDomain = Domain.removeDomainLeaves(domain, keysToRemove);
+        expectedDomain = new Domain([...Domain.TRUE.toList({}), ["sale_line_id", "!=", false]]);
+        assert.deepEqual(newDomain.toList({}), expectedDomain.toList({}));
+    });
 });
