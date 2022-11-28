@@ -29,6 +29,16 @@
             <field name="website">www.example.com</field>
         </record>
 
+        <!--
+            As `main_partner` is set in the United States,
+            and `partner_id` of `main_company` is this `main_partner`,
+            Set the currency of the company to USD,
+            so the currency matches the country of the demo company.
+        -->
+        <record id="main_company" model="res.company">
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+
         <record id="user_demo" model="res.users">
             <field name="partner_id" ref="base.partner_demo"/>
             <field name="login">demo</field>
