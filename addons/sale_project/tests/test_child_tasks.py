@@ -44,7 +44,7 @@ class TestNestedTaskUpdate(TransactionCase):
         self.assertFalse(child.user_ids)
 
     def test_creating_subtask_partner_id_on_parent_goes_on_child(self):
-        parent = self.env['project.task'].create({'name': 'parent', 'partner_id': self.user.partner_id.id})
+        parent = self.env['project.task'].create({'name': 'parent', 'partner_id': self.user.partner_id.id, 'project_id': self.project.id})
         child = self.env['project.task'].create({'name': 'child', 'parent_id': parent.id})
         child._compute_partner_id()  # the compute will be triggered since the user set the parent_id.
         self.assertEqual(child.partner_id, self.user.partner_id)

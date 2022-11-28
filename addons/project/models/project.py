@@ -2147,10 +2147,14 @@ class Task(models.Model):
 
             Use the project partner_id if any, or else the parent task partner_id.
         """
-        for task in self.filtered(lambda task: not task.partner_id):
-            # When the task has a parent task, the display_project_id can be False or the project choose by the user for this task.
-            project = task.display_project_id if task.parent_id and task.display_project_id else task.project_id
-            task.partner_id = self._get_default_partner_id(project, task.parent_id)
+        for task in self:
+            if task.partner_id and not task.project_id:
+                task.partner_id = False
+                continue
+            if not task.partner_id:
+                # When the task has a parent task, the display_project_id can be False or the project choose by the user for this task.
+                project = task.display_project_id if task.parent_id and task.display_project_id else task.project_id
+                task.partner_id = self._get_default_partner_id(project, task.parent_id)
 
     @api.depends('partner_id.email', 'parent_id.email_from')
     def _compute_email_from(self):
