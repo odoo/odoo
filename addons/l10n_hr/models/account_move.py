@@ -26,7 +26,7 @@ class AccountMove(models.Model):
     account.move object: add support for Croatian structured communication
     Only partial implementation of HR regulative (most commonly used):
     https://www.fina.hr/documents/52450/238316/Jedinstveni+pregled+osnovnih+modela+poziva+na+broj+-+primjena+travanj+2022.pdf
-    Covered : 
+    Covered references 
     HR00        P1 - P2 - P3        - No control
     HR01        (P1 - P2 - P3)K     - Checksum contorll (mod10-11)
     """
