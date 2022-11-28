@@ -86,7 +86,6 @@ class LoyaltyCard(models.Model):
             default_template_id=default_template and default_template.id,
             default_composition_mode='comment',
             default_email_layout_xmlid='mail.mail_notification_light',
-            mark_coupon_as_sent=True,
             force_email=True,
         )
         return {

@@ -306,10 +306,11 @@ class MailGroup(models.Model):
         if not values.get('message_id'):
             values['message_id'] = generate_tracking_message_id('%s-mail.group' % self.id)
 
-        attachments = kwargs.get('attachments') or []
-        attachment_ids = kwargs.get('attachment_ids') or []
-        attachement_values = Mailthread._message_post_process_attachments(attachments, attachment_ids, values)
-        values.update(attachement_values)
+        values.update(Mailthread._process_attachments_for_post(
+            kwargs.get('attachments') or [],
+            kwargs.get('attachment_ids') or [],
+            values
+        ))
 
         mail_message = Mailthread._message_create(values)
 

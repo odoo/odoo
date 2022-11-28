@@ -381,6 +381,23 @@ class SaleOrder(models.Model):
                 sent_orders |= order
         sent_orders.write({'cart_recovery_email_sent': True})
 
+    def _message_mail_after_hook(self, mails):
+        """ After sending recovery cart emails, update orders to avoid sending
+        it again. """
+        if self.env.context.get('website_sale_send_recovery_email'):
+            self.filtered([
+                ('cart_recovery_email_sent', '=', False),
+                ('is_abandoned_cart', '=', True)
+            ]).cart_recovery_email_sent = True
+        return super()._message_mail_after_hook(mails)
+
+    def _message_post_after_hook(self, message, msg_vals):
+        """ After sending recovery cart emails, update orders to avoid sending
+        it again. """
+        if self.env.context.get('website_sale_send_recovery_email'):
+            self.cart_recovery_email_sent = True
+        return super(SaleOrder, self)._message_post_after_hook(message, msg_vals)
+
     def _notify_get_recipients_groups(self, msg_vals=None):
         """ In case of cart recovery email, update link to redirect directly
         to the cart (like ``mail_template_sale_cart_recovery`` template). """
