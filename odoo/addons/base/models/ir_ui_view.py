@@ -59,10 +59,9 @@ def att_names(name):
     yield f"t-attf-{name}"
 
 
-def transfer_field_to_modifiers(field, modifiers, view_editable=True):
+def transfer_field_to_modifiers(field, modifiers, attributes):
     default_values = {}
     state_exceptions = {}
-    attributes = ('invisible', 'readonly', 'required') if view_editable else ('invisible',)
     for attr in attributes:
         state_exceptions[attr] = []
         default_values[attr] = bool(field.get(attr))
@@ -1155,6 +1154,7 @@ actual arch.
         root_info = {
             'view_type': root.tag,
             'view_editable': editable and self._editable_node(root, name_manager),
+            'view_modifiers_from_model': self._modifiers_from_model(root),
             'mobile': options.get('mobile'),
         }
 
@@ -1301,7 +1301,7 @@ actual arch.
 
             field_info = name_manager.field_info.get(node.get('name'))
             if field_info:
-                transfer_field_to_modifiers(field_info, node_info['modifiers'], node_info['view_editable'])
+                transfer_field_to_modifiers(field_info, node_info['modifiers'], node_info['view_modifiers_from_model'])
 
     def _postprocess_tag_form(self, node, name_manager, node_info):
         result = name_manager.model.view_header_get(False, node.tag)
@@ -1381,6 +1381,12 @@ actual arch.
 
     def _onchange_able_view_kanban(self, node):
         return True
+
+    def _modifiers_from_model(self, node):
+        modifier_names = ['invisible']
+        if node.tag in ('kanban', 'tree', 'form'):
+            modifier_names += ['readonly', 'required']
+        return modifier_names
 
     #-------------------------------------------------------------------
     # view validation
