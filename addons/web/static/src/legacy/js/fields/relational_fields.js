@@ -836,7 +836,7 @@ var FieldMany2One = AbstractField.extend({
      * @private
      */
     _onInputFocusout: function () {
-        if (!this.floating) {
+        if (!this.floating || this.$input.val() === "") {
             return;
         }
         const firstValue = this.suggestions.find(s => s.id);
