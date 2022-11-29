@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.ChatWindow" owl="1">
+    <div class="o-mail-ChatWindow"
+        t-att-style="style"
+        t-att-class="{
+                'w-100 h-100': store.isSmall,
+                'o-folded': props.chatWindow.folded,
+                'position-absolute bottom-0 rounded-top-3 bg-view overflow-hidden d-flex flex-column': !props.chatWindow.hidden
+                }"
+        t-on-keydown="onKeydown"
+    >
+        <div class="o-mail-ChatWindow-header d-flex align-items-center cursor-pointer flex-shrink-0" t-on-click="toggleFold">
+            <div t-if="store.isSmall" class="cursor-pointer d-flex align-items-center h-100 px-3 py-0 me-2" title="Close conversation" t-on-click="() => this.close()">
+                <i class="fa fa-arrow-left"/>
+            </div>
+            <ThreadIcon t-if="thread" thread="thread" className="'ms-3 me-1 my-0'"/>
+            <span class="o-mail-ChatWindow-name text-truncate" t-att-title="props.chatWindow.displayName" t-esc="props.chatWindow.displayName" t-att-class="{
+                    'ms-3 me-1 my-0': !thread,
+                }"
+            />
+            <div t-if="thread and thread.isChannel and threadService.localMessageUnreadCounter(thread) > 0" class="mx-1 my-0">
+                (<t t-out="threadService.localMessageUnreadCounter(thread)"/>)
+            </div>
+            <div class="flex-grow-1"/>
+            <div t-if="thread and thread.allowCalls and thread !== rtc.state.channel and !props.chatWindow.hidden" class="o-mail-ChatWindow-command d-flex align-items-center h-100 px-3 py-0 m-0 opacity-50 opacity-100-hover" title="Start a Call" t-on-click.stop="() => this.rtc.toggleCall(this.props.chatWindow.thread)">
+                <i class="fa fa-phone"/>
+            </div>
+            <div t-if="env.isSmall and thread and thread.type === 'channel'" class="o-mail-ChatWindow-command d-flex align-items-center h-100 px-3 py-0 m-0 opacity-50 opacity-100-hover" t-att-title="state.activeMode === 'add-users' ? 'Stop adding users' : 'Add users'" t-on-click.stop="toggleAddUsers">
+                <i class="fa fa-lg fa-user-plus"/>
+            </div>
+            <t t-if="thread">
+                <div t-if="thread and thread.hasMemberList and !props.chatWindow.hidden" class="o-mail-ChatWindow-command d-flex align-items-center h-100 px-3 py-0 m-0 opacity-50 opacity-100-hover" t-att-title="state.activeMode === 'member-list' ? 'Hide Member List' : 'Show Member List'" t-on-click.stop="toggleMemberList">
+                    <i class="fa fa-users"/>
+                </div>
+                <div t-if="thread.allowCalls and !props.chatWindow.hidden" class="o-mail-ChatWindow-command d-flex align-items-center h-100 px-3 py-0 m-0 opacity-50 opacity-100-hover" title="Show Call Settings" t-on-click.stop="toggleSettings">
+                    <i class="fa fa-gear"/>
+                </div>
+                <div t-if="!env.isSmall" class="o-mail-ChatWindow-command d-flex align-items-center h-100 px-3 py-0 m-0 opacity-50 opacity-100-hover" title="Open in Discuss" t-on-click.stop="expand">
+                    <i class="fa fa-expand"/>
+                </div>
+            </t>
+            <div class="o-mail-ChatWindow-command d-flex align-items-center h-100 px-3 opacity-50 opacity-100-hover" title="Close chat window" t-on-click.stop="() => this.close()">
+                <i class="fa fa-close"></i>
+            </div>
+        </div>
+        <div t-if="!props.chatWindow.folded" class="o-mail-ChatWindow-content d-flex flex-column h-100 overflow-auto" t-ref="content">
+            <t t-if="thread">
+                <CallSettings t-if="state.activeMode === 'in-settings'" thread="thread" className="'flex-grow-1'"/>
+                <ChannelMemberList t-elif="state.activeMode === 'member-list'" thread="thread" className="'o-mail-Discuss-channelMemberList flex-shrink-0 border-start w-100 h-100'"/>
+                <ChannelInvitation t-elif="state.activeMode === 'add-users'" thread="thread" chatState="state"/>
+                <t t-else="">
+                    <Call t-if="Object.keys(thread.rtcSessions).length > 0" thread="thread" compact="true"/>
+                    <Thread isInChatWindow="true" thread="thread" t-key="thread.localId" messageEdition="messageEdition" messageHighlight="messageHighlight" messageToReplyTo="messageToReplyTo"/>
+                    <Composer composer="thread.composer" autofocus="props.chatWindow.autofocus" mode="'compact'" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" highlightReplyTo="messageHighlight.highlightMessage" dropzoneRef="contentRef"/>
+                </t>
+            </t>
+            <div t-else="" class="d-flex align-items-center m-3">
+                <span class="flex-shrink-0 me-2">To :</span>
+                <ChannelSelector category="store.discuss.chats" onValidate="() => chatWindowService.closeNewMessage()" multiple="false" autofocus="true"/>
+            </div>
+        </div>
+    </div>
+</t>
+
+</templates>

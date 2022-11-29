@@ -160,7 +160,10 @@ function patchBrowserWithCleanup() {
                 return interval;
             },
             navigator: {
+                mediaDevices: browser.navigator.mediaDevices,
+                permissions: browser.navigator.permissions,
                 userAgent: browser.navigator.userAgent.replace(/\([^)]*\)/, "(X11; Linux x86_64)"),
+                sendBeacon: () => {},
             },
             // in tests, we never want to interact with the real url or reload the page
             location: mockLocation,

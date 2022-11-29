@@ -1,9 +1,15 @@
 /** @odoo-module **/
 
-import { nextTick } from "@mail/utils/utils";
-
 import { browser } from "@web/core/browser/browser";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
+
+/**
+ * Wait a task tick, so that anything in micro-task queue that can be processed
+ * is processed.
+ */
+async function nextTick() {
+    await new Promise(setTimeout);
+}
 
 export function getAdvanceTime() {
     // list of timeout ids that have timed out.

@@ -47,25 +47,15 @@
     'application': True,
     'post_init_hook': '_install_hr_localization',
     'assets': {
-        'mail.assets_messaging': [
-            'hr/static/src/models/*.js',
-        ],
         'web.assets_backend': [
-            'hr/static/src/views/**/*.js',
-            'hr/static/src/components/**/*',
-            'hr/static/src/user_menu/*.js',
-            'hr/static/src/scss/*.scss',
-            'hr/static/src/js/m2x_avatar_employee.js',
-            'hr/static/src/js/standalone_m2o_avatar_employee.js',
-            'hr/static/src/xml/*.xml',
+            'hr/static/src/**/*',
         ],
         'web.qunit_suite_tests': [
-            'hr/static/tests/helpers/*.js',
-            'hr/static/tests/*.js',
+            'hr/static/tests/**/*',
+            ('remove', 'hr/static/tests/tours/**/*'),
         ],
         'web.assets_tests': [
-            'hr/static/tests/tours/hr_employee_flow.js',
-            'hr/static/tests/tours/user_modify_own_profile_tour.js',
+            'hr/static/tests/tours/**/*',
         ],
     },
     'license': 'LGPL-3',

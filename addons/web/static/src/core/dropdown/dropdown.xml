@@ -33,7 +33,7 @@
       </button>
       <div
         t-if="state.open"
-        class="o-dropdown--menu dropdown-menu d-block"
+        t-attf-class="o-dropdown--menu dropdown-menu {{ props.menuDisplay }}"
         t-att-class="props.menuClass"
         role="menu"
         t-ref="menuRef"

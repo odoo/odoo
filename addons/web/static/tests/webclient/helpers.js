@@ -292,6 +292,7 @@ export async function createWebClient(params) {
     const WebClientClass = params.WebClientClass || WebClient;
     const target = params && params.target ? params.target : getFixture();
     const wc = await mount(WebClientClass, target, { env });
+    odoo.__WOWL_DEBUG__ = { root: wc };
     target.classList.add("o_web_client"); // necessary for the stylesheet
     registerCleanup(() => {
         target.classList.remove("o_web_client");

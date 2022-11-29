@@ -25,12 +25,8 @@
     'installable': True,
     'application': True,
     'assets': {
-        'mail.assets_messaging': [
-            'note/static/src/models/*.js',
-        ],
         'web.assets_backend': [
-            'note/static/src/components/**/*',
-            'note/static/src/scss/note.scss',
+            'note/static/src/**/*',
         ],
         'web.qunit_suite_tests': [
             'note/static/tests/**/*',

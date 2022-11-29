@@ -22,6 +22,7 @@ try {
 
 export const browser = {
     addEventListener: window.addEventListener.bind(window),
+    Audio: window.Audio,
     removeEventListener: window.removeEventListener.bind(window),
     setTimeout: window.setTimeout.bind(window),
     clearTimeout: window.clearTimeout.bind(window),

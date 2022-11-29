@@ -1,0 +1,67 @@
+.o-mail-Composer {
+    grid-template-areas:
+        "sidebar-header core-header"
+        "sidebar-main core-main"
+        "sidebar-footer core-footer";
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr auto;
+
+    &.o-hasSelfAvatar {
+        grid-template-columns: $o-mail-Message-sidebarWidth 1fr;
+    }
+
+    .o-mail-Composer-sidebarMain {
+        width: 48px;
+        justify-self: center;
+    }
+
+    .o-mail-Composer-coreHeader {
+        grid-area: core-header;
+    }
+
+    .o-mail-Composer-coreMain {
+        grid-area: core-main;
+    }
+
+    .o-mail-Composer-sidebarMain {
+        grid-area: sidebar-main;
+    }
+
+    .o-mail-Composer-footer {
+        grid-area: core-footer;
+    }
+}
+
+.o-mail-Composer-input {
+    padding-top: 10px; // carefully crafted to have the text in the middle in chat window
+    padding-bottom: 10px;
+    max-height: 100px;
+    resize: none;
+
+    .o-extended & {
+        max-height: 400px;
+    }
+
+    &::placeholder {
+        @include text-truncate();
+    }
+}
+
+.o-mail-Composer-avatar {
+    width: $o-mail-Avatar-size;
+    height: $o-mail-Avatar-size;
+}
+
+.o-fast-popover {
+    animation: 0.02s slide-right !important;
+    animation: 0.02s slide-left !important;
+    animation: 0.02s slide-top !important;
+    animation: 0.02s slide-bottom !important;
+}
+
+.o-mail-Composer-fake {
+    height: 0;
+    top: -10000px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
