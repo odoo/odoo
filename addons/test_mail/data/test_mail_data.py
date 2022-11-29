@@ -214,6 +214,36 @@ Content-Type: text/html;
 --Apple-Mail=_9331E12B-8BD2-4EC7-B53E-01F3FBEC9227--
 """
 
+
+MAIL_MULTIPART_BINARY_OCTET_STREAM = """X-Original-To: raoul@grosbedon.fr
+Delivered-To: raoul@grosbedon.fr
+Received: by mail1.grosbedon.com (Postfix, from userid 10002)
+    id E8166BFACA; Fri, 10 Nov 2021 06:04:01 +0200 (CEST)
+From: "Bruce Wayne" <bruce@wayneenterprises.com>
+Content-Type: multipart/alternative;
+ boundary="Apple-Mail=_9331E12B-8BD2-4EC7-B53E-01F3FBEC9227"
+Message-Id: <6BB1FAB2-2104-438E-9447-07AE2C8C4A92@sexample.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \\(1878.6\\))
+
+--Apple-Mail=_9331E12B-8BD2-4EC7-B53E-01F3FBEC9227
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+    charset=us-ascii
+
+The attached file contains b"Hello world\\n"
+
+--Apple-Mail=_9331E12B-8BD2-4EC7-B53E-01F3FBEC9227
+Content-Disposition: attachment;
+ filename="hello_world.dat"
+Content-Type: binary/octet-stream;
+ name="hello_world.dat"
+Content-Transfer-Encoding: base64
+
+SGVsbG8gd29ybGQK
+--Apple-Mail=_9331E12B-8BD2-4EC7-B53E-01F3FBEC9227--
+"""
+
+
 MAIL_SINGLE_BINARY = """X-Original-To: raoul@grosbedon.fr
 Delivered-To: raoul@grosbedon.fr
 Received: by mail1.grosbedon.com (Postfix, from userid 10002)
