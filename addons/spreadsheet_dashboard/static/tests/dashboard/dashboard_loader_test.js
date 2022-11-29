@@ -31,7 +31,7 @@ async function createDashboardLoader(params = {}) {
             [dashboardId],
             ["raw"]
         );
-        return { data: record.raw, revisions: [] };
+        return { data: JSON.parse(record.raw), revisions: [] };
     });
 }
 
