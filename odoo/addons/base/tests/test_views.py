@@ -1738,7 +1738,7 @@ class TestViews(ViewCase):
         def _test_modifiers(what, expected):
             modifiers = {}
             if isinstance(what, dict):
-                transfer_field_to_modifiers(what, modifiers)
+                transfer_field_to_modifiers(what, modifiers, ['invisible', 'readonly', 'required'])
             else:
                 node = etree.fromstring(what) if isinstance(what, str) else what
                 transfer_node_to_modifiers(node, modifiers)

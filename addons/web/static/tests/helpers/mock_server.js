@@ -252,6 +252,7 @@ export class MockServer {
         }
         const editableView = editable && this._editableNode(doc, modelName);
         const onchangeAbleView = this._onchangeAbleView(doc);
+        const modifiersFromModel = this._modifiersFromModel(doc);
         const inTreeView = ["tree", "list"].includes(doc.tagName);
         const inFormView = doc.tagName === "form";
         // mock _postprocess_access_rights
@@ -286,7 +287,8 @@ export class MockServer {
                 }
                 const defaultValues = {};
                 const stateExceptions = {}; // what is this ?
-                ((editableView && modifiersNames) || ["invisible"]).forEach((attr) => {
+
+                modifiersFromModel.forEach((attr) => {
                     stateExceptions[attr] = [];
                     defaultValues[attr] = !!field[attr];
                 });
@@ -494,6 +496,14 @@ export class MockServer {
         } else if (node.tagName === "kanban") {
             return true;
         }
+    }
+
+    _modifiersFromModel(node) {
+        const modifiersNames = ['invisible'];
+        if (['kanban', 'tree', 'form'].includes(node.tagName)) {
+            modifiersNames.push(...['readonly', 'required']);
+        }
+        return modifiersNames;
     }
 
     /**
