@@ -25,7 +25,7 @@
             <!-- Remove customer accounts setting from sales settings tab -->
             <!-- It must not be in the view at all to make sure settings can be saved
                 (because auth_signup_uninvited is specified as required) -->
-            <xpath expr="//div[@id='auth_signup_documents']" position="replace"></xpath>
+            <xpath expr="//setting[@id='auth_signup_documents']" position="replace"></xpath>
         </field>
     </record>
 
@@ -34,428 +34,192 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="website.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <div id="website_info_settings" position="after">
-                <h2>Shop - Checkout Process</h2>
-                <div class="row mt16 o_settings_container" id="website_shop_checkout">
-                    <div class="col-12 col-lg-6 o_setting_box" id="cart_redirect_setting">
-                        <div class="o_setting_right_pane">
-                            <label for="add_to_cart_action" string="Add to Cart"/>
-                            <div class="text-muted">
-                                What should be done on "Add to Cart"?
-                            </div>
-                            <div class="content-group">
-                                <div class="row mt16 ms-4">
-                                    <field name="add_to_cart_action" widget="radio"/>
-                                </div>
+            <block id="website_info_settings" position="after">
+                <block title="Shop - Checkout Process" id="website_shop_checkout">
+                    <setting id="cart_redirect_setting" string="Add to Cart" help="What should be done on &quot;Add to Cart&quot;?">
+                        <div class="content-group">
+                            <div class="row mt16 ms-4">
+                                <field name="add_to_cart_action" widget="radio"/>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-12 col-lg-6 o_setting_box">
-                        <div class="o_setting_left_pane">
-                            <field name="enabled_buy_now_button"/>
+                    </setting>
+                    <setting help="Instant checkout, instead of adding to cart">
+                        <field name="enabled_buy_now_button"/>
+                    </setting>
+                    <setting help="Add a customizable form during checkout (after address)">
+                        <field name="enabled_extra_checkout_step"/>
+                        <div class="row mt8 ms-4" attrs="{'invisible': [('enabled_extra_checkout_step', '=', False)]}">
+                            <button type="object" name="action_open_extra_info" string="Configure Form " class="btn-link" icon="fa-arrow-right"/>
                         </div>
-                        <div class="o_setting_right_pane">
-                            <label for="enabled_buy_now_button"/>
-                            <div class="text-muted">
-                                Instant checkout, instead of adding to cart
+                    </setting>
+                    <setting id="digital_content_setting" title="Provide customers with product-specific links or downloadable content in the confirmation page of the checkout process if the payment gets through. To do so, attach some files to a product using the new Files button and publish them." help="Add download link for customers at the end of checkout">
+                        <field name="module_website_sale_digital"/>
+                    </setting>
+                    <setting string="Assignment" help="Assignment of online orders">
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label class="o_light_label col-lg-3" string="Sales Team" for="salesteam_id"/>
+                                <field name="salesteam_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s" />
+                            </div>
+                            <div class="row">
+                                <label class="o_light_label col-lg-3" for="salesperson_id"/>
+                                <field name="salesperson_id"/>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-12 col-lg-6 o_setting_box">
-                        <div class="o_setting_left_pane">
-                            <field name="enabled_extra_checkout_step"/>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label for="enabled_extra_checkout_step"/>
-                            <div class="text-muted">
-                                Add a customizable form during checkout (after address)
-                            </div>
-                            <div class="row mt8 ms-4" attrs="{'invisible': [('enabled_extra_checkout_step', '=', False)]}">
-                                <button type="object" name="action_open_extra_info" string="Configure Form " class="btn-link" icon="fa-arrow-right"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-6 o_setting_box" id="digital_content_setting" title="Provide customers with product-specific links or downloadable content in the confirmation page of the checkout process if the payment gets through. To do so, attach some files to a product using the new Files button and publish them.">
-                        <div class="o_setting_left_pane">
-                            <field name="module_website_sale_digital"/>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label for="module_website_sale_digital"/>
-                            <div class="text-muted">
-                                Add download link for customers at the end of checkout
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-6 o_setting_box">
-                        <div class="o_setting_right_pane">
-                            <span class="o_form_label">Assignment</span>
-                            <div class="text-muted">
-                                Assignment of online orders
-                            </div>
-                            <div class="content-group">
-                                <div class="row mt16">
-                                    <label class="o_light_label col-lg-3" string="Sales Team" for="salesteam_id"/>
-                                    <field name="salesteam_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s" />
-                                </div>
-                                <div class="row">
-                                    <label class="o_light_label col-lg-3" for="salesperson_id"/>
-                                    <field name="salesperson_id"/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-6 o_setting_box">
-                        <div class="o_setting_left_pane">
-                            <field name="website_sale_enabled_portal_reorder_button"/>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label for="website_sale_enabled_portal_reorder_button"/>
-                            <div class="text-muted">
-                                Allow your customer to add products from previous order in their cart.
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    </setting>
+                    <setting help="Allow your customer to add products from previous order in their cart.">
+                        <field name="website_sale_enabled_portal_reorder_button"/>
+                    </setting>
+                </block>
 
-                <h2>Shop - Products</h2>
-                <div class="row mt16 o_settings_container" id="sale_product_catalog_settings">
-                    <div class="col-12 col-lg-6 o_setting_box" id="website_tax_inclusion_setting">
-                        <div class="o_setting_right_pane">
-                            <label string="Display Product Prices" for="show_line_subtotals_tax_selection"/>
-                            <div class="text-muted">
-                                Prices displayed on your eCommerce
-                            </div>
-                            <div class="content-group">
-                                <div class="mt16">
-                                    <field name="show_line_subtotals_tax_selection" class="o_light_label" widget="radio"/>
-                                    <field name="group_show_line_subtotals_tax_included" invisible="1"/>
-                                    <field name="group_show_line_subtotals_tax_excluded" invisible="1"/>
-                                </div>
+                <block title="Shop - Products" id="sale_product_catalog_settings">
+                    <setting id="website_tax_inclusion_setting" string="Display Product Prices" help="Prices displayed on your eCommerce">
+                        <div class="content-group">
+                            <div class="mt16">
+                                <field name="show_line_subtotals_tax_selection" class="o_light_label" widget="radio"/>
+                                <field name="group_show_line_subtotals_tax_included" invisible="1"/>
+                                <field name="group_show_line_subtotals_tax_excluded" invisible="1"/>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-12 col-lg-6 o_setting_box" id="pricelists_setting"  title="With the first mode you can set several prices in the product config form (from Sales tab). With the second one, you set prices and computation rules from Pricelists.">
-                        <div class="o_setting_left_pane">
-                            <field name="group_product_pricelist"/>
+                    </setting>
+                    <setting id="pricelists_setting" title="With the first mode you can set several prices in the product config form (from Sales tab). With the second one, you set prices and computation rules from Pricelists." help="Manage pricelists to apply specific prices per country, customer, products, etc">
+                        <field name="group_product_pricelist"/>
+                        <div class="content-group mt16" attrs="{'invisible': [('group_product_pricelist', '=', False)]}">
+                            <field name="group_sale_pricelist" invisible="1"/>
+                            <field name="group_product_pricelist" invisible="1"/>
+                            <field name="product_pricelist_setting" class="o_light_label w-75" widget="radio"/>
                         </div>
-                        <div class="o_setting_right_pane">
-                            <label for="group_product_pricelist"/>
-                            <div class="text-muted">
-                                Manage pricelists to apply specific prices per country, customer, products, etc
-                            </div>
-                            <div class="content-group mt16" attrs="{'invisible': [('group_product_pricelist', '=', False)]}">
-                                <field name="group_sale_pricelist" invisible="1"/>
-                                <field name="group_product_pricelist" invisible="1"/>
-                                <field name="product_pricelist_setting" class="o_light_label w-75" widget="radio"/>
-                            </div>
-                            <div attrs="{'invisible': [('group_product_pricelist', '=', False)]}">
-                                <button type="action" name="%(product.product_pricelist_action2)d" string="Pricelists" class="btn-link" icon="fa-arrow-right"/>
-                            </div>
+                        <div attrs="{'invisible': [('group_product_pricelist', '=', False)]}">
+                            <button type="action" name="%(product.product_pricelist_action2)d" string="Pricelists" class="btn-link" icon="fa-arrow-right"/>
                         </div>
-                    </div>
-                    <div class="col-12 col-lg-6 o_setting_box">
-                        <div class="o_setting_left_pane">
-                            <field name="group_product_price_comparison"/>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label for="group_product_price_comparison"/>
-                            <div class="text-muted">
-                                Add a strikethrough price, as a comparison
+                    </setting>
+                    <setting help="Add a strikethrough price, as a comparison">
+                        <field name="group_product_price_comparison"/>
+                    </setting>
+                    <setting id="ecom_uom_price_option_setting" string="Product Reference Price" help="Add a reference price per UoM on products (i.e $/kg), in addition to the sale price">
+                        <field name="group_show_uom_price"/>
+                    </setting>
+                    <setting id="product_attributes_setting" string="Product Variants" help="One product might have different attributes (size, color, ...)">
+                        <field name="group_product_variant"/>
+                        <div class="content-group" attrs="{'invisible': [('group_product_variant', '=', False)]}">
+                            <div class="mt8">
+                                <button type="action" name="%(product.attribute_action)d" string="Attributes" class="btn-link" icon="fa-arrow-right"/>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-12 col-lg-6 o_setting_box" id="ecom_uom_price_option_setting">
-                        <div class="o_setting_left_pane">
-                            <field name="group_show_uom_price"/>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label for="group_show_uom_price" string="Product Reference Price"/>
-                            <div class="text-muted">
-                                Add a reference price per UoM on products (i.e $/kg), in addition to the sale price
+                    </setting>
+                    <setting id="promotion_coupon_programs" title="Boost your sales with multiple kinds of programs: Coupons, Promotions, Gift Card, Loyalty. Specific conditions can be set (products, customers, minimum purchase amount, period). Rewards can be discounts (% or amount) or free products." string="Discounts, Loyalty &amp; Gift Card" help="Manage Promotions, coupons, loyalty cards, Gift cards &amp; eWallet">
+                        <field name="module_loyalty" />
+                    </setting>
+                    <setting id="wishlist_option_setting" help="Allow signed-in users to save product in a wishlist">
+                        <field name="module_website_sale_wishlist"/>
+                    </setting>
+                    <setting id="comparator_option_setting" string="Product Comparison Tool" help="Allow shoppers to compare products based on their attributes">
+                        <field name="module_website_sale_comparison"/>
+                    </setting>
+                    <setting id="hide_add_to_cart_setting" help="If product price equals 0, replace 'Add to Cart' by 'Contact us'.">
+                        <field name="website_sale_prevent_zero_price_sale"/>
+                        <div class="content-group" attrs="{'invisible': [('website_sale_prevent_zero_price_sale', '=', False)]}">
+                            <div class="row mt16">
+                                <label class="o_light_label col-lg-3" string="Button url" for="website_sale_contact_us_button_url"/>
+                                <field name="website_sale_contact_us_button_url"/>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-12 col-lg-6 o_setting_box" id="product_attributes_setting">
-                        <div class="o_setting_left_pane">
-                            <field name="group_product_variant"/>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label for="group_product_variant" string="Product Variants"/>
-                            <div class="text-muted">
-                                One product might have different attributes (size, color, ...)
-                            </div>
-                            <div class="content-group" attrs="{'invisible': [('group_product_variant', '=', False)]}">
-                                <div class="mt8">
-                                    <button type="action" name="%(product.attribute_action)d" string="Attributes" class="btn-link" icon="fa-arrow-right"/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-6 o_setting_box"
-                        id="promotion_coupon_programs"
-                        title="Boost your sales with multiple kinds of programs: Coupons, Promotions, Gift Card, Loyalty. Specific conditions can be set (products, customers, minimum purchase amount, period). Rewards can be discounts (% or amount) or free products.">
-                        <div class="o_setting_left_pane">
-                            <field name="module_loyalty" />
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label for="module_loyalty" string="Discounts, Loyalty &amp; Gift Card"/>
-                            <div class="text-muted" id="website_sale_loyalty">
-                                Manage Promotions, coupons, loyalty cards, Gift cards &amp; eWallet
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-6 o_setting_box" id="wishlist_option_setting">
-                        <div class="o_setting_left_pane">
-                            <field name="module_website_sale_wishlist"/>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label for="module_website_sale_wishlist"/>
-                            <div class="text-muted">
-                                Allow signed-in users to save product in a wishlist
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-6 o_setting_box" id="comparator_option_setting">
-                        <div class="o_setting_left_pane">
-                            <field name="module_website_sale_comparison"/>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label for="module_website_sale_comparison" string="Product Comparison Tool"/>
-                            <div class="text-muted">
-                                Allow shoppers to compare products based on their attributes
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-6 o_setting_box" id="hide_add_to_cart_setting">
-                          <div class="o_setting_left_pane">
-                            <field name="website_sale_prevent_zero_price_sale"/>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label for="website_sale_prevent_zero_price_sale"/>
-                            <div class="text-muted">
-                                If product price equals 0, replace 'Add to Cart' by 'Contact us'.
-                            </div>
-                            <div class="content-group" attrs="{'invisible': [('website_sale_prevent_zero_price_sale', '=', False)]}">
-                                <div class="row mt16">
-                                    <label class="o_light_label col-lg-3" string="Button url" for="website_sale_contact_us_button_url"/>
-                                    <field name="website_sale_contact_us_button_url"/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    </setting>
+                </block>
 
-                <h2>Shipping</h2>
-                <div class="row mt16 o_settings_container" id="sale_shipping_settings">
-                    <div class="col-12 col-lg-6 o_setting_box" id="shipping_address_setting">
-                        <div class="o_setting_left_pane">
-                            <field name="group_delivery_invoice_address"/>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label for="group_delivery_invoice_address"/>
-                            <div class="text-muted">
-                                Let the customer enter a shipping address
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-6 o_setting_box" id="delivery_method_setting">
-                        <div class="o_setting_left_pane">
-                            <field name="module_website_sale_delivery"/>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label string="Shipping Costs" for="module_website_sale_delivery"/>
-                            <div class="text-muted" id="msg_delivery_method_setting">
-                                Compute shipping costs on orders
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-6 o_setting_box" id="ups_provider_setting">
-                        <div class="o_setting_left_pane">
-                            <field name="module_delivery_ups" widget="upgrade_boolean"/>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label string="UPS" for="module_delivery_ups"/>
-                            <div class="text-muted" id="website_delivery_ups">
-                                Compute shipping costs and ship with UPS
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-6 o_setting_box" id="shipping_provider_dhl_setting">
-                        <div class="o_setting_left_pane">
-                            <field name="module_delivery_dhl" widget="upgrade_boolean"/>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label string="DHL Express Connector" for="module_delivery_dhl"/>
-                            <div class="text-muted" id="website_delivery_dhl">
-                                Compute shipping costs and ship with DHL
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-6 o_setting_box" id="shipping_provider_fedex_setting">
-                        <div class="o_setting_left_pane">
-                            <field name="module_delivery_fedex" widget="upgrade_boolean"/>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label string="FedEx" for="module_delivery_fedex"/>
-                            <div class="text-muted" id="website_delivery_fedex">
-                                Compute shipping costs and ship with FedEx
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-6 o_setting_box" id="shipping_provider_usps_setting">
-                        <div class="o_setting_left_pane">
-                            <field name="module_delivery_usps" widget="upgrade_boolean"/>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label string="USPS" for="module_delivery_usps"/>
-                            <div class="text-muted" id="website_delivery_usps">
-                                Compute shipping costs and ship with USPS
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-6 o_setting_box" id="shipping_provider_bpost_setting">
-                        <div class="o_setting_left_pane">
-                            <field name="module_delivery_bpost" widget="upgrade_boolean"/>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label string="bpost" for="module_delivery_bpost"/>
-                            <div class="text-muted" id="website_delivery_bpost">
-                                Compute shipping costs and ship with bpost
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-6 o_setting_box" id="shipping_provider_easypost_setting">
-                        <div class="o_setting_left_pane">
-                            <field name="module_delivery_easypost" widget="upgrade_boolean"/>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label string="Easypost" for="module_delivery_easypost"/>
-                            <div class="text-muted" id="website_delivery_easypost">
-                                Compute shipping cost and ship with Easypost
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-6 o_setting_box" id="shipping_provider_mondialrelay_setting">
-                        <div class="o_setting_left_pane">
-                            <field name="module_delivery_mondialrelay" widget="upgrade_boolean"/>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label string="Mondial Relay" for="module_delivery_mondialrelay"/>
-                            <div class="text-muted" id="website_delivery_mondialrelay">
-                                Let the customer select a Mondial Relay shipping point
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-6 o_setting_box" id="onsite_payment_setting">
-                        <div class="o_setting_left_pane">
-                            <field name="module_website_sale_picking"/>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label for="module_website_sale_picking"/>
-                            <div class="text-muted">
-                                Allow customers to pay in person at your stores
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <block title="Shipping" id="sale_shipping_settings">
+                    <setting id="shipping_address_setting" help="Let the customer enter a shipping address">
+                        <field name="group_delivery_invoice_address"/>
+                    </setting>
+                    <setting id="delivery_method_setting" string="Shipping Costs" help="Compute shipping costs on orders">
+                        <field name="module_website_sale_delivery"/>
+                    </setting>
+                    <setting id="ups_provider_setting" string="UPS" help="Compute shipping costs and ship with UPS">
+                        <field name="module_delivery_ups" widget="upgrade_boolean"/>
+                    </setting>
+                    <setting id="shipping_provider_dhl_setting" string="DHL Express Connector" help="Compute shipping costs and ship with DHL">
+                        <field name="module_delivery_dhl" widget="upgrade_boolean"/>
+                    </setting>
+                    <setting id="shipping_provider_fedex_setting" string="FedEx" help="Compute shipping costs and ship with FedEx">
+                        <field name="module_delivery_fedex" widget="upgrade_boolean"/>
+                    </setting>
+                    <setting id="shipping_provider_usps_setting" string="USPS" help="Compute shipping costs and ship with USPS">
+                        <field name="module_delivery_usps" widget="upgrade_boolean"/>
+                    </setting>
+                    <setting id="shipping_provider_bpost_setting" string="bpost" help="Compute shipping costs and ship with bpost">
+                        <field name="module_delivery_bpost" widget="upgrade_boolean"/>
+                    </setting>
+                    <setting id="shipping_provider_easypost_setting" string="Easypost" help="Compute shipping cost and ship with Easypost">
+                        <field name="module_delivery_easypost" widget="upgrade_boolean"/>
+                    </setting>
+                    <setting id="shipping_provider_mondialrelay_setting" string="Mondial Relay" help="Let the customer select a Mondial Relay shipping point">
+                        <field name="module_delivery_mondialrelay" widget="upgrade_boolean"/>
+                    </setting>
+                    <setting id="onsite_payment_setting" help="Allow customers to pay in person at your stores">
+                        <field name="module_website_sale_picking"/>
+                    </setting>
+                </block>
 
                 <field name='module_account' invisible="1"/>
-                <div attrs="{'invisible': [('module_account', '=', False)]}">
-                    <h2>Invoicing</h2>
-                    <div class="row mt16 o_settings_container" id="sale_invoicing_settings">
-                       <div class="col-12 col-lg-6 o_setting_box" id="invoicing_policy_setting" title="The mode selected here applies as invoicing policy of any new product created but not of products already existing.">
-                            <div class="o_setting_right_pane">
-                                <span class="o_form_label">Invoicing Policy</span>
-                                <div class="text-muted">
-                                    Issue invoices to customers
-                                </div>
-                                <div class="content-group">
-                                    <div class="mt16">
-                                        <field name="default_invoice_policy" class="o_light_label" widget="radio"/>
-                                    </div>
+                    <block title="Invoicing" id="sale_invoicing_settings" attrs="{'invisible': [('module_account', '=', False)]}">
+                        <setting id="invoicing_policy_setting" title="The mode selected here applies as invoicing policy of any new product created but not of products already existing." string="Invoicing Policy" help="Issue invoices to customers">
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="default_invoice_policy" class="o_light_label" widget="radio"/>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-12 col-lg-6 o_setting_box"
-                            id="automatic_invoice_generation"
-                            attrs="{'invisible': [('default_invoice_policy', '=', 'delivery')]}">
-                            <div class="o_setting_left_pane">
-                                <field name="automatic_invoice" nolabel="1"/>
+                        </setting>
+                        <setting id="automatic_invoice_generation" attrs="{'invisible': [('default_invoice_policy', '=', 'delivery')]}" help="Generate the invoice automatically when the online payment is confirmed">
+                            <field name="automatic_invoice" nolabel="1"/>
+                            <div  attrs="{'invisible': [('automatic_invoice','=',False)]}">
+                                <label for="invoice_mail_template_id" class="o_light_label"/>
+                                <field name="invoice_mail_template_id" class="oe_inline"/>
                             </div>
-                            <div class="o_setting_right_pane">
-                                <label for="automatic_invoice"/>
-                                <div class="text-muted">
-                                    Generate the invoice automatically when the online payment is confirmed
-                                </div>
-                                <div  attrs="{'invisible': [('automatic_invoice','=',False)]}">
-                                    <label for="invoice_mail_template_id" class="o_light_label"/>
-                                    <field name="invoice_mail_template_id" class="oe_inline"/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                        </setting>
+                    </block>
+            </block>
 
-            <div id="cart_redirect_setting" position="after">
-                <div id="website_login_documents" position="move"/>
-            </div>
-            <xpath expr="//div[@id='website_login_documents']/div[hasclass('o_setting_right_pane')]" position="replace">
-                <div class="o_setting_right_pane">
-                    <label for="account_on_checkout" string="Sign in/up at checkout"/>
-                    <div class="text-muted">
-                        "Optional" allows guests to register from the order confirmation email to track their order.
-                    </div>
-                    <div class="mt8 ms-4">
-                        <field name="account_on_checkout" class="w-75" widget="radio"/>
-                    </div>
-                </div>
+            <setting id="cart_redirect_setting" position="after">
+                <setting id="website_login_documents" position="move"/>
+            </setting>
+            <xpath expr="//setting[@id='website_login_documents']" position="replace">
+                <setting id="website_login_documents" title=" To send invitations in B2B mode, open a contact or select several ones in list view and click on 'Portal Access Management' option in the dropdown menu *Action*." string="Sign in/up at checkout" help="&quot;Optional&quot; allows guests to register from the order confirmation email to track their order.">
+                    <field name="account_on_checkout" class="w-75" widget="radio"/>
+                </setting>
             </xpath>
 
-            <div id="website_marketing_automation" position="after">
-                <div class="col-xs-12 col-lg-6 o_setting_box" id="abandoned_carts_setting" title="Customer needs to be signed in otherwise the mail address is not known.
+            <setting id="website_marketing_automation" position="after">
+                <setting
+                    id="abandoned_carts_setting"
+                    title="Customer needs to be signed in otherwise the mail address is not known.
     &#10;&#10;- If a potential customer creates one or more abandoned checkouts and then completes a sale before the recovery email gets sent, then the email won't be sent.
     &#10;&#10;- If user has manually sent a recovery email, the mail will not be sent a second time
     &#10;&#10;- If a payment processing error occurred when the customer tried to complete their checkout, then the email won't be sent.
     &#10;&#10;- If your shop does not support shipping to the customer's address, then the email won't be sent.
     &#10;&#10;- If none of the products in the checkout are available for purchase (empty inventory, for example), then the email won't be sent.
-    &#10;&#10;- If all the products in the checkout are free, and the customer does not visit the shipping page to add a shipping fee or the shipping fee is also free, then the email won't be sent.">
-                    <div class="o_setting_left_pane">
-                        <field name="send_abandoned_cart_email"/>
-                    </div>
-                    <div class="o_setting_right_pane">
-                        <span class="o_form_label">Automatically send abandoned checkout emails</span>
-                        <div class="text-muted">
-                            Mail only sent to signed in customers with items available for sale in their cart.
-                        </div>
+    &#10;&#10;- If all the products in the checkout are free, and the customer does not visit the shipping page to add a shipping fee or the shipping fee is also free, then the email won't be sent."
+                    string="Automatically send abandoned checkout emails"
+                    help="Mail only sent to signed in customers with items available for sale in their cart.">
+                    <field name="send_abandoned_cart_email"/>
 
-                        <div attrs="{'invisible': [('send_abandoned_cart_email', '=', False)]}" class="content-group" title="Carts are flagged as abandoned after this delay.">
-                            <div class="row mt16">
-                                <div class="col-12">
-                                  <label for="cart_abandoned_delay" string="Send after" class="o_light_label"/>
-                                  <field class="col-2" name="cart_abandoned_delay" widget="float_time" /> Hours.
-                                </div>
+                    <div attrs="{'invisible': [('send_abandoned_cart_email', '=', False)]}" class="content-group" title="Carts are flagged as abandoned after this delay.">
+                        <div class="row mt16">
+                            <div class="col-12">
+                                <label for="cart_abandoned_delay" string="Send after" class="o_light_label"/>
+                                <field class="col-2" name="cart_abandoned_delay" widget="float_time" /> Hours.
                             </div>
                         </div>
-                        <div attrs="{'invisible': [('send_abandoned_cart_email', '=', False)]}" class="mt8">
-                            <button type="object" name="action_open_abandoned_cart_mail_template" string="Customize Abandoned Email Template" class="btn-link" icon="fa-arrow-right"/>
-                        </div>
                     </div>
-                </div>
-            </div>
+                    <div attrs="{'invisible': [('send_abandoned_cart_email', '=', False)]}" class="mt8">
+                        <button type="object" name="action_open_abandoned_cart_mail_template" string="Customize Abandoned Email Template" class="btn-link" icon="fa-arrow-right"/>
+                    </div>
+                </setting>
+            </setting>
 
-            <xpath expr="//div[@id='google_analytics_setting']" position="after">
-                <div class="col-12 col-lg-6 o_setting_box" id="autocomplete_googleplaces_setting">
-                    <div class="o_setting_left_pane">
-                        <field name="module_website_sale_autocomplete"/>
-                    </div>
-                    <div class="o_setting_right_pane">
-                        <label for="module_website_sale_autocomplete"/>
-                        <div class="text-muted">
-                            Use Google Places API to validate addresses entered by your visitors
-                        </div>
-                    </div>
-                </div>
+            <xpath expr="//setting[@id='google_analytics_setting']" position="after">
+                <setting id="autocomplete_googleplaces_setting" help="Use Google Places API to validate addresses entered by your visitors">
+                    <field name="module_website_sale_autocomplete"/>
+                </setting>
             </xpath>
         </field>
     </record>

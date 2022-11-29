@@ -5,82 +5,43 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="website.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@id='website_marketing_automation']" position="after">
-                <div class="col-12 col-lg-6 o_setting_box" id="slides_install_setting" groups="website_slides.group_website_slides_manager">
-                    <div class="o_setting_right_pane">
-                        <span class="o_form_label">Slides</span>
-                        <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
-                        <div class="text-muted">
-                            Google Drive API Key
+            <xpath expr="//setting[@id='website_marketing_automation']" position="after">
+                <setting id="slides_install_setting" groups="website_slides.group_website_slides_manager">
+                    <span class="o_form_label">Slides</span>
+                    <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                    <div class="text-muted">
+                        Google Drive API Key
+                    </div>
+                    <div class="content-group">
+                        <div class="row mt16">
+                            <label for="website_slide_google_app_key" class="col-lg-3 o_light_label" string="API Key"/>
+                            <field name="website_slide_google_app_key" class="oe_inline"/>
                         </div>
-                        <div class="content-group">
-                            <div class="row mt16">
-                                <label for="website_slide_google_app_key" class="col-lg-3 o_light_label" string="API Key"/>
-                                <field name="website_slide_google_app_key" class="oe_inline"/>
-                            </div>
-                            <div class="oe_link">
-                                <a href="https://console.developers.google.com/flows/enableapi?apiid=drive,youtube"><span class="fa fa-arrow-right"/>
-                                    Create a Google Project and Get a Key
-                                </a>
-                            </div>
+                        <div class="oe_link">
+                            <a href="https://console.developers.google.com/flows/enableapi?apiid=drive,youtube"><span class="fa fa-arrow-right"/>
+                                Create a Google Project and Get a Key
+                            </a>
                         </div>
                     </div>
-                </div>
+                </setting>
             </xpath>
-            <xpath expr="//div[hasclass('settings')]" position="inside">
-                <div class="app_settings_block" data-string="eLearning" string="eLearning" data-key="website_slides" groups="website_slides.group_website_slides_manager">
-                    <h2>eLearning</h2>
-                    <div class="row mt16 o_settings_container" id="website_slides_selection_settings">
-                        <group>
-                            <div class="o_setting_box me-auto" id="website_slide_install_website_slides_survey" colspan="4">
-                                <div class="o_setting_left_pane">
-                                    <field name="module_website_slides_survey"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="module_website_slides_survey"/>
-                                    <div class="text-muted">
-                                        Evaluate the knowledge of your Attendees and certify their skills.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="o_setting_box" id="website_slides_install_sale_slides" colspan="4">
-                                <div class="o_setting_left_pane">
-                                    <field name="module_website_sale_slides"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="module_website_sale_slides" string="Paid Courses"/>
-                                    <div class="text-muted">
-                                        Sell access to your courses on your website and track revenues.
-                                    </div>
-                                </div>
-                            </div>
-                        </group>
-                        <group>
-                            <div class="o_setting_box" id="website_slides_install_mass_mailing_slides" colspan="4">
-                                <div class="o_setting_left_pane">
-                                    <field name="module_mass_mailing_slides"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="module_mass_mailing_slides"/>
-                                    <div class="text-muted">
-                                        Update all your Attendees at once through mass mailings.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="o_setting_box me-auto" id="website_slide_install_website_slides_forum" colspan="4">
-                                <div class="o_setting_left_pane">
-                                    <field name="module_website_slides_forum"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="module_website_slides_forum"/>
-                                    <div class="text-muted me-auto">
-                                        Create a community and let Attendees answer each others' questions.
-                                    </div>
-                                </div>
-                            </div>
-                        </group>
-                    </div>
-                </div>
+            <xpath expr="//form" position="inside">
+                <app data-string="eLearning" string="eLearning" name="website_slides" groups="website_slides.group_website_slides_manager">
+                    <block title="eLearning" id="website_slides_selection_settings">
+                        <setting id="website_slide_install_website_slides_survey" colspan="4" help="Evaluate the knowledge of your Attendees and certify their skills.">
+                            <field name="module_website_slides_survey"/>
+                        </setting>
+                        <setting id="website_slides_install_sale_slides" colspan="4" string="Paid Courses" help="Sell access to your courses on your website and track revenues.">
+                            <field name="module_website_sale_slides"/>
+                        </setting>
+                        <setting id="website_slides_install_mass_mailing_slides" colspan="4" help="Update all your Attendees at once through mass mailings.">
+                            <field name="module_mass_mailing_slides"/>
+                        </setting>
+                        <setting id="website_slide_install_website_slides_forum" colspan="4" help="Create a community and let Attendees answer each others' questions.">
+                            <field name="module_website_slides_forum"/>
+                        </setting>
+                    </block>
+                </app>
             </xpath>
         </field>
     </record>

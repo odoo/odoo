@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.SettingsPage" owl="1">
-        <div class="settings_tab" t-if="!env.isSmall or state.search.value.length === 0">
-            <t t-foreach="props.modules" t-as="module" t-key="module.key">
-                <div class="tab" t-if="!module.isVisible" t-att-class="(state.selectedTab === module.key and state.search.value.length === 0) ? 'selected': ''" t-att-data-key="module.key" role="tab" t-on-click="() => this.onSettingTabClick(module.key)">
-                    <div class="icon d-none d-md-block" t-attf-style="background : url('{{module.imgurl}}') no-repeat center;background-size:contain;"/> <span class="app_name"><t t-esc="module.string"/></span>
-                </div>
-            </t>
-        </div>
-        <ActionSwiper
-                onRightSwipe = " hasRightSwipe() ? {
-                    action: onRightSwipe.bind(this),
-                } : undefined"
-                onLeftSwipe = " hasLeftSwipe() ? {
-                    action: onLeftSwipe.bind(this),
-                } : undefined"
-                animationOnMove="false"
-                animationType="'forwards'"
-                swipeDistanceRatio="6">
-            <div class="settings" t-ref="settings">
-                <t t-slot="NoContentHelper" t-if="props.slots['NoContentHelper'].isVisible"/>
-                <t t-slot="default" selectedTab="state.selectedTab"/>
+        <div class="o_setting_container">
+            <div class="settings_tab" t-if="!env.isSmall or state.search.value.length === 0">
+                <t t-foreach="props.modules" t-as="module" t-key="module.key">
+                    <div class="tab" t-if="!module.isVisible" t-att-class="(state.selectedTab === module.key and state.search.value.length === 0) ? 'selected': ''" t-att-data-key="module.key" role="tab" t-on-click="() => this.onSettingTabClick(module.key)">
+                        <div class="icon d-none d-md-block" t-attf-style="background : url('{{module.imgurl}}') no-repeat center;background-size:contain;"/> <span class="app_name"><t t-esc="module.string"/></span>
+                    </div>
+                </t>
             </div>
-        </ActionSwiper>
+            <ActionSwiper
+                    onRightSwipe = " hasRightSwipe() ? {
+                        action: onRightSwipe.bind(this),
+                    } : undefined"
+                    onLeftSwipe = " hasLeftSwipe() ? {
+                        action: onLeftSwipe.bind(this),
+                    } : undefined"
+                    animationOnMove="false"
+                    animationType="'forwards'"
+                    swipeDistanceRatio="6">
+                <div class="settings" t-ref="settings">
+                    <t t-slot="NoContentHelper" t-if="props.slots['NoContentHelper'].isVisible"/>
+                    <t t-slot="default" selectedTab="state.selectedTab"/>
+                </div>
+            </ActionSwiper>
+        </div>
     </t>
 </templates>

@@ -6,134 +6,52 @@
             <field name="priority" eval="50"/>
             <field name="inherit_id" ref="base.res_config_settings_view_form" />
             <field name="arch" type="xml">
-            <xpath expr="//div[hasclass('settings')]" position="inside">
-                <div class="app_settings_block" data-string="Project" string="Project" data-key="project" groups="project.group_project_manager">
-                        <h2>Tasks Management</h2>
-                        <div class="row mt16 o_settings_container" id="tasks_management">
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="group_subtask_project"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="group_subtask_project"/>
-                                    <div class="text-muted">
-                                        Split your tasks to organize your work into sub-milestones
+                <xpath expr="//form" position="inside">
+                    <app data-string="Project" string="Project" name="project" groups="project.group_project_manager">
+                        <block title="Tasks Management" id="tasks_management">
+                            <setting help="Split your tasks to organize your work into sub-milestones">
+                                <field name="group_subtask_project"/>
+                            </setting>
+                            <setting id="recurring_tasks_setting" help="Auto-generate tasks for regular activities">
+                                <field name="group_project_recurring_tasks"/>
+                            </setting>
+                            <setting id="task_dependencies_setting" help="Determine the order in which to perform tasks">
+                                <field name="group_project_task_dependencies"/>
+                            </setting>
+                            <setting id="project_stages" help="Track the progress of your projects">
+                                <field name="group_project_stages"/>
+                                <div class="content-group" attrs="{'invisible': [('group_project_stages', '=', False)]}">
+                                    <div class="mt8">
+                                        <button name="%(project.project_project_stage_configure)d" icon="fa-arrow-right" type="action" string="Configure Stages" class="btn-link"/>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="recurring_tasks_setting">
-                                <div class="o_setting_left_pane">
-                                    <field name="group_project_recurring_tasks"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="group_project_recurring_tasks"/>
-                                    <div class="text-muted">
-                                        Auto-generate tasks for regular activities
+                            </setting>
+                            <setting id="project_milestone" help="Track major progress points that must be reached to achieve success">
+                                <field name="group_project_milestone"/>
+                            </setting>
+                        </block>
+                        <block title="Time Management" name="project_time">
+                            <setting id="log_time_tasks_setting" help="Track time spent on projects and tasks">
+                                <field name="module_hr_timesheet"/>
+                            </setting>
+                            <setting name="project_time_management" help="Plan resource allocation across projects and estimate deadlines more accurately">
+                                <field name="module_project_forecast" widget="upgrade_boolean"/>
+                            </setting>
+                        </block>
+                        <block title="Analytics" name="analytic">
+                            <setting id="track_customer_satisfaction_setting" help="Track customer satisfaction on tasks">
+                                <field name="group_project_rating"/>
+                                <div class="content-group" attrs="{'invisible': [('group_project_rating', '=', False)]}">
+                                    <div class="mt16">
+                                        <button name="%(project.open_task_type_form)d" context="{'project_id':id}" icon="fa-arrow-right" type="action" string="Set a Rating Email Template on Stages" class="btn-link"/>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="task_dependencies_setting">
-                                <div class="o_setting_left_pane">
-                                    <field name="group_project_task_dependencies"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="group_project_task_dependencies"/>
-                                    <div class="text-muted">
-                                        Determine the order in which to perform tasks
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="project_stages">
-                                <div class="o_setting_left_pane">
-                                    <field name="group_project_stages"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="group_project_stages"/>
-                                    <div class="text-muted">
-                                        Track the progress of your projects
-                                    </div>
-                                    <div class="content-group" attrs="{'invisible': [('group_project_stages', '=', False)]}">
-                                        <div class="mt8">
-                                            <button name="%(project.project_project_stage_configure)d" icon="fa-arrow-right" type="action" string="Configure Stages" class="btn-link"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="project_milestone">
-                                <div class="o_setting_left_pane">
-                                    <field name="group_project_milestone"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="group_project_milestone"/>
-                                    <div class="text-muted">
-                                        Track major progress points that must be reached to achieve success
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <h2>Time Management</h2>
-                        <div class="row mt16 o_settings_container" name="project_time">
-                            <div class="col-12 col-lg-6 o_setting_box" id="log_time_tasks_setting">
-                                <div class="o_setting_left_pane">
-                                    <field name="module_hr_timesheet"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="module_hr_timesheet"/>
-                                    <div class="text-muted">
-                                        Track time spent on projects and tasks
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box" name="project_time_management">
-                                <div class="o_setting_left_pane">
-                                    <field name="module_project_forecast" widget="upgrade_boolean"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="module_project_forecast"/>
-                                    <div class="text-muted" name="project_forecast_msg">
-                                        Plan resource allocation across projects and estimate deadlines more accurately
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <h2 name="section_analytics">Analytics</h2>
-                        <div class="row mt16 o_settings_container" name="analytic">
-                            <div class="col-12 col-lg-6 o_setting_box" id="track_customer_satisfaction_setting">
-                                <div class="o_setting_left_pane">
-                                    <field name="group_project_rating"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="group_project_rating"/>
-                                    <div class="text-muted">
-                                        Track customer satisfaction on tasks
-                                    </div>
-                                    <div class="content-group" attrs="{'invisible': [('group_project_rating', '=', False)]}">
-                                        <div class="mt16">
-                                            <button name="%(project.open_task_type_form)d" context="{'project_id':id}" icon="fa-arrow-right" type="action" string="Set a Rating Email Template on Stages" class="btn-link"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box"
-                                 id="default_plan_setting"
-                                 groups="analytic.group_analytic_accounting"
-                                 title="Track the profitability of your projects. Any project, its tasks and timesheets are linked to an analytic account and any analytic account belongs to a plan.">
-                                <div class="o_setting_left_pane"/>
-                                <div class="o_setting_right_pane">
-                                    <label for="analytic_plan_id"/>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
-                                    <div class="text-muted">
-                                        Assign each new project to this plan
-                                    </div>
-                                    <div class="content-group">
-                                        <div class="mt16">
-                                            <field name="analytic_plan_id"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                            </setting>
+                            <setting id="default_plan_setting" groups="analytic.group_analytic_accounting" help="Assign each new project to this plan" company_dependent="1" title="Track the profitability of your projects. Any project, its tasks and timesheets are linked to an analytic account and any analytic account belongs to a plan.">
+                                <field name="analytic_plan_id"/>
+                            </setting>
+                        </block>
+                    </app>
                 </xpath>
             </field>
         </record>

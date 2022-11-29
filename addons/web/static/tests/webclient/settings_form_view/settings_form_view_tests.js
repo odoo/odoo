@@ -69,69 +69,33 @@ QUnit.module("SettingsFormView", (hooks) => {
             serverData,
             arch: `
                 <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
-                    <div class="o_setting_container">
-                        <div class="settings">
-                            <div class="app_settings_block" string="CRM" data-key="crm">
-                                <div class="app_settings_header pt-1 pb-1" style="background-color: #FEF0D0;">
-                                    <div class="col-xs-12 col-md-6 ms-0 o_setting_box">
-                                        <div class="o_setting_right_pane border-start-0 ms-0 ps-0">
-                                            <div class="content-group">
-                                                <div class="row flex-row flex-nowrap mt8 align-items-center">
-                                                    <label class="col text-nowrap ml8 flex-nowrap" string="Foo" for="foo_config_id"/>
-                                                    <field name="foo" title="Foo?."/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <h2>Title of group Bar</h2>
-                                <div class="row mt16 o_settings_container">
-                                    <div class="col-12 col-lg-6 o_setting_box">
-                                        <div class="o_setting_left_pane">
-                                            <field name="bar"/>
-                                        </div>
-                                        <div class="o_setting_right_pane">
-                                            <label for="bar"/>
-                                            <div class="text-muted">this is bar</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-lg-6 o_setting_box">
-                                        <div class="o_setting_left_pane">
-                                            <field name="bar"/>
-                                        </div>
-                                        <div class="o_setting_right_pane">
-                                            <label for="bar" string="This is Big BAR"/>
-                                            <div class="text-muted">this is big bar</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <h2>Title of group Foo</h2>
-                                <div class="row mt16 o_settings_container">
-                                    <div class="col-12 col-lg-6 o_setting_box">
-                                        <div class="o_setting_left_pane">
-                                            <field name="foo"/>
-                                        </div>
-                                        <div class="o_setting_right_pane">
-                                            <span class="o_form_label">Foo</span>
-                                            <div class="text-muted">this is foo</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <h2 attrs="{'invisible': [('bar','=',False)]}">Hide group Foo</h2>
-                                <div class="row mt16 o_settings_container" attrs="{'invisible': [('bar','=',False)]}">
-                                    <div class="col-12 col-lg-6 o_setting_box">
-                                        <div class="o_setting_left_pane">
-                                            <field name="foo"/>
-                                        </div>
-                                        <div class="o_setting_right_pane">
-                                            <span class="o_form_label">Hide Foo</span>
-                                            <div class="text-muted">this is hide foo</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <app string="CRM" name="crm">
+                        <setting type="header" string="Foo">
+                            <field name="foo" title="Foo?."/>
+                            <button name="nameAction" type="object" string="Button" class="col-auto btn-link ms-2 text-nowrap" style="line-height: 0.5;"/>
+                        </setting>
+                        <block title="Title of group Bar">
+                            <setting help="this is bar" documentation="/applications/technical/web/settings/this_is_a_test.html">
+                                <field name="bar"/>
+                            </setting>
+                            <setting string="This is Big BAR" help="this is big bar">
+                                <field name="bar"/>
+                            </setting>
+                        </block>
+                        <block title="Title of group Foo">
+                            <setting help="this is foo">
+                                <field name="foo"/>
+                            </setting>
+                            <setting string="Personalize setting" help="this is full personalize setting">
+                                <div>This is a different setting</div>
+                            </setting>
+                        </block>
+                        <block title="Hide group Foo" attrs="{'invisible': [('bar','=',False)]}">
+                            <setting string="Hide Foo" help="this is hide foo">
+                                <field name="foo"/>
+                            </setting>
+                        </block>
+                    </app>
                 </form>`,
         });
 
@@ -146,12 +110,14 @@ QUnit.module("SettingsFormView", (hooks) => {
             "res.config.settings settings show"
         );
         assert.deepEqual(
-            [...target.querySelectorAll(".settings .o_form_label")].map((x) => x.textContent),
-            ["Bar", "This is Big BAR", "Foo"]
+            [...target.querySelectorAll(".settings .o_settings_container .o_form_label")].map(
+                (x) => x.textContent
+            ),
+            ["Bar", "This is Big BAR", "Foo", "Personalize setting"]
         );
         assert.deepEqual(
             [...target.querySelectorAll(".settings .text-muted")].map((x) => x.textContent),
-            ["this is bar", "this is big bar", "this is foo"]
+            ["this is bar", "this is big bar", "this is foo", "this is full personalize setting"]
         );
         assert.deepEqual(
             [...target.querySelectorAll(".settings h2:not(.d-none)")].map((x) => x.textContent),
@@ -166,6 +132,10 @@ QUnit.module("SettingsFormView", (hooks) => {
         assert.containsOnce(
             target,
             ".app_settings_block:not(.d-none) .app_settings_header .o_setting_box"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_setting_box a").href,
+            "https://www.odoo.com/documentation/1.0/applications/technical/web/settings/this_is_a_test.html"
         );
 
         await editSearch(target, "Hello there");
@@ -188,7 +158,9 @@ QUnit.module("SettingsFormView", (hooks) => {
             "b word highlighted"
         );
         assert.deepEqual(
-            [...target.querySelectorAll(".o_setting_box .o_form_label")].map((x) => x.textContent),
+            [...target.querySelectorAll(".o_settings_container .o_setting_box .o_form_label")].map(
+                (x) => x.textContent
+            ),
             ["Bar", "This is Big BAR"],
             "Foo is not shown"
         );
@@ -206,7 +178,9 @@ QUnit.module("SettingsFormView", (hooks) => {
         await editSearch(target, "Big");
         await execTimeouts();
         assert.deepEqual(
-            [...target.querySelectorAll(".o_setting_box .o_form_label")].map((x) => x.textContent),
+            [...target.querySelectorAll(".o_settings_container  .o_setting_box .o_form_label")].map(
+                (x) => x.textContent
+            ),
             ["This is Big BAR"],
             "Only 'Big Bar' is shown"
         );
@@ -223,7 +197,9 @@ QUnit.module("SettingsFormView", (hooks) => {
         await editSearch(target, "group Bar");
         await execTimeouts();
         assert.deepEqual(
-            [...target.querySelectorAll(".o_setting_box .o_form_label")].map((x) => x.textContent),
+            [...target.querySelectorAll(".o_settings_container  .o_setting_box .o_form_label")].map(
+                (x) => x.textContent
+            ),
             ["Bar", "This is Big BAR"],
             "When searching a title, all group is shown"
         );
@@ -252,9 +228,11 @@ QUnit.module("SettingsFormView", (hooks) => {
             "Fo word highlighted"
         );
         assert.deepEqual(
-            [...target.querySelectorAll(".o_setting_box .o_form_label")].map((x) => x.textContent),
-            ["Foo"],
-            "only Foo is shown"
+            [...target.querySelectorAll(".o_settings_container .o_setting_box .o_form_label")].map(
+                (x) => x.textContent
+            ),
+            ["Foo", "Personalize setting"],
+            "only settings in group Foo is shown"
         );
         assert.containsOnce(
             target,
@@ -269,7 +247,9 @@ QUnit.module("SettingsFormView", (hooks) => {
             "Hide settings should not be shown"
         );
         assert.deepEqual(
-            [...target.querySelectorAll(".o_setting_box .o_form_label")].map((x) => x.textContent),
+            [...target.querySelectorAll(".o_settings_container .o_setting_box .o_form_label")].map(
+                (x) => x.textContent
+            ),
             [],
             "Hide settings should not be shown"
         );
@@ -286,24 +266,11 @@ QUnit.module("SettingsFormView", (hooks) => {
             serverData,
             arch: `
                 <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
-                    <div class="o_setting_container">
-                        <div class="settings">
-                            <div class="app_settings_block" string="CRM" data-key="crm">
-                                <div class="row mt16 o_settings_container">
-                                    <div class="col-12 col-lg-6 o_setting_box">
-                                        <div class="o_setting_right_pane">
-                                            <label for="baz"/>
-                                            <div class="content-group">
-                                                <div class="mt16">
-                                                    <field name="baz" class="o_light_label" widget="radio"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <app string="CRM" name="crm">
+                        <block title="Baz">
+                            <field name="baz" class="o_light_label" widget="radio"/>
+                        </block>
+                    </app>
                 </form>`,
         });
         assert.hasAttrValue(
@@ -341,37 +308,18 @@ QUnit.module("SettingsFormView", (hooks) => {
             serverData,
             arch: `
                 <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
-                    <div class="o_setting_container">
-                        <div class="settings">
-                            <div class="app_settings_block" string="Settings" data-key="settings">
-                                <h2>Setting Header</h2>
-                                <h3 class="o_setting_tip">Settings will appear below</h3>
-                                <div class="row mt16 o_settings_container">
-                                    <div class="col-12 col-lg-6 o_setting_box">
-                                        <div class="o_setting_left_pane">
-                                            <field name="bar"/>
-                                        </div>
-                                        <div class="o_setting_right_pane">
-                                            <label for="bar"/>
-                                            <div class="text-muted">this is bar</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <h2>Title of group Foo</h2>
-                                <div class="row mt16 o_settings_container">
-                                    <div class="col-12 col-lg-6 o_setting_box">
-                                        <div class="o_setting_left_pane">
-                                            <field name="foo"/>
-                                        </div>
-                                        <div class="o_setting_right_pane">
-                                            <span class="o_form_label">Foo</span>
-                                            <div class="text-muted">this is foo</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <app string="Settings" name="settings">
+                        <block title="Setting Header" help="Settings will appear below">
+                            <setting help="this is bar">
+                                <field name="bar"/>
+                            </setting>
+                        </block>
+                        <block title="Title of group Foo">
+                            <setting help="this is foo">
+                                <field name="foo"/>
+                            </setting>
+                        </block>
+                    </app>
                 </form>`,
         });
         assert.containsOnce(
@@ -415,22 +363,14 @@ QUnit.module("SettingsFormView", (hooks) => {
             serverData.views = {
                 "res.config.settings,1,form": `
                     <form string="Settings" js_class="base_settings">
-                        <div class="settings">
-                            <div class="app_settings_block" string="CRM" data-key="crm">
-                                <div class="row mt16 o_settings_container">
-                                    <div class="col-12 col-lg-6 o_setting_box">
-                                        <div class="o_setting_left_pane">
-                                            <field name="foo"/>
-                                        </div>
-                                        <div class="o_setting_right_pane">
-                                            <span class="o_form_label">Foo</span>
-                                            <div class="text-muted">this is foo</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button name="4" string="Execute action" type="action"/>
-                            </div>
-                        </div>
+                        <app string="CRM" name="crm">
+                            <block>
+                                <setting help="this is foo">
+                                    <field name="foo"/>
+                                </setting>
+                            </block>
+                            <button name="4" string="Execute action" type="action"/>
+                        </app>
                     </form>`,
                 "task,2,list": `
                     <tree>
@@ -478,15 +418,11 @@ QUnit.module("SettingsFormView", (hooks) => {
             serverData,
             arch: `
                 <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
-                    <div class="o_setting_container">
-                        <div class="settings">
-                            <div class="app_settings_block" string="Base Setting" data-key="base-setting">
-                                <div class="o_setting_box">
+                            <app string="Base Setting" name="base-setting">
+                                <setting>
                                     <field name="bar"/>Make Changes
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                </setting>
+                            </app>
                 </form>`,
             mockRPC(route, { args, method, model }) {
                 if (method === "create" && model === "res.config.settings") {
@@ -515,20 +451,16 @@ QUnit.module("SettingsFormView", (hooks) => {
             serverData,
             arch: `
                 <form string="Settings" js_class="base_settings">
-                        <div class="settings">
-                            <div class="app_settings_block" string="CRM" data-key="crm">
-                                <div class="row mt16 o_settings_container">
-                                    <div class="col-12 col-lg-6 o_setting_box">
-                                        <div class="o_setting_left_pane">
-                                            <label for="foo" string="Label Before" class="a"/>
-                                            <field name="foo" class="b"/>
-                                            <label for="foo" string="Label After" class="c"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>`,
+                    <app string="CRM" name="crm">
+                        <block>
+                            <setting>
+                                    <label for="foo" string="Label Before" class="a"/>
+                                    <field name="foo" class="b"/>
+                                    <label for="foo" string="Label After" class="c"/>
+                            </setting>
+                        </block>
+                    </app>
+                </form>`,
         });
 
         assert.hasClass(target.querySelectorAll(".o_form_label")[0], "a");
@@ -550,21 +482,13 @@ QUnit.module("SettingsFormView", (hooks) => {
         serverData.views = {
             "res.config.settings,1,form": `
                     <form string="Settings" js_class="base_settings">
-                        <div class="settings">
-                            <div class="app_settings_block" string="CRM" data-key="crm">
-                                <div class="row mt16 o_settings_container">
-                                    <div class="col-12 col-lg-6 o_setting_box">
-                                        <div class="o_setting_left_pane">
+                            <app string="CRM" name="crm">
+                                <block>
+                                    <setting help="this is foo">
                                             <field name="foo"/>
-                                        </div>
-                                        <div class="o_setting_right_pane">
-                                            <span class="o_form_label">Foo</span>
-                                            <div class="text-muted">this is foo</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                    </setting>
+                                </block>
+                            </app>
                     </form>`,
             "task,2,list": `
                     <tree>
@@ -617,22 +541,14 @@ QUnit.module("SettingsFormView", (hooks) => {
             serverData.views = {
                 "res.config.settings,1,form": `
                     <form string="Settings" js_class="base_settings">
-                        <div class="settings">
-                            <div class="app_settings_block" string="CRM" data-key="crm">
-                                <div class="row mt16 o_settings_container">
-                                    <div class="col-12 col-lg-6 o_setting_box">
-                                        <div class="o_setting_left_pane">
-                                            <field name="foo"/>
-                                        </div>
-                                        <div class="o_setting_right_pane">
-                                            <span class="o_form_label">Foo</span>
-                                            <div class="text-muted">this is foo</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button name="4" string="Execute action" type="action"/>
-                            </div>
-                        </div>
+                        <app string="CRM" name="crm">
+                            <block>
+                                <setting help="this is foo">
+                                    <field name="foo"/>
+                                </setting>
+                            </block>
+                            <button name="4" string="Execute action" type="action"/>
+                        </app>
                     </form>`,
                 "task,2,list": `
                     <tree>
@@ -678,18 +594,14 @@ QUnit.module("SettingsFormView", (hooks) => {
         serverData.views = {
             "res.config.settings,1,form": `
                     <form string="Settings" js_class="base_settings">
-                        <div class="settings">
-                            <div class="app_settings_block" string="CRM" data-key="crm">
-                                <div class="row mt16 o_settings_container">
-                                    <div class="col-12 col-lg-6 o_setting_box">
-                                        <div class="o_setting_left_pane">
-                                            <label for="foo" string=""/>
-                                            <field name="foo"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <app string="CRM" name="crm">
+                            <block>
+                                <setting>
+                                    <label for="foo" string=""/>
+                                    <field name="foo"/>
+                                </setting>
+                            </block>
+                        </app>
                     </form>`,
             "task,2,list": `
                     <tree>
@@ -736,22 +648,14 @@ QUnit.module("SettingsFormView", (hooks) => {
             serverData.views = {
                 "res.config.settings,1,form": `
                     <form string="Settings" js_class="base_settings">
-                        <div class="settings">
-                            <div class="app_settings_block" string="CRM" data-key="crm">
-                                <div class="row mt16 o_settings_container">
-                                    <div class="col-12 col-lg-6 o_setting_box">
-                                        <div class="o_setting_left_pane">
-                                            <field name="foo"/>
-                                        </div>
-                                        <div class="o_setting_right_pane">
-                                            <span class="o_form_label">Foo</span>
-                                            <div class="text-muted">this is foo</div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <app string="CRM" name="crm">
+                                <block>
+                                    <setting string="Foo" help="this is foo">
+                                        <field name="foo"/>
+                                    </setting>
+                                </block>
                                 <button name="4" string="Execute action" type="action"/>
-                            </div>
-                        </div>
+                            </app>
                     </form>`,
                 "task,2,list": '<tree><field name="display_name"/></tree>',
                 "res.config.settings,false,search": "<search></search>",
@@ -831,8 +735,10 @@ QUnit.module("SettingsFormView", (hooks) => {
             type: "form",
             arch: `
                 <form js_class="base_settings">
-                    <field name="foo" />
-                    <button type="object" name="mymethod" class="myBtn"/>
+                    <app string="CRM" name="crm">
+                        <field name="foo" />
+                        <button type="object" name="mymethod" class="myBtn"/>
+                    </app>
                 </form>`,
             serverData,
             resModel: "res.config.settings",
@@ -870,8 +776,10 @@ QUnit.module("SettingsFormView", (hooks) => {
             type: "form",
             arch: `
                 <form js_class="base_settings">
-                    <field name="foo" />
-                    <button type="object" name="mymethod" class="myBtn"/>
+                    <app string="CRM" name="crm">
+                        <field name="foo" />
+                        <button type="object" name="mymethod" class="myBtn"/>
+                    </app>
                 </form>`,
             serverData,
             resModel: "res.config.settings",
@@ -916,22 +824,14 @@ QUnit.module("SettingsFormView", (hooks) => {
             serverData.views = {
                 "res.config.settings,1,form": `
                     <form string="Settings" js_class="base_settings">
-                        <div class="settings">
-                            <div class="app_settings_block" string="CRM" data-key="crm">
-                                <div class="row mt16 o_settings_container">
-                                    <div class="col-12 col-lg-6 o_setting_box">
-                                        <div class="o_setting_left_pane">
-                                            <field name="foo"/>
-                                        </div>
-                                        <div class="o_setting_right_pane">
-                                            <span class="o_form_label">Foo</span>
-                                            <div class="text-muted">this is foo</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button name="4" string="Execute action" type="action" noSaveDialog="true"/>
-                            </div>
-                        </div>
+                        <app string="CRM" name="crm">
+                            <block>
+                                <setting string="Foo" help="this is foo">
+                                    <field name="foo"/>
+                                </setting>
+                            </block>
+                            <button name="4" string="Execute action" type="action" noSaveDialog="true"/>
+                        </app>
                     </form>`,
                 "task,2,list": '<tree><field name="display_name"/></tree>',
                 "res.config.settings,false,search": "<search></search>",
@@ -968,38 +868,21 @@ QUnit.module("SettingsFormView", (hooks) => {
             serverData,
             arch: `
                     <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
-                        <div class="o_setting_container">
-                            <div class="settings">
-                                <div class="app_settings_block" string="CRM" data-key="crm">
-                                    <h2>CRM</h2>
-                                    <div class="row mt16 o_settings_container">
-                                        <div class="col-12 col-lg-6 o_setting_box">
-                                            <div class="o_setting_left_pane">
-                                                <field name="bar"/>
-                                            </div>
-                                            <div class="o_setting_right_pane">
-                                                <label for="bar"/>
-                                                <div class="text-muted">this is bar</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="app_settings_block o_not_app" string="Other App" data-key="otherapp">
-                                    <h2>Other app tab</h2>
-                                    <div class="row mt16 o_settings_container">
-                                        <div class="col-12 col-lg-6 o_setting_box">
-                                            <div class="o_setting_left_pane">
-                                                <field name="bar"/>
-                                            </div>
-                                            <div class="o_setting_right_pane">
-                                                <label for="bar"/>
-                                                <div class="text-muted">this is bar</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <app string="CRM" name="crm">
+                            <block title="CRM">
+                                <setting help="this is bar">
+                                    <field name="bar"/>
+                                </setting>
+                            </block>
+                        </app>
+                        <app notApp="1" string="Other App" name="otherapp">
+                            <h2>Other app tab</h2>
+                            <block>
+                                <setting help="this is bar">
+                                    <field name="bar"/>
+                                </setting>
+                            </block>
+                        </app>
                     </form>`,
         });
 
@@ -1021,15 +904,11 @@ QUnit.module("SettingsFormView", (hooks) => {
             serverData,
             arch: `
                 <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
-                    <div class="o_setting_container">
-                        <div class="settings">
-                            <div class="app_settings_block" string="Base Setting" data-key="base-setting">
-                                <div class="o_setting_box">
-                                    <field name="bar"/>Make Changes
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <app string="Base Setting" name="base-setting">
+                        <setting>
+                            <field name="bar"/>Make Changes
+                        </setting>
+                    </app>
                 </form>`,
         });
 
@@ -1062,15 +941,11 @@ QUnit.module("SettingsFormView", (hooks) => {
                 },
                 arch: `
                     <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
-                        <div class="o_setting_container">
-                            <div class="settings">
-                                <div class="app_settings_block" string="Base Setting" data-key="base-setting">
-                                    <div class="o_setting_box">
-                                        <field name="bar"/>Make Changes
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <app string="Base Setting" name="base-setting">
+                            <setting>
+                                <field name="bar"/>Make Changes
+                            </setting>
+                        </app>
                     </form>`,
             });
 
@@ -1115,19 +990,13 @@ QUnit.module("SettingsFormView", (hooks) => {
                 "task,1,list": '<tree><field name="display_name"/></tree>',
                 "res.config.settings,2,form": `
                     <form string="Settings" js_class="base_settings">
-                        <div class="settings">
-                            <div class="app_settings_block" string="CRM" data-key="crm">
-                                <h2>Title of group</h2>
-                                <div class="row mt16 o_settings_container">
-                                    <div class="col-12 col-lg-6 o_setting_box">
-                                        <div class="o_setting_left_pane"/>
-                                        <div class="o_setting_right_pane">
-                                            <button name="3" string="Execute action" type="action"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <app string="CRM" name="crm">
+                            <block title="Title of group">
+                                <setting>
+                                    <button name="3" string="Execute action" type="action"/>
+                                </setting>
+                            </block>
+                        </app>
                     </form>`,
                 "task,3,list": '<tree><field name="display_name"/></tree>',
                 "res.config.settings,false,search": "<search></search>",
@@ -1168,18 +1037,14 @@ QUnit.module("SettingsFormView", (hooks) => {
             serverData,
             arch: `
                 <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
-                    <div class="o_setting_container">
-                        <div class="settings">
-                            <div class="app_settings_block" string="Base Setting" data-key="base-setting">
-                                <div class="o_setting_box">
-                                    <field name="tasks">
-                                        <tree><field name="display_name"/></tree>
-                                        <form><field name="display_name"/></form>
-                                   </field>
-                               </div>
-                           </div>
-                       </div>
-                    </div>
+                    <app string="Base Setting" name="base-setting">
+                        <setting>
+                            <field name="tasks">
+                                <tree><field name="display_name"/></tree>
+                                <form><field name="display_name"/></form>
+                            </field>
+                        </setting>
+                    </app>
                 </form>`,
         });
 
@@ -1219,22 +1084,14 @@ QUnit.module("SettingsFormView", (hooks) => {
             serverData.views = {
                 "res.config.settings,1,form": `
                     <form string="Settings" js_class="base_settings">
-                        <div class="settings">
-                            <div class="app_settings_block" string="CRM" data-key="crm">
-                                <div class="row mt16 o_settings_container">
-                                    <div class="col-12 col-lg-6 o_setting_box">
-                                        <div class="o_setting_left_pane">
+                            <app string="CRM" name="crm">
+                                <block>
+                                    <setting string="Foo" help="this is foo">
                                             <field name="foo"/>
-                                        </div>
-                                        <div class="o_setting_right_pane">
-                                            <span class="o_form_label">Foo</span>
-                                            <div class="text-muted">this is foo</div>
-                                        </div>
-                                    </div>
+                                    </setting>
                                     <button name="4" string="Execute action" type="action"/>
-                                </div>
-                            </div>
-                        </div>
+                                </block>
+                            </app>
                     </form>
                 `,
                 "res.config.settings,false,search": "<search></search>",
@@ -1293,21 +1150,13 @@ QUnit.module("SettingsFormView", (hooks) => {
         serverData.views = {
             "res.config.settings,1,form": `
                     <form string="Settings" js_class="base_settings">
-                        <div class="settings">
-                            <div class="app_settings_block" string="CRM" data-key="crm">
-                                <div class="row mt16 o_settings_container">
-                                    <div class="col-12 col-lg-6 o_setting_box">
-                                        <div class="o_setting_left_pane">
-                                            <field name="foo"/>
-                                        </div>
-                                        <div class="o_setting_right_pane">
-                                            <span class="o_form_label">Foo</span>
-                                            <div class="text-muted">this is foo</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <app string="CRM" name="crm">
+                            <block>
+                                <setting string="Foo" help="this is foo">
+                                    <field name="foo"/>
+                                </setting>
+                            </block>
+                        </app>
                     </form>
                 `,
             "res.config.settings,false,search": "<search></search>",
@@ -1374,24 +1223,18 @@ QUnit.module("SettingsFormView", (hooks) => {
             serverData,
             arch: `
                 <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
-                    <div class="o_setting_container">
-                        <div class="settings">
-                            <div class="app_settings_block" string="CRM" data-key="crm">
-                                <div class="row mt16 o_settings_container">
-                                    <div class="col-12 col-lg-6 o_setting_box">
-                                        <div class="o_setting_right_pane">
-                                            <label for="product_id"/>
-                                            <div class="content-group">
-                                                <div class="mt16">
-                                                    <field name="product_id" class="o_light_label" widget="radio"/>
-                                                </div>
-                                            </div>
-                                        </div>
+                    <app string="CRM" name="crm">
+                        <block>
+                            <setting>
+                                <label for="product_id"/>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <field name="product_id" class="o_light_label" widget="radio"/>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
+                            </setting>
+                        </block>
+                    </app>
                 </form>`,
         });
 
@@ -1435,14 +1278,10 @@ QUnit.module("SettingsFormView", (hooks) => {
             serverData,
             arch: `
                 <form js_class="base_settings">
-                    <div class="o_setting_container">
-                        <div class="settings">
-                            <div class="app_settings_block" string="CRM" data-key="crm">
+                            <app string="CRM" name="crm">
                                 <label string="My&quot; little &apos;  Label" for="display_name" class="highhopes"/>
                                 <field name="display_name" />
-                            </div>
-                        </div>
-                    </div>
+                            </app>
                 </form>`,
         });
 
@@ -1452,14 +1291,12 @@ QUnit.module("SettingsFormView", (hooks) => {
         );
 
         const expectedCompiled = `
-        <div class="o_setting_container">
-            <SettingsPage slots="{NoContentHelper:this.props.slots.NoContentHelper}" initialTab="this.props.initialApp" t-slot-scope="settings" modules="[{&quot;key&quot;:&quot;crm&quot;,&quot;string&quot;:&quot;CRM&quot;,&quot;imgurl&quot;:&quot;/crm/static/description/icon.png&quot;,&quot;isVisible&quot;:false}]" class="'settings'">
-                <SettingsApp t-props="{&quot;key&quot;:&quot;crm&quot;,&quot;string&quot;:&quot;CRM&quot;,&quot;imgurl&quot;:&quot;/crm/static/description/icon.png&quot;,&quot;isVisible&quot;:false}" selectedTab="settings.selectedTab" class="'app_settings_block'">
+            <SettingsPage slots="{NoContentHelper:this.props.slots.NoContentHelper}" initialTab="this.props.initialApp" t-slot-scope="settings" modules="[{&quot;key&quot;:&quot;crm&quot;,&quot;string&quot;:&quot;CRM&quot;,&quot;imgurl&quot;:&quot;/crm/static/description/icon.png&quot;}]">
+                <SettingsApp key="\`crm\`" string="\`CRM\`" imgurl="\`/crm/static/description/icon.png\`" selectedTab="settings.selectedTab">
                     <FormLabel id="'display_name'" fieldName="'display_name'" record="this.props.record" fieldInfo="this.props.archInfo.fieldNodes['display_name']" className="&quot;highhopes&quot;" string="\`My&quot; little '  Label\`"/>
                     <Field id="'display_name'" name="'display_name'" record="this.props.record" fieldInfo="this.props.archInfo.fieldNodes['display_name']"/>
                 </SettingsApp>
-            </SettingsPage>
-        </div>`;
+            </SettingsPage>`;
         assert.areEquivalent(compiled.firstChild.innerHTML, expectedCompiled);
     });
 
@@ -1479,24 +1316,14 @@ QUnit.module("SettingsFormView", (hooks) => {
             serverData,
             arch: `
             <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
-            <div class="o_setting_container">
-                <div class="settings">
-                    <div class="app_settings_block" string="CRM" data-key="crm">
-                        <h2>Title of group Bar</h2>
-                        <div class="row mt16 o_settings_container">
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane">
+                    <app string="CRM" name="crm">
+                        <block title="Title of group Bar">
+                            <setting>
                                     <field name="bar"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="bar"/>
                                     <div class="text-muted">this is Baz value: <field name="baz" readonly="1"/> and this is the after text</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                            </setting>
+                        </block>
+                    </app>
         </form>`,
         });
 
@@ -1510,7 +1337,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             <Field id="'baz'" name="'baz'" record="this.props.record" fieldInfo="this.props.archInfo.fieldNodes['baz']"/>
             <HighlightText originalText="\` and this is the after text\`"/>`;
         assert.areEquivalent(
-            compiled.querySelector("Setting div.o_setting_right_pane div.text-muted").innerHTML,
+            compiled.querySelector("Setting div.text-muted").innerHTML,
             expectedCompiled
         );
     });
@@ -1532,21 +1359,14 @@ QUnit.module("SettingsFormView", (hooks) => {
             serverData,
             arch: `
             <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
-            <div class="o_setting_container">
-                <div class="settings">
-                    <div class="app_settings_block" string="CRM" data-key="crm">
-                        <h2>Title of group Bar</h2>
-                        <div class="row mt16 o_settings_container">
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="textField"/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>`,
+                <app string="CRM" name="crm">
+                    <block title="Title of group Bar">
+                        <setting>
+                            <field name="textField"/>
+                        </setting>
+                    </block>
+                </app>
+            </form>`,
         });
 
         assert.containsOnce(target, "[name='textField'] input");
@@ -1568,32 +1388,26 @@ QUnit.module("SettingsFormView", (hooks) => {
             serverData,
             arch: `
             <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
-            <div class="o_setting_container">
-                <div class="settings">
-                    <div class="app_settings_block" string="CRM" data-key="crm">
-                        <h2>Title of group Bar</h2>
-                        <div class="row mt16 o_settings_container">
-                                <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-                                <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-                                <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-                                <div id="deepDivCrm" />
-                        </div>
-                    </div>
+                <app string="CRM" name="crm">
+                    <block title="Title of group Bar">
+                        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                        <div id="deepDivCrm" />
+                    </block>
+                </app>
 
-                    <div class="app_settings_block" string="OtherApp" data-key="otherapp">
-                        <h2>Title of group Other</h2>
-                        <div class="row mt16 o_settings_container">
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-                                <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-                                <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-                                <div id="deepDivOther" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>`,
+                <app string="OtherApp" name="otherapp">
+                    <block title="Title of group Other">
+                        <setting>
+                            <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                            <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                            <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                            <div id="deepDivOther" />
+                        </setting>
+                    </block>
+                </app>
+            </form>`,
         });
 
         // constrain o_content to have height for its children to be scrollable

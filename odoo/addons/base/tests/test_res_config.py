@@ -85,6 +85,7 @@ class TestResConfig(TransactionCase):
         # Check returned value
         self.assertEqual(res.args[0], self.expected_final_error_msg_wo_menu)
 
+    # TODO: ASK DLE if this test can be removed
     def test_40_view_expected_architecture(self):
         """Tests the res.config.settings form view architecture expected by the web client.
         The res.config.settings form view is handled with a custom widget expecting a very specific
@@ -99,11 +100,11 @@ class TestResConfig(TransactionCase):
             'model': 'res.config.settings',
             'inherit_id': self.env.ref('base.res_config_settings_view_form').id,
             'arch': """
-                <xpath expr="//div[hasclass('settings')]" position="inside">
+                <xpath expr="//form" position="inside">
                     <t groups="base.group_system">
-                        <div class="app_settings_block" data-string="Foo" string="Foo" data-key="foo">
+                        <app data-string="Foo" string="Foo" name="foo">
                             <h2>Foo</h2>
-                        </div>
+                        </app>
                     </t>
                 </xpath>
             """,
@@ -112,13 +113,12 @@ class TestResConfig(TransactionCase):
         tree = etree.fromstring(arch)
         self.assertTrue(tree.xpath("""
             //form[@class="oe_form_configuration o_base_settings"]
-            /div[@class="o_setting_container"]
-            /div[@class="settings"]
-            /div[@class="app_settings_block"][@data-key="foo"]
+            /app[@name="foo"]
         """), 'The res.config.settings form view architecture is not what is expected by the web client.')
 
+    # TODO: ASK DLE if this test can be removed
     def test_50_view_expected_architecture_t_node_groups(self):
-        """Tests the behavior of the res.config.settings form view postprocessing when a block `app_settings_block`
+        """Tests the behavior of the res.config.settings form view postprocessing when a block `app`
         is wrapped in a `<t groups="...">`, which is used when you need to display an app settings section
         only for users part of two groups at the same time."""
         view = self.env['ir.ui.view'].create({
@@ -127,12 +127,12 @@ class TestResConfig(TransactionCase):
             'model': 'res.config.settings',
             'inherit_id': self.env.ref('base.res_config_settings_view_form').id,
             'arch': """
-                <xpath expr="//div[hasclass('settings')]" position="inside">
+                <xpath expr="//form" position="inside">
                     <t groups="base.group_system">
-                        <div class="app_settings_block" data-string="Foo"
-                            string="Foo" data-key="foo" groups="base.group_no_one">
+                        <app data-string="Foo"
+                            string="Foo" name="foo" groups="base.group_no_one">
                             <h2>Foo</h2>
-                        </div>
+                        </app>
                     </t>
                 </xpath>
             """,
@@ -143,9 +143,9 @@ class TestResConfig(TransactionCase):
             # The <t> must be removed from the structure
             self.assertFalse(tree.xpath('//t'), 'The `<t groups="...">` block must not remain in the view')
             self.assertTrue(tree.xpath("""
-                //div[@class="settings"]
-                /div[@class="app_settings_block"][@data-key="foo"]
-            """), 'The `class="app_settings_block"` block must be a direct child of the `class="settings"` block')
+                //form
+                /app[@name="foo"]
+            """), 'The `app` block must be a direct child of the `form` block')
 
 
 @tagged('post_install', '-at_install')

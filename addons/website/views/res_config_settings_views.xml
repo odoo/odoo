@@ -8,7 +8,7 @@
             <!-- Remove customer accounts setting from general settings tab -->
             <!-- It must not be in the view at all to make sure settings can be saved
                 (because auth_signup_uninvited is specified as required) -->
-            <xpath expr="//div[@id='login_documents']" position="replace"></xpath>
+            <xpath expr="//setting[@id='login_documents']" position="replace"></xpath>
         </field>
     </record>
 
@@ -18,281 +18,168 @@
         <field name="priority" eval="20"/>
         <field name="inherit_id" ref="base.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[hasclass('settings')]" position="inside">
-                <div class="app_settings_block" data-string="Website" string="Website" data-key="website" groups="website.group_website_designer">
-                    <div class="row app_settings_header my-0 ms-0 mw-100 bg-warning bg-opacity-25">
-                        <div class="col-xs-12 col-md-6 ms-0 o_setting_box">
-                            <div class="o_setting_right_pane border-start-0 ms-0 ps-0">
-                                <div class="content-group">
-                                    <div class="row flex-row flex-nowrap mt8 align-items-center">
-                                        <label class="col ps-0 text-nowrap" string="Settings of Website" for="website_id"/>
-                                        <field name="website_id" options="{'no_open': True, 'no_create': True}" title="Settings on this page will apply to this website"/>
-                                        <button name="action_website_create_new" type="object" string="+ New Website" class="col-auto btn-link ms-2 text-nowrap" style="line-height: 0.5;"/>
-                                    </div>
+            <xpath expr="//form" position="inside">
+                <app data-string="Website" string="Website" name="website" groups="website.group_website_designer">
+                    <setting type="header" string="Settings of Website">
+                        <field name="website_id" options="{'no_open': True, 'no_create': True}" title="Settings on this page will apply to this website"/>
+                        <button name="action_website_create_new" type="object" string="+ New Website" class="col-auto btn-link ms-2 text-nowrap" style="line-height: 0.5;"/>
+                    </setting>
+                    <block title="Website Info" id="website_info_settings">
+                        <setting>
+                            <div class="content-group">
+                                <div class="row mt8">
+                                    <label class="col-lg-3" string="Domain" for="website_domain"/>
+                                    <field name="website_domain" placeholder="https://www.odoo.com" title="Display this website when users visit this domain"/>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    <h2>Website Info</h2>
-                    <div class="col-xs-12 row o_settings_container" id="website_info_settings">
-                        <div class="col-xs-12 col-md-6 o_setting_box">
-                            <div class="o_setting_right_pane border-start-0">
-                                <div class="content-group">
-                                    <div class="row mt8">
-                                        <label class="col-lg-3" string="Domain" for="website_domain"/>
-                                        <field name="website_domain" placeholder="https://www.odoo.com" title="Display this website when users visit this domain"/>
-                                    </div>
-                                    <div class="row mt8">
-                                        <label class="col-lg-3" string="Homepage URL" for="website_homepage_url"/>
-                                        <field name="website_homepage_url" placeholder="/" title="Main page of your website served to visitors"/>
-                                    </div>
-                                    <div class="row mt8">
-                                        <label class="col-lg-3" string="Languages" for="language_ids"/>
-                                        <field name="language_ids" widget="many2many_tags" options="{'no_create': True, 'no_open': True}" attrs="{'required': [('website_id', '!=', False)]}" title="Languages available on your website"/>
-                                    </div>
-                                    <div class="row mt8" attrs="{'invisible': [('website_language_count', '&lt;', 2)]}">
-                                        <field name="website_language_count" invisible="1"/>
-                                        <label class="col-lg-3" string="Default" for="website_default_lang_id"/>
-                                        <field name="website_default_lang_id" options="{'no_open': True, 'no_create': True}" attrs="{'required': [('website_id', '!=', False)]}"/>
-                                    </div>
-                                    <div class="mt8">
-                                        <button type="action" name="%(base.action_view_base_language_install)d" string="Install languages" class="btn-link" icon="fa-arrow-right"/>
-                                    </div>
+                                <div class="row mt8">
+                                    <label class="col-lg-3" string="Homepage URL" for="website_homepage_url"/>
+                                    <field name="website_homepage_url" placeholder="/" title="Main page of your website served to visitors"/>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-xs-12 col-md-6 o_setting_box">
-                            <div class="o_setting_right_pane border-start-0">
-                                <div class="content-group">
-                                    <div class="row mt8">
-                                        <label class="col-lg-3" string="Website Name" for="website_name"/>
-                                        <field name="website_name" attrs="{'required': [('website_id', '!=', False)]}"/>
-                                    </div>
-                                    <div class="row mt8" groups="base.group_multi_company">
-                                        <label class="col-lg-3" string="Company" for="website_company_id"/>
-                                        <field name="website_company_id" attrs="{'required': [('website_id', '!=', False)]}" title="The company this website belongs to"/>
-                                    </div>
-                                    <div class="row mt8">
-                                        <label class="col-lg-3" string="Favicon" for="favicon"/>
-                                        <field name="favicon" widget="image" class="float-start oe_avatar bg-view"/>
-                                    </div>
+                                <div class="row mt8">
+                                    <label class="col-lg-3" string="Languages" for="language_ids"/>
+                                    <field name="language_ids" widget="many2many_tags" options="{'no_create': True, 'no_open': True}" attrs="{'required': [('website_id', '!=', False)]}" title="Languages available on your website"/>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <h2>Email &amp; Marketing</h2>
-                    <div class="row mt16 o_settings_container" id="website_email_marketing">
-                        <div class="col-xs-12 col-lg-6 o_setting_box">
-                            <div class="o_setting_left_pane">
-                                <field name="module_website_livechat"/>
-                            </div>
-                            <div class="o_setting_right_pane" id="livechat_right_pane">
-                                <span class="o_form_label">Livechat</span>
-                                <div class="text-muted">
-                                    Alows your visitors to chat with you
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xs-12 col-lg-6 o_setting_box" id="website_marketing_automation">
-                            <div class="o_setting_left_pane">
-                                <field name="module_marketing_automation" widget="upgrade_boolean"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <span class="o_form_label">Email Marketing</span>
-                                <div class="text-muted">
-                                    Allows to do mass mailing campaigns to contacts
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <h2>Privacy</h2>
-                    <div class="row mt16 o_settings_container" id="website_settings" attrs="{'invisible': [('website_id', '=', False)]}">
-                        <div class="col-12 col-lg-6 o_setting_box" id="website_cookies_bar_setting">
-                            <div class="o_setting_left_pane">
-                                <field name="website_cookies_bar"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="website_cookies_bar"/>
-                                <div class="text-muted">
-                                    Display a customizable cookies bar on your website
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-6 o_setting_box" id="shared_user_account_setting" groups="website.group_multi_website">
-                            <div class="o_setting_left_pane">
-                                <field name="shared_user_account"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="shared_user_account"/>
-                                <div class="text-muted">
-                                    Accounts are usable across all your multiple websites
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-6 o_setting_box"
-                            id="website_login_documents"
-                            title=" To send invitations in B2B mode, open a contact or select several ones in list view and click on 'Portal Access Management' option in the dropdown menu *Action*.">
-                            <div class="o_setting_left_pane">
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="auth_signup_uninvited"/>
-                                <div class="text-muted">
-                                    Let your customers log in to see their documents
+                                <div class="row mt8" attrs="{'invisible': [('website_language_count', '&lt;', 2)]}">
+                                    <field name="website_language_count" invisible="1"/>
+                                    <label class="col-lg-3" string="Default" for="website_default_lang_id"/>
+                                    <field name="website_default_lang_id" options="{'no_open': True, 'no_create': True}" attrs="{'required': [('website_id', '!=', False)]}"/>
                                 </div>
                                 <div class="mt8">
-                                    <field name="auth_signup_uninvited" class="o_light_label" widget="radio" options="{'horizontal': true}" required="True"/>
-                                </div>
-                                <div class="content-group" attrs="{'invisible': [('auth_signup_uninvited','=','b2b')]}">
-                                    <div class="mt8">
-                                        <button type="object" name="action_open_template_user" string="Default Access Rights" icon="fa-arrow-right" class="btn-link"/>
-                                    </div>
+                                    <button type="action" name="%(base.action_view_base_language_install)d" string="Install languages" class="btn-link" icon="fa-arrow-right"/>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <h2>SEO</h2>
-                    <div class="row mt16 o_settings_container" id="website_settings" attrs="{'invisible': [('website_id', '=', False)]}">
-                        <div class="col-12 col-lg-6 o_setting_box" id="google_analytics_setting">
-                            <div class="o_setting_left_pane">
-                                <field name="has_google_analytics"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="has_google_analytics"/>
-                                <div class="text-muted">
-                                    Track visits using Google Analytics
+                        </setting>
+                        <setting>
+                            <div class="content-group">
+                                <div class="row mt8">
+                                    <label class="col-lg-3" string="Website Name" for="website_name"/>
+                                    <field name="website_name" attrs="{'required': [('website_id', '!=', False)]}"/>
                                 </div>
-                                <div class="content-group" attrs="{'invisible': [('has_google_analytics', '=', False)]}">
-                                    <div class="row mt16">
-                                        <label class="col-lg-3 o_light_label" string="Measurement ID" for="google_analytics_key"/>
-                                        <field name="google_analytics_key" placeholder="G-XXXXXXXXXX"
-                                            attrs="{'required': [('has_google_analytics', '=', True)]}"/>
-                                    </div>
+                                <div class="row mt8" groups="base.group_multi_company">
+                                    <label class="col-lg-3" string="Company" for="website_company_id"/>
+                                    <field name="website_company_id" attrs="{'required': [('website_id', '!=', False)]}" title="The company this website belongs to"/>
                                 </div>
-                                <div attrs="{'invisible': [('has_google_analytics', '=', False)]}">
-                                    <a href="https://www.odoo.com/documentation/master/applications/websites/website/optimize/google_analytics.html"
-                                            class="oe_link" target="_blank">
-                                        <i class="fa fa-arrow-right"/>
-                                        How to get my Measurement ID
-                                    </a>
+                                <div class="row mt8">
+                                    <label class="col-lg-3" string="Favicon" for="favicon"/>
+                                    <field name="favicon" widget="image" class="float-start oe_avatar bg-view"/>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-12 col-lg-6 o_setting_box" id="cdn_setting" title="A CDN helps you serve your website’s content with high availability and high performance to any visitor wherever they are located." groups="base.group_no_one">
-                            <div class="o_setting_left_pane">
-                                <field name="cdn_activated"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="cdn_activated"/>
-                                <div class="text-muted">
-                                    Use a CDN to optimize the availability of your website's content
-                                </div>
-                                <div class="content-group" attrs="{'invisible': [('cdn_activated', '=', False)]}">
-                                    <div class="row mt16">
-                                        <label class="col-lg-3 o_light_label" for="cdn_url"/>
-                                        <field name="cdn_url"
-                                               attrs="{'required': [('cdn_activated', '=', True)]}"
-                                               placeholder="//mycompany.mycdn.com/"
-                                               t-translation="off"/>
-                                    </div>
-                                    <div class="row" >
-                                        <label class="col-lg-3 o_light_label" for="cdn_filters"/>
-                                        <field name="cdn_filters" class="oe_inline"
-                                               attrs="{'required': [('cdn_activated', '=', True)]}"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-6 o_setting_box" id="robots_setting">
-                            <div class="o_setting_right_pane">
-                                <span class="o_form_label">Robots.txt</span>
-                                <div class="text-muted">
-                                    Robots.txt: This file tells to search engine crawlers which pages or files they can or can't request from your site.<br/>
-                                </div>
-                                <div class="mt4">
-                                    <button type="object" name="action_open_robots" string="Edit robots.txt" class="btn-link" icon="fa-android" noSaveDialog="true"/>
+                        </setting>
+                    </block>
+
+                    <block title="Email &amp; Marketing" id="website_email_marketing">
+                        <setting id="livechat" string="Livechat" help="Alows your visitors to chat with you">
+                            <field name="module_website_livechat"/>
+                        </setting>
+                        <setting id="website_marketing_automation" string="Email Marketing" help="Allows to do mass mailing campaigns to contacts">
+                            <field name="module_marketing_automation" widget="upgrade_boolean"/>
+                        </setting>
+                    </block>
+
+                    <block title="Privacy" id="website_settings" attrs="{'invisible': [('website_id', '=', False)]}">
+                        <setting id="website_cookies_bar_setting" help="Display a customizable cookies bar on your website">
+                            <field name="website_cookies_bar"/>
+                        </setting>
+                        <setting id="shared_user_account_setting" groups="website.group_multi_website" help="Accounts are usable across all your multiple websites">
+                            <field name="shared_user_account"/>
+                        </setting>
+                        <setting id="website_login_documents" title=" To send invitations in B2B mode, open a contact or select several ones in list view and click on 'Portal Access Management' option in the dropdown menu *Action*." help="Let your customers log in to see their documents">
+                            <field name="auth_signup_uninvited" class="o_light_label" widget="radio" options="{'horizontal': true}" required="True"/>
+                            <div class="content-group" attrs="{'invisible': [('auth_signup_uninvited','=','b2b')]}">
+                                <div class="mt8">
+                                    <button type="object" name="action_open_template_user" string="Default Access Rights" icon="fa-arrow-right" class="btn-link"/>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-12 col-lg-6 o_setting_box" id="robots_setting">
-                            <div class="o_setting_right_pane">
-                                <span class="o_form_label">Sitemap</span>
-                                <div class="text-muted mt8">
-                                    Sitemap.xml: Help search engine crawlers to find out what pages are present and which have recently changed, and to crawl your site accordingly. This file is automatically generated by Odoo.
-                                </div>
-                                <div class="mt4">
-                                    <button type="object" name="action_ping_sitemap" string="Submit sitemap to Google" class='btn-link' icon="fa-google" noSaveDialog="true"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-6 o_setting_box" id="social_default_image_setting">
-                            <div class="o_setting_left_pane">
-                                <field name="has_default_share_image"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label string="Default Social Share Image" for="has_default_share_image"/>
-                                <div class="text-muted">
-                                    If set, replaces the website logo as the default social share image.
-                                </div>
-                                <field name="social_default_image" widget="image" class="w-25 mt-2" attrs="{'invisible': [('has_default_share_image', '=', False)]}"/>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-6 o_setting_box" id="google_console_setting">
-                            <div class="o_setting_left_pane">
-                                <field name="has_google_search_console"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="has_google_search_console"/>
-                                <div class="text-muted">
-                                    Monitor Google Search results data
-                                </div>
-                                <div class="content-group" attrs="{'invisible': [('has_google_search_console', '=', False)]}">
-                                    <div class="row mt16">
-                                        <label class="col-lg-3 o_light_label" string="Code" for="google_search_console"/>
-                                        <field name="google_search_console" placeholder="google1234567890123456.html"
-                                            attrs="{'required': [('has_google_search_console', '=', True)]}"/>
-                                    </div>
-                                </div>
-                                <div attrs="{'invisible': [('has_google_search_console', '=', False)]}">
-                                    <small class='text-muted'>
-                                        <i class="fa fa-info"/>: type some of the first chars after 'google' is enough, we'll guess the rest.
-                                    </small>
+                        </setting>
+                    </block>
+                    <block title="SEO" id="website_settings" attrs="{'invisible': [('website_id', '=', False)]}">
+                        <setting id="google_analytics_setting" help="Track visits using Google Analytics">
+                            <field name="has_google_analytics"/>
+                            <div class="content-group" attrs="{'invisible': [('has_google_analytics', '=', False)]}">
+                                <div class="row mt16">
+                                    <label class="col-lg-3 o_light_label" string="Measurement ID" for="google_analytics_key"/>
+                                    <field name="google_analytics_key" placeholder="G-XXXXXXXXXX"
+                                        attrs="{'required': [('has_google_analytics', '=', True)]}"/>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-12 col-lg-6 o_setting_box" id="plausbile_setting">
-                            <div class="o_setting_left_pane">
-                                <field name="has_plausible_shared_key"/>
+                            <div attrs="{'invisible': [('has_google_analytics', '=', False)]}">
+                                <a href="https://www.odoo.com/documentation/master/applications/websites/website/optimize/google_analytics.html"
+                                        class="oe_link" target="_blank">
+                                    <i class="fa fa-arrow-right"/>
+                                    How to get my Measurement ID
+                                </a>
                             </div>
-                            <div class="o_setting_right_pane">
-                                <label for="has_plausible_shared_key"/>
-                                <div class="text-muted">
-                                    Use Plausible.io, Simple and privacy-friendly Google Analytics alternative
+                        </setting>
+                        <setting id="cdn_setting" title="A CDN helps you serve your website’s content with high availability and high performance to any visitor wherever they are located." groups="base.group_no_one" help="Use a CDN to optimize the availability of your website's content">
+                            <field name="cdn_activated"/>
+                            <div class="content-group" attrs="{'invisible': [('cdn_activated', '=', False)]}">
+                                <div class="row mt16">
+                                    <label class="col-lg-3 o_light_label" for="cdn_url"/>
+                                    <field name="cdn_url"
+                                            attrs="{'required': [('cdn_activated', '=', True)]}"
+                                            placeholder="//mycompany.mycdn.com/"
+                                            t-translation="off"/>
                                 </div>
-                                <div class="content-group" attrs="{'invisible': [('has_plausible_shared_key', '=', False)]}">
-                                    <div class="row mt16">
-                                        <label class="col-lg-3 o_light_label" string="Shared Link Auth" for="plausible_shared_key"/>
-                                        <field name="plausible_shared_key"
-                                            attrs="{'required': [('has_plausible_shared_key', '=', True)]}"/>
-                                    </div>
-                                    <div class="row mt16">
-                                        <label class="col-lg-3 o_light_label" string="Site" for="plausible_site"/>
-                                        <field name="plausible_site"
-                                            attrs="{'required': [('has_plausible_shared_key', '=', True)]}"/>
-                                    </div>
-                                </div>
-                                <div attrs="{'invisible': [('has_plausible_shared_key', '=', False)]}">
-                                    <a href="https://www.odoo.com/documentation/master/applications/websites/website/optimize/plausible.html"
-                                            class="oe_link" target="_blank">
-                                        <i class="fa fa-arrow-right"/>
-                                        How to create my Plausible Shared Link
-                                    </a>
+                                <div class="row" >
+                                    <label class="col-lg-3 o_light_label" for="cdn_filters"/>
+                                    <field name="cdn_filters" class="oe_inline"
+                                            attrs="{'required': [('cdn_activated', '=', True)]}"/>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
+                        </setting>
+                        <setting id="robots_setting" string="Robots.txt" help="Robots.txt: This file tells to search engine crawlers which pages or files they can or can't request from your site.">
+                            <div class="mt4">
+                                <button type="object" name="action_open_robots" string="Edit robots.txt" class="btn-link" icon="fa-android" noSaveDialog="true"/>
+                            </div>
+                        </setting>
+                        <setting id="robots_setting" string="Sitemap" help="Sitemap.xml: Help search engine crawlers to find out what pages are present and which have recently changed, and to crawl your site accordingly. This file is automatically generated by Odoo.">
+                            <div class="mt4">
+                                <button type="object" name="action_ping_sitemap" string="Submit sitemap to Google" class='btn-link' icon="fa-google" noSaveDialog="true"/>
+                            </div>
+                        </setting>
+                        <setting id="social_default_image_setting" string="Default Social Share Image" help="If set, replaces the website logo as the default social share image.">
+                            <field name="has_default_share_image"/>
+                            <field name="social_default_image" widget="image" class="w-25 mt-2" attrs="{'invisible': [('has_default_share_image', '=', False)]}"/>
+                        </setting>
+                        <setting id="google_console_setting" help="Monitor Google Search results data">
+                            <field name="has_google_search_console"/>
+                            <div class="content-group" attrs="{'invisible': [('has_google_search_console', '=', False)]}">
+                                <div class="row mt16">
+                                    <label class="col-lg-3 o_light_label" string="Code" for="google_search_console"/>
+                                    <field name="google_search_console" placeholder="google1234567890123456.html"
+                                        attrs="{'required': [('has_google_search_console', '=', True)]}"/>
+                                </div>
+                            </div>
+                            <div attrs="{'invisible': [('has_google_search_console', '=', False)]}">
+                                <small class='text-muted'>
+                                    <i class="fa fa-info"/>: type some of the first chars after 'google' is enough, we'll guess the rest.
+                                </small>
+                            </div>
+                        </setting>
+                        <setting id="plausbile_setting" help="Use Plausible.io, Simple and privacy-friendly Google Analytics alternative">
+                            <field name="has_plausible_shared_key"/>
+                            <div class="content-group" attrs="{'invisible': [('has_plausible_shared_key', '=', False)]}">
+                                <div class="row mt16">
+                                    <label class="col-lg-3 o_light_label" string="Shared Link Auth" for="plausible_shared_key"/>
+                                    <field name="plausible_shared_key"
+                                        attrs="{'required': [('has_plausible_shared_key', '=', True)]}"/>
+                                </div>
+                                <div class="row mt16">
+                                    <label class="col-lg-3 o_light_label" string="Site" for="plausible_site"/>
+                                    <field name="plausible_site"
+                                        attrs="{'required': [('has_plausible_shared_key', '=', True)]}"/>
+                                </div>
+                            </div>
+                            <div attrs="{'invisible': [('has_plausible_shared_key', '=', False)]}">
+                                <a href="https://www.odoo.com/documentation/master/applications/websites/website/optimize/plausible.html"
+                                        class="oe_link" target="_blank">
+                                    <i class="fa fa-arrow-right"/>
+                                    How to create my Plausible Shared Link
+                                </a>
+                            </div>
+                        </setting>
+                    </block>
+                </app>
             </xpath>
         </field>
     </record>
