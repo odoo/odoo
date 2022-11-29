@@ -330,7 +330,7 @@ class MrpWorkcenterProductivity(models.Model):
         return company_id
 
     production_id = fields.Many2one('mrp.production', string='Manufacturing Order', related='workorder_id.production_id', readonly='True')
-    workcenter_id = fields.Many2one('mrp.workcenter', "Work Center", required=True, check_company=True)
+    workcenter_id = fields.Many2one('mrp.workcenter', "Work Center", required=True, check_company=True, index=True)
     company_id = fields.Many2one(
         'res.company', required=True, index=True,
         default=lambda self: self._get_default_company_id())

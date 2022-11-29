@@ -439,9 +439,10 @@ class StockMove(models.Model):
                 ['id'],
             )]
             ForecastedReport = self.env['report.stock.report_product_product_replenishment']
-            forecast_lines = ForecastedReport.with_context(warehouse=warehouse.id)._get_report_lines(None, product_variant_ids, wh_location_ids)
+            forecast_lines = list(filter(lambda report_line: report_line["move_out"] and report_line["replenishment_filled"],
+                ForecastedReport.with_context(warehouse=warehouse.id, fast_prepare_report_line=True)._get_report_lines(None, product_variant_ids, wh_location_ids)))
             for move in moves:
-                lines = [l for l in forecast_lines if l["move_out"] == move._origin and l["replenishment_filled"] is True]
+                lines = [l for l in forecast_lines if l["move_out"].id == move._origin.id]
                 if lines:
                     move.forecast_availability = sum(m['quantity'] for m in lines)
                     move_ins_lines = list(filter(lambda report_line: report_line['move_in'], lines))

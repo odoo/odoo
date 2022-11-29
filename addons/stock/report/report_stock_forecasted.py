@@ -109,7 +109,18 @@ class ReplenishmentReport(models.AbstractModel):
         res['lines'] = self._get_report_lines(product_template_ids, product_variant_ids, wh_location_ids)
         return res
 
+    def _fast_prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False):
+        product = product or (move_out.product_id if move_out else move_in.product_id)
+        return {
+            'replenishment_filled': replenishment_filled,
+            'quantity': float_round(quantity, precision_rounding=product.uom_id.rounding),
+            'move_out': move_out,
+            'move_in': move_in,
+        }
+
     def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reservation=False):
+        if self._context.get('fast_prepare_report_line'):
+            return self._fast_prepare_report_line(quantity, move_out, move_in, replenishment_filled, product)
         timezone = self._context.get('tz')
         product = product or (move_out.product_id if move_out else move_in.product_id)
         is_late = move_out.date < move_in.date if (move_out and move_in) else False
