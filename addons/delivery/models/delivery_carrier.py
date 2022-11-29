@@ -330,7 +330,7 @@ class DeliveryCarrier(models.Model):
         total_full_packages = int(total_weight / max_weight)
         last_package_weight = total_weight % max_weight
 
-        package_weights = [max_weight] * total_full_packages + [last_package_weight] if last_package_weight else []
+        package_weights = [max_weight] * total_full_packages + ([last_package_weight] if last_package_weight else [])
         partial_cost = total_cost / len(package_weights)  # separate the cost uniformly
         for weight in package_weights:
             packages.append(DeliveryPackage(None, weight, default_package_type, total_cost=partial_cost, currency=order.company_id.currency_id, order=order))
