@@ -6,9 +6,9 @@
             <t t-set-slot="toggler">
                 Save current search
             </t>
-            <div class="px-3 py-2">
+            <div class="dropdown-item-text">
                 <input type="text"
-                    class="o_input"
+                    class="o_input mb-2"
                     t-ref="autofocus"
                     t-model.trim="state.description"
                     t-on-keydown="onInputKeydown"
@@ -19,9 +19,7 @@
                 <CheckBox value="state.isShared" onChange.bind="onShareCheckboxChange">
                     Share with all users
                 </CheckBox>
-            </div>
-            <div class="px-3 py-2">
-                <button class="o_save_favorite btn btn-primary" t-on-click="saveFavorite">
+                <button class="o_save_favorite btn btn-primary mt-2" t-on-click="saveFavorite">
                     Save
                 </button>
             </div>

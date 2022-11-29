@@ -124,13 +124,13 @@ QUnit.module("Search", (hooks) => {
         assert.containsOnce(customFilterItem, ".o_filter_condition");
         assert.containsOnce(
             customFilterItem,
-            ".o_filter_condition > select.o_generator_menu_field"
+            ".o_filter_condition select.o_generator_menu_field"
         );
         assert.containsOnce(
             customFilterItem,
-            ".o_filter_condition > select.o_generator_menu_operator"
+            ".o_filter_condition div select.o_generator_menu_operator"
         );
-        assert.containsOnce(customFilterItem, ".o_filter_condition > span.o_generator_menu_value");
+        assert.containsOnce(customFilterItem, ".o_filter_condition div span.o_generator_menu_value");
         assert.containsNone(customFilterItem, ".o_filter_condition .o_or_filter");
         assert.containsNone(customFilterItem, ".o_filter_condition .o_generator_menu_delete");
 
@@ -177,7 +177,7 @@ QUnit.module("Search", (hooks) => {
             await toggleFilterMenu(target);
             await toggleAddCustomFilter(target);
             const optionEls = target.querySelectorAll(
-                ".o_filter_condition > select.o_generator_menu_field option"
+                ".o_filter_condition div select.o_generator_menu_field option"
             );
             assert.strictEqual(optionEls[0].innerText.trim(), "Date");
             assert.strictEqual(optionEls[1].innerText.trim(), "ID");

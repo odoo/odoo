@@ -5,16 +5,14 @@
             <t t-set-slot="toggler">
                 Add Custom Group
             </t>
-            <div class="px-3 py-2">
+            <div class="dropdown-item-text">
                 <select class="w-100 o_input" t-model="state.fieldName">
                     <option t-foreach="props.fields" t-as="field" t-key="field.name"
                     t-att-value="field.name"
                     t-esc="field.string"
                     />
                 </select>
-            </div>
-            <div class="px-3 py-2">
-                <button class="btn btn-primary w-100"
+                <button class="btn btn-primary mt-2"
                     t-on-click="() => props.onAddCustomGroup(state.fieldName)"
                     >
                     Apply

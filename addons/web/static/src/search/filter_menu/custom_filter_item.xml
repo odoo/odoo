@@ -7,91 +7,91 @@
                 Add Custom Filter
             </t>
             <t t-foreach="conditions" t-as="condition" t-key="condition_index">
-                <div class=" o_filter_condition dropdown-item-text position-relative">
-                    <t t-set="fieldType" t-value="fields[condition.field].type"/>
-                    <t t-set="selectedOperator" t-value="OPERATORS[FIELD_TYPES[fieldType]][condition.operator]"/>
-                    <span t-if="!condition_first" class="o_or_filter">or</span>
-                    <select class="o_input o_generator_menu_field"
-                        t-on-change="ev => this.onFieldSelect(condition, ev)"
-                        >
-                        <option t-foreach="fields" t-as="field" t-key="field_index"
-                            t-att-value="field.name"
-                            t-att-selected="field_index === condition.field"
-                            t-esc="field.string"
-                        />
-                    </select>
-                    <select class="o_input o_generator_menu_operator"
-                        t-on-change="ev => this.onOperatorSelect(condition, ev)"
-                        >
-                        <option t-foreach="OPERATORS[FIELD_TYPES[fieldType]]" t-as="operator" t-key="operator_index"
-                            t-att-value="operator.symbol"
-                            t-att-selected="operator_index === condition.operator"
-                            t-esc="operator.description"
-                        />
-                    </select>
-                    <span t-if="!('value' in selectedOperator)" class="o_generator_menu_value">
-                        <t t-if="fieldType === 'date'">
-                            <DatePicker
-                                date="condition.value[0]"
-                                onDateTimeChanged="date => this.onDateTimeChanged(condition, 0, date)"
-                            />
-                            <DatePicker t-if="selectedOperator.symbol === 'between'"
-                                date="condition.value[1]"
-                                onDateTimeChanged="date => this.onDateTimeChanged(condition, 1, date)"
-                            />
-                        </t>
-                        <t t-elif="fieldType === 'datetime'">
-                            <DateTimePicker
-                                date="condition.value[0]"
-                                onDateTimeChanged="date => this.onDateTimeChanged(condition, 0, date)"
-                            />
-                            <DateTimePicker t-if="selectedOperator.symbol === 'between'"
-                                date="condition.value[1]"
-                                onDateTimeChanged="date => this.onDateTimeChanged(condition, 1, date)"
-                            />
-                        </t>
-                        <select t-elif="fieldType === 'selection'" class="o_input"
-                            t-on-change="ev => this.onValueChange(condition, ev)"
-                            >
-                            <option t-foreach="fields[condition.field].selection" t-as="option" t-key="option_index"
-                                t-att-value="option[0]"
-                                t-esc="option[1]"
+                <div class="o_filter_condition d-flex align-items-center">
+                    <div class="dropdown-item-text flex-grow-1">
+                        <t t-set="fieldType" t-value="fields[condition.field].type"/>
+                        <t t-set="selectedOperator" t-value="OPERATORS[FIELD_TYPES[fieldType]][condition.operator]"/>
+                        <span t-if="!condition_first" class="o_or_filter d-block my-2 text-muted text-center text-uppercase fw-bold">or</span>
+                        <select class="o_generator_menu_field o_input d-flex align-items-center" t-on-change="ev => this.onFieldSelect(condition, ev)">
+                            <option t-foreach="fields" t-as="field" t-key="field_index"
+                                t-att-value="field.name"
+                                t-att-selected="field_index === condition.field"
+                                t-esc="field.string"
                             />
                         </select>
-                        <!-- @todo (DAM) I think that the localization should be better consisered below -->
-                        <input t-elif="fieldType === 'float'"
-                            class="o_input"
-                            step="0.01"
-                            t-att-type="DECIMAL_POINT === '.' ? 'number' : 'text'"
-                            t-attf-title="Number using {{ DECIMAL_POINT }} as decimal separator."
-                            t-attf-pattern="[0-9]+([\\{{ DECIMAL_POINT }}][0-9]+)?"
-                            t-model="condition.displayedValue"
-                            t-on-change="ev => this.onValueChange(condition, ev)"
-                        />
-                        <input t-elif="['integer', 'id'].includes(fieldType)"
-                            class="o_input"
-                            step="1"
-                            type="number"
-                            t-model="condition.displayedValue"
-                            t-on-change="ev => this.onValueChange(condition, ev)"
-                        />
-                        <input t-else=""
-                            type="text"
-                            class="o_input"
-                            t-model="condition.displayedValue"
-                            t-on-change="ev => this.onValueChange(condition, ev)"
-                        />
-                    </span>
+                        <select class="o_input o_generator_menu_operator"
+                            t-on-change="ev => this.onOperatorSelect(condition, ev)"
+                            >
+                            <option t-foreach="OPERATORS[FIELD_TYPES[fieldType]]" t-as="operator" t-key="operator_index"
+                                t-att-value="operator.symbol"
+                                t-att-selected="operator_index === condition.operator"
+                                t-esc="operator.description"
+                            />
+                        </select>
+                        <span t-if="!('value' in selectedOperator)" class="o_generator_menu_value">
+                            <t t-if="fieldType === 'date'">
+                                <DatePicker
+                                    date="condition.value[0]"
+                                    onDateTimeChanged="date => this.onDateTimeChanged(condition, 0, date)"
+                                />
+                                <DatePicker t-if="selectedOperator.symbol === 'between'"
+                                    date="condition.value[1]"
+                                    onDateTimeChanged="date => this.onDateTimeChanged(condition, 1, date)"
+                                />
+                            </t>
+                            <t t-elif="fieldType === 'datetime'">
+                                <DateTimePicker
+                                    date="condition.value[0]"
+                                    onDateTimeChanged="date => this.onDateTimeChanged(condition, 0, date)"
+                                />
+                                <DateTimePicker t-if="selectedOperator.symbol === 'between'"
+                                    date="condition.value[1]"
+                                    onDateTimeChanged="date => this.onDateTimeChanged(condition, 1, date)"
+                                />
+                            </t>
+                            <select t-elif="fieldType === 'selection'" class="o_input"
+                                t-on-change="ev => this.onValueChange(condition, ev)"
+                                >
+                                <option t-foreach="fields[condition.field].selection" t-as="option" t-key="option_index"
+                                    t-att-value="option[0]"
+                                    t-esc="option[1]"
+                                />
+                            </select>
+                            <!-- @todo (DAM) I think that the localization should be better consisered below -->
+                            <input t-elif="fieldType === 'float'"
+                                class="o_input"
+                                step="0.01"
+                                t-att-type="DECIMAL_POINT === '.' ? 'number' : 'text'"
+                                t-attf-title="Number using {{ DECIMAL_POINT }} as decimal separator."
+                                t-attf-pattern="[0-9]+([\\{{ DECIMAL_POINT }}][0-9]+)?"
+                                t-model="condition.displayedValue"
+                                t-on-change="ev => this.onValueChange(condition, ev)"
+                            />
+                            <input t-elif="['integer', 'id'].includes(fieldType)"
+                                class="o_input"
+                                step="1"
+                                type="number"
+                                t-model="condition.displayedValue"
+                                t-on-change="ev => this.onValueChange(condition, ev)"
+                            />
+                            <input t-else=""
+                                type="text"
+                                class="o_input"
+                                t-model="condition.displayedValue"
+                                t-on-change="ev => this.onValueChange(condition, ev)"
+                            />
+                        </span>
+                    </div>
                     <i t-if="conditions.length gt 1"
-                        class="fa fa-trash-o o_generator_menu_delete"
-                        role="image"
-                        aria-label="Delete"
-                        title="Delete"
-                        t-on-click="() => this.onRemoveCondition(condition_index)"
+                            class="fa fa-trash-o o_generator_menu_delete d-block position-relative cursor-pointer pe-4"
+                            role="image"
+                            aria-label="Delete"
+                            title="Delete"
+                            t-on-click="() => this.onRemoveCondition(condition_index)"
                     />
                 </div>
             </t>
-            <div class="px-3 py-2">
+            <div class="dropdown-item-text mt-2">
                 <button type="button"
                     class="btn btn-primary o_apply_filter me-2"
                     t-on-click="onApply"
