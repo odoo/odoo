@@ -242,3 +242,34 @@ class StockMove(models.Model):
                                 if not float_is_zero(available_quantity, precision_rounding=line.product_id.uom_id.rounding):
                                     move._update_reserved_quantity(qty, min(qty, available_quantity), move.location_id, existing_lot)
                                     continue
+
+    def _account_entry_move(self, qty, description, svl_id, cost):
+        """ Extend the behavior of `_account_entry_move` from `stock_account` so corrective inventory valuation entries
+        are created for COGS lines if a failed stock picking occurred after closing a POS session and this stock picking
+        was fixed and validated by the user. An example of why a stock picking can fail is if a product requires a
+        serial number for tracking purposes but none was specified. The POS will warn the user about this, but they can
+        choose to ignore that."""
+
+        am_vals = super(StockMove, self)._account_entry_move(qty, description, svl_id, cost)
+
+        # If the `stock_account` implementation didn't create any valuation moves there's nothing for us to add here.
+        if not am_vals or not self.company_id.anglo_saxon_accounting:
+            return am_vals
+
+        company_from = self._is_out() and self.mapped('move_line_ids.location_id.company_id') or False
+        journal_id, _, acc_dest, _ = self._get_accounting_data_for_valuation()
+        acc_expense = self.with_company(self.company_id).product_id.product_tmpl_id.get_product_accounts()['expense'].id
+
+        if self.picking_id.pos_session_id.state == 'closed':
+            # Create Journal Entry for products arriving in the company. In the POS context this means products that
+            # were returned by the customer.
+            if self._is_in() and self._is_returned(valued_type='in'):
+                am_vals.append(self.with_company(company_from)._prepare_account_move_vals(acc_expense, acc_dest, journal_id, qty, description, svl_id, cost))
+
+            # Create Journal Entry for products leaving the company. In the POS context this means sales made through
+            # the POS.
+            if self._is_out() and not self._is_returned(valued_type='out'):
+                cost = -1 * cost
+                am_vals.append(self.with_company(company_from)._prepare_account_move_vals(acc_dest, acc_expense, journal_id, qty, description, svl_id, cost))
+
+        return am_vals
