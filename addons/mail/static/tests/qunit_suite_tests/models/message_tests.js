@@ -211,5 +211,165 @@ QUnit.module("mail", {}, function () {
                 assert.notOk(message.isEmpty);
             }
         );
+
+        QUnit.test(
+            "isSubjectSimilarToOriginThreadName is true if both originThread.name and subject are identical",
+            async function (assert) {
+                assert.expect(1);
+
+                const { messaging } = await start();
+                const message = messaging.models["Message"].insert({
+                    id: 2,
+                    originThread: {
+                        id: 513,
+                        model: "mail.channel",
+                        name: "re: pas xD",
+                    },
+                    subject: "re: pas xD",
+                });
+
+                assert.ok(message.isSubjectSimilarToOriginThreadName);
+            }
+        );
+
+        QUnit.test(
+            "isSubjectSimilarToOriginThreadName is false if originThread.name and subject are different",
+            async function (assert) {
+                assert.expect(1);
+
+                const { messaging } = await start();
+                const message = messaging.models["Message"].insert({
+                    id: 2,
+                    originThread: {
+                        id: 513,
+                        model: "mail.channel",
+                        name: "Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch",
+                    },
+                    subject: "施氏食獅史",
+                });
+
+                assert.notOk(message.isSubjectSimilarToOriginThreadName);
+            }
+        );
+
+        QUnit.test(
+            "isSubjectSimilarToOriginThreadName comparison is case-insensitive",
+            async function (assert) {
+                assert.expect(1);
+
+                const { messaging } = await start();
+                const message = messaging.models["Message"].insert({
+                    id: 2,
+                    originThread: {
+                        id: 513,
+                        model: "mail.channel",
+                        name: "AAaaAA",
+                    },
+                    subject: "aaAAaa",
+                });
+
+                assert.ok(message.isSubjectSimilarToOriginThreadName);
+            }
+        );
+
+        QUnit.test(
+            "isSubjectSimilarToOriginThreadName comparison ignores prefix",
+            async function (assert) {
+                assert.expect(2);
+
+                const { messaging } = await start();
+                const message = messaging.models["Message"].insert({
+                    id: 2,
+                    originThread: {
+                        id: 513,
+                        model: "mail.channel",
+                        name: "quin",
+                    },
+                    subject: "RE:quin",
+                });
+
+                assert.ok(message.isSubjectSimilarToOriginThreadName);
+            }
+        );
+
+        QUnit.test(
+            "isSubjectSimilarToOriginThreadName comparison ignores all prefixes",
+            async function (assert) {
+                assert.expect(1);
+
+                const { messaging } = await start();
+                const message = messaging.models["Message"].insert({
+                    id: 2,
+                    originThread: {
+                        id: 513,
+                        model: "mail.channel",
+                        name: "fw:IMPORTANT",
+                    },
+                    subject: "re:fw:fw:IMPORTANT",
+                });
+
+                assert.ok(message.isSubjectSimilarToOriginThreadName);
+            }
+        );
+
+        QUnit.test(
+            "isSubjectSimilarToOriginThreadName comparison ignores whitespaces around the subject",
+            async function (assert) {
+                assert.expect(1);
+
+                const { messaging } = await start();
+                const message = messaging.models["Message"].insert({
+                    id: 2,
+                    originThread: {
+                        id: 513,
+                        model: "mail.channel",
+                        name: "slt",
+                    },
+                    subject: "\n\v\fslt\r\t  ",
+                });
+
+                assert.ok(message.isSubjectSimilarToOriginThreadName);
+            }
+        );
+
+        QUnit.test(
+            "isSubjectSimilarToOriginThreadName comparison ignores whitespaces around prefixes",
+            async function (assert) {
+                assert.expect(1);
+
+                const { messaging } = await start();
+                const message = messaging.models["Message"].insert({
+                    id: 2,
+                    originThread: {
+                        id: 513,
+                        model: "mail.channel",
+                        name: "slt",
+                    },
+                    subject: "re:\n\v\ffw:\r\tfwd:  slt",
+                });
+
+                assert.ok(message.isSubjectSimilarToOriginThreadName);
+            }
+        );
+
+        QUnit.test(
+            "isSubjectSimilarToOriginThreadName comparison only ignores prefixes at start of the subject",
+            async function (assert) {
+                assert.expect(1);
+
+                const { messaging } = await start();
+                const message = messaging.models["Message"].insert({
+                    id: 2,
+                    originThread: {
+                        id: 513,
+                        model: "mail.channel",
+                        name: "mu",
+                    },
+                    subject: "mure:",
+                });
+
+                assert.notOk(message.isSubjectSimilarToOriginThreadName);
+            }
+        );
     });
 });
