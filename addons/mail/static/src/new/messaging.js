@@ -7,6 +7,8 @@ import { sprintf } from "@web/core/utils/strings";
 import { url } from "@web/core/utils/urls";
 import { htmlToTextContentInline, convertBrToLineBreak, removeFromArray } from "./utils";
 import { prettifyMessageContent } from "./message_prettify_utils";
+import { Thread } from "./core/thread_model";
+import { Partner } from "./core/partner_model";
 
 const { DateTime } = luxon;
 
@@ -58,7 +60,7 @@ export class Messaging {
             threads: {},
             users: {},
             internalUserGroupId: null,
-            registeredImStatusPartners: [],
+            registeredImStatusPartners: reactive([], () => this.updateImStatusRegistration()),
             // messaging menu
             menu: {
                 counter: 5, // sounds about right.
@@ -98,17 +100,27 @@ export class Messaging {
             chatWindows: [],
             commands: [],
         });
-        this.state.discuss.inbox = this.createThread("inbox", env._t("Inbox"), "mailbox", {
+        this.state.discuss.inbox = Thread.insert(this.state, {
+            id: "inbox",
+            name: env._t("Inbox"),
+            type: "mailbox",
             icon: "fa-inbox",
         });
-        this.state.discuss.starred = this.createThread("starred", env._t("Starred"), "mailbox", {
+        this.state.discuss.starred = Thread.insert(this.state, {
+            id: "starred",
+            name: env._t("Starred"),
+            type: "mailbox",
             icon: "fa-star-o",
             counter: 0,
         });
-        this.state.discuss.history = this.createThread("history", env._t("History"), "mailbox", {
+        this.state.discuss.history = Thread.insert(this.state, {
+            id: "history",
+            name: env._t("History"),
+            type: "mailbox",
             icon: "fa-history",
             counter: 0,
         });
+        this.updateImStatusRegistration();
     }
 
     /**
@@ -116,11 +128,14 @@ export class Messaging {
      */
     initialize() {
         this.rpc("/mail/init_messaging", {}, { silent: true }).then((data) => {
-            this.createPartner(data.current_partner.id, data.current_partner.name);
-            this.state.partnerRoot = this.createPartner(
-                data.partner_root.id,
-                data.partner_root.name
-            );
+            Partner.insert(this.state, {
+                id: data.current_partner.id,
+                name: data.current_partner.name,
+            });
+            this.state.partnerRoot = Partner.insert(this.state, {
+                id: data.partner_root.id,
+                name: data.partner_root.name,
+            });
             for (const channelData of data.channels) {
                 this.createChannelThread(channelData);
             }
@@ -136,7 +151,7 @@ export class Messaging {
     }
 
     /**
-     * todo: merge this with createThread (?)
+     * todo: merge this with Thread.insert() (?)
      */
     createChannelThread(serverData) {
         const { id, name, last_message_id, seen_message_id, description, channel } = serverData;
@@ -148,7 +163,10 @@ export class Messaging {
             !serverData.message_needaction_counter &&
             !serverData.group_based_subscription;
         const isAdmin = channelType !== "group" && serverData.create_uid === this.state.user.uid;
-        this.createThread(id, name, type, {
+        Thread.insert(this.state, {
+            id,
+            name,
+            type,
             isUnread,
             icon: "fa-hashtag",
             description,
@@ -166,84 +184,11 @@ export class Messaging {
         });
     }
 
-    updateImStatusRegistration(partner) {
-        if (partner.im_status !== "im_partner" && !partner.is_public) {
-            this.state.registeredImStatusPartners.push(partner.id);
-        }
+    updateImStatusRegistration() {
         this.imStatusService.registerToImStatus(
             "res.partner",
             toRaw(this.state.registeredImStatusPartners)
         );
-    }
-
-    createComposer({ threadId, messageId }) {
-        return {
-            messageId,
-            threadId,
-            textInputContent: messageId
-                ? convertBrToLineBreak(this.state.messages[messageId].body)
-                : "",
-        };
-    }
-
-    createThread(id, name, type, data = {}) {
-        if (id in this.state.threads) {
-            return this.state.threads[id];
-        }
-        const thread = {
-            hasWriteAccess: data.serverData && data.serverData.hasWriteAccess,
-            id,
-            name,
-            type,
-            counter: 0,
-            isUnread: false,
-            icon: false,
-            loadMore: false,
-            description: false,
-            status: "new", // 'new', 'loading', 'ready'
-            imgUrl: false,
-            messages: [], // list of ids
-            chatPartnerId: false,
-            isAdmin: false,
-            canLeave: data.canLeave || false,
-            isDescriptionChangeable: ["channel", "group"].includes(type),
-            isRenameable: ["chat", "channel", "group"].includes(type),
-            composer: this.createComposer({ threadId: id }),
-            serverLastSeenMsgByCurrentUser: data.serverData
-                ? data.serverData.seen_message_id
-                : null,
-        };
-        for (const key in data) {
-            thread[key] = data[key];
-        }
-        if (type === "channel") {
-            this.state.discuss.channels.threads.push(thread.id);
-            const avatarCacheKey = data.serverData.channel.avatarCacheKey;
-            thread.imgUrl = `/web/image/mail.channel/${id}/avatar_128?unique=${avatarCacheKey}`;
-        }
-        if (type === "chat") {
-            thread.is_pinned = data.serverData.is_pinned;
-            this.state.discuss.chats.threads.push(thread.id);
-            if (data.serverData) {
-                const avatarCacheKey = data.serverData.channel.avatarCacheKey;
-                for (const elem of data.serverData.channel.channelMembers[0][1]) {
-                    this.createPartner(elem.persona.partner.id, elem.persona.partner.name);
-                    if (
-                        elem.persona.partner.id !== this.state.user.partnerId ||
-                        (data.serverData.channel.channelMembers[0][1].length === 1 &&
-                            elem.persona.partner.id === this.state.user.partnerId)
-                    ) {
-                        thread.chatPartnerId = elem.persona.partner.id;
-                        thread.name = this.state.partners[elem.persona.partner.id].name;
-                    }
-                }
-                thread.imgUrl = `/web/image/res.partner/${thread.chatPartnerId}/avatar_128?unique=${avatarCacheKey}`;
-            }
-        }
-
-        this.state.threads[id] = thread;
-        // return reactive version
-        return this.state.threads[id];
     }
 
     /**
@@ -285,7 +230,7 @@ export class Messaging {
             id,
             type,
             body,
-            author: this.createPartner(author.id, author.name),
+            author: Partner.insert(this.state, { id: author.id, name: author.name }),
             isAuthor: author.id === this.state.user.partnerId,
             dateDay,
             dateTimeStr: dateTime.toLocaleString(DateTime.DATETIME_SHORT),
@@ -355,17 +300,6 @@ export class Messaging {
             },
             this.state.threads[threadId]
         );
-    }
-
-    createPartner(id, name) {
-        if (id in this.state.partners) {
-            return this.state.partners[id];
-        }
-        const partner = { id, name, im_status: null };
-        this.state.partners[id] = partner;
-        this.updateImStatusRegistration(partner);
-        // return reactive version
-        return this.state.partners[id];
     }
 
     initCommands() {
@@ -514,7 +448,13 @@ export class Messaging {
             // to force a reload
             this.state.threads[localId].status = "new";
         }
-        const thread = this.createThread(localId, localId, "chatter", { resId, resModel });
+        const thread = Thread.insert(this.state, {
+            id: localId,
+            name: localId,
+            type: "chatter",
+            resId,
+            resModel,
+        });
         if (resId === false) {
             const tmpId = `virtual${this.nextId++}`;
             const tmpData = {
@@ -651,7 +591,7 @@ export class Messaging {
                             preview.last_message.body
                         );
                         const { id, name } = preview.last_message.author;
-                        this.createPartner(id, name);
+                        Partner.insert(this.state, { id, name });
                     }
                     return previews;
                 });
@@ -841,7 +781,10 @@ export class Messaging {
         await this.orm.call("mail.channel", "add_members", [[id]], {
             partner_ids: [this.state.user.partnerId],
         });
-        this.createThread(id, name, "channel", {
+        Thread.insert(this.state, {
+            id,
+            name,
+            type: "channel",
             serverData: { channel: { avatarCacheKey: "hello" } },
         });
         this.sortChannels();
@@ -852,7 +795,12 @@ export class Messaging {
         const data = await this.orm.call("mail.channel", "channel_get", [], {
             partners_to: [id],
         });
-        return this.createThread(data.id, undefined, "chat", { serverData: data });
+        return Thread.insert(this.state, {
+            id: data.id,
+            name: undefined,
+            type: "chat",
+            serverData: data,
+        });
     }
 
     async leaveChannel(id) {
