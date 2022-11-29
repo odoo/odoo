@@ -7,19 +7,28 @@
                 Add Custom Filter
             </t>
             <t t-foreach="conditions" t-as="condition" t-key="condition_index">
-                <div class=" o_filter_condition dropdown-item-text position-relative">
+                <div class="o_filter_condition dropdown-item-text position-relative">
                     <t t-set="fieldType" t-value="fields[condition.field].type"/>
                     <t t-set="selectedOperator" t-value="OPERATORS[FIELD_TYPES[fieldType]][condition.operator]"/>
-                    <span t-if="!condition_first" class="o_or_filter">or</span>
-                    <select class="o_input o_generator_menu_field"
-                        t-on-change="ev => this.onFieldSelect(condition, ev)"
-                        >
-                        <option t-foreach="fields" t-as="field" t-key="field_index"
-                            t-att-value="field.name"
-                            t-att-selected="field_index === condition.field"
-                            t-esc="field.string"
+                    <span t-if="!condition_first" class="o_or_filter d-block position-relative my-2 text-muted text-center text-uppercase fw-bold">or</span>
+                    <div class="d-flex align-items-center">
+                        <select class="o_input o_generator_menu_field"
+                            t-on-change="ev => this.onFieldSelect(condition, ev)"
+                            >
+                            <option t-foreach="fields" t-as="field" t-key="field_index"
+                                t-att-value="field.name"
+                                t-att-selected="field_index === condition.field"
+                                t-esc="field.string"
+                            />
+                        </select>
+                        <i t-if="conditions.length gt 1"
+                            class="fa fa-trash-o o_generator_menu_delete d-block position-relative ms-3 cursor-pointer"
+                            role="image"
+                            aria-label="Delete"
+                            title="Delete"
+                            t-on-click="() => this.onRemoveCondition(condition_index)"
                         />
-                    </select>
+                    </div>
                     <select class="o_input o_generator_menu_operator"
                         t-on-change="ev => this.onOperatorSelect(condition, ev)"
                         >
@@ -82,16 +91,9 @@
                             t-on-change="ev => this.onValueChange(condition, ev)"
                         />
                     </span>
-                    <i t-if="conditions.length gt 1"
-                        class="fa fa-trash-o o_generator_menu_delete"
-                        role="image"
-                        aria-label="Delete"
-                        title="Delete"
-                        t-on-click="() => this.onRemoveCondition(condition_index)"
-                    />
                 </div>
             </t>
-            <div class="px-3 py-2">
+            <div class="o_add_buttons mt-2">
                 <button type="button"
                     class="btn btn-primary o_apply_filter me-2"
                     t-on-click="onApply"
