@@ -284,6 +284,19 @@ class AccountTestInvoicingCommon(TransactionCase):
         }
 
     @classmethod
+    def _instantiate_basic_test_tax_group(cls, company=None, country=None):
+        company = company or cls.env.company
+        vals = {
+            'name': 'Test tax group',
+            'company_id': company.id,
+            'tax_receivable_account_id': cls.company_data['default_account_receivable'].sudo().copy({'company_id': company.id}).id,
+            'tax_payable_account_id': cls.company_data['default_account_payable'].sudo().copy({'company_id': company.id}).id,
+        }
+        if country:
+            vals['country_id'] = country.id
+        return cls.env['account.tax.group'].sudo().create(vals)
+
+    @classmethod
     def setup_armageddon_tax(cls, tax_name, company_data):
         return cls.env['account.tax'].create({
             'name': '%s (group)' % tax_name,
