@@ -330,6 +330,10 @@ Dropdown.props = {
         type: String,
         optional: true,
     },
+    disabled: {
+        type: Boolean,
+        optional: true,
+    },
     toggler: {
         type: String,
         optional: true,
