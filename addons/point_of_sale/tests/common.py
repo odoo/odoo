@@ -160,6 +160,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             'company_id': cls.company.id,
             'sequence': 20
         })
+        cls.sales_account = cls.company_data['default_account_revenue']
         cls.invoice_journal = cls.company_data['default_journal_sale']
         cls.receivable_account = cls.company_data['default_account_receivable']
         cls.tax_received_account = cls.company_data['default_account_tax_sale']
@@ -621,3 +622,15 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         self.bank_pm = self.pos_session.payment_method_ids.filtered(lambda pm: not pm.is_cash_count and not pm.split_transactions)[:1]
         self.cash_split_pm = self.pos_session.payment_method_ids.filtered(lambda pm: pm.is_cash_count and pm.split_transactions)[:1]
         self.bank_split_pm = self.pos_session.payment_method_ids.filtered(lambda pm: not pm.is_cash_count and pm.split_transactions)[:1]
+
+    # Backported from 15.0
+    def _assert_account_move(self, account_move, expected_account_move_vals):
+        if expected_account_move_vals:
+            # We allow partial checks of the lines of the account move if `line_ids_predicate` is specified.
+            # This means that only those that satisfy the predicate are compared to the expected account move line_ids.
+            line_ids_predicate = expected_account_move_vals.pop('line_ids_predicate', lambda _: True)
+            self.assertRecordValues(account_move.line_ids.filtered(line_ids_predicate), expected_account_move_vals.pop('line_ids'))
+            self.assertRecordValues(account_move, [expected_account_move_vals])
+        else:
+            # if the expected_account_move_vals is falsy, the account_move should be falsy.
+            self.assertFalse(account_move)
