@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.ImStatus" t-inherit-mode="extension">
+        <xpath expr="//span" position="inside">
+            <i t-if="props.persona.im_status === 'leave_online'" class="fa fa-plane fa-stack-1x text-primary" title="Online" role="img" aria-label="User is online"/>
+            <i t-if="props.persona.im_status === 'leave_away'" class="fa fa-plane fa-stack-1x text-warning" title="Idle" role="img" aria-label="User is idle"/>
+            <i t-if="props.persona.im_status === 'leave_offline'" class="fa fa-plane fa-stack-1x text-700" title="Out of office" role="img" aria-label="User is out of office"/>
+        </xpath>        
+    </t>
+</templates>

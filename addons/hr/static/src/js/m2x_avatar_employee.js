@@ -1,6 +1,6 @@
 /** @odoo-module alias=hr.Many2OneAvatarEmployee **/
 
-import fieldRegistry from 'web.field_registry';
+import fieldRegistry from "web.field_registry";
 
 import {
     Many2OneAvatarUser,
@@ -8,8 +8,7 @@ import {
     KanbanMany2ManyAvatarUser,
     ListMany2ManyAvatarUser,
     Many2ManyAvatarUser,
-} from '@mail/js/m2x_avatar_user';
-
+} from "@mail/web/fields/m2x_avatar_user";
 
 // This module defines variants of the Many2OneAvatarUser and Many2ManyAvatarUser
 // field widgets, to support fields pointing to 'hr.employee'. It also defines the
@@ -19,7 +18,7 @@ import {
 //   <field name="employee_id" widget="many2one_avatar_employee"/>
 
 const M2XAvatarEmployeeMixin = {
-    supportedModels: ['hr.employee', 'hr.employee.public'],
+    supportedModels: ["hr.employee", "hr.employee.public"],
 
     //----------------------------------------------------------------------
     // Private
@@ -40,14 +39,14 @@ const M2XAvatarEmployeeMixin = {
         ev.stopPropagation(); // in list view, prevent from opening the record
         const employeeId = this._getEmployeeID(ev);
         this._openChat({ employeeId: employeeId });
-    }
+    },
 };
 
 export const Many2OneAvatarEmployee = Many2OneAvatarUser.extend(M2XAvatarEmployeeMixin);
 export const KanbanMany2OneAvatarEmployee = KanbanMany2OneAvatarUser.extend(M2XAvatarEmployeeMixin);
 
-fieldRegistry.add('many2one_avatar_employee', Many2OneAvatarEmployee);
-fieldRegistry.add('kanban.many2one_avatar_employee', KanbanMany2OneAvatarEmployee);
+fieldRegistry.add("many2one_avatar_employee", Many2OneAvatarEmployee);
+fieldRegistry.add("kanban.many2one_avatar_employee", KanbanMany2OneAvatarEmployee);
 
 const M2MAvatarEmployeeMixin = Object.assign(M2XAvatarEmployeeMixin, {
     //----------------------------------------------------------------------
@@ -55,19 +54,25 @@ const M2MAvatarEmployeeMixin = Object.assign(M2XAvatarEmployeeMixin, {
     //----------------------------------------------------------------------
 
     _getEmployeeID(ev) {
-        return parseInt(ev.target.getAttribute('data-id'), 10);
+        return parseInt(ev.target.getAttribute("data-id"), 10);
     },
 });
 
 export const Many2ManyAvatarEmployee = Many2ManyAvatarUser.extend(M2MAvatarEmployeeMixin, {});
 
-export const KanbanMany2ManyAvatarEmployee = KanbanMany2ManyAvatarUser.extend(M2MAvatarEmployeeMixin, {});
+export const KanbanMany2ManyAvatarEmployee = KanbanMany2ManyAvatarUser.extend(
+    M2MAvatarEmployeeMixin,
+    {}
+);
 
-export const ListMany2ManyAvatarEmployee = ListMany2ManyAvatarUser.extend(M2MAvatarEmployeeMixin, {});
+export const ListMany2ManyAvatarEmployee = ListMany2ManyAvatarUser.extend(
+    M2MAvatarEmployeeMixin,
+    {}
+);
 
-fieldRegistry.add('many2many_avatar_employee', Many2ManyAvatarEmployee);
-fieldRegistry.add('kanban.many2many_avatar_employee', KanbanMany2ManyAvatarEmployee);
-fieldRegistry.add('list.many2many_avatar_employee', ListMany2ManyAvatarEmployee);
+fieldRegistry.add("many2many_avatar_employee", Many2ManyAvatarEmployee);
+fieldRegistry.add("kanban.many2many_avatar_employee", KanbanMany2ManyAvatarEmployee);
+fieldRegistry.add("list.many2many_avatar_employee", ListMany2ManyAvatarEmployee);
 
 export default {
     Many2OneAvatarEmployee,

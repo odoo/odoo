@@ -23,6 +23,7 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
             const attachment = this.getRecords("ir.attachment", [["id", "=", attachmentId]])[0];
             return {
                 filename: attachment.name,
+                name: attachment.name,
                 id: attachment.id,
                 mimetype: attachment.mimetype,
                 size: attachment.file_size,
@@ -53,6 +54,10 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
         }
         if (route === "/mail/channel/ping") {
             return;
+        }
+        if (route === "/mail/channel/members") {
+            const { channel_id, known_member_ids } = args;
+            return this._mockMailChannelLoadMoreMembers([channel_id], known_member_ids);
         }
         if (route === "/mail/history/messages") {
             const { min_id, max_id, limit } = args;
@@ -85,6 +90,26 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
                 args.post_data,
                 args.context
             );
+        }
+        if (route === "/mail/message/add_reaction") {
+            return this._mockRouteMailMessageAddReaction(args);
+        }
+        if (route === "/mail/message/remove_reaction") {
+            return this._mockRouteMailMessageRemoveReaction(args);
+        }
+        if (route === "/mail/message/update_content") {
+            this.pyEnv["mail.message"].write([args.message_id], {
+                body: args.body,
+                attachment_ids: args.attachment_ids,
+            });
+            this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartnerId, "mail.record/insert", {
+                Message: {
+                    id: args.message_id,
+                    body: args.body,
+                    attachment_ids: this._mockIrAttachment_attachmentFormat(args.attachment_ids),
+                },
+            });
+            return args;
         }
         if (route === "/mail/read_subscription_data") {
             const follower_id = args.follower_id;
@@ -223,6 +248,36 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
         }
     },
     /**
+     * Simulates `/mail/message/add_reaction` route.
+     */
+    _mockRouteMailMessageAddReaction({ content, message_id: messageId }) {
+        return this._mockMailMessage_messageAddReaction(content, messageId);
+    },
+    /**
+     * Simulates `/mail/message/remove_reaction` route.
+     */
+    _mockRouteMailMessageRemoveReaction({ content, message_id: messageId }) {
+        this._mockMailMessage_messageRemoveReaction(content, messageId);
+        const reactions = this.pyEnv["mail.message.reaction"].search([
+            ["message_id", "=", messageId],
+            ["content", "=", content],
+        ]);
+        return {
+            id: messageId,
+            messageReactionGroups: [
+                [
+                    reactions.length > 0 ? "insert" : "insert-and-unlink",
+                    {
+                        content,
+                        count: reactions.length,
+                        message: { id: messageId },
+                        partners: [["insert-and-unlink", { id: this.pyEnv.currentPartnerId }]],
+                    },
+                ],
+            ],
+        };
+    },
+    /**
      * Simulates the `/mail/history/messages` route.
      *
      * @private
@@ -231,7 +286,18 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
     _mockRouteMailMessageHistory(min_id = false, max_id = false, limit = 30) {
         const domain = [["needaction", "=", false]];
         const messages = this._mockMailMessage_MessageFetch(domain, max_id, min_id, limit);
-        return this._mockMailMessageMessageFormat(messages.map((message) => message.id));
+        const messagesWithNotification = messages.filter((message) => {
+            const notifs = this.pyEnv["mail.notification"].searchRead([
+                ["mail_message_id", "=", message.id],
+                ["is_read", "=", true],
+                ["res_partner_id", "=", this.currentPartnerId],
+            ]);
+            return notifs.length > 0;
+        });
+
+        return this._mockMailMessageMessageFormat(
+            messagesWithNotification.map((message) => message.id)
+        );
     },
     /**
      * Simulates the `/mail/inbox/messages` route.
@@ -412,15 +478,19 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
             ]);
             // search read returns many2one relations as an array [id, display_name].
             // But the original route does not. Thus, we need to change it now.
-            followers.forEach((follower) => (follower.partner_id = follower.partner_id[0]));
+            followers.forEach((follower) => {
+                follower.partner_id = follower.partner_id[0];
+                follower.partner = this._mockResPartnerMailPartnerFormat([follower.partner_id]).get(
+                    follower.partner_id
+                );
+            });
             res["followers"] = followers;
         }
         if (request_list.includes("suggestedRecipients")) {
-            res[
-                "suggestedRecipients"
-            ] = this._mockMailThread_MessageGetSuggestedRecipients(thread_model, [thread.id])[
-                thread_id
-            ];
+            res["suggestedRecipients"] = this._mockMailThread_MessageGetSuggestedRecipients(
+                thread_model,
+                [thread.id]
+            )[thread_id];
         }
         return res;
     },

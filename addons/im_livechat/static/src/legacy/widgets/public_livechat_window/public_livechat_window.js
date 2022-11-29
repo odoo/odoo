@@ -29,7 +29,7 @@ const PublicLivechatWindow = Widget.extend({
     /**
      * @param {Widget} parent
      * @param {Messaging} messaging
-     * @param {@im_livechat/legacy/models/public_livechat} thread
+     * @param {@im_livechat/legacy/legacy_models/public_livechat} thread
      */
     init(parent, messaging, thread) {
         this._super(parent);
