@@ -5,3 +5,16 @@
 .o-chatter-disabled .o-mail-message-actions {
     display: none;
 }
+
+.o-mail-chatter-topbar-follower-list-button:focus {
+    background-color: $gray-200;
+}
+
+.o-mail-chatter-topbar-follower-list-dropdown {
+    /**
+     * Note: Min() refers to CSS min() and not SCSS min().
+     *
+     * To by-pass SCSS min() shadowing CSS min(), we rely on SCSS being case-sensitive while CSS isn't.
+     */
+    max-width: Min(400px, 95vw);
+}

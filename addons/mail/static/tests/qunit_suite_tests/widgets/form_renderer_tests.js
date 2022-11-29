@@ -317,7 +317,7 @@ QUnit.module("mail", {}, function () {
             );
             assert.containsNone(
                 document.body,
-                ".o_FollowerListMenuView",
+                ".o-mail-chatter-topbar-follower-list",
                 "there should be no followers menu because the 'message_follower_ids' field is not present in 'oe_chatter'"
             );
             assert.containsOnce(document.body, ".o_Chatter_thread", "there should be a thread");
@@ -369,7 +369,7 @@ QUnit.module("mail", {}, function () {
                 );
                 assert.containsOnce(
                     document.body,
-                    ".o_FollowerListMenuView",
+                    ".o-mail-chatter-topbar-follower-list",
                     "there should be a followers menu"
                 );
                 assert.containsOnce(document.body, ".o_Chatter_thread", "there should be a thread");
@@ -418,7 +418,7 @@ QUnit.module("mail", {}, function () {
             );
             assert.containsOnce(
                 document.body,
-                ".o_FollowerListMenuView",
+                ".o-mail-chatter-topbar-follower-list",
                 "there should be a followers menu"
             );
             assert.containsNone(

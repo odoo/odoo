@@ -7,7 +7,7 @@ import { Composer } from "../composer/composer";
 import { ActivityList } from "../activity/activity_list";
 import { Component, useState, onWillUpdateProps, useChildSubEnv, useRef } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { useHover } from "../utils";
+import { onExternalClick, useHover } from "../utils";
 
 export class Chatter extends Component {
     setup() {
@@ -21,8 +21,12 @@ export class Chatter extends Component {
             attachments: [],
             composing: false, // false, 'message' or 'note'
             followers: [],
+            isFollowerDropdownOpen: false,
         });
         this.unfollowHover = useHover("unfollow");
+        onExternalClick("follower-list", () => {
+            this.state.isFollowerDropdownOpen = false;
+        });
 
         this.load();
         useChildSubEnv({
@@ -45,6 +49,11 @@ export class Chatter extends Component {
 
     get followingText() {
         return this.env._t("Following");
+    }
+
+    get isDisabled() {
+        return !this.props.resId;
+        // TODO should depend on access rights on document
     }
 
     get isFollower() {
@@ -82,6 +91,10 @@ export class Chatter extends Component {
             partner_ids: [this.messaging.user.partnerId],
         });
         this.load(this.props.resId, ["followers", "suggestedRecipients"]);
+    }
+
+    onClickFollowersButton() {
+        this.state.isFollowerDropdownOpen = !this.state.isFollowerDropdownOpen;
     }
 
     async onClickUnfollow() {

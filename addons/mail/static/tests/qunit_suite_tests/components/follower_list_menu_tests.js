@@ -9,7 +9,7 @@ QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
         QUnit.module("follower_list_menu_tests.js");
 
-        QUnit.skipRefactoring("base rendering not editable", async function (assert) {
+        QUnit.test("base rendering not editable", async function (assert) {
             assert.expect(5);
 
             const { openView } = await start();
@@ -22,34 +22,34 @@ QUnit.module("mail", {}, function () {
             );
             assert.containsOnce(
                 document.body,
-                ".o_FollowerListMenuView",
+                ".o-mail-chatter-topbar-follower-list",
                 "should have followers menu component"
             );
             assert.containsOnce(
                 document.body,
-                ".o_FollowerListMenuView_buttonFollowers",
+                ".o-mail-chatter-topbar-follower-list-button",
                 "should have followers button"
             );
             assert.ok(
-                document.querySelector(".o_FollowerListMenuView_buttonFollowers").disabled,
+                document.querySelector(".o-mail-chatter-topbar-follower-list-button").disabled,
                 "followers button should be disabled"
             );
             assert.containsNone(
                 document.body,
-                ".o_FollowerListMenuView_dropdown",
+                ".o-mail-chatter-topbar-follower-list-dropdown",
                 "followers dropdown should not be opened"
             );
 
-            document.querySelector(".o_FollowerListMenuView_buttonFollowers").click();
+            document.querySelector(".o-mail-chatter-topbar-follower-list-button").click();
             await nextTick();
             assert.containsNone(
                 document.body,
-                ".o_FollowerListMenuView_dropdown",
+                ".o-mail-chatter-topbar-follower-list-dropdown",
                 "followers dropdown should still be closed as button is disabled"
             );
         });
 
-        QUnit.skipRefactoring("base rendering editable", async function (assert) {
+        QUnit.test("base rendering editable", async function (assert) {
             assert.expect(5);
 
             const pyEnv = await startServer();
@@ -73,28 +73,28 @@ QUnit.module("mail", {}, function () {
 
             assert.containsOnce(
                 document.body,
-                ".o_FollowerListMenuView",
+                ".o-mail-chatter-topbar-follower-list",
                 "should have followers menu component"
             );
             assert.containsOnce(
                 document.body,
-                ".o_FollowerListMenuView_buttonFollowers",
+                ".o-mail-chatter-topbar-follower-list-button",
                 "should have followers button"
             );
             assert.notOk(
-                document.querySelector(".o_FollowerListMenuView_buttonFollowers").disabled,
+                document.querySelector(".o-mail-chatter-topbar-follower-list-button").disabled,
                 "followers button should not be disabled"
             );
             assert.containsNone(
                 document.body,
-                ".o_FollowerListMenuView_dropdown",
+                ".o-mail-chatter-topbar-follower-list-dropdown",
                 "followers dropdown should not be opened"
             );
 
-            await click(".o_FollowerListMenuView_buttonFollowers");
+            await click(".o-mail-chatter-topbar-follower-list-button");
             assert.containsOnce(
                 document.body,
-                ".o_FollowerListMenuView_dropdown",
+                ".o-mail-chatter-topbar-follower-list-dropdown",
                 "followers dropdown should be opened"
             );
         });
@@ -169,24 +169,24 @@ QUnit.module("mail", {}, function () {
 
             assert.containsOnce(
                 document.body,
-                ".o_FollowerListMenuView",
+                ".o-mail-chatter-topbar-follower-list",
                 "should have followers menu component"
             );
             assert.containsOnce(
                 document.body,
-                ".o_FollowerListMenuView_buttonFollowers",
+                ".o-mail-chatter-topbar-follower-list-button",
                 "should have followers button"
             );
             assert.strictEqual(
-                document.querySelector(".o_FollowerListMenuView_buttonFollowersCount").textContent,
+                document.querySelector(".o-mail-chatter-topbar-followers-count").textContent,
                 "1",
                 "Followers counter should be equal to 1"
             );
 
-            await click(".o_FollowerListMenuView_buttonFollowers");
+            await click(".o-mail-chatter-topbar-follower-list-button");
             assert.containsOnce(
                 document.body,
-                ".o_FollowerListMenuView_dropdown",
+                ".o-mail-chatter-topbar-follower-list-dropdown",
                 "followers dropdown should be opened"
             );
             assert.containsOnce(
@@ -198,20 +198,20 @@ QUnit.module("mail", {}, function () {
             await click(".o_FollowerListMenuView_addFollowersButton");
             assert.containsNone(
                 document.body,
-                ".o_FollowerListMenuView_dropdown",
+                ".o-mail-chatter-topbar-follower-list-dropdown",
                 "followers dropdown should be closed after click on 'Add followers'"
             );
             assert.verifySteps(["action:open_view"]);
             assert.strictEqual(
-                document.querySelector(".o_FollowerListMenuView_buttonFollowersCount").textContent,
+                document.querySelector(".o-mail-chatter-topbar-followers-count").textContent,
                 "2",
                 "Followers counter should now be equal to 2"
             );
 
-            await click(".o_FollowerListMenuView_buttonFollowers");
+            await click(".o-mail-chatter-topbar-follower-list-button");
             assert.containsN(
                 document.body,
-                ".o_FollowerMenu_follower",
+                ".o-mail-chatter-topbar-follower-list-follower",
                 2,
                 "Follower list should be refreshed and contain 2 followers"
             );
@@ -262,7 +262,7 @@ QUnit.module("mail", {}, function () {
                 views: [[false, "form"]],
             });
 
-            await click(".o_FollowerListMenuView_buttonFollowers");
+            await click(".o-mail-chatter-topbar-follower-list-button");
             assert.containsOnce(document.body, ".o_FollowerView", "should have follower component");
             assert.containsOnce(
                 document.body,
@@ -324,7 +324,7 @@ QUnit.module("mail", {}, function () {
                     views: [[false, "form"]],
                 });
 
-                await click(".o_FollowerListMenuView_buttonFollowers");
+                await click(".o-mail-chatter-topbar-follower-list-button");
                 assert.containsNone(
                     document.body,
                     ".o_FollowerListMenuView_addFollowersButton",
@@ -396,7 +396,7 @@ QUnit.module("mail", {}, function () {
                     views: [[false, "form"]],
                 });
 
-                await click(".o_FollowerListMenuView_buttonFollowers");
+                await click(".o-mail-chatter-topbar-follower-list-button");
                 assert.containsOnce(
                     document.body,
                     ".o_FollowerListMenuView_addFollowersButton",
@@ -450,10 +450,10 @@ QUnit.module("mail", {}, function () {
                     views: [[false, "form"]],
                 });
 
-                await click(".o_FollowerListMenuView_buttonFollowers");
+                await click(".o-mail-chatter-topbar-follower-list-button");
                 assert.containsOnce(
                     document.body,
-                    ".o_FollowerListMenuView_noFollowers.disabled",
+                    ".o-mail-chatter-topbar-follower-list-no-followers.disabled",
                     "should display 'No Followers' dropdown-item"
                 );
             }

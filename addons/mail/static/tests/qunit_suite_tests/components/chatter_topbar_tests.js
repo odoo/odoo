@@ -410,19 +410,19 @@ QUnit.module("mail", {}, function () {
 
             assert.containsOnce(
                 document.body,
-                ".o_FollowerListMenuView",
+                ".o-mail-chatter-topbar-follower-list",
                 "should have followers menu component"
             );
             assert.containsOnce(
                 document.body,
-                ".o_FollowerListMenuView_buttonFollowers",
+                ".o-mail-chatter-topbar-follower-list-button",
                 "should have followers button"
             );
 
-            await click(".o_FollowerListMenuView_buttonFollowers");
+            await click(".o-mail-chatter-topbar-follower-list-button");
             assert.containsOnce(
                 document.body,
-                ".o_FollowerListMenuView_dropdown",
+                ".o-mail-chatter-topbar-follower-list-dropdown",
                 "followers dropdown should be opened"
             );
             assert.containsN(

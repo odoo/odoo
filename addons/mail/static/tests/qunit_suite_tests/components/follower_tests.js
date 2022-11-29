@@ -35,7 +35,7 @@ QUnit.module("mail", {}, function () {
                 res_model: "res.partner",
                 views: [[false, "form"]],
             });
-            await click(".o_FollowerListMenuView_buttonFollowers");
+            await click(".o-mail-chatter-topbar-follower-list-button");
             assert.containsOnce(document.body, ".o_FollowerView", "should have follower component");
             assert.containsOnce(
                 document.body,
@@ -76,7 +76,7 @@ QUnit.module("mail", {}, function () {
                 res_model: "res.partner",
                 views: [[false, "form"]],
             });
-            await click(".o_FollowerListMenuView_buttonFollowers");
+            await click(".o-mail-chatter-topbar-follower-list-button");
             assert.containsOnce(document.body, ".o_FollowerView", "should have follower component");
             assert.containsOnce(
                 document.body,
@@ -144,7 +144,7 @@ QUnit.module("mail", {}, function () {
                     openFormDef.resolve();
                 },
             });
-            await click(".o_FollowerListMenuView_buttonFollowers");
+            await click(".o-mail-chatter-topbar-follower-list-button");
             assert.containsOnce(document.body, ".o_FollowerView", "should have follower component");
             assert.containsOnce(
                 document.body,
@@ -193,7 +193,7 @@ QUnit.module("mail", {}, function () {
                 res_model: "res.partner",
                 views: [[false, "form"]],
             });
-            await click(".o_FollowerListMenuView_buttonFollowers");
+            await click(".o-mail-chatter-topbar-follower-list-button");
             assert.containsOnce(document.body, ".o_FollowerView", "should have follower component");
             assert.containsOnce(
                 document.body,
@@ -246,7 +246,7 @@ QUnit.module("mail", {}, function () {
                 res_model: "res.partner",
                 views: [[false, "form"]],
             });
-            await click(".o_FollowerListMenuView_buttonFollowers");
+            await click(".o-mail-chatter-topbar-follower-list-button");
             assert.containsOnce(document.body, ".o_FollowerView", "should have follower component");
             assert.containsOnce(
                 document.body,

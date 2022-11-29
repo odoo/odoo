@@ -40,7 +40,7 @@ QUnit.module("mail", {}, function () {
                 res_id: pyEnv.currentPartnerId,
                 views: [[false, "form"]],
             });
-            await click(".o_FollowerListMenuView_buttonFollowers");
+            await click(".o-mail-chatter-topbar-follower-list-button");
             await click(".o_FollowerView_editButton");
             assert.containsOnce(
                 document.body,
@@ -103,7 +103,7 @@ QUnit.module("mail", {}, function () {
                 res_id: pyEnv.currentPartnerId,
                 views: [[false, "form"]],
             });
-            await click(".o_FollowerListMenuView_buttonFollowers");
+            await click(".o-mail-chatter-topbar-follower-list-button");
             await click(".o_FollowerView_editButton");
             assert.notOk(
                 $(".o_FollowerSubtypeView:contains(TestSubtype) .o_FollowerSubtypeView_checkbox")[0]
@@ -145,7 +145,7 @@ QUnit.module("mail", {}, function () {
                 res_id: pyEnv.currentPartnerId,
                 views: [[false, "form"]],
             });
-            await click(".o_FollowerListMenuView_buttonFollowers");
+            await click(".o-mail-chatter-topbar-follower-list-button");
             await click(".o_FollowerView_editButton");
             assert.notOk(
                 document.querySelector(
