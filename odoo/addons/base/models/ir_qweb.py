@@ -873,9 +873,7 @@ class IrQWeb(models.AbstractModel):
             )
 
         context = {'dev_mode': 'qweb' in tools.config['dev_mode']}
-        if 'xml' in tools.config['dev_mode']:
-            context['is_t_cache_disabled'] = True
-        elif 'disable-t-cache' in debug:
+        if 'xml' in tools.config['dev_mode'] or 'disable-t-cache' in debug:
             context['is_t_cache_disabled'] = True
         return self.with_context(**context)
 
