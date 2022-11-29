@@ -287,7 +287,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.strictEqual(
             target.querySelector(".o_list_selection_box").textContent.trim(),
-            "4 selected"
+            "4 selected  Unselect all"
         );
         assert.strictEqual(
             document.querySelectorAll(".o_data_row .o_list_record_selector input:checked").length,
@@ -302,7 +302,7 @@ QUnit.module("Views", (hooks) => {
         );
         assert.strictEqual(
             target.querySelector(".o_list_selection_box").textContent.trim(),
-            "2 selected"
+            "2 selected  Unselect all"
         );
         assert.strictEqual(
             document.querySelectorAll(".o_data_row .o_list_record_selector input:checked").length,
@@ -2869,7 +2869,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target.querySelector(".o_list_selection_box"), ".o_list_select_domain");
         assert.strictEqual(
             target.querySelector(".o_list_selection_box").textContent.trim(),
-            "4 selected"
+            "4 selected  Unselect all"
         );
 
         // unselect a record
@@ -2878,7 +2878,18 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target.querySelector(".o_list_selection_box"), ".o_list_select_domain");
         assert.strictEqual(
             target.querySelector(".o_list_selection_box").textContent.trim(),
-            "3 selected"
+            "3 selected  Unselect all"
+        );
+        await click(target.querySelector(".o_list_unselect_all"));
+        assert.containsNone(
+            target,
+            ".o_list_selection_box",
+            "selection options are no longer visible"
+        );
+        assert.containsNone(
+            target,
+            ".o_data_row .o_list_record_selector input:checked",
+            "no records should be selected"
         );
     });
 
@@ -2908,7 +2919,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target.querySelector(".o_list_selection_box"), ".o_list_select_domain");
         assert.strictEqual(
             target.querySelector(".o_list_selection_box").textContent.replace(/\s+/g, " ").trim(),
-            "3 selected Select all 4"
+            "3 selected Select all 4 Unselect all"
         );
 
         // select all domain
@@ -2916,7 +2927,13 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target.querySelector(".o_cp_buttons"), ".o_list_selection_box");
         assert.strictEqual(
             target.querySelector(".o_list_selection_box").textContent.trim(),
-            "All 4 selected"
+            "All 4 selected Unselect all"
+        );
+        await click(target.querySelector(".o_list_unselect_all"));
+        assert.containsNone(
+            target,
+            ".o_list_selection_box",
+            "selection options are no longer visible"
         );
     });
 
@@ -2949,7 +2966,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target.querySelector(".o_list_selection_box"), ".o_list_select_domain");
         assert.strictEqual(
             target.querySelector(".o_list_selection_box").textContent.replace(/\s+/g, " ").trim(),
-            "2 selected Select all 4"
+            "2 selected Select all 4 Unselect all"
         );
 
         // select all domain
@@ -2957,7 +2974,13 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target.querySelector(".o_cp_buttons"), ".o_list_selection_box");
         assert.strictEqual(
             target.querySelector(".o_list_selection_box").textContent.trim(),
-            "All 4 selected"
+            "All 4 selected Unselect all"
+        );
+        await click(target.querySelector(".o_list_unselect_all"));
+        assert.containsNone(
+            target,
+            ".o_list_selection_box",
+            "selection options are no longer visible"
         );
     });
 

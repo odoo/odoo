@@ -304,6 +304,13 @@ export class ListController extends Component {
         }
     }
 
+    onUnselectAll() {
+        this.model.root.selection.forEach((record) => {
+            record.toggleSelection(false);
+        });
+        this.model.root.selectDomain(false);
+    }
+
     get className() {
         return this.props.className;
     }
