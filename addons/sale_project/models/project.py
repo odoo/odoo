@@ -513,7 +513,7 @@ class Project(models.Model):
                 'action_type': 'object',
                 'action': 'action_view_sos',
                 'show': self.sale_order_count > 0,
-                'sequence': 1,
+                'sequence': 27,
             })
         if self.user_has_groups('account.group_account_readonly'):
             buttons.append({
@@ -533,7 +533,7 @@ class Project(models.Model):
                 'action_type': 'object',
                 'action': 'action_open_project_vendor_bills',
                 'show': self.vendor_bill_count > 0,
-                'sequence': 48,
+                'sequence': 38,
             })
         return buttons
 

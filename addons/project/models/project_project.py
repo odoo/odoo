@@ -405,6 +405,11 @@ class Project(models.Model):
     def create(self, vals_list):
         # Prevent double project creation
         self = self.with_context(mail_create_nosubscribe=True)
+        if any('label_tasks' in vals and not vals['label_tasks'] for vals in vals_list):
+            task_label = _("Tasks")
+            for vals in vals_list:
+                if 'label_tasks' in vals and not vals['label_tasks']:
+                    vals['label_tasks'] = task_label
         projects = super().create(vals_list)
         return projects
 
@@ -731,7 +736,7 @@ class Project(models.Model):
                 'active_id': self.id,
             }),
             'show': True,
-            'sequence': 3,
+            'sequence': 1,
         }]
         if self.rating_count != 0 and self.user_has_groups('project.group_project_rating'):
             if self.rating_avg >= rating_data.RATING_AVG_TOP:
