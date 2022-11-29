@@ -40,17 +40,11 @@ The service is provided by the In App Purchase Odoo platform.
     'installable': True,
     'auto_install': True,
     'assets': {
-        'mail.assets_messaging': [
-            'sms/static/src/models/*.js',
-        ],
-        'mail.assets_discuss_public': [
-            'sms/static/src/components/sms_button/*',
-        ],
         'web.assets_backend': [
-            'sms/static/src/components/*/*',
+            'sms/static/src/**/*',
         ],
         'web.qunit_suite_tests': [
-            'sms/static/tests/qunit_suite_tests/**/*.js',
+            'sms/static/tests/**/*',
         ],
     },
     'license': 'LGPL-3',

@@ -24,7 +24,7 @@ function compileChatter(node, params) {
         projectSharingId: params.projectSharingId,
     });
     const chatterContainerHookXml = createElement('div');
-    chatterContainerHookXml.classList.add('o_FormRenderer_chatterContainer');
+    chatterContainerHookXml.classList.add('o-mail-Form-chatter');
     append(chatterContainerHookXml, chatterContainerXml);
     return chatterContainerHookXml;
 }
@@ -37,7 +37,7 @@ export class ProjectSharingChatterCompiler extends ViewCompiler {
 
     compile(node, params) {
         const res = super.compile(node, params).children[0];
-        const chatterContainerHookXml = res.querySelector(".o_FormRenderer_chatterContainer");
+        const chatterContainerHookXml = res.querySelector(".o-mail-Form-chatter");
         if (chatterContainerHookXml) {
             setAttributes(chatterContainerHookXml, {
                 "t-if": `__comp__.uiService.size >= ${SIZES.XXL}`,
@@ -83,7 +83,7 @@ registry.category("form_compilers").add("portal_chatter_compiler", {
 patch(FormCompiler.prototype, 'project_sharing_chatter', {
     compile(node, params) {
         const res = this._super(node, params);
-        const chatterContainerHookXml = res.querySelector('.o_FormRenderer_chatterContainer');
+        const chatterContainerHookXml = res.querySelector('.o-mail-Form-chatter');
         if (!chatterContainerHookXml) {
             return res; // no chatter, keep the result as it is
         }

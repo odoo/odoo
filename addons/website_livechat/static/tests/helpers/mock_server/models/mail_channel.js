@@ -15,8 +15,8 @@ patch(MockServer.prototype, 'website_livechat/models/mail_channel', {
         const channelInfos = this._super(...arguments);
         for (const channelInfo of channelInfos) {
             const channel = this.getRecords('mail.channel', [['id', '=', channelInfo.id]])[0];
-            if (channel.channel_type === 'livechat' && channelInfo.livechat_visitor_id) {
-                const visitor = this.getRecords('website.visitor', [['id', '=', channelInfo.livechat_visitor_id]])[0];
+            if (channel.channel_type === 'livechat' && channel.livechat_visitor_id) {
+                const visitor = this.getRecords('website.visitor', [['id', '=', channel.livechat_visitor_id]])[0];
                 const country = this.getRecords('res.country', [['id', '=', visitor.country_id]])[0];
                 channelInfo.visitor = {
                     country_code: country && country.code,

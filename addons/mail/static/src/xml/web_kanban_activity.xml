@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="mail.KanbanActivity">
+<t t-name="mail.LegacyKanbanActivity">
     <div class="o_kanban_inline_block dropdown o_mail_activity">
         <!-- Dropdowns are created in JS to avoid some bugs, that's why the <a/> contains no args for the dropdown creation -->
         <a class="dropdown-toggle o-no-caret o_activity_btn" data-boundary="viewport" data-flip="false" data-bs-toggle="dropdown" role="button">
@@ -12,7 +12,7 @@
     </div>
 </t>
 
-<t t-name="mail.ListActivity" t-extend="mail.KanbanActivity">
+<t t-name="mail.LegacyListActivity" t-extend="mail.LegacyKanbanActivity">
     <t t-jquery=".o_mail_activity" t-operation="append">
         <span class="o_activity_summary"/>
     </t>
@@ -44,7 +44,7 @@
                         <t t-set="edit_class" t-value=""/>
                     </t>
                     <t class="activities_list_group_item">
-                        <t t-call="mail.activities-list-group-item"/>
+                        <t t-call="mail.ActivitiesListGroupItem"/>
                     </t>
                     <li t-attf-id="o_activity_form_{{log.id}}" class="o_activity_form list-group-item border-top-0 py-0 mb-2 collapse" data-bs-collapse="false"></li>
                 </t>
@@ -59,7 +59,7 @@
     </div>
 </t>
 
-<t t-name="mail.activities-list-group-item">
+<t t-name="mail.ActivitiesListGroupItem">
     <li t-attf-class="list-group-item o_log_activity d-flex #{log_last ? 'border-bottom' : ''}" role="menuitem">
         <div t-attf-class="o_activity_title o_log_activity #{edit_class}" t-att-data-activity-id="log.id">
             <div t-attf-class="o_activity_title_entry o_mail_activity d-flex align-items-baseline {{ log.chaining_type === 'suggest' ? 'align-items-center' : 'mb-1'}}">

@@ -45,6 +45,18 @@ patch(MockServer.prototype, "mail/models/mail_activity", {
                     };
                 });
             }
+            const [activityType] = record.activity_type_id
+                ? this.pyEnv["mail.activity.type"].searchRead([
+                      ["id", "=", record.activity_type_id[0]],
+                  ])
+                : [false];
+            if (activityType) {
+                record.display_name = activityType.name;
+                record.icon = activityType.icon;
+            }
+            if (record.summary) {
+                record.display_name = record.summary;
+            }
             return record;
         });
         return res;

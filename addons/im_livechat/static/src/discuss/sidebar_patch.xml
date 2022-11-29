@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="im_livechat.DiscussSidebar" t-inherit="mail.DiscussSidebar" t-inherit-mode="extension" owl="1">
+        <xpath expr="//*[@name='chatCategory']" position="before">
+            <t t-if="shouldDisplayLivechatCategory" t-call="mail.DiscussCategory">
+                <t t-set="category" t-value="store.discuss.livechat"/>
+            </t>
+        </xpath>
+    </t>
+</templates>

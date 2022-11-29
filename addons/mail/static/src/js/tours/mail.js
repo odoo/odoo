@@ -4,14 +4,12 @@ import { _t } from "web.core";
 import { Markup } from "web.utils";
 import { registry } from "@web/core/registry";
 
-registry.category("web_tour.tours").add(
-    "mail_tour",
-    {
-        url: "/web#action=mail.action_discuss",
-        sequence: 80,
-        steps: [
+registry.category("web_tour.tours").add("mail_tour", {
+    url: "/web#action=mail.action_discuss",
+    sequence: 80,
+    steps: [
         {
-            trigger: ".o_DiscussSidebarView_categoryChannel .o_DiscussSidebarCategory_commandAdd",
+            trigger: ".o-mail-DiscussCategory-channel .o-mail-DiscussCategory-add",
             content: Markup(
                 _t(
                     "<p>Channels make it easy to organize information across different topics and groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, marketing, product XYZ, after work party, etc).</p>"
@@ -20,7 +18,7 @@ registry.category("web_tour.tours").add(
             position: "bottom",
         },
         {
-            trigger: ".o_DiscussSidebarCategory_addingItemInput",
+            trigger: ".o-mail-ChannelSelector input",
             content: Markup(_t("<p>Create a channel here.</p>")),
             position: "bottom",
             auto: true,
@@ -30,16 +28,16 @@ registry.category("web_tour.tours").add(
             },
         },
         {
-            trigger: ".o_DiscussSidebarCategory_newChannelAutocompleteSuggestions",
+            trigger: ".o-mail-ChannelSelector-list",
+            extra_trigger: ".o-mail-ChannelSelector-suggestion",
             content: Markup(_t("<p>Create a public or private channel.</p>")),
             position: "right",
+            run() {
+                document.querySelector(".o-mail-ChannelSelector-suggestion").click();
+            },
         },
         {
-            auto: true,
-            trigger: ".o_DiscussSidebarCategory_newChannelAutocompleteSuggestions .ui-menu-item a",
-        },
-        {
-            trigger: ".o_DiscussView_thread .o_ComposerTextInputView_textarea",
+            trigger: ".o-mail-Composer-input",
             content: Markup(
                 _t(
                     "<p><b>Write a message</b> to the members of the channel here.</p> <p>You can notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. Start your message with <i>'/'</i> to get the list of possible commands.</p>"
@@ -53,31 +51,31 @@ registry.category("web_tour.tours").add(
             },
         },
         {
-            trigger: ".o_DiscussView_thread .o_ComposerView_buttonSend:not(:disabled)",
+            trigger: ".o-mail-Composer-send:not(:disabled)",
             content: _t("Post your message on the thread"),
             position: "top",
         },
         {
-            trigger: ".o_DiscussView_thread .o_MessageView",
+            trigger: ".o-mail-Message",
             content: _t("Click on your message"),
             position: "top",
         },
         {
-            trigger: ".o_DiscussView_thread .o_MessageActionView_actionToggleStar",
+            trigger: ".o-mail-Message i[aria-label='Mark as Todo']",
             content: Markup(
                 _t("Messages can be <b>starred</b> to remind you to check back later.")
             ),
             position: "bottom",
         },
         {
-            trigger: ".o_DiscussSidebarMailboxView.o-starred-box",
+            trigger: "button:contains(Starred)",
             content: _t(
                 "Once a message has been starred, you can come back and review it at any time here."
             ),
             position: "bottom",
         },
         {
-            trigger: ".o_DiscussSidebarView_categoryChat .o_DiscussSidebarCategory_commandAdd",
+            trigger: ".o-mail-DiscussCategory-chat .o-mail-DiscussCategory-add",
             content: Markup(
                 _t(
                     "<p><b>Chat with coworkers</b> in real-time using direct messages.</p><p><i>You might need to invite users from the Settings app first.</i></p>"
@@ -85,5 +83,5 @@ registry.category("web_tour.tours").add(
             ),
             position: "bottom",
         },
-    ]
+    ],
 });

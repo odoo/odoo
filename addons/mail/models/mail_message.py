@@ -982,7 +982,6 @@ class Message(models.Model):
                     'subject': False
                     'is_note': True # only if the message is a note (subtype == note)
                     'is_discussion': False # only if the message is a discussion (subtype == discussion)
-                    'is_notification': False # only if the message is a note but is a notification aka not linked to a document like assignation
                     'parentMessage': {...}, # formatted message that this message is a reply to. Only present if format_reply is True
                 }
         """
@@ -1014,7 +1013,6 @@ class Message(models.Model):
                 'is_note': message_sudo.subtype_id.id == note_id,
                 'is_discussion': message_sudo.subtype_id.id == com_id,
                 'subtype_description': message_sudo.subtype_id.description,
-                'is_notification': vals['message_type'] == 'user_notification',
                 'recipients': [{'id': p.id, 'name': p.name} for p in message_sudo.partner_ids],
                 'scheduledDatetime': scheduled_dt_by_msg_id.get(vals['id'], False),
             })
@@ -1044,6 +1042,7 @@ class Message(models.Model):
             'res_model_name': message.env['ir.model']._get(message.model).display_name,
             'date': message.date,
             'message_type': message.message_type,
+            'body': message.body,
             'notifications': message.notification_ids._filtered_for_web_client()._notification_format(),
         } for message in self]
 

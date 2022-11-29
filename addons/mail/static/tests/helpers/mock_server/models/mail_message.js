@@ -27,6 +27,62 @@ patch(MockServer.prototype, "mail/models/mail_message", {
         return this._super(route, args);
     },
     /**
+     * Simulates `_message_add_reaction` on `mail.message`.
+     */
+    _mockMailMessage_messageAddReaction(content, messageId) {
+        const reaction = this.pyEnv["mail.message.reaction"].searchRead([
+            ["content", "=", content],
+            ["partner_id", "=", this.pyEnv.currentPartnerId],
+        ]);
+        if (!reaction.length) {
+            this.pyEnv["mail.message.reaction"].create({
+                content,
+                partner_id: this.pyEnv.currentPartnerId,
+                message_id: messageId,
+            });
+        }
+        const reactions = this.pyEnv["mail.message.reaction"].search([
+            ["message_id", "=", messageId],
+            ["content", "=", content],
+        ]);
+        const currentPartner = this.pyEnv["res.partner"].searchRead([
+            ["id", "=", this.pyEnv.currentPartnerId],
+        ])[0];
+        const result = {
+            id: messageId,
+            messageReactionGroups: [
+                [
+                    reactions.length > 0 ? "insert" : "insert-and-unlink",
+                    {
+                        content,
+                        count: reactions.length,
+                        message: { id: messageId },
+                        partners: [
+                            [
+                                "insert",
+                                { id: this.pyEnv.currentPartnerId, name: currentPartner.name },
+                            ],
+                        ],
+                    },
+                ],
+            ],
+        };
+        this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartnerId, "mail.record/insert", {
+            Message: result,
+        });
+        return result;
+    },
+    /**
+     * Simulates `_message_add_reaction` on `mail.message`.
+     */
+    _mockMailMessage_messageRemoveReaction(content, messageId) {
+        const reactionsIdsToUnlink = this.pyEnv["mail.message.reaction"].search([
+            ["content", "=", content],
+            ["partner_id", "=", this.pyEnv.currentPartnerId],
+        ]);
+        this.pyEnv["mail.message.reaction"].unlink(reactionsIdsToUnlink);
+    },
+    /**
      * Simulates `mark_all_as_read` on `mail.message`.
      *
      * @private
@@ -151,9 +207,8 @@ patch(MockServer.prototype, "mail/models/mail_message", {
             const trackingValueIds = this.getRecords("mail.tracking.value", [
                 ["id", "in", message.tracking_value_ids],
             ]);
-            const formattedTrackingValues = this._mockMailTrackingValue_TrackingValueFormat(
-                trackingValueIds
-            );
+            const formattedTrackingValues =
+                this._mockMailTrackingValue_TrackingValueFormat(trackingValueIds);
             const partners = this.getRecords("res.partner", [["id", "in", message.partner_ids]]);
             const linkPreviews = this.getRecords("mail.link.preview", [
                 ["id", "in", message.link_preview_ids],
@@ -162,6 +217,40 @@ patch(MockServer.prototype, "mail/models/mail_message", {
                 this._mockMailLinkPreviewFormat(linkPreview)
             );
 
+            const reactionsPerContent = {};
+            for (const reactionId of message.reaction_ids) {
+                const [reaction] = this.getRecords("mail.message.reaction", [
+                    ["id", "=", reactionId],
+                ]);
+                if (reactionsPerContent[reaction.content]) {
+                    reactionsPerContent[reaction.content].push(reaction);
+                } else {
+                    reactionsPerContent[reaction.content] = [reaction];
+                }
+            }
+            const reactionGroups = [];
+            for (const content in reactionsPerContent) {
+                const reactions = reactionsPerContent[content];
+                const guests = reactions
+                    .map(
+                        (reaction) =>
+                            this.getRecords("mail.guest", [["id", "=", reaction.guest_id]])[0]
+                    )
+                    .filter((guest) => !!guest);
+                const partners = reactions
+                    .map(
+                        (reaction) =>
+                            this.getRecords("res.partner", [["id", "=", reaction.partner_id]])[0]
+                    )
+                    .filter((partner) => !!partner);
+                reactionGroups.push({
+                    content: content,
+                    count: reactionsPerContent[content].length,
+                    guests: guests.map((guest) => ({ id: guest.id, name: guest.name })),
+                    message: { id: message.id },
+                    partners: partners.map((partner) => ({ id: partner.id, name: partner.name })),
+                });
+            }
             const response = Object.assign({}, message, {
                 attachment_ids: formattedAttachments,
                 author: formattedAuthor,
@@ -169,6 +258,7 @@ patch(MockServer.prototype, "mail/models/mail_message", {
                 default_subject: message.model && message.res_id &&
                     this.mockMailThread_MessageComputeSubject(message.model, [message.res_id]).get(message.res_id),
                 linkPreviews: linkPreviewsFormatted,
+                messageReactionGroups: reactionGroups,
                 needaction_partner_ids: needactionPartnerIds,
                 notifications,
                 parentMessage: message.parent_id
@@ -192,6 +282,7 @@ patch(MockServer.prototype, "mail/models/mail_message", {
                 ]);
                 response["guestAuthor"] = { id: guest.id, name: guest.name };
             }
+            response["module_icon"] = "/base/static/description/icon.png";
             return response;
         });
     },
@@ -215,6 +306,7 @@ patch(MockServer.prototype, "mail/models/mail_message", {
                 notifications.map((notification) => notification.id)
             );
             return {
+                body: message.body,
                 date: message.date,
                 id: message.id,
                 message_type: message.message_type,

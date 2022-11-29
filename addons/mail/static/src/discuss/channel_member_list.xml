@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ChannelMemberList" owl="1">
+        <div class="o-mail-ChannelMemberList d-flex flex-column overflow-auto bg-light" t-att-class="props.className">
+            <t t-if="props.thread.onlineMembers.length > 0">
+                <h6 class="m-2">
+                    Online -
+                    <t t-esc="props.thread.onlineMembers.length"/>
+                </h6>
+                <t t-foreach="props.thread.onlineMembers" t-as="member" t-key="member.id" t-call="mail.channel_member"/>
+            </t>
+            <t t-if="props.thread.offlineMembers.length > 0">
+                <h6 class="m-2">
+                    Offline -
+                    <t t-esc="props.thread.offlineMembers.length"/>
+                </h6>
+                <t t-foreach="props.thread.offlineMembers" t-as="member" t-key="member.id" t-call="mail.channel_member"/>
+            </t>
+            <span t-if="props.thread.unknownMembersCount === 1" class="mx-2 mt-2">And 1 other member.</span>
+            <span t-if="props.thread.unknownMembersCount > 1" class="mx-2 mt-2">And <t t-esc="props.thread.unknownMembersCount"/> other members.</span>
+            <div t-if="!props.thread.areAllMembersLoaded" class="mx-2 my-1">
+                <button class="btn btn-secondary" title="Load more" t-on-click.stop="() => threadService.fetchChannelMembers(props.thread)">Load more</button>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="mail.channel_member" owl="1">
+        <div class="o-mail-ChannelMember d-flex align-items-center mx-2 p-2 bg-light" t-att-class="{ 'cursor-pointer': canOpenChatWith(member) }" t-on-click.stop="() => this.openChatAvatar(member)">
+            <div class="o-bg-inherit o-mail-ChannelMember-avatar position-relative d-flex ms-4 flex-shrink-0">
+                <img class="w-100 h-100 rounded-circle o_object_fit_cover o_redirect"
+                     t-att-src="threadService.avatarUrl(member.persona, props.thread)"/>
+                <ImStatus className="'position-absolute bottom-0 end-0'" persona="member.persona"/>
+            </div>
+            <span class="ms-2 text-truncate" t-esc="member.persona.name"/>
+        </div>
+    </t>
+
+</templates>

@@ -37,23 +37,22 @@ function compileChatter(node, params) {
                 break;
         }
     }
-    const chatterContainerXml = createElement("ChatterContainer");
+    const chatterContainerXml = createElement("Chatter");
     setAttributes(chatterContainerXml, {
-        chatter: params.chatter,
-        hasActivities: hasActivities,
-        hasFollowers: hasFollowers,
-        hasMessageList: hasMessageList,
-        hasParentReloadOnAttachmentsChanged: hasParentReloadOnAttachmentsChanged,
-        hasParentReloadOnFollowersUpdate: hasParentReloadOnFollowersUpdate,
-        hasParentReloadOnMessagePosted: hasParentReloadOnMessagePosted,
-        isAttachmentBoxVisibleInitially: isAttachmentBoxVisibleInitially,
+        hasActivities,
+        hasFollowers,
+        hasMessageList,
+        hasParentReloadOnAttachmentsChanged,
+        hasParentReloadOnFollowersUpdate,
+        hasParentReloadOnMessagePosted,
+        isAttachmentBoxVisibleInitially,
         threadId: params.threadId,
         threadModel: params.threadModel,
         webRecord: params.webRecord,
         saveRecord: "() => __comp__.saveButtonClicked and __comp__.saveButtonClicked()",
     });
     const chatterContainerHookXml = createElement("div");
-    chatterContainerHookXml.classList.add("o_FormRenderer_chatterContainer");
+    chatterContainerHookXml.classList.add("o-mail-Form-chatter");
     append(chatterContainerHookXml, chatterContainerXml);
     return chatterContainerHookXml;
 }
@@ -61,9 +60,7 @@ function compileChatter(node, params) {
 function compileAttachmentPreview(node, params) {
     const webClientViewAttachmentViewContainerHookXml = createElement("div");
     webClientViewAttachmentViewContainerHookXml.classList.add("o_attachment_preview");
-    const webClientViewAttachmentViewContainerXml = createElement(
-        "WebClientViewAttachmentViewContainer"
-    );
+    const webClientViewAttachmentViewContainerXml = createElement("AttachmentView");
     setAttributes(webClientViewAttachmentViewContainerXml, {
         threadId: params.threadId,
         threadModel: params.threadModel,
@@ -84,16 +81,15 @@ export class MailFormCompiler extends ViewCompiler {
 
     compile(node, params) {
         const res = super.compile(node, params).children[0];
-        const chatterContainerHookXml = res.querySelector(".o_FormRenderer_chatterContainer");
+        const chatterContainerHookXml = res.querySelector(".o-mail-Form-chatter");
         if (chatterContainerHookXml) {
             setAttributes(chatterContainerHookXml, {
                 "t-if": `!__comp__.hasAttachmentViewer() and __comp__.uiService.size >= ${SIZES.XXL}`,
                 "t-attf-class": "o-aside",
             });
-            const chatterContainerXml = chatterContainerHookXml.querySelector("ChatterContainer");
+            const chatterContainerXml = chatterContainerHookXml.querySelector("Chatter");
             setAttributes(chatterContainerXml, {
-                hasExternalBorder: "false",
-                hasMessageListScrollAdjust: "true",
+                hasMessageScrollAdjustInChatter: "true",
                 isInFormSheetBg: "false",
             });
         }
@@ -141,7 +137,6 @@ registry.category("form_compilers").add("chatter_compiler", {
     selector: "div.oe_chatter",
     fn: (node) =>
         compileChatter(node, {
-            chatter: "__comp__.props.chatter",
             threadId: "__comp__.props.record.resId or undefined",
             threadModel: "__comp__.props.record.resModel",
             webRecord: "__comp__.props.record",
@@ -157,14 +152,13 @@ patch(FormCompiler.prototype, "mail", {
     compile(node, params) {
         // TODO no chatter if in dialog?
         const res = this._super(node, params);
-        const chatterContainerHookXml = res.querySelector(".o_FormRenderer_chatterContainer");
+        const chatterContainerHookXml = res.querySelector(".o-mail-Form-chatter");
         if (!chatterContainerHookXml) {
             return res; // no chatter, keep the result as it is
         }
-        const chatterContainerXml = chatterContainerHookXml.querySelector("ChatterContainer");
+        const chatterContainerXml = chatterContainerHookXml.querySelector("Chatter");
         setAttributes(chatterContainerXml, {
-            hasExternalBorder: "true",
-            hasMessageListScrollAdjust: "false",
+            hasMessageScrollAdjustInChatter: "false",
             isInFormSheetBg: "false",
             saveRecord: "__comp__.props.saveButtonClicked",
         });
@@ -185,7 +179,7 @@ patch(FormCompiler.prototype, "mail", {
             });
             append(formSheetBgXml, sheetBgChatterContainerHookXml);
             const sheetBgChatterContainerXml =
-                sheetBgChatterContainerHookXml.querySelector("ChatterContainer");
+                sheetBgChatterContainerHookXml.querySelector("Chatter");
             setAttributes(sheetBgChatterContainerXml, {
                 isInFormSheetBg: "true",
             });

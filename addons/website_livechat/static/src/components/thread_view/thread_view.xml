@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<templates xml:space="preserve">
-    <t t-inherit="mail.ThreadView" t-inherit-mode="extension">
-        <xpath expr="//ThreadViewTopbar" position="after">
-            <VisitorBannerView t-if="visitorBanner" className="'border-bottom'" record="visitorBanner"/>
-        </xpath>
-    </t>
-</templates>

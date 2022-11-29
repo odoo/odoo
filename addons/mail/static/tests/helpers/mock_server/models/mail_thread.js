@@ -87,7 +87,7 @@ patch(MockServer.prototype, "mail/models/mail_thread", {
      */
     mockMailThread_MessageComputeSubject(model, ids) {
         const records = this.getRecords(model, [["id", "in", ids]]);
-        return new Map(records.map(record => [record.id, record.name || '']));
+        return new Map(records.map((record) => [record.id, record.name || ""]));
     },
     /**
      * Simulates `_message_add_suggested_recipient` on `mail.thread`.
@@ -201,13 +201,18 @@ patch(MockServer.prototype, "mail/models/mail_thread", {
     _mockMailThreadMessageSubscribe(model, ids, partner_ids, subtype_ids) {
         for (const id of ids) {
             for (const partner_id of partner_ids) {
-                const followerId = this.pyEnv["mail.followers"].create({
-                    is_active: true,
-                    partner_id,
-                    res_id: id,
-                    res_model: model,
-                    subtype_ids: subtype_ids,
-                });
+                let followerId = this.pyEnv["mail.followers"].search([
+                    ["partner_id", "=", partner_id],
+                ])[0];
+                if (!followerId) {
+                    followerId = this.pyEnv["mail.followers"].create({
+                        is_active: true,
+                        partner_id,
+                        res_id: id,
+                        res_model: model,
+                        subtype_ids: subtype_ids,
+                    });
+                }
                 this.pyEnv["res.partner"].write([partner_id], {
                     message_follower_ids: [followerId],
                 });
@@ -263,7 +268,13 @@ patch(MockServer.prototype, "mail/models/mail_thread", {
                 ]);
             }
         }
-        this.pyEnv["bus.bus"]._sendmany(notifications);
+        const channelMemberOfCurrentUser = this.pyEnv["mail.channel.member"].search([
+            ["channel_id", "=", message.res_id],
+            ["partner_id", "=", this.currentPartnerId],
+        ]);
+        if (channelMemberOfCurrentUser.length === 1) {
+            this.pyEnv["bus.bus"]._sendmany(notifications);
+        }
     },
     /**
      * Simulates `message_unsubscribe` on `mail.thread`.

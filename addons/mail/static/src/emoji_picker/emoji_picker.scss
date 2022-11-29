@@ -1,0 +1,30 @@
+.o-mail-EmojiPicker {
+    width: 285px;
+    height: 350px;
+
+    display: grid;
+    grid-template-rows: 34px 35px 1fr;
+
+    .o-mail-Emoji {
+        width: 30px;
+        font-size: 1.5rem;
+        &:hover {
+            background-color: $gray-300;
+        }
+    }
+
+    .o-mail-EmojiPicker-header .o-mail-Emoji:not(:hover):not(.o-isActive) {
+        filter: grayscale(1);
+    }
+
+    input:not(:focus) {
+        & + i.oi-search, &::placeholder {
+            opacity: 75%;
+        }
+    }
+}
+
+.o-mail-EmojiPicker-category:before {
+    // invisible character so that category has constant height, regardless of text content.
+    content: "\200b"; /* unicode zero width space character */
+}

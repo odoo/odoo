@@ -70,25 +70,15 @@
     'installable': True,
     'application': True,
     'assets': {
-        'mail.assets_messaging': [
-            'crm/static/src/models/*.js',
-        ],
         'web.assets_backend': [
-            'crm/static/src/views/**/*.js',
-            'crm/static/src/views/**/*.xml',
-            'crm/static/src/js/tours/crm.js',
-            'crm/static/src/scss/crm.scss',
-            'crm/static/src/scss/crm_team_member_views.scss',
+            'crm/static/src/**/*',
         ],
         'web.assets_tests': [
             'crm/static/tests/tours/**/*',
         ],
         'web.qunit_suite_tests': [
-            'crm/static/tests/crm_kanban_progress_bar_mrr_sum_field_tests.js',
-            'crm/static/tests/mock_server.js',
-            'crm/static/tests/forecast_kanban_tests.js',
-            'crm/static/tests/forecast_view_tests.js',
-            'crm/static/tests/crm_rainbowman_tests.js',
+            'crm/static/tests/**/*',
+            ('remove', 'crm/static/tests/tours/**/*'),
         ],
     },
     'license': 'LGPL-3',

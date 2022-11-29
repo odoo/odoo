@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.Chatter" owl="1">
+    <div class="o-mail-Chatter bg-view h-100 flex-grow-1 d-flex flex-column overflow-auto" t-att-class="props.threadId === false ? 'o-chatter-disabled' : ''" t-ref="root">
+        <div class="o-mail-Chatter-topbar d-flex flex-shrink-0 flex-grow-0 pe-2">
+            <button t-if="props.hasMessageList" class="o-mail-Chatter-sendMessage btn text-nowrap me-2" t-att-class="{ 'btn-odoo': state.thread.composer.type !== 'note', 'btn-light': state.thread.composer.type === 'note', 'o-active': state.thread.composer.type === 'message', 'my-2': !props.compactHeight }" t-att-disabled="!state.thread.hasWriteAccess and !(state.thread.hasReadAccess and state.thread.canPostOnReadonly) and props.threadId" data-hotkey="m" t-on-click="() => this.toggleComposer('message')">
+                Send message
+            </button>
+            <button t-if="props.hasMessageList" class="o-mail-Chatter-logNote btn text-nowrap me-2" t-att-class="{ 'btn-odoo o-active': state.thread.composer.type === 'note', 'btn-light': state.thread.composer.type !== 'note', 'my-2': !props.compactHeight }" data-hotkey="shift+m" t-on-click="() => this.toggleComposer('note')">
+                Log note
+            </button>
+            <div class="border-bottom flex-grow-1 d-flex" t-att-class="{ 'border-start ps-2': props.hasActivities }">
+                <button t-if="props.hasActivities" class="btn btn-light text-nowrap" t-att-class="{ 'my-2': !props.compactHeight }" data-hotkey="shift+a" t-on-click="scheduleActivity">
+                    <i class="fa fa-clock-o me-1"/>
+                    <span>Activities</span>
+                </button>
+                <span class="o-mail-Chatter-topbarGrow flex-grow-1 border-start pe-2" t-att-class="{ 'ms-2': props.hasActivities }"/>
+                <FileUploader t-if="attachments.length === 0" fileUploadClass="'o-mail-Chatter-fileUploader'" multiUpload="true" onUploaded.bind="onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">
+                    <t t-set-slot="toggler">
+                        <t t-call="mail.Chatter.attachFiles"/>
+                    </t>
+                </FileUploader>
+                <t t-else="" t-call="mail.Chatter.attachFiles"/>
+                <Dropdown t-if="props.hasFollowers" position="'bottom-end'" disabled="isDisabled" class="'o-mail-Followers d-flex'" menuClass="'o-mail-Followers-dropdown flex-column p-0'" menuDisplay="'d-flex'" title="followerButtonLabel" togglerClass="'o-mail-Followers-button btn btn-light px-2 ' + (props.compactHeight ? '' : 'my-2')">
+                    <t t-set-slot="toggler">
+                        <i class="fa fa-user-o" role="img"/>
+                        <span class="o-mail-Followers-counter ps-1" t-esc="state.thread.followers.length"/>
+                    </t>
+                    <t t-set-slot="default">
+                        <t t-if="this.props.threadModel !== 'mail.channel' and state.thread.hasWriteAccess">
+                            <a class="dropdown-item" href="#" role="menuitem" t-on-click.prevent="onClickAddFollowers">
+                                Add Followers
+                            </a>
+                            <div t-if="state.thread.followers.length > 0" role="separator" class="dropdown-divider"/>
+                        </t>
+                        <t t-if="state.thread.followers.length > 0">
+                            <div t-foreach="state.thread.followers" t-as="follower" t-key="follower.id" class="dropdown-item o-mail-Follower d-flex justify-content-between p-0">
+                                <a class="o-mail-Follower-details d-flex align-items-center flex-grow-1 px-3 text-700" t-att-class="{ 'o-inactive fst-italic opacity-25': !follower.isActive }" href="#" role="menuitem" t-on-click.prevent="(ev) => this.onClickDetails(ev, follower)">
+                                    <img class="o-mail-Follower-avatar me-2 rounded-circle" t-att-src="threadService.avatarUrl(follower.partner, state.thread)" alt=""/>
+                                    <span class="flex-shrink text-truncate" t-esc="follower.partner.name"/>
+                                </a>
+                                <t t-if="follower.isEditable">
+                                    <button class="o-mail-Follower-action btn btn-icon rounded-0" title="Edit subscription" aria-label="Edit subscription" t-on-click="(ev) => this.onClickEdit(ev, follower)">
+                                        <i class="fa fa-pencil"/>
+                                    </button>
+                                    <button class="o-mail-Follower-action btn btn-icon rounded-0" title="Remove this follower" aria-label="Remove this follower" t-on-click="(ev) => this.onClickRemove(ev, follower)">
+                                        <i class="fa fa-remove"/>
+                                    </button>
+                                </t>
+                            </div>
+                        </t>
+                        <div t-elif="!state.thread.hasWriteAccess" class="dropdown-item disabled">
+                            No Followers
+                        </div>
+                    </t>
+                </Dropdown>
+                <button t-if="props.hasFollowers and state.thread.followerOfSelf" class="btn px-0" t-att-class="{ 'text-success': !unfollowHover.isHover, 'text-warning': unfollowHover.isHover, 'my-2': !props.compactHeight }" t-att-disabled="!props.threadId" t-on-click="onClickUnfollow" t-ref="unfollow">
+                    <div class="position-relative">
+                        <!-- Hidden element used to set the button maximum size -->
+                        <span class="invisible">
+                            <i class="me-1 fa fa-fw fa-eye-slash"/><t t-out="followingText.length > unfollowText.length ? followingText : unfollowText"/>
+                        </span>
+                        <span class="position-absolute end-0 top-0" t-att-class="{ 'text-warning': unfollowHover.isHover }">
+                            <i class="me-1" t-att-class="{ 'fa fa-fw fa-times': unfollowHover.isHover, 'fa fa-fw fa-check': !unfollowHover.isHover }"/><span t-out="unfollowHover.isHover ? unfollowText : followingText"/>
+                        </span>
+                    </div>
+                </button>
+                <button t-if="!state.thread.followerOfSelf" class="o-mail-Chatter-follow btn btn-link text-600" t-on-click="onClickFollow">Follow</button>
+            </div>
+            <button t-if="props.close" class="o-mail-Chatter-close btn btn-dark flex-shrink-0 rounded-bottom-3" aria-label="Close" t-on-click="props.close">
+                <i class="oi oi-large oi-close"/>
+            </button>
+        </div>
+        <t t-if="state.thread.composer.type">
+            <t t-if="state.thread.composer.type === 'message'">
+                <div class="flex-shrink-0 px-3 pb-1 pt-2 text-truncate" style="margin-left:48px;">
+                    <em class="text-muted">
+                        To followers of:
+                    </em>
+                    <b class="px-1">
+                        <t t-if="state.thread.displayName or state.thread.name">
+                            "<t t-out="state.thread.displayName or state.thread.name"/>"
+                        </t>
+                        <t t-else="">
+                            this document
+                        </t>
+                    </b>
+                </div>
+            </t>
+            <t t-if="state.thread.composer.type === 'message'" t-set="placeholder">Send a message to followers...</t>
+            <t t-else="" t-set="placeholder">Log an internal note...</t>
+            <t t-set="type" t-value="state.thread.composer.type === 'message' ? 'message' : 'note'"/>
+            <SuggestedRecipientsList t-if="props.hasFollowers and state.thread.composer.type !== 'note'" className="'px-3 pb-1 pt-2'" styleString="'margin-left:48px;'" thread="state.thread"/>
+            <Composer composer="state.thread.composer" autofocus="true" mode="'extended'" onPostCallback.bind="onPostCallback" placeholder="placeholder" dropzoneRef="rootRef"/>
+            <hr/>
+        </t>
+        <div class="o-mail-Chatter-scrollable overflow-auto" t-ref="scrollable">
+            <t t-if="props.hasActivities and activities.length">
+                <t t-call="mail.ActivityList"/>
+            </t>
+            <div t-if="state.isAttachmentBoxOpened" class="o-mail-AttachmentBox position-relative">
+                <div class="d-flex align-items-center">
+                    <hr class="flex-grow-1"/>
+                    <span class="p-3 fw-bold">
+                        Files
+                    </span>
+                    <hr class="flex-grow-1"/>
+                </div>
+                <div class="d-flex flex-column">
+                    <AttachmentList
+                        attachments="attachments"
+                        unlinkAttachment.bind="unlinkAttachment"
+                        imagesHeight="160"
+                    />
+                    <FileUploader multiUpload="true" fileUploadClass="'o-mail-Chatter-fileUploader'" onUploaded.bind="onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">
+                        <t t-set-slot="toggler">
+                            <button class="btn btn-link" type="button" t-att-disabled="!state.thread.hasWriteAccess">
+                                <i class="fa fa-plus-square"/>
+                                Attach files
+                            </button>
+                        </t>
+                    </FileUploader>
+                </div>
+            </div>
+            <Thread t-if="props.hasMessageList" thread="state.thread" t-key="state.thread.localId" order="'desc'" hasMessageScrollAdjustInChatter="props.hasMessageScrollAdjustInChatter"/>
+        </div>
+    </div>
+</t>
+
+<t t-name="mail.ActivityList" owl="1">
+    <div class="o-mail-ActivityList">
+        <div class="d-flex pt-4 cursor-pointer fw-bolder" t-on-click="toggleActivities">
+            <hr class="flex-grow-1 border-top"/>
+            <div class="px-3">
+                <i class="fa fa-fw" t-att-class="state.showActivities ? 'fa-caret-down' : 'fa-caret-right'"/>
+                Planned Activities
+                <span t-if="!state.showActivities" class="badge text-bg-success"><t t-esc="activities.length"/></span>
+            </div>
+            <hr class="flex-grow-1 border-top"/>
+        </div>
+        <t t-if="state.showActivities">
+            <t t-foreach="activities" t-as="activity" t-key="activity.id">
+                <Activity data="activity" onUpdate.bind="load" reloadParentView.bind="reloadParentView"/>
+            </t>
+        </t>
+    </div>
+</t>
+
+<t t-name="mail.Chatter.attachFiles" owl="1">
+    <button class="btn btn-light" aria-label="Attach files" t-att-class="{ 'my-2': !props.compactHeight }" t-on-click="onClickAddAttachments">
+        <i class="fa fa-paperclip fa-lg me-1"/>
+        <span t-if="attachments.length > 0 and !state.thread.isLoadingAttachments" t-esc="attachments.length"/>
+        <i t-if="state.thread.isLoadingAttachments" class="fa fa-circle-o-notch fa-spin" aria-label="Attachment counter loading..."/>
+    </button>
+</t>
+
+</templates>
