@@ -15,7 +15,6 @@
         'security/ir.model.access.csv',
     ],
     'installable': True,
-    'application': False,
     'auto_install': True,
     'license': 'LGPL-3',
 }

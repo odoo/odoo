@@ -7,9 +7,7 @@
     "summary": "Spreadsheet",
     "description": "Spreadsheet",
     "depends": ["spreadsheet"],
-    "demo": [],
     "installable": True,
-    "auto_install": False,
     "license": "LGPL-3",
     "data": [
         "security/security.xml",

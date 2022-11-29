@@ -4,7 +4,7 @@
 {
     'name': 'Customer Portal',
     'summary': 'Customer Portal',
-    'sequence': '9000',
+    'sequence': 9000,
     'category': 'Hidden',
     'description': """
 This module adds required base code for a fully integrated customer portal.
