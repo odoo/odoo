@@ -7,7 +7,7 @@ import {
     RPCErrorDialog,
     NetworkErrorDialog,
 } from "@web/core/errors/error_dialogs";
-import { errorService } from "@web/core/errors/error_service";
+import { errorService, UncaughtPromiseError } from "@web/core/errors/error_service";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc_service";
 import { notificationService } from "@web/core/notifications/notification_service";
 import { registry } from "@web/core/registry";
@@ -20,9 +20,9 @@ import {
     makeFakeNotificationService,
     makeFakeRPCService,
 } from "../../helpers/mock_services";
-import { makeDeferred, nextTick, patchWithCleanup } from "../../helpers/utils";
+import { getFixture, makeDeferred, mount, nextTick, patchWithCleanup } from "../../helpers/utils";
 
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, onError, OwlError, onWillStart } from "@odoo/owl";
 const errorDialogRegistry = registry.category("error_dialogs");
 const errorHandlerRegistry = registry.category("error_handlers");
 const serviceRegistry = registry.category("services");
@@ -239,6 +239,58 @@ QUnit.test("will let handlers from the registry handle errors first", async (ass
         cancelable: true,
     });
     await unhandledRejectionCb(errorEvent);
+    assert.verifySteps(["in handler"]);
+});
+
+QUnit.test("originalError is the root cause of the error chain", async (assert) => {
+    errorHandlerRegistry.add("__test_handler__", (env, err, originalError) => {
+        assert.ok(err instanceof UncaughtPromiseError); // Wrapped by error service
+        assert.ok(err.cause instanceof OwlError); // Wrapped by owl
+        assert.strictEqual(err.cause.cause, originalError); // original error
+        assert.step("in handler");
+    });
+    const testEnv = await makeTestEnv();
+    testEnv.someValue = 14;
+    const error = new Error();
+    error.name = "boom";
+
+    class ErrHandler extends Component {
+        setup() {
+            onError(async (err) => {
+                await unhandledRejectionCb(
+                    new PromiseRejectionEvent("error", {
+                        reason: err,
+                        promise: null,
+                        cancelable: true,
+                    })
+                );
+                prom.resolve();
+            });
+        }
+    }
+    ErrHandler.template = xml`<t t-component="props.comp"/>`;
+    class ThrowInSetup extends Component {
+        setup() {
+            throw error;
+        }
+    }
+    ThrowInSetup.template = xml``;
+    let prom = makeDeferred();
+    mount(ErrHandler, getFixture(), { props: { comp: ThrowInSetup } });
+    await prom;
+    assert.verifySteps(["in handler"]);
+
+    class ThrowInWillStart extends Component {
+        setup() {
+            onWillStart(() => {
+                throw error;
+            });
+        }
+    }
+    ThrowInWillStart.template = xml``;
+    prom = makeDeferred();
+    mount(ErrHandler, getFixture(), { props: { comp: ThrowInWillStart } });
+    await prom;
     assert.verifySteps(["in handler"]);
 });
 
