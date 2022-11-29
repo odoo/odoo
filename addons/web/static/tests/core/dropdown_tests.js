@@ -1182,4 +1182,16 @@ QUnit.module("Components", ({ beforeEach }) => {
         await nextTick();
         assert.verifySteps(["onOpened"]);
     });
+
+    QUnit.test("dropdown button can be disabled", async (assert) => {
+        class Parent extends Component {}
+        Parent.template = xml`<Dropdown disabled="true"/>`;
+        Parent.components = { Dropdown };
+        env = await makeTestEnv();
+        await mount(Parent, target, { env });
+        assert.strictEqual(
+            target.querySelector(".dropdown").outerHTML,
+            '<div class="o-dropdown dropdown o-dropdown--no-caret"><button class="dropdown-toggle" disabled="" tabindex="0" aria-expanded="false"></button></div>'
+        );
+    });
 });
