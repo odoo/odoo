@@ -19,6 +19,7 @@
           {{props.togglerClass || ''}}
           {{parentDropdown ? 'dropdown-item' : ''}}
         "
+        t-att-disabled="props.disabled"
         t-on-click.stop="onTogglerClick"
         t-on-mouseenter="onTogglerMouseEnter"
         t-att-title="props.title"
