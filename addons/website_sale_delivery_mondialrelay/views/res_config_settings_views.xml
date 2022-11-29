@@ -5,13 +5,13 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="website_sale.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <div id="website_delivery_mondialrelay" position="after">
+            <setting id="shipping_provider_mondialrelay_setting" position="inside">
                 <div class="content-group">
                     <div class="mt8" attrs="{'invisible': [('module_delivery_mondialrelay', '=', False)]}">
                         <button name="%(delivery.action_delivery_carrier_form)d" icon="fa-arrow-right" type="action" string="Mondial Relay Shipping Methods" class="btn-link" context="{'search_default_is_mondialrelay': True}"/>
                     </div>
                 </div>
-            </div>
+            </setting>
         </field>
     </record>
 </odoo>

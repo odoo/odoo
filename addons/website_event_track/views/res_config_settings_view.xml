@@ -7,22 +7,20 @@
         <field name="inherit_id" ref="website.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <!-- TODO TDE there are two div with website_settings id in the website settings view -->
-            <xpath expr="//div[@id='website_settings']" position="inside">
-                <div class="col-12 col-lg-6 o_setting_box" id="events_app_setting" groups="base.group_no_one">
-                    <div class="o_setting_right_pane">
-                        <label for="events_app_name" string="Events PWA"/>
-                        <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
-                        <div class="text-muted">
-                            Name of your website's Events Progressive Web Application
-                        </div>
-                        <div class="content-group">
-                            <div class="row mt16">
-                                <label class="col-lg-3 o_light_label" string="Name" for="events_app_name"/>
-                                <field name="events_app_name" attrs="{'required': [('website_id', '!=', False)]}"/>
-                            </div>
+            <xpath expr="//block[@id='website_settings']" position="inside">
+                <setting id="events_app_setting" groups="base.group_no_one">
+                    <label for="events_app_name" string="Events PWA"/>
+                    <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                    <div class="text-muted">
+                        Name of your website's Events Progressive Web Application
+                    </div>
+                    <div class="content-group">
+                        <div class="row mt16">
+                            <label class="col-lg-3 o_light_label" string="Name" for="events_app_name"/>
+                            <field name="events_app_name" attrs="{'required': [('website_id', '!=', False)]}"/>
                         </div>
                     </div>
-                </div>
+                </setting>
             </xpath>
         </field>
     </record>

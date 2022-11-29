@@ -6,39 +6,19 @@
             <field name="model">res.config.settings</field>
             <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
             <field name="arch" type="xml">
-                <div id="production_lot_info" position="after">
-                    <h2>Valuation</h2>
-                    <div class="row mt16 o_settings_container" name="valuation_setting_container">
-                        <div class="col-12 col-lg-6 o_setting_box"
-                            id="additional_cost_setting"
-                            title="Affect landed costs on reception operations and split them among products to update their cost price.">
-                            <div class="o_setting_left_pane">
-                                <field name="module_stock_landed_costs"/>
+                <block id="production_lot_info" position="after">
+                    <block title="Valuation" name="valuation_setting_container">
+                        <setting id="additional_cost_setting" title="Affect landed costs on reception operations and split them among products to update their cost price." documentation="/applications/inventory_and_mrp/inventory/management/reporting/integrating_landed_costs.html" help="Add additional cost (transport, customs, ...) in the value of the product.">
+                            <field name="module_stock_landed_costs"/>
+                            <div class="content-group">
+                                <div name="landed_cost_info"/>
                             </div>
-                            <div class="o_setting_right_pane">
-                                <label for="module_stock_landed_costs"/>
-                                <a href="https://www.odoo.com/documentation/master/applications/inventory_and_mrp/inventory/management/reporting/integrating_landed_costs.html" title="Documentation" class="o_doc_link" target="_blank"></a>
-                                <div class="text-muted">
-                                    Add additional cost (transport, customs, ...) in the value of the product.
-                                </div>
-                                <div class="content-group">
-                                    <div name="landed_cost_info"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('group_stock_production_lot', '=', False)]}" id="group_lot_on_invoice">
-                            <div class="o_setting_left_pane">
-                                <field name="group_lot_on_invoice"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="group_lot_on_invoice"/>
-                                <div class="text-muted">
-                                    Lots &amp; Serial numbers will appear on the invoice
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                        </setting>
+                        <setting attrs="{'invisible': [('group_stock_production_lot', '=', False)]}" id="group_lot_on_invoice" help="Lots &amp; Serial numbers will appear on the invoice">
+                            <field name="group_lot_on_invoice"/>
+                        </setting>
+                    </block>
+                </block>
             </field>
         </record>
     </data>

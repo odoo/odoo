@@ -5,7 +5,7 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="sale_management.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//label[@for='module_sale_quotation_builder']/following::div/em" position="replace"/>
+            <xpath expr="//field[@name='module_sale_quotation_builder']/following::div/em" position="replace"/>
         </field>
     </record>
 </odoo>

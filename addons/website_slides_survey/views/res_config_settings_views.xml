@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="website_slides.res_config_settings_view_form"/>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <xpath expr="//div[@id='website_slide_install_website_slides_survey']//div[hasclass('text-muted')]" position="after">
+            <xpath expr="//setting[@id='website_slide_install_website_slides_survey']" position="inside">
                 <div class="mt8">
                     <button type="action" name="%(website_slides_survey.survey_survey_action_slides)d" string="Manage Certifications" class="btn-link" icon="fa-arrow-right"/>
                 </div>

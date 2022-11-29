@@ -5,14 +5,14 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="website.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <div id="livechat_right_pane" position="inside">
+            <setting id="livechat" position="inside">
                 <div class="content-group mt16">
                     <div class="row">
                         <label class="col-lg-3 o_light_label" string="Channel" for="channel_id"/>
                         <field name="channel_id" class="oe_inline"/>
                     </div>
                 </div>
-            </div>
+            </setting>
         </field>
     </record>
 </odoo>

@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="website_slides.res_config_settings_view_form"/>
         <field name="priority">20</field>
         <field name="arch" type="xml">
-            <xpath expr="//div[@id='website_slide_install_website_slides_forum']//div[hasclass('text-muted')]" position="after">
+            <xpath expr="//setting[@id='website_slide_install_website_slides_forum']" position="inside">
                 <div class="mt8">
                     <button type="action" name="%(website_slides_forum.forum_forum_action_channel)d" string="Manage Forums" class="btn-link" icon="fa-arrow-right"/>
                 </div>

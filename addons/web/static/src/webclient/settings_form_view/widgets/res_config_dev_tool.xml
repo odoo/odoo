@@ -2,17 +2,15 @@
 <template>
     <div t-name='res_config_dev_tool' owl="1">
         <div id="developer_tool">
-            <SettingsContainer title="'Developer Tools'" class="'row mt16 o_settings_container'">
-                <Setting class="'col-12 col-lg-6 o_setting_box'" id="devel_tool">
-                    <div class="o_setting_right_pane">
+            <SettingsBlock title="'Developer Tools'">
+                <Setting addLabel="false">
                         <a t-if="!isDebug" class="d-block" href="?debug=1">Activate the developer mode</a>
                         <a t-if="!isAssets" class="d-block" href="?debug=assets">Activate the developer mode (with assets)</a>
                         <a t-if="!isTests" class="d-block" href="?debug=assets,tests">Activate the developer mode (with tests assets)</a>
                         <a t-if="isDebug" class="d-block" href="?debug=">Deactivate the developer mode</a>
                         <a t-if="isDebug and !isDemoDataActive" t-on-click.prevent="onClickForceDemo" class="o_web_settings_force_demo" href="#">Load demo data</a>
-                    </div>
                 </Setting>
-            </SettingsContainer>
+            </SettingsBlock>
         </div>
     </div>
 </template>

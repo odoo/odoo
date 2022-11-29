@@ -18,23 +18,11 @@ if records:
         <field name="arch" type="xml">
             <xpath expr="//div[@id='contacts_settings']" position="inside">
                 <div id="iap_portal">
-                    <div class='row mt16 o_settings_container iap_portal' name="iap_purchases_setting_container">
-                        <div class="col-12 col-lg-6 o_setting_box" id="iap_credits_setting">
-                            <div class='o_setting_right_pane'>
-                                <div class="o_form_label">
-                                Odoo IAP
-                                <a href="https://www.odoo.com/documentation/master/applications/general/in_app_purchase.html" title="Documentation" class="o_doc_link" target="_blank"></a>
-                                <a href="https://www.odoo.com/documentation/master/developer/misc/api/iap.html" title="Documentation" class="ms-1 o_doc_link" target="_blank"></a>
-                                </div>
-                                <div class="text-muted">
-                                    View your IAP Services and recharge your credits
-                                </div>
-                                <div class='mt8'>
-                                    <button name="%(iap.open_iap_account)d" icon="fa-arrow-right" type="action" string="View My Services" class="btn-link"/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <block class='iap_portal' name="iap_purchases_setting_container">
+                        <setting id="iap_credits_setting" string="Odoo IAP" help ="View your IAP Services and recharge your credits" documentation="/applications/general/in_app_purchase.html">
+                            <button name="%(iap.open_iap_account)d" icon="fa-arrow-right" type="action" string="View My Services" class="btn-link"/>
+                        </setting>
+                    </block>
                 </div>
             </xpath>
         </field>
