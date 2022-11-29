@@ -1711,7 +1711,7 @@ const Wysiwyg = Widget.extend({
                 // Make it important so it has priority over selection color.
                 td.style.setProperty(propName, td.style[propName], previewMode ? 'important' : '');
             }
-        } else {
+        } else if (!this.lastMediaClicked) {
             // Ensure the selection in the fonts tags, otherwise an undetermined
             // race condition could generate a wrong selection later.
             const first = coloredElements[0];
