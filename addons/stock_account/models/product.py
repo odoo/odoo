@@ -317,6 +317,7 @@ class ProductProduct(models.Model):
         ])
         new_standard_price = 0
         tmp_value = 0  # to accumulate the value taken on the candidates
+        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
         for candidate in candidates:
             qty_taken_on_candidate = min(qty_to_take_on_candidates, candidate.remaining_qty)
 
@@ -338,8 +339,10 @@ class ProductProduct(models.Model):
 
             if float_is_zero(qty_to_take_on_candidates, precision_rounding=self.uom_id.rounding):
                 if float_is_zero(candidate.remaining_qty, precision_rounding=self.uom_id.rounding):
-                    next_candidates = candidates.filtered(lambda svl: svl.remaining_qty > 0)
-                    new_standard_price = next_candidates and next_candidates[0].unit_cost or new_standard_price
+                    next_candidate = candidates.filtered(lambda svl: svl.remaining_qty > 0)[:1]
+                    next_candidate_cost = next_candidate.quantity and next_candidate.value / next_candidate.quantity or 0.0
+                    if not float_is_zero(next_candidate_cost, precision_digits=price_unit_prec):
+                        new_standard_price = next_candidate_cost
                 break
 
         # Update the standard price with the price of the last used candidate, if any.
