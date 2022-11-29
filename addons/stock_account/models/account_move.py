@@ -301,6 +301,7 @@ class AccountMoveLine(models.Model):
                 )['total_excluded']
                 price_unit /= prec
             price_unit = line.currency_id._convert(price_unit, line.company_id.currency_id, line.company_id, line.date, round=False)
+            price_unit = line.product_uom_id._compute_price(price_unit, line.product_id.uom_id)
             layers_price_unit = line._get_stock_valuation_layers_price_unit(layers)
             layers_to_correct = line._get_stock_layer_price_difference(layers, layers_price_unit, price_unit)
             svl_vals_list += line._prepare_in_invoice_svl_vals(layers_to_correct)
