@@ -2885,9 +2885,8 @@ class Many2one(_Relational):
         if not self.ondelete:
             comodel = model.env[self.comodel_name]
             if model.is_transient() and not comodel.is_transient():
-                # Many2one relations from TransientModel Model are annoying because
-                # they can block deletion due to foreign keys. So unless stated
-                # otherwise, we default them to ondelete='cascade'.
+                # Many2one relations from TransientModel can block deletion due to foreign keys
+                # Unless stated otherwise, we default them to ondelete='cascade'
                 self.ondelete = 'cascade' if self.required else 'set null'
             else:
                 self.ondelete = 'restrict' if self.required else 'set null'
