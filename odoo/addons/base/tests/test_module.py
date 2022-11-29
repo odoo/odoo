@@ -46,7 +46,7 @@ class TestModuleManifest(BaseCase):
             'demo_xml': [],
             'depends': [],
             'description': '',
-            'external_dependencies': [],
+            'external_dependencies': {},
             'icon': '/base/static/description/icon.png',
             'init_xml': [],
             'installable': True,

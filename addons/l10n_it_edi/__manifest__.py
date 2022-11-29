@@ -13,7 +13,6 @@
         'account_edi_proxy_client',
     ],
     'auto_install': ['l10n_it', 'account_edi'],
-    'author': 'Odoo S.A.',
     'description': """
 E-invoice implementation
     """,
