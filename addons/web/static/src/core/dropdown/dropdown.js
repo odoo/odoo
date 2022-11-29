@@ -322,6 +322,7 @@ export class Dropdown extends Component {
 }
 Dropdown.bus = new EventBus();
 Dropdown.defaultProps = {
+    menuDisplay: "d-block",
     onOpened: () => {},
     onScroll: () => {},
 };
@@ -352,6 +353,10 @@ Dropdown.props = {
         optional: true,
     },
     menuClass: {
+        type: String,
+        optional: true,
+    },
+    menuDisplay: {
         type: String,
         optional: true,
     },
