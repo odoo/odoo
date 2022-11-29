@@ -1271,12 +1271,7 @@ QUnit.module("Views", (hooks) => {
         assert.step("next page");
         await click(target.querySelector(".o_pager_next"));
         assert.deepEqual(getPagerValue(target), [4, 4]);
-        assert.verifySteps([
-            "render",
-            "next page",
-            "onUpdatedPager",
-            "render"
-        ]);
+        assert.verifySteps(["render", "next page", "onUpdatedPager", "render"]);
     });
 
     QUnit.test("click on a button type='delete' to delete a record in a column", async (assert) => {
@@ -12170,4 +12165,26 @@ QUnit.module("Views", (hooks) => {
             );
         }
     );
+
+    QUnit.test("Can't use KanbanRecord implementation details in arch", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <t t-esc="__owl__"/>
+                                <t t-esc="props"/>
+                                <t t-esc="env"/>
+                                <t t-esc="render"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+        });
+        assert.strictEqual(target.querySelector(".o_kanban_record").innerHTML, "<div></div>");
+    });
 });

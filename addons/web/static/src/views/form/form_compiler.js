@@ -76,13 +76,13 @@ export class FormCompiler extends ViewCompiler {
         } else {
             labelText = labelText
                 ? toStringExpression(labelText)
-                : `props.record.fields['${fieldName}'].string`;
+                : `this.props.record.fields['${fieldName}'].string`;
         }
         const formLabel = createElement("FormLabel", {
             id: `'${fieldId}'`,
             fieldName: `'${fieldName}'`,
-            record: `props.record`,
-            fieldInfo: `props.archInfo.fieldNodes['${fieldId}']`,
+            record: `this.props.record`,
+            fieldInfo: `this.props.archInfo.fieldNodes['${fieldId}']`,
             className: `"${label.className}"`,
             string: labelText,
         });
@@ -140,7 +140,9 @@ export class FormCompiler extends ViewCompiler {
             if (typeof invisible === "boolean") {
                 isVisibleExpr = `${invisible ? false : true}`;
             } else {
-                isVisibleExpr = `!evalDomainFromRecord(props.record,${JSON.stringify(invisible)})`;
+                isVisibleExpr = `!this.evalDomainFromRecord(this.props.record,${JSON.stringify(
+                    invisible
+                )})`;
             }
             const mainSlot = createElement("t", {
                 "t-set-slot": `slot_${slotId++}`,
@@ -174,8 +176,8 @@ export class FormCompiler extends ViewCompiler {
 
     compileButton(el, params) {
         const compiled = super.compileButton(el, params);
-        compiled.setAttribute("disable", "props.disableViewButtons");
-        compiled.setAttribute("enable", "props.enableViewButtons");
+        compiled.setAttribute("disable", "this.props.disableViewButtons");
+        compiled.setAttribute("enable", "this.props.enableViewButtons");
         return compiled;
     }
 
@@ -217,13 +219,13 @@ export class FormCompiler extends ViewCompiler {
     compileForm(el, params) {
         const sheetNode = el.querySelector("sheet");
         const displayClasses = sheetNode
-            ? `d-flex {{ uiService.size < ${SIZES.XXL} ? "flex-column" : "flex-nowrap h-100" }}`
+            ? `d-flex {{ this.uiService.size < ${SIZES.XXL} ? "flex-column" : "flex-nowrap h-100" }}`
             : "d-block";
         const stateClasses =
-            "{{ props.record.isDirty ? 'o_form_dirty' : !props.record.isVirtual ? 'o_form_saved' : '' }}";
+            "{{ this.props.record.isDirty ? 'o_form_dirty' : !this.props.record.isVirtual ? 'o_form_saved' : '' }}";
         const form = createElement("div", {
-            "t-att-class": "props.class",
-            "t-attf-class": `{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} ${displayClasses} ${stateClasses}`,
+            "t-att-class": "this.props.class",
+            "t-attf-class": `{{this.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} ${displayClasses} ${stateClasses}`,
         });
         if (!sheetNode) {
             for (const child of el.childNodes) {
@@ -247,7 +249,7 @@ export class FormCompiler extends ViewCompiler {
         if (localization.multiLang) {
             const statusBar = form.querySelector(".o_form_statusbar");
             const translateAlert = createElement("t", {
-                "t-if": "props.translateAlert",
+                "t-if": "this.props.translateAlert",
                 "t-call": "web.TranslateAlert",
             });
             if (statusBar) {
@@ -330,14 +332,14 @@ export class FormCompiler extends ViewCompiler {
                     const props = {
                         id: `${fieldId}`,
                         fieldName: `'${fieldName}'`,
-                        record: `props.record`,
+                        record: `this.props.record`,
                         string: child.hasAttribute("string")
                             ? toStringExpression(child.getAttribute("string"))
-                            : `props.record.fields.${fieldName}.string`,
-                        fieldInfo: `props.archInfo.fieldNodes[${fieldId}]`,
+                            : `this.props.record.fields.${fieldName}.string`,
+                        fieldInfo: `this.props.archInfo.fieldNodes[${fieldId}]`,
                     };
                     mainSlot.setAttribute("props", objectToString(props));
-                    mainSlot.setAttribute("Component", "constructor.components.FormLabel");
+                    mainSlot.setAttribute("Component", "this.constructor.components.FormLabel");
                     mainSlot.setAttribute("subType", "'item_component'");
                 }
             } else {
@@ -358,7 +360,7 @@ export class FormCompiler extends ViewCompiler {
                 if (typeof invisible === "boolean") {
                     isVisibleExpr = `${invisible ? false : true}`;
                 } else {
-                    isVisibleExpr = `!evalDomainFromRecord(props.record,${JSON.stringify(
+                    isVisibleExpr = `!this.evalDomainFromRecord(this.props.record,${JSON.stringify(
                         invisible
                     )})`;
                 }
@@ -502,7 +504,7 @@ export class FormCompiler extends ViewCompiler {
 
         noteBook.setAttribute(
             "defaultPage",
-            `props.record.isNew ? undefined : props.activeNotebookPages[${noteBookId}]`
+            `this.props.record.isNew ? undefined : this.props.activeNotebookPages[${noteBookId}]`
         );
         noteBook.setAttribute(
             "onPageUpdate",
@@ -537,7 +539,7 @@ export class FormCompiler extends ViewCompiler {
             if (child.getAttribute("autofocus") === "autofocus") {
                 noteBook.setAttribute(
                     "defaultPage",
-                    `props.record.isNew ? "${pageId}" : (props.activeNotebookPages[${noteBookId}] || "${pageId}")`
+                    `this.props.record.isNew ? "${pageId}" : (this.props.activeNotebookPages[${noteBookId}] || "${pageId}")`
                 );
             }
 
@@ -556,7 +558,9 @@ export class FormCompiler extends ViewCompiler {
             if (typeof invisible === "boolean") {
                 isVisible = `${!invisible}`;
             } else {
-                isVisible = `!evalDomainFromRecord(props.record,${JSON.stringify(invisible)})`;
+                isVisible = `!this.evalDomainFromRecord(this.props.record,${JSON.stringify(
+                    invisible
+                )})`;
             }
             pageSlot.setAttribute("isVisible", isVisible);
 
@@ -628,7 +632,7 @@ export class FormCompiler extends ViewCompiler {
      */
     compileWidget(el) {
         const widget = super.compileWidget(el);
-        widget.setAttribute("readonly", `!props.record.isInEdition`);
+        widget.setAttribute("readonly", `!this.props.record.isInEdition`);
         return widget;
     }
 }

@@ -331,51 +331,29 @@ export class KanbanRecord extends Component {
         }
     }
 
-    //-------------------------------------------------------------------------
-    // KANBAN SPECIAL GETTERS AND FUNCTIONS
-    //
-    // Note: the names of these getters and functions answer to outdated standards
-    // but should not be altered for the sake of compatibility.
-    //-------------------------------------------------------------------------
-
-    get context() {
-        return this.props.record.context;
-    }
-
-    get luxon() {
-        return luxon;
-    }
-
-    get JSON() {
-        return JSON;
-    }
-
-    get read_only_mode() {
-        return this.props.readonly;
-    }
-
-    get selection_mode() {
-        return this.props.forceGlobalClick;
-    }
-
-    get user_context() {
-        return this.user.context;
-    }
-
-    kanban_color() {
-        return getColorClass(...arguments);
-    }
-
-    kanban_getcolor() {
-        return getColorIndex(...arguments);
-    }
-
-    kanban_getcolorname() {
-        return getColorName(...arguments);
-    }
-
-    kanban_image() {
-        return getImageSrcFromRecordInfo(this.props.record, ...arguments);
+    /**
+     * Returns the kanban-box template's rendering context.
+     *
+     * Note: the keys answer to outdated standards but should not be altered for
+     * the sake of compatibility.
+     *
+     * @returns {Object}
+     */
+    get renderingContext() {
+        return {
+            context: this.props.record.context,
+            JSON,
+            kanban_color: getColorClass,
+            kanban_getcolor: getColorIndex,
+            kanban_getcolorname: getColorName,
+            kanban_image: (...args) => getImageSrcFromRecordInfo(this.props.record, ...args),
+            luxon,
+            read_only_mode: this.props.readonly,
+            record: this.record,
+            selection_mode: this.props.forceGlobalClick,
+            user_context: this.user.context,
+            widget: this.widget,
+        };
     }
 }
 

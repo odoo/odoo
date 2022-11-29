@@ -6,8 +6,8 @@ import { getModifier } from "@web/views/view_compiler";
 
 function compileSettingsPage(el, params) {
     const settingsPage = createElement("SettingsPage");
-    settingsPage.setAttribute("slots", "{NoContentHelper:props.slots.NoContentHelper}");
-    settingsPage.setAttribute("initialTab", "props.initialApp");
+    settingsPage.setAttribute("slots", "{NoContentHelper:this.props.slots.NoContentHelper}");
+    settingsPage.setAttribute("initialTab", "this.props.initialApp");
     settingsPage.setAttribute("t-slot-scope", "settings");
 
     //props

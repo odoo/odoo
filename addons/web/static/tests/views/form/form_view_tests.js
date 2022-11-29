@@ -11670,39 +11670,45 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([], "should not save because we do not change anything");
     });
 
-    QUnit.test("Auto save: save on closing tab/browser (not dirty) with text field", async function (assert) {
+    QUnit.test(
+        "Auto save: save on closing tab/browser (not dirty) with text field",
+        async function (assert) {
+            serverData.models.partner.fields.bloup = {
+                string: "Bloup",
+                type: "text",
+                default: false,
+            };
 
-        serverData.models.partner.fields.bloup = {
-            string: "Bloup",
-            type: "text",
-            default: false,
-        };
-
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
                 <form>
                     <group>
                         <field name="bloup"/>
                     </group>
                 </form>`,
-            resId: 1,
-            mockRPC(route, { args, method, model }) {
-                if (method === "write" && model === "partner") {
-                    assert.step("save"); // should not be called
-                }
-            },
-        });
+                resId: 1,
+                mockRPC(route, { args, method, model }) {
+                    if (method === "write" && model === "partner") {
+                        assert.step("save"); // should not be called
+                    }
+                },
+            });
 
-        assert.strictEqual(target.querySelector(".o_field_widget[name=bloup] textarea").value, "", "should contain the default value");
+            assert.strictEqual(
+                target.querySelector(".o_field_widget[name=bloup] textarea").value,
+                "",
+                "should contain the default value"
+            );
 
-        window.dispatchEvent(new Event("beforeunload"));
-        await nextTick();
+            window.dispatchEvent(new Event("beforeunload"));
+            await nextTick();
 
-        assert.verifySteps([], "should not save because we do not change anything");
-    });
+            assert.verifySteps([], "should not save because we do not change anything");
+        }
+    );
 
     QUnit.test("Auto save: save on closing tab/browser (detached form)", async function (assert) {
         serverData.actions[1] = {
@@ -12748,4 +12754,22 @@ QUnit.module("Views", (hooks) => {
             assert.verifySteps(["onWillSaveRecord 1"]);
         }
     );
+
+    QUnit.test("Can't use FormRenderer implementation details in arch", async (assert) => {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <div>
+                        <t t-esc="__owl__"/>
+                        <t t-esc="props"/>
+                        <t t-esc="env"/>
+                        <t t-esc="render"/>
+                    </div>
+                </form>`,
+        });
+        assert.strictEqual(target.querySelector(".o_form_nosheet").innerHTML, "<div></div>");
+    });
 });

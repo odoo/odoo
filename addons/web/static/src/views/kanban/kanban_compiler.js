@@ -241,7 +241,7 @@ export class KanbanCompiler extends ViewCompiler {
         } else {
             compiled = super.compileField(el, params);
             const fieldId = el.getAttribute("field_id") || el.getAttribute("name");
-            compiled.setAttribute("id", `'${fieldId}_' + props.record.id`);
+            compiled.setAttribute("id", `'${fieldId}_' + this.props.record.id`);
         }
 
         const { bold, display } = extractAttributes(el, ["bold", "display"]);
@@ -301,7 +301,7 @@ export class KanbanCompiler extends ViewCompiler {
         const compiled = this.compileGenericNode(el, params);
         const tname = el.getAttribute("t-call");
         if (tname in this.templates) {
-            compiled.setAttribute("t-call", `{{templates[${toStringExpression(tname)}]}}`);
+            compiled.setAttribute("t-call", `{{this.templates[${toStringExpression(tname)}]}}`);
         }
         return compiled;
     }
