@@ -20,6 +20,21 @@ from odoo.tools import email_split_and_format, formataddr, mute_logger
 @tagged('mail_gateway')
 class TestEmailParsing(TestMailCommon):
 
+    def test_message_parse_and_replace_binary_octetstream(self):
+        """ Incoming email containing a wrong Content-Type as described in RFC2046/section-3 """
+        received_mail = self.from_string(test_mail_data.MAIL_MULTIPART_BINARY_OCTET_STREAM)
+        with self.assertLogs('odoo.addons.mail.models.mail_thread', level="WARNING") as capture:
+            extracted_mail = self.env['mail.thread']._message_parse_extract_payload(received_mail)
+
+        self.assertEqual(len(extracted_mail['attachments']), 1)
+        attachment = extracted_mail['attachments'][0]
+        self.assertEqual(attachment.fname, 'hello_world.dat')
+        self.assertEqual(attachment.content, b'Hello world\n')
+        self.assertEqual(capture.output, [
+            ("WARNING:odoo.addons.mail.models.mail_thread:Message containing an unexpected "
+             "Content-Type 'binary/octet-stream', assuming 'application/octet-stream'"),
+        ])
+
     def test_message_parse_body(self):
         # test pure plaintext
         plaintext = self.format(test_mail_data.MAIL_TEMPLATE_PLAINTEXT, email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>')
@@ -95,7 +110,6 @@ class TestEmailParsing(TestMailCommon):
     def test_message_parse_xhtml(self):
         # Test that the parsing of XHTML mails does not fail
         self.env['mail.thread'].message_parse(self.from_string(test_mail_data.MAIL_XHTML))
-
 
 @tagged('mail_gateway')
 class TestMailAlias(TestMailCommon):
