@@ -209,7 +209,7 @@ export class DashboardLoader {
     _createSpreadsheetModel(data, revisions = []) {
         const dataSources = new DataSources(this.orm);
         const model = new Model(
-            migrate(JSON.parse(data)),
+            migrate(data),
             {
                 external: { env: this.env, orm: this.orm, dataSources },
                 mode: "dashboard",
