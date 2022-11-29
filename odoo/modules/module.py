@@ -35,7 +35,7 @@ _DEFAULT_MANIFEST = {
     'demo_xml': [],
     'depends': [],
     'description': '',
-    'external_dependencies': [],
+    'external_dependencies': {},
     #icon: f'/{module}/static/description/icon.png',  # automatic
     'init_xml': [],
     'installable': True,

@@ -3,7 +3,7 @@
 {
     'name': 'Extended Addresses',
     'summary': 'Add extra fields on addresses',
-    'sequence': '19',
+    'sequence': 19,
     'version': '1.1',
     'category': 'Hidden',
     'description': """
