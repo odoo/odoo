@@ -1575,7 +1575,7 @@ const Wysiwyg = Widget.extend({
                         // Unstash the mutations now that the color is picked.
                         this.odooEditor.historyUnstash();
                         this._processAndApplyColor(eventName, ev.data.color);
-                        this._updateEditorUI();
+                        this._updateEditorUI(this.lastMediaClicked && { target: this.lastMediaClicked });
                     });
                     colorpicker.on('color_hover', null, ev => {
                         if (hadNonCollapsedSelection) {
