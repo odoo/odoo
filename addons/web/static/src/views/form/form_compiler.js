@@ -608,7 +608,7 @@ export class FormCompiler extends ViewCompiler {
         sheetBG.className = "o_form_sheet_bg";
 
         const sheetFG = createElement("div");
-        sheetFG.className = "o_form_sheet position-relative";
+        sheetFG.className = "o_form_sheet position-relative clearfix";
 
         append(sheetBG, sheetFG);
         for (const child of el.childNodes) {
