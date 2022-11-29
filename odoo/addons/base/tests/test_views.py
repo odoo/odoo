@@ -3279,6 +3279,96 @@ class TestViews(ViewCase):
             "The view test_views_test_view_ref should not be in the views of the many2many field groups_id"
         )
 
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_forbidden_owl_directives_in_form(self):
+        arch = "<form>%s</form>"
+
+        self.assertInvalid(
+            arch % ('<span t-esc="x"/>'),
+            """Error while validating view near:
+
+<form __validate__="1"><span t-esc="x"/></form>
+Forbidden owl directive used in arch (t-esc).""",
+        )
+
+        self.assertInvalid(
+            arch % ('<span t-on-click="x.doIt()"/>'),
+            """Error while validating view near:
+
+<form __validate__="1"><span t-on-click="x.doIt()"/></form>
+Forbidden owl directive used in arch (t-on-click).""",
+        )
+
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_forbidden_owl_directives_in_kanban(self):
+        arch = "<kanban><templates><t t-name='kanban-box'>%s</t></templates></kanban>"
+
+        self.assertValid(arch % ('<span t-esc="record.resId"/>'))
+
+        self.assertInvalid(
+            arch % ('<span t-on-click="x.doIt()"/>'),
+            """Error while validating view near:
+
+<kanban __validate__="1"><templates><t t-name="kanban-box"><span t-on-click="x.doIt()"/></t></templates></kanban>
+Forbidden owl directive used in arch (t-on-click).""",
+        )
+
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_forbidden_data_tooltip_attributes_in_form(self):
+        arch = "<form>%s</form>"
+
+        self.assertInvalid(
+            arch % ('<span data-tooltip="Test"/>'),
+            """Error while validating view near:
+
+<form __validate__="1"><span data-tooltip="Test"/></form>
+Forbidden attribute used in arch (data-tooltip)."""
+        )
+
+        self.assertInvalid(
+            arch % ('<span data-tooltip-template="test"/>'),
+            """Error while validating view near:
+
+<form __validate__="1"><span data-tooltip-template="test"/></form>
+Forbidden attribute used in arch (data-tooltip-template)."""
+        )
+
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_forbidden_data_tooltip_attributes_in_kanban(self):
+        arch = "<kanban><templates><t t-name='kanban-box'>%s</t></templates></kanban>"
+
+        self.assertInvalid(
+            arch % ('<span data-tooltip="Test"/>'),
+            """Error while validating view near:
+
+<kanban __validate__="1"><templates><t t-name="kanban-box"><span data-tooltip="Test"/></t></templates></kanban>
+Forbidden attribute used in arch (data-tooltip)."""
+        )
+
+        self.assertInvalid(
+            arch % ('<span data-tooltip-template="test"/>'),
+            """Error while validating view near:
+
+<kanban __validate__="1"><templates><t t-name="kanban-box"><span data-tooltip-template="test"/></t></templates></kanban>
+Forbidden attribute used in arch (data-tooltip-template)."""
+        )
+
+        self.assertInvalid(
+            arch % ('<span t-att-data-tooltip="test"/>'),
+            """Error while validating view near:
+
+<kanban __validate__="1"><templates><t t-name="kanban-box"><span t-att-data-tooltip="test"/></t></templates></kanban>
+Forbidden attribute used in arch (t-att-data-tooltip)."""
+        )
+
+        self.assertInvalid(
+            arch % ('<span t-attf-data-tooltip-template="{{ test }}"/>'),
+            """Error while validating view near:
+
+<kanban __validate__="1"><templates><t t-name="kanban-box"><span t-attf-data-tooltip-template="{{ test }}"/></t></templates></kanban>
+Forbidden attribute used in arch (t-attf-data-tooltip-template)."""
+        )
+
 
 class TestViewTranslations(common.TransactionCase):
     # these tests are essentially the same as in test_translate.py, but they use

@@ -2,15 +2,12 @@
 
 import ast
 import collections
-import datetime
 import functools
 import inspect
 import json
 import logging
-import math
 import pprint
 import re
-import time
 import uuid
 import warnings
 
@@ -1417,6 +1414,7 @@ actual arch.
         model = self.env[model_name].with_context(lang=None)
         name_manager = NameManager(model)
 
+        view_type = node.tag
         # use a stack to recursively traverse the tree
         stack = [(node, editable, full)]
         while stack:
@@ -1428,6 +1426,7 @@ actual arch.
             node_info = {
                 'editable': editable and self._editable_node(node, name_manager),
                 'validate': validate,
+                'view_type': view_type,
             }
 
             # tag-specific validation
@@ -1733,6 +1732,9 @@ actual arch.
                 msg = 'o_progressbar class must have aria-valuemaxattribute'
                 self._log_view_warning(msg, node)
 
+    def _is_qweb_based_view(self, view_type):
+        return view_type in ("kanban", "gantt")
+
     def _validate_attrs(self, node, name_manager, node_info):
         """ Generic validation of node attrs. """
         for attr, expr in node.items():
@@ -1812,6 +1814,12 @@ actual arch.
             elif attr == 'group':
                 msg = "attribute 'group' is not valid.  Did you mean 'groups'?"
                 self._log_view_warning(msg, node)
+
+            elif (re.match(r'^(t\-att\-|t\-attf\-)?data-tooltip(-template|-info)?$', attr)):
+                self._raise_view_error(_("Forbidden attribute used in arch (%s).", attr), node)
+
+            elif (attr.startswith("t-")):
+                self._validate_qweb_directive(node, attr, node_info["view_type"])
 
     def _validate_classes(self, node, expr):
         """ Validate the classes present on node. """
@@ -1923,6 +1931,32 @@ actual arch.
 
         msg = '%s must have title in its tag, parents, descendants or have text'
         self._log_view_warning(msg % description, node)
+
+    def _validate_qweb_directive(self, node, directive, view_type):
+        """Some views (e.g. kanban, form) generate owl templates from the archs.
+        However, we don't want to see owl directives directly written in archs.
+        There are exceptions though, since the kanban and gantt archs define qweb templates.
+        We thus here validate that the given directive is allowed, according to the view_type.
+        """
+        allowed_directives = ["t-translation"]
+        if self._is_qweb_based_view(view_type):
+            allowed_directives.extend([
+                "t-name",
+                "t-esc",
+                "t-out",
+                "t-set",
+                "t-value",
+                "t-if",
+                "t-else",
+                "t-elif",
+                "t-foreach",
+                "t-as",
+                "t-key",
+                "t-att.*",
+                "t-call",
+            ])
+        if (not next(filter(lambda regex: re.match(regex, directive), allowed_directives), None)):
+            self._raise_view_error(_("Forbidden owl directive used in arch (%s).", directive), node)
 
     def _get_domain_identifiers(self, node, domain, use, expr=None):
         try:
