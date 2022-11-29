@@ -14,3 +14,6 @@ class View(models.Model):
             name_manager.has_field(node, node.get('name'), {})
             return
         return super()._postprocess_tag_field(node, name_manager, node_info)
+
+    def _is_qweb_based_view(self, view_type):
+        return view_type == "activity" or super()._is_qweb_based_view(view_type)
