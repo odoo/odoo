@@ -119,6 +119,26 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test("color field read-only in model definition, in non-editable list", async function (assert) {
+        serverData.models.partner.fields.hex_color.readonly = true;
+        await makeView({
+            type: "list",
+            serverData,
+            resModel: "partner",
+            arch: `
+                <tree>
+                    <field name="hex_color" widget="color" />
+                </tree>`,
+        });
+
+        assert.containsN(
+            target,
+            '.o_field_color input:disabled',
+            2,
+            "the field should not be editable"
+        );
+    });
+
     QUnit.test("color field change via another field's onchange", async (assert) => {
         serverData.models.partner.onchanges = {
             foo: (rec) => {
