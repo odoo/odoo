@@ -119,11 +119,13 @@ export function debounce(func, delay, immediate = false) {
  * @template {Function} T
  * @param {T} callback
  * @param {number | "animationFrame"} delay
+ * @param {boolean} [immediate=false] whether the function should be called on
+ *      the leading edge instead of the trailing edge.
  * @returns {T & { cancel: () => void }}
  */
-export function useDebounced(callback, delay) {
+export function useDebounced(callback, delay, immediate = false) {
     const component = useComponent();
-    const debounced = debounce(callback.bind(component), delay);
+    const debounced = debounce(callback.bind(component), delay, immediate);
     onWillUnmount(() => debounced.cancel());
     return debounced;
 }
