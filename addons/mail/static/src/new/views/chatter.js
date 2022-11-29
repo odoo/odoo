@@ -6,8 +6,9 @@ import { useDropzone } from "@mail/new/dropzone/dropzone_hook";
 import { Composer } from "../composer/composer";
 import { ActivityList } from "../activity/activity_list";
 import { Component, useState, onWillUpdateProps, useChildSubEnv, useRef } from "@odoo/owl";
+import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useService } from "@web/core/utils/hooks";
-import { onExternalClick, useHover } from "../utils";
+import { useHover } from "../utils";
 
 export class Chatter extends Component {
     setup() {
@@ -21,12 +22,8 @@ export class Chatter extends Component {
             attachments: [],
             composing: false, // false, 'message' or 'note'
             followers: [],
-            isFollowerDropdownOpen: false,
         });
         this.unfollowHover = useHover("unfollow");
-        onExternalClick("follower-list", () => {
-            this.state.isFollowerDropdownOpen = false;
-        });
 
         this.load();
         useChildSubEnv({
@@ -45,6 +42,10 @@ export class Chatter extends Component {
                 }
             }
         });
+    }
+
+    get followerButtonLabel() {
+        return this.env._t("Show Followers");
     }
 
     get followingText() {
@@ -93,10 +94,6 @@ export class Chatter extends Component {
         this.load(this.props.resId, ["followers", "suggestedRecipients"]);
     }
 
-    onClickFollowersButton() {
-        this.state.isFollowerDropdownOpen = !this.state.isFollowerDropdownOpen;
-    }
-
     async onClickUnfollow() {
         await this.orm.call(this.props.resModel, "message_unsubscribe", [[this.props.resId]], {
             partner_ids: [this.messaging.user.partnerId],
@@ -123,7 +120,7 @@ export class Chatter extends Component {
 }
 
 Object.assign(Chatter, {
-    components: { Thread, Composer, ActivityList },
+    components: { Dropdown, Thread, Composer, ActivityList },
     props: ["hasActivity", "resId", "resModel", "displayName?"],
     template: "mail.chatter",
 });

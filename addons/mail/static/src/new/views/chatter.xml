@@ -19,12 +19,12 @@
                 <button class="o-mail-chatter-topbar-add-attachments btn px-2" t-att-disabled="!props.resId">
                     <i class="fa fa-paperclip fa-lg"/>
                 </button>
-                <div class="o-mail-chatter-topbar-follower-list d-flex position-relative" t-ref="follower-list">
-                    <button class="o-mail-chatter-topbar-follower-list-button btn btn-light px-2" t-att-disabled="isDisabled" t-att-aria-expanded="state.isFollowerDropdownOpen ? 'true' : 'false'" aria-label="Show Followers" t-on-click="onClickFollowersButton">
+                <Dropdown position="'bottom-end'" isDisabled="isDisabled" class="'o-mail-chatter-topbar-follower-list d-flex'" menuClass="'o-mail-chatter-topbar-follower-list-dropdown flex-column p-0'" menuDisplay="'d-flex'" title="followerButtonLabel" togglerClass="'o-mail-chatter-topbar-follower-list-button btn btn-light px-2'">
+                    <t t-set-slot="toggler">
                         <i class="fa fa-user-o" role="img"/>
                         <span class="o-mail-chatter-topbar-followers-count ps-1" t-esc="state.followers.length"/>
-                    </button>
-                    <div t-if="state.isFollowerDropdownOpen" class="o-mail-chatter-topbar-follower-list-dropdown o-dropdown-menu dropdown-menu-end flex-column d-flex" role="menu">
+                    </t>
+                    <t t-set-slot="default">
                         <t t-if="thread.model !== 'channel' and thread.hasWriteAccess">
                             <a class="o_FollowerListMenuView_addFollowersButton dropdown-item" href="#" role="menuitem" t-on-click="onClickAddFollowers">
                                 Add Followers
@@ -42,8 +42,8 @@
                         <div t-elif="!thread.hasWriteAccess" class="o-mail-chatter-topbar-follower-list-no-followers dropdown-item disabled">
                             No Followers
                         </div>
-                    </div>
-                </div>
+                    </t>
+                </Dropdown>
                 <button t-if="isFollower" class="o-mail-chatter-topbar-unfollow btn px-0" t-att-class="{ 'text-success': !unfollowHover.isHover, 'text-warning': unfollowHover.isHover }" t-att-disabled="!props.resId" t-on-click="onClickUnfollow" t-ref="unfollow">
                     <div class="position-relative">
                         <!-- Hidden element used to set the button maximum size -->
