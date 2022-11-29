@@ -689,7 +689,7 @@
                           js_class="project_calendar"
                           scales="month,year">
                     <field name="allow_milestones" invisible="1" />
-                    <field name="project_id" widget="project_private_task"/>
+                    <field name="project_id" widget="project_private_task" invisible="context.get('default_project_id', False)"/>
                     <field name="milestone_id" attrs="{'invisible': ['|', ('allow_milestones', '=', False), ('milestone_id', '=', False)]}"/>
                     <field name="user_ids" widget="many2many_avatar_user" attrs="{'invisible': [('user_ids', '=', [])]}"/>
                     <field name="partner_id" attrs="{'invisible': [('partner_id', '=', False)]}"/>
@@ -722,7 +722,7 @@
             <field name="model">project.task</field>
             <field name="arch" type="xml">
                 <graph string="Tasks" sample="1" js_class="project_graph">
-                    <field name="project_id"/>
+                    <field name="project_id" invisible="context.get('default_project_id', False)"/>
                     <field name="stage_id"/>
                     <field name="color" invisible="1"/>
                     <field name="sequence" invisible="1"/>
@@ -745,7 +745,7 @@
                                 <span t-att-title="record.name.value">
                                     <field name="name" display="full" class="text-truncate"/>
                                 </span>
-                                <span t-att-title="record.project_id.value">
+                                <span t-att-title="record.project_id.value" invisible="context.get('default_project_id', False)">
                                     <field t-if="record.project_id.value" name="project_id" muted="1" display="full"/>
                                     <span t-elif="record.is_private.value" class="fst-italic text-muted"><i class="fa fa-lock"></i> Private</span>
                                 </span>

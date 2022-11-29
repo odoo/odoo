@@ -95,6 +95,6 @@ class Project(models.Model):
                 'action_type': 'object',
                 'action': 'action_view_mrp_bom',
                 'show': self.bom_count > 0,
-                'sequence': 45,
+                'sequence': 35,
             }])
         return buttons
