@@ -1661,7 +1661,7 @@ const Wysiwyg = Widget.extend({
                         if (this.odooEditor.deselectTable() && hasValidSelection(this.odooEditor.editable)) {
                             this.odooEditor.document.getSelection().collapseToStart();
                         }
-                        this._updateEditorUI();
+                        this._updateEditorUI(this.lastMediaClicked && { target: this.lastMediaClicked });
                         colorpicker.off('color_leave');
                     });
                     colorpicker.on('color_hover', null, ev => {
