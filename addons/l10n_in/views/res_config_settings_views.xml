@@ -5,22 +5,11 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <div id="invoicing_settings" position="inside">
-                <div class="col-xs-12 col-md-6 o_setting_box"
-                    name="ecommerce_reseller_setting"
-                    title="Manage Reseller(E-Commerce)"
-                    attrs="{'invisible': [('country_code', '!=', 'IN')]}">
-                    <div class="o_setting_left_pane">
-                        <field name="group_l10n_in_reseller"/>
-                    </div>
-                    <div class="o_setting_right_pane" name="l10n_eu_service_right_pane">
-                        <label for="group_l10n_in_reseller"/>
-                        <div class="text-muted">
-                            Use this if setup with Reseller(E-Commerce).
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <block id="invoicing_settings" position="inside">
+                <setting help="Use this if setup with Reseller(E-Commerce)." name="ecommerce_reseller_setting" title="Manage Reseller(E-Commerce)" attrs="{'invisible': [('country_code', '!=', 'IN')]}">
+                    <field name="group_l10n_in_reseller"/>
+                </setting>
+            </block>
         </field>
     </record>
 </odoo>

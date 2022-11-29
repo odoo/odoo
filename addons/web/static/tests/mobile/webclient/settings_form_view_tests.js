@@ -49,36 +49,20 @@ QUnit.module("Mobile SettingsFormView", (hooks) => {
             serverData,
             arch: `
                 <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
-                    <div class="o_setting_container">
-                        <div class="settings">
-                            <div class="app_settings_block" string="CRM" data-key="crm">
-                                <div class="row mt16 o_settings_container">
-                                    <div class="col-12 col-lg-6 o_setting_box">
-                                        <div class="o_setting_left_pane">
-                                            <field name="bar"/>
-                                        </div>
-                                        <div class="o_setting_right_pane">
-                                            <label for="bar"/>
-                                            <div class="text-muted">this is bar</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="app_settings_block" string="Project" data-key="project">
-                                <div class="row mt16 o_settings_container">
-                                    <div class="col-12 col-lg-6 o_setting_box">
-                                        <div class="o_setting_left_pane">
-                                            <field name="foo"/>
-                                        </div>
-                                        <div class="o_setting_right_pane">
-                                            <label for="foo"/>
-                                            <div class="text-muted">this is foo</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <app string="CRM" name="crm">
+                        <block>
+                            <setting help="this is bar">
+                                <field name="bar"/>
+                            </setting>
+                        </block>
+                    </app>
+                    <app string="Project" name="project">
+                        <block>
+                            <setting help="this is foo">
+                                <field name="foo"/>
+                            </setting>
+                        </block>
+                    </app>
                 </form>`,
         });
 
@@ -125,36 +109,20 @@ QUnit.module("Mobile SettingsFormView", (hooks) => {
                 serverData,
                 arch: `
                 <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
-                    <div class="o_setting_container">
-                        <div class="settings">
-                            <div class="app_settings_block" string="CRM" data-key="crm">
-                                <div class="row mt16 o_settings_container">
-                                    <div class="col-12 col-lg-6 o_setting_box">
-                                        <div class="o_setting_left_pane">
-                                            <field name="bar"/>
-                                        </div>
-                                        <div class="o_setting_right_pane">
-                                            <label for="bar"/>
-                                            <div class="text-muted">this is bar</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="app_settings_block" string="Project" data-key="project">
-                                <div class="row mt16 o_settings_container">
-                                    <div class="col-12 col-lg-6 o_setting_box">
-                                        <div class="o_setting_left_pane">
-                                            <field name="foo"/>
-                                        </div>
-                                        <div class="o_setting_right_pane">
-                                            <label for="foo"/>
-                                            <div class="text-muted">this is foo</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <app string="CRM" name="crm">
+                        <block>
+                            <setting help="this is bar">
+                                <field name="bar"/>
+                            </setting>
+                        </block>
+                    </app>
+                    <app string="Project" name="project">
+                        <block>
+                            <setting help="this is foo">
+                                <field name="foo"/>
+                            </setting>
+                        </block>
+                    </app>
                 </form>`,
             });
 

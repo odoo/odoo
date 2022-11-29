@@ -21,7 +21,7 @@ export class FormLabel extends Component {
         if (empty) {
             classes.push("o_form_label_empty");
         }
-        if (readonly) {
+        if (readonly && !this.props.notMuttedLabel) {
             classes.push("o_form_label_readonly");
         }
         return classes.join(" ");
@@ -64,4 +64,5 @@ FormLabel.props = {
     className: { type: String, optional: true },
     string: { type: String },
     id: { type: String },
+    notMuttedLabel: { type: Boolean, optional: true },
 };

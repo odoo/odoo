@@ -6,114 +6,56 @@
         <field name="priority" eval="80"/>
         <field name="inherit_id" ref="base.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[hasclass('settings')]" position="inside">
-                <div class="app_settings_block" data-string="Attendances" string="Attendances" data-key="hr_attendance" groups="hr_attendance.group_hr_attendance_manager">
-                    <h2>Check-In/Out in Kiosk Mode</h2>
-                    <div class="row mt16 o_settings_container" name="kiosk_mode_setting_container">
-                        <div class="col-12 col-lg-6 o_setting_box">
-                            <div class="o_setting_right_pane">
-                                <label for="attendance_kiosk_mode"/>
-                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." role="img" aria-label="Values set here are company-specific." groups="base.group_multi_company"/>
-                                <div class="row">
-                                    <div class="text-muted col-lg-10">
-                                        Define the way the user will be identified by the application.
-                                    </div>
+            <xpath expr="//form" position="inside">
+                <app data-string="Attendances" string="Attendances" name="hr_attendance" groups="hr_attendance.group_hr_attendance_manager">
+                    <block title="Check-In/Out in Kiosk Mode" name="kiosk_mode_setting_container">
+                        <setting company_dependent="1" help="Define the way the user will be identified by the application.">
+                            <field name="attendance_kiosk_mode" required="1" class="w-75"/>
+                        </setting>
+                        <setting string="Display Time" company_dependent="1" help="Choose how long the greeting message will be displayed.">
+                            <field name="attendance_kiosk_delay" required="1" class="text-center" style="width: 10%; min-width: 4rem;"/><span> seconds</span>
+                        </setting>
+                    </block>
+                    <block name="pincode_setting_container">
+                        <setting attrs="{'invisible': [('attendance_kiosk_mode', '=', 'manual')]}" company_dependent="1" help="Define the camera used for the barcode scan.">
+                            <field name="attendance_barcode_source" required="1"/>
+                        </setting>
+                        <setting title="Set PIN codes in the employee detail form (in HR Settings tab)." attrs="{'invisible': [('attendance_kiosk_mode', '=', 'barcode')]}" help="Use PIN codes (defined on the Employee's profile) to check-in.">
+                            <field name="group_attendance_use_pin"/>
+                        </setting>
+                    </block>
+                    <block title="Extra Hours" name="overtime_settings">
+                        <setting title="Activate the count of employees' extra hours." string="Count of Extra Hours" company_dependent="1" help="Compare attendance with working hours set on employee.">
+                            <field name="hr_attendance_overtime"/>
+                            <div class="mt16" attrs="{'invisible': [('hr_attendance_overtime', '=', False)],
+                                                        'required': [('hr_attendance_overtime', '=', True)]}">
+                                <div class="mt16 row" title="Count of extra hours is considered from this date. Potential extra hours prior to this date are not considered.">
+                                    <label for="overtime_start_date" string="Start from" class="col-3 col-lg-3 o_light_label"/>
+                                    <field name="overtime_start_date" class="col-lg-3 p-0" attrs="{'required': [('hr_attendance_overtime', '=', True)]}" />
                                 </div>
-                                <div class="content-group">
-                                    <div class="mt16">
-                                        <field name="attendance_kiosk_mode" required="1" class="w-75"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-6 o_setting_box">
-                            <div class="o_setting_right_pane">
-                                <label for="attendance_kiosk_delay" string="Display Time"/>
-                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." role="img" aria-label="Values set here are company-specific." groups="base.group_multi_company"/>
-                                <div class="row">
-                                    <div class="text-muted col-lg-10">
-                                        Choose how long the greeting message will be displayed.
-                                    </div>
-                                </div>
-                                <div class="content-group">
-                                    <div class="mt16">
-                                        <field name="attendance_kiosk_delay" required="1" class="text-center" style="width: 10%; min-width: 4rem;"/> seconds
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mt16 o_settings_container" name="pincode_setting_container">
-                        <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('attendance_kiosk_mode', '=', 'manual')]}">
-                            <div class="o_setting_right_pane">
-                                <label for="attendance_barcode_source"/>
-                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." role="img" aria-label="Values set here are company-specific." groups="base.group_multi_company"/>
-                                <div class="row">
-                                    <div class="text-muted col-lg-10">
-                                        Define the camera used for the barcode scan.
-                                    </div>
-                                </div>
-                                <div class="content-group">
-                                    <div class="mt16">
-                                        <field name="attendance_barcode_source" required="1"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-6 o_setting_box" title="Set PIN codes in the employee detail form (in HR Settings tab)." attrs="{'invisible': [('attendance_kiosk_mode', '=', 'barcode')]}">
-                            <div class="o_setting_left_pane">
-                                <field name="group_attendance_use_pin"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="group_attendance_use_pin"/>
-                                <div class="text-muted col-lg-10">
-                                    Use PIN codes (defined on the Employee's profile) to check-in.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <h2>Extra Hours</h2>
-                    <div class="row mt16 o_settings_container" name="overtime_settings">
-                        <div class="col-12 col-lg-6 o_setting_box">
-                            <div class="o_setting_left_pane" title="Activate the count of employees' extra hours.">
-                                <field name="hr_attendance_overtime"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="hr_attendance_overtime" class="o_form_label">Count of Extra Hours</label>
-                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." role="img" aria-label="Values set here are company-specific." groups="base.group_multi_company"/>
+                                <br/>
+                                <label for="overtime_company_threshold" class="o_form_label">
+                                    Tolerance Time In Favor Of Company
+                                </label>
                                 <div class="text-muted">
-                                    Compare attendance with working hours set on employee.
+                                    Allow a period of time (around working hours) where extra time will not be counted, in benefit of the company
                                 </div>
-                                <div class="mt16" attrs="{'invisible': [('hr_attendance_overtime', '=', False)],
-                                                          'required': [('hr_attendance_overtime', '=', True)]}">
-                                    <div class="mt16 row" title="Count of extra hours is considered from this date. Potential extra hours prior to this date are not considered.">
-                                        <label for="overtime_start_date" string="Start from" class="col-3 col-lg-3 o_light_label"/>
-                                        <field name="overtime_start_date" class="col-lg-3 p-0" attrs="{'required': [('hr_attendance_overtime', '=', True)]}" />
-                                    </div>
-                                    <br/>
-                                    <label for="overtime_company_threshold" class="o_form_label">
-                                        Tolerance Time In Favor Of Company
-                                    </label>
-                                    <div class="text-muted">
-                                        Allow a period of time (around working hours) where extra time will not be counted, in benefit of the company
-                                    </div>
-                                    <span>Time Period </span><field name="overtime_company_threshold" class="text-center"
-                                        attrs="{'required': [('hr_attendance_overtime', '=', True)]}" style="width: 10%; min-width: 4rem;"/><span> Minutes</span>
-                                    <br/>
-                                    <br/>
-                                    <label for="overtime_employee_threshold" class="o_form_label">
-                                        Tolerance Time In Favor Of Employee
-                                    </label>
-                                    <div class="text-muted">
-                                        Allow a period of time (around working hours) where extra time will not be deducted, in benefit of the employee
-                                    </div>
-                                    <span>Time Period </span><field name="overtime_employee_threshold" class="text-center"
-                                        attrs="{'required': [('hr_attendance_overtime', '=', True)]}" style="width: 10%; min-width: 4rem;"/><span> Minutes</span>
+                                <span>Time Period </span><field name="overtime_company_threshold" class="text-center"
+                                    attrs="{'required': [('hr_attendance_overtime', '=', True)]}" style="width: 10%; min-width: 4rem;"/><span> Minutes</span>
+                                <br/>
+                                <br/>
+                                <label for="overtime_employee_threshold" class="o_form_label">
+                                    Tolerance Time In Favor Of Employee
+                                </label>
+                                <div class="text-muted">
+                                    Allow a period of time (around working hours) where extra time will not be deducted, in benefit of the employee
                                 </div>
+                                <span>Time Period </span><field name="overtime_employee_threshold" class="text-center"
+                                    attrs="{'required': [('hr_attendance_overtime', '=', True)]}" style="width: 10%; min-width: 4rem;"/><span> Minutes</span>
                             </div>
-                        </div>
-                    </div>
-                </div>
+                        </setting>
+                    </block>
+                </app>
             </xpath>
         </field>
     </record>

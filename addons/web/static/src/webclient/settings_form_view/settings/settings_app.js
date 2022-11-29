@@ -27,3 +27,10 @@ export class SettingsApp extends Component {
     }
 }
 SettingsApp.template = "web.SettingsApp";
+SettingsApp.props = {
+    string: String,
+    imgurl: String,
+    key: String,
+    selectedTab: { type: String, optional: 1 },
+    slots: Object,
+};
