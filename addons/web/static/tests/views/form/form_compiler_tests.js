@@ -209,7 +209,7 @@ QUnit.module("Form Compiler", (hooks) => {
                 <div class="o_form_sheet_bg">
                     <div class="o_form_statusbar position-relative d-flex justify-content-between border-bottom"><StatusBarButtons readonly="!props.record.isInEdition"/></div>
                     <div>someDiv</div>
-                    <div class="o_form_sheet position-relative">
+                    <div class="o_form_sheet position-relative clearfix">
                         <div>inside sheet</div>
                     </div>
                 </div>
