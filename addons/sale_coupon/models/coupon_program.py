@@ -84,6 +84,17 @@ class CouponProgram(models.Model):
             untaxed_amount = order_amount['amount_untaxed'] - sum(line.price_subtotal for line in lines)
             tax_amount = order_amount['amount_tax'] - sum(line.price_tax for line in lines)
             program_amount = program._compute_program_amount('rule_minimum_amount', order.currency_id)
+
+            # Adjust program_amount if cart contains the reward product
+            # Prevent the customer from using the reward product to have an higher price than the program_amount
+            if program.reward_type == 'product' and order.order_line.filtered(lambda line: line.product_id == program.reward_product_id):
+                reward_product_price = program.reward_product_id.list_price
+                reward_product_quantity = program.reward_product_quantity
+                program_amount += reward_product_price * reward_product_quantity
+                if program.rule_minimum_amount_tax_inclusion == 'tax_included':
+                    reward_product_tax = program.reward_product_id.taxes_id._compute_amount(reward_product_price, None)
+                    program_amount += reward_product_tax * reward_product_quantity
+
             if program.rule_minimum_amount_tax_inclusion == 'tax_included' and program_amount <= (untaxed_amount + tax_amount) or program_amount <= untaxed_amount:
                 program_ids.append(program.id)
 
