@@ -16,7 +16,16 @@ import { FormCompiler } from "./form_compiler";
 import { FormLabel } from "./form_label";
 import { StatusBarButtons } from "./status_bar_buttons/status_bar_buttons";
 
-import { Component, onMounted, onWillUnmount, useEffect, useSubEnv, useRef, useState, xml } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillUnmount,
+    useEffect,
+    useSubEnv,
+    useRef,
+    useState,
+    xml,
+} from "@odoo/owl";
 
 export class FormRenderer extends Component {
     setup() {
@@ -49,10 +58,18 @@ export class FormRenderer extends Component {
                     }
                     let elementToFocus;
                     if (isVirtual) {
-                        const focusableSelectors = ['input[type="text"]', 'textarea', '[contenteditable]'];
+                        const focusableSelectors = [
+                            'input[type="text"]',
+                            "textarea",
+                            "[contenteditable]",
+                        ];
                         elementToFocus =
                             (autofocusFieldId && rootEl.querySelector(`#${autofocusFieldId}`)) ||
-                            rootEl.querySelector(focusableSelectors.map(sel => `.o_content .o_field_widget ${sel}`).join(', '));
+                            rootEl.querySelector(
+                                focusableSelectors
+                                    .map((sel) => `.o_content .o_field_widget ${sel}`)
+                                    .join(", ")
+                            );
                     }
                     if (elementToFocus) {
                         elementToFocus.focus();
@@ -76,7 +93,7 @@ export class FormRenderer extends Component {
     }
 }
 
-FormRenderer.template = xml`<t t-call="{{ templates.FormRenderer }}" />`;
+FormRenderer.template = xml`<t t-call="{{ templates.FormRenderer }}" t-call-context="{}" />`;
 FormRenderer.components = {
     Field,
     FormLabel,

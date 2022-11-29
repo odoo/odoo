@@ -86,7 +86,7 @@ export class MailFormCompiler extends ViewCompiler {
         const chatterContainerHookXml = res.querySelector(".o_FormRenderer_chatterContainer");
         if (chatterContainerHookXml) {
             setAttributes(chatterContainerHookXml, {
-                "t-if": `!hasAttachmentViewer() and uiService.size >= ${SIZES.XXL}`,
+                "t-if": `!this.hasAttachmentViewer() and this.uiService.size >= ${SIZES.XXL}`,
                 "t-attf-class": "o-aside",
             });
             const chatterContainerXml = chatterContainerHookXml.querySelector("ChatterContainer");
@@ -99,7 +99,7 @@ export class MailFormCompiler extends ViewCompiler {
         const attachmentViewHookXml = res.querySelector(".o_attachment_preview");
         if (attachmentViewHookXml) {
             setAttributes(attachmentViewHookXml, {
-                "t-if": `hasAttachmentViewer()`,
+                "t-if": `this.hasAttachmentViewer()`,
             });
         }
         return res;
@@ -112,7 +112,7 @@ export class MailFormCompiler extends ViewCompiler {
             let compiledChild = this.compileNode(child, params, false);
             compiledChild = this.applyInvisible(invisible, compiledChild, {
                 ...params,
-                recordExpr: "model.root",
+                recordExpr: "this.model.root",
             });
             append(compiledRoot, compiledChild);
         }
@@ -122,16 +122,16 @@ export class MailFormCompiler extends ViewCompiler {
     compileChatter(node) {
         return compileChatter(node, {
             chatter: "chatter",
-            threadId: "model.root.resId or undefined",
-            threadModel: "model.root.resModel",
-            webRecord: "model.root",
+            threadId: "this.model.root.resId or undefined",
+            threadModel: "this.model.root.resModel",
+            webRecord: "this.model.root",
         });
     }
 
     compileAttachmentPreview(node) {
         return compileAttachmentPreview(node, {
-            threadId: "model.root.resId or undefined",
-            threadModel: "model.root.resModel",
+            threadId: "this.model.root.resId or undefined",
+            threadModel: "this.model.root.resModel",
         });
     }
 }
@@ -140,10 +140,10 @@ registry.category("form_compilers").add("chatter_compiler", {
     selector: "div.oe_chatter",
     fn: (node) =>
         compileChatter(node, {
-            chatter: "props.chatter",
-            threadId: "props.record.resId or undefined",
-            threadModel: "props.record.resModel",
-            webRecord: "props.record",
+            chatter: "this.props.chatter",
+            threadId: "this.props.record.resId or undefined",
+            threadModel: "this.props.record.resModel",
+            webRecord: "this.props.record",
         }),
 });
 
@@ -151,8 +151,8 @@ registry.category("form_compilers").add("attachment_preview_compiler", {
     selector: "div.o_attachment_preview",
     fn: (node) =>
         compileAttachmentPreview(node, {
-            threadId: "props.record.resId or undefined",
-            threadModel: "props.record.resModel",
+            threadId: "this.props.record.resId or undefined",
+            threadModel: "this.props.record.resModel",
         }),
 });
 
@@ -195,7 +195,7 @@ patch(FormCompiler.prototype, "mail", {
         }
         // after sheet bg (standard position, below form)
         setAttributes(chatterContainerHookXml, {
-            "t-if": `!this.props.hasAttachmentViewer and uiService.size < ${SIZES.XXL}`,
+            "t-if": `!this.props.hasAttachmentViewer and this.uiService.size < ${SIZES.XXL}`,
         });
         append(parentXml, chatterContainerHookXml);
         return res;
