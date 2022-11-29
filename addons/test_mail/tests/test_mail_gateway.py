@@ -16,6 +16,7 @@ from odoo.tests import tagged
 from odoo.tests.common import users
 from odoo.tools import email_split_and_format, formataddr, mute_logger
 
+from email.message import EmailMessage
 
 @tagged('mail_gateway')
 class TestEmailParsing(TestMailCommon):
@@ -96,6 +97,13 @@ class TestEmailParsing(TestMailCommon):
         # Test that the parsing of XHTML mails does not fail
         self.env['mail.thread'].message_parse(self.from_string(test_mail_data.MAIL_XHTML))
 
+    def test_message_parse_and_replace_binary_octetstream(self):
+        """ Incoming email containing a wrong Content-Type as described in RFC2046/section-3 """
+        received_mail = self.from_string(test_mail_data.MAIL_MULTIPART_BINARY_OCTET_STREAM)
+        extracted_mail = self.env['mail.thread']._message_parse_extract_payload(received_mail)
+        mailmessage = self.from_string(extracted_mail)
+
+        self.assertIsInstance(mailmessage, EmailMessage)
 
 @tagged('mail_gateway')
 class TestMailAlias(TestMailCommon):
