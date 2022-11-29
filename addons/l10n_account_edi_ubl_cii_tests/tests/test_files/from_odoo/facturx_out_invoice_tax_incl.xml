@@ -1,12 +1,12 @@
-<rsm:CrossIndustryInvoice xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100" xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100" xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100">
+<rsm:CrossIndustryInvoice xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100" xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100" xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100">
   <rsm:ExchangedDocumentContext>
     <ram:GuidelineSpecifiedDocumentContextParameter>
       <ram:ID>urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended</ram:ID>
     </ram:GuidelineSpecifiedDocumentContextParameter>
   </rsm:ExchangedDocumentContext>
   <rsm:ExchangedDocument>
-    <ram:ID>RINV/2017/01/0001</ram:ID>
-    <ram:TypeCode>381</ram:TypeCode>
+    <ram:ID>INV/2017/01/0001</ram:ID>
+    <ram:TypeCode>380</ram:TypeCode>
     <ram:IssueDateTime>
       <udt:DateTimeString format="102">20170101</udt:DateTimeString>
     </ram:IssueDateTime>
@@ -24,29 +24,23 @@
       </ram:SpecifiedTradeProduct>
       <ram:SpecifiedLineTradeAgreement>
         <ram:GrossPriceProductTradePrice>
-          <ram:ChargeAmount>990.00</ram:ChargeAmount>
-          <ram:AppliedTradeAllowanceCharge>
-            <ram:ChargeIndicator>
-              <udt:Indicator>false</udt:Indicator>
-            </ram:ChargeIndicator>
-            <ram:ActualAmount>99.00</ram:ActualAmount>
-          </ram:AppliedTradeAllowanceCharge>
+          <ram:ChargeAmount>95.24</ram:ChargeAmount>
         </ram:GrossPriceProductTradePrice>
         <ram:NetPriceProductTradePrice>
-          <ram:ChargeAmount>891.00</ram:ChargeAmount>
+          <ram:ChargeAmount>95.24</ram:ChargeAmount>
         </ram:NetPriceProductTradePrice>
       </ram:SpecifiedLineTradeAgreement>
       <ram:SpecifiedLineTradeDelivery>
-        <ram:BilledQuantity unitCode="DZN">2.0</ram:BilledQuantity>
+        <ram:BilledQuantity unitCode="C62">1.0</ram:BilledQuantity>
       </ram:SpecifiedLineTradeDelivery>
       <ram:SpecifiedLineTradeSettlement>
         <ram:ApplicableTradeTax>
           <ram:TypeCode>VAT</ram:TypeCode>
           <ram:CategoryCode>S</ram:CategoryCode>
-          <ram:RateApplicablePercent>21.0</ram:RateApplicablePercent>
+          <ram:RateApplicablePercent>5.0</ram:RateApplicablePercent>
         </ram:ApplicableTradeTax>
         <ram:SpecifiedTradeSettlementLineMonetarySummation>
-          <ram:LineTotalAmount>1782.00</ram:LineTotalAmount>
+          <ram:LineTotalAmount>95.24</ram:LineTotalAmount>
         </ram:SpecifiedTradeSettlementLineMonetarySummation>
       </ram:SpecifiedLineTradeSettlement>
     </ram:IncludedSupplyChainTradeLineItem>
@@ -55,7 +49,7 @@
         <ram:LineID>2</ram:LineID>
       </ram:AssociatedDocumentLineDocument>
       <ram:SpecifiedTradeProduct>
-        <ram:Name>product_b</ram:Name>
+        <ram:Name>product_a</ram:Name>
       </ram:SpecifiedTradeProduct>
       <ram:SpecifiedLineTradeAgreement>
         <ram:GrossPriceProductTradePrice>
@@ -66,16 +60,16 @@
         </ram:NetPriceProductTradePrice>
       </ram:SpecifiedLineTradeAgreement>
       <ram:SpecifiedLineTradeDelivery>
-        <ram:BilledQuantity unitCode="C62">10.0</ram:BilledQuantity>
+        <ram:BilledQuantity unitCode="C62">1.0</ram:BilledQuantity>
       </ram:SpecifiedLineTradeDelivery>
       <ram:SpecifiedLineTradeSettlement>
         <ram:ApplicableTradeTax>
           <ram:TypeCode>VAT</ram:TypeCode>
           <ram:CategoryCode>S</ram:CategoryCode>
-          <ram:RateApplicablePercent>12.0</ram:RateApplicablePercent>
+          <ram:RateApplicablePercent>5.0</ram:RateApplicablePercent>
         </ram:ApplicableTradeTax>
         <ram:SpecifiedTradeSettlementLineMonetarySummation>
-          <ram:LineTotalAmount>1000.00</ram:LineTotalAmount>
+          <ram:LineTotalAmount>100.00</ram:LineTotalAmount>
         </ram:SpecifiedTradeSettlementLineMonetarySummation>
       </ram:SpecifiedLineTradeSettlement>
     </ram:IncludedSupplyChainTradeLineItem>
@@ -84,27 +78,68 @@
         <ram:LineID>3</ram:LineID>
       </ram:AssociatedDocumentLineDocument>
       <ram:SpecifiedTradeProduct>
-        <ram:Name>product_b</ram:Name>
+        <ram:Name>product_a</ram:Name>
       </ram:SpecifiedTradeProduct>
       <ram:SpecifiedLineTradeAgreement>
         <ram:GrossPriceProductTradePrice>
-          <ram:ChargeAmount>100.00</ram:ChargeAmount>
+          <ram:ChargeAmount>190.48</ram:ChargeAmount>
+          <ram:AppliedTradeAllowanceCharge>
+            <ram:ChargeIndicator>
+              <udt:Indicator>false</udt:Indicator>
+            </ram:ChargeIndicator>
+            <ram:ActualAmount>19.05</ram:ActualAmount>
+          </ram:AppliedTradeAllowanceCharge>
         </ram:GrossPriceProductTradePrice>
         <ram:NetPriceProductTradePrice>
-          <ram:ChargeAmount>100.00</ram:ChargeAmount>
+          <ram:ChargeAmount>171.43</ram:ChargeAmount>
         </ram:NetPriceProductTradePrice>
       </ram:SpecifiedLineTradeAgreement>
       <ram:SpecifiedLineTradeDelivery>
-        <ram:BilledQuantity unitCode="C62">-1.0</ram:BilledQuantity>
+        <ram:BilledQuantity unitCode="C62">1.0</ram:BilledQuantity>
       </ram:SpecifiedLineTradeDelivery>
       <ram:SpecifiedLineTradeSettlement>
         <ram:ApplicableTradeTax>
           <ram:TypeCode>VAT</ram:TypeCode>
           <ram:CategoryCode>S</ram:CategoryCode>
-          <ram:RateApplicablePercent>12.0</ram:RateApplicablePercent>
+          <ram:RateApplicablePercent>5.0</ram:RateApplicablePercent>
         </ram:ApplicableTradeTax>
         <ram:SpecifiedTradeSettlementLineMonetarySummation>
-          <ram:LineTotalAmount>-100.00</ram:LineTotalAmount>
+          <ram:LineTotalAmount>171.43</ram:LineTotalAmount>
+        </ram:SpecifiedTradeSettlementLineMonetarySummation>
+      </ram:SpecifiedLineTradeSettlement>
+    </ram:IncludedSupplyChainTradeLineItem>
+    <ram:IncludedSupplyChainTradeLineItem>
+      <ram:AssociatedDocumentLineDocument>
+        <ram:LineID>4</ram:LineID>
+      </ram:AssociatedDocumentLineDocument>
+      <ram:SpecifiedTradeProduct>
+        <ram:Name>product_a</ram:Name>
+      </ram:SpecifiedTradeProduct>
+      <ram:SpecifiedLineTradeAgreement>
+        <ram:GrossPriceProductTradePrice>
+          <ram:ChargeAmount>200.00</ram:ChargeAmount>
+          <ram:AppliedTradeAllowanceCharge>
+            <ram:ChargeIndicator>
+              <udt:Indicator>false</udt:Indicator>
+            </ram:ChargeIndicator>
+            <ram:ActualAmount>20.00</ram:ActualAmount>
+          </ram:AppliedTradeAllowanceCharge>
+        </ram:GrossPriceProductTradePrice>
+        <ram:NetPriceProductTradePrice>
+          <ram:ChargeAmount>180.00</ram:ChargeAmount>
+        </ram:NetPriceProductTradePrice>
+      </ram:SpecifiedLineTradeAgreement>
+      <ram:SpecifiedLineTradeDelivery>
+        <ram:BilledQuantity unitCode="C62">1.0</ram:BilledQuantity>
+      </ram:SpecifiedLineTradeDelivery>
+      <ram:SpecifiedLineTradeSettlement>
+        <ram:ApplicableTradeTax>
+          <ram:TypeCode>VAT</ram:TypeCode>
+          <ram:CategoryCode>S</ram:CategoryCode>
+          <ram:RateApplicablePercent>5.0</ram:RateApplicablePercent>
+        </ram:ApplicableTradeTax>
+        <ram:SpecifiedTradeSettlementLineMonetarySummation>
+          <ram:LineTotalAmount>180.00</ram:LineTotalAmount>
         </ram:SpecifiedTradeSettlementLineMonetarySummation>
       </ram:SpecifiedLineTradeSettlement>
     </ram:IncludedSupplyChainTradeLineItem>
@@ -122,7 +157,7 @@
         </ram:DefinedTradeContact>
         <ram:PostalTradeAddress>
           <ram:PostcodeCode>75000</ram:PostcodeCode>
-          <ram:LineOne>Rue Jean Jaurès, 42</ram:LineOne>
+          <ram:LineOne>Rue Jean Jaur&#232;s, 42</ram:LineOne>
           <ram:CityName>Paris</ram:CityName>
           <ram:CountryID>FR</ram:CountryID>
         </ram:PostalTradeAddress>
@@ -138,7 +173,7 @@
         <ram:PostalTradeAddress>
           <ram:PostcodeCode>52330</ram:PostcodeCode>
           <ram:LineOne>Rue Charles de Gaulle</ram:LineOne>
-          <ram:CityName>Colombey-les-Deux-Églises</ram:CityName>
+          <ram:CityName>Colombey-les-Deux-&#201;glises</ram:CityName>
           <ram:CountryID>FR</ram:CountryID>
         </ram:PostalTradeAddress>
         <ram:SpecifiedTaxRegistration>
@@ -146,7 +181,7 @@
         </ram:SpecifiedTaxRegistration>
       </ram:BuyerTradeParty>
       <ram:BuyerOrderReferencedDocument>
-        <ram:IssuerAssignedID>RINV/2017/01/0001</ram:IssuerAssignedID>
+        <ram:IssuerAssignedID>INV/2017/01/0001</ram:IssuerAssignedID>
       </ram:BuyerOrderReferencedDocument>
     </ram:ApplicableHeaderTradeAgreement>
     <ram:ApplicableHeaderTradeDelivery>
@@ -158,7 +193,7 @@
         <ram:PostalTradeAddress>
           <ram:PostcodeCode>52330</ram:PostcodeCode>
           <ram:LineOne>Rue Charles de Gaulle</ram:LineOne>
-          <ram:CityName>Colombey-les-Deux-Églises</ram:CityName>
+          <ram:CityName>Colombey-les-Deux-&#201;glises</ram:CityName>
           <ram:CountryID>FR</ram:CountryID>
         </ram:PostalTradeAddress>
       </ram:ShipToTradeParty>
@@ -169,28 +204,21 @@
       </ram:ActualDeliverySupplyChainEvent>
     </ram:ApplicableHeaderTradeDelivery>
     <ram:ApplicableHeaderTradeSettlement>
+      <ram:PaymentReference>INV/2017/00001</ram:PaymentReference>
       <ram:InvoiceCurrencyCode>USD</ram:InvoiceCurrencyCode>
       <ram:SpecifiedTradeSettlementPaymentMeans>
         <ram:TypeCode>42</ram:TypeCode>
         <ram:PayeePartyCreditorFinancialAccount>
-          <ram:ProprietaryID>FR90735788866632</ram:ProprietaryID>
+          <ram:ProprietaryID>FR15001559627230</ram:ProprietaryID>
         </ram:PayeePartyCreditorFinancialAccount>
       </ram:SpecifiedTradeSettlementPaymentMeans>
       <ram:ApplicableTradeTax>
-        <ram:CalculatedAmount>374.22</ram:CalculatedAmount>
+        <ram:CalculatedAmount>27.33</ram:CalculatedAmount>
         <ram:TypeCode>VAT</ram:TypeCode>
-        <ram:BasisAmount>1782.00</ram:BasisAmount>
+        <ram:BasisAmount>546.67</ram:BasisAmount>
         <ram:CategoryCode>S</ram:CategoryCode>
         <ram:DueDateTypeCode>5</ram:DueDateTypeCode>
-        <ram:RateApplicablePercent>21.0</ram:RateApplicablePercent>
-      </ram:ApplicableTradeTax>
-      <ram:ApplicableTradeTax>
-        <ram:CalculatedAmount>108.00</ram:CalculatedAmount>
-        <ram:TypeCode>VAT</ram:TypeCode>
-        <ram:BasisAmount>900.00</ram:BasisAmount>
-        <ram:CategoryCode>S</ram:CategoryCode>
-        <ram:DueDateTypeCode>5</ram:DueDateTypeCode>
-        <ram:RateApplicablePercent>12.0</ram:RateApplicablePercent>
+        <ram:RateApplicablePercent>5.0</ram:RateApplicablePercent>
       </ram:ApplicableTradeTax>
       <ram:SpecifiedTradePaymentTerms>
         <ram:Description>30% Advance End of Following Month</ram:Description>
@@ -199,12 +227,12 @@
         </ram:DueDateDateTime>
       </ram:SpecifiedTradePaymentTerms>
       <ram:SpecifiedTradeSettlementHeaderMonetarySummation>
-        <ram:LineTotalAmount>2682.00</ram:LineTotalAmount>
-        <ram:TaxBasisTotalAmount>2682.00</ram:TaxBasisTotalAmount>
-        <ram:TaxTotalAmount currencyID="USD">482.22</ram:TaxTotalAmount>
-        <ram:GrandTotalAmount>3164.22</ram:GrandTotalAmount>
+        <ram:LineTotalAmount>546.67</ram:LineTotalAmount>
+        <ram:TaxBasisTotalAmount>546.67</ram:TaxBasisTotalAmount>
+        <ram:TaxTotalAmount currencyID="USD">27.33</ram:TaxTotalAmount>
+        <ram:GrandTotalAmount>574.00</ram:GrandTotalAmount>
         <ram:TotalPrepaidAmount>0.00</ram:TotalPrepaidAmount>
-        <ram:DuePayableAmount>3164.22</ram:DuePayableAmount>
+        <ram:DuePayableAmount>574.00</ram:DuePayableAmount>
       </ram:SpecifiedTradeSettlementHeaderMonetarySummation>
     </ram:ApplicableHeaderTradeSettlement>
   </rsm:SupplyChainTradeTransaction>
