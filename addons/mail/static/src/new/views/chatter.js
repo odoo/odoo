@@ -75,6 +75,7 @@ export class Chatter extends Component {
             requestList.push("activities");
         }
         this.messaging.fetchChatterData(resId, resModel, requestList).then((result) => {
+            this.thread.hasWriteAccess = result.hasWriteAccess;
             if ("activities" in result) {
                 this.state.activities = result.activities;
             }
@@ -84,6 +85,28 @@ export class Chatter extends Component {
             if ("followers" in result) {
                 this.state.followers = result.followers;
             }
+        });
+    }
+
+    onClickAddFollowers() {
+        document.body.click(); // hack to close dropdown
+        const action = {
+            type: "ir.actions.act_window",
+            res_model: "mail.wizard.invite",
+            view_mode: "form",
+            views: [[false, "form"]],
+            name: this.env._t("Invite Follower"),
+            target: "new",
+            context: {
+                default_res_model: this.props.resModel,
+                default_res_id: this.props.resId,
+            },
+        };
+        this.env.services.action.doAction(action, {
+            onClose: () => {
+                this.load(this.props.resId, ["followers", "suggestedRecipients"]);
+                // TODO reload parent view if applicable (hasParentReloadOnFollowersUpdate)
+            },
         });
     }
 

@@ -433,17 +433,21 @@ QUnit.module("mail", {}, function () {
             );
             assert.containsN(
                 document.body,
-                ".o_FollowerView_name",
+                ".o-mail-chatter-topbar-follower-list-follower",
                 2,
                 "exactly two follower names should be listed"
             );
             assert.strictEqual(
-                document.querySelectorAll(".o_FollowerView_name")[0].textContent.trim(),
+                document
+                    .querySelectorAll(".o-mail-chatter-topbar-follower-list-follower")[0]
+                    .textContent.trim(),
                 "Jean Michang",
                 "first follower is 'Jean Michang'"
             );
             assert.strictEqual(
-                document.querySelectorAll(".o_FollowerView_name")[1].textContent.trim(),
+                document
+                    .querySelectorAll(".o-mail-chatter-topbar-follower-list-follower")[1]
+                    .textContent.trim(),
                 "Eden Hazard",
                 "second follower is 'Eden Hazard'"
             );

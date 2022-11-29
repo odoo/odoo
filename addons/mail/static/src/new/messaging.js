@@ -185,6 +185,7 @@ export class Messaging {
             return this.threads[id];
         }
         const thread = {
+            hasWriteAccess: data.serverData && data.serverData.hasWriteAccess,
             id,
             name,
             type,

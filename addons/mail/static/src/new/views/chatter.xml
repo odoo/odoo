@@ -25,8 +25,8 @@
                         <span class="o-mail-chatter-topbar-followers-count ps-1" t-esc="state.followers.length"/>
                     </t>
                     <t t-set-slot="default">
-                        <t t-if="thread.model !== 'channel' and thread.hasWriteAccess">
-                            <a class="o_FollowerListMenuView_addFollowersButton dropdown-item" href="#" role="menuitem" t-on-click="onClickAddFollowers">
+                        <t t-if="this.props.resModel !== 'mail.channel' and thread.hasWriteAccess">
+                            <a class="o-mail-chatter-topbar-follower-list-add-follower dropdown-item" href="#" role="menuitem" t-on-click.prevent="onClickAddFollowers">
                                 Add Followers
                             </a>
                             <div t-if="state.followers.length > 0" role="separator" class="dropdown-divider"/>

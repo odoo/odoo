@@ -99,7 +99,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.skipRefactoring('click on "add followers" button', async function (assert) {
+        QUnit.test('click on "add followers" button', async function (assert) {
             assert.expect(15);
 
             const pyEnv = await startServer();
@@ -191,11 +191,11 @@ QUnit.module("mail", {}, function () {
             );
             assert.containsOnce(
                 document.body,
-                ".o_FollowerListMenuView_addFollowersButton",
+                ".o-mail-chatter-topbar-follower-list-add-follower",
                 "followers dropdown should contain a 'Add followers' button"
             );
 
-            await click(".o_FollowerListMenuView_addFollowersButton");
+            await click(".o-mail-chatter-topbar-follower-list-add-follower");
             assert.containsNone(
                 document.body,
                 ".o-mail-chatter-topbar-follower-list-dropdown",
@@ -216,7 +216,7 @@ QUnit.module("mail", {}, function () {
                 "Follower list should be refreshed and contain 2 followers"
             );
             assert.strictEqual(
-                document.querySelector(".o_FollowerView_name").textContent,
+                document.querySelector(".o-mail-chatter-topbar-follower-list-follower").textContent,
                 "François Perusse",
                 "Follower added in follower list should be the one added"
             );
@@ -327,7 +327,7 @@ QUnit.module("mail", {}, function () {
                 await click(".o-mail-chatter-topbar-follower-list-button");
                 assert.containsNone(
                     document.body,
-                    ".o_FollowerListMenuView_addFollowersButton",
+                    ".o-mail-chatter-topbar-follower-list-add-follower",
                     "'Add followers' button should not be displayed for a readonly record"
                 );
                 const followersList = document.querySelectorAll(".o_FollowerView");
@@ -399,7 +399,7 @@ QUnit.module("mail", {}, function () {
                 await click(".o-mail-chatter-topbar-follower-list-button");
                 assert.containsOnce(
                     document.body,
-                    ".o_FollowerListMenuView_addFollowersButton",
+                    ".o-mail-chatter-topbar-follower-list-add-follower",
                     "'Add followers' button should be displayed for the writable record"
                 );
                 const followersList = document.querySelectorAll(".o_FollowerView");
@@ -426,8 +426,8 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.skipRefactoring(
-            'Show "No Followers" dropdown-item if there are no followers and user dose not have write access',
+        QUnit.test(
+            'Show "No Followers" dropdown-item if there are no followers and user does not have write access',
             async function (assert) {
                 assert.expect(1);
 

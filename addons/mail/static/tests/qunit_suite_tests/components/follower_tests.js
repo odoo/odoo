@@ -49,7 +49,7 @@ QUnit.module("mail", {}, function () {
             );
             assert.containsOnce(
                 document.body,
-                ".o_FollowerView_name",
+                ".o-mail-chatter-topbar-follower-list-follower",
                 "should display the name of the follower"
             );
             assert.containsNone(
@@ -90,7 +90,7 @@ QUnit.module("mail", {}, function () {
             );
             assert.containsOnce(
                 document.body,
-                ".o_FollowerView_name",
+                ".o-mail-chatter-topbar-follower-list-follower",
                 "should display the name of the follower"
             );
             assert.containsOnce(
