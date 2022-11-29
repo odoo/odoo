@@ -5,7 +5,7 @@
     <t t-set="compact" t-value="props.mode === 'compact'"/>
     <t t-set="normal" t-value="props.mode === 'normal'"/>
     <t t-set="extended" t-value="props.mode === 'extended'"/>
-    <t t-set="messageToReplyTo" t-value="messaging.discuss.messageToReplyTo" />
+    <t t-set="messageToReplyTo" t-value="messaging.state.discuss.messageToReplyTo" />
     <div class="o-mail-composer-container" t-ref="composer">
         <div class="o-mail-composer d-grid flex-shrink-0"
                 t-att-class="{
@@ -13,10 +13,10 @@
                     'p-3': normal,
                 }">
             <div class="o-mail-composer-sidebar-main flex-shrink-0" t-if="!compact">
-                <img class="o-mail-composer-avatar mt-1 rounded-circle" t-att-src="messaging.user.avatarUrl" alt="Avatar of user"/>
+                <img class="o-mail-composer-avatar mt-1 rounded-circle" t-att-src="messaging.state.user.avatarUrl" alt="Avatar of user"/>
             </div>
             <div class="o-mail-composer-core-header text-truncate small p-2" t-if="hasReplyToHeader">
-                <span class="cursor-pointer" t-on-click="() => props.highlightReplyTo and props.highlightReplyTo(messaging.discuss.messageToReplyTo.id)">
+                <span class="cursor-pointer" t-on-click="() => props.highlightReplyTo and props.highlightReplyTo(messaging.state.discuss.messageToReplyTo.id)">
                     Replying to <b t-esc="messageToReplyTo.author.name"/>
                 </span>
                 <span t-if="thread and thread.type === 'mailbox'" class="o-mail-composer-origin-thread">

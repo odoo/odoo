@@ -20,19 +20,19 @@ export class Discuss extends Component {
         this.closePopover = null;
         this.settingsRef = useRef("settings");
         onWillStart(() => this.messaging.isReady);
-        onMounted(() => (this.messaging.discuss.isActive = true));
-        onWillUnmount(() => (this.messaging.discuss.isActive = false));
+        onMounted(() => (this.messaging.state.discuss.isActive = true));
+        onWillUnmount(() => (this.messaging.state.discuss.isActive = false));
     }
 
     get thread() {
-        return this.messaging.threads[this.messaging.discuss.threadId];
+        return this.messaging.state.threads[this.messaging.state.discuss.threadId];
     }
 
     unstarAll() {
         this.messaging.unstarAll();
     }
     startCall() {
-        this.messaging.startCall(this.messaging.discuss.threadId);
+        this.messaging.startCall(this.messaging.state.discuss.threadId);
     }
 
     toggleSettings() {

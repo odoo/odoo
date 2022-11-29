@@ -48,7 +48,7 @@
                 <CallUI thread="thread"/>
             </t>
             <Thread id="thread.id" t-key="thread.id" messageHighlight="messageHighlight"/>
-            <t t-if="thread.type !== 'mailbox' or messaging.discuss.messageToReplyTo">
+            <t t-if="thread.type !== 'mailbox' or messaging.state.discuss.messageToReplyTo">
                 <Composer t-key="thread.id" composer="thread.composer" autofocus="true" highlightReplyTo="messageHighlight.highlightMessage" onDiscardCallback="() => messaging.cancelReplyTo()" dropzoneRef="contentRef"/>
             </t>
         </div>

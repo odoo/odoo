@@ -7,7 +7,7 @@ import { patch } from "web.utils";
 patch(Messaging.prototype, "hr", {
     setup(...args) {
         this._super(...args);
-        this.employees = {};
+        this.state.employees = {};
     },
     async getChat(person) {
         const { employeeId } = person;
@@ -15,10 +15,10 @@ patch(Messaging.prototype, "hr", {
         if (!employeeId) {
             return _super(person);
         }
-        let employee = this.employees[employeeId];
+        let employee = this.state.employees[employeeId];
         if (!employee) {
-            this.employees[employeeId] = { id: employeeId };
-            employee = this.employees[employeeId];
+            this.state.employees[employeeId] = { id: employeeId };
+            employee = this.state.employees[employeeId];
         }
         if (!employee.user_id && !employee.hasCheckedUser) {
             employee.hasCheckedUser = true;
@@ -32,10 +32,10 @@ patch(Messaging.prototype, "hr", {
             );
             if (employeeData) {
                 employee.user_id = employeeData.user_id[0];
-                let user = this.users[employee.user_id];
+                let user = this.state.users[employee.user_id];
                 if (!user) {
-                    this.users[employee.user_id] = { id: employee.user_id };
-                    user = this.users[employee.user_id];
+                    this.state.users[employee.user_id] = { id: employee.user_id };
+                    user = this.state.users[employee.user_id];
                 }
                 user.partner_id = employeeData.user_partner_id[0];
             }

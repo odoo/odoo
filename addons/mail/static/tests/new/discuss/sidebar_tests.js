@@ -35,7 +35,7 @@ QUnit.module("mail", (hooks) => {
         server.addChannel(43, "abc");
         server.addChannel(46, "def");
         const env = makeTestEnv((route, params) => server.rpc(route, params));
-        env.services["mail.messaging"].discuss.threadId = 43; // #abc is active
+        env.services["mail.messaging"].state.discuss.threadId = 43; // #abc is active
 
         await mount(Sidebar, target, { env });
         assert.containsN(target, ".o-mail-category-item", 2);

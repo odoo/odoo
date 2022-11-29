@@ -7,7 +7,7 @@
         t-att-class="{'o-folded': props.chatWindow.folded}"
     >
         <div class="o-mail-chat-window-header d-flex align-items-center cursor-pointer flex-shrink-0" t-on-click="toggleFold">
-            <t t-set="thread" t-value="messaging.threads[props.chatWindow.threadId]"/>
+            <t t-set="thread" t-value="messaging.state.threads[props.chatWindow.threadId]"/>
             <span class="o-mail-chat-window-header-name ms-3">#<t t-esc="thread.name"/></span>
             <div class="flex-grow-1"/>
             <div t-if="!thread.inCall" class="o-mail-command d-flex align-items-center h-100 px-3 py-0 m-0 opacity-50 opacity-100-hover" title="Start a Call" t-on-click.stop="startCall">

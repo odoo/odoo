@@ -11,21 +11,21 @@
         <hr class="w-100 border-top"/>
         <div class="d-flex flex-column flex-grow-0">
             <t t-call="mail.discuss_mailbox">
-                <t t-set="mailbox" t-value="messaging.discuss.inbox" />
+                <t t-set="mailbox" t-value="messaging.state.discuss.inbox" />
             </t>
             <t t-call="mail.discuss_mailbox">
-                <t t-set="mailbox" t-value="messaging.discuss.starred" />
+                <t t-set="mailbox" t-value="messaging.state.discuss.starred" />
             </t>
             <t t-call="mail.discuss_mailbox">
-                <t t-set="mailbox" t-value="messaging.discuss.history" />
+                <t t-set="mailbox" t-value="messaging.state.discuss.history" />
             </t>
         </div>
         <hr class="w-100 border-top"/>
         <t t-call="mail.discuss_category">
-            <t t-set="category" t-value="messaging.discuss.channels" />
+            <t t-set="category" t-value="messaging.state.discuss.channels" />
         </t>
         <t t-call="mail.discuss_category">
-            <t t-set="category" t-value="messaging.discuss.chats" />
+            <t t-set="category" t-value="messaging.state.discuss.chats" />
         </t>
     </div>
 </t>
@@ -33,8 +33,8 @@
 <t t-name="mail.discuss_mailbox" owl="1">
     <button class="btn d-flex align-items-center py-1 px-0 border-0 rounded-0 fw-normal text-dark"
         t-att-class="{
-            'bg-100': mailbox.id !== messaging.discuss.threadId,
-            'o-active bg-200': mailbox.id === messaging.discuss.threadId,
+            'bg-100': mailbox.id !== messaging.state.discuss.threadId,
+            'o-active bg-200': mailbox.id === messaging.state.discuss.threadId,
             'o-starred-box': mailbox.id === 'starred',
         }"
         t-on-click="() => this.openThread(mailbox.id)"
@@ -82,15 +82,15 @@
         </t>
         <t t-foreach="category.threads" t-as="threadId" t-key="threadId">
             <t t-call="mail.discuss_category_item">
-                <t t-set="thread" t-value="messaging.threads[threadId]"/>
+                <t t-set="thread" t-value="messaging.state.threads[threadId]"/>
             </t>
         </t>
     </t>
     <t t-else="">
-        <t t-if="category.threads.includes(messaging.discuss.threadId)">
+        <t t-if="category.threads.includes(messaging.state.discuss.threadId)">
             <t t-call="mail.discuss_category_item">
-                <t t-set="threadId" t-value="messaging.discuss.threadId"/>
-                <t t-set="thread" t-value="messaging.threads[threadId]"/>
+                <t t-set="threadId" t-value="messaging.state.discuss.threadId"/>
+                <t t-set="thread" t-value="messaging.state.threads[threadId]"/>
             </t>
         </t>
     </t>
@@ -99,18 +99,18 @@
 <t t-name="mail.discuss_category_item" owl="1">
     <button class="o-mail-category-item btn d-flex align-items-center w-100 px-0 py-2 border-0 text-reset"
         t-att-class="{
-            'bg-100': threadId !== messaging.discuss.threadId,
-            'o-active bg-200': threadId === messaging.discuss.threadId,
+            'bg-100': threadId !== messaging.state.discuss.threadId,
+            'o-active bg-200': threadId === messaging.state.discuss.threadId,
             'o-unread': thread.isUnread,
         }"
         t-on-click="() => this.openThread(threadId)"
     >
         <div class="o-mail-background-inherit position-relative d-flex ms-4" style="width:30px;height:30px">
             <img class="w-100 h-100 rounded-circle" t-att-src="thread.imgUrl" alt="Thread Image"/>
-            <PartnerImStatus t-if="thread.type === 'chat'" className="'o-mail-category-im-status position-absolute bottom-0 end-0'" partner="messaging.partners[thread.chatPartnerId]"/>
+            <PartnerImStatus t-if="thread.type === 'chat'" className="'o-mail-category-im-status position-absolute bottom-0 end-0'" partner="messaging.state.partners[thread.chatPartnerId]"/>
         </div>
         <span class="ms-3 me-2 text-truncate" t-att-class="{ 'o-item-unread fw-bolder': thread.isUnread }">
-            <t t-esc="thread.chatPartnerId ? messaging.partners[thread.chatPartnerId].name : thread.name"/>
+            <t t-esc="thread.chatPartnerId ? messaging.state.partners[thread.chatPartnerId].name : thread.name"/>
         </span>
         <div class="flex-grow-1"/>
         <div class="o-mail-commands d-none ms-1 me-3">

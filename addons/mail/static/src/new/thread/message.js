@@ -75,7 +75,7 @@ export class Message extends Component {
         if (!this.props.threadId) {
             return false;
         }
-        const thread = this.messaging.threads[this.props.threadId];
+        const thread = this.messaging.state.threads[this.props.threadId];
         // channel has no resId, it's indistinguishable from threadId in that case
         return this.message.resId === (thread.resId || this.props.threadId);
     }
@@ -110,7 +110,7 @@ export class Message extends Component {
     }
 
     get hasOpenChatFromAvatarClick() {
-        return this.message.author.id !== this.messaging.user.partnerId;
+        return this.message.author.id !== this.messaging.state.user.partnerId;
     }
 
     openChatAvatar() {

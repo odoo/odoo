@@ -59,7 +59,7 @@ export class Chatter extends Component {
 
     get isFollower() {
         return Boolean(
-            this.state.followers.find((f) => f.partner_id === this.messaging.user.partnerId)
+            this.state.followers.find((f) => f.partner_id === this.messaging.state.user.partnerId)
         );
     }
 
@@ -112,14 +112,14 @@ export class Chatter extends Component {
 
     async onClickFollow() {
         await this.orm.call(this.props.resModel, "message_subscribe", [[this.props.resId]], {
-            partner_ids: [this.messaging.user.partnerId],
+            partner_ids: [this.messaging.state.user.partnerId],
         });
         this.load(this.props.resId, ["followers", "suggestedRecipients"]);
     }
 
     async onClickUnfollow() {
         await this.orm.call(this.props.resModel, "message_unsubscribe", [[this.props.resId]], {
-            partner_ids: [this.messaging.user.partnerId],
+            partner_ids: [this.messaging.state.user.partnerId],
         });
         this.load(this.props.resId, ["followers", "suggestedRecipients"]);
     }

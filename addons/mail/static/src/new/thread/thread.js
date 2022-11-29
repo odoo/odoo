@@ -50,7 +50,7 @@ export class Thread extends Component {
     }
 
     get thread() {
-        return this.messaging.threads[this.props.id];
+        return this.messaging.state.threads[this.props.id];
     }
 
     loadMore() {
@@ -71,7 +71,7 @@ export class Thread extends Component {
     }
 
     isGrayedOut(msg) {
-        const { messageToReplyTo } = this.messaging.discuss;
+        const { messageToReplyTo } = this.messaging.state.discuss;
         return (
             messageToReplyTo &&
             messageToReplyTo.id !== msg.id &&

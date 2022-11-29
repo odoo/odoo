@@ -29,7 +29,7 @@ export class MessagingMenu extends Component {
         if (filter === "all") {
             return this.state.previews;
         }
-        const threads = this.messaging.threads;
+        const threads = this.messaging.state.threads;
         const target = filter === "chats" ? "chat" : "channel";
         return this.state.previews.filter((preview) => {
             return threads[preview.id].type === target;
@@ -45,11 +45,11 @@ export class MessagingMenu extends Component {
     }
 
     isAuthor(preview) {
-        return preview.last_message.author.id === this.messaging.user.partnerId;
+        return preview.last_message.author.id === this.messaging.state.user.partnerId;
     }
 
     getPreviewAuthor(id) {
-        return this.messaging.partners[id].name;
+        return this.messaging.state.partners[id].name;
     }
 }
 

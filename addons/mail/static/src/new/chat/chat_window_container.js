@@ -10,7 +10,7 @@ export class ChatWindowContainer extends Component {
     }
 
     get chatWindows() {
-        return this.messaging.discuss.isActive ? [] : this.messaging.chatWindows;
+        return this.messaging.state.discuss.isActive ? [] : this.messaging.state.chatWindows;
     }
 }
 

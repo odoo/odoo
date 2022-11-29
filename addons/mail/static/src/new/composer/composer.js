@@ -36,7 +36,7 @@ export class Composer extends Component {
                     this.state.autofocus++;
                 }
             },
-            () => [this.messaging.discuss.messageToReplyTo]
+            () => [this.messaging.state.discuss.messageToReplyTo]
         );
         useEffect(
             () => {
@@ -57,7 +57,7 @@ export class Composer extends Component {
     }
 
     get hasReplyToHeader() {
-        const { messageToReplyTo } = this.messaging.discuss;
+        const { messageToReplyTo } = this.messaging.state.discuss;
         if (!messageToReplyTo) {
             return false;
         }
@@ -72,17 +72,16 @@ export class Composer extends Component {
             return this.props.placeholder;
         }
         if (this.thread) {
-            return sprintf(
-                this.env._t("Message #%(thread name)s…"),
-                { "thread name": this.thread.name },
-            );
+            return sprintf(this.env._t("Message #%(thread name)s…"), {
+                "thread name": this.thread.name,
+            });
         }
         return "";
     }
 
     get thread() {
         if (this.props.composer.threadId) {
-            return this.messaging.threads[this.props.composer.threadId];
+            return this.messaging.state.threads[this.props.composer.threadId];
         }
         return null;
     }
@@ -123,7 +122,7 @@ export class Composer extends Component {
 
     async sendMessage() {
         return this.processMessage(async (value) => {
-            const { messageToReplyTo } = this.messaging.discuss;
+            const { messageToReplyTo } = this.messaging.state.discuss;
             const { id: parentId, isNote, resId, resModel } = messageToReplyTo || {};
             const postData = {
                 isNote: this.props.type === "note" || isNote,
@@ -131,7 +130,7 @@ export class Composer extends Component {
             };
             if (
                 messageToReplyTo &&
-                this.props.composer.threadId === this.messaging.discuss.inbox.id
+                this.props.composer.threadId === this.messaging.state.discuss.inbox.id
             ) {
                 await this.messaging.postInboxReply(resId, resModel, value, postData);
             } else {
