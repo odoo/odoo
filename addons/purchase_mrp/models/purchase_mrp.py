@@ -17,7 +17,7 @@ class PurchaseOrderLine(models.Model):
     def _compute_qty_received(self):
         kit_lines = self.env['purchase.order.line']
         for line in self:
-            if line.qty_received_method == 'stock_moves' and line.move_ids.filtered(lambda m: m.bom_line_id):
+            if line.qty_received_method == 'stock_moves' and line.move_ids.filtered(lambda m: m.state != 'cancel' and m.bom_line_id):
                 kit_bom = self.env['mrp.bom']._bom_find(product=line.product_id, company_id=line.company_id.id, bom_type='phantom')
                 if kit_bom:
                     moves = line.move_ids.filtered(lambda m: m.state == 'done' and not m.scrapped)
@@ -43,7 +43,7 @@ class PurchaseOrderLine(models.Model):
         if bom and bom.type == 'phantom' and 'previous_product_qty' in self.env.context:
             return self.env.context['previous_product_qty'].get(self.id, 0.0)
         return super()._get_qty_procurement()
-    
+
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
