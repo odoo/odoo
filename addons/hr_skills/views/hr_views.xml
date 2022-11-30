@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='job_id']" position="after">
                 <field name="employee_skill_ids"/>
-                <field name="resume_line_ids" string="Resumé" filter_domain="['|', ('resume_line_ids.name', 'ilike', self), ('resume_line_ids.description', 'ilike', self)]"/>
+                <field name="resume_line_ids" string="Resume" filter_domain="['|', ('resume_line_ids.name', 'ilike', self), ('resume_line_ids.description', 'ilike', self)]"/>
             </xpath>
             <filter name="group_job" position="after">
                 <filter name="group_by_skill_ids" string="Skills" domain="[]" context="{'group_by': 'skill_ids'}"/>
@@ -23,7 +23,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='job_title']" position="after">
                 <field name="employee_skill_ids"/>
-                <field name="resume_line_ids" string="Resumé" filter_domain="['|', ('resume_line_ids.name', 'ilike', self), ('resume_line_ids.description', 'ilike', self)]"/>
+                <field name="resume_line_ids" string="Resume" filter_domain="['|', ('resume_line_ids.name', 'ilike', self), ('resume_line_ids.description', 'ilike', self)]"/>
             </xpath>
         </field>
     </record>
@@ -32,7 +32,7 @@
         <field name="name">hr.resume.line.form</field>
         <field name="model">hr.resume.line</field>
         <field name="arch" type="xml">
-            <form string="Resumé">
+            <form string="Resume">
                 <sheet>
                     <div class="oe_title">
                         <label for="name" string="Title"/>
@@ -63,7 +63,7 @@
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
             <xpath expr="//page[@name='public']" position="before">
-                <page name="public" string="Resumé">
+                <page name="public" string="Resume">
                     <div class="row">
                         <div class="o_hr_skills_editable o_hr_skills_group o_group_resume col-lg-7 d-flex flex-column">
                             <separator string="Resume"/>
@@ -106,7 +106,7 @@
         <field name="inherit_id" ref="hr.hr_employee_public_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//page[@name='public']" position="before">
-                <page name="public" string="Resumé">
+                <page name="public" string="Resume">
                     <div class="row">
                         <div class="o_hr_skills_group o_group_resume col-lg-7 d-flex flex-column">
                             <!-- This field uses a custom tree view rendered by the 'resume_one2many' widget.
@@ -146,7 +146,7 @@
         <field name="inherit_id" ref="hr.res_users_view_form_profile" />
         <field name="arch" type="xml">
             <xpath expr="//page[@name='public']" position="before">
-                <page name="public" string="Resumé">
+                <page name="public" string="Resume">
                     <div class="row">
                         <div class="o_hr_skills_group o_group_resume col-lg-7 d-flex">
                             <!-- This field uses a custom tree view rendered by the 'resume_one2many' widget.
@@ -184,7 +184,7 @@
         <field name="name">hr.resume.line.type.tree.view</field>
         <field name="model">hr.resume.line.type</field>
         <field name="arch" type="xml">
-            <tree name="Resumé Line Types" editable="bottom">
+            <tree name="Resume Line Types" editable="bottom">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
             </tree>
@@ -192,14 +192,14 @@
     </record>
 
     <record id="hr_resume_type_action" model="ir.actions.act_window">
-        <field name="name">Resumé Line Types</field>
+        <field name="name">Resume Line Types</field>
         <field name="res_model">hr.resume.line.type</field>
         <field name="view_mode">tree,form</field>
     </record>
 
     <menuitem
             id="menu_human_resources_configuration_resume"
-            name="Resumé"
+            name="Resume"
             parent="hr.menu_human_resources_configuration"
             sequence="15"
             groups="base.group_no_one"/>

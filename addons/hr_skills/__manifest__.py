@@ -6,13 +6,13 @@
     'category': 'Human Resources/Employees',
     'sequence': 270,
     'version': '1.0',
-    'summary': 'Manage skills, knowledge and resumé of your employees',
+    'summary': 'Manage skills, knowledge and resume of your employees',
     'description':
         """
-Skills and Resumé for HR
+Skills and Resume for HR
 ========================
 
-This module introduces skills and resumé management for employees.
+This module introduces skills and resume management for employees.
         """,
     'depends': ['hr'],
     'data': [
