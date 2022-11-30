@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { onExternalClick, useFocus, useHover } from "@mail/new/utils";
+import { onExternalClick, useFocus, useHover } from "@mail/new/utils/utils";
 
 import { Component, useRef, useState, onWillUpdateProps, useEffect } from "@odoo/owl";
 

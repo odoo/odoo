@@ -4,7 +4,7 @@ import { ChannelSelector } from "@mail/new/discuss/components/channel_selector";
 import { PartnerImStatus } from "@mail/new/discuss/components/partner_im_status";
 import { ThreadIcon } from "@mail/new/discuss/components/thread_icon";
 import { useMessaging } from "@mail/new/messaging_hook";
-import { onExternalClick } from "@mail/new/utils";
+import { onExternalClick } from "@mail/new/utils/utils";
 
 import { Component, useState } from "@odoo/owl";
 

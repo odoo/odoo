@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { markEventHandled } from "@mail/new/utils";
+import { markEventHandled } from "@mail/new/utils/utils";
 
 import {
     Component,

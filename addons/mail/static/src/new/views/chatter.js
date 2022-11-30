@@ -4,8 +4,8 @@ import { ActivityList } from "@mail/new/common/components/activity_list";
 import { Thread } from "@mail/new/common/components/thread";
 import { Composer } from "@mail/new/common/components/composer";
 import { useMessaging } from "@mail/new/messaging_hook";
-import { useHover } from "@mail/new/utils";
 import { useDropzone } from "@mail/new/utils/dropzone/dropzone_hook";
+import { useHover } from "@mail/new/utils/utils";
 
 import { Component, useState, onWillUpdateProps, useChildSubEnv, useRef } from "@odoo/owl";
 

@@ -2,7 +2,7 @@
 
 import { Message } from "@mail/new/common/components/message";
 import { useMessaging } from "@mail/new/messaging_hook";
-import { useAutoScroll, useScrollSnapshot, useVisible } from "@mail/new/utils";
+import { useAutoScroll, useScrollSnapshot, useVisible } from "@mail/new/utils/utils";
 
 import { Component, onMounted, onWillStart, onWillUpdateProps, useRef } from "@odoo/owl";
 

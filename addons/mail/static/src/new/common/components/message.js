@@ -7,8 +7,8 @@ import { MessageDeleteDialog } from "@mail/new/discuss/components/message_delete
 import { MessageInReplyTo } from "@mail/new/discuss/components/message_in_reply_to";
 import { PartnerImStatus } from "@mail/new/discuss/components/partner_im_status";
 import { useMessaging } from "@mail/new/messaging_hook";
-import { isEventHandled, markEventHandled, onExternalClick } from "@mail/new/utils";
 import { RelativeTime } from "@mail/new/utils/relative_time";
+import { isEventHandled, markEventHandled, onExternalClick } from "@mail/new/utils/utils";
 
 import { Component, onPatched, useChildSubEnv, useRef, useState } from "@odoo/owl";
 
