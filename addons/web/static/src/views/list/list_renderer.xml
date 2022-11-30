@@ -167,7 +167,7 @@
                 t-attf-class="o_group_name fs-6 fw-bold {{!group.isFolded ? 'text-900' : 'text-700'}}"
                 t-att-colspan="getGroupNameCellColSpan(group)">
                 <div class="d-flex">
-                    <span t-attf-class="fa fa-fw {{group.isFolded ? 'fa-caret-right' : 'fa-caret-down' }}"
+                    <span t-attf-class="fa {{group.isFolded ? 'fa-caret-right' : 'fa-caret-down' }}"
                         t-attf-style="padding-left: {{2 + getGroupLevel(group) * 20}}px; padding-right: 5px"/>
                     <t t-esc="getGroupDisplayName(group)"/> (<t t-esc="group.count"/>)
                     <div t-if="(groupByButtons[group.groupByField.name] and !group.isFolded)" class="o_group_buttons">
