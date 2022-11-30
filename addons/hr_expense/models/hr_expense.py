@@ -1201,7 +1201,7 @@ class HrExpenseSheet(models.Model):
             'context': {
                 'active_model': 'account.move',
                 'active_ids': self.account_move_id.ids,
-                'default_partner_bank_id': self.employee_id.sudo().bank_account_id.id,
+                'default_partner_bank_id': self.employee_id.sudo().bank_account_id[:1].id,
             },
             'target': 'new',
             'type': 'ir.actions.act_window',
