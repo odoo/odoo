@@ -112,7 +112,7 @@ class GoogleSync(models.AbstractModel):
     def _from_google_ids(self, google_ids):
         if not google_ids:
             return self.browse()
-        return self.search([('google_id', 'in', google_ids)])
+        return self.search([('google_id', 'in', google_ids)]).ids
 
     def _sync_odoo2google(self, google_service: GoogleCalendarService):
         if not self:

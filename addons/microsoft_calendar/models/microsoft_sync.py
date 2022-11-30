@@ -173,7 +173,7 @@ class MicrosoftSync(models.AbstractModel):
     def _from_uids(self, uids):
         if not uids:
             return self.browse()
-        return self.search([('ms_universal_event_id', 'in', uids)])
+        return self.search([('ms_universal_event_id', 'in', uids)]).ids
 
     def _sync_odoo2microsoft(self):
         if not self:
