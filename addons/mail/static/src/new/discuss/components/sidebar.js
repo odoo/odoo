@@ -1,13 +1,15 @@
-/** @odoo-module */
+/** @odoo-module **/
 
-import { useMessaging } from "../messaging_hook";
-import { ThreadIcon } from "./thread_icon";
-import { ChannelSelector } from "./channel_selector";
-import { PartnerImStatus } from "./partner_im_status";
-import { useService } from "@web/core/utils/hooks";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { onExternalClick } from "../utils";
+import { ChannelSelector } from "@mail/new/discuss/components/channel_selector";
+import { PartnerImStatus } from "@mail/new/discuss/components/partner_im_status";
+import { ThreadIcon } from "@mail/new/discuss/components/thread_icon";
+import { useMessaging } from "@mail/new/messaging_hook";
+import { onExternalClick } from "@mail/new/utils";
+
 import { Component, useState } from "@odoo/owl";
+
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { useService } from "@web/core/utils/hooks";
 
 export class Sidebar extends Component {
     setup() {

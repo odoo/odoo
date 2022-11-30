@@ -1,10 +1,10 @@
-/** @odoo-module */
+/** @odoo-module **/
 
 import { isEventHandled, markEventHandled, onExternalClick } from "@mail/new/utils";
-import { useMessaging } from "../messaging_hook";
+import { useMessaging } from "@mail/new/messaging_hook";
 import { RelativeTime } from "./relative_time";
 import { Component, onPatched, useChildSubEnv, useRef, useState } from "@odoo/owl";
-import { PartnerImStatus } from "@mail/new/discuss/partner_im_status";
+import { PartnerImStatus } from "@mail/new/discuss/components/partner_im_status";
 import { useService } from "@web/core/utils/hooks";
 import { Composer } from "@mail/new/common/components/composer";
 import { Composer as ComposerModel } from "../core/composer_model";

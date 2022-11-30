@@ -1,9 +1,10 @@
 /** @odoo-module **/
 
-import { Sidebar } from "@mail/new/discuss/sidebar";
+import { Sidebar } from "@mail/new/discuss/components/sidebar";
+import { makeTestEnv, TestServer } from "@mail/new/helpers/helpers";
+
 import { click, getFixture, mount, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
-import { makeTestEnv, TestServer } from "../helpers/helpers";
 
 let target;
 

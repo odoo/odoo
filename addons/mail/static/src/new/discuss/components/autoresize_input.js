@@ -1,6 +1,7 @@
-/** @odoo-module */
+/** @odoo-module **/
 
-import { onExternalClick, useFocus, useHover } from "../utils";
+import { onExternalClick, useFocus, useHover } from "@mail/new/utils";
+
 import { Component, useRef, useState, onWillUpdateProps, useEffect } from "@odoo/owl";
 
 export class AutoresizeInput extends Component {

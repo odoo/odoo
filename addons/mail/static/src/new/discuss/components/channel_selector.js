@@ -1,11 +1,13 @@
-/** @odoo-module */
+/** @odoo-module **/
 
-import { useMessaging } from "../messaging_hook";
+import { useMessaging } from "@mail/new/messaging_hook";
+
+import { Component } from "@odoo/owl";
+
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
-import { KeepLast } from "@web/core/utils/concurrency";
-import { Component } from "@odoo/owl";
 
 /**
  * return a concurrency safe/debounced version of fn argument

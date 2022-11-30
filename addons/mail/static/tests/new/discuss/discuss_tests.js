@@ -1,7 +1,12 @@
 /** @odoo-module **/
 
-import { Discuss } from "@mail/new/discuss/discuss";
+import { UPDATE_BUS_PRESENCE_DELAY } from "@bus/im_status_service";
+
 import { start, startServer, afterNextRender } from "@mail/../tests/helpers/test_utils";
+import { Discuss } from "@mail/new/discuss/components/discuss";
+import { insertText, makeTestEnv, TestServer } from "@mail/new/helpers/helpers";
+import { loadEmoji } from "@mail/new/utils/emoji/emoji_picker";
+
 import {
     click,
     editInput,
@@ -11,10 +16,7 @@ import {
     patchWithCleanup,
     triggerEvent,
 } from "@web/../tests/helpers/utils";
-import { insertText, makeTestEnv, TestServer } from "../helpers/helpers";
 import { browser } from "@web/core/browser/browser";
-import { loadEmoji } from "@mail/new/composer/emoji_picker";
-import { UPDATE_BUS_PRESENCE_DELAY } from "@bus/im_status_service";
 
 let target;
 

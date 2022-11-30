@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { loadEmoji } from "@mail/new/composer/emoji_picker";
-import { Discuss } from "@mail/new/discuss/discuss";
 import { startServer, start } from "@mail/../tests/helpers/test_utils";
+import { Discuss } from "@mail/new/discuss/components/discuss";
+import { loadEmoji } from "@mail/new/utils/emoji/emoji_picker";
 
 import {
     click,
