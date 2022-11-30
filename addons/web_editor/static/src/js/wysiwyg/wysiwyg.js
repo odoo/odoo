@@ -1915,6 +1915,7 @@ const Wysiwyg = Widget.extend({
                 title: _t('Quote'),
                 description: _t('Add a blockquote section.'),
                 fontawesome: 'fa-quote-right',
+                isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     this.odooEditor.execCommand('setTag', 'blockquote');
                 },
@@ -1924,6 +1925,7 @@ const Wysiwyg = Widget.extend({
                 title: _t('Code'),
                 description: _t('Add a code section.'),
                 fontawesome: 'fa-code',
+                isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     this.odooEditor.execCommand('setTag', 'pre');
                 },
