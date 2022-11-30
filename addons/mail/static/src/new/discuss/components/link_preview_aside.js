@@ -1,8 +1,10 @@
-/** @odoo-module */
+/** @odoo-module **/
+
+import { LinkPreviewConfirmDelete } from "@mail/new/discuss/components/link_preview_confirm_delete";
+
+import { Component } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
-import { Component } from "@odoo/owl";
-import { LinkPreviewConfirmDelete } from "./link_preview_confirm_delete";
 
 export class LinkPreviewAside extends Component {
     setup() {

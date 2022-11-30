@@ -1,7 +1,8 @@
-/** @odoo-module */
+/** @odoo-module **/
+
+import { LinkPreviewAside } from "@mail/new/discuss/components/link_preview_aside";
 
 import { Component } from "@odoo/owl";
-import { LinkPreviewAside } from "./link_preview_aside";
 
 export class LinkPreviewImage extends Component {
     get imageUrl() {

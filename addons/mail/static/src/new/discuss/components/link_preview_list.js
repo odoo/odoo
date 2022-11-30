@@ -1,9 +1,10 @@
-/** @odoo-module */
+/** @odoo-module **/
+
+import { LinkPreviewCard } from "@mail/new/discuss/components/link_preview_card";
+import { LinkPreviewImage } from "@mail/new/discuss/components/link_preview_image";
+import { LinkPreviewVideo } from "@mail/new/discuss/components/link_preview_video";
 
 import { Component } from "@odoo/owl";
-import { LinkPreviewCard } from "./link_preview_card";
-import { LinkPreviewImage } from "./link_preview_image";
-import { LinkPreviewVideo } from "./link_preview_video";
 
 export class LinkPreviewList extends Component {
     get linkPreviewsImage() {
