@@ -276,7 +276,7 @@ class SaleOrder(models.Model):
         compute='_compute_tax_country_id',
         # Avoid access error on fiscal position when reading a sale order with company != user.company_ids
         compute_sudo=True)  # used to filter available taxes depending on the fiscal country and position
-    tax_totals = fields.Binary(compute='_compute_tax_totals')
+    tax_totals = fields.Binary(compute='_compute_tax_totals', exportable=False)
     terms_type = fields.Selection(related='company_id.terms_type')
     type_name = fields.Char(string="Type Name", compute='_compute_type_name')
 
