@@ -208,8 +208,7 @@ export class Powerbox {
             }
             const term = this._lastText;
 
-            this._currentFilteredCommands =
-                term === '' ? this._currentOpenOptions.commands : await onValueChangeFunction(term);
+            this._currentFilteredCommands = await onValueChangeFunction(term);
             this.render(this._currentFilteredCommands);
         };
         const keydown = ev => {
@@ -320,7 +319,10 @@ export class Powerbox {
     // -------------------------------------------------------------------------
 
     _filter(term, commands) {
-        const initalCommands = commands;
+        const initalCommands = commands.filter(c => !c.isDisabled || !c.isDisabled());
+        if (term === '') {
+            return initalCommands;
+        }
         term = term.toLowerCase();
         term = term.replaceAll(/\s/g, '\\s');
         const regex = new RegExp(
@@ -328,6 +330,7 @@ export class Powerbox {
                 .split('')
                 .map(c => c.replace(/[\\^$.*+?()[\]{}|]/g, '\\$&'))
                 .join('.*'),
+            'i'
         );
         if (term.length) {
             commands = initalCommands.filter(command => {
