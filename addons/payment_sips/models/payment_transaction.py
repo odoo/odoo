@@ -150,6 +150,6 @@ class PaymentTransaction(models.Model):
     def _sips_notification_data_to_object(self, data):
         res = {}
         for element in data.split('|'):
-            key, value = element.split('=')
+            key, value = element.split('=', 1)
             res[key] = value
         return res
