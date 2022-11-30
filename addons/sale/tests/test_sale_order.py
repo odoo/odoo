@@ -165,45 +165,51 @@ class TestSaleOrder(SaleCommon):
         with self.assertRaises(UserError):
             self.sale_order.unlink()
 
-    def test_onchange_packaging_00(self):
+    def test_packaging_suggestion_00(self):
         """Create a SO and use packaging. Check we suggested suitable packaging
         according to the product_qty. Also check product_qty or product_packaging
         are correctly calculated when one of them changed.
         """
         # Required for `product_packaging_qty` to be visible in the view
         self.env.user.groups_id += self.env.ref('product.group_stock_packaging')
-        packaging_single, packaging_dozen = self.env['product.packaging'].create([{
+        packaging_two, packaging_dozen = self.env['product.packaging'].create([{
             'name': "I'm a packaging",
             'product_id': self.product.id,
-            'qty': 1.0,
+            'qty': 2.0,
         }, {
             'name': "I'm also a packaging",
             'product_id': self.product.id,
             'qty': 12.0,
         }])
 
+        # set product_uom_qty to 1.0, no packaging will be added
         so = self.empty_order
-        so_form = Form(so)
-        with so_form.order_line.new() as line:
-            line.product_id = self.product
-            line.product_uom_qty = 1.0
-        so_form.save()
-        self.assertEqual(so.order_line.product_packaging_id, packaging_single)
-        self.assertEqual(so.order_line.product_packaging_qty, 1.0)
-        with so_form.order_line.edit(0) as line:
-            line.product_packaging_qty = 2.0
-        so_form.save()
-        self.assertEqual(so.order_line.product_uom_qty, 2.0)
+        so.write({
+            'order_line': [
+                Command.create({'product_id': self.product.id, 'product_uom_qty': 1.0}),
+            ]
+        })
+        self.assertFalse(so.order_line.product_packaging_id)
+        self.assertEqual(so.order_line.product_packaging_qty, 0)
 
-        with so_form.order_line.edit(0) as line:
-            line.product_uom_qty = 24.0
+        # change product_uom_qty to 2.0, packaging_two will be added
+        so.order_line.product_uom_qty = 2.0
+        self.assertEqual(so.order_line.product_packaging_id, packaging_two)
+        self.assertEqual(so.order_line.product_packaging_qty, 1.0)
+
+        # change to packaging_dozen, product_uom_qty will be change to 12
+        so_form = Form(so)
+        with self.assertLogs(level='WARNING'):
+            with so_form.order_line.edit(0) as line:
+                line.product_packaging_id = packaging_dozen
         so_form.save()
-        self.assertEqual(so.order_line.product_packaging_id, packaging_dozen)
-        self.assertEqual(so.order_line.product_packaging_qty, 2.0)
-        with so_form.order_line.edit(0) as line:
-            line.product_packaging_qty = 1.0
-        so_form.save()
-        self.assertEqual(so.order_line.product_uom_qty, 12)
+        self.assertEqual(so.order_line.product_uom_qty, 12.0)
+        self.assertEqual(so.order_line.product_packaging_qty, 1.0)
+
+        # change to product_uom_qty to 13, packaging will be removed
+        so.order_line.product_uom_qty = 13.0
+        self.assertFalse(so.order_line.product_packaging_id)
+        self.assertEqual(so.order_line.product_packaging_qty, 0)
 
         packaging_pack_of_10 = self.env['product.packaging'].create({
             'name': "PackOf10",

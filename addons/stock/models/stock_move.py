@@ -182,7 +182,13 @@ class StockMove(models.Model):
     lot_ids = fields.Many2many('stock.lot', compute='_compute_lot_ids', inverse='_set_lot_ids', string='Serial Numbers', readonly=False)
     reservation_date = fields.Date('Date to Reserve', compute='_compute_reservation_date', store=True,
         help="Computes when a move should be reserved")
-    product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
+    product_packaging_qty = fields.Float(
+        'Packaging Quantity',
+        compute='_compute_product_packaging_qty', store=True, readonly=False)
+    product_packaging_id = fields.Many2one(
+        'product.packaging', 'Packaging',
+        compute='_compute_product_packaging_id', store=True, readonly=False,
+        domain="[('product_id', '=', product_id)]", check_company=True)
     from_immediate_transfer = fields.Boolean(related="picking_id.immediate_transfer")
 
     @api.depends('product_id')
@@ -606,6 +612,18 @@ Please change the quantity done or the rounding precision of your unit of measur
             user_warning += _('\n\nBlocking: %s') % ' ,'.join(moves_error.mapped('name'))
             raise UserError(user_warning)
 
+    @api.depends('product_id', 'product_uom_qty', 'product_uom')
+    def _compute_product_packaging_id(self):
+        for move in self:
+            move.product_packaging_id = self.env["product.packaging"]._compute_packaging(
+                move.product_packaging_id, move.product_id, move.product_uom_qty, move.product_uom)
+
+    @api.depends('product_packaging_id', 'product_uom_qty', 'product_uom')
+    def _compute_product_packaging_qty(self):
+        for move in self:
+            move.product_packaging_qty = self.env["product.packaging"]._compute_packaging_qty(
+                move.product_packaging_id, move.product_uom_qty, move.product_uom)
+
     def init(self):
         self._cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('stock_move_product_location_index',))
         if not self._cr.fetchone():
@@ -1021,14 +1039,26 @@ Please change the quantity done or the rounding precision of your unit of measur
         if product:
             self.description_picking = product._get_description(self.picking_type_id)
 
-    @api.onchange('product_id', 'product_qty', 'product_uom')
-    def _onchange_suggest_packaging(self):
-        # remove packaging if not match the product
-        if self.product_packaging_id.product_id != self.product_id:
-            self.product_packaging_id = False
-        # suggest biggest suitable packaging
-        if self.product_id and self.product_qty and self.product_uom:
-            self.product_packaging_id = self.product_id.packaging_ids._find_suitable_product_packaging(self.product_qty, self.product_uom)
+    @api.onchange('product_packaging_id')
+    def _onchange_product_packaging_id(self):
+        if self.product_packaging_id and self.product_uom_qty:
+            current_qty = self.product_uom_qty
+            new_qty = self.product_packaging_id._check_qty(self.product_uom_qty, self.product_uom, "UP")
+            if float_compare(new_qty, self.product_uom_qty, precision_rounding=self.product_uom.rounding) != 0:
+                self.product_uom_qty = new_qty
+                if float_compare(1.0, current_qty, precision_rounding=self.product_uom.rounding) != 0:
+                    return {
+                        'warning': {
+                            'title': _('Warning'),
+                            'message': _(
+                                "This product is packaged by %(pack_size).2f %(pack_name)s. You should transfer %(quantity).2f %(unit)s.",
+                                pack_size=self.product_packaging_id.qty,
+                                pack_name=self.product_id.uom_id.name,
+                                quantity=new_qty,
+                                unit=self.product_uom.name
+                            ),
+                        },
+                    }
 
     @api.onchange('lot_ids')
     def _onchange_lot_ids(self):

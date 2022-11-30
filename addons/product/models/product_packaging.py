@@ -64,3 +64,44 @@ class ProductPackaging(models.Model):
             if new_qty == product_qty:
                 return packaging
         return self.env['product.packaging']
+
+    @api.model
+    def _compute_packaging(self, product_packaging_id, product_id, product_uom_qty, product_uom, optional_type=False):
+        """Helper method to be used to compute packaging and packaging_qty for
+        stock.move, purchase.order.line, and sale.order.line.
+        If there is product_packaging_id, check with current product_uom_qty, the
+        packaging_qty is an integer or not. If no, remove it.
+        If there is no product_packaging_id or it's removed during the above process,
+        try suggest a packaging with integer packaging_qty.
+        """
+        if not product_id or not product_uom_qty or not product_uom:
+            return False
+        else:
+            # remove packaging if not match the product
+            if product_packaging_id.product_id != product_id:
+                product_packaging_id = False
+            # remove packaging if product_uom_qty is not a multiple of packaging_uom_qty
+            if product_packaging_id:
+                packaging_uom = product_packaging_id.product_uom_id
+                packaging_uom_qty = product_uom._compute_quantity(product_uom_qty, packaging_uom)
+                product_packaging_qty = packaging_uom_qty / product_packaging_id.qty
+                product_packaging_qty_integer = float_round(product_packaging_qty, precision_rounding=1.0)
+                if not float_compare(product_packaging_qty,
+                                        product_packaging_qty_integer,
+                                        precision_rounding=product_uom.rounding) == 0:
+                    product_packaging_id = False
+            # if now no packaging, try find a suitable one
+            if not product_packaging_id:
+                condidate_packagings = product_id.packaging_ids
+                if optional_type:
+                    condidate_packagings = condidate_packagings.filtered(optional_type)
+                product_packaging_id = condidate_packagings._find_suitable_product_packaging(product_uom_qty, product_uom)
+            return product_packaging_id
+
+    @api.model
+    def _compute_packaging_qty(self, product_packaging_id, product_uom_qty, product_uom):
+        if not product_packaging_id:
+            return 0
+        packaging_uom = product_packaging_id.product_uom_id
+        packaging_uom_qty = product_uom._compute_quantity(product_uom_qty, packaging_uom)
+        return packaging_uom_qty / product_packaging_id.qty
