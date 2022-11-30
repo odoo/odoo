@@ -29,7 +29,7 @@ import { markRaw, markup, toRaw } from "@odoo/owl";
 const preloadedDataRegistry = registry.category("preloadedData");
 
 const { CREATE, UPDATE, DELETE, FORGET, LINK_TO, DELETE_ALL, REPLACE_WITH } = x2ManyCommands;
-const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection"];
+const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection", "many2many"];
 const AGGREGATABLE_FIELD_TYPES = ["float", "integer", "monetary"]; // types that can be aggregated in grouped views
 const DEFAULT_HANDLE_FIELD = "sequence";
 const DEFAULT_QUICK_CREATE_FIELDS = {
@@ -1245,7 +1245,11 @@ export class Record extends DataPoint {
             return;
         }
 
-        const { domain, value: changes, warning } = await this.model.orm.call(
+        const {
+            domain,
+            value: changes,
+            warning,
+        } = await this.model.orm.call(
             this.resModel,
             "onchange",
             [
@@ -2658,11 +2662,15 @@ export class Group extends DataPoint {
 
     getServerValue() {
         const { name, selection, type, granularity } = this.groupByField;
+
         switch (type) {
             case "many2one":
             case "char":
             case "boolean": {
                 return this.value || false;
+            }
+            case "many2many": {
+                return this.value ? [this.value] : false;
             }
             case "selection": {
                 const descriptor = selection.find((opt) => opt[0] === this.value);
