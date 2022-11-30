@@ -231,7 +231,7 @@ class IrUiMenu(models.Model):
 
         xmlids = menu_roots._get_menuitems_xmlids()
         for menu in menu_roots_data:
-            menu['xmlid'] = xmlids[menu['id']]
+            menu['xmlid'] = xmlids.get(menu['id'], '')
 
         return menu_root
 
