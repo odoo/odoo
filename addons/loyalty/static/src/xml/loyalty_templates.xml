@@ -10,10 +10,10 @@
 
     <t t-name="loyalty.LoyaltyActionHelper" owl="1">
         <div class="o_view_nocontent">
-            <div class="o_nocontent_help">
-                <t t-out="props.noContentHelp"/>
-            </div>
             <div class="container">
+                <div class="o_nocontent_help">
+                    <t t-out="props.noContentHelp"/>
+                </div>
                 <div class="row justify-content-center loyalty-templates-container">
                     <t t-foreach="Object.entries(loyaltyTemplateData)" t-as="data" t-key="data[0]">
                         <t t-set="loyalty_el_icon" t-value="data[1].icon"/>
