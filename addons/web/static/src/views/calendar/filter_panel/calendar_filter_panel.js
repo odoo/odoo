@@ -10,9 +10,6 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
 
 import { Component, useState } from "@odoo/owl";
 
-class CalendarFilterTooltip extends Component {}
-CalendarFilterTooltip.template = "web.CalendarFilterPanel.tooltip";
-
 let nextId = 1;
 
 export class CalendarFilterPanel extends Component {
@@ -24,7 +21,6 @@ export class CalendarFilterPanel extends Component {
         this.addDialog = useOwnedDialogs();
         this.orm = useService("orm");
         this.popover = usePopover();
-        this.removePopover = null;
     }
 
     getAutoCompleteProps(section) {
@@ -155,13 +151,6 @@ export class CalendarFilterPanel extends Component {
         return this.state.collapsed[section.fieldName] || false;
     }
 
-    closeTooltip() {
-        if (this.removePopover) {
-            this.removePopover();
-            this.removePopover = null;
-        }
-    }
-
     onFilterInputChange(section, filter, ev) {
         this.props.model.updateFilters(section.fieldName, {
             [filter.value]: ev.target.checked,
@@ -176,28 +165,6 @@ export class CalendarFilterPanel extends Component {
             }
         }
         this.props.model.updateFilters(section.fieldName, filters);
-    }
-
-    onFilterMouseEnter(section, filter, ev) {
-        this.closeTooltip();
-        if (!section.hasAvatar || !filter.hasAvatar) {
-            return;
-        }
-
-        this.removePopover = this.popover.add(
-            ev.currentTarget,
-            CalendarFilterTooltip,
-            { section, filter },
-            {
-                closeOnClickAway: false,
-                popoverClass: "o-calendar-filter--tooltip",
-                position: "top",
-            }
-        );
-    }
-
-    onFilterMouseLeave() {
-        this.closeTooltip();
     }
 
     onFilterRemoveBtnClick(section, filter) {
