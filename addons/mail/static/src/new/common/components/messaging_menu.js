@@ -1,10 +1,12 @@
 /** @odoo-module **/
 
-import { Component, useState } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { useMessaging } from "@mail/new/messaging_hook";
 import { PartnerImStatus } from "@mail/new/discuss/components/partner_im_status";
-import { RelativeTime } from "../thread/relative_time";
+import { useMessaging } from "@mail/new/messaging_hook";
+import { RelativeTime } from "@mail/new/utils/relative_time";
+
+import { Component, useState } from "@odoo/owl";
+
+import { Dropdown } from "@web/core/dropdown/dropdown";
 
 export class MessagingMenu extends Component {
     setup() {

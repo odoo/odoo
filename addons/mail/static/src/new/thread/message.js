@@ -2,7 +2,7 @@
 
 import { isEventHandled, markEventHandled, onExternalClick } from "@mail/new/utils";
 import { useMessaging } from "@mail/new/messaging_hook";
-import { RelativeTime } from "./relative_time";
+import { RelativeTime } from "@mail/new/utils/relative_time";
 import { Component, onPatched, useChildSubEnv, useRef, useState } from "@odoo/owl";
 import { PartnerImStatus } from "@mail/new/discuss/components/partner_im_status";
 import { useService } from "@web/core/utils/hooks";
