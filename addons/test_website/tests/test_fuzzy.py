@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import psycopg2
 
 from odoo.addons.website.controllers.main import Website
 from odoo.addons.website.tools import MockRequest
@@ -72,3 +73,26 @@ class TestAutoComplete(TransactionCase):
 
         # There are no "X*" records
         self._autocomplete('XEF1000', 0, "Not found")
+
+    def test_02_pages_search(self):
+        if not self.env.registry.has_trigram:
+            try:
+                self.env.cr.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
+                self.env.registry.has_trigram = True
+            except psycopg2.Error:
+                _logger.warning("pg_trgm extension can't be installed, which is required to run this test")
+                return
+
+        with MockRequest(self.env, website=self.env['website'].browse(1)):
+            # This should not crash. This ensures that when searching on `name`
+            # field of `website.page` model, it works properly when `pg_trgm` is
+            # activated.
+            # Indeed, `name` is a field of `website.page` record but only at the
+            # ORM level, not in SQL, due to how `inherits` works.
+            self.env['website'].browse(1)._search_with_fuzzy(
+                'pages', 'test', limit=5, order='name asc, website_id desc, id', options={
+                    'displayDescription': False, 'displayDetail': False,
+                    'displayExtraDetail': False, 'displayExtraLink': False,
+                    'displayImage': False, 'allowFuzzy': True
+                }
+            )
