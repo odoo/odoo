@@ -3612,6 +3612,61 @@ options.registry.SwitchableViews = options.Class.extend({
     }
 });
 
+options.registry.GridImage = options.Class.extend({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see this.selectClass for parameters
+     */
+    changeGridImageMode(previewMode, widgetValue, params) {
+        const imageGridItemEl = this._getImageGridItem();
+        if (imageGridItemEl) {
+            imageGridItemEl.classList.toggle('o_grid_item_image_contain', widgetValue === 'contain');
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Returns the parent column if it is marked as a grid item containing an
+     * image.
+     *
+     * @returns {?HTMLElement}
+     */
+    _getImageGridItem() {
+        const parentEl = this.$target[0].parentNode;
+        if (parentEl && parentEl.classList.contains('o_grid_item_image')) {
+            return parentEl;
+        }
+        return null;
+    },
+    /**
+     * @override
+     */
+    _computeVisibility() {
+        return this._super(...arguments)
+            && !!this._getImageGridItem()
+            && !('shape' in this.$target[0].dataset);
+    },
+    /**
+     * @override
+     */
+    _computeWidgetState(methodName, params) {
+        if (methodName === 'changeGridImageMode') {
+            const imageGridItemEl = this._getImageGridItem();
+            return imageGridItemEl && imageGridItemEl.classList.contains('o_grid_item_image_contain')
+                ? 'contain'
+                : 'cover';
+        }
+        return this._super(...arguments);
+    },
+});
+
 return {
     UrlPickerUserValueWidget: UrlPickerUserValueWidget,
     FontFamilyPickerUserValueWidget: FontFamilyPickerUserValueWidget,
