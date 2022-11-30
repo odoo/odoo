@@ -1,4 +1,4 @@
-/** @odoo-module */
+/** @odoo-module **/
 
 import { markEventHandled } from "@mail/new/utils";
 
@@ -11,6 +11,7 @@ import {
     useState,
     onPatched,
 } from "@odoo/owl";
+
 import { getBundle, loadBundle } from "@web/core/assets";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { memoize } from "@web/core/utils/functions";
@@ -45,11 +46,11 @@ export function useEmojiPicker(refName, props) {
 const _loadEmoji = memoize(() => getBundle("mail.assets_model_data").then(loadBundle));
 
 /**
- * @returns {import("@mail/new/composer/emoji_data")}
+ * @returns {import("@mail/new/utils/emoji/emoji_data")}
  */
 export async function loadEmoji() {
     await _loadEmoji();
-    return odoo.runtimeImport("@mail/new/composer/emoji_data");
+    return odoo.runtimeImport("@mail/new/utils/emoji/emoji_data");
 }
 
 export class EmojiPicker extends Component {
