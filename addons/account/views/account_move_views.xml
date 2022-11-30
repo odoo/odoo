@@ -421,11 +421,12 @@
                     <field name="company_currency_id" invisible="1"/>
                     <field name="to_check" optional="hide" widget="boolean_toggle"/>
                     <field name="payment_state"
+                           string="Payment"
                            widget="badge"
                            decoration-danger="payment_state == 'not_paid'"
                            decoration-warning="payment_state in ('partial', 'in_payment')"
                            decoration-success="payment_state in ('paid', 'reversed')"
-                           attrs="{'invisible': [('payment_state', 'in', ('invoicing_legacy'))]}"
+                           attrs="{'invisible': ['|', ('payment_state', 'in', ('invoicing_legacy')), ('state', '!=', 'posted')]}"
                            optional="show"/>
                     <field name="state" widget="badge" decoration-success="state == 'posted'" decoration-info="state == 'draft'" optional="show"/>
                     <field name="move_type" invisible="context.get('default_move_type', True)"/>
@@ -825,7 +826,8 @@
                                           attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', False)]}"> or </span>
                                     <field name="invoice_payment_term_id"
                                            context="{'example_date': invoice_date, 'example_amount': tax_totals['amount_total']}"
-                                           placeholder="Terms"/>
+                                           placeholder="Terms"
+                                           options="{'no_quick_create':True}"/>
                                 </div>
 
                                 <label for="journal_id"
