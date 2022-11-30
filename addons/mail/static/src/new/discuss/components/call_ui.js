@@ -1,7 +1,8 @@
-/** @odoo-module */
+/** @odoo-module **/
+
+import { useMessaging } from "@mail/new/messaging_hook";
 
 import { Component } from "@odoo/owl";
-import { useMessaging } from "../messaging_hook";
 
 export class CallUI extends Component {
     setup() {
