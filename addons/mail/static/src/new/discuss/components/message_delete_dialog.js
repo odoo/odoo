@@ -1,7 +1,9 @@
-/** @odoo-module */
+/** @odoo-module **/
 
 import { useMessaging } from "@mail/new/messaging_hook";
+
 import { Component } from "@odoo/owl";
+
 import { Dialog } from "@web/core/dialog/dialog";
 
 export class MessageDeleteDialog extends Component {
