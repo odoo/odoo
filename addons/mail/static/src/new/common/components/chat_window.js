@@ -1,12 +1,12 @@
 /** @odoo-module */
 
-import { Thread } from "../thread/thread";
-import { Composer } from "../composer/composer";
-import { useMessageHighlight, useMessaging } from "../messaging_hook";
+import { Thread } from "../../thread/thread";
+import { Composer } from "../../composer/composer";
+import { useMessageHighlight, useMessaging } from "@mail/new/messaging_hook";
 import { Component, useChildSubEnv, useRef, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { CallUI } from "../rtc/call_ui";
-import { CallSettings } from "../rtc/call_settings";
+import { CallUI } from "../../rtc/call_ui";
+import { CallSettings } from "../../rtc/call_settings";
 
 export class ChatWindow extends Component {
     setup() {
