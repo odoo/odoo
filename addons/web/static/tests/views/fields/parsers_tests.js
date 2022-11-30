@@ -40,6 +40,12 @@ QUnit.module("Fields", (hooks) => {
         patchWithCleanup(localization, { decimalPoint: ",", thousandsSep: "." });
         assert.strictEqual(parseFloat("1.234,567"), 1234.567);
 
+        // Can evaluate expression from locale with decimal point different from ".".
+        assert.strictEqual(parseFloat("=1.000,1 + 2.000,2"), 3000.3);
+        assert.strictEqual(parseFloat("=1.000,00 + 11.121,00"), 12121);
+        assert.strictEqual(parseFloat("=1000,00 + 11122,00"), 12122);
+        assert.strictEqual(parseFloat("=1000 + 11123"), 12123);
+
         patchWithCleanup(localization, { decimalPoint: ",", thousandsSep: false });
         assert.strictEqual(parseFloat("1234,567"), 1234.567);
     });
