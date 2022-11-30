@@ -73,8 +73,6 @@
             class="o_calendar_filter_item w-100 position-relative mb-2"
             t-att-class="filter.colorIndex !== null ? 'o_cw_filter_color_' + filter.colorIndex : ''"
             t-att-data-value="filter.value"
-            t-on-mouseenter="(ev) => this.onFilterMouseEnter(section, filter, ev)"
-            t-on-mouseleave="() => this.onFilterMouseLeave(section, filter)"
         >
             <input
                 type="checkbox"
@@ -125,21 +123,6 @@
                     <i class="fa fa-times" />
                 </button>
             </t>
-        </div>
-    </t>
-
-    <t t-name="web.CalendarFilterPanel.tooltip" owl="1">
-        <div class="card">
-            <h6
-                class="text-center card-header"
-                t-esc="props.filter.label"
-            />
-            <div class="card-body">
-                <img
-                    t-attf-src="/web/image/{{ props.section.avatar.model }}/{{ props.filter.value }}/{{ props.section.avatar.field }}"
-                    class="mx-auto"
-                />
-            </div>
         </div>
     </t>
 
