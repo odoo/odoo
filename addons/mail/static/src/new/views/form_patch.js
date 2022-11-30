@@ -1,12 +1,14 @@
-/** @odoo-module */
+/** @odoo-module **/
 
-import { useService } from "@web/core/utils/hooks";
+import { Chatter } from "@mail/new/chatter/components/chatter";
+
+import { useChildSubEnv } from "@odoo/owl";
+
 import { SIZES } from "@web/core/ui/ui_service";
+import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { FormController } from "@web/views/form/form_controller";
 import { FormRenderer } from "@web/views/form/form_renderer";
-import { Chatter } from "./chatter";
-import { useChildSubEnv } from "@odoo/owl";
 
 FormController.components.Chatter = Chatter;
 FormRenderer.components.Chatter = Chatter;
