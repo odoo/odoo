@@ -1,14 +1,16 @@
 /** @odoo-module **/
 
-import { Thread } from "../thread/thread";
-import { useMessaging } from "@mail/new/messaging_hook";
-import { useDropzone } from "@mail/new/utils/dropzone/dropzone_hook";
+import { ActivityList } from "@mail/new/common/components/activity_list";
+import { Thread } from "@mail/new/common/components/thread";
 import { Composer } from "@mail/new/common/components/composer";
-import { ActivityList } from "@mail/new/chatter/components/activity_list";
+import { useMessaging } from "@mail/new/messaging_hook";
+import { useHover } from "@mail/new/utils";
+import { useDropzone } from "@mail/new/utils/dropzone/dropzone_hook";
+
 import { Component, useState, onWillUpdateProps, useChildSubEnv, useRef } from "@odoo/owl";
+
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useService } from "@web/core/utils/hooks";
-import { useHover } from "../utils";
 
 export class Chatter extends Component {
     setup() {

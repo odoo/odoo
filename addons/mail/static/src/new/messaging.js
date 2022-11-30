@@ -1,4 +1,4 @@
-/** @odoo-module */
+/** @odoo-module **/
 
 import { markRaw, markup, toRaw, reactive } from "@odoo/owl";
 import { deserializeDateTime } from "@web/core/l10n/dates";
@@ -7,8 +7,8 @@ import { sprintf } from "@web/core/utils/strings";
 import { url } from "@web/core/utils/urls";
 import { htmlToTextContentInline, convertBrToLineBreak, removeFromArray } from "./utils";
 import { prettifyMessageContent } from "./message_prettify_utils";
-import { Thread } from "./core/thread_model";
-import { Partner } from "./core/partner_model";
+import { Thread } from "@mail/new/common/models/thread_model";
+import { Partner } from "@mail/new/common/models/partner_model";
 
 const { DateTime } = luxon;
 

@@ -1,12 +1,14 @@
-/** @odoo-module */
+/** @odoo-module **/
 
-import { Thread } from "../../thread/thread";
 import { Composer } from "@mail/new/common/components/composer";
-import { useMessageHighlight, useMessaging } from "@mail/new/messaging_hook";
-import { Component, useChildSubEnv, useRef, useState } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
-import { CallUI } from "@mail/new/discuss/components/call_ui";
+import { Thread } from "@mail/new/common/components/thread";
 import { CallSettings } from "@mail/new/discuss/components/call_settings";
+import { CallUI } from "@mail/new/discuss/components/call_ui";
+import { useMessageHighlight, useMessaging } from "@mail/new/messaging_hook";
+
+import { Component, useChildSubEnv, useRef, useState } from "@odoo/owl";
+
+import { useService } from "@web/core/utils/hooks";
 
 export class ChatWindow extends Component {
     setup() {

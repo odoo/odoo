@@ -1,6 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
-import { convertBrToLineBreak } from "./../utils";
+import { convertBrToLineBreak } from "@mail/new/utils";
 
 export class Composer {
     static insert(state, data) {

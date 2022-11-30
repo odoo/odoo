@@ -1,16 +1,18 @@
 /** @odoo-module **/
 
-import { isEventHandled, markEventHandled, onExternalClick } from "@mail/new/utils";
-import { useMessaging } from "@mail/new/messaging_hook";
-import { RelativeTime } from "@mail/new/utils/relative_time";
-import { Component, onPatched, useChildSubEnv, useRef, useState } from "@odoo/owl";
-import { PartnerImStatus } from "@mail/new/discuss/components/partner_im_status";
-import { useService } from "@web/core/utils/hooks";
 import { Composer } from "@mail/new/common/components/composer";
-import { Composer as ComposerModel } from "../../core/composer_model";
-import { MessageDeleteDialog } from "@mail/new/discuss/components/message_delete_dialog";
+import { Composer as ComposerModel } from "@mail/new/common/models/composer_model";
 import { LinkPreviewList } from "@mail/new/discuss/components/link_preview_list";
+import { MessageDeleteDialog } from "@mail/new/discuss/components/message_delete_dialog";
 import { MessageInReplyTo } from "@mail/new/discuss/components/message_in_reply_to";
+import { PartnerImStatus } from "@mail/new/discuss/components/partner_im_status";
+import { useMessaging } from "@mail/new/messaging_hook";
+import { isEventHandled, markEventHandled, onExternalClick } from "@mail/new/utils";
+import { RelativeTime } from "@mail/new/utils/relative_time";
+
+import { Component, onPatched, useChildSubEnv, useRef, useState } from "@odoo/owl";
+
+import { useService } from "@web/core/utils/hooks";
 
 export class Message extends Component {
     setup() {

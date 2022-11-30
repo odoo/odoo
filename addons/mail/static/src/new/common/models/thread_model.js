@@ -1,7 +1,7 @@
-/** @odoo-module */
+/** @odoo-module **/
 
-import { Composer } from "./composer_model";
-import { Partner } from "./partner_model";
+import { Composer } from "@mail/new/common/models/composer_model";
+import { Partner } from "@mail/new/common/models/partner_model";
 
 export class Thread {
     static insert(state, data) {

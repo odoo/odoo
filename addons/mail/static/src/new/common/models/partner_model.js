@@ -1,4 +1,4 @@
-/** @odoo-module */
+/** @odoo-module **/
 
 export class Partner {
     static insert(state, data) {
