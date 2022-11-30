@@ -148,6 +148,7 @@ class AccountEdiFormat(models.Model):
                 'net_price_subtotal': taxes_res['total_excluded'],
                 'price_discount_unit': (gross_price_subtotal - line.price_subtotal) / line.quantity if line.quantity else 0.0,
                 'unece_uom_code': line.product_id.product_tmpl_id.uom_id._get_unece_code(),
+                'gross_price_total_unit': line._prepare_edi_vals_to_export()['gross_price_total_unit']
             }
 
             for tax_res in taxes_res['taxes']:
@@ -159,7 +160,6 @@ class AccountEdiFormat(models.Model):
                     'tax_base_amount': tax_res['base'],
                     'unece_tax_category_code': tax_category_code,
                 })
-                line_template_values['gross_price_total_unit'] = line._prepare_edi_vals_to_export()['gross_price_total_unit']
 
             template_values['invoice_line_values'].append(line_template_values)
 
