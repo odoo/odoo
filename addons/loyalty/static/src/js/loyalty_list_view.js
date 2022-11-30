@@ -29,6 +29,7 @@ export class LoyaltyActionHelper extends Component {
             "loyalty.program",
             "create_from_template",
             [templateId],
+            {context: this.env.model.root.context},
         );
         if (!action) {
             return;
