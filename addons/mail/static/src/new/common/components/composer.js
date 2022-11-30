@@ -1,9 +1,9 @@
 /** @odoo-module */
 
 import { Component, onMounted, useEffect, useRef, useState } from "@odoo/owl";
-import { useDropzone } from "../dropzone/dropzone_hook";
-import { useMessaging } from "../messaging_hook";
-import { useEmojiPicker } from "./emoji_picker";
+import { useDropzone } from "../../dropzone/dropzone_hook";
+import { useMessaging } from "@mail/new/messaging_hook";
+import { useEmojiPicker } from "../../composer/emoji_picker";
 import { isEventHandled, onExternalClick } from "@mail/new/utils";
 
 import { sprintf } from "@web/core/utils/strings";

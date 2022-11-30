@@ -5,7 +5,7 @@ import { Sidebar } from "./sidebar";
 import { Thread } from "../thread/thread";
 import { ThreadIcon } from "./thread_icon";
 import { useMessageHighlight, useMessaging } from "../messaging_hook";
-import { Composer } from "../composer/composer";
+import { Composer } from "@mail/new/common/components/composer";
 import { CallUI } from "../rtc/call_ui";
 import { Component, onWillStart, onMounted, onWillUnmount, useRef } from "@odoo/owl";
 import { CallSettings } from "../rtc/call_settings";

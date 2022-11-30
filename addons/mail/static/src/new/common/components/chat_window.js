@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { Thread } from "../../thread/thread";
-import { Composer } from "../../composer/composer";
+import { Composer } from "@mail/new/common/components/composer";
 import { useMessageHighlight, useMessaging } from "@mail/new/messaging_hook";
 import { Component, useChildSubEnv, useRef, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";

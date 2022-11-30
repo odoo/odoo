@@ -3,7 +3,7 @@
 import { Thread } from "../thread/thread";
 import { useMessaging } from "../messaging_hook";
 import { useDropzone } from "@mail/new/dropzone/dropzone_hook";
-import { Composer } from "../composer/composer";
+import { Composer } from "@mail/new/common/components/composer";
 import { ActivityList } from "../activity/activity_list";
 import { Component, useState, onWillUpdateProps, useChildSubEnv, useRef } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
