@@ -3,6 +3,7 @@
 import { useService } from '@web/core/utils/hooks';
 import { KanbanRenderer } from '@web/views/kanban/kanban_renderer';
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
+import { ProjectTaskKanbanRecord } from './project_task_kanban_record';
 
 const { onWillStart } = owl;
 
@@ -89,3 +90,8 @@ export class ProjectTaskKanbanRenderer extends KanbanRenderer {
         });
     }
 }
+
+ProjectTaskKanbanRenderer.components = {
+    ...KanbanRenderer.components,
+    KanbanRecord: ProjectTaskKanbanRecord,
+};

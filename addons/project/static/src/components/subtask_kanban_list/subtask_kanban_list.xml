@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<templates>
+
+    <t t-name="project.SubtaskKanbanList" owl="1">
+        <Record resModel="'project.task'" resId="props.record.resId" fields="fieldsInfo" activeFields="fieldsInfo" t-slot-scope="data">
+            <div class="subtask_list">
+                <t t-foreach="data.record.data.child_ids.records" t-as="subTask" t-key="subTask.resId">
+                    <div class="subtask_list_row">
+                        <Field name="'kanban_state'"
+                               class="`subtask_state_widget_col d-flex justify-content-center align-items-center`"
+                               record="subTask"
+                               fieldInfo="subTask.fields.kanban_state"
+                               type="'state_selection'"/>
+                        <a class="subtask_name_col"
+                           t-att-title="subTask.data.display_name"
+                           style="color: inherit;"
+                           t-esc="subTask.data.display_name"
+                           t-on-click.prevent="() => this.goToSubtask(subTask.resId)"/>
+                        <Field value="subTask.data.user_ids"
+                               class="`subtask_user_widget_col justify-content-end align-items-center`"
+                               name="'user_ids'"
+                               record="subTask"
+                               fieldInfo="subTask.fields.user_ids"
+                               readonly="true"
+                               type="'many2many_avatar_user'"/>
+                    </div>
+                </t>
+            </div>
+        </Record>
+    </t>
+
+</templates>

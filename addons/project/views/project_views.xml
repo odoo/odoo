@@ -1191,10 +1191,9 @@
                         </page>
                         <page name="sub_tasks_page" string="Sub-tasks" attrs="{'invisible': [('allow_subtasks', '=', False)]}">
                             <field name="child_ids"
-                                   context="{'search_view_ref' : 'project.view_task_search_form', 'default_project_id': project_id if not parent_id or not display_project_id else display_project_id, 'default_user_ids': user_ids, 'default_parent_id': id,
-                                    'default_partner_id': partner_id, 'default_milestone_id': allow_milestones and milestone_id, 'search_default_display_project_id': project_id, 'tree_view_ref': 'project.open_view_all_tasks_list_view'}"
-                                   widget="many2many"
-                                   domain="['!', ('id', 'parent_of', id), ('recurring_task', '=', False)]">
+                                   context="{'default_project_id': project_id if not parent_id or not display_project_id else display_project_id, 'default_user_ids': user_ids, 'default_parent_id': id,
+                                    'default_partner_id': partner_id, 'default_milestone_id': allow_milestones and milestone_id}"
+                                   widget="subtasks_one2many">
                                 <tree editable="bottom" decoration-muted="is_closed == True">
                                     <field name="legend_normal" invisible="1"/>
                                     <field name="legend_done" invisible="1"/>
@@ -1417,6 +1416,7 @@
                     <field name="has_late_and_unreached_milestone" />
                     <field name="allow_milestones" />
                     <field name="recurrence_id" />
+                    <field name="subtask_count"/>
                     <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger", "normal": "200"}'/>
                     <templates>
                     <t t-name="kanban-menu" t-if="!selection_mode" groups="base.group_user">
@@ -1464,12 +1464,14 @@
                                             <span style="font-weight:bold;" class="fa fa-fw mt4 fa-meh-o text-warning" t-elif="record.rating_avg.raw_value &gt;= 2.33" title="Average Rating: Okay" role="img" aria-label="Neutral face"/>
                                             <span style="font-weight:bold;" class="fa fa-fw mt4 fa-frown-o text-danger" t-else="" title="Average Rating: Dissatisfied" role="img" aria-label="Sad face"/>
                                         </b>
+                                        <a t-if="record.subtask_count.raw_value and record.allow_subtasks.raw_value" class="subtask_list_button" title="See Subtasks" style="padding: 0px 5px 0px 0px; box-sizing: border-box; font-size: 20px;"/>
                                     </div>
                                     <div class="oe_kanban_bottom_right" t-if="!selection_mode">
                                         <field name="kanban_state" widget="state_selection" groups="base.group_user"/>
                                         <t t-if="record.user_ids.raw_value"><field name="user_ids" widget="many2many_avatar_user"/></t>
                                     </div>
                                 </div>
+                                <div class="kanban_bottom_subtasks_section"/>
                             </div>
                             <div class="clearfix"></div>
                         </div>
