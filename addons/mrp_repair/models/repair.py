@@ -20,7 +20,7 @@ class Repair(models.Model):
     def action_explode(self):
         lines_to_unlink_ids = set()
         line_vals_list = []
-        for op in self.operations:
+        for op in self.move_ids:
             bom = self.env['mrp.bom'].sudo()._bom_find(op.product_id, company_id=op.company_id.id, bom_type='phantom')[op.product_id]
             if not bom:
                 continue
@@ -31,35 +31,24 @@ class Repair(models.Model):
                     line_vals_list.append(op._prepare_phantom_line_vals(bom_line, line_data['qty']))
             lines_to_unlink_ids.add(op.id)
 
-        self.env['repair.line'].browse(lines_to_unlink_ids).sudo().unlink()
+        self.env['stock.move'].browse(lines_to_unlink_ids).sudo().unlink()
         if line_vals_list:
-            self.env['repair.line'].create(line_vals_list)
+            self.env['stock.move'].create(line_vals_list)
 
 
-class RepairLine(models.Model):
-    _inherit = 'repair.line'
+class StockMove(models.Model):
+    _inherit = 'stock.move'
 
     def _prepare_phantom_line_vals(self, bom_line, qty):
         self.ensure_one()
         product = bom_line.product_id
-        uom = bom_line.product_uom_id
-        partner = self.repair_id.partner_id
-        price = self.repair_id.pricelist_id._get_product_price(product, qty, uom=uom)
-        tax = self.env['account.tax']
-        if partner:
-            partner_invoice = self.repair_id.partner_invoice_id or partner
-            fpos = self.env['account.fiscal.position']._get_fiscal_position(partner_invoice, delivery=self.repair_id.address_id)
-            taxes = self.product_id.taxes_id.filtered(lambda x: x.company_id == self.repair_id.company_id)
-            tax = fpos.map_tax(taxes)
         return {
             'name': self.name,
             'repair_id': self.repair_id.id,
-            'type': self.type,
+            'repair_line_type': self.repair_line_type,
             'product_id': product.id,
-            'price_unit': price,
-            'tax_id': [(4, t.id) for t in tax],
+            'price_unit': self.price_unit,
             'product_uom_qty': qty,
-            'product_uom': uom.id,
             'location_id': self.location_id.id,
             'location_dest_id': self.location_dest_id.id,
             'state': 'draft',
