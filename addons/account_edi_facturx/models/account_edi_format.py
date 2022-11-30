@@ -148,6 +148,7 @@ class AccountEdiFormat(models.Model):
                 'net_price_subtotal': taxes_res['total_excluded'],
                 'price_discount_unit': (gross_price_subtotal - line.price_subtotal) / line.quantity if line.quantity else 0.0,
                 'unece_uom_code': line.product_id.product_tmpl_id.uom_id._get_unece_code(),
+                'gross_price_total_unit': 0,
             }
 
             for tax_res in taxes_res['taxes']:

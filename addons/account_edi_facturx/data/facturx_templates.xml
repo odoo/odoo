@@ -34,7 +34,7 @@
                         <t t-set="net_amount" t-value="line.price_subtotal/line.quantity if line.quantity else 0"/>
                         <ram:GrossPriceProductTradePrice>
                             <ram:ChargeAmount
-                                t-esc="format_monetary(line_values['gross_price_total_unit'], currency)"/>
+                                t-esc="format_monetary(line_values.get('gross_price_total_unit', 0), currency)"/>
 
                             <!-- Discount. -->
                             <ram:AppliedTradeAllowanceCharge t-if="line.discount">
