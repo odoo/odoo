@@ -7,6 +7,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools.float_utils import float_split_str
 from odoo.tools.misc import mod10r
+from odoo.tools.sql import column_exists, create_column
 
 
 l10n_ch_ISR_NUMBER_LENGTH = 27
@@ -28,6 +29,15 @@ class AccountMove(models.Model):
     l10n_ch_isr_sent = fields.Boolean(default=False, help="Boolean value telling whether or not the ISR corresponding to this invoice has already been printed or sent by mail.")
     l10n_ch_currency_name = fields.Char(related='currency_id.name', readonly=True, string="Currency Name", help="The name of this invoice's currency") #This field is used in the "invisible" condition field of the 'Print ISR' button.
     l10n_ch_isr_needs_fixing = fields.Boolean(compute="_compute_l10n_ch_isr_needs_fixing", help="Used to show a warning banner when the vendor bill needs a correct ISR payment reference. ")
+
+    def _auto_init(self):
+        """
+        Create compute stored field l10n_ch_isr_number
+        here to avoid MemoryError on large databases.
+        """
+        if not column_exists(self.env.cr, 'account_move', 'l10n_ch_isr_number'):
+            create_column(self.env.cr, 'account_move', 'l10n_ch_isr_number', 'varchar')
+        return super()._auto_init()
 
     @api.depends('partner_bank_id.l10n_ch_isr_subscription_eur', 'partner_bank_id.l10n_ch_isr_subscription_chf')
     def _compute_l10n_ch_isr_subscription(self):
