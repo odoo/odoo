@@ -3,7 +3,28 @@
 import { KanbanModel } from "@web/views/kanban/kanban_model";
 
 import { ProjectTaskKanbanDynamicGroupList } from "./project_task_kanban_dynamic_group_list";
-import { ProjectTaskRecord } from './project_task_kanban_record';
+import { Record } from '@web/views/relational_model';
+
+export class ProjectTaskRecord extends Record {
+    async _applyChanges(changes) {
+        const value = changes.personal_stage_type_ids;
+        if (Array.isArray(value)) {
+            delete changes.personal_stage_type_ids;
+            changes.personal_stage_type_id = value;
+        }
+        await super._applyChanges(changes);
+    }
+
+    get context() {
+        const context = super.context;
+        const value = context.default_personal_stage_type_ids;
+        if (Array.isArray(value)) {
+            context.default_personal_stage_type_id = value[0];
+            delete context.default_personal_stage_type_ids;
+        }
+        return context;
+    }
+}
 
 export class ProjectTaskKanbanGroup extends KanbanModel.Group {
     get isPersonalStageGroup() {
