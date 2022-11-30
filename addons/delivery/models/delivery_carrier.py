@@ -5,6 +5,7 @@ import psycopg2
 
 from odoo import api, fields, models, registry, SUPERUSER_ID, _
 from odoo.tools.float_utils import float_round
+from odoo.exceptions import UserError
 
 from .delivery_request_objects import DeliveryCommodity, DeliveryPackage
 
@@ -361,6 +362,8 @@ class DeliveryCarrier(models.Model):
             for move_line in picking.move_line_ids:
                 package_total_cost += self._product_price_to_company_currency(move_line.qty_done, move_line.product_id, picking.company_id)
             packages.append(DeliveryPackage(commodities, picking.weight_bulk, default_package_type, name='Bulk Content', total_cost=package_total_cost, currency=picking.company_id.currency_id, picking=picking))
+        elif not packages:
+            raise UserError(_("The package cannot be created because the total weight of the products in the picking is 0.0 %s") % (picking.weight_uom_name))
 
         return packages
 
