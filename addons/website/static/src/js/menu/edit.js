@@ -476,6 +476,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 title: _t('Alert'),
                 description: _t('Insert an alert snippet.'),
                 fontawesome: 'fa-info',
+                isDisabled: () => !this.wysiwyg.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_alert"]');
                 },
@@ -485,6 +486,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 title: _t('Rating'),
                 description: _t('Insert a rating snippet.'),
                 fontawesome: 'fa-star-half-o',
+                isDisabled: () => !this.wysiwyg.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_rating"]');
                 },
@@ -494,6 +496,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 title: _t('Card'),
                 description: _t('Insert a card snippet.'),
                 fontawesome: 'fa-sticky-note',
+                isDisabled: () => !this.wysiwyg.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_card"]');
                 },
@@ -503,6 +506,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 title: _t('Share'),
                 description: _t('Insert a share snippet.'),
                 fontawesome: 'fa-share-square-o',
+                isDisabled: () => !this.wysiwyg.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_share"]');
                 },
@@ -512,6 +516,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 title: _t('Text Highlight'),
                 description: _t('Insert a text Highlight snippet.'),
                 fontawesome: 'fa-sticky-note',
+                isDisabled: () => !this.wysiwyg.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_text_highlight"]');
                 },
@@ -521,6 +526,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 title: _t('Chart'),
                 description: _t('Insert a chart snippet.'),
                 fontawesome: 'fa-bar-chart',
+                isDisabled: () => !this.wysiwyg.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_chart"]');
                 },
@@ -530,6 +536,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 title: _t('Progress Bar'),
                 description: _t('Insert a progress bar snippet.'),
                 fontawesome: 'fa-spinner',
+                isDisabled: () => !this.wysiwyg.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_progress_bar"]');
                 },
@@ -539,6 +546,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 title: _t('Badge'),
                 description: _t('Insert a badge snippet.'),
                 fontawesome: 'fa-tags',
+                isDisabled: () => !this.wysiwyg.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_badge"]');
                 },
@@ -548,6 +556,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 title: _t('Blockquote'),
                 description: _t('Insert a blockquote snippet.'),
                 fontawesome: 'fa-quote-left',
+                isDisabled: () => !this.wysiwyg.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_blockquote"]');
                 },
@@ -555,8 +564,9 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             {
                 groupName: _t('Website'),
                 title: _t('Separator'),
-                description: _t('Insert an horizontal separator sippet.'),
+                description: _t('Insert a horizontal separator snippet.'),
                 fontawesome: 'fa-minus',
+                isDisabled: () => !this.wysiwyg.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_hr"]');
                 },
