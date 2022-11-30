@@ -125,7 +125,7 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/lib/selfie_segmentation/selfie_segmentation.js',
         ],
         'mail.assets_model_data': [
-            'mail/static/src/new/composer/emoji_data.js',
+            'mail/static/src/new/utils/emoji/emoji_data.js',
         ],
         # Custom bundle in case we want to remove things that are later added to web.assets_common
         'mail.assets_common_discuss_public': [
@@ -210,7 +210,7 @@ For more specific needs, you may also assign custom-defined actions
             ('remove', 'mail/static/src/components/*/*.dark.scss'),
 
             'mail/static/src/new/**/*',
-            ('remove', 'mail/static/src/new/composer/emoji_data.js'),
+            ('remove', 'mail/static/src/new/utils/emoji/emoji_data.js'),
         ],
         "web.dark_mode_assets_backend": [
             'mail/static/src/components/*/*.dark.scss',

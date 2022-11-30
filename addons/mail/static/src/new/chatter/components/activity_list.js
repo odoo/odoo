@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Activity } from "@mail/chatter/components/activity";
+import { Activity } from "@mail/new/chatter/components/activity";
 
 import { Component, useState } from "@odoo/owl";
 

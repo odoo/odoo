@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { ActivityList } from "@mail/new/common/components/activity_list";
+import { ActivityList } from "@mail/new/chatter/components/activity_list";
 import { Thread } from "@mail/new/common/components/thread";
 import { Composer } from "@mail/new/common/components/composer";
 import { useMessaging } from "@mail/new/messaging_hook";

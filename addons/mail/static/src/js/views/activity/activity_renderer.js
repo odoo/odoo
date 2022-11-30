@@ -1,7 +1,9 @@
 /** @odoo-module **/
 
 import ActivityRecord from "@mail/js/views/activity/activity_record";
-import { ActivityCell } from "@mail/new/views/activity/activity_cell";
+import { ActivityCell } from "@mail/new/chatter/components/activity_cell";
+
+import { useState } from "@odoo/owl";
 
 import AbstractRendererOwl from "web.AbstractRendererOwl";
 import core from "web.core";
@@ -11,7 +13,6 @@ import QWeb from "web.QWeb";
 import session from "web.session";
 import utils from "web.utils";
 
-import { useState } from "@odoo/owl";
 const _t = core._t;
 
 /**

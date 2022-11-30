@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { DropzoneContainer } from "@mail/new/dropzone/dropzone_container";
+import { DropzoneContainer } from "@mail/new/utils/dropzone/dropzone_container";
 
 import { registry } from "@web/core/registry";
 

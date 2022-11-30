@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
 import { DialogManagerContainer } from "@mail/components/dialog_manager_container/dialog_manager_container";
-import { ActivityMenu } from "@mail/new/activity/activity_menu";
-import { activityService } from "@mail/new/activity/activity_service";
+import { ActivityMenu } from "@mail/new/chatter/components/activity_menu";
+import { activityService } from "@mail/new/chatter/activity_service";
+import { ChatWindowContainer } from "@mail/new/common/components/chat_window_container";
+import { MessagingMenu } from "@mail/new/common/components/messaging_menu";
 import { Discuss } from "@mail/new/discuss/components/discuss";
 import { messagingService as newMessagingService } from "@mail/new/messaging_service";
-import { ChatWindowContainer } from "@mail/new/chat/chat_window_container";
-import { MessagingMenu } from "@mail/new/messaging_menu/messaging_menu";
 import { PopoverManagerContainer } from "@mail/components/popover_manager_container/popover_manager_container";
 import { messagingService } from "@mail/services/messaging_service";
 import { systrayService } from "@mail/services/systray_service";

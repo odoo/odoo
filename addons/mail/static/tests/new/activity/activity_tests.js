@@ -1,8 +1,9 @@
 /** @odoo-module **/
 
-import { Activity } from "@mail/new/activity/activity";
+import { Activity } from "@mail/new/chatter/components/activity";
+import { makeTestEnv, TestServer } from "@mail/new/helpers/helpers";
+
 import { click, getFixture, mount } from "@web/../tests/helpers/utils";
-import { makeTestEnv, TestServer } from "../helpers/helpers";
 
 let target;
 

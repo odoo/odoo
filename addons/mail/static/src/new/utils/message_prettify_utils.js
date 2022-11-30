@@ -1,6 +1,8 @@
-/** @odoo-module */
+/** @odoo-module **/
+
+import { loadEmoji } from "@mail/new/utils/emoji/emoji_picker";
+
 import { escape } from "@web/core/utils/strings";
-import { loadEmoji } from "./composer/emoji_picker";
 
 const urlRegexp =
     /\b(?:https?:\/\/\d{1,3}(?:\.\d{1,3}){3}|(?:https?:\/\/|(?:www\.))[-a-z0-9@:%._+~#=\u00C0-\u024F\u1E00-\u1EFF]{2,256}\.[a-z]{2,13})\b(?:[-a-z0-9@:%_+.~#?&'$//=;\u00C0-\u024F\u1E00-\u1EFF]*)/gi;

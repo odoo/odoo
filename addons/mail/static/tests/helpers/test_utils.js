@@ -2,7 +2,7 @@
 
 import { getPyEnv, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { loadEmoji } from "@mail/new/composer/emoji_picker";
+import { loadEmoji } from "@mail/new/utils/emoji/emoji_picker";
 import { nextTick } from "@mail/utils/utils";
 import { getAdvanceTime } from "@mail/../tests/helpers/time_control";
 import { getWebClientReady } from "@mail/../tests/helpers/webclient_setup";

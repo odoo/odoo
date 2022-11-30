@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Dropzone } from "@mail/new/dropzone/dropzone";
+import { Dropzone } from "@mail/new/utils/dropzone/dropzone";
 
 import { Component, useExternalListener, useState, xml } from "@odoo/owl";
 

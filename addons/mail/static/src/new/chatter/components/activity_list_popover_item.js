@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
-import { ActivityMarkAsDone } from "@mail/new/activity/activity_markasdone_popover";
-
-import { auto_str_to_date } from "web.time";
-import { useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
+import { ActivityMarkAsDone } from "@mail/new/chatter/components/activity_markasdone_popover";
 
 import { Component, useState } from "@odoo/owl";
+
+import { useService } from "@web/core/utils/hooks";
+import { sprintf } from "@web/core/utils/strings";
+import { auto_str_to_date } from "web.time";
 
 export class ActivityListPopoverItem extends Component {
     setup() {

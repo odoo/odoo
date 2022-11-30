@@ -1,16 +1,18 @@
 /** @odoo-module **/
 
 import { messagingService } from "@mail/new/messaging_service";
-import { activityService } from "@mail/new/activity/activity_service";
+import { activityService } from "@mail/new/chatter/activity_service";
+import { dropzoneService } from "@mail/new/utils/dropzone/dropzone_service";
+
+import { App, EventBus } from "@odoo/owl";
+
+import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { ormService } from "@web/core/orm_service";
 import { popoverService } from "@web/core/popover/popover_service";
-import { dropzoneService } from "@mail/new/dropzone/dropzone_service";
-import { App, EventBus } from "@odoo/owl";
-import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 
 const { afterNextRender } = App;
 
-export { TestServer } from "./test_server";
+export { TestServer } from "@mail/new/helpers/test_server";
 
 export function makeTestEnv(rpc) {
     const user = {
