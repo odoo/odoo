@@ -1866,6 +1866,258 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
+    QUnit.test("quick create record in grouped on m2m (no quick_create_view)", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban on_create="quick_create">
+                    <field name="category_ids"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["category_ids"],
+            async mockRPC(route, { method, args, kwargs }) {
+                assert.step(method || route);
+                if (method === "name_create") {
+                    assert.strictEqual(args[0], "new partner");
+                    const { default_category_ids } = kwargs.context;
+                    assert.deepEqual(default_category_ids, [6]);
+                }
+            },
+        });
+
+        assert.containsOnce(
+            target,
+            ".o_kanban_group:nth-child(2) .o_kanban_record",
+            "gold column should contain one records"
+        );
+
+        // click on 'Create', fill the quick create and validate
+        await quickCreateRecord(1);
+        await editQuickCreateInput("display_name", "new partner");
+        await validateRecord();
+
+        assert.containsN(
+            target,
+            ".o_kanban_group:nth-child(2) .o_kanban_record",
+            2,
+            "gold column should contain two records"
+        );
+
+        assert.verifySteps([
+            "get_views",
+            "web_read_group", // initial read_group
+            "web_search_read", // initial search_read (first column)
+            "web_search_read", // initial search_read (second column)
+            "read", // read display_name of categories
+            "onchange", // quick create
+            "name_create", // should perform a name_create to create the record
+            "read",
+            "read", // read the created record
+            "onchange", // reopen the quick create automatically
+        ]);
+    });
+
+    QUnit.test("quick create record in grouped on m2m in the None column", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban on_create="quick_create">
+                    <field name="category_ids"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["category_ids"],
+            async mockRPC(route, { method, args, kwargs }) {
+                assert.step(method || route);
+                if (method === "name_create") {
+                    assert.strictEqual(args[0], "new partner");
+                    const { default_category_ids } = kwargs.context;
+                    assert.deepEqual(default_category_ids, false);
+                }
+            },
+        });
+
+        await click(target, ".o_kanban_group:nth-child(1)");
+        assert.containsN(
+            target,
+            ".o_kanban_group:nth-child(1) .o_kanban_record",
+            2,
+            "'None' column should contain two records"
+        );
+
+        // click on 'Create', fill the quick create and validate
+        await quickCreateRecord(0);
+        await editQuickCreateInput("display_name", "new partner");
+        await validateRecord();
+
+        assert.containsN(
+            target,
+            ".o_kanban_group:nth-child(1) .o_kanban_record",
+            3,
+            "'None' column should contain three records"
+        );
+
+        assert.verifySteps([
+            "get_views",
+            "web_read_group", // initial read_group
+            "web_search_read", // initial search_read (first column)
+            "web_search_read", // initial search_read (second column)
+            "read", // read display_name of categories
+            "web_search_read", // read records when unfolding 'None'
+            "onchange", // quick create
+            "name_create", // should perform a name_create to create the record
+            "read", // read the created record
+            "onchange", // reopen the quick create automatically
+        ]);
+    });
+
+    QUnit.test("quick create record in grouped on m2m (field not in template)", async (assert) => {
+        serverData.views["partner,some_view_ref,form"] = `
+            <form>
+                <field name="foo"/>
+            </form>`;
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban on_create="quick_create" quick_create_view="some_view_ref">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["category_ids"],
+            async mockRPC(route, { method, args, kwargs }) {
+                assert.step(method || route);
+                if (method === "create") {
+                    assert.deepEqual(args[0], {
+                        foo: "new partner",
+                    });
+                    const { default_category_ids } = kwargs.context;
+                    assert.deepEqual(default_category_ids, [6]);
+                }
+            },
+        });
+
+        assert.containsOnce(
+            target,
+            ".o_kanban_group:nth-child(2) .o_kanban_record",
+            "gold column should contain one records"
+        );
+
+        // click on 'Create', fill the quick create and validate
+        await quickCreateRecord(1);
+        await editQuickCreateInput("foo", "new partner");
+        await validateRecord();
+
+        assert.containsN(
+            target,
+            ".o_kanban_group:nth-child(2) .o_kanban_record",
+            2,
+            "gold column should contain two records"
+        );
+
+        assert.verifySteps([
+            "get_views",
+            "web_read_group", // initial read_group
+            "web_search_read", // initial search_read (first column)
+            "web_search_read", // initial search_read (second column)
+            "get_views", // get form view
+            "onchange", // quick create
+            "create", // should perform a name_create to create the record
+            "read", // read the created record
+            "onchange", // reopen the quick create automatically
+        ]);
+    });
+
+    QUnit.test("quick create record in grouped on m2m (field in the form view)", async (assert) => {
+        serverData.views["partner,some_view_ref,form"] = `
+            <form>
+                <field name="foo"/>
+                <field name="category_ids" widget="many2many_tags"/>
+            </form>`;
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban on_create="quick_create" quick_create_view="some_view_ref">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["category_ids"],
+            async mockRPC(route, { method, args, kwargs }) {
+                assert.step(method || route);
+                if (method === "create") {
+                    assert.deepEqual(args[0], {
+                        category_ids: [[6, false, [6]]],
+                        foo: "new partner",
+                    });
+                    const { default_category_ids } = kwargs.context;
+                    assert.deepEqual(default_category_ids, [6]);
+                }
+            },
+        });
+
+        assert.containsOnce(
+            target,
+            ".o_kanban_group:nth-child(2) .o_kanban_record",
+            "gold column should contain one records"
+        );
+        // click on 'Create', fill the quick create and validate
+        await quickCreateRecord(1);
+
+        // verify that the quick create m2m field contains the column value
+        assert.containsOnce(
+            target,
+            ".o_tag_badge_text",
+            "quick create form should contain one tag in the m2m field"
+        );
+        assert.strictEqual(target.querySelector(".o_tag_badge_text").textContent, "gold");
+
+        await editQuickCreateInput("foo", "new partner");
+        await validateRecord();
+
+        assert.containsN(
+            target,
+            ".o_kanban_group:nth-child(2) .o_kanban_record",
+            2,
+            "gold column should contain two records"
+        );
+
+        assert.verifySteps([
+            "get_views",
+            "web_read_group", // initial read_group
+            "web_search_read", // initial search_read (first column)
+            "web_search_read", // initial search_read (second column)
+            "get_views", // get form view
+            "onchange", // quick create
+            "read",
+            "create", // should perform a create to create the record
+            "read",
+            "onchange",
+            "read",
+        ]);
+    });
+
     QUnit.test("quick create record validation: stays open when invalid", async (assert) => {
         await makeView({
             type: "kanban",

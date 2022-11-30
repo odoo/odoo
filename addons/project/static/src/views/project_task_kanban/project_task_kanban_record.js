@@ -11,4 +11,14 @@ export class ProjectTaskRecord extends Record {
         }
         await super._applyChanges(changes);
     }
+
+    get context() {
+        const context = super.context;
+        const value = context.default_personal_stage_type_ids;
+        if (value && Array.isArray(value)) {
+            context.default_personal_stage_type_id = value[0];
+            delete context.default_personal_stage_type_ids;
+        }
+        return context;
+    }
 }
