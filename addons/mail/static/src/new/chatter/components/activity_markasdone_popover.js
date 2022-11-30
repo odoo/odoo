@@ -1,7 +1,9 @@
-/** @odoo-module */
+/** @odoo-module **/
 
-import { useMessaging } from "../messaging_hook";
+import { useMessaging } from "@mail/new/messaging_hook";
+
 import { Component, onMounted, useExternalListener, useRef } from "@odoo/owl";
+
 import { useService } from "@web/core/utils/hooks";
 
 export class ActivityMarkAsDone extends Component {

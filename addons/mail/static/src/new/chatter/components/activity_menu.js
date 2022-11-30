@@ -1,6 +1,7 @@
-/** @odoo-module */
+/** @odoo-module **/
 
 import { Component, useState } from "@odoo/owl";
+
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useService } from "@web/core/utils/hooks";
 

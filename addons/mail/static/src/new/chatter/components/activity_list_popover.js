@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { ActivityListPopoverItem } from "@mail/new/activity/activity_list_popover_item";
+import { ActivityListPopoverItem } from "@mail/new/chatter/components/activity_list_popover_item";
 
 import { useService } from "@web/core/utils/hooks";
 
