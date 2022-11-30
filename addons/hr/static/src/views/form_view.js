@@ -1,13 +1,13 @@
-/** @odoo-module */
+/** @odoo-module **/
 
-import { registry } from '@web/core/registry';
+import { useArchiveEmployee } from "@hr/views/archive_employee_hook";
 
-import { formView } from '@web/views/form/form_view';
-import { FormController } from '@web/views/form/form_controller';
-import { FormRenderer } from '@web/views/form/form_renderer';
+import { useOpenChat } from "@mail/new/common/open_chat_hook";
 
-import { useArchiveEmployee } from '@hr/views/archive_employee_hook';
-import { useOpenChat } from "@mail/new/views/open_chat_hook";
+import { registry } from "@web/core/registry";
+import { FormController } from "@web/views/form/form_controller";
+import { FormRenderer } from "@web/views/form/form_renderer";
+import { formView } from "@web/views/form/form_view";
 
 export class EmployeeFormController extends FormController {
     setup() {
@@ -37,7 +37,7 @@ export class EmployeeFormRenderer extends FormRenderer {
     }
 }
 
-registry.category('views').add('hr_employee_form', {
+registry.category("views").add("hr_employee_form", {
     ...formView,
     Controller: EmployeeFormController,
     Renderer: EmployeeFormRenderer,
