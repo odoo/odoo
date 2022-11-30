@@ -215,14 +215,14 @@ class AccountEdiXmlCII(models.AbstractModel):
 
         # ==== partner_id ====
 
-        partner_type = invoice.journal_id.type == journal.type and 'SellerTradeParty' or 'BuyerTradeParty'
+        partner_type = invoice.journal_id.type == 'purchase' and 'SellerTradeParty' or 'BuyerTradeParty'
         invoice.partner_id = self.env['account.edi.format']._retrieve_partner(
             name=_find_value(f"//ram:{partner_type}/ram:Name"),
             mail=_find_value(f"//ram:{partner_type}//ram:URIID[@schemeID='SMTP']"),
             vat=_find_value(f"//ram:{partner_type}/ram:SpecifiedTaxRegistration/ram:ID"),
         )
         if not invoice.partner_id:
-            logs.append(_("Could not retrieve the vendor."))
+            logs.append(_("Could not retrieve the %s.", _("customer") if invoice.move_type in ('out_invoice', 'out_refund') else _("vendor")))
 
         # ==== currency_id ====
 

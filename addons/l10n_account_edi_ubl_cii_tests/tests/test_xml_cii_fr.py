@@ -289,6 +289,9 @@ class TestCIIFR(TestUBLCommon):
     # Test import
     ####################################################
 
+    def test_import_partner_facturx(self):
+        self._test_import_partner('facturx_1_0_05', 'factur-x.xml')
+
     def test_import_tax_included(self):
         """
         Tests whether the tax included / tax excluded are correctly decoded when
