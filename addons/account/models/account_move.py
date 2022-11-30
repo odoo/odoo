@@ -428,6 +428,7 @@ class AccountMove(models.Model):
         compute='_compute_tax_totals',
         inverse='_inverse_tax_totals',
         help='Edit Tax amounts if you encounter rounding issues.',
+        exportable=False,
     )
     payment_state = fields.Selection(
         selection=[
