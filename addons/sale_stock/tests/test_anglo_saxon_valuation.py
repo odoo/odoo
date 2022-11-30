@@ -41,6 +41,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'tax_id': False,  # no love taxes amls
                 })],
         })
+        sale_order.flush_recordset()
         sale_order.action_confirm()
         return sale_order
 

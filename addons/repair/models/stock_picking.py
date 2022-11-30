@@ -1,11 +1,37 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import time
+
 from odoo import _, api, fields, models
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
 class PickingType(models.Model):
     _inherit = 'stock.picking.type'
+
+    code = fields.Selection(selection_add=[
+        ('repair_operation', 'Repair')
+    ], ondelete={'repair_operation': 'cascade'})
+
+    count_repair_ready = fields.Integer(
+        string="Number of Repair Orders to Process", compute='_compute_count_repair')
+    count_repair_waiting = fields.Integer(
+        string="Number of Repair Orders Waiting", compute='_compute_count_repair')
+    count_repair_late = fields.Integer(
+        string="Number of Repair Orders Late", compute='_compute_count_repair')
+
+    default_location_dest_id = fields.Many2one(
+        readonly={"code", "=", "repair_operation"})
+    default_remove_location_dest_id = fields.Many2one(
+        'stock.location', 'Default Remove Destination Location',
+        check_company=True, readonly=True,
+        help="This is the default remove destination location when you create a repair order with this operation type.")
+
+    default_recycle_location_dest_id = fields.Many2one(
+        'stock.location', 'Default Recycle Destination Location',
+        check_company=True,
+        help="This is the default recycle destination location when you create a repair order with this operation type.")
 
     is_repairable = fields.Boolean(
         'Create Repair Orders from Returns',
@@ -13,11 +39,51 @@ class PickingType(models.Model):
         help="If ticked, you will be able to directly create repair orders from a return.")
     return_type_of_ids = fields.One2many('stock.picking.type', 'return_picking_type_id')
 
+    def _compute_count_repair(self):
+        repair_picking_types = self.filtered(lambda picking: picking.code == 'repair_operation')
+
+        # By default, set count_repair_xxx to False
+        self.count_repair_ready = False
+        self.count_repair_waiting = False
+        self.count_repair_late = False
+
+        # shortcut
+        if not repair_picking_types:
+            return
+
+        domains = {
+            'count_repair_ready': [
+                ('is_parts_available', '=', True)
+            ],
+            'count_repair_waiting': [],
+            'count_repair_late': [
+                '|',
+                    ('schedule_date', '<', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)),
+                    ('is_parts_late', '=', True)
+            ],
+        }
+
+        for field, domain in domains.items():
+            picking_types = self.env['repair.order'].read_group(
+                [('picking_type_id', 'in', repair_picking_types.ids), ('state', 'in', ('confirmed', 'under_repair'))] + domain,
+                fields=['picking_type_id'],
+                groupby=['picking_type_id']
+            )
+            counts = {pt['picking_type_id'][0]:pt['picking_type_id_count'] for pt in picking_types}
+            for record in repair_picking_types:
+                record[field] = counts.get(record.id)
+
     @api.depends('return_type_of_ids', 'code')
     def _compute_is_repairable(self):
         for picking_type in self:
             if not(picking_type.code == 'incoming' and picking_type.return_type_of_ids):
                 picking_type.is_repairable = False
+
+    def get_repair_stock_picking_action_picking_type(self):
+        action = self.env["ir.actions.actions"]._for_xml_id('repair.action_picking_repair')
+        if self:
+            action['display_name'] = self.display_name
+        return action
 
 
 class Picking(models.Model):

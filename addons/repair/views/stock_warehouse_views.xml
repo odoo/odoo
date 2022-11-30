@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_warehouse_inherit_repair" model="ir.ui.view">
+            <field name="name">Stock Warehouse Inherit Repair</field>
+            <field name="model">stock.warehouse</field>
+            <field name="inherit_id" ref="stock.view_warehouse"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='out_type_id']" position="after">
+                    <field name="repair_type_id" readonly="True"/>
+                </xpath>
+            </field>
+        </record>
+</odoo>

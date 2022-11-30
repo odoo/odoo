@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged, Form
+from odoo.exceptions import UserError, ValidationError
+from odoo.tests import tagged, common, Form
+from odoo.tools import float_compare, float_is_zero
 
 
 @tagged('post_install', '-at_install')
-class TestRepair(AccountTestInvoicingCommon):
+class TestRepair(common.TransactionCase):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         # Partners
         cls.res_partner_1 = cls.env['res.partner'].create({'name': 'Wood Corner'})
@@ -18,15 +19,42 @@ class TestRepair(AccountTestInvoicingCommon):
 
         # Products
         cls.product_product_3 = cls.env['product.product'].create({'name': 'Desk Combination'})
-        cls.product_product_11 = cls.env['product.product'].create({'name': 'Conference Chair'})
+        cls.product_product_11 = cls.env['product.product'].create({
+            'name': 'Conference Chair',
+            'lst_price': 30.0,
+            })
         cls.product_product_5 = cls.env['product.product'].create({'name': 'Product 5'})
         cls.product_product_6 = cls.env['product.product'].create({'name': 'Large Cabinet'})
         cls.product_product_12 = cls.env['product.product'].create({'name': 'Office Chair Black'})
         cls.product_product_13 = cls.env['product.product'].create({'name': 'Corner Desk Left Sit'})
-        cls.product_product_2 = cls.env['product.product'].create({'name': 'Virtual Home Staging'})
-        cls.product_service_order_repair = cls.env['product.product'].create({
-            'name': 'Repair Services',
-            'type': 'service',
+
+        # Storable products
+        cls.product_storable_no = cls.env['product.product'].create({
+            'name': 'Product Storable No Tracking',
+            'type': 'product',
+            'tracking': 'none',
+        })
+        cls.product_storable_serial = cls.env['product.product'].create({
+            'name': 'Product Storable Serial',
+            'type': 'product',
+            'tracking': 'serial',
+        })
+        cls.product_storable_lot = cls.env['product.product'].create({
+            'name': 'Product Storable Lot',
+            'type': 'product',
+            'tracking': 'lot',
+        })
+
+        # 'Create Repair' Products
+        cls.product_consu_order_repair = cls.env['product.product'].create({
+            'name': 'Repair Consumable',
+            'type': 'consu',
+            'create_repair': True,
+        })
+        cls.product_storable_order_repair = cls.env['product.product'].create({
+            'name': 'Repair Storable',
+            'type': 'product',
+            'create_repair': True,
         })
 
         # Location
@@ -38,35 +66,15 @@ class TestRepair(AccountTestInvoicingCommon):
 
         # Repair Orders
         cls.repair1 = cls.env['repair.order'].create({
-            'address_id': cls.res_partner_address_1.id,
-            'guarantee_limit': '2019-01-01',
-            'invoice_method': 'none',
-            'user_id': False,
             'product_id': cls.product_product_3.id,
             'product_uom': cls.env.ref('uom.product_uom_unit').id,
-            'partner_invoice_id': cls.res_partner_address_1.id,
-            'location_id': cls.stock_warehouse.lot_stock_id.id,
-            'operations': [
+            'picking_type_id': cls.stock_warehouse.repair_type_id.id,
+            'move_ids': [
                 (0, 0, {
-                    'location_dest_id': cls.product_product_11.property_stock_production.id,
-                    'location_id': cls.stock_warehouse.lot_stock_id.id,
-                    'name': cls.product_product_11.get_product_multiline_description_sale(),
                     'product_id': cls.product_product_11.id,
-                    'product_uom': cls.env.ref('uom.product_uom_unit').id,
                     'product_uom_qty': 1.0,
-                    'price_unit': 50.0,
                     'state': 'draft',
-                    'type': 'add',
-                    'company_id': cls.env.company.id,
-                })
-            ],
-            'fees_lines': [
-                (0, 0, {
-                    'name': cls.product_service_order_repair.get_product_multiline_description_sale(),
-                    'product_id': cls.product_service_order_repair.id,
-                    'product_uom_qty': 1.0,
-                    'product_uom': cls.env.ref('uom.product_uom_unit').id,
-                    'price_unit': 50.0,
+                    'repair_line_type': 'add',
                     'company_id': cls.env.company.id,
                 })
             ],
@@ -76,33 +84,14 @@ class TestRepair(AccountTestInvoicingCommon):
         cls.repair0 = cls.env['repair.order'].create({
             'product_id': cls.product_product_5.id,
             'product_uom': cls.env.ref('uom.product_uom_unit').id,
-            'address_id': cls.res_partner_address_1.id,
-            'guarantee_limit': '2019-01-01',
-            'invoice_method': 'after_repair',
             'user_id': False,
-            'partner_invoice_id': cls.res_partner_address_1.id,
-            'location_id': cls.stock_warehouse.lot_stock_id.id,
-            'operations': [
+            'picking_type_id': cls.stock_warehouse.repair_type_id.id,
+            'move_ids': [
                 (0, 0, {
-                    'location_dest_id': cls.product_product_12.property_stock_production.id,
-                    'location_id': cls.stock_warehouse.lot_stock_id.id,
-                    'name': cls.product_product_12.get_product_multiline_description_sale(),
-                    'price_unit': 50.0,
                     'product_id': cls.product_product_12.id,
-                    'product_uom': cls.env.ref('uom.product_uom_unit').id,
                     'product_uom_qty': 1.0,
                     'state': 'draft',
-                    'type': 'add',
-                    'company_id': cls.env.company.id,
-                })
-            ],
-            'fees_lines': [
-                (0, 0, {
-                    'name': cls.product_service_order_repair.get_product_multiline_description_sale(),
-                    'product_id': cls.product_service_order_repair.id,
-                    'product_uom_qty': 1.0,
-                    'product_uom': cls.env.ref('uom.product_uom_unit').id,
-                    'price_unit': 50.0,
+                    'repair_line_type': 'add',
                     'company_id': cls.env.company.id,
                 })
             ],
@@ -112,33 +101,14 @@ class TestRepair(AccountTestInvoicingCommon):
         cls.repair2 = cls.env['repair.order'].create({
             'product_id': cls.product_product_6.id,
             'product_uom': cls.env.ref('uom.product_uom_unit').id,
-            'address_id': cls.res_partner_address_1.id,
-            'guarantee_limit': '2019-01-01',
-            'invoice_method': 'b4repair',
             'user_id': False,
-            'partner_invoice_id': cls.res_partner_address_1.id,
-            'location_id': cls.stock_location_14.id,
-            'operations': [
+            'picking_type_id': cls.stock_warehouse.repair_type_id.id,
+            'move_ids': [
                 (0, 0, {
-                    'location_dest_id': cls.product_product_13.property_stock_production.id,
-                    'location_id': cls.stock_warehouse.lot_stock_id.id,
-                    'name': cls.product_product_13.get_product_multiline_description_sale(),
-                    'price_unit': 50.0,
                     'product_id': cls.product_product_13.id,
-                    'product_uom': cls.env.ref('uom.product_uom_unit').id,
                     'product_uom_qty': 1.0,
                     'state': 'draft',
-                    'type': 'add',
-                    'company_id': cls.env.company.id,
-                })
-            ],
-            'fees_lines': [
-                (0, 0, {
-                    'name': cls.product_service_order_repair.get_product_multiline_description_sale(),
-                    'product_id': cls.product_service_order_repair.id,
-                    'product_uom_qty': 1.0,
-                    'product_uom': cls.env.ref('uom.product_uom_unit').id,
-                    'price_unit': 50.0,
+                    'repair_line_type': 'add',
                     'company_id': cls.env.company.id,
                 })
             ],
@@ -147,188 +117,304 @@ class TestRepair(AccountTestInvoicingCommon):
 
         cls.env.user.groups_id |= cls.env.ref('stock.group_stock_user')
 
-    def _create_simple_repair_order(self, invoice_method):
+    def _create_simple_repair_order(self):
         product_to_repair = self.product_product_5
-        partner = self.res_partner_address_1
         return self.env['repair.order'].create({
             'product_id': product_to_repair.id,
             'product_uom': product_to_repair.uom_id.id,
-            'address_id': partner.id,
-            'guarantee_limit': '2019-01-01',
-            'invoice_method': invoice_method,
-            'partner_invoice_id': partner.id,
-            'location_id': self.stock_warehouse.lot_stock_id.id,
+            'picking_type_id': self.stock_warehouse.repair_type_id.id,
             'partner_id': self.res_partner_12.id
         })
 
-    def _create_simple_operation(self, repair_id=False, qty=0.0, price_unit=0.0):
-        product_to_add = self.product_product_5
-        return self.env['repair.line'].create({
-            'name': 'Add The product',
-            'type': 'add',
-            'product_id': product_to_add.id,
+    def _create_simple_part_move(self, repair_id=False, qty=0.0, product=False):
+        if not product:
+            product = self.product_product_5
+        return self.env['stock.move'].create({
+            'repair_line_type': 'add',
+            'product_id': product.id,
             'product_uom_qty': qty,
-            'product_uom': product_to_add.uom_id.id,
-            'price_unit': price_unit,
-            'repair_id': repair_id,
-            'location_id': self.stock_warehouse.lot_stock_id.id,
-            'location_dest_id': product_to_add.property_stock_production.id,
-            'company_id': self.env.company.id,
-        })
-
-    def _create_simple_fee(self, repair_id=False, qty=0.0, price_unit=0.0):
-        product_service = self.product_product_2
-        return self.env['repair.fee'].create({
-            'name': 'PC Assemble + Custom (PC on Demand)',
-            'product_id': product_service.id,
-            'product_uom_qty': qty,
-            'product_uom': product_service.uom_id.id,
-            'price_unit': price_unit,
             'repair_id': repair_id,
             'company_id': self.env.company.id,
         })
 
-    def test_00_repair_afterinv(self):
-        repair = self._create_simple_repair_order('after_repair')
-        self._create_simple_operation(repair_id=repair.id, qty=1.0, price_unit=50.0)
-        # I confirm Repair order taking Invoice Method 'After Repair'.
-        repair.action_repair_confirm()
+    @classmethod
+    def create_quant(cls, product, qty, offset=0, name="L"):
+        i = 1
+        if product.tracking == 'serial':
+            i, qty = qty, 1
+            if name == "L":
+                name = "S"
 
-        # I check the state is in "Confirmed".
+        vals = []
+        for x in range(1, i + 1):
+            qDict = {
+                'location_id': cls.stock_warehouse.lot_stock_id.id,
+                'product_id': product.id,
+                'inventory_quantity': qty,
+            }
+
+            if product.tracking != 'none':
+                qDict['lot_id'] = cls.env['stock.lot'].create({
+                    'name': name + str(offset + x),
+                    'product_id': product.id,
+                    'company_id': cls.env.company.id
+                }).id
+            vals.append(qDict)
+
+        return cls.env['stock.quant'].create(vals)
+
+    def test_01_repair_states_transition(self):
+        repair = self._create_simple_repair_order()
+        # Draft -> Confirmed -> Cancel -> Draft -> Done -> Failing Cancel
+        # draft -> confirmed (action_validate -> _action_repair_confirm)
+            # PRE
+                # lines' qty >= 0 !-> UserError
+                # product's qty IS available !-> Warning w/ choice
+            # POST
+                # state = confirmed
+                # move_ids in (partially reserved, fully reserved, waiting availability)
+
+        #  Line A with qty < 0 --> UserError
+        lineA = self._create_simple_part_move(repair.id, -1.0, self.product_storable_no)
+        repair.move_ids |= lineA
+        with self.assertRaises(UserError):
+            repair.action_validate()
+
+        #  Line A with qty > 0 & not available, Line B with qty >= 0 & available --> Warning (stock.warn.insufficient.qty.repair)
+        lineA.product_uom_qty = 2.0
+        lineB = self._create_simple_part_move(repair.id, 2.0, self.product_storable_lot)
+        repair.move_ids |= lineB
+        quant = self.create_quant(self.product_storable_no, 1)
+        quant |= self.create_quant(self.product_storable_lot, 3)
+        quant.action_apply_inventory()
+
+        lineC = self._create_simple_part_move(repair.id, 1.0, self.product_storable_order_repair)
+        repair.move_ids |= lineC
+
+        repair.product_id = self.product_storable_serial
+        validate_action = repair.action_validate()
+        self.assertEqual(validate_action.get("res_model"), "stock.warn.insufficient.qty.repair")
+        # Warn qty Wizard only apply to "product TO repair"
+        warn_qty_wizard = Form(
+            self.env['stock.warn.insufficient.qty.repair']
+            .with_context(**validate_action['context'])
+            ).save()
+        warn_qty_wizard.action_done()
+
         self.assertEqual(repair.state, "confirmed", 'Repair order should be in "Confirmed" state.')
-        repair.action_repair_start()
+        self.assertEqual(lineA.state, "partially_available", 'Repair line #1 should be in "Partial Availability" state.')
+        self.assertEqual(lineB.state, "assigned", 'Repair line #2 should be in "Available" state.')
+        self.assertEqual(lineC.state, "confirmed", 'Repair line #3 should be in "Waiting Availability" state.')
 
-        # I check the state is in "Under Repair".
-        self.assertEqual(repair.state, "under_repair", 'Repair order should be in "Under_repair" state.')
+        # Create quotation
+        # No partner warning -> working case -> already linked warning
 
-        # Repairing process for product is in Done state and I end Repair process by clicking on "End Repair" button.
-        repair.action_repair_end()
+        # Ensure SO doesn't exist
+        self.assertEqual(repair.sale_order_id.__len__(), 0)
+        repair.partner_id = None
+        with self.assertRaises(UserError) as err:
+            repair.action_create_sale_order()
+        self.assertIn("You need to define a customer", err.exception.args[0])
+        repair.partner_id = self.res_partner_12.id
+        repair.action_create_sale_order()
+        # Ensure SO and SOL were created
+        self.assertNotEqual(repair.sale_order_id.__len__(), 0)
+        self.assertEqual(repair.sale_order_id.order_line.__len__(), 3)
+        with self.assertRaises(UserError) as err:
+            repair.action_create_sale_order()
+        self.assertIn("You cannot create a quotation for a repair order that is already linked", err.exception.args[0])
 
-        # I define Invoice Method 'After Repair' option in this Repair order.so I create invoice by clicking on "Make Invoice" wizard.
-        make_invoice = self.env['repair.order.make_invoice'].create({
-            'group': True})
-        # I click on "Create Invoice" button of this wizard to make invoice.
-        context = {
-            "active_model": 'repair_order',
-            "active_ids": [repair.id],
-            "active_id": repair.id
-        }
-        make_invoice.with_context(context).make_invoices()
+        # (*) -> cancel (action_repair_cancel)
+            # PRE
+                # state != done !-> UserError (cf. end of this test)
+            # POST
+                # moves_ids state == cancelled
+                # 'Lines" SOL product_uom_qty == 0
+                # state == cancel
 
-        # I check that invoice is created for this Repair order.
-        self.assertEqual(len(repair.invoice_id), 1, "No invoice exists for this repair order")
-        self.assertEqual(len(repair.move_id.move_line_ids[0].consume_line_ids), 1, "Consume lines should be set")
-
-    def test_01_repair_b4inv(self):
-        repair = self._create_simple_repair_order('b4repair')
-        # I confirm Repair order for Invoice Method 'Before Repair'.
-        repair.action_repair_confirm()
-
-        # I click on "Create Invoice" button of this wizard to make invoice.
-        repair.action_repair_invoice_create()
-
-        # I check that invoice is created for this Repair order.
-        self.assertEqual(len(repair.invoice_id), 1, "No invoice exists for this repair order")
-
-    def test_02_repair_noneinv(self):
-        repair = self._create_simple_repair_order('none')
-
-        # Add a new fee line
-        self._create_simple_fee(repair_id=repair.id, qty=1.0, price_unit=12.0)
-
-        self.assertEqual(repair.amount_total, 12, "Amount_total should be 12")
-        # Add new operation line
-        self._create_simple_operation(repair_id=repair.id, qty=1.0, price_unit=14.0)
-
-        self.assertEqual(repair.amount_total, 26, "Amount_total should be 26")
-
-        # I confirm Repair order for Invoice Method 'No Invoice'.
-        repair.action_repair_confirm()
-
-        # I start the repairing process by clicking on "Start Repair" button for Invoice Method 'No Invoice'.
-        repair.action_repair_start()
-
-        # I check its state which is in "Under Repair".
-        self.assertEqual(repair.state, "under_repair", 'Repair order should be in "Under_repair" state.')
-
-        # Repairing process for product is in Done state and I end this process by clicking on "End Repair" button.
-        repair.action_repair_end()
-
-        self.assertEqual(repair.move_id.location_id.id, self.stock_warehouse.lot_stock_id.id,
-                         'Repaired product was taken in the wrong location')
-        self.assertEqual(repair.move_id.location_dest_id.id, self.stock_warehouse.lot_stock_id.id,
-                         'Repaired product went to the wrong location')
-        self.assertEqual(repair.operations.move_id.location_id.id, self.stock_warehouse.lot_stock_id.id,
-                         'Consumed product was taken in the wrong location')
-        self.assertEqual(repair.operations.move_id.location_dest_id.id, self.product_product_5.property_stock_production.id,
-                         'Consumed product went to the wrong location')
-
-        # I define Invoice Method 'No Invoice' option in this repair order.
-        # So, I check that Invoice has not been created for this repair order.
-        self.assertNotEqual(len(repair.invoice_id), 1, "Invoice should not exist for this repair order")
-
-    def test_repair_state(self):
-        repair = self._create_simple_repair_order('b4repair')
-        repair.action_repair_confirm()
-        repair.action_repair_invoice_create()
-        repair.invoice_id.unlink()
-        # Repair order state should be changed to 2binvoiced so that new invoice can be created
-        self.assertEqual(repair.state, '2binvoiced', 'Repair order should be in 2binvoiced state, if invoice is deleted.')
-        repair.action_repair_invoice_create()
+        self.assertNotEqual(repair.state, "done")
         repair.action_repair_cancel()
-        # Repair order and linked invoice both should be cancelled.
-        self.assertEqual(repair.state, 'cancel', 'Repair order should be in cancel state.')
-        self.assertEqual(repair.invoice_id.state, 'cancel', 'Invoice should be in cancel state.')
+        self.assertEqual(repair.state, "cancel")
+        self.assertTrue(all(m.state == "cancel" for m in repair.move_ids))
+        self.assertTrue(all(float_is_zero(sol.product_uom_qty, 2) for sol in repair.sale_order_id.order_line))
+
+        # (*)/cancel -> draft (action_repair_cancel_draft)
+            # PRE
+                # state == cancel !-> action_repair_cancel()
+                # state != done !~> UserError (transitive..., don't care)
+            # POST
+                # move_ids.state == draft
+                # state == draft
+
         repair.action_repair_cancel_draft()
-        # Linked invoice should be unlinked
-        self.assertEqual(len(repair.invoice_id), 0, "No invoice should be exists for this repair order")
+        self.assertEqual(repair.state, "draft")
+        self.assertTrue(all(m.state == "draft" for m in repair.move_ids))
 
-    def test_03_repair_multicompany(self):
-        """ This test ensures that the correct taxes are selected when the user fills in the RO form """
+        # draft -> confirmed
+            # Enforce product_id availability to skip warning
+        quant = self.create_quant(self.product_storable_serial, 1)
+        quant.action_apply_inventory()
+        repair.lot_id = quant.lot_id
+        repair.action_validate()
+        self.assertEqual(repair.state, "confirmed")
 
-        company01 = self.env.company
-        company02 = self.env['res.company'].create({
-            'name': 'SuperCompany',
-            'country_id': self.env.ref('base.us').id,
-        })
+        # confirmed -> under_repair (action_repair_start)
+            # Purely informative state
+        repair.action_repair_start()
+        self.assertEqual(repair.state, "under_repair")
 
-        self.env["account.tax.group"].create([{
-            "name": "default",
-            "company_id": company01.id
-        }, {
-            "name": "default",
-            "company_id": company02.id
-        }])
-        tax01 = self.env["account.tax"].create({
-            "name": "C01 Tax",
-            "amount": "0.00",
-            "company_id": company01.id
-        })
-        tax02 = self.env["account.tax"].create({
-            "name": "C02 Tax",
-            "amount": "0.00",
-            "company_id": company02.id
-        })
+        # under_repair -> done (action_repair_end -> action_repair_done)
+            # PRE
+                # state == under_repair !-> UserError
+                # lines' qty_done >= lines' product_uom_qty !-> Warning
+                # line tracked => line has lot_ids !-> ValidationError
+            # POST
+                # lines with qty_done == 0 are cancelled (related sol product_uom_qty is consequently set to 0)
+                # repair.product_id => repair.move_id
+                # move_ids.state == (done || cancel)
+                # state == done
+                # move_ids with qty_done (LOWER or HIGHER than) product_uom_qty MUST NOT be splitted
+        # Any line with qty_done < product_uom_qty => Warning
+        end_action = repair.action_repair_end()
+        self.assertEqual(end_action.get("res_model"), "repair.warn.uncomplete.move")
+        warn_uncomplete_wizard = Form(
+            self.env['repair.warn.uncomplete.move']
+            .with_context(**end_action['context'])
+            ).save()
+        # LineB : no serial => ValidationError
+        with self.assertRaises(ValidationError) as err:
+            warn_uncomplete_wizard.action_validate()
+        self.assertIn("Serial number is required for operation lines", err.exception.args[0])
 
-        super_product = self.env['product.template'].create({
-            "name": "SuperProduct",
-            "taxes_id": [(4, tax01.id), (4, tax02.id)],
-        })
-        super_variant = super_product.product_variant_id
-        self.assertEqual(super_variant.taxes_id, tax01 | tax02)
+        # LineB with lots
+        move_line = lineB.move_line_ids[0]
+        move_line.qty_done = move_line.reserved_uom_qty
 
-        ro_form = Form(self.env['repair.order'])
-        ro_form.product_id = super_variant
-        ro_form.partner_id = company01.partner_id
-        with ro_form.operations.new() as ro_line:
-            ro_line.product_id = super_variant
-        with ro_form.fees_lines.new() as fee_line:
-            fee_line.product_id = super_variant
-        repair_order = ro_form.save()
+        lineA.quantity_done = 2  # qty_done = product_uom_qty
+        lineC.quantity_done = 2  # qty_done > product_uom_qty (No warning)
+        lineD = self._create_simple_part_move(repair.id, 0.0)
+        repair.move_ids |= lineD  # product_uom_qty = 0   : state is cancelled
 
-        # tax02 should not be present since it belongs to the second company.
-        self.assertEqual(repair_order.operations.tax_id, tax01)
-        self.assertEqual(repair_order.fees_lines.tax_id, tax01)
+        self.assertEqual(lineD.state, 'assigned')
+        num_of_lines = repair.move_ids.__len__()
+        self.assertEqual(repair.move_id.__len__(), 0)
+        repair.action_repair_end()
+
+        self.assertEqual(repair.state, "done")
+        done_moves = repair.move_ids - lineD
+        #line a,b,c are 'done', line d is 'cancel'
+        self.assertTrue(all(m.state == 'done' for m in done_moves))
+        self.assertEqual(lineD.state, 'cancel')
+        self.assertEqual(repair.move_id.__len__(), 1)
+        self.assertEqual(repair.move_ids.__len__(), num_of_lines)  # No split
+
+        # (*) -> cancel (action_repair_cancel)
+            # PRE
+                # state != done !-> UserError
+        with self.assertRaises(UserError) as err:
+            repair.action_repair_cancel()
+        self.assertEqual(err.exception.args[0], "You cannot cancel a Repair Order that's already been completed")
+
+    def test_02_repair_sale_order_binding(self):
+        # Binding from SO to RO(s)
+        #   On SO Confirm
+        #     - Create linked RO per line (only if item with "create_repair" checked)
+        #   Create Repair SOL
+        #     - sol qty updated to 0 -> RO canceled (Reciprocal is true too)
+        #     - sol qty back to >0 -> RO Confirmed (Reciprocal is not true)
+        #   RO Parts SOL
+        #     - SOL qty change is NOT propagated to RO
+        #     - However, these changes FROM RO are propagated to SO
+        #----------------------------------------------------------------------------------
+        #  Binding from RO to SO
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.res_partner_1
+        with so_form.order_line.new() as line:
+            line.product_id = self.product_consu_order_repair
+            # line.product_template_id = self.product_consu_order_repair.product_tmpl_id
+            line.product_uom_qty = 2.0
+        sale_order = so_form.save()
+        order_line = sale_order.order_line[0]
+        self.assertEqual(len(sale_order.repair_order_ids), 0)
+        sale_order.action_confirm()
+        # Quantity set on the "create repair" product doesn't affect the number of RO created
+        self.assertEqual(len(sale_order.repair_order_ids), 1)
+        repair_order = sale_order.repair_order_ids[0]
+        self.assertEqual(sale_order, repair_order.sale_order_id)
+        self.assertEqual(repair_order.state, 'confirmed')
+        order_line.product_uom_qty = 0
+        self.assertEqual(repair_order.state, 'cancel')
+        order_line.product_uom_qty = 1
+        self.assertEqual(repair_order.state, 'confirmed')
+        repair_order.action_repair_cancel()
+        self.assertTrue(float_is_zero(order_line.product_uom_qty, 2))
+        order_line.product_uom_qty = 3
+        self.assertEqual(repair_order.state, 'confirmed')
+        # Add RO line
+        ro_form = Form(repair_order)
+        with ro_form.move_ids.new() as ro_line_form:
+            ro_line_form.repair_line_type = 'add'
+            ro_line_form.product_id = self.product_product_11
+            ro_line_form.product_uom_qty = 1
+        ro_form.save()
+        ro_line_0 = repair_order.move_ids[0]
+        sol_part_0 = ro_line_0.sale_line_id
+        self.assertEqual(float_compare(sol_part_0.product_uom_qty, ro_line_0.product_uom_qty, 2), 0)
+        # chg qty in SO -> No effect on RO
+        sol_part_0.product_uom_qty = 5
+        self.assertNotEqual(float_compare(sol_part_0.product_uom_qty, ro_line_0.product_uom_qty, 2), 0)
+        # chg qty in RO -> Update qty in SO
+        ro_line_0.product_uom_qty = 3
+        self.assertEqual(float_compare(sol_part_0.product_uom_qty, ro_line_0.product_uom_qty, 2), 0)
+        # with/without warranty
+        self.assertFalse(float_is_zero(sol_part_0.price_unit, 2))
+        repair_order.under_warranty = True
+        self.assertTrue(float_is_zero(sol_part_0.price_unit, 2))
+        repair_order.under_warranty = False
+        self.assertFalse(float_is_zero(sol_part_0.price_unit, 2))
+
+        # stock_move transitions
+        #   add -> remove -> add -> recycle -> add transitions
+        ro_line_0.repair_line_type = 'remove'
+        self.assertTrue(float_is_zero(sol_part_0.product_uom_qty, 2))
+        ro_line_0.repair_line_type = 'add'
+        self.assertEqual(float_compare(sol_part_0.product_uom_qty, ro_line_0.product_uom_qty, 2), 0)
+        ro_line_0.repair_line_type = 'recycle'
+        self.assertTrue(float_is_zero(sol_part_0.product_uom_qty, 2))
+        ro_line_0.repair_line_type = 'add'
+        self.assertEqual(float_compare(sol_part_0.product_uom_qty, ro_line_0.product_uom_qty, 2), 0)
+        #   remove and recycle line : not added to SO.
+        sol_count = len(sale_order.order_line)
+        with ro_form.move_ids.new() as ro_line_form:
+            ro_line_form.repair_line_type = 'remove'
+            ro_line_form.product_id = self.product_product_12
+            ro_line_form.product_uom_qty = 1
+        with ro_form.move_ids.new() as ro_line_form:
+            ro_line_form.repair_line_type = 'recycle'
+            ro_line_form.product_id = self.product_product_13
+            ro_line_form.product_uom_qty = 1
+        ro_form.save()
+        ro_line_1 = repair_order.move_ids[1]
+        self.assertEqual(len(sale_order.order_line), sol_count)
+        # remove to add -> added to SO
+        ro_line_1.repair_line_type = 'add'
+        sol_part_1 = ro_line_1.sale_line_id
+        self.assertNotEqual(len(sale_order.order_line), sol_count)
+        self.assertEqual(float_compare(sol_part_1.product_uom_qty, ro_line_1.product_uom_qty, 2), 0)
+        # delete 'remove to add' line in RO -> SOL qty set to 0
+        repair_order.move_ids = [(2, ro_line_1.id, 0)]
+        self.assertTrue(float_is_zero(sol_part_1.product_uom_qty, 2))
+
+        # repair_order.action_repair_end()
+        #   -> order_line.qty_delivered == order_line.product_uom_qty
+        #   -> "RO Lines"'s SOL.qty_delivered == move.quantity_done
+        for line in repair_order.move_ids:
+            line.quantity_done = line.product_uom_qty
+        repair_order.action_repair_start()
+        repair_order.action_repair_end()
+        self.assertEqual(float_compare(order_line.product_uom_qty, order_line.qty_delivered, 2), 0)
+        self.assertEqual(float_compare(sol_part_0.product_uom_qty, ro_line_0.quantity_done, 2), 0)
+        self.assertTrue(float_is_zero(sol_part_1.qty_delivered, 2))
 
     def test_repair_return(self):
         """Tests functionality of creating a repair directly from a return picking,
@@ -357,60 +443,33 @@ class TestRepair(AccountTestInvoicingCommon):
     def test_repair_compute_product_uom(self):
         repair = self.env['repair.order'].create({
             'product_id': self.product_product_3.id,
-            'operations': [
+            'picking_type_id': self.stock_warehouse.repair_type_id.id,
+            'move_ids': [
                 (0, 0, {
-                    'name': 'foo',
+                    'repair_line_type': 'add',
                     'product_id': self.product_product_11.id,
-                    'price_unit': 50.0,
                 })
             ],
         })
         self.assertEqual(repair.product_uom, self.product_product_3.uom_id)
-        self.assertEqual(repair.operations[0].product_uom, self.product_product_11.uom_id)
+        self.assertEqual(repair.move_ids[0].product_uom, self.product_product_11.uom_id)
 
     def test_repair_compute_location(self):
         repair = self.env['repair.order'].create({
             'product_id': self.product_product_3.id,
-            'operations': [
+            'picking_type_id': self.stock_warehouse.repair_type_id.id,
+            'move_ids': [
                 (0, 0, {
-                    'name': 'foo',
+                    'repair_line_type': 'add',
                     'product_id': self.product_product_11.id,
-                    'price_unit': 50.0,
                 })
             ],
         })
         self.assertEqual(repair.location_id, self.stock_warehouse.lot_stock_id)
-        self.assertEqual(repair.operations[0].location_id, self.stock_warehouse.lot_stock_id)
+        self.assertEqual(repair.move_ids[0].location_id, self.stock_warehouse.lot_stock_id)
         location_dest_id = self.env['stock.location'].search([
             ('usage', '=', 'production'),
             ('company_id', '=', repair.company_id.id),
         ], limit=1)
-        self.assertEqual(repair.operations[0].location_dest_id, location_dest_id)
+        self.assertEqual(repair.move_ids[0].location_dest_id, location_dest_id)
 
-    def test_repair_order_send_to_self(self):
-        # when sender(logged in user) is also present in recipients of the mail composer,
-        # user should receive mail.
-        product_to_repair = self.product_product_5
-        partner = self.res_partner_address_1
-        repair_order = self.env['repair.order'].with_user(self.env.user).create({
-            'product_id': product_to_repair.id,
-            'product_uom': product_to_repair.uom_id.id,
-            'address_id': partner.id,
-            'guarantee_limit': '2019-01-01',
-            'location_id': self.stock_warehouse.lot_stock_id.id,
-            'partner_id': self.env.user.partner_id.id
-        })
-        email_ctx = repair_order.action_send_mail().get('context', {})
-        # We need to prevent auto mail deletion, and so we copy the template and send the mail with
-        # added configuration in copied template. It will allow us to check whether mail is being
-        # sent to to author or not (in case author is present in 'Recipients' of composer).
-        mail_template = self.env['mail.template'].browse(email_ctx.get('default_template_id')).copy({'auto_delete': False})
-        # send the mail with same user as customer
-        repair_order.with_context(**email_ctx).with_user(self.env.user).message_post_with_source(
-            mail_template,
-            subtype_xmlid='mail.mt_comment',
-        )
-        mail_message = repair_order.message_ids[0]
-        self.assertEqual(mail_message.author_id, repair_order.partner_id, 'Repair: author should be same as customer')
-        self.assertEqual(mail_message.author_id, mail_message.partner_ids, 'Repair: author should be in composer recipients thanks to "partner_to" field set on template')
-        self.assertEqual(mail_message.partner_ids, mail_message.sudo().mail_ids.recipient_ids, 'Repair: author should receive mail due to presence in composer recipients')

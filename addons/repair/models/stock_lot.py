@@ -3,6 +3,7 @@
 from collections import defaultdict
 from odoo import api, fields, models, _
 
+
 class StockLot(models.Model):
     _inherit = 'stock.lot'
 
@@ -13,8 +14,9 @@ class StockLot(models.Model):
     @api.depends('name')
     def _compute_repair_order_ids(self):
         repair_orders = defaultdict(lambda: self.env['repair.order'])
-        for repair_line in self.env['repair.line'].search([('lot_id', 'in', self.ids), ('state', '=', 'done')]):
-            repair_orders[repair_line.lot_id.id] |= repair_line.repair_id
+        for repair_line in self.env['stock.move'].search([('repair_id', '!=', False), ('move_line_ids.lot_id', 'in', self.ids), ('state', '=', 'done')]):
+            for rl_id in repair_line.lot_ids.ids:
+                repair_orders[rl_id] |= repair_line.repair_id
         for lot in self:
             lot.repair_order_ids = repair_orders[lot.id]
             lot.repair_order_count = len(lot.repair_order_ids)
