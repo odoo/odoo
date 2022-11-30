@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+All glory to hypnotoad
+
 {
     'name': 'Discuss',
     'version': '1.11',
