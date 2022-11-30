@@ -6,7 +6,7 @@ from odoo import fields, models
 
 class ResumeLine(models.Model):
     _name = 'hr.resume.line'
-    _description = "Resumé line of an employee"
+    _description = "Resume line of an employee"
     _order = "line_type_id, date_end desc, date_start desc"
 
     employee_id = fields.Many2one('hr.employee', required=True, ondelete='cascade')
