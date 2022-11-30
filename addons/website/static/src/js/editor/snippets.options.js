@@ -2258,14 +2258,6 @@ const VisibilityPageOptionUpdate = options.Class.extend({
     /**
      * @override
      */
-    async start() {
-        await this._super(...arguments);
-        const shown = await this._isShown();
-        this.trigger_up('snippet_option_visibility_update', {show: shown});
-    },
-    /**
-     * @override
-     */
     async onTargetShow() {
         if (await this._isShown()) {
             // onTargetShow may be called even if the element is already shown.
