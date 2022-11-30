@@ -81,6 +81,26 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         return this._super(...arguments);
     },
     /**
+     * @override
+     */
+    _patchForComputeSnippetTemplates($html) {
+        this._super(...arguments);
+
+        // TODO adapt in master: as a stable fix we decided to introduce a new
+        // option for image in grid mode to change the default "cover" display
+        // into "contain" should the user prefer it. Note: to be sure, this
+        // targets all images but is only displayed if the image acts as a grid
+        // image (parent column has the right class).
+        $html.find('[data-js="WebsiteAnimate"]').eq(0).before($(_.str.sprintf(`
+            <div data-js="GridImage" data-selector="img">
+                <we-select string="%s">
+                    <we-button data-change-grid-image-mode="cover">%s</we-button>
+                    <we-button data-change-grid-image-mode="contain">%s</we-button>
+                </we-select>
+            </div>
+        `, _t("Position"), _t("Cover"), _t("Contain"))));
+    },
+    /**
      * Depending of the demand, reconfigure they gmap key or configure it
      * if not already defined.
      *
