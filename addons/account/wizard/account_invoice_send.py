@@ -90,7 +90,7 @@ class AccountInvoiceSend(models.TransientModel):
                 })
             else:
                 self.composer_id.composition_mode = 'comment' if len(res_ids) == 1 else 'mass_mail'
-                self.composer_id.res_id = self.invoice_ids.ids[0]
+                self.composer_id.res_id = self.res_id
                 self.composer_id.template_id = self.template_id.id
                 self._compute_composition_mode()
             self.composer_id._onchange_template_id_wrapper()
