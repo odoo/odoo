@@ -181,7 +181,7 @@ class Challenge(models.Model):
         """Overwrite the create method to add the user of groups"""
         for vals in vals_list:
             users = self._get_challenger_users(
-                ustr(vals.get('user_domain')) if vals.get('user_domain') else "[('active', '=', True)]")
+                ustr(vals.get('user_domain', "[('active', '=', True)]"))
 
             if not vals.get('user_ids'):
                 vals['user_ids'] = []
