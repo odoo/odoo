@@ -1657,30 +1657,68 @@ class Website(models.Model):
             fields = set(fields).intersection(model._fields)
 
             unaccent = get_unaccent_sql_wrapper(self.env.cr)
-            similarities = [sql.SQL("word_similarity({search}, {field})").format(
-                search=unaccent(sql.Placeholder('search')),
-                # Specific handling for website.page that inherits its arch_db and name fields
-                # TODO make more generic
-                field=unaccent(sql.SQL("{table}.{field}").format(
-                    table=sql.Identifier((self.env['ir.ui.view'] if field == 'arch_db' or (field == 'name' and 'arch_db' in fields) else model)._table),
-                    field=sql.Identifier(field)
-                ))
-            ) for field in fields]
+
+            # Specific handling for fields being actually part of another model
+            # through the `inherits` mechanism.
+            # It gets the list of fields requested to search upon and that are
+            # actually not part of the requested model itself but part of a
+            # `inherits` model:
+            #     {
+            #       'name': {
+            #           'table': 'ir_ui_view',
+            #           'fname': 'view_id',
+            #       },
+            #       'url': {
+            #           'table': 'ir_ui_view',
+            #           'fname': 'view_id',
+            #       },
+            #       'another_field': {
+            #           'table': 'another_table',
+            #           'fname': 'record_id',
+            #       },
+            #     }
+            inherits_fields = {
+                inherits_model_fname: {
+                    'table': self.env[inherits_model_name]._table,
+                    'fname': inherits_field_name,
+                }
+                for inherits_model_name, inherits_field_name in model._inherits.items()
+                for inherits_model_fname in self.env[inherits_model_name]._fields.keys()
+                if inherits_model_fname in fields
+            }
+
+            similarities = []
+            for field in fields:
+                # Field might belong to another model (`inherits` mechanism)
+                table = inherits_fields[field]['table'] if field in inherits_fields else model._table
+                similarities.append(
+                    sql.SQL("word_similarity({search}, {field})").format(
+                        search=unaccent(sql.Placeholder('search')),
+                        field=unaccent(sql.SQL("{table}.{field}").format(
+                            table=sql.Identifier(table),
+                            field=sql.Identifier(field)
+                        ))
+                    )
+                )
+
             best_similarity = sql.SQL('GREATEST({similarities})').format(
                 similarities=sql.SQL(', ').join(similarities)
             )
 
             from_clause = sql.SQL("FROM {table}").format(table=sql.Identifier(model._table))
-            # Specific handling for website.page that inherits its arch_db and name fields
-            # TODO make more generic
-            if 'arch_db' in fields:
+            # Specific handling for fields being actually part of another model
+            # through the `inherits` mechanism.
+            for table_to_join in {
+                field['table']: field['fname'] for field in inherits_fields.values()
+            }.items():  # Removes duplicate inherits model
                 from_clause = sql.SQL("""
                     {from_clause}
-                    LEFT JOIN {view_table} ON {table}.view_id = {view_table}.id
+                    LEFT JOIN {inherits_table} ON {table}.{inherits_field} = {inherits_table}.id
                 """).format(
                     from_clause=from_clause,
                     table=sql.Identifier(model._table),
-                    view_table=sql.Identifier(self.env['ir.ui.view']._table),
+                    inherits_table=sql.Identifier(table_to_join[0]),
+                    inherits_field=sql.Identifier(table_to_join[1]),
                 )
             query = sql.SQL("""
                 SELECT {table}.id, {best_similarity} AS _best_similarity
