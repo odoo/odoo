@@ -93,7 +93,7 @@
                                 <div class="oe_kanban_bottom_right">
                                     <field name="state"
                                         widget="label_selection"
-                                        options="{'classes': {'draft': 'default', 'cancel': 'default', 'done': 'success'}}"/>
+                                        options="{'classes': {'draft': 'info', 'cancel': 'default', 'done': 'success', 'sale': 'success'}}"/>
                                 </div>
                             </div>
                         </div>
@@ -143,7 +143,8 @@
         <field name="priority">4</field>
         <field name="arch" type="xml">
             <tree string="Quotation" class="o_sale_order" sample="1"
-                decoration-info="state in ['draft', 'sent']"
+                decoration-info="state == 'draft'"
+                decoration-primary="state == 'sent'"
                 decoration-muted="state == 'cancel'">
                 <field name="name" string="Number" readonly="1" decoration-bf="1"/>
                 <field name="create_date" string="Creation Date" widget="date" optional="show"/>
@@ -160,7 +161,8 @@
                 <field name="amount_total" sum="Total Tax Included" widget="monetary" decoration-bf="1" optional="show"/>
                 <field name="state"
                     decoration-success="state == 'sale' or state == 'done'"
-                    decoration-info="state == 'draft' or state == 'sent'"
+                    decoration-info="state == 'draft'"
+                    decoration-primary="state == 'sent'"
                     widget="badge" optional="show"/>
                 <field name="invoice_status" optional="hide"/>
                 <field name="message_needaction" invisible="1"/>
