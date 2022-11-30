@@ -8,6 +8,7 @@
         'base',
         'account',
         'base_vat',
+        'l10n_multilang',
     ],
     'data': [
            'data/l10n_pt_chart_data.xml',
