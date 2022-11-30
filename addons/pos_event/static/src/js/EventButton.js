@@ -21,7 +21,16 @@ export class EventButton extends PosComponent {
                 model: 'event.event.ticket',
                 method: 'get_ticket_linked_to_product_available_pos',
             });
-            this.showPopup('EventConfiguratorPopup', { eventData })
+            const { confirmed, payload } = await this.showPopup('EventConfiguratorPopup', { eventData });
+            if (confirmed) {
+                const { eventName, ticketDetails } = payload;
+                const currentOrder = this.env.pos.get_order();
+                for (const ticketDetail of ticketDetails) {
+                    const product = this.env.pos.db.get_product_by_id(ticketDetail.productId);
+                    const options = { quantity: ticketDetail.quantity, description: `[${eventName}]`, ticketId: ticketDetail.ticketId};
+                    currentOrder.add_product(product, options);
+                }
+            }
         } catch (e) {
             const error = identifyError(e);
             if (error instanceof ConnectionLostError || error instanceof ConnectionAbortedError) {

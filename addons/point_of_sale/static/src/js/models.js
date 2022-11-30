@@ -476,6 +476,14 @@ export class PosGlobalState extends PosModel {
             }
         }
     }
+    async fetchProductsByIds(ids) {
+        const products = await this.env.services.rpc({
+            model: "pos.session",
+            method: "get_pos_ui_product_product_by_params",
+            args: [odoo.pos_session_id, { domain: [["id", "in", ids]] }],
+        });
+        this._loadProductProduct(products);
+    }
     async _loadMissingProducts(orders) {
         const missingProductIds = new Set([]);
         for (const order of orders) {
@@ -489,12 +497,7 @@ export class PosGlobalState extends PosModel {
                 }
             }
         }
-        const products = await this.env.services.rpc({
-            model: "pos.session",
-            method: "get_pos_ui_product_product_by_params",
-            args: [odoo.pos_session_id, { domain: [["id", "in", [...missingProductIds]]] }],
-        });
-        this._loadProductProduct(products);
+        await this.fetchProductsByIds([...missingProductIds]);
     }
     // load the partners based on the ids
     async _loadPartners(partnerIds) {
@@ -1423,12 +1426,7 @@ export class PosGlobalState extends PosModel {
                 context: this.env.session.user_context,
             });
         }
-        const product = await this.env.services.rpc({
-            model: "pos.session",
-            method: "get_pos_ui_product_product_by_params",
-            args: [odoo.pos_session_id, { domain: [["id", "in", ids]] }],
-        });
-        this._loadProductProduct(product);
+        await this.fetchProductsByIds(ids);
     }
     async refreshTotalDueOfPartner(partner) {
         const partnerWithUpdatedTotalDue = await this.env.services.rpc({
