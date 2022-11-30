@@ -38,16 +38,16 @@ function evaluateMathematicalExpression(expr, context = {}) {
  * @returns {number}
  */
 function parseNumber(value, options = {}) {
-    // a number can have the thousand separator multiple times. ex: 1,000,000.00
-    value = value.replaceAll(new RegExp(escapeRegExp(options.thousandsSep), "g") || ",", "");
-    // a number only have one decimal separator
-    value = value.replace(new RegExp(escapeRegExp(options.decimalPoint), "g") || ".", ".");
-
     if (value.startsWith("=")) {
         value = evaluateMathematicalExpression(value.substring(1));
         if (options.truncate) {
             value = Math.trunc(value);
         }
+    } else {
+        // a number can have the thousand separator multiple times. ex: 1,000,000.00
+        value = value.replaceAll(new RegExp(escapeRegExp(options.thousandsSep), "g") || ",", "");
+        // a number only have one decimal separator
+        value = value.replace(new RegExp(escapeRegExp(options.decimalPoint), "g") || ".", ".");
     }
 
     return Number(value);
