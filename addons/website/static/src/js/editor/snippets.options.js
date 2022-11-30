@@ -2175,8 +2175,20 @@ const VisibilityPageOptionUpdate = options.Class.extend({
      */
     async start() {
         await this._super(...arguments);
-        const shown = await this._isShown();
-        this.trigger_up('snippet_option_visibility_update', {show: shown});
+        // When entering edit mode via the URL (enable_editor) the WebsiteNavbar
+        // is not yet ReadyForActions because it is waiting for its
+        // sub-component EditPageMenu to start edit mode. Then invisible blocks
+        // options start (so this option too). But for isShown() to work, the
+        // navbar must be ReadyForActions. This is the reason why we can't wait
+        // for isShown here, otherwise we would have a deadlock. On one hand the
+        // navbar waiting for the invisible snippets options to be started to be
+        // ReadyForActions and on the other hand this option which needs the
+        // navbar to be ReadyForActions to be started.
+        // TODO in master: Use the data-invisible system to get rid of this
+        // piece of code.
+        this._isShown().then(isShown => {
+            this.trigger_up('snippet_option_visibility_update', {show: isShown});
+        });
     },
     /**
      * @override
