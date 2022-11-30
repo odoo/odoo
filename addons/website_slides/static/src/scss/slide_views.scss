@@ -1,12 +1,6 @@
-$o-kanban-large-record-width: 400px;
-
 .o_kanban_view .o_slide_kanban {
-    .o_kanban_group:not(.o_column_folded) {
-        width: $o-kanban-large-record-width + 2*$o-kanban-group-padding;
-    }
-    .o_kanban_record {
-        width: $o-kanban-large-record-width;
-    }
+    --KanbanRecord-width: 400px;
+
     .o_kanban_slides_card_manage_pane {
         > div {
             @include o-kanban-dashboard-dropdown-link;
