@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { CalendarFilterPanel } from "@web/views/calendar/filter_panel/calendar_filter_panel";
-import { click, getFixture, triggerEvent } from "../../helpers/utils";
+import { click, getFixture } from "../../helpers/utils";
 import { makeEnv, makeFakeModel, mountComponent } from "./helpers";
 
 let target;
@@ -177,37 +177,5 @@ QUnit.module("CalendarView - FilterPanel", ({ beforeEach }) => {
             "partner_ids all true",
             "partner_ids all false",
         ]);
-    });
-
-    QUnit.test("hover filter opens tooltip", async (assert) => {
-        await start({
-            services: {
-                popover: {
-                    start: () => ({
-                        add: (target, _, props) => {
-                            assert.step(props.filter.label);
-                            assert.step("" + props.filter.hasAvatar);
-                            assert.step("" + props.filter.value);
-                            return () => {
-                                assert.step("popOver Closed");
-                            };
-                        },
-                    }),
-                },
-            },
-        });
-
-        const section = target.querySelectorAll(".o_calendar_filter")[0];
-        const filters = section.querySelectorAll(".o_calendar_filter_item");
-
-        await triggerEvent(filters[0], null, "mouseenter");
-        assert.verifySteps(["Mitchell Admin", "true", "3"]);
-        await triggerEvent(filters[0], null, "mouseleave");
-        assert.verifySteps(["popOver Closed"]);
-
-        await triggerEvent(filters[3], null, "mouseenter");
-        assert.verifySteps([]);
-        await triggerEvent(filters[3], null, "mouseleave");
-        assert.verifySteps([]);
     });
 });
