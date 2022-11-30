@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { registry } from "@web/core/registry";
-
 import { DropzoneContainer } from "@mail/new/dropzone/dropzone_container";
+
+import { registry } from "@web/core/registry";
 
 export const dropzoneService = {
     start() {

@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
 import { Thread } from "../thread/thread";
-import { useMessaging } from "../messaging_hook";
-import { useDropzone } from "@mail/new/dropzone/dropzone_hook";
+import { useMessaging } from "@mail/new/messaging_hook";
+import { useDropzone } from "@mail/new/utils/dropzone/dropzone_hook";
 import { Composer } from "@mail/new/common/components/composer";
-import { ActivityList } from "../activity/activity_list";
+import { ActivityList } from "@mail/new/chatter/components/activity_list";
 import { Component, useState, onWillUpdateProps, useChildSubEnv, useRef } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useService } from "@web/core/utils/hooks";
