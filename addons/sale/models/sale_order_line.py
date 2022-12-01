@@ -1115,12 +1115,22 @@ class SaleOrderLine(models.Model):
 
     #=== CORE METHODS OVERRIDES ===#
 
+    def _additional_name_per_id(self):
+        return {
+            so_line.id:
+            '(%s)' % (so_line.order_partner_id.ref or so_line.order_partner_id.name)
+            for so_line in self
+            if so_line.order_partner_id.ref or so_line.order_partner_id.name
+        }
+
     def name_get(self):
         result = []
+        name_per_id = self._additional_name_per_id()
         for so_line in self.sudo():
             name = '%s - %s' % (so_line.order_id.name, so_line.name and so_line.name.split('\n')[0] or so_line.product_id.name)
-            if so_line.order_partner_id.ref:
-                name = '%s (%s)' % (name, so_line.order_partner_id.ref)
+            additional_name = name_per_id.get(so_line.id)
+            if additional_name:
+                name = '%s %s' % (name, additional_name)
             result.append((so_line.id, name))
         return result
 
