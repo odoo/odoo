@@ -16,7 +16,7 @@ export class MonetaryField extends Component {
         useInputField({
             getValue: () => this.formattedValue,
             refName: "numpadDecimal",
-            parse: (v) => parseMonetary(v, { currencyId: this.currencyId }),
+            parse: parseMonetary,
         });
         useNumpadDecimal();
     }
