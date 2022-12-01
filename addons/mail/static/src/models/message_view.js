@@ -129,7 +129,11 @@ Model({
                     this.message
                 );
             }
-            if (this.prettyBodyRef.el && this.message.prettyBody !== this.lastPrettyBody) {
+            if (
+                this.prettyBodyRef.el &&
+                (this.message.prettyBody !== this.lastPrettyBody ||
+                    (this.message.prettyBody && this.prettyBodyRef.el.innerHTML === ""))
+            ) {
                 this.prettyBodyRef.el.innerHTML = this.message.prettyBody;
                 this.update({ lastPrettyBody: this.message.prettyBody });
             }
