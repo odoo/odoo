@@ -437,6 +437,24 @@ class TestProjectrecurrence(SavepointCase):
         self.assertEqual(dates[3], datetime(2020, 4, 25))
         self.assertEqual(dates[4], datetime(2020, 5, 23))
 
+        dates = self.env['project.task.recurrence']._get_next_recurring_dates(
+            date_start=datetime(2020, 1, 10),
+            repeat_interval=6, # twice a year
+            repeat_unit='month',
+            repeat_type='until',
+            repeat_until=datetime(2021, 1, 11),
+            repeat_on_month='date',
+            repeat_on_year=False,
+            weekdays=[TH(+1)],
+            repeat_day='3', # the 3rd of the month
+            repeat_week=False,
+            repeat_month=False,
+            count=1)
+
+        self.assertEqual(len(dates), 2)
+        self.assertEqual(dates[0], datetime(2020, 7, 3))
+        self.assertEqual(dates[1], datetime(2021, 1, 3))
+
     def test_recurrence_next_dates_year(self):
         dates = self.env['project.task.recurrence']._get_next_recurring_dates(
             date_start=date(2020, 12, 1),
