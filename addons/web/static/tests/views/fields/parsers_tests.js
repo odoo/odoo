@@ -130,20 +130,41 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(parseMonetary("-100.00"), -100);
         assert.strictEqual(parseMonetary("1,000.00"), 1000);
         assert.strictEqual(parseMonetary("1,000,000.00"), 1000000);
-        assert.strictEqual(parseMonetary("$\u00a0125.00", { currencyId: 3 }), 125);
-        assert.strictEqual(parseMonetary("1,000.00\u00a0€", { currencyId: 1 }), 1000);
+        assert.strictEqual(parseMonetary("$\u00a0125.00"), 125);
+        assert.strictEqual(parseMonetary("1,000.00\u00a0€"), 1000);
 
-        assert.throws(() => parseMonetary("\u00a0", { currencyId: 3 }));
-        assert.throws(() => parseMonetary("1\u00a0", { currencyId: 3 }));
-        assert.throws(() => parseMonetary("\u00a01", { currencyId: 3 }));
+        assert.strictEqual(parseMonetary("\u00a0"), 0);
+        assert.strictEqual(parseMonetary("1\u00a0"), 1);
+        assert.strictEqual(parseMonetary("\u00a01"), 1);
 
-        assert.throws(() => parseMonetary("12.00 €"));
-        assert.throws(() => parseMonetary("$ 12.00", { currencyId: 3 }));
-        assert.throws(() => parseMonetary("1\u00a0$", { currencyId: 1 }));
-        assert.throws(() => parseMonetary("$\u00a01")); // "€" is the default currency here
+        assert.strictEqual(parseMonetary("12.00 €"), 12);
+        assert.strictEqual(parseMonetary("$ 12.00"), 12);
+        assert.strictEqual(parseMonetary("1\u00a0$"), 1);
+        assert.strictEqual(parseMonetary("$\u00a01"), 1);
 
-        assert.throws(() => parseMonetary("1$\u00a01", { currencyId: 1 }));
-        assert.throws(() => parseMonetary("$\u00a012.00\u00a034", { currencyId: 3 }));
+        assert.throws(() => parseMonetary("1$\u00a01"));
+        assert.throws(() => parseMonetary("$\u00a012.00\u00a034"));
+
+        // nbsp as thousands separator
+        patchWithCleanup(localization, { thousandsSep: "\u00a0", decimalPoint: "," });
+        assert.strictEqual(parseMonetary("1\u00a0000,06\u00a0€"), 1000.06);
+        assert.strictEqual(parseMonetary("$\u00a01\u00a0000,07"), 1000.07);
+        assert.strictEqual(parseMonetary("1000000,08"), 1000000.08);
+        assert.strictEqual(parseMonetary("$ -1\u00a0000,09"), -1000.09);
+
+        // symbol not separated from the value
+        assert.strictEqual(parseMonetary("1\u00a0000,08€"), 1000.08);
+        assert.strictEqual(parseMonetary("€1\u00a0000,09"), 1000.09);
+        assert.strictEqual(parseMonetary("$1\u00a0000,10"), 1000.1);
+        assert.strictEqual(parseMonetary("$-1\u00a0000,11"), -1000.11);
+
+        // any symbol
+        assert.strictEqual(parseMonetary("1\u00a0000,11EUROS"), 1000.11);
+        assert.strictEqual(parseMonetary("EUR1\u00a0000,12"), 1000.12);
+        assert.strictEqual(parseMonetary("DOL1\u00a0000,13"), 1000.13);
+        assert.strictEqual(parseMonetary("1\u00a0000,14DOLLARS"), 1000.14);
+        assert.strictEqual(parseMonetary("DOLLARS+1\u00a0000,15"), 1000.15);
+        assert.strictEqual(parseMonetary("EURO-1\u00a0000,16DOGE"), -1000.16);
     });
 
     QUnit.test("parsers fallback on english localisation", function (assert) {
