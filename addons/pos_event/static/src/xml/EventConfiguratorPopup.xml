@@ -22,7 +22,7 @@
                             <div class="ticket-info">
                                 <div class="ticket-title">
                                     <span class="ticket-name" t-esc="ticket.name"/>
-                                    <span class="ticket-price" t-esc="env.pos.format_currency(ticketPriceMap[ticket.id])"/>
+                                    <span class="ticket-price" t-esc="env.pos.format_currency(ticketInfoMap[ticket.id].product.lst_price)"/>
                                 </div>
                                 <span t-if="ticket.description" class="ticket-description" t-esc="ticket.description"/>
                             </div>

@@ -1,4 +1,4 @@
-from odoo import models
+from odoo import models, fields
 
 
 class PosOrderLine(models.Model):

@@ -407,13 +407,16 @@ export const PosDB = core.Class.extend({
         }
         return undefined;
     },
+    _isProductDisplayable(product) {
+        return product.active && product.available_in_pos;
+    },
     get_product_by_category: function (category_id) {
         var product_ids = this.product_by_category_id[category_id];
         var list = [];
         if (product_ids) {
             for (var i = 0, len = Math.min(product_ids.length, this.limit); i < len; i++) {
                 const product = this.product_by_id[product_ids[i]];
-                if (!(product.active && product.available_in_pos)) {
+                if (!this._isProductDisplayable(product)) {
                     continue;
                 }
                 list.push(product);
@@ -440,7 +443,7 @@ export const PosDB = core.Class.extend({
             if (r) {
                 var id = Number(r[1]);
                 const product = this.get_product_by_id(id);
-                if (!(product.active && product.available_in_pos)) {
+                if (!this._isProductDisplayable(product)) {
                     continue;
                 }
                 results.push(product);

@@ -1,4 +1,5 @@
 /** @odoo-module alias=pos_event.EventConfiguratorPopup */
+'use strict';
 
 import Registries from 'point_of_sale.Registries';
 import AbstractAwaitablePopup from 'point_of_sale.AbstractAwaitablePopup';
@@ -27,12 +28,16 @@ export class EventConfiguratorPopup extends AbstractAwaitablePopup  {
             canBeConfirmed: false,
         });
         this.currentEventId = null;
-        this.ticketProductIdMap = Object.fromEntries(openEvents.reduce((tickets, event) => tickets.concat(event.tickets), [])
-            .map(ticket => ([ticket.id, ticket.product_id])));
-        this.ticketPriceMap = {};
-        for (const ticketId in this.ticketProductIdMap) {
-            const product = this.env.pos.db.get_product_by_id(this.ticketProductIdMap[ticketId]);
-            this.ticketPriceMap[ticketId] = product ? product.lst_price : null;
+        this.ticketInfoMap = {};
+        for (const event of openEvents) {
+            for (const ticket of event['tickets']) {
+                this.ticketInfoMap[ticket['id']] =  {
+                    name: ticket['name'],
+                    id: ticket['id'],
+                    productId: ticket['product_id'],
+                    product: this.env.pos.db.get_product_by_id(),
+                };
+            }
         }
         onWillStart(this._loadMissingTicketPrices);
     }
@@ -43,21 +48,32 @@ export class EventConfiguratorPopup extends AbstractAwaitablePopup  {
         for (const id in this.state.eventTickets[this.currentEventId]) {
             const quantity = this.state.eventTickets[this.currentEventId][id];
             if (quantity > 0) {
-                const ticketId = parseInt(id);
-                ticketDetails.push({ productId: this.ticketProductIdMap[id], quantity, ticketId });
+                const ticketInfo = this.ticketInfoMap[id];
+                ticketDetails.push({
+                    product: ticketInfo['product'],
+                    name: `${ticketInfo['name']} - ${eventName}`,
+                    id: ticketInfo['id'],
+                    quantity,
+                });
             }
         }
-        return { eventName, ticketDetails }
+        return { ticketDetails }
     }
     async _loadMissingTicketPrices() {
-        const ticketIds = Object.entries(this.ticketPriceMap).flatMap(([ticketId, price]) => price === null ? ticketId : []);
-            if (ticketIds.length > 0) {
-            const missingProductIds = ticketIds.map(ticketId => this.ticketProductIdMap[ticketId]);
+        const missingProductTicketIds = [];
+        const missingProductIds = [];
+        for (const info of Object.values(this.ticketInfoMap)) {
+            if (!info['product']) {
+                missingProductTicketIds.push(info['id']);
+                missingProductIds.push(info['productId']);
+            }
+        }
+        if (missingProductIds.length > 0) {
             try {
                 await this.env.pos.fetchProductsByIds(missingProductIds);
-                for (const ticketId of ticketIds) {
-                    const product = this.env.pos.db.get_product_by_id(this.ticketProductIdMap[ticketId]);
-                    this.ticketPriceMap[ticketId] = product.lst_price;
+                for (const ticketId of missingProductTicketIds) {
+                    const product = this.env.pos.db.get_product_by_id(this.ticketInfoMap[ticketId]['productId']);
+                    this.ticketInfoMap[ticketId]['product'] = product;
                 }
             } catch (error) {
                 this.cancel();

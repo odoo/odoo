@@ -1,4 +1,5 @@
-/** @odoo-module alias=pos_event.ProductScreen */
+/** @odoo-module alias=pos_event.EventButton */
+'use strict';
 
 import PosComponent from 'point_of_sale.PosComponent';
 import ProductScreen from 'point_of_sale.ProductScreen';
@@ -6,8 +7,6 @@ import Registries from 'point_of_sale.Registries';
 import { identifyError } from 'point_of_sale.utils';
 import { ConnectionLostError, ConnectionAbortedError } from '@web/core/network/rpc_service';
 import { useListener } from '@web/core/utils/hooks';
-
-
 
 
 export class EventButton extends PosComponent {
@@ -23,12 +22,15 @@ export class EventButton extends PosComponent {
             });
             const { confirmed, payload } = await this.showPopup('EventConfiguratorPopup', { eventData });
             if (confirmed) {
-                const { eventName, ticketDetails } = payload;
+                const { ticketDetails } = payload;
                 const currentOrder = this.env.pos.get_order();
                 for (const ticketDetail of ticketDetails) {
-                    const product = this.env.pos.db.get_product_by_id(ticketDetail.productId);
-                    const options = { quantity: ticketDetail.quantity, description: `[${eventName}]`, ticketId: ticketDetail.ticketId};
-                    currentOrder.add_product(product, options);
+                    const options = {
+                        quantity: ticketDetail['quantity'],
+                        customer_note: ticketDetail['name'],
+                        ticketId: ticketDetail['id']
+                    };
+                    currentOrder.add_product(ticketDetail['product'], options);
                 }
             }
         } catch (e) {

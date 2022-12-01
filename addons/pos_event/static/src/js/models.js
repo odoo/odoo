@@ -1,27 +1,25 @@
-odoo.define('pos_restaurant.models', function (require) {
-"use strict";
+/** @odoo-module alias=pos_event.models */
+'use strict';
 
-const { Order, Orderline } = require('point_of_sale.models');
-const Registries = require('point_of_sale.Registries');
-const core = require('web.core');
-
+import { Order, Orderline } from 'point_of_sale.models';
+import Registries from 'point_of_sale.Registries';
 
 
-// New orders are now associated with the current table, if any.
-const PosEventOrder = (Order) => class PosEventOrder extends Order {
+export const PosEventOrder = (Order) => class PosEventOrder extends Order {
     //@override
     set_orderline_options(orderline, options) {
         super.set_orderline_options(...arguments);
         if (options.ticketId) {
-            orderline.setEventTicketId(options.ticketId)
+            orderline.setEventTicketId(options.ticketId);
         }
+        return orderline;
     }
 
 }
 Registries.Model.extend(Order, PosEventOrder);
 
 
-const PosEventOrderline = (Orderline) => class PosEventOrderline extends Orderline {
+export const PosEventOrderline = (Orderline) => class PosEventOrderline extends Orderline {
     // constructor() {
     //     super(...arguments);
     //     this.eventTicketId = this.eventTicketId || null;
@@ -44,6 +42,7 @@ const PosEventOrderline = (Orderline) => class PosEventOrderline extends Orderli
     export_as_JSON(){
         const json = super.export_as_JSON(...arguments);
         json.event_ticket_id  = this.eventTicketId;
+        return json;
     }
     //@override
     init_from_JSON(json){
@@ -55,5 +54,3 @@ const PosEventOrderline = (Orderline) => class PosEventOrderline extends Orderli
     }
 }
 Registries.Model.extend(Orderline, PosEventOrderline);
-
-});

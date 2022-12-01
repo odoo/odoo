@@ -3058,6 +3058,10 @@ export class Order extends PosModel {
             orderline.description += options.description;
         }
 
+        if (options.customer_note !== undefined) {
+            orderline.set_customer_note(options.customer_note);
+        }
+
         if (options.extras !== undefined) {
             for (var prop in options.extras) {
                 orderline[prop] = options.extras[prop];
