@@ -246,6 +246,8 @@ class TestCRMLead(TestCrmCommon):
 
     @users('user_sales_manager')
     def test_crm_lead_currency_sync(self):
+        self.company_main.currency_id = self.env.ref('base.EUR')
+
         lead = self.env['crm.lead'].create({
             'name': 'Lead 1',
             'company_id': self.company_main.id
@@ -255,8 +257,6 @@ class TestCRMLead(TestCrmCommon):
         self.company_main.currency_id = self.env.ref('base.CHF')
         lead.with_company(self.company_main).update({'company_id': False})
         self.assertEqual(lead.company_currency, self.env.ref('base.CHF'))
-        #set back original currency
-        self.company_main.currency_id = self.env.ref('base.EUR')
 
     @users('user_sales_manager')
     def test_crm_lead_date_closed(self):

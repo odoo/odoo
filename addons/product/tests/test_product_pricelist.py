@@ -16,13 +16,6 @@ class TestProductPricelist(ProductCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        # Required for some of the tests below
-        # Breaks if run after account installation (and with demo data)
-        # as generic chart of accounts changes company currency to USD
-        # therefore the test must stay at_install until adapted to work with USD
-        # or according to current currency.
-        cls._use_currency('EUR')
-
         cls.category_5_id = cls.env['product.category'].create({
             'name': 'Office Furniture',
             'parent_id': cls.product_category.id
