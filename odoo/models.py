@@ -6146,7 +6146,7 @@ class BaseModel(metaclass=MetaModel):
             DeprecationWarning, stacklevel=2,
         )
         if fnames is None:
-            self.env._recompute()
+            self.env._recompute_all()
         elif records is None:
             self._recompute_model(fnames)
         else:
