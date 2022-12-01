@@ -73,7 +73,7 @@ class Challenge(models.Model):
         string="Responsible", help="The user responsible for the challenge.",)
 
     user_ids = fields.Many2many('res.users', 'gamification_challenge_users_rel', string="Users", help="List of users participating to the challenge")
-    user_domain = fields.Char("User domain", help="Alternative to a list of users")
+    user_domain = fields.Char("User domain", help="Alternative to a list of users", default=[["active", "=", True]])
 
     period = fields.Selection([
             ('once', "Non recurring"),
