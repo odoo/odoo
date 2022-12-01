@@ -41,7 +41,6 @@ wifi_config_template = jinja_env.get_template('wifi_config.html')
 handler_list_template = jinja_env.get_template('handler_list.html')
 remote_connect_template = jinja_env.get_template('remote_connect.html')
 configure_wizard_template = jinja_env.get_template('configure_wizard.html')
-six_payment_terminal_template = jinja_env.get_template('six_payment_terminal.html')
 list_credential_template = jinja_env.get_template('list_credential.html')
 upgrade_page_template = jinja_env.get_template('upgrade_page.html')
 
@@ -52,10 +51,6 @@ class IoTboxHomepage(Home):
 
     def clean_partition(self):
         subprocess.check_call(['sudo', 'bash', '-c', '. /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/upgrade.sh; cleanup'])
-
-    def get_six_terminal(self):
-        terminal_id = helpers.read_file_first_line('odoo-six-payment-terminal.conf')
-        return terminal_id or 'Not Configured'
 
     def get_homepage_data(self):
         hostname = str(socket.gethostname())
@@ -85,7 +80,6 @@ class IoTboxHomepage(Home):
             'mac': helpers.get_mac_address(),
             'iot_device_status': iot_device,
             'server_status': helpers.get_odoo_server_url() or 'Not Configured',
-            'six_terminal': self.get_six_terminal(),
             'network_status': network,
             'version': helpers.get_version(),
             }
@@ -268,26 +262,6 @@ class IoTboxHomepage(Home):
             return 'starting with ' + auth_token
         else:
             return 'already running'
-
-    @http.route('/six_payment_terminal', type='http', auth='none', cors='*', csrf=False)
-    def six_payment_terminal(self):
-        return six_payment_terminal_template.render({
-            'title': 'Six Payment Terminal',
-            'breadcrumb': 'Six Payment Terminal',
-            'terminalId': self.get_six_terminal(),
-        })
-
-    @http.route('/six_payment_terminal_add', type='http', auth='none', cors='*', csrf=False)
-    def add_six_payment_terminal(self, terminal_id):
-        helpers.write_file('odoo-six-payment-terminal.conf', terminal_id)
-        subprocess.check_call(["sudo", "service", "odoo", "restart"])
-        return 'http://' + helpers.get_ip() + ':8069'
-
-    @http.route('/six_payment_terminal_clear', type='http', auth='none', cors='*', csrf=False)
-    def clear_six_payment_terminal(self):
-        helpers.unlink_file('odoo-six-payment-terminal.conf')
-        subprocess.check_call(["sudo", "service", "odoo", "restart"])
-        return "<meta http-equiv='refresh' content='0; url=http://" + helpers.get_ip() + ":8069'>"
 
     @http.route('/hw_proxy/upgrade', type='http', auth='none', )
     def upgrade(self):

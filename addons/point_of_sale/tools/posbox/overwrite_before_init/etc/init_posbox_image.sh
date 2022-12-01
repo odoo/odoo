@@ -108,11 +108,6 @@ PIP_TO_INSTALL="
 
 pip3 install ${PIP_TO_INSTALL}
 
-# Dowload MPD server and library for Six terminals
-wget 'https://nightly.odoo.com/master/iotbox/eftdvs' -P /usr/local/bin/
-chmod +x /usr/local/bin/eftdvs
-wget 'https://nightly.odoo.com/master/iotbox/eftapi.so' -P /usr/lib/
-
 groupadd usbusers
 usermod -a -G usbusers pi
 usermod -a -G lp pi
