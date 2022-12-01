@@ -293,5 +293,5 @@ class HrAttendance(models.Model):
         self._update_overtime(attendances_dates)
 
     @api.returns('self', lambda value: value.id)
-    def copy(self):
+    def copy(self, default=None):
         raise exceptions.UserError(_('You cannot duplicate an attendance.'))

@@ -8,5 +8,6 @@ from . import test_l10n
 from . import test_manifests
 from . import test_markers
 from . import test_onchange_domains
+from . import test_override_signatures
 from . import test_pofile
 from . import test_pylint

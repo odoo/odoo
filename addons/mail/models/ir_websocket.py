@@ -46,4 +46,4 @@ class IrWebsocket(models.AbstractModel):
             guest_sudo = self.env['mail.guest']._get_guest_from_request(req).sudo()
             if not guest_sudo:
                 return
-            guest_sudo.env['bus.presence'].update(inactivity_period, identity_field='guest_id', identity_value=guest_sudo.id)
+            guest_sudo.env['bus.presence'].update_presence(inactivity_period, identity_field='guest_id', identity_value=guest_sudo.id)

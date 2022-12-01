@@ -40,7 +40,7 @@ class IrWebsocket(models.AbstractModel):
 
     def _update_bus_presence(self, inactivity_period, im_status_ids_by_model):
         if self.env.user and not self.env.user._is_public():
-            self.env['bus.presence'].update(
+            self.env['bus.presence'].update_presence(
                 inactivity_period,
                 identity_field='user_id',
                 identity_value=self.env.uid
