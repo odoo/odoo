@@ -68,8 +68,8 @@ Wysiwyg.include({
     /**
      * @override
      **/
-    _editorOptions: function () {
-        let options = this._super.apply(this, arguments);
+    _getEditorOptions: function () {
+        const options = this._super.apply(this, arguments);
         options.getContextFromParentRect = () => {
             return this.$iframe && this.$iframe.length ? this.$iframe[0].getBoundingClientRect() : { top: 0, left: 0 };
         };

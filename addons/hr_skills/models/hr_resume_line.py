@@ -22,12 +22,3 @@ class ResumeLine(models.Model):
     _sql_constraints = [
         ('date_check', "CHECK ((date_start <= date_end OR date_end = NULL))", "The start date must be anterior to the end date."),
     ]
-
-
-class ResumeLineType(models.Model):
-    _name = 'hr.resume.line.type'
-    _description = "Type of a resumé line"
-    _order = "sequence"
-
-    name = fields.Char(required=True)
-    sequence = fields.Integer('Sequence', default=10)
