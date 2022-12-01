@@ -112,7 +112,7 @@ class BarcodeNomenclature(models.Model):
         }
 
         rules = []
-        for rule in self.rule_ids:
+        for rule in self._get_rules():
             rules.append({'type': rule.type, 'encoding': rule.encoding, 'sequence': rule.sequence, 'pattern': rule.pattern, 'alias': rule.alias})
 
         for rule in rules:
@@ -144,6 +144,10 @@ class BarcodeNomenclature(models.Model):
                     return parsed_result
 
         return parsed_result
+
+    def _get_rules(self):
+        return self.rule_ids
+
 
 class BarcodeRule(models.Model):
     _name = 'barcode.rule'
