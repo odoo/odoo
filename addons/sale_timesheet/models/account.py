@@ -22,8 +22,8 @@ class AccountAnalyticLine(models.Model):
         ('non_billable', 'Non Billable Tasks'),
         ('timesheet_revenues', 'Timesheet Revenues'),
         ('service_revenues', 'Service Revenues'),
-        ('other_revenues', 'Other Revenues'),
-        ('other_costs', 'Other Costs')], string="Billable Type",
+        ('other_revenues', 'Materials'),
+        ('other_costs', 'Materials')], string="Billable Type",
             compute='_compute_timesheet_invoice_type', compute_sudo=True, store=True, readonly=True)
     commercial_partner_id = fields.Many2one('res.partner', compute="_compute_commercial_partner")
     timesheet_invoice_id = fields.Many2one('account.move', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet")

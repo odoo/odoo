@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
+
+from odoo import Command
 from odoo.tests import tagged
 
 from odoo.addons.sale.tests.common import TestSaleCommon
@@ -236,4 +239,151 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
         self.assertDictEqual(
             self.project._get_profitability_items(False),
             self.project_profitability_items_empty,
+        )
+
+    def test_invoices_without_sale_order_are_accounted_in_profitability(self):
+        """
+        An invoice that has an AAL on one of its line should be taken into account
+        for the profitability of the project.
+        """
+        self.project.allow_billable = True
+        # create a invoice_1 with the AAL
+        invoice_1 = self.env['account.move'].create({
+            "name": "Invoice_1",
+            "move_type": "out_invoice",
+            "state": "draft",
+            "partner_id": self.partner,
+            "invoice_date": datetime.today(),
+            "invoice_line_ids": [Command.create({
+                "analytic_account_id": self.analytic_account.id,
+                "product_id": self.product_a,
+                "quantity": 1,
+                "product_uom_id": self.product_a.uom_id.id,
+                "price_unit": self.product_a.standard_price,
+            })],
+        })
+        # the bill_1 is in draft, therefor it should have the cost "to_invoice" same as the -product_price (untaxed)
+        self.assertDictEqual(
+            self.project._get_profitability_items(False)['revenues'],
+            {
+                'data': [{
+                    'id': 'other_invoice_revenues',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_invoice_revenues'],
+                    'to_invoice': self.product_a.standard_price,
+                    'invoiced': 0.0,
+                }],
+                'total': {'to_invoice': self.product_a.standard_price, 'invoiced': 0.0},
+            },
+        )
+        # post invoice_1
+        invoice_1.action_post()
+        # we posted the invoice_1, therefore the revenue "invoiced" should be -product_price, to_invoice should be back to 0
+        self.assertDictEqual(
+            self.project._get_profitability_items(False)['revenues'],
+            {
+                'data': [{
+                    'id': 'other_invoice_revenues',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_invoice_revenues'],
+                    'to_invoice': 0.0,
+                    'invoiced': self.product_a.standard_price,
+                }],
+                'total': {'to_invoice': 0.0, 'invoiced': self.product_a.standard_price},
+            },
+        )
+        # create another invoice, with 2 lines, 2 diff products, the second line has 2 as quantity
+        invoice_2 = self.env['account.move'].create({
+            "name": "I have 2 lines",
+            "move_type": "out_invoice",
+            "state": "draft",
+            "partner_id": self.partner,
+            "invoice_date": datetime.today(),
+            "invoice_line_ids": [Command.create({
+                "analytic_account_id": self.analytic_account.id,
+                "product_id": self.product_a,
+                "quantity": 1,
+                "product_uom_id": self.product_a.uom_id.id,
+                "price_unit": self.product_a.standard_price,
+            }), Command.create({
+                "analytic_account_id": self.analytic_account.id,
+                "product_id": self.product_b,
+                "quantity": 2,
+                "product_uom_id": self.product_b.uom_id.id,
+                "price_unit": self.product_b.standard_price,
+            })],
+        })
+        # invoice_2 is not posted, therefor its cost should be "to_invoice" = - sum of all product_price * qty for each line
+        self.assertDictEqual(
+            self.project._get_profitability_items(False)['revenues'],
+            {
+                'data': [{
+                    'id': 'other_invoice_revenues',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_invoice_revenues'],
+                    'to_invoice': (self.product_a.standard_price + 2 * self.product_b.standard_price),
+                    'invoiced': self.product_a.standard_price,
+                }],
+                'total': {
+                    'to_invoice': (self.product_a.standard_price + 2 * self.product_b.standard_price),
+                    'invoiced': self.product_a.standard_price,
+                },
+            },
+        )
+        # post invoice_2
+        invoice_2.action_post()
+        # invoice_2 is posted, therefor its revenue should be counting in "invoiced", with the revenues from invoice_1
+        self.assertDictEqual(
+            self.project._get_profitability_items(False)['revenues'],
+            {
+                'data': [{
+                    'id': 'other_invoice_revenues',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_invoice_revenues'],
+                    'to_invoice': 0.0,
+                    'invoiced': 2 * (self.product_a.standard_price + self.product_b.standard_price),
+                }],
+                'total': {
+                    'to_invoice': 0.0,
+                    'invoiced': 2 * (self.product_a.standard_price + self.product_b.standard_price),
+                },
+            },
+        )
+        product_service_order = self.product_delivery_service
+        product_service_order.invoice_policy = "order"
+        # create a new sales order
+        sale_order = self.env['sale.order'].create({
+            "name": "A purchase order",
+            "partner_id": self.partner_a.id,
+            "analytic_account_id": self.analytic_account.id,
+            "order_line": [Command.create({
+                "product_id": product_service_order.id,
+                "product_uom_qty": 1,
+                "price_unit": product_service_order.standard_price,
+            })],
+        })
+        sale_order.action_confirm()
+        sale_order._create_invoices()
+        sale_invoice = sale_order.invoice_ids  # get the invoice from the sales order
+        sale_invoice.invoice_date = datetime.today()
+        sale_invoice.action_post()
+        # now the invoice has been posted, its costs should be accounted in the "invoiced" part
+        # of the "other_revenues" section, but shouldn't touch in the other_invoice_revenues
+        self.assertDictEqual(
+            self.project._get_profitability_items(False)['revenues'],
+            {
+                'data': [{
+                    'id': 'billable_fixed',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['billable_fixed'],
+                    'to_invoice': 0.0,
+                    'invoiced': product_service_order.standard_price,
+                }, {
+                    'id': 'other_invoice_revenues',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_invoice_revenues'],
+                    'to_invoice': 0.0,
+                    'invoiced': 2 * (self.product_a.standard_price + self.product_b.standard_price),
+                }],
+                'total': {
+                    'to_invoice': 0.0,
+                    'invoiced': (2 * self.product_a.standard_price +
+                                2 * self.product_b.standard_price +
+                                product_service_order.standard_price),
+                },
+            },
         )
