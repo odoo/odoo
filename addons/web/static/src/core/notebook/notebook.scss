@@ -8,10 +8,9 @@
 
     .o_notebook_headers {
         margin: 0 var(--notebook-margin-x, 0);
+        overflow-x: auto;
 
         @include media-breakpoint-down(md) {
-            overflow-x: auto;
-
             &::-webkit-scrollbar {
                 display: none;
             }
