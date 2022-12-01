@@ -44,8 +44,15 @@ function parseNumber(value, options = {}) {
             value = Math.trunc(value);
         }
     } else {
+        // A whitespace thousands separator is equivalent to any whitespace character.
+        // E.g. "1  000 000" should be parsed as 1000000 even if the
+        // thousands separator is nbsp.
+        const thousandsSepRegex = options.thousandsSep.match(/\s+/)
+            ? /\s+/g
+            : new RegExp(escapeRegExp(options.thousandsSep), "g") || ",";
+
         // a number can have the thousand separator multiple times. ex: 1,000,000.00
-        value = value.replaceAll(new RegExp(escapeRegExp(options.thousandsSep), "g") || ",", "");
+        value = value.replaceAll(thousandsSepRegex, "");
         // a number only have one decimal separator
         value = value.replace(new RegExp(escapeRegExp(options.decimalPoint), "g") || ".", ".");
     }
