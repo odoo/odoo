@@ -2,13 +2,22 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from odoo import _
+from odoo import _, http
 from odoo.http import request, route
 
 from odoo.addons.website_event.controllers.main import WebsiteEventController
 
 
 class WebsiteEventSaleController(WebsiteEventController):
+
+    @http.route(['/event/change_pricelist/<model("product.pricelist"):pricelist>'], type='http', auth="public", website=True, sitemap=False)
+    def pricelist_change(self, pricelist, **post):
+        website = request.env['website'].get_current_website()
+        redirect_url = request.httprequest.referrer
+        if (pricelist.selectable or pricelist == request.env.user.partner_id.property_product_pricelist) \
+                and website.is_pricelist_available(pricelist.id):
+            request.session['website_sale_current_pl'] = pricelist.id
+        return request.redirect(redirect_url or '/event')
 
     @route()
     def event_register(self, event, **post):

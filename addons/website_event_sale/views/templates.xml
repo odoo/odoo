@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="pricelist_list" inherit_id="website_sale.pricelist_list" primary="True" name="Pricelists Dropdown">
+        <xpath expr="//div[hasclass('dropdown-menu')]/t/a" position="replace">
+            <a role="menuitem" t-att-href="'/event/change_pricelist/%s' % pl.id" class="dropdown-item">
+                <span class="switcher_pricelist" t-att-data-pl_id="pl.id" t-esc="pl.name" />
+            </a>
+        </xpath>
+    </template>
+
+</odoo>
