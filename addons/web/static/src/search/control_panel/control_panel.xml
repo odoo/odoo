@@ -180,9 +180,10 @@
                         <em t-else="" class="text-warning">Unnamed</em>
                     </a>
                 </li>
-                <li t-else="" class="breadcrumb-item active">
-                    <t t-if="breadcrumb.name" t-esc="breadcrumb.name"/>
+                <li t-else="" class="breadcrumb-item active d-flex align-items-center">
+                    <span class="text-truncate" t-if="breadcrumb.name" t-esc="breadcrumb.name"/>
                     <em t-else="" class="text-warning">Unnamed</em>
+                    <t t-slot="control-panel-status-indicator" />
                 </li>
             </t>
         </ol>
