@@ -11,6 +11,7 @@ import {
 import { session } from "@web/session";
 import { defaultLocalization } from "@web/../tests/helpers/mock_services";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { nbsp } from "@web/core/utils/strings";
 
 function expectInvalidNumberError(assert, func, value, options) {
     let message = `${func.name} fails on value: "${value}"`;
@@ -48,6 +49,11 @@ QUnit.module("Fields", (hooks) => {
 
         patchWithCleanup(localization, { decimalPoint: ",", thousandsSep: false });
         assert.strictEqual(parseFloat("1234,567"), 1234.567);
+
+        patchWithCleanup(localization, { decimalPoint: ",", thousandsSep: nbsp });
+        assert.strictEqual(parseFloat("9 876,543"), 9876.543);
+        assert.strictEqual(parseFloat("1  234 567,89"), 1234567.89);
+        assert.strictEqual(parseFloat(`98${nbsp}765 432,1`), 98765432.1);
     });
 
     QUnit.test("parseFloatTime", function (assert) {
