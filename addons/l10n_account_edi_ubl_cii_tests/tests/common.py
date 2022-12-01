@@ -6,8 +6,8 @@ from freezegun import freeze_time
 from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
 from odoo import fields
 from odoo.modules.module import get_resource_path
-from odoo.tools.misc import file_open
 from odoo.tests import tagged
+from lxml import etree
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -175,7 +175,7 @@ class TestUBLCommon(AccountEdiTestCommon):
         xml_etree = self.get_xml_tree_from_string(xml_content)
 
         expected_file_path = get_resource_path('l10n_account_edi_ubl_cii_tests', 'tests/test_files', expected_file)
-        expected_etree = self.get_xml_tree_from_string(file_open(expected_file_path, "r").read())
+        expected_etree = etree.parse(expected_file_path).getroot()
 
         modified_etree = self.with_applied_xpath(
             expected_etree,
@@ -223,3 +223,18 @@ class TestUBLCommon(AccountEdiTestCommon):
                 [('type', '=', 'purchase'), ('company_id', '=', self.env.company.id)], limit=1)
         )
         self.assertEqual(self.partner_1, new_invoice.partner_id)
+
+    def _test_encoding_in_attachment(self, edi_code, filename):
+        """
+        Generate an invoice, assert that the tag '<?xml version='1.0' encoding='UTF-8'?>' is present in the attachment
+        """
+        invoice = self._generate_move(
+            seller=self.partner_1,
+            buyer=self.partner_2,
+            move_type='out_invoice',
+            invoice_line_ids=[{'product_id': self.product_a.id}],
+        )
+        edi_attachment = invoice.edi_document_ids.filtered(
+            lambda doc: doc.edi_format_id.code == edi_code).attachment_id
+        self.assertEqual(edi_attachment.name, filename)
+        self.assertIn(b"<?xml version='1.0' encoding='UTF-8'?>", edi_attachment.raw)
