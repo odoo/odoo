@@ -86,6 +86,8 @@ class MrpWorkorder(models.Model):
     date_finished = fields.Datetime(
         'End Date', copy=False,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+    leave_date_start = fields.Datetime('Leave Date Start', related='leave_id.date_from')
+    leave_date_finished = fields.Datetime('Leave Date Finished', related='leave_id.date_to')
 
     duration_expected = fields.Float(
         'Expected Duration', digits=(16, 2), compute='_compute_duration_expected',
@@ -251,11 +253,12 @@ class MrpWorkorder(models.Model):
     # makes multiple call, the constraint check_dates() is raised.
     # That's why the compute and set methods are needed. to ensure the dates are updated
     # in the same time.
-    @api.depends('leave_id')
+    @api.depends('leave_id.date_from', 'leave_id.date_to')
     def _compute_dates_planned(self):
         for workorder in self:
-            workorder.date_planned_start = workorder.leave_id.date_from
-            workorder.date_planned_finished = workorder.leave_id.date_to
+            if workorder.state not in ('done', 'cancel'):
+                workorder.date_planned_start = workorder.leave_id.date_from
+                workorder.date_planned_finished = workorder.leave_id.date_to
 
     def _set_dates_planned(self):
         if not self[0].date_planned_start or not self[0].date_planned_finished:
@@ -444,6 +447,28 @@ class MrpWorkorder(models.Model):
         if res is not True:
             return res
 
+    def move_in_planning(self, values):
+        """ Translates leave_date_start and leave_date_finished (only present in gantt views) to date_planned_start and date_planned_finished. """
+        for workorder in self:
+            start_date = fields.Datetime.to_datetime(values.get('leave_date_start', workorder.leave_date_start))
+            end_date = fields.Datetime.to_datetime(values.get('leave_date_finished', workorder.leave_date_finished))
+            # Move workorder
+            if values.get('leave_date_start') and values.get('leave_date_finished'):
+                computed_finished_time = workorder._calculate_date_planned_finished(start_date)
+                values['date_planned_finished'] = computed_finished_time
+                del values['leave_date_finished']
+            # Extend workorder
+            elif start_date and end_date:
+                computed_duration = workorder._calculate_duration_expected(date_planned_start=start_date, date_planned_finished=end_date)
+                values['duration_expected'] = computed_duration
+            if values.get('leave_date_start'):
+                values['date_planned_start'] = start_date
+                del values['leave_date_start']
+            if values.get('leave_date_finished'):
+                values['date_planned_finished'] = end_date
+                del values['leave_date_finished']
+        return values
+
     def write(self, values):
         if 'production_id' in values and any(values['production_id'] != w.production_id.id for w in self):
             raise UserError(_('You cannot link this work order to another manufacturing order.'))
@@ -453,19 +478,16 @@ class MrpWorkorder(models.Model):
                     if workorder.state in ('progress', 'done', 'cancel'):
                         raise UserError(_('You cannot change the workcenter of a work order that is in progress or done.'))
                     workorder.leave_id.resource_id = self.env['mrp.workcenter'].browse(values['workcenter_id']).resource_id
+        if 'leave_date_start' in values or 'leave_date_finished' in values:
+            if any(workorder.state in ('progress', 'done') for workorder in self):
+                raise UserError(_('You cannot change the planned date of a work order that is in progress or done.'))
+            values = self.move_in_planning(values)
         if 'date_planned_start' in values or 'date_planned_finished' in values:
             for workorder in self:
                 start_date = fields.Datetime.to_datetime(values.get('date_planned_start', workorder.date_planned_start))
                 end_date = fields.Datetime.to_datetime(values.get('date_planned_finished', workorder.date_planned_finished))
                 if start_date and end_date and start_date > end_date:
                     raise UserError(_('The planned end date of the work order cannot be prior to the planned start date, please correct this to save the work order.'))
-                if 'duration_expected' not in values and not self.env.context.get('bypass_duration_calculation'):
-                    if values.get('date_planned_start') and values.get('date_planned_finished'):
-                        computed_finished_time = workorder._calculate_date_planned_finished(start_date)
-                        values['date_planned_finished'] = computed_finished_time
-                    elif start_date and end_date:
-                        computed_duration = workorder._calculate_duration_expected(date_planned_start=start_date, date_planned_finished=end_date)
-                        values['duration_expected'] = computed_duration
                 # Update MO dates if the start date of the first WO or the
                 # finished date of the last WO is update.
                 if workorder == workorder.production_id.workorder_ids[0] and 'date_planned_start' in values:
@@ -629,20 +651,17 @@ class MrpWorkorder(models.Model):
                 'name': self.display_name,
                 'calendar_id': self.workcenter_id.resource_calendar_id.id,
                 'date_from': start_date,
-                'date_to': start_date + relativedelta(minutes=self.duration_expected),
+                'date_to': self._calculate_date_planned_finished(start_date),
                 'resource_id': self.workcenter_id.resource_id.id,
                 'time_type': 'other'
             })
             vals['leave_id'] = leave.id
             return self.write(vals)
         else:
-            if self.date_planned_start > start_date:
-                vals['date_planned_start'] = start_date
-                if self.duration_expected:
-                    vals['date_planned_finished'] = self._calculate_date_planned_finished(start_date)
-            if self.date_planned_finished and self.date_planned_finished < start_date:
-                vals['date_planned_finished'] = start_date
-            return self.with_context(bypass_duration_calculation=True).write(vals)
+            vals['date_planned_start'] = start_date
+            if self.duration_expected:
+                vals['date_planned_finished'] = self._calculate_date_planned_finished(start_date)
+            return self.write(vals)
 
     def button_finish(self):
         end_date = datetime.now()
@@ -659,9 +678,22 @@ class MrpWorkorder(models.Model):
             }
             if not workorder.date_start:
                 vals['date_start'] = end_date
-            if not workorder.date_planned_start or end_date < workorder.date_planned_start:
-                vals['date_planned_start'] = end_date
-            workorder.with_context(bypass_duration_calculation=True).write(vals)
+            if workorder.leave_id:
+                leave_vals = {'date_to': end_date}
+                if workorder.leave_id.date_from > end_date:
+                    leave_vals['date_from'] = end_date
+                workorder.leave_id.write(leave_vals)
+            else:
+                leave = workorder.env['resource.calendar.leaves'].create({
+                    'name': workorder.display_name,
+                    'calendar_id': workorder.workcenter_id.resource_calendar_id.id,
+                    'date_from': end_date,
+                    'date_to': end_date,
+                    'resource_id': workorder.workcenter_id.resource_id.id,
+                    'time_type': 'other'
+                })
+                workorder.leave_id = leave.id
+            workorder.write(vals)
         return True
 
     def end_previous(self, doall=False):
