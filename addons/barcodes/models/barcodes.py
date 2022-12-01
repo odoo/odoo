@@ -102,7 +102,7 @@ class BarcodeNomenclature(models.Model):
     #  - value  : if the id encodes a numerical value, it will be put there
     #  - base_code : the barcode code with all the encoding parts set to zero; the one put on
     #                the product in the backend
-    def parse_barcode(self, barcode):
+    def parse_barcode(self, barcode, types=None):
         parsed_result = {
             'encoding': '', 
             'type': 'error', 
@@ -113,6 +113,8 @@ class BarcodeNomenclature(models.Model):
 
         rules = []
         for rule in self.rule_ids:
+            if types and rule.type not in types:
+                continue
             rules.append({'type': rule.type, 'encoding': rule.encoding, 'sequence': rule.sequence, 'pattern': rule.pattern, 'alias': rule.alias})
 
         for rule in rules:
