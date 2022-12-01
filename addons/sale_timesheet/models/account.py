@@ -14,8 +14,8 @@ TIMESHEET_INVOICE_TYPES = [
     ('non_billable', 'Non Billable Tasks'),
     ('timesheet_revenues', 'Timesheet Revenues'),
     ('service_revenues', 'Service Revenues'),
-    ('other_revenues', 'Other Revenues'),
-    ('other_costs', 'Other Costs'),
+    ('other_revenues', 'Materials'),
+    ('other_costs', 'Materials'),
 ]
 
 class AccountAnalyticLine(models.Model):
