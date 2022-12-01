@@ -219,10 +219,10 @@ class HrEmployeePrivate(models.Model):
                     user_id=responsible_user_id)
         employees_scheduled.write({'work_permit_scheduled_activity': True})
 
-    def read(self, fields, load='_classic_read'):
+    def read(self, fields=None, load='_classic_read'):
         if self.check_access_rights('read', raise_exception=False):
             return super(HrEmployeePrivate, self).read(fields, load=load)
-        private_fields = set(fields).difference(self.env['hr.employee.public']._fields.keys())
+        private_fields = set(fields or self._fields).difference(self.env['hr.employee.public']._fields)
         if private_fields:
             raise AccessError(_('The fields "%s" you try to read is not available on the public employee profile.') % (','.join(private_fields)))
         return self.env['hr.employee.public'].browse(self.ids).read(fields, load=load)
