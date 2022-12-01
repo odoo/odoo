@@ -437,3 +437,31 @@ export function serializeDateTime(value) {
     }
     return dateTimeCache.get(value);
 }
+
+/**
+ * @param {"day" | "week" | "month" | "quarter" | "year"} scale
+ * @param {DateTime} [date] DateTime object, in local timezone
+ * @returns {{ start: DateTime, end: DateTime }}
+ *  start and end dates of the given scale (included), in local timezone
+ */
+export function computeRange(scale, date = DateTime.local()) {
+    let start = date;
+    let end = date;
+
+    if (scale !== "week") {
+        // startOf("week") does not depend on locale and will always give the
+        // "Monday" of the week... (ISO standard)
+        start = start.startOf(scale);
+        end = end.endOf(scale);
+    } else {
+        const { weekStart } = localization;
+        const weekday = start.weekday < weekStart ? weekStart - 7 : weekStart;
+        start = start.set({ weekday });
+        end = start.plus({ weeks: scale === "week" ? 1 : 6, days: -1 });
+    }
+
+    start = start.startOf("day");
+    end = end.endOf("day");
+
+    return { start, end };
+}
