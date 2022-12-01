@@ -262,6 +262,9 @@ class StockMove(models.Model):
 
         res = super(StockMove, self)._action_done(cancel_backorder=cancel_backorder)
 
+        # '_action_done' might have deleted some exploded stock moves
+        valued_moves = {value_type: moves.exists() for value_type, moves in valued_moves.items()}
+
         # '_action_done' might have created an extra move to be valued
         for move in res - self:
             for valued_type in self._get_valued_types():
