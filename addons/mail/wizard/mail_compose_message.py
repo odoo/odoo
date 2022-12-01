@@ -282,7 +282,13 @@ class MailComposer(models.TransientModel):
             elif mass_mode and wizard.model and self._context.get('active_ids'):
                 res_ids = self._context['active_ids']
             else:
-                res_ids = [wizard.res_id]
+                res_ids = [wizard.res_id] if wizard.res_id else []
+            # in comment mode: raise here as anyway message_post will raise.
+            if not res_ids and not mass_mode:
+                raise ValueError(
+                    _('Mail composer in comment mode should run on at least one record. No records found (model %(model_name)s).',
+                      model_name=wizard.model)
+                )
 
             if wizard.composition_mode == 'mass_mail':
                 result_mails_su += wizard._action_send_mail_mass_mail(res_ids, auto_commit=auto_commit)
