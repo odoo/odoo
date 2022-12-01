@@ -16,7 +16,7 @@
         <field name="model">project.task.type</field>
         <field name="inherit_id" ref="project.task_type_tree_inherited"/>
         <field name="arch" type="xml">
-            <field name="mail_template_id" position="after">
+            <field name="mail_template_id" position="before">
                 <field name="sms_template_id" optional="hide"/>
             </field>
         </field>
