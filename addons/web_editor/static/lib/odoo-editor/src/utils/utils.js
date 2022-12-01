@@ -265,6 +265,9 @@ export function findNode(domPath, findCallback = () => true, stopCallback = () =
  * @returns {HTMLElement}
  */
 export function closestElement(node, selector, restrictToEditable=false) {
+    if (node.nodeType === Node.COMMENT_NODE) {
+        return false;
+    }
     let element = node;
     while (element && element.nodeType !== Node.ELEMENT_NODE) {
         element = element.parentNode;
