@@ -6,6 +6,14 @@
         <field name="model">project.share.wizard</field>
         <field name="arch" type="xml">
             <form string="Share Project">
+                <p class="text-muted" attrs="{'invisible': [('access_mode', '!=', 'edit')]}">
+                    When sharing a project in edit mode, you are giving people access to the kanban and list views of your tasks.
+                    Collaborators will be able to view and modify part of the tasks' information.
+                </p>
+                <p class="text-muted" attrs="{'invisible': [('access_mode', '=', 'edit')]}">
+                    When sharing a project in read-only mode, you are giving people access to the tasks in their portal.
+                    These people will be able to view the tasks, but not edit them.
+                </p>
                 <field name="res_model" invisible="1"/>
                 <field name="res_id" invisible="1"/>
                 <field name="display_access_mode" invisible="1" />
