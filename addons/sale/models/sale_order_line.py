@@ -993,7 +993,13 @@ class SaleOrderLine(models.Model):
                 % '\n'.join(fields.mapped('field_description'))
             )
 
-        return super().write(values)
+        result = super().write(values)
+
+        # Don't recompute the package_id if we are setting the quantity of the items and the quantity of packages
+        if 'product_uom_qty' in values and 'product_packaging_qty' in values and 'product_packaging_id' not in values:
+            self.env.remove_to_compute(self._fields['product_packaging_id'], self)
+
+        return result
 
     def _get_protected_fields(self):
         """ Give the fields that should not be modified on a locked SO.

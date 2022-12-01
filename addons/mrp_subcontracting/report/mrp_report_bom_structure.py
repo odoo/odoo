@@ -46,6 +46,24 @@ class ReportBomStructure(models.AbstractModel):
         return lines
 
     @api.model
+    def _need_special_rules(self, product_info, parent_bom=False, parent_product_id=False):
+        if parent_bom and parent_product_id:
+            parent_info = product_info.get(parent_product_id, {}).get(parent_bom.id, {})
+            return parent_info and parent_info.get('route_type') == 'subcontract'
+        return super()._need_special_rules(product_info, parent_bom, parent_product_id)
+
+    @api.model
+    def _find_special_rules(self, product, product_info, parent_bom=False, parent_product_id=False):
+        res = super()._find_special_rules(product, product_info, parent_bom, parent_product_id)
+        # If no rules could be found within the warehouse, check if the product is a component from a subcontracted product.
+        parent_info = product_info.get(parent_product_id, {}).get(parent_bom.id, {})
+        if parent_info and parent_info.get('route_type') == 'subcontract':
+            # Since the product is subcontracted, check the subcontracted location for rules instead of the warehouse.
+            subcontracting_loc = parent_info['supplier'].partner_id.property_stock_subcontractor
+            return product._get_rules_from_location(subcontracting_loc)
+        return res
+
+    @api.model
     def _format_route_info(self, rules, rules_delay, warehouse, product, bom, quantity):
         res = super()._format_route_info(rules, rules_delay, warehouse, product, bom, quantity)
         subcontract_rules = [rule for rule in rules if rule.action == 'buy' and bom and bom.type == 'subcontract']
@@ -67,8 +85,8 @@ class ReportBomStructure(models.AbstractModel):
     @api.model
     def _get_quantities_info(self, product, bom_uom, parent_bom, product_info):
         if parent_bom and parent_bom.type == 'subcontract' and product.detailed_type == 'product':
-            parent_product = parent_bom.product_id or parent_bom.product_tmpl_id.product_variant_id
-            route_info = product_info[parent_product.id].get(parent_bom.id, {})
+            parent_product_id = self.env.context.get('parent_product_id', False)
+            route_info = product_info.get(parent_product_id, {}).get(parent_bom.id, {})
             if route_info and route_info['route_type'] == 'subcontract':
                 subcontracting_loc = route_info['supplier'].partner_id.property_stock_subcontractor
                 subloc_product = product.with_context(location=subcontracting_loc.id, warehouse=False).read(['free_qty', 'qty_available'])[0]
