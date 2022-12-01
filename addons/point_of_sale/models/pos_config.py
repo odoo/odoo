@@ -106,7 +106,7 @@ class PosConfig(models.Model):
     session_ids = fields.One2many('pos.session', 'config_id', string='Sessions')
     current_session_id = fields.Many2one('pos.session', compute='_compute_current_session', string="Current Session")
     current_session_state = fields.Char(compute='_compute_current_session')
-    number_of_opened_session = fields.Integer(string="Number of Opened Session", compute='_compute_current_session')
+    number_of_rescue_session = fields.Integer(string="Number of Rescue Session", compute='_compute_current_session')
     last_session_closing_cash = fields.Float(compute='_compute_last_session')
     last_session_closing_date = fields.Date(compute='_compute_last_session')
     pos_session_username = fields.Char(compute='_compute_current_session_user')
@@ -213,13 +213,14 @@ class PosConfig(models.Model):
         """If there is an open session, store it to current_session_id / current_session_State.
         """
         for pos_config in self:
-            opened_sessions = pos_config.session_ids.filtered(lambda s: not s.state == 'closed')
-            session = pos_config.session_ids.filtered(lambda s: not s.state == 'closed' and not s.rescue)
+            opened_sessions = pos_config.session_ids.filtered(lambda s: s.state != 'closed')
+            rescue_sessions = opened_sessions.filtered('rescue')
+            session = pos_config.session_ids.filtered(lambda s: s.state != 'closed' and not s.rescue)
             # sessions ordered by id desc
-            pos_config.number_of_opened_session = len(opened_sessions)
             pos_config.has_active_session = opened_sessions and True or False
             pos_config.current_session_id = session and session[0].id or False
             pos_config.current_session_state = session and session[0].state or False
+            pos_config.number_of_rescue_session = len(rescue_sessions)
 
     @api.depends('session_ids')
     def _compute_last_session(self):
@@ -543,13 +544,13 @@ class PosConfig(models.Model):
             'type': 'ir.actions.act_window',
         }
 
-    def open_opened_session_list(self):
+    def open_opened_rescue_session_form(self):
+        self.ensure_one()
         return {
-            'name': _('Opened Sessions'),
             'res_model': 'pos.session',
-            'view_mode': 'tree,kanban,form',
+            'view_mode': 'form',
+            'res_id': self.session_ids.filtered(lambda s: s.state != 'closed' and s.rescue).id,
             'type': 'ir.actions.act_window',
-            'domain': [('state', '!=', 'closed'), ('config_id', '=', self.id)]
         }
 
     # All following methods are made to create data needed in POS, when a localisation
