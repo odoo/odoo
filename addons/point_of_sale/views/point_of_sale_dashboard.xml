@@ -60,7 +60,7 @@
                 <field name="pos_session_state"/>
                 <field name="pos_session_duration"/>
                 <field name="currency_id"/>
-                <field name="number_of_opened_session"/>
+                <field name="number_of_rescue_session"/>
                 <templates>
                     <t t-name="kanban-menu">
                         <div class="container">
@@ -149,9 +149,11 @@
                                             </div>
                                         </div>
 
-                                        <button t-if="record.number_of_opened_session.value &gt; 1" class="btn btn-link" style="padding-left:0; text-decoration: underline" name="open_opened_session_list" type="object">
-                                            There are <t t-esc="record.number_of_opened_session.value"/> open sessions
-                                        </button>
+                                        <div>
+                                            <a t-if="record.number_of_rescue_session.value &gt; 0" class="oe_kanban_action oe_kanban_action_a col-12" name="open_opened_rescue_session_form" type="object">
+                                                <t t-esc="record.number_of_rescue_session.value" /> outstanding rescue session
+                                            </a>                                     
+                                        </div>
                                     </div>
                                 </div>
                                 <div style="text-align:right;">

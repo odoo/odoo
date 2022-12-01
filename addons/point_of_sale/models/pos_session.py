@@ -494,7 +494,16 @@ class PosSession(models.Model):
         if any(order.state == 'draft' for order in self.order_ids):
             return {'successful': False, 'message': _("You cannot close the POS when orders are still in draft"), 'redirect': False}
         if self.state == 'closed':
-            return {'successful': False, 'message': _("This session is already closed."), 'redirect': True}
+            return {
+                'successful': False,
+                'type': 'alert',
+                'title': 'Session already closed',
+                'message': _("The session has been already closed by another User. "
+                            "All sales completed in the meantime have been saved in a "
+                            "Rescue Session, which can be reviewed anytime and posted "
+                            "to Accounting from Point of Sale's dashboard."),
+                'redirect': True
+            }
         if bank_payment_method_diffs:
             no_loss_account = self.env['account.journal']
             no_profit_account = self.env['account.journal']

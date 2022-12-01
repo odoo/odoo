@@ -132,11 +132,26 @@ class ClosePosPopup extends AbstractAwaitablePopup {
                     return this.handleClosingError(response);
                 }
             }
-            await this.rpc({
-                model: "pos.session",
-                method: "update_closing_control_state_session",
-                args: [this.env.pos.pos_session.id, this.state.notes],
-            });
+
+            try {
+                await this.rpc({
+                    model: "pos.session",
+                    method: "update_closing_control_state_session",
+                    args: [this.env.pos.pos_session.id, this.state.notes],
+                });
+            } catch (error) {
+                // We have to handle the error manually otherwise the validation check stops the script.
+                // In case of "rescue session", we want to display the next popup with "handleClosingError".
+                // FIXME
+                if (
+                    !error.message &&
+                    !error.message.data &&
+                    error.message.data.message !== "This session is already closed."
+                ) {
+                    throw error;
+                }
+            }
+
             try {
                 const bankPaymentMethodDiffPairs = this.otherPaymentMethods
                     .filter((pm) => pm.type == "bank")
@@ -170,11 +185,23 @@ class ClosePosPopup extends AbstractAwaitablePopup {
                     window.location = "/web#action=point_of_sale.action_client_pos_menu";
                 }
             }
-            this.closeSessionClicked = false;
         }
+        this.closeSessionClicked = false;
     }
+
     async handleClosingError(response) {
-        await this.showPopup("ErrorPopup", { title: "Error", body: response.message });
+        let popupType = "";
+        let title = "";
+
+        if (response.type == "alert") {
+            popupType = "AlertPopup";
+            title = response.title ? response.title : "";
+        } else {
+            popupType = "ErrorPopup";
+            title = "Error";
+        }
+
+        await this.showPopup(popupType, { title: title, body: response.message });
         if (response.redirect) {
             window.location = "/web#action=point_of_sale.action_client_pos_menu";
         }
