@@ -173,7 +173,7 @@ class StockMove(models.Model):
         for move in self:
             move.order_finished_lot_ids = move.raw_material_production_id.lot_producing_id
 
-    @api.depends('raw_material_production_id.is_locked', 'production_id.is_locked')
+    @api.depends('raw_material_production_id', 'production_id')
     def _compute_is_locked(self):
         super(StockMove, self)._compute_is_locked()
         for move in self:
