@@ -15,16 +15,15 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
     <data>
         <record id="l10n_chart_china_small_business" model="account.chart.template">
             <field name="name">小企业会计科目表（财会[2011]17号《小企业会计准则》）</field>
-            <field name="code_digits" eval="6"/>
+            <field name="code_digits" eval="4"/>
             <field name="currency_id" ref="base.CNY"/>
             <field name="cash_account_code_prefix">1001</field>
             <field name="bank_account_code_prefix">1002</field>
             <field name="transfer_account_code_prefix">1012</field>
             <field name="spoken_languages" eval="'en_US'"/>
             <field name="country_id" ref="base.cn"/>
+            <field name="use_anglo_saxon" eval="True"/>
             <field name="use_storno_accounting" eval="True"/>
         </record>
     </data>
 </odoo>
-
-

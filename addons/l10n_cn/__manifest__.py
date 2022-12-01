@@ -45,6 +45,7 @@ correctly when the cn2an library is installed. (e.g. with pip3 install cn2an)
         'data/account_tax_template_data.xml',
         'data/account_chart_template_data.xml',
         'views/account_move_view.xml',
+        'views/account.group.template.csv',
         'views/account_report.xml',
         'views/report_voucher.xml',
     ],
