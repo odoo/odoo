@@ -1391,13 +1391,17 @@ export function containsUnremovable(node) {
 export function getInSelection(document, selector) {
     const selection = document.getSelection();
     const range = selection && !!selection.rangeCount && selection.getRangeAt(0);
-    return (
-        range &&
-        (closestElement(range.startContainer, selector) ||
-            [...closestElement(range.commonAncestorContainer).querySelectorAll(selector)].find(
+    if (range) {
+        const selectorInStartAncestors = closestElement(range.startContainer, selector);
+        if (selectorInStartAncestors) {
+            return selectorInStartAncestors;
+        } else {
+            const commonElementAncestor = closestElement(range.commonAncestorContainer);
+            return commonElementAncestor && [...commonElementAncestor.querySelectorAll(selector)].find(
                 node => range.intersectsNode(node),
-            ))
-    );
+            );
+        }
+    }
 }
 
 /**
