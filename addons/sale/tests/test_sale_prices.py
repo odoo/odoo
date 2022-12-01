@@ -219,8 +219,8 @@ class TestSalePrices(SaleCommon):
         })
         self.env['res.currency.rate'].create({
             'name': fields.Date.today(),
-            'rate': 1.0,
-            'currency_id': self.env.company.currency_id.id,
+            'rate': 2.0,
+            'currency_id': other_currency.id,
             'company_id': self.env.company.id,
         })
         order_in_other_currency = self.env['sale.order'].create({
@@ -234,7 +234,8 @@ class TestSalePrices(SaleCommon):
                 }),
             ]
         })
-        self.assertEqual(order_in_other_currency.amount_total, 480.0)
+        # 20.0 (product price) * 24.0 (2 dozens) * 2.0 (price rate USD -> EUR)
+        self.assertEqual(order_in_other_currency.amount_total, 960.0)
 
     def test_negative_discounts(self):
         """aka surcharges"""

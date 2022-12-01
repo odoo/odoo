@@ -272,6 +272,8 @@ class TestDeliveryCost(common.TransactionCase):
         self.normal_delivery.product_id.taxes_id = tax_price_include
 
         # Create sales order
+        # Required to see `pricelist_id` in the view
+        self.env.user.groups_id += self.env.ref('product.group_product_pricelist')
         order_form = Form(self.env['sale.order'].with_context(tracking_disable=True))
         order_form.partner_id = self.partner_18
         order_form.pricelist_id = self.pricelist

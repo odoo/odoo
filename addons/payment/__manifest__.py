@@ -26,9 +26,6 @@
         'wizards/payment_link_wizard_views.xml',
         'wizards/payment_onboarding_views.xml',
     ],
-    'demo': [
-        'data/payment_demo.xml',
-    ],
     'assets': {
         'web.assets_frontend': [
             'payment/static/src/scss/portal_payment.scss',
