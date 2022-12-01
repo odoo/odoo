@@ -100,11 +100,13 @@ class Project(models.Model):
     def _get_profitability_labels(self):
         labels = super()._get_profitability_labels()
         labels['purchase_order'] = _lt('Purchase Orders')
+        labels['other_purchase_costs'] = _lt('Other Costs')
         return labels
 
     def _get_profitability_sequence_per_invoice_type(self):
         sequence_per_invoice_type = super()._get_profitability_sequence_per_invoice_type()
         sequence_per_invoice_type['purchase_order'] = 9
+        sequence_per_invoice_type['other_purchase_costs'] = 10
         return sequence_per_invoice_type
 
     def _get_profitability_items(self, with_action=True):
@@ -116,11 +118,13 @@ class Project(models.Model):
                 '|',
                 ('qty_invoiced', '>', 0),
                 '|', ('qty_to_invoice', '>', 0), ('product_uom_qty', '>', 0),
-            ], ['qty_invoiced', 'qty_to_invoice', 'product_uom_qty', 'price_unit'])
+            ], ['invoice_lines', 'qty_invoiced', 'qty_to_invoice', 'product_uom_qty', 'price_unit'])
+            purchase_order_line_invoice_line_ids = []
             if purchase_order_line_read:
                 amount_invoiced = amount_to_invoice = 0.0
                 purchase_order_line_ids = []
                 for pol_read in purchase_order_line_read:
+                    purchase_order_line_invoice_line_ids.extend(pol_read['invoice_lines'])
                     price_unit = pol_read['price_unit']
                     amount_invoiced -= price_unit * pol_read['qty_invoiced'] if pol_read['qty_invoiced'] > 0 else 0.0
                     if pol_read['qty_to_invoice'] > 0:
@@ -139,4 +143,44 @@ class Project(models.Model):
                 costs['data'].append(purchase_order_costs)
                 costs['total']['billed'] += amount_invoiced
                 costs['total']['to_bill'] += amount_to_invoice
+            # calculate the cost of bills without a purchase order
+            query = self.env['account.move.line'].sudo()._search([
+                ('analytic_account_id', 'in', self.analytic_account_id.ids),
+                ('move_id.move_type', 'in', ['in_invoice', 'in_refund']),
+                ('parent_state', 'in', ['draft', 'posted']),
+                ('price_subtotal', '>', 0),
+                ('id', 'not in', purchase_order_line_invoice_line_ids),
+            ])
+            # account_move_line__move_id is the alias of the joined table account_move in the query
+            # we can use it, because of the "move_id.move_type" clause in the domain of the query, which generates the join
+            # this is faster than a search_read followed by a browse on the move_id to retrieve the move_type of each account.move.line
+            query_string, query_param = query.select('price_subtotal', 'parent_state', 'account_move_line__move_id.move_type')
+            self._cr.execute(query_string, query_param)
+            bills_move_line_read = self._cr.dictfetchall()
+            if bills_move_line_read:
+                amount_invoiced = amount_to_invoice = 0.0
+                for moves_read in bills_move_line_read:
+                    if moves_read['parent_state'] == 'draft':
+                        if moves_read['move_type'] == 'in_invoice':
+                            amount_to_invoice -= moves_read['price_subtotal']
+                        else:  # moves_read['move_type'] == 'in_refund'
+                            amount_to_invoice += moves_read['price_subtotal']
+                    else:  # moves_read['parent_state'] == 'posted'
+                        if moves_read['move_type'] == 'in_invoice':
+                            amount_invoiced -= moves_read['price_subtotal']
+                        else:  # moves_read['move_type'] == 'in_refund'
+                            amount_invoiced += moves_read['price_subtotal']
+                # don't display the section if the final values are both 0 (bill -> vendor credit)
+                if amount_invoiced != 0 or amount_to_invoice != 0:
+                    costs = profitability_items['costs']
+                    section_id = 'other_purchase_costs'
+                    bills_costs = {
+                        'id': section_id,
+                        'sequence': self._get_profitability_sequence_per_invoice_type()[section_id],
+                        'billed': amount_invoiced,
+                        'to_bill': amount_to_invoice,
+                    }
+                    costs['data'].append(bills_costs)
+                    costs['total']['billed'] += amount_invoiced
+                    costs['total']['to_bill'] += amount_to_invoice
         return profitability_items

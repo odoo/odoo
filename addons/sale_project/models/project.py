@@ -303,6 +303,7 @@ class Project(models.Model):
             **super()._get_profitability_labels(),
             'service_revenues': _lt('Other Services'),
             'other_revenues': _lt('Materials'),
+            'other_invoice_revenues': _lt('Other Revenues'),
         }
 
     def _get_profitability_sequence_per_invoice_type(self):
@@ -310,6 +311,7 @@ class Project(models.Model):
             **super()._get_profitability_sequence_per_invoice_type(),
             'service_revenues': 6,
             'other_revenues': 7,
+            'other_invoice_revenues': 8,
         }
 
     def _get_service_policy_to_invoice_type(self):
@@ -399,16 +401,88 @@ class Project(models.Model):
             'total': {'to_invoice': total_to_invoice, 'invoiced': total_invoiced},
         }
 
+    def _get_revenues_items_from_invoices(self, excluded_move_line_ids=None):
+        """
+        Get all revenues items from invoices, and put them into their own
+        "other_invoice_revenues" section.
+        If the final total is 0 for either to_invoice or invoiced (ex: invoice -> credit note),
+        we don't output a new section
+
+        :param excluded_move_line_ids a list of 'account.move.line' to ignore
+        when fetching the move lines, for example a list of invoices that were
+        generated from a sales order
+        """
+        if excluded_move_line_ids is None:
+            excluded_move_line_ids = []
+        query = self.env['account.move.line'].sudo()._search([
+            ('analytic_account_id', 'in', self.analytic_account_id.ids),
+            ('move_id.move_type', 'in', ['out_invoice', 'out_refund']),
+            ('parent_state', 'in', ['draft', 'posted']),
+            ('price_subtotal', '>', 0),
+            ('id', 'not in', excluded_move_line_ids),
+        ])
+        # account_move_line__move_id is the alias of the joined table account_move in the query
+        # we can use it, because of the "move_id.move_type" clause in the domain of the query, which generates the join
+        # this is faster than a search_read followed by a browse on the move_id to retrieve the move_type of each account.move.line
+        query_string, query_param = query.select('price_subtotal', 'parent_state', 'account_move_line__move_id.move_type')
+        self._cr.execute(query_string, query_param)
+        invoices_move_line_read = self._cr.dictfetchall()
+        if invoices_move_line_read:
+            amount_invoiced = amount_to_invoice = 0.0
+            for moves_read in invoices_move_line_read:
+                if moves_read['parent_state'] == 'draft':
+                    if moves_read['move_type'] == 'out_invoice':
+                        amount_to_invoice += moves_read['price_subtotal']
+                    else:  # moves_read['move_type'] == 'out_refund'
+                        amount_to_invoice -= moves_read['price_subtotal']
+                else:  # moves_read['parent_state'] == 'posted'
+                    if moves_read['move_type'] == 'out_invoice':
+                        amount_invoiced += moves_read['price_subtotal']
+                    else:  # moves_read['move_type'] == 'out_refund'
+                        amount_invoiced -= moves_read['price_subtotal']
+            # don't display the section if the final values are both 0 (invoice -> credit note)
+            if amount_invoiced != 0 or amount_to_invoice != 0:
+                section_id = 'other_invoice_revenues'
+                invoices_revenues = {
+                    'id': section_id,
+                    'sequence': self._get_profitability_sequence_per_invoice_type()[section_id],
+                    'invoiced': amount_invoiced,
+                    'to_invoice': amount_to_invoice,
+                }
+                return {
+                    'data': [invoices_revenues],
+                    'total': {
+                        'invoiced': amount_invoiced,
+                        'to_invoice': amount_to_invoice,
+                    },
+                }
+        return {'data': [], 'total': {'invoiced': 0.0, 'to_invoice': 0.0}}
+
     def _get_profitability_items(self, with_action=True):
         profitability_items = super()._get_profitability_items(with_action)
+        domain = [('order_id', 'in', self.sudo()._get_sale_orders().ids)]
         revenue_items_from_sol = self._get_revenues_items_from_sol(
-            [('order_id', 'in', self.sudo()._get_sale_orders().ids)],
+            domain,
             with_action,
         )
         revenues = profitability_items['revenues']
         revenues['data'] += revenue_items_from_sol['data']
         revenues['total']['to_invoice'] += revenue_items_from_sol['total']['to_invoice']
         revenues['total']['invoiced'] += revenue_items_from_sol['total']['invoiced']
+
+        sale_line_read_group = self.env['sale.order.line'].sudo()._read_group(
+            self._get_profitability_sale_order_items_domain(domain),
+            ['ids:array_agg(id)'],
+            ['product_id'],
+        )
+        revenue_items_from_invoices = self._get_revenues_items_from_invoices(
+            excluded_move_line_ids=self.env['sale.order.line'].browse(
+                [sol_id for sol_read in sale_line_read_group for sol_id in sol_read['ids']]
+            ).invoice_lines.ids
+        )
+        revenues['data'] += revenue_items_from_invoices['data']
+        revenues['total']['to_invoice'] += revenue_items_from_invoices['total']['to_invoice']
+        revenues['total']['invoiced'] += revenue_items_from_invoices['total']['invoiced']
         return profitability_items
 
     def _get_stat_buttons(self):
