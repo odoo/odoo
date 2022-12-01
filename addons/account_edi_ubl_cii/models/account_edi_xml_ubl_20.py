@@ -465,12 +465,12 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         partner = self._import_retrieve_info_from_map(
             tree,
-            self._import_retrieve_partner_map(journal),
+            self._import_retrieve_partner_map(self.env.company, journal.type),
         )
         if partner:
             invoice.partner_id = partner
         else:
-            logs.append(_("Could not retrieve the vendor."))
+            logs.append(_("Could not retrieve the %s.", _("customer") if invoice.is_sale_document() else _("vendor")))
 
         # ==== currency_id ====
 
@@ -615,23 +615,24 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             return 'refund', 1
         return None, None
 
-    def _import_retrieve_partner_map(self, company):
+    def _import_retrieve_partner_map(self, company, move_type='purchase'):
+        role = "Customer" if move_type == 'sale' else "Supplier"
 
         def with_vat(tree, extra_domain):
-            vat_node = tree.find('.//{*}AccountingSupplierParty/{*}Party//{*}CompanyID')
+            vat_node = tree.find(f'.//{{*}}Accounting{role}Party/{{*}}Party//{{*}}CompanyID')
             vat = None if vat_node is None else vat_node.text
             return self.env['account.edi.format']._retrieve_partner_with_vat(vat, extra_domain)
 
         def with_phone_mail(tree, extra_domain):
-            phone_node = tree.find('.//{*}AccountingSupplierParty/{*}Party//{*}Telephone')
-            mail_node = tree.find('.//{*}AccountingSupplierParty/{*}Party//{*}ElectronicMail')
+            phone_node = tree.find(f'.//{{*}}Accounting{role}Party/{{*}}Party//{{*}}Telephone')
+            mail_node = tree.find(f'.//{{*}}Accounting{role}Party/{{*}}Party//{{*}}ElectronicMail')
 
             phone = None if phone_node is None else phone_node.text
             mail = None if mail_node is None else mail_node.text
             return self.env['account.edi.format']._retrieve_partner_with_phone_mail(phone, mail, extra_domain)
 
         def with_name(tree, extra_domain):
-            name_node = tree.find('.//{*}AccountingSupplierParty/{*}Party//{*}Name')
+            name_node = tree.find(f'.//{{*}}Accounting{role}Party/{{*}}Party//{{*}}Name')
             name = None if name_node is None else name_node.text
             return self.env['account.edi.format']._retrieve_partner_with_name(name, extra_domain)
 
