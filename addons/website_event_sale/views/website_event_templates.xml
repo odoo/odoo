@@ -2,6 +2,14 @@
 <odoo>
 
 <template id="registration_template" inherit_id="website_event.registration_template">
+    <!-- Change pricelist -->
+    <xpath expr="//div[hasclass('o_wevent_price_range')]" position="after">
+        <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
+        <t t-set="hasPricelistDropdown" t-value="website_sale_pricelists and len(website_sale_pricelists)&gt;1"/>
+        <t t-call="website_event_sale.pricelist_list">
+            <t t-set="_classes" t-valuef="dropdown p-0 ms-2 my-1"/>
+        </t>
+    </xpath>
     <!-- Add price information on tickets (multi tickets, aka in collapse) -->
     <xpath expr="//div[hasclass('o_wevent_registration_multi_select')]" position="inside">
         <t t-if="ticket.price">
