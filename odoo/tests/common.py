@@ -320,6 +320,9 @@ class OdooSuite(BackportSuite):
         with result.collectStats(test_id):
             super()._tearDownPreviousClass(test, result)
 
+    def has_http_case(self):
+        return self.countTestCases() and any(isinstance(test_case, HttpCase) for test_case in self)
+
 
 class MetaCase(type):
     """ Metaclass of test case classes to assign default 'test_tags':
