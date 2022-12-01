@@ -564,7 +564,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             {
                 groupName: _t('Website'),
                 title: _t('Separator'),
-                description: _t('Insert a horizontal separator snippet.'),
+                description: _t('Insert an horizontal separator sippet.'),
                 fontawesome: 'fa-minus',
                 isDisabled: () => !this.wysiwyg.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
