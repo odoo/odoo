@@ -7,11 +7,9 @@ from freezegun import freeze_time
 from pytz import timezone
 
 from odoo import fields, Command
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import date_utils, mute_logger
 from odoo.tests import Form, tagged
-
-from odoo.exceptions import UserError
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
@@ -233,6 +231,18 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         allocation_form.date_to = date(2019, 5, 6)
         allocation_form.name = 'New Allocation Request'
         allocation_form.save()
+
+    def test_allocation_constrain_dates_check(self):
+        with self.assertRaises(UserError):
+            self.env['hr.leave.allocation'].create({
+                'name': 'Test allocation',
+                'holiday_status_id': self.holidays_type_2.id,
+                'number_of_days': 1,
+                'employee_id': self.employee_emp_id,
+                'state': 'confirm',
+                'date_from': time.strftime('%Y-%m-10'),
+                'date_to': time.strftime('%Y-%m-01'),
+            })
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_employee_is_absent(self):
@@ -904,7 +914,6 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 self.holidays_type_2.get_allocation_data(self.employee_emp, target_date=date(2021, 12, 1))[self.employee_emp][0][1],
                 ml=10, lt=5, rl=5, vrl=5, vlt=5,
             )
-
 
     def test_cancel_leave(self):
         with freeze_time('2020-09-15'):
