@@ -1308,7 +1308,7 @@ def preload_registries(dbnames):
                 _logger.info("Starting post tests")
                 tests_before = registry._assertion_report.testsRun
                 post_install_suite = loader.make_suite(module_names, 'post_install')
-                if post_install_suite.countTestCases():
+                if post_install_suite.has_http_case():
                     with registry.cursor() as cr:
                         env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
                         env['ir.qweb']._pregenerate_assets_bundles()
