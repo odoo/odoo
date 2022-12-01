@@ -8,6 +8,8 @@ from calendar import monthrange
 from dateutil.relativedelta import relativedelta
 from dateutil.rrule import rrule, rruleset, DAILY, WEEKLY, MONTHLY, YEARLY, MO, TU, WE, TH, FR, SA, SU
 
+import math
+
 MONTHS = {
     'january': 31,
     'february': 28,
@@ -179,7 +181,7 @@ class ProjectTaskRecurrence(models.Model):
                 start = date_start - relativedelta(days=1)
                 if repeat_type == 'until' and repeat_until > date_start:
                     delta = relativedelta(repeat_until, date_start)
-                    count = delta.years * 12 + delta.months
+                    count = math.floor((delta.years * 12 + delta.months) / repeat_interval)
                 for i in range(count):
                     start = start.replace(day=min(repeat_day, monthrange(start.year, start.month)[1]))
                     if i == 0 and start < date_start:
