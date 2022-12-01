@@ -774,7 +774,7 @@ class Lead(models.Model):
         return result
 
     @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
+    def search(self, domain, offset=0, limit=None, order=None, count=False):
         """ Override to support ordering on my_activity_date_deadline.
 
         Ordering through web client calls search_read with an order parameter set.
@@ -805,7 +805,7 @@ class Lead(models.Model):
         side effects. Search_count is not affected by this override.
         """
         if count or not order or 'my_activity_date_deadline' not in order:
-            return super(Lead, self).search(args, offset=offset, limit=limit, order=order, count=count)
+            return super(Lead, self).search(domain, offset=offset, limit=limit, order=order, count=count)
         order_items = [order_item.strip().lower() for order_item in (order or self._order).split(',')]
 
         # Perform a read_group on my activities to get a mapping lead_id / deadline
@@ -820,7 +820,7 @@ class Lead(models.Model):
         )
         my_lead_mapping = dict((item['res_id'], item['date_deadline']) for item in my_lead_activities)
         my_lead_ids = list(my_lead_mapping.keys())
-        my_lead_domain = expression.AND([[('id', 'in', my_lead_ids)], args])
+        my_lead_domain = expression.AND([[('id', 'in', my_lead_ids)], domain])
         my_lead_order = ', '.join(item for item in order_items if 'my_activity_date_deadline' not in item)
 
         # Search leads linked to those activities and order them. See docstring
@@ -848,7 +848,7 @@ class Lead(models.Model):
         lead_order = ', '.join(item for item in order_items if 'my_activity_date_deadline' not in item)
 
         other_lead_res = super(Lead, self).search(
-            expression.AND([[('id', 'not in', my_lead_ids_skip)], args]),
+            expression.AND([[('id', 'not in', my_lead_ids_skip)], domain]),
             offset=lead_offset, limit=lead_limit, order=lead_order, count=count
         )
         return self.browse(my_lead_ids_keep) + other_lead_res
