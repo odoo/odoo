@@ -6,7 +6,7 @@ from collections import defaultdict
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
-
+from odoo.tools.sql import column_exists, create_column
 
 
 class StockQuantPackage(models.Model):
@@ -55,6 +55,25 @@ class StockQuantPackage(models.Model):
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
+    def _auto_init(self):
+        if not column_exists(self.env.cr, "stock_picking", "weight"):
+            # In order to speed up module installation when dealing with hefty data
+            # We create the column weight manually, but the computation will be skipped
+            # Therefore we do the computation in a query by getting weight sum from stock moves
+            create_column(self.env.cr, "stock_picking", "weight", "numeric")
+            self.env.cr.execute("""
+                WITH computed_weight AS (
+                    SELECT SUM(weight) AS weight_sum, picking_id
+                    FROM stock_move
+                    WHERE picking_id IS NOT NULL
+                    GROUP BY picking_id
+                )
+                UPDATE stock_picking
+                SET weight = weight_sum
+                FROM computed_weight
+                WHERE stock_picking.id = computed_weight.picking_id;
+            """)
+        return super()._auto_init()
 
     @api.depends('move_line_ids', 'move_line_ids.result_package_id')
     def _compute_packages(self):
