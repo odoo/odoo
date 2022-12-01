@@ -22,9 +22,6 @@ class BaseCommon(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        # Enforce the use of USD as main currency unless modified in inherited class(es)
-        cls._use_currency('USD')
-
         # Mail logic won't be tested by default in other modules.
         # Mail API overrides should be tested with dedicated tests on purpose
         # Hack to use with_context and avoid manual context dict modification
@@ -33,17 +30,6 @@ class BaseCommon(TransactionCase):
         cls.partner = cls.env['res.partner'].create({
             'name': 'Test Partner',
         })
-
-    @classmethod
-    def _use_currency(cls, currency_code):
-        # Enforce constant currency
-        currency = cls._enable_currency(currency_code)
-        if not cls.env.company.currency_id == currency:
-            cls.env.transaction.cache.set(cls.env.company, type(cls.env.company).currency_id, currency.id, dirty=True)
-            # this is equivalent to cls.env.company.currency_id = currency but without triggering buisness code checks.
-            # The value is added in cache, and the cache value is set as dirty so that that
-            # the value will be written to the database on next flush.
-            # this was needed because some journal entries may exist when running tests, especially l10n demo data.
 
     @classmethod
     def _enable_currency(cls, currency_code):
