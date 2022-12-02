@@ -1,33 +1,44 @@
 <template>
     <div t-name="product_matrix.matrix" t-ref="productMatrix" owl="1">
-        <table class="o_matrix_input_table o_product_variant_matrix table table-sm table-striped table-bordered cursor-default">
-            <thead>
-                <tr>
+        <table class="o_matrix_input_table table table-sm table-striped table-hover table-bordered cursor-default mb-0 h-100">
+            <thead class="border-0">
+                <tr class="border-0 h-100">
                     <t t-foreach="header" t-as="column_header" t-key="column_header_index">
-                        <th t-attf-class="o_matrix_title_header {{column_header_first?'text-start':'text-center'}}">
-                            <span t-esc="column_header.name"/>
-                            <t t-call="product_matrix.extra_price">
-                                <t t-set="cell" t-value="column_header"/>
-                            </t>
+                        <th class="border-0"
+                            t-attf-class="{{column_header_first?'o_matrix_ps':''}} {{column_header_last?'o_matrix_pe':''}}">
+                            <div class="d-flex flex-column justify-content-start h-100"
+                                 t-attf-class="{{column_header_first?'align-items-start':'align-items-end'}}">
+                                <span t-esc="column_header.name"/>
+                                <t t-call="product_matrix.extra_price">
+                                    <t t-set="cell" t-value="column_header"/>
+                                </t>
+                            </div>
                         </th>
                     </t>
                 </tr>
             </thead>
             <tbody>
-                <tr t-foreach="rows" t-as="row" t-key="row_index">
+                <tr t-foreach="rows" t-as="row" t-key="row_index" class="border-1 border-end-0 border-start-0">
                     <t t-foreach="row" t-as="cell" t-key="cell_index">
-                        <th t-if="cell.name" class="text-start">
-                            <strong t-esc="cell.name"/>
-                            <t t-call="product_matrix.extra_price"/>
+                        <th t-if="cell.name"
+                            class="border-0"
+                            t-attf-class="{{cell_first?'o_matrix_ps o_matrix_pe':''}} {{cell_last?'o_matrix_pe':''}}">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <strong t-esc="cell.name" class="pe-2"/>
+                                <t t-call="product_matrix.extra_price"/>
+                            </div>
                         </th>
-                        <td t-else="">
+                        <td t-else="" 
+                            class="o_matrix_input_td text-end"
+                            t-attf-class="{{cell_last?'o_matrix_pe':''}}">
                             <div t-if="cell.is_possible_combination" class="input-group">
-                                <input type="number"
-                                       class="o_matrix_input"
-                                       t-att="{'ptav_ids': cell.ptav_ids,'value': cell.qty}"/>
+                                <input  type="number"
+                                        class="o_input o_field_number o_matrix_input border-0 text-end"
+                                        t-att="{'ptav_ids': cell.ptav_ids,'value': cell.qty}"
+                                        onClick="this.select();"/>
                             </div>
                             <span t-else=""
-                                  class="o_matrix_cell o_matrix_text_muted o_matrix_nocontent_container">
+                                  class="text-muted overflow-auto">
                                 Not available
                             </span>
                         </td>
