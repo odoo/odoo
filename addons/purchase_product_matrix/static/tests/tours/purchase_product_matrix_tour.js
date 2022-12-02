@@ -25,7 +25,7 @@ tour.register('purchase_matrix_tour', {
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Matrix")',
 }, {
-    trigger: '.o_product_variant_matrix',
+    trigger: '.o_matrix_input_table',
     run: function () {
         // fill the whole matrix with 1's
         $('.o_matrix_input').val(1);
@@ -44,7 +44,7 @@ tour.register('purchase_matrix_tour', {
 }, {
     trigger: '[name=product_template_id] button.fa-pencil', // edit the matrix
 }, {
-    trigger: '.o_product_variant_matrix',
+    trigger: '.o_matrix_input_table',
     run: function () {
         // update some of the matrix values.
         $('.o_matrix_input').slice(8, 16).val(4);
