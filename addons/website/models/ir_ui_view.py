@@ -484,6 +484,14 @@ class View(models.Model):
                 self = website_specific_view
         super(View, self).save(value, xpath=xpath)
 
+    @api.model
+    def _get_allowed_root_attrs(self):
+        # Related to these options:
+        # background-video, background-shapes, parallax
+        return super()._get_allowed_root_attrs() + [
+            'data-bg-video-src', 'data-shape', 'data-scroll-background-ratio',
+        ]
+
     # --------------------------------------------------------------------------
     # Snippet saving
     # --------------------------------------------------------------------------
