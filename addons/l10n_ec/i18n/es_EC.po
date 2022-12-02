@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.5alpha1+e\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-30 12:58+0000\n"
-"PO-Revision-Date: 2021-07-30 12:58+0000\n"
+"POT-Creation-Date: 2023-02-03 12:25+0000\n"
+"PO-Revision-Date: 2023-02-03 12:25+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -15,394 +15,258 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
-#. module: l10n_ec
-#: code:addons/l10n_ec/models/l10n_ec_witholding.py:0
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_witholding__witholding_move_id
-#, python-format
-msgid "Account Move"
-msgstr ""
 
 #. module: l10n_ec
-#: code:addons/l10n_ec/models/l10n_ec_witholding.py:0
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_witholding_lines__amount
-#, python-format
-msgid "Amount"
+#: model:ir.model.fields,help:l10n_ec.field_l10n_latam_document_type__internal_type
+msgid ""
+"Analog to odoo account.move.move_type but with more options allowing to "
+"identify the kind of document we are working with. (not only related to "
+"account.move, could be for documents of other models like stock.picking)"
 msgstr ""
+"Análogo a account.move.type de Odoo pero con más opciones, permitiendo "
+"identificar el tipo de documento sobre el que estamos trabajando. (no "
+"solamente relativo a account.move, podría ser relativo a otros modelos, como"
+" por ejemplo stock.picking)"
 
 #. module: l10n_ec
-#: code:addons/l10n_ec/models/account_move.py:0
-#: model:ir.model.fields,field_description:l10n_ec.field_account_bank_statement_line__l10n_ec_access_key
-#: model:ir.model.fields,field_description:l10n_ec.field_account_bank_statement_line__l10n_ec_auth_type
-#: model:ir.model.fields,field_description:l10n_ec.field_account_move__l10n_ec_access_key
-#: model:ir.model.fields,field_description:l10n_ec.field_account_move__l10n_ec_auth_type
-#: model:ir.model.fields,field_description:l10n_ec.field_account_payment__l10n_ec_access_key
-#: model:ir.model.fields,field_description:l10n_ec.field_account_payment__l10n_ec_auth_type
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_latam_document_type__l10n_ec_authorization
-#, python-format
-msgid "Authorization"
-msgstr ""
+#: model:ir.model.fields,field_description:l10n_ec.field_l10n_latam_document_type__l10n_ec_check_format
+msgid "Check Number Format EC"
+msgstr "Validar Formato Numérico EC"
 
 #. module: l10n_ec
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_witholding_lines__base
-msgid "Base"
-msgstr ""
-
-#. module: l10n_ec
-#: model:l10n_latam.identification.type,name:l10n_ec.ec_dni
-msgid "Ced"
+#: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_sri_payment__code
+msgid "Code"
 msgstr ""
 
 #. module: l10n_ec
 #: model:ir.model.fields,field_description:l10n_ec.field_account_tax__l10n_ec_code_ats
 #: model:ir.model.fields,field_description:l10n_ec.field_account_tax_template__l10n_ec_code_ats
 msgid "Code ATS"
-msgstr ""
+msgstr "Código ATS"
 
 #. module: l10n_ec
 #: model:ir.model.fields,field_description:l10n_ec.field_account_tax__l10n_ec_code_applied
 #: model:ir.model.fields,field_description:l10n_ec.field_account_tax_template__l10n_ec_code_applied
 msgid "Code applied"
-msgstr ""
+msgstr "Código aplicado"
 
 #. module: l10n_ec
 #: model:ir.model.fields,field_description:l10n_ec.field_account_tax__l10n_ec_code_base
 #: model:ir.model.fields,field_description:l10n_ec.field_account_tax_template__l10n_ec_code_base
 msgid "Code base"
-msgstr ""
+msgstr "Código base"
 
 #. module: l10n_ec
 #: model:ir.model,name:l10n_ec.model_res_company
 msgid "Companies"
-msgstr ""
-
-#. module: l10n_ec
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_witholding__company_id
-msgid "Company"
-msgstr ""
+msgstr "Compañías"
 
 #. module: l10n_ec
 #: model:ir.model,name:l10n_ec.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Contacto"
 
 #. module: l10n_ec
 #: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_sri_payment__create_uid
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_witholding__create_uid
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_witholding_lines__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Creado por"
 
 #. module: l10n_ec
 #: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_sri_payment__create_date
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_witholding__create_date
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_witholding_lines__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Creado en"
+
 
 #. module: l10n_ec
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_witholding__currency_id
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_witholding_lines__currency_id
-msgid "Currency"
-msgstr ""
-
-#. module: l10n_ec
-#: model:ir.model.fields.selection,name:l10n_ec.selection__l10n_latam_document_type__l10n_ec_type__out_invoice
-msgid "Customer Document"
-msgstr ""
-
-#. module: l10n_ec
-#: model:ir.model.fields.selection,name:l10n_ec.selection__l10n_latam_document_type__l10n_ec_type__out_refund
-msgid "Customer Refund"
-msgstr ""
-
-#. module: l10n_ec
-#: model:ir.model.fields.selection,name:l10n_ec.selection__l10n_latam_document_type__l10n_ec_type__out_withhold
-msgid "Customer Withhold"
-msgstr ""
-
-#. module: l10n_ec
-#: model:ir.model.fields,field_description:l10n_ec.field_product_product__witholding_tax_ids
-#: model:ir.model.fields,field_description:l10n_ec.field_product_template__witholding_tax_ids
-msgid "Customer Witholdings"
-msgstr ""
-
-#. module: l10n_ec
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_sri_payment__code
-msgid "Código"
-msgstr ""
-
-#. module: l10n_ec
-#: model:ir.model.fields,help:l10n_ec.field_product_product__witholding_tax_ids
-#: model:ir.model.fields,help:l10n_ec.field_product_template__witholding_tax_ids
-msgid "Default witholding used when selling the product."
+#: model:l10n_latam.identification.type,name:l10n_ec.ec_dni
+msgid "Cédula"
 msgstr ""
 
 #. module: l10n_ec
 #: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_sri_payment__display_name
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_witholding__display_name
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_witholding_lines__display_name
 msgid "Display Name"
-msgstr ""
-
-#. module: l10n_ec
-#: code:addons/l10n_ec/models/l10n_ec_witholding.py:0
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_witholding__l10n_latam_document_type_id
-#, python-format
-msgid "Document Type"
-msgstr ""
+msgstr "Nombre mostrado"
 
 #. module: l10n_ec
 #: model_terms:ir.ui.view,arch_db:l10n_ec.view_document_type_conf_form
 msgid "Ecuadorian Configuration"
-msgstr ""
+msgstr "Configuración Ecuatoriana"
 
 #. module: l10n_ec
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_latam_document_type__l10n_ec_type
-msgid "Ecuadorian Type"
-msgstr ""
+#. odoo-python
+#: code:addons/l10n_ec/models/l10n_latam_document_type.py:0
+#, python-format
+msgid "Ecuadorian Document %s must be like 001-001-123456789"
+msgstr "El Documento Ecuatoriano %s debe ser de la forma 001-001-123456789"
 
 #. module: l10n_ec
-#: model:ir.model.fields,help:l10n_ec.field_account_bank_statement_line__l10n_ec_auth_type
-#: model:ir.model.fields,help:l10n_ec.field_account_move__l10n_ec_auth_type
-#: model:ir.model.fields,help:l10n_ec.field_account_payment__l10n_ec_auth_type
-#: model:ir.model.fields,help:l10n_ec.field_l10n_latam_document_type__l10n_ec_authorization
-msgid ""
-"Ecuadorian tax authority requires an authorization for certain documents"
-msgstr ""
+#: model:ir.ui.menu,name:l10n_ec.sri_menu
+msgid "Ecuadorian SRI"
+msgstr "Ecuador SRI"
 
 #. module: l10n_ec
 #: model:ir.model.fields,help:l10n_ec.field_account_tax_group__l10n_ec_type
 msgid "Ecuadorian taxes subtype"
+msgstr "Subtipo de impuestos Ecuatorianos"
+
+#. module: l10n_ec
+#: model:ir.model.fields.selection,name:l10n_ec.selection__account_journal__l10n_ec_emission_type__electronic
+msgid "Electronic"
 msgstr ""
 
 #. module: l10n_ec
-#: model:ir.model.fields,help:l10n_ec.field_account_bank_statement_line__amount_by_group_wth
-#: model:ir.model.fields,help:l10n_ec.field_account_move__amount_by_group_wth
-#: model:ir.model.fields,help:l10n_ec.field_account_payment__amount_by_group_wth
-msgid "Edit Tax amounts if you encounter rounding issues."
-msgstr ""
-
-#. module: l10n_ec
-#: model:ir.model.fields,field_description:l10n_ec.field_account_bank_statement_import_journal_creation__l10n_ec_entity
 #: model:ir.model.fields,field_description:l10n_ec.field_account_journal__l10n_ec_entity
 msgid "Emission Entity"
-msgstr ""
+msgstr "Entidad emisora"
 
 #. module: l10n_ec
-#: model:ir.model.fields,field_description:l10n_ec.field_account_bank_statement_import_journal_creation__l10n_ec_emission
 #: model:ir.model.fields,field_description:l10n_ec.field_account_journal__l10n_ec_emission
 msgid "Emission Point"
+msgstr "Punto de emisión"
+
+#. module: l10n_ec
+#: model:ir.model.fields,field_description:l10n_ec.field_account_journal__l10n_ec_emission_address_id
+msgid "Emission address"
+msgstr "Dirección Emisión"
+
+#. module: l10n_ec
+#: model:ir.model.fields,field_description:l10n_ec.field_account_journal__l10n_ec_emission_type
+msgid "Emission type"
 msgstr ""
 
 #. module: l10n_ec
-#: model:ir.model.fields.selection,name:l10n_ec.selection__l10n_latam_document_type__l10n_ec_type__hr_advance
-msgid "Employee Advance"
-msgstr ""
-
-#. module: l10n_ec
-#: model:account.tax.group,name:l10n_ec.ec_tax_group_outflows
+#: model:account.tax.group,name:l10n_ec.tax_group_outflows
 #: model:ir.model.fields.selection,name:l10n_ec.selection__account_tax_group__l10n_ec_type__outflows_tax
 msgid "Exchange Outflows"
-msgstr ""
-
-#. module: l10n_ec
-#: model:ir.actions.act_window,name:l10n_ec.action_account_l10n_ec_sri_payment_tree
-#: model:ir.ui.menu,name:l10n_ec.menu_action_account_l10n_ec_sri_payment
-msgid "Formas de pago SRI"
-msgstr ""
+msgstr "Salidas por cambio"
 
 #. module: l10n_ec
 #: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_sri_payment__id
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_witholding__id
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_witholding_lines__id
 msgid "ID"
-msgstr ""
+msgstr "Identificación"
 
 #. module: l10n_ec
-#: model:ir.model.fields,help:l10n_ec.field_l10n_latam_document_type__l10n_ec_type
-msgid "Indicates the aplicability of the document"
-msgstr ""
+#. odoo-python
+#: code:addons/l10n_ec/models/res_partner.py:0
+#, python-format
+msgid "If your identification type is %s, it must be 10 digits"
+msgstr "Si su tipo de identificación es %s, debe ser de 10 digitos"
 
 #. module: l10n_ec
-#: model:ir.model.fields.selection,name:l10n_ec.selection__l10n_latam_document_type__l10n_ec_type__out_waybill
-msgid "Issued Waybill"
-msgstr ""
+#. odoo-python
+#: code:addons/l10n_ec/models/res_partner.py:0
+#, python-format
+msgid "If your identification type is %s, it must be 13 digits"
+msgstr "Si su tipo de identificación es %s, debe ser de 13 digitos"
 
 #. module: l10n_ec
-#: model:ir.model.fields.selection,name:l10n_ec.selection__l10n_latam_document_type__l10n_ec_authorization__third
-msgid "Issued by Third Parties"
-msgstr ""
-
-#. module: l10n_ec
-#: model:ir.model.fields.selection,name:l10n_ec.selection__l10n_latam_document_type__l10n_ec_authorization__own
-msgid "Issued by my company"
-msgstr ""
+#: model:ir.model.fields,field_description:l10n_ec.field_l10n_latam_document_type__internal_type
+msgid "Internal Type"
+msgstr "Tipo interno"
 
 #. module: l10n_ec
 #: model:ir.model,name:l10n_ec.model_account_journal
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_witholding__journal_id
 msgid "Journal"
-msgstr ""
+msgstr "Diario"
 
 #. module: l10n_ec
 #: model:ir.model,name:l10n_ec.model_account_move
 msgid "Journal Entry"
-msgstr ""
-
-#. module: l10n_ec
-#: model:ir.model,name:l10n_ec.model_account_move_line
-msgid "Journal Item"
-msgstr ""
-
-#. module: l10n_ec
-#: model:ir.model.fields,field_description:l10n_ec.field_account_bank_statement_line__l10n_ec_is_electronic
-#: model:ir.model.fields,field_description:l10n_ec.field_account_move__l10n_ec_is_electronic
-#: model:ir.model.fields,field_description:l10n_ec.field_account_payment__l10n_ec_is_electronic
-msgid "L10N Ec Is Electronic"
-msgstr ""
+msgstr "Entrada de diario"
 
 #. module: l10n_ec
 #: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_sri_payment____last_update
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_witholding____last_update
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_witholding_lines____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Última actualización por"
 
 #. module: l10n_ec
 #: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_sri_payment__write_uid
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_witholding__write_uid
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_witholding_lines__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Última actualización por"
 
 #. module: l10n_ec
 #: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_sri_payment__write_date
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_witholding__write_date
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_witholding_lines__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Ultima actualización en"
 
 #. module: l10n_ec
 #: model:ir.model,name:l10n_ec.model_l10n_latam_document_type
 msgid "Latam Document Type"
-msgstr ""
+msgstr "Tipo de Documento Latinoamericano"
 
 #. module: l10n_ec
 #: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_sri_payment__name
-msgid "Nombre"
+msgid "Name"
 msgstr ""
 
 #. module: l10n_ec
-#: model:ir.model.fields.selection,name:l10n_ec.selection__l10n_latam_document_type__l10n_ec_authorization__none
-msgid "None"
-msgstr ""
-
-#. module: l10n_ec
-#: code:addons/l10n_ec/models/l10n_ec_witholding.py:0
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_witholding__invoice_id
-#, python-format
-msgid "Origin Document"
-msgstr ""
-
-#. module: l10n_ec
-#: model:account.tax.group,name:l10n_ec.ec_tax_group_others
+#: model:account.tax.group,name:l10n_ec.tax_group_others
 #: model:ir.model.fields.selection,name:l10n_ec.selection__account_tax_group__l10n_ec_type__other
-#: model:ir.model.fields.selection,name:l10n_ec.selection__l10n_latam_document_type__l10n_ec_type__other
 msgid "Others"
-msgstr ""
+msgstr "Otros"
 
 #. module: l10n_ec
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_witholding__partner_id
-msgid "Partner"
-msgstr ""
-
-#. module: l10n_ec
-#: code:addons/l10n_ec/models/account_move.py:0
 #: model:ir.model.fields,field_description:l10n_ec.field_account_bank_statement_line__l10n_ec_sri_payment_id
 #: model:ir.model.fields,field_description:l10n_ec.field_account_move__l10n_ec_sri_payment_id
 #: model:ir.model.fields,field_description:l10n_ec.field_account_payment__l10n_ec_sri_payment_id
-#, python-format
 msgid "Payment Method (SRI)"
+msgstr "Método de pago (SRI)"
+
+#. module: l10n_ec
+#: model:ir.actions.act_window,name:l10n_ec.action_account_l10n_ec_sri_payment_tree
+#: model:ir.ui.menu,name:l10n_ec.menu_action_account_l10n_ec_sri_payment
+msgid "Payment Methods SRI"
 msgstr ""
 
 #. module: l10n_ec
-#: code:addons/l10n_ec/models/l10n_ec_witholding.py:0
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_witholding_lines__percent
-#, python-format
-msgid "Percent"
-msgstr ""
-
-#. module: l10n_ec
-#: model:account.tax.group,name:l10n_ec.ec_tax_group_irbpnr
+#: model:account.tax.group,name:l10n_ec.tax_group_irbpnr
 #: model:ir.model.fields.selection,name:l10n_ec.selection__account_tax_group__l10n_ec_type__irbpnr
 msgid "Plastic Bottles (IRBPNR)"
-msgstr ""
+msgstr "Botellas de plástico (IRBPNR)"
 
 #. module: l10n_ec
-#: model:ir.model,name:l10n_ec.model_product_template
-msgid "Product Template"
-msgstr ""
+#: model:account.tax.group,name:l10n_ec.tax_group_withhold_income_purchase
+#: model:ir.model.fields.selection,name:l10n_ec.selection__account_tax_group__l10n_ec_type__withhold_income_purchase
+msgid "Profit Withhold on Purchases"
+msgstr "Retención Renta en Compras"
 
 #. module: l10n_ec
-#: model:account.tax.group,name:l10n_ec.ec_tax_group_withhold_income
-#: model:ir.model.fields.selection,name:l10n_ec.selection__account_tax_group__l10n_ec_type__withhold_income_tax
-msgid "Profit Withhold"
-msgstr ""
+#: model:account.tax.group,name:l10n_ec.tax_group_withhold_income_sale
+#: model:ir.model.fields.selection,name:l10n_ec.selection__account_tax_group__l10n_ec_type__withhold_income_sale
+msgid "Profit Withhold on Sales"
+msgstr "Retención Renta en Ventas"
 
 #. module: l10n_ec
-#: model:l10n_latam.identification.type,name:l10n_ec.ec_ruc
-msgid "RUC"
-msgstr ""
+#: model:ir.model,name:l10n_ec.model_l10n_ec_sri_payment
+msgid "SRI Payment Method"
+msgstr "SRI Forma de Pago"
 
 #. module: l10n_ec
-#: model:ir.actions.act_window,name:l10n_ec.action_account_l10n_ec_witholding_tree
-#: model:ir.ui.menu,name:l10n_ec.menu_action_account_l10n_ec_witholding
-msgid "Retenciones"
-msgstr ""
-
-#. module: l10n_ec
-#: model:account.tax.group,name:l10n_ec.ec_tax_group_ice
+#: model:account.tax.group,name:l10n_ec.tax_group_ice
 msgid "Special Consumptions (ICE)"
-msgstr ""
+msgstr "Consumos Especiales (ICE)"
 
 #. module: l10n_ec
 #: model:ir.model.fields.selection,name:l10n_ec.selection__account_tax_group__l10n_ec_type__ice
 msgid "Special Consumptions Tax (ICE)"
-msgstr ""
+msgstr "Impuesto a los Consumos Especiales (ICE)"
 
 #. module: l10n_ec
-#: model:ir.model.fields.selection,name:l10n_ec.selection__l10n_latam_document_type__l10n_ec_type__in_invoice
-msgid "Supplier Document"
-msgstr ""
-
-#. module: l10n_ec
-#: model:ir.model.fields.selection,name:l10n_ec.selection__l10n_latam_document_type__l10n_ec_type__in_refund
-msgid "Supplier Refund"
-msgstr ""
-
-#. module: l10n_ec
-#: model:ir.model.fields.selection,name:l10n_ec.selection__l10n_latam_document_type__l10n_ec_type__in_withhold
-msgid "Supplier Withhold"
-msgstr ""
-
-#. module: l10n_ec
-#: code:addons/l10n_ec/models/l10n_ec_witholding.py:0
 #: model:ir.model,name:l10n_ec.model_account_tax
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_witholding_lines__name
-#, python-format
 msgid "Tax"
-msgstr ""
+msgstr "Impuesto"
 
 #. module: l10n_ec
 #: model:ir.model,name:l10n_ec.model_account_tax_group
 msgid "Tax Group"
-msgstr ""
+msgstr "Grupo de impuestos"
 
 #. module: l10n_ec
 #: model:ir.model.fields,help:l10n_ec.field_account_tax__l10n_ec_code_ats
 #: model:ir.model.fields,help:l10n_ec.field_account_tax_template__l10n_ec_code_ats
 msgid "Tax Identification Code for the Simplified Transactional Annex"
 msgstr ""
+"Código de Identificación Fiscal para el Anexo Transaccional Simplificado"
 
 #. module: l10n_ec
 #: model:ir.model.fields,help:l10n_ec.field_account_tax__l10n_ec_code_base
@@ -410,6 +274,8 @@ msgstr ""
 msgid ""
 "Tax declaration code of the base amount prior to the calculation of the tax"
 msgstr ""
+"Código de declaración de impuesto del importe base anterior al cálculo del "
+"impuesto"
 
 #. module: l10n_ec
 #: model:ir.model.fields,help:l10n_ec.field_account_tax__l10n_ec_code_applied
@@ -418,120 +284,105 @@ msgid ""
 "Tax declaration code of the resulting amount after the calculation of the "
 "tax"
 msgstr ""
+"Código de declaración de impuestos de la cantidad resultante después del "
+"cálculo del impuesto"
 
 #. module: l10n_ec
 #: model:ir.model,name:l10n_ec.model_account_tax_template
 msgid "Templates for Taxes"
-msgstr ""
+msgstr "Plantillas para Impuestos"
 
 #. module: l10n_ec
-#: model_terms:res.company,invoice_terms_html:l10n_ec.demo_company_ec
-msgid "Terms &amp; Conditions"
-msgstr ""
-
-#. module: l10n_ec
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_witholding__amount_total
-msgid "Total Amount"
+#: model:ir.model.fields,help:l10n_ec.field_account_journal__l10n_ec_require_emission
+msgid "True if an entity and emission point must be set on the journal"
 msgstr ""
 
 #. module: l10n_ec
 #: model:ir.model.fields,field_description:l10n_ec.field_account_tax_group__l10n_ec_type
 msgid "Type Ecuadorian Tax"
-msgstr ""
+msgstr "Tipo de Impuesto Ecuatoriano"
 
 #. module: l10n_ec
 #: model:l10n_latam.identification.type,name:l10n_ec.ec_unknown
 msgid "Unknown"
-msgstr ""
+msgstr "Desconocido"
 
 #. module: l10n_ec
-#: model:account.tax.group,name:l10n_ec.ec_tax_group_vat0
+#. odoo-python
+#: code:addons/l10n_ec/models/res_partner.py:0
+#, python-format
+msgid ""
+"VAT %s is not valid for an Ecuadorian DNI, it must be like this form "
+"1234567897"
+msgstr ""
+"Cédula %s no es valida para el DNI de Ecuador, debe ser de esta forma "
+"1234567897"
+
+#. module: l10n_ec
+#. odoo-python
+#: code:addons/l10n_ec/models/res_partner.py:0
+#, python-format
+msgid ""
+"VAT %s is not valid for an Ecuadorian company, it must be like this form "
+"1234567897001"
+msgstr ""
+"RUC %s no es valida para una compañía ecuatoriana, debe ser de esta forma "
+"1234567897001"
+
+#. module: l10n_ec
+#: model:account.tax.group,name:l10n_ec.tax_group_vat0
 #: model:ir.model.fields.selection,name:l10n_ec.selection__account_tax_group__l10n_ec_type__zero_vat
 msgid "VAT 0%"
-msgstr ""
+msgstr "IVA 0%"
 
 #. module: l10n_ec
-#: model:account.tax.group,name:l10n_ec.ec_tax_group_vat12
+#: model:account.tax.group,name:l10n_ec.tax_group_vat_12
 #: model:ir.model.fields.selection,name:l10n_ec.selection__account_tax_group__l10n_ec_type__vat12
 msgid "VAT 12%"
-msgstr ""
+msgstr "IVA 12%"
 
 #. module: l10n_ec
-#: model:account.tax.group,name:l10n_ec.ec_tax_group_vat14
+#: model:account.tax.group,name:l10n_ec.tax_group_vat14
 #: model:ir.model.fields.selection,name:l10n_ec.selection__account_tax_group__l10n_ec_type__vat14
 msgid "VAT 14%"
+msgstr "IVA 14%"
+
+#. module: l10n_ec
+#: model:account.tax.group,name:l10n_ec.tax_group_vat_08
+#: model:ir.model.fields.selection,name:l10n_ec.selection__account_tax_group__l10n_ec_type__vat08
+msgid "VAT 8%"
 msgstr ""
 
 #. module: l10n_ec
-#: model:account.tax.group,name:l10n_ec.ec_tax_group_vat_excempt
-msgid "VAT Excempt"
-msgstr ""
-
-#. module: l10n_ec
+#: model:account.tax.group,name:l10n_ec.tax_group_vat_exempt
 #: model:ir.model.fields.selection,name:l10n_ec.selection__account_tax_group__l10n_ec_type__exempt_vat
 msgid "VAT Exempt"
-msgstr ""
+msgstr "Exento de IVA"
 
 #. module: l10n_ec
-#: model:account.tax.group,name:l10n_ec.ec_tax_group_vat_not_charged
+#: model:account.tax.group,name:l10n_ec.tax_group_vat_not_charged
 #: model:ir.model.fields.selection,name:l10n_ec.selection__account_tax_group__l10n_ec_type__not_charged_vat
 msgid "VAT Not Charged"
-msgstr ""
+msgstr "IVA no cobrado"
 
 #. module: l10n_ec
-#: model:account.tax.group,name:l10n_ec.ec_tax_group_withhold_vat
 #: model:ir.model.fields.selection,name:l10n_ec.selection__account_tax_group__l10n_ec_type__withhold_vat
-msgid "VAT Withhold"
-msgstr ""
+msgid "VAT Withhold (Deprecated)"
+msgstr "Retención IVA (deprec"
 
 #. module: l10n_ec
-#: model_terms:ir.ui.view,arch_db:l10n_ec.account_witholding_form_view
-msgid "Validate"
-msgstr ""
+#: model:account.tax.group,name:l10n_ec.tax_group_withhold_vat_purchase
+#: model:ir.model.fields.selection,name:l10n_ec.selection__account_tax_group__l10n_ec_type__withhold_vat_purchase
+msgid "VAT Withhold on Purchases"
+msgstr "Retención IVA en Compras"
 
 #. module: l10n_ec
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_witholding_lines__witholding_id
-msgid "Witholding"
-msgstr ""
+#: model:account.tax.group,name:l10n_ec.tax_group_withhold_vat_sale
+#: model:ir.model.fields.selection,name:l10n_ec.selection__account_tax_group__l10n_ec_type__withhold_vat_sale
+msgid "VAT Withhold on Sales"
+msgstr "Retención IVA en Ventas"
 
 #. module: l10n_ec
-#: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_witholding__witholding_line_ids
-msgid "Witholding Line"
-msgstr ""
-
-#. module: l10n_ec
-#: model:ir.model.fields,field_description:l10n_ec.field_account_bank_statement_line__amount_by_group_wth
-#: model:ir.model.fields,field_description:l10n_ec.field_account_move__amount_by_group_wth
-#: model:ir.model.fields,field_description:l10n_ec.field_account_payment__amount_by_group_wth
-msgid "Witholding amount by group"
-msgstr ""
-
-#. module: l10n_ec
-#: model:ir.model.fields,help:l10n_ec.field_account_move_line__witholding_tax_ids
-msgid "Witholding taxes that apply on the base amount"
-msgstr ""
-
-#. module: l10n_ec
-#: model:ir.model.fields,field_description:l10n_ec.field_account_move_line__witholding_tax_ids
-msgid "Witholdings"
-msgstr ""
-
-#. module: l10n_ec
-#: model_terms:res.company,invoice_terms_html:l10n_ec.demo_company_ec
-msgid "Your conditions..."
-msgstr ""
-
-#. module: l10n_ec
-#: model:ir.model,name:l10n_ec.model_l10n_ec_sri_payment
-msgid "l10n.ec.sri.payment"
-msgstr ""
-
-#. module: l10n_ec
-#: model:ir.model,name:l10n_ec.model_l10n_ec_witholding
-msgid "l10n_ec.witholding"
-msgstr ""
-
-#. module: l10n_ec
-#: model:ir.model,name:l10n_ec.model_l10n_ec_witholding_lines
-msgid "l10n_ec.witholding.lines"
-msgstr ""
+#: model:ir.model.fields.selection,name:l10n_ec.selection__l10n_latam_document_type__internal_type__withhold
+msgid "Withhold"
+msgstr "Retención"
