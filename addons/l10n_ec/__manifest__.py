@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Ecuadorian Accounting',
-    'version': '3.3',
+    'version': '3.4',
     'description': """
 Functional
 ----------
@@ -30,11 +30,11 @@ Master Data:
 * Identification types
 * Ecuador banks
 * Partners: Consumidor Final, SRI, IESS, and also basic VAT validation
-    """,
-    'author': 'OPA CONSULTING & TRESCLOUD',
+""",
+    'author': 'TRESCLOUD, OPA CONSULTING',
     'category': 'Accounting/Localizations/Account Charts',
-    'maintainer': 'OPA CONSULTING',
-    'website': 'https://opa-consulting.com',
+    'maintainer': 'TRESCLOUD',
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/ecuador.html',
     'license': 'LGPL-3',
     'depends': [
         'base',
@@ -55,6 +55,7 @@ Master Data:
         'views/l10n_latam_document_type_view.xml',
         'views/l10n_ec_sri_payment.xml',
         'views/account_journal_view.xml',
+        'views/root_sri_menu.xml',
         'security/ir.model.access.csv',
     ],
     'demo': [
