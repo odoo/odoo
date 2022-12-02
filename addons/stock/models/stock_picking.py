@@ -521,6 +521,7 @@ class Picking(models.Model):
         picking_no_alert.json_popover = False
         for picking in (self - picking_no_alert):
             picking.json_popover = json.dumps({
+                'popoverTemplate': 'stock.PopoverStockRescheduling',
                 'delay_alert_date': format_datetime(self.env, picking.delay_alert_date, dt_format=False),
                 'late_elements': [{
                     'id': late_move.id,

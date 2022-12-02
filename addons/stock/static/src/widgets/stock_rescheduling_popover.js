@@ -19,8 +19,6 @@ class  StockRescheculingPopoverComponent extends PopoverComponent {
     }
 }
 
-StockRescheculingPopoverComponent.template ='stock.PopoverStockRescheduling';
-
 class StockRescheculingPopover extends PopoverWidgetField {
     setup(){
         super.setup();
