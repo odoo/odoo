@@ -1040,7 +1040,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'amount_total': untax+tax,
             'amount_paid': 0,
             'amount_return': 0,
-            'to_ship': True,
+            'shipping_date': fields.Date.today(),
         })
 
         context_make_payment = {

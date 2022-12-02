@@ -52,7 +52,7 @@ class PosOrder(models.Model):
             'amount_return':  ui_order['amount_return'],
             'company_id': self.env['pos.session'].browse(ui_order['pos_session_id']).company_id.id,
             'to_invoice': ui_order['to_invoice'] if "to_invoice" in ui_order else False,
-            'to_ship': ui_order['to_ship'] if "to_ship" in ui_order else False,
+            'shipping_date': ui_order['shipping_date'] if "shipping_date" in ui_order else False,
             'is_tipped': ui_order.get('is_tipped', False),
             'tip_amount': ui_order.get('tip_amount', 0),
             'access_token': ui_order.get('access_token', '')
@@ -284,7 +284,7 @@ class PosOrder(models.Model):
     payment_ids = fields.One2many('pos.payment', 'pos_order_id', string='Payments', readonly=True)
     session_move_id = fields.Many2one('account.move', string='Session Journal Entry', related='session_id.move_id', readonly=True, copy=False)
     to_invoice = fields.Boolean('To invoice', copy=False)
-    to_ship = fields.Boolean('To ship')
+    shipping_date = fields.Date('Shipping Date')
     is_invoiced = fields.Boolean('Is Invoiced', compute='_compute_is_invoiced')
     is_tipped = fields.Boolean('Is this already tipped?', readonly=True)
     tip_amount = fields.Float(string='Tip Amount', digits=0, readonly=True)
@@ -887,7 +887,7 @@ class PosOrder(models.Model):
 
     def _create_order_picking(self):
         self.ensure_one()
-        if self.to_ship:
+        if self.shipping_date:
             self.lines._launch_stock_rule_from_pos_order_lines()
         else:
             if self._should_create_picking_real_time():
@@ -1028,7 +1028,7 @@ class PosOrder(models.Model):
             'creation_date': order.date_order.astimezone(timezone),
             'fiscal_position_id': order.fiscal_position_id.id,
             'to_invoice': order.to_invoice,
-            'to_ship': order.to_ship,
+            'shipping_date': order.shipping_date,
             'state': order.state,
             'account_move': order.account_move.id,
             'id': order.id,
@@ -1238,7 +1238,11 @@ class PosOrderLine(models.Model):
         """
         self.ensure_one()
         # Use the delivery date if there is else use date_order and lead time
-        date_deadline = self.order_id.date_order
+        if self.order_id.shipping_date:
+            date_deadline = self.order_id.shipping_date
+        else:
+            date_deadline = self.order_id.date_order
+
         values = {
             'group_id': group_id,
             'date_planned': date_deadline,
