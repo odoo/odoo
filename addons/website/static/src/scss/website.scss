@@ -1187,7 +1187,7 @@ header {
     }
 }
 
-.o_mega_menu_container_size {
+.dropdown-menu.o_mega_menu_container_size {
     $-header-template: o-website-value('header-template');
     @if not index(('sidebar', 'hamburger', 'magazine'), $-header-template) {
         $bp: if($-header-template == 'minimalist', md, lg);
