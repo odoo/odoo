@@ -3048,6 +3048,9 @@ class AccountMove(models.Model):
                 raise UserError(_("You cannot validate an invoice with an inactive currency: %s",
                                   move.currency_id.name))
 
+            if move.line_ids.account_id.filtered(lambda account: account.deprecated):
+                raise UserError(_("A line of this move is using a deprecated account, you cannot post it."))
+
             # Handle case when the invoice_date is not set. In that case, the invoice_date is set at today and then,
             # lines are recomputed accordingly.
             # /!\ 'check_move_validity' must be there since the dynamic lines will be recomputed outside the 'onchange'
