@@ -151,10 +151,10 @@ class MailComposer(models.TransientModel):
         'Type', required=True, default='comment',
         help="Message type: email for email message, notification for system "
              "message, comment for other messages such as user replies")
-    is_log = fields.Boolean('Log as Internal Note')
     subtype_id = fields.Many2one(
         'mail.message.subtype', 'Subtype', ondelete='set null',
         default=lambda self: self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'))
+    subtype_is_log = fields.Boolean('Is a log', compute='_compute_subtype_is_log')
     mail_activity_type_id = fields.Many2one('mail.activity.type', 'Mail Activity Type', ondelete='set null')
     # destination
     reply_to = fields.Char('Reply To', help='Reply email address. Setting the reply_to bypasses the automatic thread creation.')
@@ -210,6 +210,12 @@ class MailComposer(models.TransientModel):
                 continue
             res_ids = composer._evaluate_res_ids()
             composer.composition_batch = len(res_ids) > 1 if res_ids else False
+
+    @api.depends('subtype_id')
+    def _compute_subtype_is_log(self):
+        note_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
+        for composer in self:
+            composer.subtype_is_log = not composer.subtype_id or composer.subtype_id.id == note_id
 
     @api.depends('reply_to_force_new')
     def _compute_reply_to_mode(self):
@@ -614,8 +620,6 @@ class MailComposer(models.TransientModel):
         email_mode = self.composition_mode == 'mass_mail'
 
         if email_mode:
-            subtype_id = False
-        elif self.is_log:  # log a note: subtype is False
             subtype_id = False
         elif self.subtype_id:
             subtype_id = self.subtype_id.id
