@@ -1192,7 +1192,7 @@ header {
     @if not index(('sidebar', 'hamburger', 'magazine'), $-header-template) {
         $bp: if($-header-template == 'minimalist', md, lg);
         @include media-breakpoint-up($bp) {
-            left: 50%;
+            left: 50% !important;
             transform: translateX(-50%);
         }
     }
