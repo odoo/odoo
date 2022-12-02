@@ -3333,3 +3333,22 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertEqual(invoice.amount_untaxed, 82.64)
         self.assertEqual(invoice.amount_tax, 17.36)
         self.assertEqual(len(invoice.invoice_line_ids), 2)
+
+    def test_out_invoice_depreciated_account(self):
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'currency_id': self.currency_data['currency'].id,
+            'partner_id': self.partner_a.id,
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'invoice_line_ids': [
+                (0, 0, {
+                    'name': 'My super product.',
+                    'quantity': 1.0,
+                    'price_unit': 750.0,
+                    'account_id': self.product_a.property_account_income_id.id,
+                })
+            ],
+        })
+        self.product_a.property_account_income_id.deprecated = True
+        with self.assertRaises(UserError), self.cr.savepoint():
+            move.action_post()
