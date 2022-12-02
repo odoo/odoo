@@ -333,7 +333,7 @@ export class Powerbox {
             } else {
                 const term = this._context.lastText.toLowerCase().replaceAll(/\s/g, '\\s').replaceAll('\u200B', '');
                 if (term.length) {
-                    const regex = new RegExp(term.split('').map(char => char.replace(REGEX_RESERVED_CHARS, '\\$&')).join('.*'));
+                    const regex = new RegExp(term.split('').map(char => char.replace(REGEX_RESERVED_CHARS, '\\$&')).join('.*'), 'i');
                     this._context.filteredCommands = this._context.commands.filter(command => (
                         `${command.category} ${command.name}`.toLowerCase().match(regex)
                     ));
