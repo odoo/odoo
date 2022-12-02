@@ -62,7 +62,7 @@
                             <td t-if="showAvailabilities"/>
                             <td t-if="showLeadTimes"/>
                             <td/>
-                            <td class="text-end" t-esc="formatMonetary(data.cost_share * data.bom_cost / data.quantity)"/>
+                            <td class="text-end" t-esc="formatMonetary(data.bom_cost / data.quantity)"/>
                             <td class="text-end" t-esc="formatMonetary(data.prod_cost / data.quantity)"/>
                             <td t-if="showAttachments"/>
                         </tr>
@@ -76,7 +76,7 @@
                                 <td t-if="showAvailabilities"/>
                                 <td t-if="showLeadTimes"/>
                                 <td/>
-                                <td class="text-end" t-esc="formatMonetary(byproduct.cost_share * data.bom_cost / byproduct.quantity)"/>
+                                <td class="text-end" t-esc="formatMonetary(byproduct.bom_cost / byproduct.quantity)"/>
                                 <td class="text-end" t-esc="formatMonetary(byproduct.prod_cost / byproduct.quantity)"/>
                                 <td t-if="showAttachments"/>
                             </tr>
