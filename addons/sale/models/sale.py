@@ -739,7 +739,8 @@ Reason(s) of this behavior could be:
             new_invoice_vals_list = []
             invoice_grouping_keys = self._get_invoice_grouping_keys()
             invoice_vals_list = sorted(invoice_vals_list, key=lambda x: [x.get(grouping_key) for grouping_key in invoice_grouping_keys])
-            for grouping_keys, invoices in groupby(invoice_vals_list, key=lambda x: [x.get(grouping_key) for grouping_key in invoice_grouping_keys]):
+            # Disable prefer-odoo-tools-groupby lint since the iterable is sorted by the key
+            for _grouping_keys, invoices in groupby(invoice_vals_list, key=lambda x: [x.get(grouping_key) for grouping_key in invoice_grouping_keys]):  # pylint: disable=prefer-odoo-tools-groupby
                 origins = set()
                 payment_refs = set()
                 refs = set()

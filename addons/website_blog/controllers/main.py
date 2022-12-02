@@ -53,8 +53,8 @@ class WebsiteBlog(http.Controller):
 
             group['month'] = babel.dates.format_datetime(start, format='MMMM', tzinfo=tzinfo, locale=locale)
             group['year'] = babel.dates.format_datetime(start, format='yyyy', tzinfo=tzinfo, locale=locale)
-
-        return OrderedDict((year, [m for m in months]) for year, months in itertools.groupby(groups, lambda g: g['year']))
+        # Disable prefer-odoo-tools-groupby lint since the iterable is sorted by the key
+        return OrderedDict((year, [m for m in months]) for year, months in itertools.groupby(groups, lambda g: g['year']))  # pylint: disable=prefer-odoo-tools-groupby
 
     def _prepare_blog_values(self, blogs, blog=False, date_begin=False, date_end=False, tags=False, state=False, page=False, search=None):
         """ Prepare all values to display the blogs index page or one specific blog"""

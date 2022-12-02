@@ -888,7 +888,8 @@ def stripped_sys_argv(*strip_args):
     assert all(config.parser.has_option(s) for s in strip_args)
     takes_value = dict((s, config.parser.get_option(s).takes_value()) for s in strip_args)
 
-    longs, shorts = list(tuple(y) for _, y in itergroupby(strip_args, lambda x: x.startswith('--')))
+    # Disable prefer-odoo-tools-groupby lint since the iterable is sorted by the key
+    longs, shorts = list(tuple(y) for _, y in itergroupby(strip_args, lambda x: x.startswith('--')))  # pylint: disable=prefer-odoo-tools-groupby
     longs_eq = tuple(l + '=' for l in longs if takes_value[l])
 
     args = sys.argv[:]

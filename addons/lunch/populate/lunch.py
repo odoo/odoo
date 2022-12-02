@@ -2,10 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 from datetime import datetime, timedelta
-from itertools import groupby
 
 from odoo import models
-from odoo.tools import populate
+from odoo.tools import groupby, populate
 
 _logger = logging.getLogger(__name__)
 

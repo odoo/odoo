@@ -843,11 +843,13 @@ class Picking(models.Model):
         precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
         grouped_quants = {}
-        for k, g in groupby(sorted(package.quant_ids, key=attrgetter(*keys_ids)), key=itemgetter(*keys)):
+        # Disable prefer-odoo-tools-groupby lint since the iterable is sorted by the key
+        for k, g in groupby(sorted(package.quant_ids, key=attrgetter(*keys_ids)), key=itemgetter(*keys)):  # pylint: disable=prefer-odoo-tools-groupby
             grouped_quants[k] = sum(self.env['stock.quant'].concat(*list(g)).mapped('quantity'))
 
         grouped_ops = {}
-        for k, g in groupby(sorted(pack_move_lines, key=attrgetter(*keys_ids)), key=itemgetter(*keys)):
+        # Disable prefer-odoo-tools-groupby lint since the iterable is sorted by the key
+        for k, g in groupby(sorted(pack_move_lines, key=attrgetter(*keys_ids)), key=itemgetter(*keys)):  # pylint: disable=prefer-odoo-tools-groupby
             grouped_ops[k] = sum(self.env['stock.move.line'].concat(*list(g)).mapped('product_qty'))
         if any(not float_is_zero(grouped_quants.get(key, 0) - grouped_ops.get(key, 0), precision_digits=precision_digits) for key in grouped_quants) \
                 or any(not float_is_zero(grouped_ops.get(key, 0) - grouped_quants.get(key, 0), precision_digits=precision_digits) for key in grouped_ops):
@@ -1152,7 +1154,8 @@ class Picking(models.Model):
         visited_documents = {}
         if stream == 'DOWN':
             if sorted_method and groupby_method:
-                grouped_moves = groupby(sorted(origin_objects.mapped(stream_field), key=sorted_method), key=groupby_method)
+                # Disable prefer-odoo-tools-groupby lint since the iterable is sorted by the key
+                grouped_moves = groupby(sorted(origin_objects.mapped(stream_field), key=sorted_method), key=groupby_method)  # pylint: disable=prefer-odoo-tools-groupby
             else:
                 raise UserError(_('You have to define a groupby and sorted method and pass them as arguments.'))
         elif stream == 'UP':

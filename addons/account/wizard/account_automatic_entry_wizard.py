@@ -207,7 +207,8 @@ class AutomaticEntryWizard(models.TransientModel):
             'journal_id': self.journal_id.id,
         }}
         # complete the account.move data
-        for date, grouped_lines in groupby(self.move_line_ids, lambda m: m.move_id.date):
+        # Disable prefer-odoo-tools-groupby lint since the iterable is sorted by the key
+        for date, grouped_lines in groupby(self.move_line_ids, lambda m: m.move_id.date):  # pylint: disable=prefer-odoo-tools-groupby
             grouped_lines = list(grouped_lines)
             amount = sum(l.balance for l in grouped_lines)
             move_data[date] = {

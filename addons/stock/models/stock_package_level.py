@@ -179,11 +179,13 @@ class StockPackageLevel(models.Model):
             return [object.product_id.id, object.lot_id.id]
 
         grouped_quants = {}
-        for k, g in groupby(sorted(package.quant_ids, key=sorted_key), key=itemgetter(*keys)):
+        # Disable prefer-odoo-tools-groupby lint since the iterable is sorted by the key
+        for k, g in groupby(sorted(package.quant_ids, key=sorted_key), key=itemgetter(*keys)):  # pylint: disable=prefer-odoo-tools-groupby
             grouped_quants[k] = sum(self.env['stock.quant'].concat(*list(g)).mapped('quantity'))
 
         grouped_ops = {}
-        for k, g in groupby(sorted(pack_move_lines, key=sorted_key), key=itemgetter(*keys)):
+        # Disable prefer-odoo-tools-groupby lint since the iterable is sorted by the key
+        for k, g in groupby(sorted(pack_move_lines, key=sorted_key), key=itemgetter(*keys)):  # pylint: disable=prefer-odoo-tools-groupby
             grouped_ops[k] = sum(self.env['stock.move.line'].concat(*list(g)).mapped(field))
         if any(grouped_quants.get(key, 0) - grouped_ops.get(key, 0) != 0 for key in grouped_quants) \
                 or any(grouped_ops.get(key, 0) - grouped_quants.get(key, 0) != 0 for key in grouped_ops):

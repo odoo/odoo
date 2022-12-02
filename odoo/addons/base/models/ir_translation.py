@@ -901,7 +901,8 @@ class IrTranslation(models.Model):
             ('comments', 'like', 'openerp-web'), ('value', '!=', False),
             ('value', '!=', '')],
             ['module', 'src', 'value', 'lang'], order='module')
-        for mod, msg_group in itertools.groupby(messages, key=operator.itemgetter('module')):
+        # Disable prefer-odoo-tools-groupby lint since the iterable is sorted by the key
+        for mod, msg_group in itertools.groupby(messages, key=operator.itemgetter('module')):  # pylint: disable=prefer-odoo-tools-groupby 
             translations_per_module.setdefault(mod, {'messages': []})
             translations_per_module[mod]['messages'].extend({
                 'id': m['src'],

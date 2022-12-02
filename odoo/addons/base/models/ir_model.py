@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import itertools
 import logging
 import re
 import psycopg2
@@ -14,7 +13,7 @@ from psycopg2 import sql
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import pycompat, unique, OrderedSet
+from odoo.tools import groupby, pycompat, unique, OrderedSet
 from odoo.tools.safe_eval import safe_eval, datetime, dateutil, time
 
 _logger = logging.getLogger(__name__)
@@ -2180,7 +2179,9 @@ class IrModelData(models.Model):
                     delete(records[half_size:])
 
         # remove non-model records first, grouped by batches of the same model
-        for model, items in itertools.groupby(unique(records_items), itemgetter(0)):
+
+        # TODO: Improve this call (drop the uniquification)
+        for model, items in groupby(unique(records_items), itemgetter(0)):
             delete(self.env[model].browse(item[1] for item in items))
 
         # Remove copied views. This must happen after removing all records from

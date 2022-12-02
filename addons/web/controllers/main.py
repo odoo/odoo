@@ -1869,7 +1869,8 @@ class Export(http.Controller):
         # export lists with no sub-fields (e.g. import_compatible lists with
         # no o2m) are even more efficient (from the same 6s to ~170ms, as
         # there's a single fields_get to execute)
-        for (base, length), subfields in itertools.groupby(
+        # Disable prefer-odoo-tools-groupby lint since the iterable is sorted by the key
+        for (base, length), subfields in itertools.groupby(  # pylint: disable=prefer-odoo-tools-groupby
                 sorted(export_fields),
                 lambda field: (field.split('/', 1)[0], len(field.split('/', 1)))):
             subfields = list(subfields)

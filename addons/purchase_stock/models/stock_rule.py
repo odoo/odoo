@@ -115,7 +115,8 @@ class StockRule(models.Model):
             procurements = self._merge_procurements(procurements_to_merge)
 
             po_lines_by_product = {}
-            grouped_po_lines = groupby(po.order_line.filtered(lambda l: not l.display_type and l.product_uom == l.product_id.uom_po_id).sorted(lambda l: l.product_id.id), key=lambda l: l.product_id.id)
+            # Disable prefer-odoo-tools-groupby lint since the iterable is sorted by the key
+            grouped_po_lines = groupby(po.order_line.filtered(lambda l: not l.display_type and l.product_uom == l.product_id.uom_po_id).sorted(lambda l: l.product_id.id), key=lambda l: l.product_id.id)  # pylint: disable=prefer-odoo-tools-groupby
             for product, po_lines in grouped_po_lines:
                 po_lines_by_product[product] = self.env['purchase.order.line'].concat(*list(po_lines))
             po_line_values = []
@@ -192,7 +193,8 @@ class StockRule(models.Model):
         """
         procurements_to_merge = []
 
-        for k, procurements in groupby(sorted(procurements, key=self._get_procurements_to_merge_sorted), key=self._get_procurements_to_merge_groupby):
+        # Disable prefer-odoo-tools-groupby lint since the iterable is sorted by the key
+        for _k, procurements in groupby(sorted(procurements, key=self._get_procurements_to_merge_sorted), key=self._get_procurements_to_merge_groupby):  # pylint: disable=prefer-odoo-tools-groupby
             procurements_to_merge.append(list(procurements))
         return procurements_to_merge
 

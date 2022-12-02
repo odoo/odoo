@@ -834,7 +834,8 @@ class StockMove(models.Model):
         for candidate_moves in candidate_moves_list:
             # First step find move to merge.
             candidate_moves = candidate_moves.with_context(prefetch_fields=False)
-            for k, g in groupby(sorted(candidate_moves, key=self._prepare_merge_move_sort_method), key=itemgetter(*distinct_fields)):
+            # Disable prefer-odoo-tools-groupby lint since the iterable is sorted by the key
+            for _k, g in groupby(sorted(candidate_moves, key=self._prepare_merge_move_sort_method), key=itemgetter(*distinct_fields)):  # pylint: disable=prefer-odoo-tools-groupby
                 moves = self.env['stock.move'].concat(*g).filtered(lambda m: m.state not in ('done', 'cancel', 'draft'))
                 # If we have multiple records we will merge then in a single one.
                 if len(moves) > 1:
@@ -998,7 +999,8 @@ class StockMove(models.Model):
         type (moves should already have them identical). Otherwise, create a new
         picking to assign them to. """
         Picking = self.env['stock.picking']
-        grouped_moves = groupby(sorted(self, key=lambda m: [f.id for f in m._key_assign_picking()]), key=lambda m: [m._key_assign_picking()])
+        # Disable prefer-odoo-tools-groupby lint since the iterable is sorted by the key
+        grouped_moves = groupby(sorted(self, key=lambda m: [f.id for f in m._key_assign_picking()]), key=lambda m: [m._key_assign_picking()])  # pylint: disable=prefer-odoo-tools-groupby
         for group, moves in grouped_moves:
             moves = self.env['stock.move'].concat(*list(moves))
             new_picking = False
@@ -1368,7 +1370,8 @@ class StockMove(models.Model):
                         return (ml.location_dest_id.id, ml.lot_id.id, ml.result_package_id.id, ml.owner_id.id)
 
                     grouped_move_lines_in = {}
-                    for k, g in groupby(sorted(move_lines_in, key=_keys_in_sorted), key=itemgetter(*keys_in_groupby)):
+                    # Disable prefer-odoo-tools-groupby lint since the iterable is sorted by the key
+                    for k, g in groupby(sorted(move_lines_in, key=_keys_in_sorted), key=itemgetter(*keys_in_groupby)):  # pylint: disable=prefer-odoo-tools-groupby
                         qty_done = 0
                         for ml in g:
                             qty_done += ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
@@ -1388,12 +1391,14 @@ class StockMove(models.Model):
                         return (ml.location_id.id, ml.lot_id.id, ml.package_id.id, ml.owner_id.id)
 
                     grouped_move_lines_out = {}
-                    for k, g in groupby(sorted(move_lines_out_done, key=_keys_out_sorted), key=itemgetter(*keys_out_groupby)):
+                    # Disable prefer-odoo-tools-groupby lint since the iterable is sorted by the key
+                    for k, g in groupby(sorted(move_lines_out_done, key=_keys_out_sorted), key=itemgetter(*keys_out_groupby)):  # pylint: disable=prefer-odoo-tools-groupby
                         qty_done = 0
                         for ml in g:
                             qty_done += ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
                         grouped_move_lines_out[k] = qty_done
-                    for k, g in groupby(sorted(move_lines_out_reserved, key=_keys_out_sorted), key=itemgetter(*keys_out_groupby)):
+                    # Disable prefer-odoo-tools-groupby lint since the iterable is sorted by the key
+                    for k, g in groupby(sorted(move_lines_out_reserved, key=_keys_out_sorted), key=itemgetter(*keys_out_groupby)):  # pylint: disable=prefer-odoo-tools-groupby
                         grouped_move_lines_out[k] = sum(self.env['stock.move.line'].concat(*list(g)).mapped('product_qty'))
                     available_move_lines = {key: grouped_move_lines_in[key] - grouped_move_lines_out.get(key, 0) for key in grouped_move_lines_in.keys()}
                     # pop key if the quantity available amount to 0
