@@ -851,7 +851,7 @@ class Website(models.Model):
                 dependencies.setdefault(model_name, [])
                 dependencies[model_name] += [{
                     'field_name': Model.fields_get()[column]['string'],
-                    'record_name': rec.name,
+                    'record_name': rec.display_name,
                     'link': 'website_url' in rec and rec.website_url or f'/web#id={rec.id}&view_type=form&model={model}',
                     'model_name': model_name,
                 } for rec in dependency_records]
