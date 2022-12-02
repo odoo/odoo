@@ -89,18 +89,20 @@
             <field name="model">restaurant.table</field>
             <field name="arch" type="xml">
                 <form string="Restaurant Table">
-                    <group col="2">
-                        <field name="name" />
-                        <field name="seats" />
-                    </group>
-                    <group col="4" string="Appearance" groups="base.group_no_one">
-                        <field name="shape" />
-                        <field name="color" />
-                        <field name="position_h" />
-                        <field name="position_v" />
-                        <field name="width" />
-                        <field name="height" />
-                    </group>
+                    <sheet>
+                        <group col="2">
+                            <field name="name" />
+                            <field name="seats" />
+                        </group>
+                        <group col="4" string="Appearance" groups="base.group_no_one">
+                            <field name="shape" />
+                            <field name="color" />
+                            <field name="position_h" />
+                            <field name="position_v" />
+                            <field name="width" />
+                            <field name="height" />
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
