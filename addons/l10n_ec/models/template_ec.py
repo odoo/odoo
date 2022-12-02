@@ -35,3 +35,15 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'ec9994',
             },
         }
+
+    @template('ec', 'account.journal')
+    def _get_ec_account_journal(self):
+        """ In case of an Ecuador, we modified the sales journal"""
+        return {
+            'sale': {
+                'name': "001-001 Facturas de cliente",
+                'l10n_ec_entity': '001',
+                'l10n_ec_emission': '001',
+                'l10n_ec_emission_address_id': self.env.company.partner_id.id,
+            },
+        }
