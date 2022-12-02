@@ -19,8 +19,10 @@ class AccrualPlan(models.Model):
         ('immediately', 'Immediately'),
         ('end_of_accrual', "After this accrual's period")],
         string="Level Transition", default="immediately", required=True,
-        help="""Immediately: When the date corresponds to the new level, your accrual is automatically computed, granted and you switch to new level
-                After this accrual's period: When the accrual is complete (a week, a month), and granted, you switch to next level if allocation date corresponds""")
+        help="""Specify what occurs if a level transition takes place in the middle of a pay period.\n
+                'Immediately' will switch the employee to the new accrual level on the exact date during the ongoing pay period.\n
+                'After this accrual's period' will keep the employee on the same accrual level until the ongoing pay period is complete.
+                After it is complete, the new level will take effect when the next pay period begins.""")
     show_transition_mode = fields.Boolean(compute='_compute_show_transition_mode')
 
     @api.depends('level_ids')
