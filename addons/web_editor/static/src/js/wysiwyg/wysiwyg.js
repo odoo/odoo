@@ -2027,6 +2027,7 @@ const Wysiwyg = Widget.extend({
                 priority: 30,
                 description: _t('Add a blockquote section.'),
                 fontawesome: 'fa-quote-right',
+                isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     this.odooEditor.execCommand('setTag', 'blockquote');
                 },
@@ -2037,6 +2038,7 @@ const Wysiwyg = Widget.extend({
                 priority: 20,
                 description: _t('Add a code section.'),
                 fontawesome: 'fa-code',
+                isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     this.odooEditor.execCommand('setTag', 'pre');
                 },
@@ -2046,6 +2048,7 @@ const Wysiwyg = Widget.extend({
                 name: _t('Signature'),
                 description: _t('Insert your signature.'),
                 fontawesome: 'fa-pencil-square-o',
+                isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
                 callback: async () => {
                     const res = await this._rpc({
                         model: 'res.users',
@@ -2065,6 +2068,9 @@ const Wysiwyg = Widget.extend({
                 fontawesome: 'fa-columns',
                 callback: () => this.odooEditor.execCommand('columnize', 2, editorOptions.insertParagraphAfterColumns),
                 isDisabled: () => {
+                    if (!this.odooEditor.isSelectionInBlockRoot()) {
+                        return true;
+                    }
                     const anchor = this.odooEditor.document.getSelection().anchorNode;
                     const row = closestElement(anchor, '.o_text_columns .row');
                     return row && row.childElementCount === 2;
@@ -2078,6 +2084,9 @@ const Wysiwyg = Widget.extend({
                 fontawesome: 'fa-columns',
                 callback: () => this.odooEditor.execCommand('columnize', 3, editorOptions.insertParagraphAfterColumns),
                 isDisabled: () => {
+                    if (!this.odooEditor.isSelectionInBlockRoot()) {
+                        return true;
+                    }
                     const anchor = this.odooEditor.document.getSelection().anchorNode;
                     const row = closestElement(anchor, '.o_text_columns .row');
                     return row && row.childElementCount === 3;
@@ -2091,6 +2100,9 @@ const Wysiwyg = Widget.extend({
                 fontawesome: 'fa-columns',
                 callback: () => this.odooEditor.execCommand('columnize', 4, editorOptions.insertParagraphAfterColumns),
                 isDisabled: () => {
+                    if (!this.odooEditor.isSelectionInBlockRoot()) {
+                        return true;
+                    }
                     const anchor = this.odooEditor.document.getSelection().anchorNode;
                     const row = closestElement(anchor, '.o_text_columns .row');
                     return row && row.childElementCount === 4;
@@ -2104,6 +2116,9 @@ const Wysiwyg = Widget.extend({
                 fontawesome: 'fa-columns',
                 callback: () => this.odooEditor.execCommand('columnize', 0),
                 isDisabled: () => {
+                    if (!this.odooEditor.isSelectionInBlockRoot()) {
+                        return true;
+                    }
                     const anchor = this.odooEditor.document.getSelection().anchorNode;
                     const row = closestElement(anchor, '.o_text_columns .row');
                     return !row;
