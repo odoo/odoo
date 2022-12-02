@@ -587,7 +587,7 @@ class PosSession(models.Model):
             session_destination_id = picking_type.default_location_dest_id.id
 
         for order in self.order_ids:
-            if order.company_id.anglo_saxon_accounting and order.is_invoiced or order.to_ship:
+            if order.company_id.anglo_saxon_accounting and order.is_invoiced or order.shipping_date:
                 continue
             destination_id = order.partner_id.property_stock_customer.id or session_destination_id
             if destination_id in lines_grouped_by_dest_location:

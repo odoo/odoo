@@ -138,10 +138,17 @@ class PaymentScreen extends PosComponent {
             this.currentOrder.set_tip(parse.float(payload));
         }
     }
-    toggleIsToShip() {
-        // click_ship
-        this.currentOrder.set_to_ship(!this.currentOrder.is_to_ship());
-        this.render(true);
+    async toggleShippingDatePicker() {
+        if (!this.currentOrder.getShippingDate()) {
+            const { confirmed, payload: shippingDate } = await this.showPopup("DatePickerPopup", {
+                title: this.env._t("Select the shipping date"),
+            });
+            if (confirmed) {
+                this.currentOrder.setShippingDate(shippingDate);
+            }
+        } else {
+            this.currentOrder.setShippingDate(false);
+        }
     }
     deletePaymentLine(event) {
         var self = this;
@@ -326,7 +333,7 @@ class PaymentScreen extends PosComponent {
         }
 
         if (
-            (this.currentOrder.is_to_invoice() || this.currentOrder.is_to_ship()) &&
+            (this.currentOrder.is_to_invoice() || this.currentOrder.getShippingDate()) &&
             !this.currentOrder.get_partner()
         ) {
             const { confirmed } = await this.showPopup("ConfirmPopup", {
@@ -343,7 +350,7 @@ class PaymentScreen extends PosComponent {
 
         const partner = this.currentOrder.get_partner();
         if (
-            this.currentOrder.is_to_ship() &&
+            this.currentOrder.getShippingDate() &&
             !(partner.name && partner.street && partner.city && partner.country_id)
         ) {
             this.showPopup("ErrorPopup", {

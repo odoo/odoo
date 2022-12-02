@@ -86,6 +86,7 @@ class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderSc
         if (confirmed) {
             const currentPOSOrder = this.env.pos.get_order();
             const sale_order = await this._getSaleOrder(clickedOrder.id);
+            clickedOrder.shipping_date = sale_order.shipping_date
             try {
                 await this.env.pos.load_new_partners();
             } catch {
@@ -293,6 +294,7 @@ class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderSc
                     "fiscal_position_id",
                     "amount_total",
                     "amount_untaxed",
+                    "picking_ids",
                 ],
             ],
             context: this.env.session.user_context,
@@ -300,6 +302,16 @@ class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderSc
 
         const sale_lines = await this._getSOLines(sale_order[0].order_line);
         sale_order[0].order_line = sale_lines;
+        
+        const picking_id = await this.rpc({
+            model: 'stock.picking',
+            method: 'read',
+            args: [
+                [sale_order[0].picking_ids[0]],
+                ['scheduled_date'],
+            ],
+          });
+        sale_order[0].shipping_date = picking_id[0].scheduled_date;
 
         return sale_order[0];
     }
