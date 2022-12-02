@@ -49,9 +49,28 @@ class ResPartner(models.Model):
                         error_message = ""
                         if partner.l10n_latam_identification_type_id.id == it_dni.id:
                             error_message = _("VAT %s is not valid for an Ecuadorian DNI, "
-                                              "it must be like this form 0915068258") % partner.vat
+                                              "it must be like this form 1234567897") % partner.vat
                         if partner.l10n_latam_identification_type_id.id == it_ruc.id:
                             error_message = _("VAT %s is not valid for an Ecuadorian company, "
-                                              "it must be like this form 0993143790001") % partner.vat
+                                              "it must be like this form 1234567897001") % partner.vat
                         raise ValidationError(error_message)
         return super(ResPartner, self - ecuadorian_partners).check_vat()
+
+    def _l10n_ec_get_identification_type(self):
+        """Maps Odoo identification types to Ecuadorian ones.
+        Useful for document type domains, electronic documents, ats, others.
+        """
+        self.ensure_one()
+
+        def id_type_in(*args):
+            return any([self.l10n_latam_identification_type_id == self.env.ref(arg) for arg in args])
+
+        if id_type_in('l10n_ec.ec_dni'):
+            return 'cedula'  # DNI
+        elif id_type_in('l10n_ec.ec_ruc'):
+            return 'ruc'  # RUC
+        elif id_type_in('l10n_latam_base.it_pass'):
+            return 'passport'  # Pasaporte
+        elif id_type_in('l10n_latam_base.it_fid', 'l10n_latam_base.it_vat') \
+                or self.l10n_latam_identification_type_id.country_id != self.env.ref('base.ec'):
+            return 'foreign'  # Identificacion del exterior
