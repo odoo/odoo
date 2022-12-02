@@ -4,6 +4,7 @@ import datetime
 from freezegun import freeze_time
 from dateutil.relativedelta import relativedelta
 
+from odoo import Command
 from odoo.tests import tagged
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
@@ -354,7 +355,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             holiday_type = self.env['hr.leave.type'].create({
                 'name': 'Paid Time Off',
                 'requires_allocation': 'no',
-                'responsible_id': self.user_hrmanager_id,
+                'responsible_ids': [Command.link(self.user_hrmanager_id)],
                 'time_type': 'leave',
             })
             leave = self.env['hr.leave'].create({
