@@ -55,16 +55,14 @@ class AccountMove(models.Model):
         gst_treatment_name_mapping = {k: v for k, v in
                              self._fields['l10n_in_gst_treatment']._description_selection(self.env)}
         for move in posted.filtered(lambda m: m.country_code == 'IN'):
-            """Check state is set in company/sub-unit"""
-            company_unit_partner = move.journal_id.l10n_in_gstin_partner_id or move.journal_id.company_id
-            if not company_unit_partner.state_id:
+            if not move.company_id.state_id:
                 raise ValidationError(_(
-                    "State is missing from your company/unit %(company_name)s (%(company_id)s).\nFirst set state in your company/unit.",
-                    company_name=company_unit_partner.name,
-                    company_id=company_unit_partner.id
+                    "State is missing from your company %(company_name)s (%(company_id)s).\nFirst set state in your company.",
+                    company_name=move.company_id.name,
+                    company_id=move.company_id.id
                 ))
             elif move.journal_id.type == 'purchase':
-                move.l10n_in_state_id = company_unit_partner.state_id
+                move.l10n_in_state_id = move.company_id.state_id
 
             move.l10n_in_gstin = move.partner_id.vat
             if not move.l10n_in_gstin and move.l10n_in_gst_treatment in ['regular', 'composition', 'special_economic_zone', 'deemed_export']:
@@ -76,11 +74,9 @@ class AccountMove(models.Model):
                 ))
             if move.journal_id.type == 'sale':
                 move.l10n_in_state_id = self._l10n_in_get_indian_state(move.partner_id)
+                #still state is not set then assumed that transaction is local like PoS so set state of company
                 if not move.l10n_in_state_id:
-                    move.l10n_in_state_id = self._l10n_in_get_indian_state(move.partner_id)
-                #still state is not set then assumed that transaction is local like PoS so set state of company unit
-                if not move.l10n_in_state_id:
-                    move.l10n_in_state_id = company_unit_partner.state_id
+                    move.l10n_in_state_id = move.company_id.state_id
         return posted
 
     def _l10n_in_get_warehouse_address(self):
