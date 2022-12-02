@@ -2512,6 +2512,14 @@ class Task(models.Model):
             'context': self._context
         }
 
+    @api.model
+    def get_pagination_details(self, task_id, type):
+        task = self.browse(task_id)
+        if type == 'subtasks':
+            return task.parent_id.child_ids.ids
+        elif type == 'dependecies':
+            return []
+
     def action_project_sharing_open_task(self):
         action = self.action_open_task()
         action['views'] = [[self.env.ref('project.project_sharing_project_task_view_form').id, 'form']]

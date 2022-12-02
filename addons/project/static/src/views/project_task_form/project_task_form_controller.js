@@ -4,7 +4,19 @@ import { useService } from '@web/core/utils/hooks';
 import { FormController } from '@web/views/form/form_controller';
 
 export class ProjectTaskFormController extends FormController {
-    setup() {
+    async setup() {
+        this.orm = useService('orm');
+        if (this.props.context.subtasks_context) {
+            const a = await this.orm.call(
+                'project.task',
+                'get_pagination_details',
+                [this.props.resId, 'subtasks']
+            );
+            this.props.resIds = a;
+        }
+        else if (this.props.context.dependencies_context) {
+            this.props.resIds = [1, 5, 10, 8, this.props.resId];
+        }
         super.setup();
         this.taskRecurrence = useService('project_task_recurrence');
     }
