@@ -178,6 +178,8 @@ class SaleOrderLine(models.Model):
 
         previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
         res = super(SaleOrderLine, self).write(values)
+        if 'product_packaging_id' in values:
+            self.move_ids.filtered(lambda m: m.state not in ('cancel', 'done')).product_packaging_id = values['product_packaging_id']
         if lines:
             lines._action_launch_stock_rule(previous_product_uom_qty)
         return res

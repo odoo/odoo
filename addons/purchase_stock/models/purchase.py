@@ -365,6 +365,8 @@ class PurchaseOrderLine(models.Model):
                 # Avoid updating kit components' stock.move
                 moves = line.move_ids.filtered(lambda s: s.state not in ('cancel', 'done') and s.product_id == line.product_id)
                 moves.write({'price_unit': line.price_unit})
+        if 'product_packaging_id' in values:
+            self.move_ids.filtered(lambda m: m.state not in ('cancel', 'done')).product_packaging_id = values['product_packaging_id']
         if 'product_qty' in values:
             lines.with_context(previous_product_qty=previous_product_qty)._create_or_update_picking()
         return result
