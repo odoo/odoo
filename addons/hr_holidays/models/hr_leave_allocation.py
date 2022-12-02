@@ -732,8 +732,8 @@ class HolidaysAllocation(models.Model):
         responsible = self.env.user
 
         if self.validation_type == 'officer' or self.validation_type == 'set':
-            if self.holiday_status_id.responsible_id:
-                responsible = self.holiday_status_id.responsible_id
+            if self.holiday_status_id.responsible_ids:
+                responsible = self.holiday_status_id.responsible_ids
 
         return responsible
 

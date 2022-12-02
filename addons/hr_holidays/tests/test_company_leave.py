@@ -18,7 +18,7 @@ class TestCompanyLeave(TransactionCase):
 
         cls.bank_holiday = cls.env['hr.leave.type'].create({
             'name': 'Bank Holiday',
-            'responsible_id': cls.env.user.id,
+            'responsible_ids': [cls.env.user.id],
             'company_id': cls.company.id,
             'requires_allocation': 'no',
         })

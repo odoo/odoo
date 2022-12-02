@@ -1524,8 +1524,8 @@ class HolidaysRequest(models.Model):
             elif self.employee_id.parent_id.user_id:
                 responsible = self.employee_id.parent_id.user_id
         elif self.validation_type == 'hr' or (self.validation_type == 'both' and self.state == 'validate1'):
-            if self.holiday_status_id.responsible_id:
-                responsible = self.holiday_status_id.responsible_id
+            if self.holiday_status_id.responsible_ids:
+                responsible = self.holiday_status_id.responsible_ids
 
         return responsible
 
@@ -1540,16 +1540,20 @@ class HolidaysRequest(models.Model):
             if holiday.state == 'draft':
                 to_clean |= holiday
             elif holiday.state == 'confirm':
-                holiday.activity_schedule(
-                    'hr_holidays.mail_act_leave_approval',
-                    note=note,
-                    user_id=holiday.sudo()._get_responsible_for_approval().id or self.env.user.id)
+                user_ids = holiday.sudo()._get_responsible_for_approval().ids or self.env.user.id
+                for user_id in user_ids:
+                    holiday.activity_schedule(
+                        'hr_holidays.mail_act_leave_approval',
+                        note=note,
+                        user_id=user_id)
             elif holiday.state == 'validate1':
                 holiday.activity_feedback(['hr_holidays.mail_act_leave_approval'])
-                holiday.activity_schedule(
-                    'hr_holidays.mail_act_leave_second_approval',
-                    note=note,
-                    user_id=holiday.sudo()._get_responsible_for_approval().id or self.env.user.id)
+                user_ids = holiday.sudo()._get_responsible_for_approval().ids or self.env.user.id
+                for user_id in user_ids:
+                    holiday.activity_schedule(
+                        'hr_holidays.mail_act_leave_second_approval',
+                        note=note,
+                        user_id=user_id)
             elif holiday.state == 'validate':
                 to_do |= holiday
             elif holiday.state == 'refuse':

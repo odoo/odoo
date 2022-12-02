@@ -90,7 +90,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                 'employee_requests': 'no',
                 'allocation_validation_type': 'officer',
                 'leave_validation_type': 'both',
-                'responsible_id': self.env.ref('base.user_admin').id,
+                'responsible_ids': [self.env.ref('base.user_admin').id],
             })
 
             self.env['hr.leave.allocation'].create([
@@ -244,7 +244,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             'employee_requests': 'no',
             'allocation_validation_type': 'officer',
             'leave_validation_type': 'both',
-            'responsible_id': self.env.ref('base.user_admin').id,
+            'responsible_ids': [self.env.ref('base.user_admin').id],
         })
 
         self.env['hr.leave.allocation'].create({
