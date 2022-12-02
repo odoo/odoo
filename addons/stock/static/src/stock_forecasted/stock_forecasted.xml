@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <div t-name="stock.Forecasted" class="o_action" owl="1">
+        <ControlPanel display="{ 'top-right' : false }">
+            <t t-set-slot="control-panel-bottom-left-buttons">
+                <ForecastedButtons action="props.action" resModel="resModel" reloadReport.bind="reloadReport"/>
+            </t>
+            <t t-set-slot="control-panel-bottom-right">
+                <div class="btn-group o_search_options position-static" role="search">
+                    <ForecastedWarehouseFilter action="props.action" setWarehouseInContext.bind="updateWarehouse"/>
+                </div>
+            </t>
+        </ControlPanel>
+        <div class="o-content pt-3 container-fluid overflow-auto o_stock_forecasted_page">
+            <ForecastedHeader docs="docs" openView.bind="openView"/>
+            <t t-if="context.warehouse">
+                <View type="'stock_forecasted_graph'"
+                viewId="stock_report_view_graph"
+                resModel="'report.stock.quantity'"
+                domain="graphDomain"
+                display="{controlPanel: false}"
+                context="{fill_temporal: false}"
+                info="graphInfo"
+                useSampleModel="true"
+                />
+            </t>
+            <ForecastedDetails docs="docs" openView.bind="openView" reloadReport.bind="reloadReport"/>
+        </div>
+    </div>
+</templates>
