@@ -13,7 +13,10 @@ Thai accounting chart and localization.
     """,
     'author': 'Almacom',
     'website': 'http://almacom.co.th/',
-    'depends': ['account'],
+    'depends': [
+        'account',
+        'l10n_multilang',
+    ],
     'data': [
         'data/account_tax_group_data.xml',
         'data/l10n_th_chart_data.xml',

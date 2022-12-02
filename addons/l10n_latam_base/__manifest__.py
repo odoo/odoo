@@ -48,6 +48,7 @@ This module is compatible with base_vat module in order to be able to validate V
     'depends': [
         'contacts',
         'base_vat',
+        'l10n_multilang',
     ],
     'data': [
         'data/l10n_latam.identification.type.csv',

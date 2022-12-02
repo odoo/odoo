@@ -21,6 +21,7 @@ Tento modul definuje:
         'account',
         'base_iban',
         'base_vat',
+        'l10n_multilang',
     ],
     'data': [
           'data/l10n_cz_coa_data.xml',

@@ -18,7 +18,10 @@ This module add, for accounting:
  - Field PermitNo and PermitNoDate on invoice
 
     """,
-    'depends': ['base', 'account'],
+    'depends': [
+        'account',
+        'l10n_multilang',
+    ],
     'data': [
         'data/l10n_sg_chart_data.xml',
         'data/account_tax_group_data.xml',

@@ -25,6 +25,7 @@ Pre viac informácií kontaktujte info@26house.com alebo navštívte https://www
         'account',
         'base_iban',
         'base_vat',
+        'l10n_multilang',
     ],
     'data': [
           'data/l10n_sk_coa_data.xml',

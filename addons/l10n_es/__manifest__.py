@@ -34,6 +34,7 @@ Spanish charts of accounts (PGCE 2008).
         "account",
         "base_iban",
         "base_vat",
+        "l10n_multilang",
     ],
     "data" : [
         'data/account_chart_template_data.xml',

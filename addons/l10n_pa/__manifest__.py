@@ -16,7 +16,10 @@ Con la Colaboración de
     """,
     "author": "Cubic ERP",
     'category': 'Accounting/Localizations/Account Charts',
-    "depends": ["account"],
+    "depends": [
+        "account",
+        "l10n_multilang",
+    ],
     "data": [
         "data/l10n_pa_chart_data.xml",
         "data/account_tax_group_data.xml",

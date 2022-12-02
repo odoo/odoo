@@ -21,6 +21,7 @@ This is the latest Ethiopian Odoo localization and consists of:
     'website':'http://miketelahun.wordpress.com',
     'depends': [
         'account',
+        'l10n_multilang',
     ],
     'data': [
         'data/l10n_et_chart_data.xml',

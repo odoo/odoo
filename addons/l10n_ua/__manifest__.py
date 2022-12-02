@@ -12,7 +12,10 @@ Ukraine - Chart of accounts.
 ============================
     """,
     'category': 'Accounting/Localizations/Account Charts',
-    'depends': ['account'],
+    'depends': [
+        'account',
+        'l10n_multilang',
+    ],
     'data': [
         'data/account_chart_template.xml',
         'data/account.account.template.csv',

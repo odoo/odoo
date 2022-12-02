@@ -8,7 +8,10 @@
 United Arab Emirates accounting chart and localization.
 =======================================================
     """,
-    'depends': ['base', 'account'],
+    'depends': [
+        'account',
+        'l10n_multilang'
+    ],
     'data': [
         'data/l10n_ae_data.xml',
         'data/l10n_ae_chart_data.xml',

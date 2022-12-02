@@ -9,7 +9,11 @@
         This is the base module of the Serbian localization. It manages chart of accounts and taxes.
     """,
     "author": "Modoolar, Odoo S.A.",
-    "depends": ["account", "base_vat"],
+    "depends": [
+        "account",
+        "base_vat",
+        "l10n_multilang",
+    ],
     "data": [
         "data/account_chart_template_data.xml",
         "data/account.account.template.csv",

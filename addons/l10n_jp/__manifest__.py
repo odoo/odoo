@@ -28,7 +28,10 @@ circumstances, you might not need to use those at all.
     """,
     'author': 'Quartile Limited',
     'website': 'https://www.quartile.co/',
-    'depends': ['account'],
+    'depends': [
+        'account',
+        'l10n_multilang'
+    ],
     'data': [
         'data/l10n_jp_chart_data.xml',
         'data/account.account.template.csv',

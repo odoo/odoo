@@ -52,7 +52,10 @@ Includes:
 Everything is in English with Spanish translation. Further translations are welcome,
 please go to http://translations.launchpad.net/openerp-costa-rica.
     """,
-    'depends': ['account'],
+    'depends': [
+        'account',
+        'l10n_multilang'
+    ],
     'data': [
         'data/l10n_cr_res_partner_title.xml',
         'data/l10n_cr_chart_data.xml',

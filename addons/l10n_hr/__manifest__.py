@@ -44,6 +44,7 @@ Izvori podataka:
 
     'depends': [
         'account',
+        'l10n_multilang',
     ],
     'data': [
         'data/l10n_hr_chart_data.xml',

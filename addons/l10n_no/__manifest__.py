@@ -14,6 +14,7 @@ Updated for Odoo 9 by Bringsvor Consulting AS <www.bringsvor.com>
         "account",
         "base_iban",
         "base_vat",
+        "l10n_multilang",
     ],
     "data": ['data/l10n_no_chart_data.xml',
              'data/account_tax_group_data.xml',

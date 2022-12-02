@@ -25,6 +25,7 @@ Set the payment reference type from the Sales Journal.
         'account',
         'base_iban',
         'base_vat',
+        'l10n_multilang',
     ],
     "data": [
         'data/account_account_tag_data.xml',

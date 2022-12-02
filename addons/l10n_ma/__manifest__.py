@@ -17,7 +17,10 @@ produits et charges), balance générale à 6 colonnes, Grand livre cumulatif...
 L'intégration comptable a été validé avec l'aide du Cabinet d'expertise comptable
 Seddik au cours du troisième trimestre 2010.""",
     'website': 'http://www.kazacube.com',
-    'depends': ['base', 'account'],
+    'depends': [
+        'account',
+        'l10n_multilang'
+    ],
     'data': [
         'data/l10n_ma_chart_data.xml',
         'data/account_tax_group_data.xml',

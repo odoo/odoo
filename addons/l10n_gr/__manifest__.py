@@ -18,6 +18,7 @@ Greek accounting chart and localization.
         'account',
         'base_iban',
         'base_vat',
+        'l10n_multilang',
     ],
     'data': [
         'data/l10n_gr_chart_data.xml',

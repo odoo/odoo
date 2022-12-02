@@ -33,6 +33,7 @@ configuration of their taxes and fiscal positions manually.
         'account',
         'base_iban',
         'base_vat',
+        'l10n_multilang',
     ],
     'data': [
         'data/l10n_fr_chart_data.xml',

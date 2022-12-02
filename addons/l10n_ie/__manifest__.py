@@ -13,7 +13,12 @@
 
     'author': 'Target Integration',
     'website': 'http://www.targetintegration.com',
-    'depends': ['account', 'base_iban', 'base_vat'],
+    'depends': [
+        'account',
+        'base_iban',
+        'base_vat',
+        'l10n_multilang'
+    ],
     'data': [
         'data/account_chart_template.xml',
         'data/account.account.template.csv',

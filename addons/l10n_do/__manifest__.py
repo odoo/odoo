@@ -84,9 +84,11 @@ en Odoo):
     """,
     'author': 'Gustavo Valverde - iterativo | Consultores de Odoo',
     'website': 'http://iterativo.do',
-    'depends': ['account',
-                'base_iban'
-                ],
+    'depends': [
+        'account',
+        'base_iban',
+        'l10n_multilang',
+    ],
     'data': [
         # Basic accounting data
         'data/l10n_do_chart_data.xml',

@@ -12,7 +12,11 @@ Swedish Accounting
 This is the base module to manage the accounting chart for Sweden in Odoo.
 It also includes the invoice OCR payment reference handling.
     """,
-    "depends": ["account", "base_vat"],
+    "depends": [
+        "account",
+        "base_vat",
+        "l10n_multilang"
+    ],
     "data": [
         'data/account.account.tag.csv',
         "data/account_chart_template_before_accounts.xml",

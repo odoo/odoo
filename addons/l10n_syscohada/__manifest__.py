@@ -26,6 +26,7 @@ Countries that use OHADA are the following:
     'website': 'http://www.baamtu.com',
     'depends' : [
         'account',
+        'l10n_multilang',
     ],
     'data': [
         'data/menuitem_data.xml',

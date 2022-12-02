@@ -17,6 +17,7 @@ Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır
     'maintainer':'https://launchpad.net/~openerp-turkey, http://www.cantecim.com',
     'depends': [
         'account',
+        'l10n_multilang',
     ],
     'data': [
         # Chart of Accounts

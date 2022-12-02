@@ -32,6 +32,7 @@ With this module you will have:
     """,
     "depends": [
         "account",
+        "l10n_multilang",
     ],
     "data": [
         "data/account.account.tag.csv",
