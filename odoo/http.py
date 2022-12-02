@@ -1603,7 +1603,7 @@ class JsonRPCDispatcher(Dispatcher):
         self.request.params = dict(self.jsonrequest.get('params', {}), **args)
         ctx = self.request.params.pop('context', None)
         if ctx is not None and self.request.db:
-            self.request.update_env(context=ctx)
+            self.request.update_context(**ctx)
 
         if self.request.db:
             result = self.request.registry['ir.http']._dispatch(endpoint)
