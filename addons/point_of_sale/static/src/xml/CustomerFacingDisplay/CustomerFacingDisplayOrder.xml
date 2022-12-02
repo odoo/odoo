@@ -51,22 +51,53 @@
 
     <t t-name="CustomerFacingDisplayOrderLines" owl="1">
         <div class="pos_orderlines">
-            <div class="pos_orderlines_item pos_orderlines_header">
-                <div/>
-                <div/>
-                <div>Quantity</div>
-                <div>Price</div>
-            </div>
-            <div class="pos_orderlines_list">
-                <t t-if="order">
-                    <div t-foreach="order.get_orderlines()" t-as="orderline" t-key="orderline_index" class="pos_orderlines_item">
-                        <div><div t-attf-style="background-image:url(#{productImages[orderline.product.id]})"/></div>
-                        <div t-esc="orderline.get_full_product_name()"/>
-                        <div t-esc="orderline.get_quantity_str()"/>
-                        <div t-esc="pos.format_currency(orderline.get_display_price())"/>
+            <!-- if there is an order -->
+            <!-- and if the order is not already paid for -->
+            <!-- we show the order items -->
+            <t t-if="order">
+            <!-- in order to see if the order has been paid for ( validated ), -->
+            <!-- we look at the state of the POS screen: -->
+            <!-- if the screen state is 'ReceiptScreen', -->
+            <!-- that means that the order has been validated -->
+                <t t-if ="order.get_screen_data().name != 'ReceiptScreen'">
+                    <div class="pos_orderlines_item pos_orderlines_header">
+                        <div/>
+                        <div/>
+                        <div>Quantity</div>
+                        <div>Price</div>
+                    </div>
+                    <div class="pos_orderlines_list">
+                        <div t-foreach="order.get_orderlines()" t-as="orderline" class="pos_orderlines_item">
+                            <div><div t-attf-style="background-image:url(#{productImages[orderline.product.id]})"/></div>
+                                <ul>
+                                    <li class="info">
+                                        <!-- name of item -->
+                                        <div t-esc="orderline.get_full_product_name()"/>
+                                    </li>
+                                    <!-- we show the specific discount applied to this item -->
+                                    <li class="info">
+                                        <t t-if="orderline.get_discount_str() !== '0'">
+                                            <em>
+                                            With a
+                                                <t t-esc="orderline.get_discount_str()" />%
+                                            discount
+                                            </em>
+                                        </t>
+                                    </li>
+                                </ul>
+                            <div t-esc="orderline.get_quantity_str()"/>
+                            <div t-esc="pos.format_currency(orderline.get_display_price())"/>
+                        </div>
                     </div>
                 </t>
-            </div>
+                <!-- after the order has been validated -->
+                <!-- we show the 'thank you' message -->
+                <t t-else="">
+                    <div class="pos-thank-you-message">
+                        <span>Thank you for your purchase!</span>
+                    </div>
+                </t>
+            </t>
         </div>
     </t>
 
