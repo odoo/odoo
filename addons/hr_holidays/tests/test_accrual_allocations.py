@@ -385,8 +385,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'leave',
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': holiday_type.id,
-                'date_from': '2021-09-02 00:00:00',
-                'date_to': '2021-09-02 23:59:59',
+                'request_date_from': '2021-09-02',
+                'request_date_to': '2021-09-02',
             })
             leave.action_validate()
             self.assertFalse(allocation_not_worked_time.nextcall, 'There should be no nextcall set on the allocation.')
@@ -1012,8 +1012,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'name': 'leave',
             'employee_id': self.employee_emp.id,
             'holiday_status_id': self.leave_type.id,
-            'date_from': '2022-03-07 00:00:00',
-            'date_to': '2022-03-11 23:59:59',
+            'request_date_from': '2022-03-07',
+            'request_date_to': '2022-03-11',
         })
         leave.action_validate()
 
@@ -1057,8 +1057,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'name': 'leave',
             'employee_id': self.employee_emp.id,
             'holiday_status_id': self.leave_type_hour.id,
-            'date_from': '2022-03-07 00:00:00',
-            'date_to': '2022-03-07 23:59:59'
+            'request_date_from': '2022-03-07',
+            'request_date_to': '2022-03-07',
         })
         leave.action_validate()
 

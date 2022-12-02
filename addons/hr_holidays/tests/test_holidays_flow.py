@@ -2,14 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
-from datetime import datetime
+from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 from psycopg2 import IntegrityError
 
 from odoo import Command
 from odoo.exceptions import AccessError, ValidationError, UserError
-from odoo.tools import mute_logger, test_reports
+from odoo.tools import date_utils, mute_logger, test_reports
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
@@ -42,13 +42,13 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         HolidaysEmployeeGroup = Requests.with_user(self.user_employee_id)
 
         # Employee creates a leave request in a no-limit category hr manager only
+        leave_date = date_utils.start_of((date.today() - relativedelta(days=1)), 'week')
         hol1_employee_group = HolidaysEmployeeGroup.create({
             'name': 'Hol11',
             'employee_id': self.employee_emp_id,
             'holiday_status_id': self.holidays_status_hr.id,
-            'date_from': (datetime.today() - relativedelta(days=1)),
-            'date_to': datetime.today(),
-            'number_of_days': 1,
+            'request_date_from': leave_date,
+            'request_date_to': leave_date,
         })
         hol1_user_group = hol1_employee_group.with_user(self.user_hruser_id)
         hol1_manager_group = hol1_employee_group.with_user(self.user_hrmanager_id)
@@ -59,13 +59,13 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         self.assertEqual(hol1_manager_group.state, 'validate', 'hr_holidays: validated leave request should be in validate state')
 
         # Employee creates a leave request in a no-limit category department manager only
+        leave_date = date_utils.start_of(date.today() + relativedelta(days=11), 'week')
         hol12_employee_group = HolidaysEmployeeGroup.create({
             'name': 'Hol12',
             'employee_id': self.employee_emp_id,
             'holiday_status_id': self.holidays_status_manager.id,
-            'date_from': (datetime.today() + relativedelta(days=12)),
-            'date_to': (datetime.today() + relativedelta(days=13)),
-            'number_of_days': 1,
+            'request_date_from': leave_date,
+            'request_date_to': leave_date,
         })
         hol12_user_group = hol12_employee_group.with_user(self.user_hruser_id)
         hol12_manager_group = hol12_employee_group.with_user(self.user_hrmanager_id)
@@ -160,9 +160,8 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                 'name': 'Hol22',
                 'employee_id': self.employee_emp_id,
                 'holiday_status_id': self.holidays_status_limited.id,
-                'date_from': (datetime.today() + relativedelta(days=2)).strftime('%Y-%m-%d %H:%M'),
-                'date_to': (datetime.today() + relativedelta(days=3)),
-                'number_of_days': 1,
+                'request_date_from': (date.today() + relativedelta(days=2)),
+                'request_date_to': (date.today() + relativedelta(days=2)),
             })
             hol2_user_group = hol2.with_user(self.user_hruser_id)
             # Check left days: - 1 virtual remaining day
@@ -202,8 +201,8 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             hol3 = Requests.create({
                 'name': 'Sick Time Off',
                 'holiday_status_id': hol3_status.id,
-                'date_from': datetime.today().strftime('%Y-%m-10 10:00:00'),
-                'date_to': datetime.today().strftime('%Y-%m-11 19:00:00'),
+                'request_date_from': date.today() + relativedelta(day=10),
+                'request_date_to': date.today() + relativedelta(day=10),
                 'employee_id': employee_id,
                 'number_of_days': 1,
             })
@@ -262,10 +261,9 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         leave_vals = {
             'name': 'Sick Time Off',
             'holiday_status_id': holiday_status_paid_time_off.id,
-            'date_from': datetime.today().strftime('%Y-%m-11 19:00:00'),
-            'date_to': datetime.today().strftime('%Y-%m-10 10:00:00'),
+            'request_date_from': date.today() + relativedelta(day=11),
+            'request_date_to': date.today() + relativedelta(day=10),
             'employee_id': self.ref('hr.employee_admin'),
-            'number_of_days': 1,
         }
         with mute_logger('odoo.sql_db'):
             with self.assertRaises(IntegrityError):
@@ -275,16 +273,16 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         leave_vals = {
             'name': 'Sick Time Off',
             'holiday_status_id': holiday_status_paid_time_off.id,
-            'date_from': datetime.today().strftime('%Y-%m-10 10:00:00'),
-            'date_to': datetime.today().strftime('%Y-%m-11 19:00:00'),
+            'request_date_from': date.today() + relativedelta(day=10),
+            'request_date_to': date.today() + relativedelta(day=11),
             'employee_id': self.ref('hr.employee_admin'),
-            'number_of_days': 1,
         }
         leave = self.env['hr.leave'].create(leave_vals)
+
         with mute_logger('odoo.sql_db'):
             with self.assertRaises(IntegrityError):  # No ValidationError
                 with self.cr.savepoint():
                     leave.write({
-                        'date_from': datetime.today().strftime('%Y-%m-11 19:00:00'),
-                        'date_to': datetime.today().strftime('%Y-%m-10 10:00:00'),
+                        'request_date_from': date.today() + relativedelta(day=11),
+                        'request_date_to': date.today() + relativedelta(day=10),
                     })

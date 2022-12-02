@@ -29,7 +29,7 @@ class HRLeave(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
-        fields_to_check = {'number_of_days', 'date_from', 'date_to', 'state', 'employee_id', 'holiday_status_id'}
+        fields_to_check = {'number_of_days', 'request_date_from', 'request_date_to', 'state', 'employee_id', 'holiday_status_id'}
         if not any(field for field in fields_to_check if field in vals):
             return res
         if vals.get('holiday_status_id'):

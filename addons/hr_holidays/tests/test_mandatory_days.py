@@ -71,9 +71,8 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             'name': 'coucou',
             'holiday_status_id': self.leave_type.id,
             'employee_id': self.employee_emp.id,
-            'date_from': datetime(2021, 11, 3),
-            'date_to': datetime(2021, 11, 3),
-            'number_of_days': 1,
+            'request_date_from': datetime(2021, 11, 3),
+            'request_date_to': datetime(2021, 11, 3),
         })
 
         # Taking a time off during a Mandatory Day is not allowed for a simple employee...
@@ -82,9 +81,8 @@ class TestHrLeaveMandatoryDays(TransactionCase):
                 'name': 'coucou',
                 'holiday_status_id': self.leave_type.id,
                 'employee_id': self.employee_emp.id,
-                'date_from': datetime(2021, 11, 3),
-                'date_to': datetime(2021, 11, 17),
-                'number_of_days': 1,
+                'request_date_from': datetime(2021, 11, 3),
+                'request_date_to': datetime(2021, 11, 17),
             })
 
         with self.assertRaises(ValidationError):
@@ -92,9 +90,8 @@ class TestHrLeaveMandatoryDays(TransactionCase):
                 'name': 'coucou',
                 'holiday_status_id': self.leave_type.id,
                 'employee_id': self.employee_emp.id,
-                'date_from': datetime(2021, 11, 9),
-                'date_to': datetime(2021, 11, 9),
-                'number_of_days': 1,
+                'request_date_from': datetime(2021, 11, 9),
+                'request_date_to': datetime(2021, 11, 9),
             })
 
         # ... but is allowed for a Time Off Officer
@@ -102,9 +99,8 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             'name': 'coucou',
             'holiday_status_id': self.leave_type.id,
             'employee_id': self.employee_emp.id,
-            'date_from': datetime(2021, 11, 2),
-            'date_to': datetime(2021, 11, 2),
-            'number_of_days': 1,
+            'request_date_from': datetime(2021, 11, 2),
+            'request_date_to': datetime(2021, 11, 2),
         })
 
     @freeze_time('2021-10-15')
@@ -185,24 +181,21 @@ class TestHrLeaveMandatoryDays(TransactionCase):
                 'name': 'have been given the black spot',
                 'holiday_status_id': self.leave_type.id,
                 'employee_id': self.employee_emp.id,
-                'date_from': datetime(2021, 11, 3),
-                'date_to': datetime(2021, 11, 3),
-                'number_of_days': 1,
+                'request_date_from': datetime(2021, 11, 3),
+                'request_date_to': datetime(2021, 11, 3),
             })
         with self.assertRaises(ValidationError):
             self.env['hr.leave'].with_user(self.employee_user.id).create({
                 'name': 'have been given the black spot',
                 'holiday_status_id': self.leave_type.id,
                 'employee_id': self.employee_emp.id,
-                'date_from': datetime(2021, 11, 4),
-                'date_to': datetime(2021, 11, 4),
-                'number_of_days': 1,
+                'request_date_from': datetime(2021, 11, 4),
+                'request_date_to': datetime(2021, 11, 4),
             })
         self.env['hr.leave'].with_user(self.employee_user.id).create({
             'name': 'have been given the black spot',
             'holiday_status_id': self.leave_type.id,
             'employee_id': self.employee_emp.id,
-            'date_from': datetime(2021, 11, 5),
-            'date_to': datetime(2021, 11, 5),
-            'number_of_days': 1,
+            'request_date_from': datetime(2021, 11, 5),
+            'request_date_to': datetime(2021, 11, 5),
         })

@@ -49,8 +49,8 @@ class TestFrenchLeaves(TransactionCase):
             'name': 'Test',
             'holiday_status_id': self.time_off_type.id,
             'employee_id': self.employee.id,
-            'date_from': '2021-09-06',
-            'date_to': '2021-09-10 23:59:59',
+            'request_date_from': '2021-09-06',
+            'request_date_to': '2021-09-10',
         })
         self.assertEqual(leave.number_of_days, 5, 'The number of days should be equal to 5.')
 
@@ -76,8 +76,8 @@ class TestFrenchLeaves(TransactionCase):
             'name': 'Test',
             'holiday_status_id': self.time_off_type.id,
             'employee_id': self.employee.id,
-            'date_from': '2021-09-06',
-            'date_to': '2021-09-08 23:59:59',
+            'request_date_from': '2021-09-06',
+            'request_date_to': '2021-09-08',
         })
         self.assertEqual(leave.number_of_days, 5, 'The number of days should be equal to 5.')
 
@@ -103,8 +103,8 @@ class TestFrenchLeaves(TransactionCase):
             'name': 'Test',
             'holiday_status_id': self.time_off_type.id,
             'employee_id': self.employee.id,
-            'date_from': '2021-09-08',
-            'date_to': '2021-09-10 23:59:59',
+            'request_date_from': '2021-09-08',
+            'request_date_to': '2021-09-10',
         })
         self.assertEqual(leave.number_of_days, 5, 'The number of days should be equal to 5.')
 
@@ -130,10 +130,8 @@ class TestFrenchLeaves(TransactionCase):
             'name': 'Test',
             'holiday_status_id': self.time_off_type.id,
             'employee_id': self.employee.id,
-            'date_from': '2021-09-10',
-            'date_to': '2021-09-10 12:00:00',
             'request_date_from': '2021-09-10',
-            'request_date_to': '2021-09-10 12:00:00',
+            'request_date_to': '2021-09-10',
             'request_unit_half': True,
             'request_date_from_period': 'am',
         })
@@ -165,8 +163,8 @@ class TestFrenchLeaves(TransactionCase):
             'name': 'Test',
             'holiday_status_id': self.time_off_type.id,
             'employee_id': self.employee.id,
-            'date_from': '2021-09-06',
-            'date_to': '2021-09-10 23:59:59',
+            'request_date_from': '2021-09-06',
+            'request_date_to': '2021-09-10',
         })
         self.assertEqual(leave.number_of_days, 5, 'The number of days should be equal to 5.')
 
@@ -189,8 +187,8 @@ class TestFrenchLeaves(TransactionCase):
             'name': 'Test',
             'holiday_status_id': self.time_off_type.id,
             'employee_id': self.employee.id,
-            'date_from': '2021-09-06',
-            'date_to': '2021-09-08 23:59:59',
+            'request_date_from': '2021-09-06',
+            'request_date_to': '2021-09-08',
         })
         self.assertEqual(leave.number_of_days, 5, 'The number of days should be equal to 5.')
 
@@ -248,8 +246,8 @@ class TestFrenchLeaves(TransactionCase):
             'name': 'Test',
             'holiday_status_id': self.time_off_type.id,
             'employee_id': self.employee.id,
-            'date_from': '2021-09-06',
-            'date_to': '2021-09-08 23:59:59',
+            'request_date_from': '2021-09-06',
+            'request_date_to': '2021-09-08',
         })
         self.assertEqual(leave.number_of_days, 5, 'The number of days should be equal to 5.')
         leave.unlink()
@@ -259,8 +257,8 @@ class TestFrenchLeaves(TransactionCase):
             'name': 'Test',
             'holiday_status_id': self.time_off_type.id,
             'employee_id': self.employee.id,
-            'date_from': '2021-09-13',
-            'date_to': '2021-09-15 23:59:59',
+            'request_date_from': '2021-09-13',
+            'request_date_to': '2021-09-15',
         })
         self.assertEqual(leave.number_of_days, 3, 'The number of days should be equal to 3.')
         leave.unlink()
@@ -270,8 +268,8 @@ class TestFrenchLeaves(TransactionCase):
             'name': 'Test',
             'holiday_status_id': self.time_off_type.id,
             'employee_id': self.employee.id,
-            'date_from': '2021-09-06',
-            'date_to': '2021-09-15 23:59:59',
+            'request_date_from': '2021-09-06',
+            'request_date_to': '2021-09-15',
         })
         self.assertEqual(leave.number_of_days, 8, 'The number of days should be equal to 3.')
         leave.unlink()
@@ -283,8 +281,8 @@ class TestFrenchLeaves(TransactionCase):
                 'name': 'Test',
                 'holiday_status_id': self.time_off_type.id,
                 'employee_id': self.employee.id,
-                'date_from': '2021-09-13',
-                'date_to': '2021-09-22 23:59:59',
+                'request_date_from': '2021-09-13',
+                'request_date_to': '2021-09-22',
             })
             # --- 0.11486363410949707 seconds ---
             _logger.info("French Leave Creation: --- %s seconds ---", time.time() - start_time)
