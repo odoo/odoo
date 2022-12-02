@@ -6,13 +6,13 @@
     'icon': '/l10n_in/static/description/icon.png',
 
     'summary': """
-        Define default sales journal on the warehouse""",
+        Get warehouse address if the invoice is created from Sale Order""",
 
     'description': """
-        Define default sales journal on the warehouse,
-        help you to choose correct sales journal on the sales order when
-        you change the warehouse.
-        useful when you setup the multiple GSTIN units.
+        Get the warehouse address if the invoice is created from the Sale Order
+        In Indian EDI we send shipping address details if available
+
+        So this module is to get the warehouse address if the invoice is created from Sale Order
     """,
 
     'website': "https://www.odoo.com",
@@ -21,9 +21,6 @@
 
     'depends': ['l10n_in_sale', 'l10n_in_stock'],
 
-    'data': [
-        'views/stock_warehouse_views.xml',
-    ],
     'auto_install': True,
     'license': 'LGPL-3',
 }
