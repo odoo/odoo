@@ -13,7 +13,7 @@
         <field name="employee_requests">no</field>
         <field name="leave_validation_type">both</field>
         <field name="allocation_validation_type">officer</field>
-        <field name="responsible_id" ref="base.user_admin"/>
+        <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
     </record>
 
     <record id="holiday_status_training" model="hr.leave.type">
@@ -22,7 +22,7 @@
         <field name="employee_requests">no</field>
         <field name="leave_validation_type">both</field>
         <field name="allocation_validation_type">officer</field>
-        <field name="responsible_id" ref="base.user_admin"/>
+        <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
     </record>
 
     <!-- Accrual Plan -->
