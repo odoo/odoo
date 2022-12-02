@@ -627,7 +627,7 @@ class SaleOrderLine(models.Model):
             # Find biggest suitable packaging
             if line.product_id and line.product_uom_qty and line.product_uom:
                 line.product_packaging_id = line.product_id.packaging_ids.filtered(
-                    'sales')._find_suitable_product_packaging(line.product_uom_qty, line.product_uom)
+                    'sales')._find_suitable_product_packaging(line.product_uom_qty, line.product_uom) or line.product_packaging_id
 
     @api.depends('product_packaging_id', 'product_uom', 'product_uom_qty')
     def _compute_product_packaging_qty(self):
@@ -1114,6 +1114,14 @@ class SaleOrderLine(models.Model):
         be used in move/po creation.
         """
         return {}
+
+    def _validate_analytic_distribution(self):
+        for line in self.filtered(lambda l: not l.display_type and l.state in ['draft', 'sent']):
+            line._validate_distribution(**{
+                'product': line.product_id.id,
+                'business_domain': 'sale_order',
+                'company_id': line.company_id.id,
+            })
 
     #=== CORE METHODS OVERRIDES ===#
 
