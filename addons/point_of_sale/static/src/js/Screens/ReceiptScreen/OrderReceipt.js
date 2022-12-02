@@ -29,6 +29,9 @@ class OrderReceipt extends PosComponent {
     get receiptEnv() {
         return this._receiptEnv;
     }
+    get shippingDate() {
+        return this.receiptEnv.shippingDate
+    }
     isSimple(line) {
         return (
             line.discount === 0 &&

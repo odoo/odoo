@@ -2496,6 +2496,7 @@ export class Order extends PosModel {
         this.cashier = this.pos.get_cashier();
         this.finalized = false; // if true, cannot be modified.
         this.set_pricelist(this.pos.default_pricelist);
+        this.shippingDate = null;
 
         this.partner = null;
 
@@ -2591,9 +2592,9 @@ export class Order extends PosModel {
         }
         this.set_partner(partner);
 
-        this.temporary = false; // FIXME
-        this.to_invoice = false; // FIXME
-        this.to_ship = false;
+        this.temporary = false;     // FIXME
+        this.to_invoice = false;    // FIXME
+        this.shippingDate = json.shipping_date;
 
         var orderlines = json.lines;
         for (var i = 0; i < orderlines.length; i++) {
@@ -2659,7 +2660,7 @@ export class Order extends PosModel {
             fiscal_position_id: this.fiscal_position ? this.fiscal_position.id : false,
             server_id: this.server_id ? this.server_id : false,
             to_invoice: this.to_invoice ? this.to_invoice : false,
-            to_ship: this.to_ship ? this.to_ship : false,
+            shipping_date: this.shippingDate ? this.shippingDate : false,
             is_tipped: this.is_tipped || false,
             tip_amount: this.tip_amount || 0,
             access_token: this.access_token || "",
@@ -2668,6 +2669,16 @@ export class Order extends PosModel {
             json.user_id = this.user_id;
         }
         return json;
+    }
+    _exportShippingDateForPrinting() {
+        const shippingDate = new Date(this.shippingDate);
+        const localeShippingDate = field_utils.format.date(
+            moment(shippingDate), {}, {timezone: false});
+        const exportedDate = {
+            localestring: localeShippingDate,
+            validationDate: shippingDate,
+        };
+        return exportedDate;
     }
     export_for_printing() {
         var orderlines = [];
@@ -3536,6 +3547,7 @@ export class Order extends PosModel {
             receipt: this.export_for_printing(),
             orderlines: this.get_orderlines(),
             paymentlines: this.get_paymentlines(),
+            shippingDate: this.shippingDate ? this._exportShippingDateForPrinting() : false,
         };
     }
     updatePricelist(newPartner) {
@@ -3561,12 +3573,11 @@ export class Order extends PosModel {
         this.set_pricelist(newPartnerPricelist);
     }
     /* ---- Ship later --- */
-    set_to_ship(to_ship) {
-        this.assert_editable();
-        this.to_ship = to_ship;
+    setShippingDate(shippingDate) {
+        this.shippingDate = shippingDate
     }
-    is_to_ship() {
-        return this.to_ship;
+    getShippingDate() {
+        return this.shippingDate;
     }
     getHasRefundLines() {
         for (const line of this.get_orderlines()) {

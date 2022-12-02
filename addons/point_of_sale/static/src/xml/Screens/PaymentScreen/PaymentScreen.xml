@@ -90,9 +90,12 @@
                                     <i class="fa fa-archive" /> Open Cashbox
                                 </div>
                                 <div t-if="env.pos.config.ship_later" class="button"
-                                        t-att-class="{ highlight: currentOrder.is_to_ship() }"
-                                        t-on-click="toggleIsToShip">
+                                        t-att-class="{ highlight: currentOrder.getShippingDate() }"
+                                        t-on-click="toggleShippingDatePicker">
                                     <i class="fa fa-clock-o" /> Ship Later
+                                    <span t-if="currentOrder.getShippingDate()">
+                                        (<t t-esc="currentOrder.getShippingDate()"/>)
+                                    <span/>
                                 </div>
                             </div>
                         </div>
