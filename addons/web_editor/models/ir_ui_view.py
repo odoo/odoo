@@ -127,6 +127,10 @@ class IrUiView(models.Model):
             return False
         return all(self._are_archs_equal(arch1, arch2) for arch1, arch2 in zip(arch1, arch2))
 
+    @api.model
+    def _get_allowed_root_attrs(self):
+        return ['style', 'class']
+
     def replace_arch_section(self, section_xpath, replacement, replace_tail=False):
         # the root of the arch section shouldn't actually be replaced as it's
         # not really editable itself, only the content truly is editable.
@@ -142,7 +146,7 @@ class IrUiView(models.Model):
         root.text = replacement.text
 
         # We need to replace some attrib for styles changes on the root element
-        for attribute in ('style', 'class'):
+        for attribute in self._get_allowed_root_attrs():
             if attribute in replacement.attrib:
                 root.attrib[attribute] = replacement.attrib[attribute]
 
