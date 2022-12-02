@@ -27,7 +27,7 @@
                         attrs="{'invisible': ['|', ('action', '!=', 'ban'), ('send_email', '=', True)]}"/>
                     <button string="Send &amp; Ban" name="action_send_mail" type="object" class="btn-primary"
                         attrs="{'invisible': ['|', ('action', '!=', 'ban'), ('send_email', '=', False)]}"/>
-                    <button string="Discard" class="btn-secondary" special="cancel"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z"/>
                 </footer>
             </form>
         </field>

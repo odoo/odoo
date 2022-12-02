@@ -32,11 +32,13 @@
                                 attrs="{'invisible': [('nb_products_to_process', '=', 0)]}"/>
                         <button special="cancel"
                                 string="Cancel"
-                                attrs="{'invisible': [('nb_products_to_process', '=', 0)]}"/>
+                                attrs="{'invisible': [('nb_products_to_process', '=', 0)]}"
+                                data-hotkey="z"/>
                         <button special="cancel"
                                 string="Cancel"
                                 class="oe_highlight"
-                                attrs="{'invisible': [('nb_products_to_process', '!=', 0)]}"/>
+                                attrs="{'invisible': [('nb_products_to_process', '!=', 0)]}"
+                                data-hotkey="z"/>
                     </footer>
                 </sheet>
             </form>

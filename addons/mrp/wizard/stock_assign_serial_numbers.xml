@@ -48,10 +48,10 @@
                     </p>
                 </group>
                 <footer>
-                    <button name="apply" string="Apply" type="object" class="btn-primary" attrs="{'invisible': [('show_apply', '=', False)]}"/>
-                    <button name="create_backorder" string="Create Backorder" type="object" class="btn-primary" attrs="{'invisible': [('show_backorders', '=', False)]}"/>
-                    <button name="no_backorder" string="No Backorder" type="object" class="btn-primary" attrs="{'invisible': [('show_backorders', '=', False)]}"/>
-                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                    <button name="apply" string="Apply" type="object" class="btn-primary" attrs="{'invisible': [('show_apply', '=', False)]}" data-hotkey="q"/>
+                    <button name="create_backorder" string="Create Backorder" type="object" class="btn-primary" attrs="{'invisible': [('show_backorders', '=', False)]}" data-hotkey="x"/>
+                    <button name="no_backorder" string="No Backorder" type="object" class="btn-primary" attrs="{'invisible': [('show_backorders', '=', False)]}" data-hotkey="w"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
                 </footer>
             </form>
         </field>
