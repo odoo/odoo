@@ -338,6 +338,7 @@ class Users(models.Model):
                                   compute='_compute_accesses_count', compute_sudo=True)
 
     _sql_constraints = [
+        ("partner_id_uniq", "UNIQUE(partner_id)", "A partner cannot be related to more than one user"),
         ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
     ]
 
