@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import datetime
-from dateutil.relativedelta import relativedelta
 
 from odoo import Command
 from odoo.fields import Datetime
@@ -83,13 +82,10 @@ class TestWorkEntryHolidaysBase(TestWorkEntryBase):
 
     @classmethod
     def create_leave(cls, date_from=None, date_to=None):
-        date_from = date_from or Datetime.today()
-        date_to = date_to or Datetime.today() + relativedelta(days=1)
         return cls.env['hr.leave'].create({
             'name': 'Holiday!!!',
             'employee_id': cls.richard_emp.id,
             'holiday_status_id': cls.leave_type.id,
-            'date_to': date_to,
-            'date_from': date_from,
-            'number_of_days': 1,
+            'request_date_to': date_to or Datetime.today(),
+            'request_date_from': date_from or Datetime.today(),
         })

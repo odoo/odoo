@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import date
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
@@ -15,8 +15,8 @@ class TestHrHolidaysCancelLeave(TestHrHolidaysCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        leave_start_datetime = datetime(2018, 2, 5, 7, 0, 0, 0)  # this is monday
-        leave_end_datetime = leave_start_datetime + relativedelta(days=3)
+        leave_start_date = date(2018, 2, 5)  # this is monday
+        leave_end_date = leave_start_date + relativedelta(days=2)
 
         cls.hr_leave_type = cls.env['hr.leave.type'].with_user(cls.user_hrmanager).create({
             'name': 'Time Off Type',
@@ -26,9 +26,8 @@ class TestHrHolidaysCancelLeave(TestHrHolidaysCommon):
             'name': 'Time Off 1',
             'employee_id': cls.employee_emp.id,
             'holiday_status_id': cls.hr_leave_type.id,
-            'date_from': leave_start_datetime,
-            'date_to': leave_end_datetime,
-            'number_of_days': (leave_end_datetime - leave_start_datetime).days,
+            'request_date_from': leave_start_date,
+            'request_date_to': leave_end_date,
         })
         cls.holiday.with_user(cls.user_hrmanager).action_validate()
 

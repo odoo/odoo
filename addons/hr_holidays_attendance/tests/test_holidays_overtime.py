@@ -75,9 +75,8 @@ class TestHolidaysOvertime(TransactionCase):
                     'name': 'no overtime',
                     'employee_id': self.employee.id,
                     'holiday_status_id': self.leave_type_no_alloc.id,
-                    'number_of_days': 1,
-                    'date_from': datetime(2021, 1, 4),
-                    'date_to': datetime(2021, 1, 5),
+                    'request_date_from': datetime(2021, 1, 4),
+                    'request_date_to': datetime(2021, 1, 4),
                     'state': 'draft',
                 })
 
@@ -87,9 +86,8 @@ class TestHolidaysOvertime(TransactionCase):
                 'name': 'no overtime',
                 'employee_id': self.employee.id,
                 'holiday_status_id': self.leave_type_no_alloc.id,
-                'number_of_days': 1,
-                'date_from': datetime(2021, 1, 4),
-                'date_to': datetime(2021, 1, 5),
+                'request_date_from': datetime(2021, 1, 4),
+                'request_date_to': datetime(2021, 1, 4),
             })
 
             # The employee doesn't have the right to read the overtime from the leave
@@ -111,9 +109,8 @@ class TestHolidaysOvertime(TransactionCase):
             'name': 'no overtime',
             'employee_id': self.employee.id,
             'holiday_status_id': self.leave_type_no_alloc.id,
-            'number_of_days': 1,
-            'date_from': datetime(2021, 1, 4),
-            'date_to': datetime(2021, 1, 5),
+            'request_date_from': datetime(2021, 1, 4),
+            'request_date_to': datetime(2021, 1, 4),
         })
 
         self.assertTrue(leave.overtime_id.adjustment, "An adjustment overtime should be created")
@@ -143,18 +140,17 @@ class TestHolidaysOvertime(TransactionCase):
             'name': 'no overtime',
             'employee_id': self.employee.id,
             'holiday_status_id': self.leave_type_no_alloc.id,
-            'number_of_days': 1,
-            'date_from': datetime(2021, 1, 4),
-            'date_to': datetime(2021, 1, 5),
+            'request_date_from': '2021-1-4',
+            'request_date_to': '2021-1-4',
         })
         self.assertEqual(self.employee.total_overtime, 8)
 
-        leave.date_to = datetime(2021, 1, 6)
+        leave.date_to = datetime(2021, 1, 5)
         self.assertEqual(self.employee.total_overtime, 0)
         with self.assertRaises(ValidationError), self.cr.savepoint():
-            leave.date_to = datetime(2021, 1, 7)
+            leave.date_to = datetime(2021, 1, 6)
 
-        leave.date_to = datetime(2021, 1, 5)
+        leave.date_to = datetime(2021, 1, 4)
         self.assertEqual(self.employee.total_overtime, 8)
 
     def test_employee_create_allocation(self):
@@ -239,9 +235,8 @@ class TestHolidaysOvertime(TransactionCase):
             'name': 'no overtime',
             'employee_id': self.employee.id,
             'holiday_status_id': self.leave_type_no_alloc.id,
-            'number_of_days': 1,
-            'date_from': datetime(2022, 1, 6),
-            'date_to': datetime(2022, 1, 6),
+            'request_date_from': '2022-1-6',
+            'request_date_to': '2022-1-6',
         })
         leave.with_user(self.user_manager).action_validate()
         self.assertEqual(self.employee.total_overtime, 8)

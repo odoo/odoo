@@ -5,8 +5,9 @@ from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 import pytz
 
+from odoo.exceptions import ValidationError
 from odoo.tests.common import tagged
-from odoo.fields import Date, Datetime
+from odoo.fields import Date
 from odoo.addons.hr_work_entry_holidays.tests.common import TestWorkEntryHolidaysBase
 
 
@@ -44,9 +45,8 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
             'name': 'Doctor Appointment',
             'employee_id': self.richard_emp.id,
             'holiday_status_id': self.leave_type.id,
-            'date_from': self.start - relativedelta(days=1),
-            'date_to': self.start + relativedelta(days=1),
-            'number_of_days': 2,
+            'request_date_from': self.start.date() - relativedelta(days=1),
+            'request_date_to': self.start.date(),
         })
         self.assertFalse(work_entry1.action_validate(), "It should not validate work_entries conflicting with non approved leaves")
         self.assertEqual(work_entry1.state, 'conflict')
@@ -58,9 +58,8 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
             'name': 'Doctor Appointment',
             'employee_id': self.richard_emp.id,
             'holiday_status_id': self.leave_type.id,
-            'date_from': start,
-            'date_to': start + relativedelta(days=1),
-            'number_of_days': 2,
+            'request_date_from': start,
+            'request_date_to': start + relativedelta(days=1),
         })
         work_entry = self.env['hr.work.entry'].create({
             'name': '1',
@@ -78,16 +77,15 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
 
     def test_time_week_leave_work_entry(self):
         # /!\ this is a week day => it exists an calendar attendance at this time
-        start = datetime(2015, 11, 2, 10, 0, 0)
-        end = datetime(2015, 11, 2, 17, 0, 0)
-        work_days_data = self.jules_emp._get_work_days_data_batch(start, end)
         leave = self.env['hr.leave'].create({
             'name': '1leave',
             'employee_id': self.richard_emp.id,
             'holiday_status_id': self.leave_type.id,
-            'date_from': start,
-            'date_to': end,
-            'number_of_days': work_days_data[self.jules_emp.id]['days'],
+            'request_date_from': date(2015, 11, 2),
+            'request_date_to': date(2015, 11, 2),
+            'request_unit_hours': True,
+            'request_hour_from': '11',
+            'request_hour_to': '17',
         })
         leave.action_validate()
 
@@ -133,9 +131,8 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
             'name': 'Sick 1 week during christmas snif',
             'employee_id': employee.id,
             'holiday_status_id': leave_type.id,
-            'date_from': Datetime.from_string('2019-12-23 06:00:00'),
-            'date_to': Datetime.from_string('2019-12-27 20:00:00'),
-            'number_of_days': 5,
+            'request_date_from': '2019-12-23',
+            'request_date_to': '2019-12-27',
         })
         leave1.action_approve()
         leave1.action_validate()
@@ -181,14 +178,16 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
             'name': "Sick 1 that doesn't make sense, but it's the prod so YOLO",
             'employee_id': employee.id,
             'holiday_status_id': leave_type.id,
-            'date_from': date(2020, 9, 4),
             'request_date_from': date(2020, 9, 4),
-            'date_to': date(2020, 9, 4),
             'request_date_to': date(2020, 9, 4),
-            'number_of_days': 1,
         })
-        leave.action_approve()
-        leave.action_validate()
+
+        # TODO I don't know what this test is supposed to test, but I feel that
+        # in any case it should raise a Validation Error, as it's trying to
+        # validate a leave in a period the employee is not supposed to work.
+        with self.assertRaises(ValidationError), self.cr.savepoint():
+            leave.action_approve()
+            leave.action_validate()
 
         work_entries = contract.generate_work_entries(date(2020, 7, 1), date(2020, 9, 30))
 
@@ -213,9 +212,8 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
             'name': 'AL',
             'employee_id': self.richard_emp.id,
             'holiday_status_id': self.leave_type.id,
-            'date_from': date(2023, 2, 3),
-            'date_to': date(2023, 2, 9),
-            'number_of_days': 3,
+            'request_date_from': date(2023, 2, 3),
+            'request_date_to': date(2023, 2, 9),
         })
         leave.action_validate()
 

@@ -21,23 +21,21 @@ class TestWorkEntryHolidaysMultiContract(TestWorkEntryHolidaysBase):
         })
 
     def create_leave(self, start, end):
-        work_days_data = self.jules_emp._get_work_days_data_batch(start, end)
         return self.env['hr.leave'].create({
             'name': 'Doctor Appointment',
             'employee_id': self.jules_emp.id,
             'holiday_status_id': self.leave_type.id,
-            'date_from': start,
-            'date_to': end,
-            'number_of_days': work_days_data[self.jules_emp.id]['days'],
+            'request_date_from': start,
+            'request_date_to': end,
         })
 
     def test_multi_contract_holiday(self):
         # Leave during second contract
-        leave = self.create_leave(datetime(2015, 11, 17, 7, 0), datetime(2015, 11, 20, 18, 0))
+        leave = self.create_leave(datetime(2015, 11, 17), datetime(2015, 11, 20))
         leave.action_approve()
-        start = date(2015, 11, 1)
-        end_generate = date(2015, 11, 30)
-        work_entries = self.jules_emp.contract_ids.generate_work_entries(start, end_generate)
+        start = datetime(2015, 11, 1, 0, 0, 0)
+        end_generate = datetime(2015, 11, 30, 23, 59, 59)
+        work_entries = self.jules_emp.contract_ids._generate_work_entries(start, end_generate)
         work_entries.action_validate()
         work_entries = work_entries.filtered(lambda we: we.contract_id == self.contract_cdi)
 
@@ -117,8 +115,6 @@ class TestWorkEntryHolidaysMultiContract(TestWorkEntryHolidaysBase):
         start = datetime.strptime('2015-11-23 07:00:00', '%Y-%m-%d %H:%M:%S')
         end = datetime.strptime('2015-11-24 18:00:00', '%Y-%m-%d %H:%M:%S')
         leave = self.create_leave(start, end)
-
-        leave._compute_number_of_hours_display()
         self.assertEqual(leave.number_of_hours_display, 14, "It should count hours according to the future contract.")
 
     def test_leave_multi_contracts_same_schedule(self):
@@ -144,7 +140,7 @@ class TestWorkEntryHolidaysMultiContract(TestWorkEntryHolidaysBase):
         # splits the existing time off for this employee that
         # are ovelapping with another contract with another
         # working schedule
-        leave = self.create_leave(datetime(2022, 6, 1, 5, 0, 0), datetime(2022, 6, 30, 20, 0, 0))
+        leave = self.create_leave(date(2022, 6, 1), date(2022, 6, 30))
         leave.action_approve()
         self.assertEqual(leave.number_of_days, 22)
         self.assertEqual(leave.state, 'validate')
@@ -164,9 +160,11 @@ class TestWorkEntryHolidaysMultiContract(TestWorkEntryHolidaysBase):
         leaves = self.env['hr.leave'].search([('employee_id', '=', self.jules_emp.id)])
         self.assertEqual(len(leaves), 3)
         self.assertEqual(leave.state, 'refuse')
+
         first_leave = leaves.filtered(lambda l: l.date_from.day == 1 and l.date_to.day == 15)
         self.assertEqual(first_leave.state, 'validate')
         self.assertEqual(first_leave.number_of_days, 11)
+
         second_leave = leaves.filtered(lambda l: l.date_from.day == 16 and l.date_to.day == 30)
         self.assertEqual(second_leave.state, 'validate')
         self.assertEqual(second_leave.number_of_days, 11)
@@ -244,16 +242,14 @@ class TestWorkEntryHolidaysMultiContract(TestWorkEntryHolidaysBase):
             {
                 'employee_id': employee.id,
                 'holiday_status_id': leave_type.id,
-                'number_of_days': 3,
-                'date_from': datetime.combine(date(2023, 1, 3), time.min), # Tuesday
-                'date_to': datetime.combine(date(2023, 1, 5), time.max), # Thursday
+                'request_date_from': '2023-1-3', # Tuesday
+                'request_date_to': '2023-1-5', # Thursday
             },
             {
                 'employee_id': employee.id,
                 'holiday_status_id': leave_type.id,
-                'number_of_days': 2,
-                'date_from': datetime.combine(date(2023, 12, 5), time.min), # Tuesday
-                'date_to': datetime.combine(date(2023, 12, 7), time.max), # Thursday
+                'request_date_from': '2023-12-5', # Tuesday
+                'request_date_to': '2023-12-7', # Thursday
             },
         ])
         self.assertEqual(leave_during_full_time.number_of_days_display, 3)
@@ -261,7 +257,7 @@ class TestWorkEntryHolidaysMultiContract(TestWorkEntryHolidaysBase):
         self.assertEqual(leave_during_full_time.number_of_hours_display, 24)
         self.assertEqual(leave_during_partial_time.number_of_hours_display, 16)
         # Simulate the unit change days/hours of the time off type
-        (leave_during_full_time + leave_during_partial_time)._compute_number_of_days()
+        (leave_during_full_time + leave_during_partial_time)._compute_duration()
         self.assertEqual(leave_during_full_time.number_of_days_display, 3)
         self.assertEqual(leave_during_partial_time.number_of_days_display, 2)
         (leave_during_full_time + leave_during_partial_time)._compute_number_of_hours_display()

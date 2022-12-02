@@ -51,8 +51,8 @@ class TestDiscussFullPerformance(HttpCase):
             'time_type': 'leave',
         })
         self.leaves = self.env['hr.leave'].create([{
-            'date_from': date.today() + relativedelta(days=-2),
-            'date_to': date.today() + relativedelta(days=2),
+            'request_date_from': date.today() + relativedelta(days=-2),
+            'request_date_to': date.today() + relativedelta(days=2),
             'employee_id': employee.id,
             'holiday_status_id': self.leave_type.id,
         } for employee in self.employees])

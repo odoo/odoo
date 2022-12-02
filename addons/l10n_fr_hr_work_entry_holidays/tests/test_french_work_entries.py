@@ -71,8 +71,8 @@ class TestFrenchWorkEntries(TransactionCase):
             'name': 'Test',
             'holiday_status_id': self.time_off_type.id,
             'employee_id': self.employee.id,
-            'date_from': '2021-09-06',
-            'date_to': '2021-09-08 23:59:59',  # This should fill the gap up to the 10th
+            'request_date_from': '2021-09-06',
+            'request_date_to': '2021-09-08',  # This should fill the gap up to the 10th
         })
         leave.action_validate()
 

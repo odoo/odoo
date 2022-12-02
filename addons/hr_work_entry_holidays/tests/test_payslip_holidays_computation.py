@@ -22,14 +22,12 @@ class TestPayslipHolidaysComputation(TestWorkEntryHolidaysBase):
     def test_work_data(self):
         start = datetime(2015, 11, 8, 8, 0)
         end = datetime(2015, 11, 10, 22, 0)
-        work_days_data = self.jules_emp._get_work_days_data_batch(start, end)
         leave = self.env['hr.leave'].create({
             'name': 'Doctor Appointment',
             'employee_id': self.jules_emp.id,
             'holiday_status_id': self.leave_type.id,
-            'date_from': start,
-            'date_to': end,
-            'number_of_days': work_days_data[self.jules_emp.id]['days'],
+            'request_date_from': start,
+            'request_date_to': end,
         })
         leave.action_approve()
 

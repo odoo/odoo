@@ -47,23 +47,16 @@ class TestCompanyLeave(TransactionCase):
             'employee_id': self.employee.id,
             'holiday_status_id': self.paid_time_off.id,
             'request_date_from': date(2020, 1, 7),
-            'date_from': date(2020, 1, 7),
             'request_date_to': date(2020, 1, 9),
-            'date_to': date(2020, 1, 9),
-            'number_of_days': 3,
         })
-        leave._compute_date_from_to()
 
         company_leave = self.env['hr.leave'].create({
             'name': 'Bank Holiday',
             'holiday_type': 'company',
             'mode_company_id': self.company.id,
             'holiday_status_id': self.bank_holiday.id,
-            'date_from': date(2020, 1, 8),
             'request_date_from': date(2020, 1, 8),
-            'date_to': date(2020, 1, 8),
             'request_date_to': date(2020, 1, 8),
-            'number_of_days': 1,
         })
         company_leave._compute_date_from_to()
 
@@ -101,10 +94,7 @@ class TestCompanyLeave(TransactionCase):
             'employee_id': self.employee.id,
             'holiday_status_id': self.paid_time_off.id,
             'request_date_from': date(2020, 1, 7),
-            'date_from': date(2020, 1, 7),
             'request_date_to': date(2020, 1, 9),
-            'date_to': date(2020, 1, 9),
-            'number_of_days': 3,
         })
         leave._compute_date_from_to()
 
@@ -113,11 +103,8 @@ class TestCompanyLeave(TransactionCase):
             'holiday_type': 'company',
             'mode_company_id': self.company.id,
             'holiday_status_id': self.bank_holiday.id,
-            'date_from': date(2020, 1, 8),
             'request_date_from': date(2020, 1, 8),
-            'date_to': date(2020, 1, 8),
             'request_date_to': date(2020, 1, 8),
-            'number_of_days': 1,
         })
         company_leave._compute_date_from_to()
 
@@ -153,11 +140,8 @@ class TestCompanyLeave(TransactionCase):
             'name': 'Hol11',
             'employee_id': self.employee.id,
             'holiday_status_id': self.paid_time_off.id,
-            'date_from': date(2020, 1, 7),
             'request_date_from': date(2020, 1, 7),
-            'date_to': date(2020, 1, 7),
             'request_date_to': date(2020, 1, 7),
-            'number_of_days': 0.5,
             'request_unit_half': True,
             'request_date_from_period': 'am',
 
@@ -169,11 +153,8 @@ class TestCompanyLeave(TransactionCase):
             'holiday_type': 'company',
             'mode_company_id': self.company.id,
             'holiday_status_id': self.bank_holiday.id,
-            'date_from': date(2020, 1, 7),
             'request_date_from': date(2020, 1, 7),
-            'date_to': date(2020, 1, 7),
             'request_date_to': date(2020, 1, 7),
-            'number_of_days': 1,
         })
         company_leave._compute_date_from_to()
 
@@ -199,11 +180,8 @@ class TestCompanyLeave(TransactionCase):
             'name': 'Hol11',
             'employee_id': self.employee.id,
             'holiday_status_id': self.paid_time_off.id,
-            'date_from': datetime.now(),
             'request_date_from': date(2020, 1, 9),
-            'date_to': datetime.now(),
             'request_date_to': date(2020, 1, 9),
-            'number_of_days': 1,
 
         })
         leave._compute_date_from_to()
@@ -213,11 +191,8 @@ class TestCompanyLeave(TransactionCase):
             'holiday_type': 'company',
             'mode_company_id': self.company.id,
             'holiday_status_id': self.bank_holiday.id,
-            'date_from': date(2020, 1, 9),
             'request_date_from': date(2020, 1, 9),
-            'date_to': date(2020, 1, 9),
             'request_date_to': date(2020, 1, 9),
-            'number_of_days': 1,
         })
         company_leave._compute_date_from_to()
 
@@ -255,11 +230,8 @@ class TestCompanyLeave(TransactionCase):
             'name': 'Hol11',
             'employee_id': self.employee.id,
             'holiday_status_id': self.paid_time_off.id,
-            'date_from': date(2020, 1, 6),
             'request_date_from': date(2020, 1, 6),
-            'date_to': date(2020, 1, 10),
             'request_date_to': date(2020, 1, 10),
-            'number_of_days': 3,
         })
         leave._compute_date_from_to()
 
@@ -268,11 +240,8 @@ class TestCompanyLeave(TransactionCase):
             'holiday_type': 'company',
             'mode_company_id': self.company.id,
             'holiday_status_id': self.bank_holiday.id,
-            'date_from': date(2020, 1, 10),
             'request_date_from': date(2020, 1, 10),
-            'date_to': date(2020, 1, 10),
             'request_date_to': date(2020, 1, 10),
-            'number_of_days': 1,
         })
         company_leave._compute_date_from_to()
         company_leave.action_validate()
@@ -307,10 +276,7 @@ class TestCompanyLeave(TransactionCase):
             'employee_id': employee.id,
             'holiday_status_id': self.paid_time_off.id,
             'request_date_from': date(2020, 3, 29),
-            'date_from': datetime(2020, 3, 29, 7, 0, 0),
             'request_date_to': date(2020, 4, 1),
-            'date_to': datetime(2020, 4, 1, 19, 0, 0),
-            'number_of_days': 3,
         } for employee in employees[0:15]])
         leaves._compute_date_from_to()
 
@@ -319,15 +285,12 @@ class TestCompanyLeave(TransactionCase):
             'holiday_type': 'company',
             'mode_company_id': self.company.id,
             'holiday_status_id': self.bank_holiday.id,
-            'date_from': date(2020, 4, 1),
-            'request_date_from': date(2020, 4, 1),
-            'date_to': date(2020, 4, 1),
-            'request_date_to': date(2020, 4, 1),
-            'number_of_days': 1,
+            'request_date_from': date(2020, 4, 2),
+            'request_date_to': date(2020, 4, 2),
         })
         company_leave._compute_date_from_to()
 
-        with self.assertQueryCount(__system__=611, admin=867):  # 770 community
+        with self.assertQueryCount(__system__=958, admin=867):  # 770 community
             # Original query count: 1987
             # Without tracking/activity context keys: 5154
             company_leave.action_validate()
