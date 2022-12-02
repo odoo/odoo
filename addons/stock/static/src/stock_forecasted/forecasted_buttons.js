@@ -9,7 +9,7 @@ export class ForecastedButtons extends Component {
         this.orm = useService("orm");
         this.context = this.props.action.context;
         this.productId = this.context.active_id;
-        this.resModel = this.context.active_model || this.context.params.active_model || 'product.template';
+        this.resModel = this.props.resModel || 'product.template';
     }
 
     async _onClickReplenish() {
@@ -42,5 +42,5 @@ export class ForecastedButtons extends Component {
     }
 }
 
-ForecastedButtons.props = {action : Object, reloadReport : Function};
+ForecastedButtons.props = {action : Object, resModel: { type: String, optional: true }, reloadReport : Function};
 ForecastedButtons.template = 'stock.ForecastedButtons';
