@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 import pytz
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools.float_utils import float_round
 from odoo.addons.resource.models.utils import HOURS_PER_DAY
 
@@ -219,6 +219,20 @@ class HrEmployeeBase(models.AbstractModel):
         res = super(HrEmployeeBase, self).write(values)
         # remove users from the Responsible group if they are no longer leave managers
         old_managers.sudo()._clean_leave_responsible_users()
+
+        # Change the resource calendar of the employee's leaves in the future
+        # Other modules can disable this behavior by setting the context key
+        # 'no_leave_resource_calendar_update'
+        if 'resource_calendar_id' in values and not self.env.context.get('no_leave_resource_calendar_update'):
+            try:
+                self.env['hr.leave'].search([
+                    ('employee_id', 'in', self.ids),
+                    ('resource_calendar_id', '!=', int(values['resource_calendar_id'])),
+                    ('date_from', '>', fields.Datetime.now())]).write({'resource_calendar_id': values['resource_calendar_id']})
+            except ValidationError:
+                raise ValidationError(_("Changing this working schedule results in the affected employee(s) not having enough "
+                                        "leaves allocated to accomodate for their leaves already taken in the future. Please "
+                                        "review this employee's leaves and adjust their allocation accordingly."))
 
         if 'parent_id' in values or 'department_id' in values:
             today_date = fields.Datetime.now()

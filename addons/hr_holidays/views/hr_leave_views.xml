@@ -252,11 +252,13 @@
                             <field name="holiday_status_id" force_save="1" domain="['|', ('requires_allocation', '=', 'no'), '&amp;', ('has_valid_allocation', '=', True), '&amp;', ('virtual_remaining_leaves', '&gt;', 0), ('max_leaves', '>', '0')]" context="{'employee_id':employee_id, 'default_date_from':date_from, 'default_date_to':date_to}" options="{'no_create': True, 'no_open': True, 'request_type':'leave'}"  readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
                             <field name="date_from" invisible="1" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" />
                             <field name="date_to" invisible="1" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" />
+                            <field name="request_date_from" invisible="1"/>
+                            <field name="request_date_to" invisible="1"/>
                             <!-- half day or custom hours: only show one date -->
                             <label for="request_date_from" invisible="not request_unit_half and not request_unit_hours" string="Date" />
                             <label for="request_date_from" invisible="request_unit_half or request_unit_hours" string="Dates" />
                             <div class="o_row" invisible="not request_unit_half and not request_unit_hours">
-                                <field name="request_date_from" class="oe_inline" string="Date" />
+                                <field name="request_date_from" class="oe_inline" string="Date" readonly="state not in ('draft', 'confirm')" />
                                 <field name="request_date_from_period" invisible="not request_unit_half" required="request_unit_half"/>
                             </div>
                             <!-- full days: show date start/end with daterange -->

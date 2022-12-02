@@ -116,7 +116,7 @@ class ResourceMixin(models.AbstractModel):
                 result[calendar_resource.id] = calendar._get_days_data(intervals[calendar_resource.id], day_total[calendar_resource.id])
 
         # convert "resource: result" into "employee: result"
-        return {mapped_employees[r.id]: result[r.id] for r in resources} 
+        return {mapped_employees[r.id]: result[r.id] for r in resources}
 
     def _get_leave_days_data_batch(self, from_datetime, to_datetime, calendar=None, domain=None):
         """

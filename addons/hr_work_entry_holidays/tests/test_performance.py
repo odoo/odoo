@@ -41,14 +41,14 @@ class TestWorkEntryHolidaysPerformance(TestWorkEntryHolidaysBase):
     def test_performance_leave_write(self):
         leave = self.create_leave(datetime(2018, 1, 1, 7, 0), datetime(2018, 1, 1, 18, 0))
 
-        with self.assertQueryCount(__system__=19, admin=27):
+        with self.assertQueryCount(__system__=30, admin=38):
             leave.date_to = datetime(2018, 1, 1, 19, 0)
         leave.action_refuse()
 
     @users('__system__', 'admin')
     @warmup
     def test_performance_leave_create(self):
-        with self.assertQueryCount(__system__=46, admin=46):
+        with self.assertQueryCount(__system__=59, admin=59):
             leave = self.create_leave(datetime(2018, 1, 1, 7, 0), datetime(2018, 1, 1, 18, 0))
         leave.action_refuse()
 
@@ -98,11 +98,8 @@ class TestWorkEntryHolidaysPerformancesBigData(TestWorkEntryHolidaysBase):
             'name': 'Holiday - %s' % employee.name,
             'employee_id': employee.id,
             'holiday_status_id': cls.paid_time_off.id,
-            'date_from': date(2020, 8, 3),
             'request_date_from': date(2020, 8, 3),
-            'date_to': date(2020, 8, 7),
             'request_date_to': date(2020, 8, 7),
-            'number_of_days': 5,
         } for employee in cls.employees])
         cls.leaves._compute_date_from_to()
         cls.leaves.action_approve()
