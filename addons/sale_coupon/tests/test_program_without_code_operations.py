@@ -57,3 +57,53 @@ class TestProgramWithoutCodeOperations(TestSaleCouponCommon):
         order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 1, "The promo reward should have been removed as the rules are not matched anymore")
         self.assertEqual(order.order_line.product_id.id, self.product_B.id, "The wrong line has been removed")
+
+    def test_program_specific_product_discount(self):
+        # Test if only the best promotion program is applied on a specific product
+        promotion_program_specific_product_qty_2 = self.env['coupon.program'].create({
+            'name': 'Buy 2 products, 10 percent discount on A',
+            'promo_code_usage': 'no_code_needed',
+            'reward_type': 'discount',
+            'discount_type': 'percentage',
+            'discount_percentage': 10,
+            'rule_min_quantity': 2,
+            'active': True,
+            'discount_apply_on': 'specific_products',
+            'discount_specific_product_ids': self.product_A,
+        })
+
+        promotion_program_specific_product_qty_5 = self.env['coupon.program'].create({
+            'name': 'Buy 5 products, 20 percent discount on A',
+            'promo_code_usage': 'no_code_needed',
+            'reward_type': 'discount',
+            'discount_type': 'percentage',
+            'discount_percentage': 20,
+            'rule_min_quantity': 5,
+            'active': True,
+            'discount_apply_on': 'specific_products',
+            'discount_specific_product_ids': self.product_A,
+        })
+
+        order = self.empty_order
+        order.write({'order_line': [
+            (0, False, {
+                'product_id': self.product_A.id,
+                'name': 'Product A',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 2.0,
+            })
+        ]})
+        order.recompute_coupon_lines()
+        self.assertEqual(len(order.order_line.ids), 2, "The sale order has to contain two lines (the product and the promotion)")
+        self.assertEqual(order._get_applied_programs(), promotion_program_specific_product_qty_2,
+            "The best promotion program must be applied for a quantity equal to 2")
+
+        order.write({'order_line': [
+            (1, order.order_line.filtered(lambda l: l.name == 'Product A').id, {
+                'product_uom_qty': 5.0,
+            })
+        ]})
+        order.recompute_coupon_lines()
+        self.assertEqual(len(order.order_line.ids), 2, "The sale order has to contain two lines (the product and the promotion)")
+        self.assertEqual(order._get_applied_programs(), promotion_program_specific_product_qty_5,
+            "The best promotion program must be applied for a quantity equal to 5")
