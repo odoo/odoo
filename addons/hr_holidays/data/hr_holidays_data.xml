@@ -260,7 +260,7 @@
             <field name="allocation_validation_type">officer</field>
             <field name="leave_notif_subtype_id" ref="mt_leave"/>
             <field name="allocation_notif_subtype_id" ref="mt_leave_allocation"/>
-            <field name="responsible_id" ref="base.user_admin"/>
+            <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
             <field name="icon_id" ref="hr_holidays.icon_14"/>
             <field name="color">2</field>
         </record>
@@ -270,7 +270,7 @@
             <field name="name">Sick Time Off</field>
             <field name="requires_allocation">no</field>
             <field name="leave_notif_subtype_id" ref="mt_leave_sick"/>
-            <field name="responsible_id" ref="base.user_admin"/>
+            <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
             <field name="support_document">True</field>
             <field name="icon_id" ref="hr_holidays.icon_21"/>
             <field name="color">3</field>
@@ -285,7 +285,7 @@
             <field name="allocation_validation_type">officer</field>
             <field name="request_unit">hour</field>
             <field name="leave_notif_subtype_id" ref="mt_leave"/>
-            <field name="responsible_id" ref="base.user_admin"/>
+            <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
             <field name="icon_id" ref="hr_holidays.icon_4"/>
             <field name="color">4</field>
         </record>
@@ -299,7 +299,7 @@
             <field name="request_unit">hour</field>
             <field name="unpaid" eval="True"/>
             <field name="leave_notif_subtype_id" ref="mt_leave_unpaid"/>
-            <field name="responsible_id" ref="base.user_admin"/>
+            <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
             <field name="icon_id" ref="hr_holidays.icon_28"/>
             <field name="color">5</field>
         </record>
