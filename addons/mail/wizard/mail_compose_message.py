@@ -142,7 +142,6 @@ class MailComposer(models.TransientModel):
         'Type', required=True, default='comment',
         help="Message type: email for email message, notification for system "
              "message, comment for other messages such as user replies")
-    is_log = fields.Boolean('Log as Internal Note')
     subtype_id = fields.Many2one(
         'mail.message.subtype', 'Subtype', ondelete='set null',
         default=lambda self: self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'))
@@ -450,8 +449,6 @@ class MailComposer(models.TransientModel):
         email_mode = self.composition_mode == 'mass_mail'
 
         if email_mode:
-            subtype_id = False
-        elif self.is_log:  # log a note: subtype is False
             subtype_id = False
         elif self.subtype_id:
             subtype_id = self.subtype_id.id

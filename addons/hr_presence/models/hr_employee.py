@@ -184,8 +184,8 @@ Do not hesitate to contact your manager or the human resource department.""")
             default_res_ids=self.ids,
             default_template_id=template.id,
             default_composition_mode='comment',
-            default_is_log=True,
             default_email_layout_xmlid='mail.mail_notification_light',
+            default_subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
         )
         return {
             'name': _('Compose Email'),

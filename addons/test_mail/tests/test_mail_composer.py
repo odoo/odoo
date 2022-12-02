@@ -900,7 +900,6 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
             'body': '<p>Test Body 2</p>',
             'email_add_signature': False,
             'email_layout_xmlid': 'mail.mail_notification_light',
-            'is_log': False,
             'message_type': 'notification',
             'subtype_id': self.env.ref('mail.mt_note').id,
             'partner_ids': [(4, self.partner_1.id), (4, self.partner_2.id)],
@@ -912,14 +911,6 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
         self.assertEqual(message.email_layout_xmlid, 'mail.mail_notification_light')
         self.assertEqual(message.message_type, 'notification')
         self.assertEqual(message.record_name, 'Custom record name')
-        self.assertEqual(message.subtype_id, self.env.ref('mail.mt_note'))
-
-        # log forces note
-        composer.write({
-            'is_log': True,
-            'subtype_id': self.env.ref('mail.mt_comment').id,
-        })
-        _mail, message = composer._action_send_mail()
         self.assertEqual(message.subtype_id, self.env.ref('mail.mt_note'))
 
         # subtype through xml id
