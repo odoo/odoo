@@ -146,6 +146,7 @@ class TestComposerForm(TestMailComposer):
         self.assertIn(f'Ticket for {self.test_record.name}', composer_form.subject,
                       'Check effective content')
         self.assertEqual(composer_form.subtype_id, self.env.ref('mail.mt_comment'))
+        self.assertFalse(composer_form.subtype_is_log)
 
     @users('employee')
     def test_mail_composer_comment_attachments(self):
@@ -221,6 +222,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.scheduled_date, FieldDatetime.to_string(self.reference_now + timedelta(days=2)))
         self.assertEqual(composer_form.subject, 'TemplateSubject %s' % self.test_record.name)
         self.assertEqual(composer_form.subtype_id, self.env.ref('mail.mt_comment'))
+        self.assertFalse(composer_form.subtype_is_log)
 
     @users('employee')
     def test_mail_composer_comment_wtpl_batch(self):
@@ -251,6 +253,8 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.scheduled_date, self.template.scheduled_date)
         self.assertEqual(composer_form.subject, self.template.subject,
                          'MailComposer: comment in batch mode should have template raw subject if template')
+        self.assertEqual(composer_form.subtype_id, self.env.ref('mail.mt_comment'))
+        self.assertFalse(composer_form.subtype_is_log)
 
     @users('employee')
     def test_mail_composer_comment_wtpl_norecords(self):
@@ -281,6 +285,7 @@ class TestComposerForm(TestMailComposer):
                          'No record but rendered, see expression in template')
         self.assertEqual(composer_form.subject, 'TemplateSubject ')
         self.assertEqual(composer_form.subtype_id, self.env.ref('mail.mt_comment'))
+        self.assertFalse(composer_form.subtype_is_log)
 
     @users('employee')
     def test_mail_composer_mass(self):
@@ -303,6 +308,7 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.scheduled_date)
         self.assertFalse(composer_form.subject, 'MailComposer: mass mode should have void default subject if no template')
         self.assertEqual(composer_form.subtype_id, self.env.ref('mail.mt_comment'))
+        self.assertFalse(composer_form.subtype_is_log)
 
     @users('employee')
     def test_mail_composer_mass_wtpl(self):
@@ -329,6 +335,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.subject, self.template.subject,
                          'MailComposer: mass mode should have template raw subject if template')
         self.assertEqual(composer_form.subtype_id, self.env.ref('mail.mt_comment'))
+        self.assertFalse(composer_form.subtype_is_log)
 
     @users('employee')
     def test_mail_composer_mass_wtpl_norecords(self):
@@ -359,6 +366,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.subject, self.template.subject,
                          'MailComposer: mass mode should have template raw subject if template')
         self.assertEqual(composer_form.subtype_id, self.env.ref('mail.mt_comment'))
+        self.assertFalse(composer_form.subtype_is_log)
 
 
 @tagged('mail_composer')
@@ -588,6 +596,7 @@ class TestComposerInternals(TestMailComposer):
                 })
                 self.assertEqual(composer.message_type, 'notification')
                 self.assertEqual(composer.subtype_id, self.env.ref('mail.mt_note'))
+                self.assertTrue(composer.subtype_is_log)
 
                 # force some composer values to see changes (due to previous bugs)
                 composer.write({
@@ -604,11 +613,13 @@ class TestComposerInternals(TestMailComposer):
                     self.assertTrue(composer.auto_delete)
                     self.assertEqual(composer.message_type, 'notification')
                     self.assertEqual(composer.subtype_id, self.env.ref('mail.mt_note'))
+                    self.assertTrue(composer.subtype_is_log)
                 else:
                     # self.assertFalse(composer.auto_delete, 'TODO: should be updated')
                     self.assertTrue(composer.auto_delete)
                     self.assertEqual(composer.message_type, 'notification')
                     self.assertEqual(composer.subtype_id, self.env.ref('mail.mt_note'))
+                    self.assertTrue(composer.subtype_is_log)
 
     @users('employee')
     def test_mail_composer_content(self):
@@ -1186,7 +1197,6 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
             'body': '<p>Test Body 2</p>',
             'email_add_signature': False,
             'email_layout_xmlid': 'mail.mail_notification_light',
-            'is_log': False,
             'message_type': 'notification',
             'subtype_id': self.env.ref('mail.mt_note').id,
             'partner_ids': [(4, self.partner_1.id), (4, self.partner_2.id)],
@@ -1198,14 +1208,6 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
         self.assertEqual(message.email_layout_xmlid, 'mail.mail_notification_light')
         self.assertEqual(message.message_type, 'notification')
         self.assertEqual(message.record_name, 'Custom record name')
-        self.assertEqual(message.subtype_id, self.env.ref('mail.mt_note'))
-
-        # log forces note
-        composer.write({
-            'is_log': True,
-            'subtype_id': self.env.ref('mail.mt_comment').id,
-        })
-        _mail, message = composer._action_send_mail()
         self.assertEqual(message.subtype_id, self.env.ref('mail.mt_note'))
 
         # subtype through xml id
