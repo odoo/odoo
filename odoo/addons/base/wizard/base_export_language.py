@@ -56,3 +56,12 @@ class BaseLanguageExport(models.TransientModel):
             'views': [(False, 'form')],
             'target': 'new',
         }
+
+    def action_export_new(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'base.language.export',
+            'view_mode': 'form',
+            'views': [(False, 'form')],
+            'target': 'new',
+        }
