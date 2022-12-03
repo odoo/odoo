@@ -1283,9 +1283,9 @@ def preload_registries(dbnames):
     # TODO: move all config checks to args dont check tools.config here
     dbnames = dbnames or []
     rc = 0
+    update_module = bool(config['init'] or config['update'])
     for dbname in dbnames:
         try:
-            update_module = config['init'] or config['update']
             registry = Registry.new(dbname, update_module=update_module)
 
             # run test_file if provided
