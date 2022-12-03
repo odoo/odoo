@@ -212,25 +212,25 @@ class TestFields(TransactionCaseWithUserDemo):
             }
         )
         fields = self.env["test_new_api.foo"]._fields
-        triggers = self.env.registry.field_triggers
+        get_trigger_tree = self.registry.get_trigger_tree
         value1 = fields["value1"]
         valid_depends = fields["x_computed_custom_valid_depends"]
         valid_transitive_depends = fields["x_computed_custom_valid_transitive_depends"]
         invalid_depends = fields["x_computed_custom_invalid_depends"]
         invalid_transitive_depends = fields["x_computed_custom_invalid_transitive_depends"]
         # `x_computed_custom_valid_depends` in the triggers of the field `value1`
-        self.assertTrue(valid_depends in triggers[value1][None])
+        self.assertTrue(valid_depends in get_trigger_tree([value1])[None])
         # `x_computed_custom_valid_transitive_depends` in the triggers `x_computed_custom_valid_depends` and `value1`
-        self.assertTrue(valid_transitive_depends in triggers[valid_depends][None])
-        self.assertTrue(valid_transitive_depends in triggers[value1][None])
+        self.assertTrue(valid_transitive_depends in get_trigger_tree([valid_depends])[None])
+        self.assertTrue(valid_transitive_depends in get_trigger_tree([value1])[None])
         # `x_computed_custom_invalid_depends` not in any triggers, as it was invalid and was skipped
         self.assertEqual(
-            sum(invalid_depends in field_triggers.get(None, []) for field_triggers in triggers.values()), 0
+            sum(invalid_depends in get_trigger_tree([field]).get(None, ()) for field in fields.values()), 0
         )
         # `x_computed_custom_invalid_transitive_depends` in the triggers of `x_computed_custom_invalid_depends` only
-        self.assertTrue(invalid_transitive_depends in triggers[invalid_depends][None])
+        self.assertTrue(invalid_transitive_depends in get_trigger_tree([invalid_depends])[None])
         self.assertEqual(
-            sum(invalid_transitive_depends in field_triggers.get(None, []) for field_triggers in triggers.values()), 1
+            sum(invalid_transitive_depends in get_trigger_tree([field]).get(None, ()) for field in fields.values()), 1
         )
 
     @mute_logger('odoo.fields')
@@ -3942,7 +3942,7 @@ class TestPrecomputeModel(common.TransactionCase):
         self.patch(Model.upper, 'precompute', False)
         with self.assertWarns(UserWarning):
             self.registry.setup_models(self.cr)
-            self.registry.field_triggers
+            self.registry.get_trigger_tree(Model._fields.values())
 
     def test_precompute_dependencies_many2one(self):
         Model = self.registry['test_new_api.precompute']
@@ -3966,7 +3966,7 @@ class TestPrecomputeModel(common.TransactionCase):
         self.patch(Line.size, 'precompute', False)
         with self.assertWarns(UserWarning):
             self.registry.setup_models(self.cr)
-            self.registry.field_triggers
+            self.registry.get_trigger_tree(Model._fields.values())
 
 
 class TestPrecompute(common.TransactionCase):
