@@ -769,7 +769,7 @@ class IrModelFields(models.Model):
                 else:
                     # field hasn't been loaded (yet?)
                     continue
-                for dep in model._dependent_fields(field):
+                for dep in self.pool.get_dependent_fields(field):
                     if dep.manual:
                         failed_dependencies.append((field, dep))
                 for inverse in model.pool.field_inverses[field]:
@@ -840,23 +840,7 @@ class IrModelFields(models.Model):
 
         # clean the registry from the fields to remove
         self.pool.registry_invalidated = True
-
-        # discard the removed fields from field triggers
-        def discard_fields(tree):
-            # discard fields from the tree's root node
-            tree.get(None, set()).difference_update(fields)
-            # discard subtrees labelled with any of the fields
-            for field in fields:
-                tree.pop(field, None)
-            # discard fields from remaining subtrees
-            for field, subtree in tree.items():
-                if field is not None:
-                    discard_fields(subtree)
-
-        discard_fields(self.pool.field_triggers)
-
-        # discard the removed fields from field inverses
-        self.pool.field_inverses.discard_keys_and_values(fields)
+        self.pool._discard_fields(fields)
 
         # discard the removed fields from fields to compute
         for field in fields:
