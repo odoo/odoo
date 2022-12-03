@@ -141,6 +141,9 @@ class Registry(Mapping):
         self.field_depends_context = Collector()
         self.field_inverses = Collector()
 
+        # cache of method is_modifying_relations()
+        self._is_modifying_relations = {}
+
         # Inter-process signaling:
         # The `base_registry_signaling` sequence indicates the whole registry
         # must be reloaded.
@@ -232,6 +235,7 @@ class Registry(Mapping):
         self.__cache.clear()
 
         lazy_property.reset_all(self)
+        self._is_modifying_relations.clear()
 
         # Instantiate registered classes (via the MetaModel automatic discovery
         # or via explicit constructor call), and add them to the pool.
@@ -260,6 +264,7 @@ class Registry(Mapping):
         self.__cache.clear()
 
         lazy_property.reset_all(self)
+        self._is_modifying_relations.clear()
         self.registry_invalidated = True
 
         # we must setup ir.model before adding manual fields because _add_manual_models may
@@ -325,6 +330,49 @@ class Registry(Mapping):
                                     model_name, ", ".join(field.name for field in fields))
         return computed
 
+    def get_trigger_tree(self, fields: list, select=bool):
+        """ Return the trigger tree to traverse when ``fields`` have been modified.
+        The function ``select`` is called on every field to determine which fields
+        should be kept in the tree nodes.  This enables to discard some unnecessary
+        fields from the tree nodes.
+        """
+        field_triggers = self.field_triggers
+        trees = [field_triggers[field] for field in fields if field in field_triggers]
+        if not trees:
+            return {}
+        return merge_trigger_trees(trees, select)
+
+    def get_dependent_fields(self, field):
+        """ Return an iterator on the fields that depend on ``field``. """
+        def traverse(tree):
+            for key, val in tree.items():
+                if key is None:
+                    yield from val
+                else:
+                    yield from traverse(val)
+        return traverse(self.field_triggers.get(field) or {})
+
+    def _discard_fields(self, fields: list):
+        """ Discard the given fields from the registry's internal data structures. """
+
+        # discard fields from field triggers
+        def discard(tree):
+            # discard fields from the tree's root node
+            tree.get(None, set()).difference_update(fields)
+            # discard subtrees labelled with any of the fields
+            for field in fields:
+                tree.pop(field, None)
+            # discard fields from remaining subtrees
+            for field, subtree in tree.items():
+                if field is not None:
+                    discard(subtree)
+
+        discard(self.field_triggers)
+        self._is_modifying_relations.clear()
+
+        # discard fields from field inverses
+        self.field_inverses.discard_keys_and_values(fields)
+
     @lazy_property
     def field_triggers(self):
         # determine field dependencies
@@ -367,29 +415,21 @@ class Registry(Mapping):
 
         return triggers
 
-    @lazy_property
-    def fields_modifying_relations(self):
-        '''
-        Return the union of the set of relational fields that are dependencies
-        of other fields, with the set of non-relational fields that are
-        dependencies of relational fields.
-        '''
-        result = set()
-
-        for field in self.field_triggers:
-            # If the field is itself a relational field, it is also considered
-            # as triggering relational fields.
-            if field.relational or self.field_inverses[field]:
-                result.add(field)
-                continue
-
-            Model = self.models[field.model_name]
-            for dep in Model._dependent_fields(field):
-                if dep.relational or self.field_inverses[dep]:
-                    result.add(field)
-                    break
-
-        return result
+    def is_modifying_relations(self, field):
+        """ Return whether ``field`` has dependent fields on some records, and
+        that modifying ``field`` might change the dependent records.
+        """
+        try:
+            return self._is_modifying_relations[field]
+        except KeyError:
+            result = field in self.field_triggers and (
+                field.relational or self.field_inverses[field] or any(
+                    dep.relational or self.field_inverses[dep]
+                    for dep in self.get_dependent_fields(field)
+                )
+            )
+            self._is_modifying_relations[field] = result
+            return result
 
     def post_init(self, func, *args, **kwargs):
         """ Register a function to call at the end of :meth:`~.init_models`. """
@@ -789,3 +829,32 @@ class DummyRLock(object):
         self.acquire()
     def __exit__(self, type, value, traceback):
         self.release()
+
+
+def merge_trigger_trees(trees: list, select=bool) -> dict:
+    """ Merge trigger trees list into a final tree. The function ``select`` is
+    called on every field to determine which fields should be kept in the tree
+    nodes. This enables to discard some fields from the tree nodes.
+    """
+    result_tree = {}                        # the resulting tree
+    root_fields = OrderedSet()              # the fields in the root node
+    subtrees_to_merge = defaultdict(list)   # the subtrees to merge grouped by key
+
+    for tree in trees:
+        for key, val in tree.items():
+            if key is None:
+                root_fields.update(val)
+            else:
+                subtrees_to_merge[key].append(val)
+
+    # the root node contains the collected fields for which select is true
+    root_node = [field for field in root_fields if select(field)]
+    if root_node:
+        result_tree[None] = root_node
+
+    for key, subtrees in subtrees_to_merge.items():
+        subtree = merge_trigger_trees(subtrees, select)
+        if subtree:
+            result_tree[key] = subtree
+
+    return result_tree
