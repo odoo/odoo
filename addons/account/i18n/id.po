@@ -10,6 +10,7 @@
 # arfa simoncelli, 2022
 # Danu S Pratomo, 2022
 # Abe Manyo, 2022
+# Edi Santoso <repopamor@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Abe Manyo, 2022\n"
+"Last-Translator: Edi Santoso <repopamor@gmail.com>, 2022\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -189,7 +190,7 @@ msgstr "%s.salinan"
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "(copy)"
-msgstr "(copy)"
+msgstr "(salinan)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -265,7 +266,7 @@ msgstr ". Anda mungkin ingin memasukan angka lebih tinggi di sini."
 #: code:addons/account/wizard/account_resequence.py:0
 #, python-format
 msgid "... (%s other)"
-msgstr "... (%s lainya)"
+msgstr "... (%s lainnya)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -574,7 +575,7 @@ msgstr "<i class=\"fa fa-fw fa-comments\"/><b>Kirim pesan</b>"
 msgid ""
 "<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/> Configure Email Servers"
 msgstr ""
-"<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/> Konfigurasi Server "
+"<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/> Konfigurasi Peladen "
 "Email"
 
 #. module: account
@@ -981,7 +982,7 @@ msgstr "<span role=\"separator\">Tampil</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in General Ledger\">Balance in GL</span>"
-msgstr "<span title=\"Balance in General Ledger\">Balance in GL</span>"
+msgstr "<span title=\"Balance in General Ledger\">Saldo di Buku Besar</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1000,7 +1001,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
 msgid "<span> (CR)</span>"
-msgstr "<span> (CR)</span>"
+msgstr "<span> (KR)</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
@@ -1047,7 +1048,7 @@ msgstr "<span>Deskripsi</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Disc.%</span>"
-msgstr "<span>Disc.%</span>"
+msgstr "<span>Diskon.%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -1100,7 +1101,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Reporting</span>"
-msgstr "Laporan"
+msgstr "<span>Laporan</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1312,7 +1313,8 @@ msgstr ""
 #, python-format
 msgid "A line cannot have both children and a groupby value (line '%s')."
 msgstr ""
-"Baris tidak dapat memiliki turunan dan harga groupby (line '1%s') bersamaan"
+"Baris tidak dapat memiliki turunan dan nilai pengelompokan (baris '%s') "
+"secara bersamaan."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -1449,7 +1451,7 @@ msgstr "Pembulatan Uang Tunai"
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
 msgid "Account Chart Template"
-msgstr "Template Bagan Akun"
+msgstr "Templat Bagan Akun"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__account_codes_formula
@@ -1519,7 +1521,7 @@ msgstr "Akun Jurnal"
 #. module: account
 #: model:ir.model,name:account.model_account_journal_group
 msgid "Account Journal Group"
-msgstr "Account Journal Group"
+msgstr "Grup Jurnal Akun"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__account_ids
@@ -1577,7 +1579,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
 msgid "Account Root"
-msgstr "Account Root"
+msgstr "Akar Akun"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template__account_src_id
@@ -1594,7 +1596,7 @@ msgstr "Statistik Akun"
 #. module: account
 #: model:ir.model,name:account.model_account_account_tag
 msgid "Account Tag"
-msgstr "Tag Akun"
+msgstr "Tanda Akun"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__account_tag_ids
@@ -1613,13 +1615,13 @@ msgstr "Akun Pajak"
 #: model_terms:ir.ui.view,arch_db:account.view_tax_group_form
 #: model_terms:ir.ui.view,arch_db:account.view_tax_group_tree
 msgid "Account Tax Group"
-msgstr "Account Tax Group"
+msgstr "Grup Akun Pajak"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_tree
 msgid "Account Tax Template"
-msgstr "Template Akun Pajak"
+msgstr "Templat Akun Pajak"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_taxcloud
@@ -1630,7 +1632,7 @@ msgstr "Akun TaxCloud"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_stock_valuation_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__property_stock_valuation_account_id
 msgid "Account Template for Stock Valuation"
-msgstr "Template Akun untuk Penilaian Persediaan"
+msgstr "Templat Akun untuk Penilaian Persediaan"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__account_type
@@ -1663,7 +1665,7 @@ msgstr "Pembatalan Rekonsiliasi Akun"
 #. module: account
 #: model:ir.model,name:account.model_account_root
 msgid "Account codes first 2 digits"
-msgstr "Account codes first 2 digits"
+msgstr "2 digit awal kode Akun"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
@@ -1717,7 +1719,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice_with_payments
 msgid "Account report with payment lines"
-msgstr "Account report with payment lines"
+msgstr "laporan Akun dengan baris pembayaran"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice
@@ -1727,7 +1729,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template__tag_ids
 msgid "Account tag"
-msgstr "Tag akun"
+msgstr "Tanda Akun"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template__property_cash_basis_base_account_id
@@ -1787,7 +1789,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Account with Entries"
-msgstr "Account with Entries"
+msgstr "Akun dengan Entri"
 
 #. module: account
 #: model:ir.actions.server,name:account.ir_cron_auto_post_draft_entry_ir_actions_server
@@ -1812,7 +1814,7 @@ msgstr "Akuntansi"
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_journal_dashboard_kanban
 msgid "Accounting Dashboard"
-msgstr "Dashboard Akuntansi"
+msgstr "Dasbor Akuntansi"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -1846,7 +1848,7 @@ msgstr "Informasi Akuntansi"
 #: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
 #, python-format
 msgid "Accounting Periods"
-msgstr "Accounting Periods"
+msgstr "Periode Akuntansi"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report
@@ -1912,7 +1914,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__account_id
 msgid "Accrual Account"
-msgstr "Akun Accrual"
+msgstr "Akun Akrual"
 
 #. module: account
 #: code:addons/account/wizard/accrued_orders.py:0
@@ -1937,7 +1939,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Accrued Account"
-msgstr "Accrued Account"
+msgstr "Akun yang masih harus dibayar"
 
 #. module: account
 #: model:ir.model,name:account.model_account_accrued_orders_wizard
@@ -2111,7 +2113,7 @@ msgstr "Tambahkan jurnal"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_group_list
 msgid "Add a journal group"
-msgstr "Add a journal group"
+msgstr "Tambah grup jurnal"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
