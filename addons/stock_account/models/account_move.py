@@ -12,13 +12,13 @@ class AccountMove(models.Model):
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'account_move_id', string='Stock Valuation Layer')
 
     def _compute_show_reset_to_draft_button(self):
+        super()._compute_show_reset_to_draft_button()
         for move in self:
             for line in move.line_ids:
                 # if a line has correction layers hide the 'Reset to Darft' button
                 if line._get_stock_valuation_layers(move).stock_valuation_layer_ids.filtered('account_move_line_id'):
                     move.show_reset_to_draft_button = False
-                    return
-        super()._compute_show_reset_to_draft_button()
+                    break
 
     # -------------------------------------------------------------------------
     # OVERRIDE METHODS
@@ -300,6 +300,8 @@ class AccountMoveLine(models.Model):
                     fixed_multiplicator=move.direction_sign,
                 )['total_excluded']
                 price_unit /= prec
+            price_unit = line.currency_id._convert(price_unit, line.company_id.currency_id, line.company_id, line.date, round=False)
+            price_unit = line.product_uom_id._compute_price(price_unit, line.product_id.uom_id)
             layers_price_unit = line._get_stock_valuation_layers_price_unit(layers)
             layers_to_correct = line._get_stock_layer_price_difference(layers, layers_price_unit, price_unit)
             svl_vals_list += line._prepare_in_invoice_svl_vals(layers_to_correct)
@@ -324,27 +326,35 @@ class AccountMoveLine(models.Model):
         return price_unit_by_layer
 
     def _get_stock_layer_price_difference(self, layers, layers_price_unit, price_unit):
+        self.ensure_one()
         po_line = self.purchase_line_id
+        aml_qty = self.product_uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
         invoice_lines = po_line.invoice_lines - self
         invoices_qty = 0
         for invoice_line in invoice_lines:
             invoices_qty += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, invoice_line.product_id.uom_id)
+        qty_received = po_line.product_uom._compute_quantity(po_line.qty_received, self.product_id.uom_id)
+        out_qty = qty_received - sum(layers.mapped('remaining_qty'))
+        out_and_not_billed_qty = max(0, out_qty - invoices_qty)
+        total_to_correct = max(0, aml_qty - out_and_not_billed_qty)
+        # we also need to skip the remaining qty that is already billed
+        total_to_skip = max(0, invoices_qty - out_qty)
         layers_to_correct = {}
         for layer in layers:
-            if layer.quantity <= invoices_qty:
-                invoices_qty -= layer.quantity
+            if float_compare(total_to_correct, 0, precision_rounding=self.product_id.uom_id.rounding) <= 0:
+                break
+            remaining_qty = layer.remaining_qty
+            qty_to_skip = min(total_to_skip, remaining_qty)
+            remaining_qty = max(0, remaining_qty - qty_to_skip)
+            qty_to_correct = min(total_to_correct, remaining_qty)
+            total_to_skip -= qty_to_skip
+            total_to_correct -= qty_to_correct
+            unit_valuation_difference = price_unit - layers_price_unit[layer]
+            if float_is_zero(unit_valuation_difference * qty_to_correct, precision_rounding=self.company_id.currency_id.rounding):
                 continue
-            qty_to_correct = layer.quantity - invoices_qty
-            layer_price_unit = self.company_id.currency_id._convert(
-                layers_price_unit[layer], po_line.currency_id, self.company_id, self.date, round=False)
-            price_difference = price_unit - layer_price_unit
-            price_difference = po_line.currency_id._convert(
-                price_difference, self.company_id.currency_id, self.company_id, self.date, round=False)
-            # TODO convert in invoice currency
-            price_difference_curr = (po_line.price_unit - self.price_unit)
-            if float_is_zero(price_difference * qty_to_correct, precision_rounding=self.currency_id.rounding):
-                continue
-            layers_to_correct[layer] = (qty_to_correct, price_difference, price_difference_curr)
+            po_pu_curr = po_line.currency_id._convert(po_line.price_unit, self.currency_id, self.company_id, self.date, round=False)
+            price_difference_curr = po_pu_curr - self.price_unit
+            layers_to_correct[layer] = (qty_to_correct, unit_valuation_difference, price_difference_curr)
         return layers_to_correct
 
     def _get_valued_in_moves(self):
@@ -366,7 +376,8 @@ class AccountMoveLine(models.Model):
         }
         for layer, (quantity, price_difference, price_difference_curr) in layers_correction.items():
             svl_vals = self.product_id._prepare_in_svl_vals(quantity, price_difference)
-            svl_vals.update(**common_svl_vals, stock_valuation_layer_id=layer.id, price_diff_value=price_difference_curr * quantity)
+            diff_value_curr = self.currency_id.round(price_difference_curr * quantity)
+            svl_vals.update(**common_svl_vals, stock_valuation_layer_id=layer.id, price_diff_value=diff_value_curr)
             svl_vals_list.append(svl_vals)
             # Adds the difference into the last SVL's remaining value.
             layer.remaining_value += svl_vals['value']

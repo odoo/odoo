@@ -6,7 +6,7 @@ from functools import lru_cache
 
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import ValidationError, UserError
-from odoo.tools import frozendict, formatLang, format_date, float_is_zero, float_compare
+from odoo.tools import frozendict, formatLang, format_date, float_is_zero
 from odoo.tools.sql import create_index
 from odoo.addons.web.controllers.utils import clean_action
 
@@ -1533,6 +1533,25 @@ class AccountMoveLine(models.Model):
                 line._copy_data_extend_business_fields(values)
         return data_list
 
+    def _search_panel_domain_image(self, field_name, domain, set_count=False, limit=False):
+        if field_name != 'account_root_id' or set_count:
+            return super()._search_panel_domain_image(field_name, domain, set_count, limit)
+
+        # Override in order to not read the complete move line table and use the index instead
+        query = self._search(domain, limit=1)
+        query.order = None
+        query.add_where('account.id = account_move_line.account_id')
+        query_str, query_param = query.select()
+        self.env.cr.execute(f"""
+            SELECT account.root_id
+              FROM account_account account,
+                   LATERAL ({query_str}) line
+        """, query_param)
+        return {
+            root.id: {'id': root.id, 'display_name': root.display_name}
+            for root in self.env['account.root'].browse(id for [id] in self.env.cr.fetchall())
+        }
+
     # -------------------------------------------------------------------------
     # TRACKING METHODS
     # -------------------------------------------------------------------------
@@ -2333,32 +2352,21 @@ class AccountMoveLine(models.Model):
     # ANALYTIC
     # -------------------------------------------------------------------------
 
-    def _validate_distribution(self):
+    def _validate_analytic_distribution(self):
         for line in self.filtered(lambda line: line.display_type == 'product'):
-            mandatory_plans_ids = [plan['id'] for plan in self.env['account.analytic.plan'].sudo().get_relevant_plans(**{
+            line._validate_distribution(**{
                         'product': line.product_id.id,
                         'account': line.account_id.id,
                         'business_domain': line.move_id.move_type in ['out_invoice', 'out_refund', 'out_receipt'] and 'invoice'
                                            or line.move_id.move_type in ['in_invoice', 'in_refund', 'in_receipt'] and 'bill'
                                            or 'general',
-                        'company_id': self.company_id.id,
-                        }) if plan['applicability'] == 'mandatory']
-            if not mandatory_plans_ids:
-                continue
-            distribution_by_root_plan = {}
-            for analytic_account_id, percentage in (line.analytic_distribution or {}).items():
-                root_plan = self.env['account.analytic.account'].browse(int(analytic_account_id)).root_plan_id
-                distribution_by_root_plan[root_plan.id] = distribution_by_root_plan.get(root_plan.id, 0) + percentage
-
-            for plan_id in mandatory_plans_ids:
-                if float_compare(distribution_by_root_plan.get(plan_id, 0), 100, precision_digits=2) != 0:
-                    raise ValidationError(_("One or more lines require a 100% analytic distribution."))
+                        'company_id': line.company_id.id,
+            })
 
     def _create_analytic_lines(self):
         """ Create analytic items upon validation of an account.move.line having an analytic distribution.
         """
-        if self.env.context.get('validate_analytic', False):
-            self._validate_distribution()
+        self._validate_analytic_distribution()
         analytic_line_vals = []
         for line in self:
             analytic_line_vals.extend(line._prepare_analytic_lines())

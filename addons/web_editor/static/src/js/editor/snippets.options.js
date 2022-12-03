@@ -33,6 +33,7 @@ const {
     isGif,
 } = require('web_editor.image_processing');
 const OdooEditorLib = require('@web_editor/js/editor/odoo-editor/src/OdooEditor');
+const {SIZES, MEDIAS_BREAKPOINTS} = require('@web/core/ui/ui_service');
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -3791,7 +3792,8 @@ const SnippetOptionWidget = Widget.extend({
         if (moveUpOrLeft || moveDownOrRight) {
             // The arrows are not displayed if the target is in a grid and if
             // not in mobile view.
-            const isMobileView = this.$target[0].ownerDocument.defaultView.frameElement.clientWidth < 768;
+            const mobileViewThreshold = MEDIAS_BREAKPOINTS[SIZES.LG].minWidth;
+            const isMobileView = this.$target[0].ownerDocument.defaultView.frameElement.clientWidth < mobileViewThreshold;
             if (this.$target[0].classList.contains('o_grid_item') && !isMobileView) {
                 return false;
             }
@@ -4464,7 +4466,8 @@ registry.sizing = SnippetOptionWidget.extend({
     async updateUIVisibility() {
         await this._super(...arguments);
 
-        const isMobileView = this.$target[0].ownerDocument.defaultView.frameElement.clientWidth < 768;
+        const mobileViewThreshold = MEDIAS_BREAKPOINTS[SIZES.LG].minWidth;
+        const isMobileView = this.$target[0].ownerDocument.defaultView.frameElement.clientWidth < mobileViewThreshold;
         const isGrid = this.$target[0].classList.contains('o_grid_item');
         if (this.$target[0].parentNode && this.$target[0].parentNode.classList.contains('row')) {
             // Hiding/showing the correct resize handles if we are in grid mode
@@ -5140,7 +5143,7 @@ registry.layout_column = SnippetOptionWidget.extend({
             gridUtils._reloadLazyImages(columnEl);
 
             // Removing the grid properties.
-            columnEl.classList.remove('o_grid_item', 'o_grid_item_image');
+            columnEl.classList.remove('o_grid_item', 'o_grid_item_image', 'o_grid_item_image_contain');
             columnEl.style.removeProperty('grid-area');
             columnEl.style.removeProperty('z-index');
         }

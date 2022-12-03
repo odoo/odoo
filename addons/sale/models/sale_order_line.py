@@ -1115,6 +1115,14 @@ class SaleOrderLine(models.Model):
         """
         return {}
 
+    def _validate_analytic_distribution(self):
+        for line in self.filtered(lambda l: not l.display_type and l.state in ['draft', 'sent']):
+            line._validate_distribution(**{
+                'product': line.product_id.id,
+                'business_domain': 'sale_order',
+                'company_id': line.company_id.id,
+            })
+
     #=== CORE METHODS OVERRIDES ===#
 
     def name_get(self):
