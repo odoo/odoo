@@ -13,7 +13,8 @@
                             <setting id="product_packs_tracking" documentation="/applications/inventory_and_mrp/inventory/management/products/usage.html#packages" title="Put your products in packs (e.g. parcels, boxes) and track them" help="Put your products in packs (e.g. parcels, boxes) and track them">
                                 <field name="group_stock_tracking_lot"/>
                             </setting>
-                            <setting id="process_transfers" help="Process transfers in batch per worker">
+                            <setting id="process_transfers" help="Process transfers in batch per worker"
+                                     documentation="/applications/inventory_and_mrp/inventory/management/misc/batch_transfers.html">
                                 <field name="module_stock_picking_batch"/>
                                 <div class="row mt-2" attrs="{'invisible': [('module_stock_picking_batch','=',False)]}">
                                     <field name="group_stock_picking_wave" class="col-lg-1 ml16 mr0"/>
@@ -26,7 +27,8 @@
                             <setting id="warning_info" string="Warnings" help="Get informative or blocking warnings on partners">
                                 <field name="group_warning_stock"/>
                             </setting>
-                            <setting id="quality_control" help="Add quality checks to your transfer operations">
+                            <setting id="quality_control" help="Add quality checks to your transfer operations"
+                                     documentation="/applications/inventory_and_mrp/manufacturing/management/quality_control.html">
                                 <field name="module_quality_control" widget="upgrade_boolean"/>
                                 <div class="row mt-2" attrs="{'invisible': [('module_quality_control','=',False)]}">
                                     <field name="module_quality_control_worksheet" widget="upgrade_boolean" class="col-lg-1 ml16 mr0"/>
@@ -128,7 +130,8 @@
                                     </div>
                                 </div>
                             </setting>
-                            <setting id="expiration_dates_serial_numbers" help="Set expiration dates on lots &amp; serial numbers" attrs="{'invisible': [('group_stock_production_lot', '=', False)]}" title="Track following dates on lots &amp; serial numbers: best before, removal, end of life, alert. Such dates are set automatically at lot/serial number creation based on values set on the product (in days).">
+                            <setting id="expiration_dates_serial_numbers" help="Set expiration dates on lots &amp; serial numbers" attrs="{'invisible': [('group_stock_production_lot', '=', False)]}" title="Track following dates on lots &amp; serial numbers: best before, removal, end of life, alert. Such dates are set automatically at lot/serial number creation based on values set on the product (in days)."
+                                     documentation="/applications/inventory_and_mrp/inventory/management/lots_serial_numbers/expiration_dates.html">
                                 <field name="module_product_expiry"/>
                             </setting>
                             <setting help="Lots &amp; Serial numbers will appear on the delivery slip" attrs="{'invisible': [('group_stock_production_lot', '=', False)]}" id="group_lot_on_delivery_slip">
