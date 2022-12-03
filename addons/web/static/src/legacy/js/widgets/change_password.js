@@ -28,7 +28,7 @@ var ChangePassword = AbstractAction.extend({
         var $button = self.$('.oe_form_button');
         $button.appendTo(this.getParent().$footer);
         $button.eq(1).click(function () {
-            self.$el.parents('.modal').modal('hide');
+            self.$el.parents('.modal').addClass('d-none')
         });
         $button.eq(0).click(function () {
             self._rpc({
