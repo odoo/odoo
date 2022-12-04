@@ -24,6 +24,7 @@
 # Sven Serlier, 2022
 # Martin Trigaux, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
@@ -31,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -303,28 +304,28 @@ msgstr ""
 "            ${object.partner_id.name},\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        Hier is uw\n"
+"        Hierbij vind je je\n"
 "        % if object.name:\n"
 "            invoice <strong>${object.name}</strong>\n"
 "        % else:\n"
 "            factuur\n"
 "        %endif\n"
 "        % if object.invoice_origin:\n"
-"            (with reference: ${object.invoice_origin})\n"
+"            (met referentie: ${object.invoice_origin})\n"
 "        % endif\n"
 "        voor het bedrag van <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "        van ${object.company_id.name}.\n"
 "        % if object.payment_state in ('paid', 'in_payment'):\n"
 "            Deze factuur is al betaald.\n"
 "        % else:\n"
-"            Wilt u de betaling zo spoedig mogelijk te verrichten.\n"
+"            Wij zien de betaling graag zo spoedig mogelijk tegemoet.\n"
 "            % if object.payment_reference:\n"
 "                <br/><br/>\n"
-"                Gebruik de volgende communicatie voor uw betaling: <strong>${object.payment_reference}</strong>.\n"
+"                Gelieve de volgende communicatie te gebruiken voor je betaling: <strong>${object.payment_reference}</strong>.\n"
 "            % endif\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        Mocht u vragen hebben aarzel dan niet om contact met ons op te nemen.\n"
+"        Mocht je vragen hebben aarzel dan niet om contact met ons op te nemen.\n"
 "        % if object.invoice_user_id.signature:\n"
 "            <br/>\n"
 "            ${object.invoice_user_id.signature | safe}\n"
@@ -1035,6 +1036,12 @@ msgid ""
 msgstr ""
 "Een dagboek wordt gebruikt om alle verrichtingen uit het dagelijkse "
 "zakenleven in uw boekhouding op te slaan."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "A line of this move is using a deprecated account, you cannot post it."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
