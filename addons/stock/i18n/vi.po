@@ -3203,6 +3203,13 @@ msgid "If set, the operations are packed into this package"
 msgstr "Nếu chọn, hoạt động sẽ đóng gói kiện hàng này"
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_lot_label_layout__label_quantity
+msgid ""
+"If the UoM of a lot is not 'units', the lot will be considered as a unit and"
+" only one label will be printed for this lot."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__active
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
@@ -8510,8 +8517,7 @@ msgstr "Sử dụng Số lô/sê-ri đã tồn tại"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid ""
 "Use GS1 nomenclature datamatrix whenever barcodes are printed for lots and "
-"serial numbers. Printing datamatrix requires extra software. If software "
-"can't be found then 1D barcodes will be printed."
+"serial numbers."
 msgstr ""
 
 #. module: stock
@@ -9035,6 +9041,13 @@ msgstr ""
 "Bạn không thể thay đổi một đơn vị đo lường của một sản phẩm mà đã có phát "
 "sinh dịch chuyển kho. Nếu bạn thực sự cần thay đổi đơn vị đo, bạn có thể vô "
 "hiệu sản phẩm này."
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr ""
+"Bạn không thể thay đổi thể loại của sản phẩm một khi nó đã được sử dụng."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
