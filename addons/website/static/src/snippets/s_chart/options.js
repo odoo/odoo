@@ -298,7 +298,7 @@ options.registry.InnerChart = options.Class.extend({
      * @param {string} tag tag of the HTML Element (td/th)
      * @param {string} value The current value of the cell input
      * @param {string} backgroundColor The background Color of the data on the graph
-     * @param {string} borderColor The border Color of the the data on the graph
+     * @param {string} borderColor The border Color of the data on the graph
      * @returns {HTMLElement}
      */
     _makeCell: function (tag, value, backgroundColor, borderColor) {
