@@ -3934,7 +3934,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         caba_move = self.env['account.move'].search([('tax_cash_basis_origin_move_id', '=', invoice.id)])
 
-        self.assertEqual(caba_move.fiscal_position_id, foreign_vat_fpos, "The foreign VAT fiscal position should be kept in the the cash basis move.")
+        self.assertEqual(caba_move.fiscal_position_id, foreign_vat_fpos, "The foreign VAT fiscal position should be kept in the cash basis move.")
 
     def test_caba_tax_group(self):
         """ Test the CABA entries generated from an invoice with
