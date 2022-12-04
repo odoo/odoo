@@ -3,17 +3,7 @@
 # 	* stock
 # 
 # Translators:
-# Phuc Tran Thanh <phuctran.odoo@gmail.com>, 2020
-# Thang Duong Bao <nothingctrl@gmail.com>, 2020
-# Tuan Tran <tmtuan.projects@gmail.com>, 2020
-# Martin Trigaux, 2021
-# fanha99 <fanha99@hotmail.com>, 2021
-# Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2021
-# Dao Nguyen <trucdao.uel@gmail.com>, 2021
-# Trần Hà <tranthuha13590@gmail.com>, 2021
-# Vo Thanh Thuy, 2022
-# Dung Nguyen Thi <dungnt@trobz.com>, 2022
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
+# Martin Trigaux, 2022
 # Duy BQ <duybq86@gmail.com>, 2022
 # 
 msgid ""
@@ -21,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:33+0000\n"
-"PO-Revision-Date: 2016-08-05 13:10+0000\n"
+"PO-Revision-Date: 2022-06-17 09:55+0000\n"
 "Last-Translator: Duy BQ <duybq86@gmail.com>, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
@@ -996,7 +986,10 @@ msgid "As soon as possible"
 msgstr "Càng sớm càng tốt"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Assign"
 msgstr "Phân công"
 
@@ -3200,6 +3193,13 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_move_line__result_package_id
 msgid "If set, the operations are packed into this package"
 msgstr "Nếu chọn, hoạt động sẽ đóng gói kiện hàng này"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_lot_label_layout__label_quantity
+msgid ""
+"If the UoM of a lot is not 'units', the lot will be considered as a unit and"
+" only one label will be printed for this lot."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__active
@@ -8374,7 +8374,10 @@ msgid "USPS Connector"
 msgstr "USPS Connector"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Unassign"
 msgstr ""
 
@@ -8524,8 +8527,7 @@ msgstr "Sử dụng Số lô/sê-ri đã tồn tại"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid ""
 "Use GS1 nomenclature datamatrix whenever barcodes are printed for lots and "
-"serial numbers. Printing datamatrix requires extra software. If software "
-"can't be found then 1D barcodes will be printed."
+"serial numbers."
 msgstr ""
 
 #. module: stock
@@ -9051,6 +9053,13 @@ msgstr ""
 "hiệu sản phẩm này."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr ""
+"Bạn không thể thay đổi thể loại của sản phẩm một khi nó đã được sử dụng."
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -9335,18 +9344,6 @@ msgstr ""
 #, python-format
 msgid "You need to supply a Lot/Serial number for products %s."
 msgstr "Bạn cần cung cấp số Lô/Serial cho sản phẩm %s."
-
-#. module: stock
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid ""
-"You should not use a planned internal transfer to move some products between"
-" two warehouses. Instead, use an immediate internal transfer or the resupply"
-" route."
-msgstr ""
-"Bạn không nên dùng một kế hoạch dịch chuyển nội bộ để dịch chuyển một vài "
-"sản phẩm giữa hai Kho hàng. Thay vào đó, hãy sử dụng phương thức chuyển giao"
-" nội bộ ngay lập tức hoặc Loan báo cung ứng."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
