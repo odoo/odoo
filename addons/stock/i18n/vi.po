@@ -7301,6 +7301,13 @@ msgstr ""
 "hiệu sản phẩm này."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr ""
+"Bạn không thể thay đổi thể loại của sản phẩm một khi nó đã được sử dụng."
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -7597,18 +7604,6 @@ msgstr "Bạn cần có số sê-ri trước khi tạo thêm."
 #, python-format
 msgid "You need to supply a Lot/Serial number for product %s."
 msgstr "Bạn cần cung cấp số lô/sê-ri của sản phẩm %s."
-
-#. module: stock
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid ""
-"You should not use a planned internal transfer to move some products between"
-" two warehouses. Instead, use an immediate internal transfer or the resupply"
-" route."
-msgstr ""
-"Bạn không nên dùng một kế hoạch dịch chuyển nội bộ để dịch chuyển một vài "
-"sản phẩm giữa hai Kho hàng. Thay vào đó, hãy sử dụng phương thức chuyển giao"
-" nội bộ ngay lập tức hoặc Loan báo cung ứng."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
