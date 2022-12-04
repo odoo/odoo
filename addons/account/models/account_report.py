@@ -653,4 +653,4 @@ class AccountReportExternalValue(models.Model):
     def _check_fiscal_position(self):
         for record in self:
             if record.foreign_vat_fiscal_position_id and record.foreign_vat_fiscal_position_id.country_id != record.report_country_id:
-                raise ValidationError(_("The country set on the the foreign VAT fiscal position must match the one set on the report."))
+                raise ValidationError(_("The country set on the foreign VAT fiscal position must match the one set on the report."))

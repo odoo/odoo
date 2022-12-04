@@ -118,7 +118,7 @@ Model({
          *     -> enable the input and let the user type
          *
          * - Otherwise
-         *   - if the the step is of type 'question_selection' and we are still waiting for the user to
+         *   - if the step is of type 'question_selection' and we are still waiting for the user to
          *     select one of the options
          *     -> don't do anything, wait for the user to click one of the options
          *   - otherwise
