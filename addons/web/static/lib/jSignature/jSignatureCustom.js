@@ -329,7 +329,7 @@ function Point(x,y){
  * Stroke = mousedown + mousemoved * n (+ mouseup but we don't record that as that was the "end / lack of movement" indicator)
  * 
  * Vectors = not classical vectors where numbers indicated shift relative last position. Our vectors are actually coordinates against top left of canvas.
- *          we could calc the classical vectors, but keeping the the actual coordinates allows us (through Math.max / min) 
+ *          we could calc the classical vectors, but keeping the actual coordinates allows us (through Math.max / min)
  *          to calc the size of resulting drawing very quickly. If we want classical vectors later, we can always get them in backend code.
  * 
  * So, the data structure:

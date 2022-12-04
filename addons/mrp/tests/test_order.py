@@ -2315,7 +2315,7 @@ class TestMrpOrder(TestMrpCommon):
 
     def test_move_finished_onchanges(self):
         """ Test that move_finished_ids (i.e. produced products) are still correct even after
-        multiple onchanges have changed the the moves
+        multiple onchanges have changed the moves
         """
 
         product1 = self.env['product.product'].create({
