@@ -990,6 +990,29 @@ msgid ""
 "        you have not already sent to the government to reuse its number.\n"
 "    "
 msgstr ""
+"\n"
+"        E-Faktur Menu(Indonesia)\n"
+"        Format : 010.000-16.00000001\n"
+"        * 2 (dua) digit pertama adalah Kode Transaksi\n"
+"        * 1 (satu) digit berikutnya adalah Kode Status\n"
+"        * 3 (tiga) digit berikutnya adalah Kode Cabang\n"
+"        * 2 (dua) digit pertama adalah Tahun Penerbitan\n"
+"        * 8 (delapan) digit berikutnya adalah Nomor Urut\n"
+"\n"
+"        To be able to export customer invoices as e-Faktur,\n"
+"        you need to put the ranges of numbers you were assigned\n"
+"        by the government in Accounting > Customers > e-Faktur\n"
+"\n"
+"        When you validate an invoice, where the partner has the ID PKP\n"
+"        field checked, a tax number will be assigned to that invoice.\n"
+"        Afterwards, you can filter the invoices still to export in the\n"
+"        invoices list and click on Action > Download e-Faktur to download\n"
+"        the csv and upload it to the site of the government.\n"
+"\n"
+"        You can replace an already sent invoice by another by indicating\n"
+"        the replaced invoice and the new one and you can reset an invoice\n"
+"        you have not already sent to the government to reuse its number.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports
@@ -1028,6 +1051,12 @@ msgid ""
 "        For more information about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
 "    "
 msgstr ""
+"\n"
+"        Buat pesanan pembayaran seperti rekomendasi norma SEPA,  berkat pain.001 messages. Versi pain yang didukung (negara) adalah pain.001.001.03 (generic), pain.001.001.03.ch.02 (Switzerland) dan pain.001.003.03 (Germany). XML file yang dibuat dapat diunggah ke bank Anda.\n"
+"\n"
+"        Modul ini akan mengikuti guideline implementasi yang dikeluarkan oleh European Payment Council.\n"
+"        Untuk informasi lebih lanjut mengenai standar SEPA : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_winbooks_import
@@ -1268,6 +1297,36 @@ msgid ""
 "        try to use this method on an invoice for whose payment no mandate can be used.\n"
 "    "
 msgstr ""
+"\n"
+"        Modul ini memungkinkan pembuatan file XML SEPA Direct Debit (SDD)-compliant (konsisten\n"
+"        dengan spesifikasi pain.008.001.02) untuk dikirim ke bank Anda untuk\n"
+"        mengumpulkan pembayaran tertentu.\n"
+"\n"
+"        Untuk memenuhi syarat penggunaan metode pembayaran ini, pelanggan harus terlebih dahulu\n"
+"        mengembalikan mandat ke perusahaan, memberikan persetujuan untuk menggunakan direct debit.\n"
+"        Persetujuan ini harus di-encode sebagai 'customer mandate' di Odoo.\n"
+"\n"
+"        Anda juga harus memenuhi persyaratan berikut agar dengan tepat\n"
+"        membuat file SDD:\n"
+"        - Akun perusahaan Anda harus diset ke nomor IBAN yang valid\n"
+"        - Perusahaan Anda harus sudah diberikan creditor identifier (ini dapat dilakukan di menu 'pengaturan' pada modul akuntansi)\n"
+"        - Perusahaan Anda harus sudah mendefinisikan jurnal untuk menerima pembayaran SDD (sekali lagi, di 'pengaturan' pada modul akuntansi)\n"
+"        - Setiap pelanggan yang mana Anda membuat pembayaran harus memiliki nomor akun IBAN yang valid.\n"
+"\n"
+"        Odoo akan memberitahu Anda bila ada persyaratan yang tidak dipenuhi.\n"
+"\n"
+"        Faktur apapun yang divalidasi untuk pelanggan dengan mandat akan secara\n"
+"        otomatis diset dalam status 'dibayar', dan pembayaran akan dibuat.\n"
+"        Opsi di dashboard lalu akan memungkinkan Anda untuk melihat semua pembayaran yang dibuat\n"
+"        via SDD dan untuk membuat collection file XML untuk pembayaran tersebut, mengelompokkan mereka sesuai\n"
+"        keinginan Anda.\n"
+"\n"
+"        Metode pembayaran 'SEPA Direct Debit' yang terdedikasi juga tersedia untuk\n"
+"        faktur yang belum lunas, saat memilih akun bank di wizard 'daftarkan pembayaran'.\n"
+"        Gunakan itu untuk membuat pembayaran SDD untuk faktur bila Anda menambahkan mandat\n"
+"        untuk pemiliknya setelah validasi. Anda akan melihat pesan error bila Anda\n"
+"        mencoba untuk menggunakan metode ini pada faktur yang mana pembayarannya tidak dapat terkena dampak mandat.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_recaptcha
@@ -1510,6 +1569,24 @@ msgid ""
 "    but rather the amount of these lines will be deduced from the lines they apply to during tax computation.\n"
 "    "
 msgstr ""
+"\n"
+"    Kelola diskon di komputasi taxclouds.\n"
+"    Lihat https://taxcloud.com/support/discounts atau\n"
+"    https://service.taxcloud.net/hc/en-us/articles/360015649791-How-can-discounts-be-applied-\n"
+"\n"
+"    Rangkuman: all seller-provided discounts must be applied to the Sales Price before calculating sales tax.\n"
+"    Sellers should disclose their methodology to customers in a Discount Application Policy.\n"
+"\n"
+"    The algorithm is as follows:\n"
+"     - line-specific discounts are applied first, on the lines they are supposed to apply to.\n"
+"       This means product-specific discounts or discounts on the cheapest line.\n"
+"     - Then global discounts are applied evenly across paid lines, as much as possible.\n"
+"       If there is a remainder, it is applied sequentially, in the order of the lines,\n"
+"       until there is either no discount left or no discountable line left.\n"
+"\n"
+"    Note that discount lines (with a negative price) will have no taxes applied to them,\n"
+"    but rather the amount of these lines will be deduced from the lines they apply to during tax computation.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_taxcloud_delivery
@@ -1523,6 +1600,14 @@ msgid ""
 "    With Sale coupon delivery, the discount computation does not apply on delivery lines.\n"
 "    "
 msgstr ""
+"\n"
+"    Kelola discounts with deliveries in taxclouds computations.\n"
+"    This module follows the same logic as \"Account Taxcloud - Sale (coupon)\".\n"
+"    More information can be found there on how discount computations are made for TaxCloud.\n"
+"\n"
+"    There is an added option for discount (free shipping) on deliveries.\n"
+"    With Sale coupon delivery, the discount computation does not apply on delivery lines.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -1654,6 +1739,23 @@ msgid ""
 "* CITI - specification (provides more information on how to format the numbers and the fillings of the numeric / alphanumeric fields): https://www.afip.gob.ar/comprasyventas/documentos/Regimen-Informacion-Compras-Ventas-Especificaciones.doc\n"
 "\n"
 msgstr ""
+"\n"
+"* Tambahkan laporan Buku VAT yang merupakan persyaratan hukum di Argentina dan yang memiliki detail VAT sales atau pembelian yang dibuat pada periode waktu tertentu.\n"
+"* Tambahkan rangkuman laporan VAT yang digunakan untuk menganalisa faktur\n"
+"* Tambahkan fungsi Buku VAT Digital yang memungkinkan kami untuk membuat file TXT untuk diimpor dalam AFIP. Yang akan diimplementasikan adalah:\n"
+"\n"
+"    * LIBRO_IVA_DIGITAL_VENTAS_CBTE\n"
+"    * LIBRO_IVA_DIGITAL_VENTAS_ALICUOTAS\n"
+"    * LIBRO_IVA_DIGITAL_COMPRAS_CBTE\n"
+"    * LIBRO_IVA_DIGITAL_COMPRAS_ALICUOTAS\n"
+"    * LIBRO_IVA_DIGITAL_IMPORTACION_BIENES_ALICUOTA\n"
+"\n"
+"Official Documentation AFIP\n"
+"\n"
+"* Buku Digital VAT - record design https://www.afip.gob.ar/libro-iva-digital/documentos/libro-iva-digital-diseno-registros.pdf\n"
+"* CITI - record design (same as the Digital VAT Book): https://www.afip.gob.ar/comprasyventas/documentos/RegimendeInformaciondeComprasyVentasDisenosdeRegistros1.xls\n"
+"* CITI - spesifikasi (menyediakan informasi lebih tentang bagaimana cara format angka dan filling untuk field numerik/alfanumerik): https://www.afip.gob.ar/comprasyventas/documentos/Regimen-Informacion-Compras-Ventas-Especificaciones.doc\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_timesheet_grid
@@ -1800,6 +1902,102 @@ msgid ""
 "    When validating a batch payment, the ABA file will be generated.  It can\n"
 "    be regenerated.  This file can then be uploaded to the bank.\n"
 msgstr ""
+"\n"
+"ABA Credit Transfer\n"
+"===================\n"
+"\n"
+"Modul ini memungkinkan pembuatan pembayaran batch dalam bentuk file teks ABA (Australian\n"
+"Bankers Association).  File 'aba' yang dibuat dapat diunggah\n"
+"ke banyak bank Australia.\n"
+"\n"
+"Setup\n"
+"-----\n"
+"\n"
+"- *Account > Configuration > invoicing > Journals*\n"
+"\n"
+"    Bila diperlukan, buat jurnal baru atau pilih jurnal yang tersedia dengan **Type**\n"
+"    set to *“Bank”*.\n"
+"\n"
+"    Pada **Advanced Settings**, pastikan ABA Credit Transfer dicentang.\n"
+"\n"
+"    Pada tab **Bank Account**, masukkan **Account Number**.\n"
+"\n"
+"    Pada tab yang sama, pastikan informasi transfer ABA transfer sudah di set up.\n"
+"\n"
+"    **BSB** - Wajib, 6 digit, dan akan di format otomatis.\n"
+"\n"
+"    **Financial Institution Code** - Wajib (disediakan oleh bank atau dapat ditemukan\n"
+"    pada Google).  Ini adalah 3 karakter uppercase.\n"
+"\n"
+"    **Supplying User Name** - Beberapa bank mengizinkan ini untuk dalam bentuk freeform, beberapa bank\n"
+"    mungkin menolak file ABA bila Supplying User Name tidak sesuai format. Ini\n"
+"    tidak boleh lebih dari 26 karakter.\n"
+"\n"
+"    **APCA Identification Number** - Nomor identifikasi User dialokasikan oleh\n"
+"    bank. 6 digit.\n"
+"\n"
+"    **Include Self Balancing Transaction** - Beberapa lembaga mewajibkan transaksi terakhir\n"
+"    adalah self balancing transaction yang akan digunakan sebagai verifikasi.\n"
+"\n"
+"- *Accounting > Configuration > Payments > Bank Accounts*\n"
+"\n"
+"    Akun akan muncul di daftar sebagai nama jurnal.\n"
+"\n"
+"    Editing akan menunjukkan **Account Number**.  Ini penting karena akan digunakan dalam\n"
+"    proses ABA.\n"
+"\n"
+"    **Bank** bersifat opsional.\n"
+"\n"
+"- *Contacts > Configuration > Bank Accounts > Bank Accounts*\n"
+"\n"
+"    Paying account akan muncul di daftar sebagai nomor akun.\n"
+"\n"
+"    **Account Holder Name** - Dapat dimasukkan di sini, bila Wajib.  Secara umum tidak\n"
+"    divalidasikan oleh bank pada transfer file ABA, tapi dapat muncul pada payee\n"
+"    bank statement against the payment.\n"
+"\n"
+"- Vendor bank accounts dapat di set up di tempat yang sama, namun, secara\n"
+"  umum lebih gampang untuk disiapkan dari mitra dari untuk Vendor.\n"
+"\n"
+"- *Accounting > Vendors > Vendors*\n"
+"\n"
+"    Pada tab **Accounting**, klik pada *\"View accounts detail\"* sehingga\n"
+"    vendor bank account dapat dibuat atau diedit.\n"
+"\n"
+"    **Account Number** - Wajib, harus lebih sedikit dari 9 digit.\n"
+"\n"
+"    **BSB** - Wajib, 6 digit, dan akan di format otomatis.\n"
+"\n"
+"    **Account Holder Name** - Opsional.\n"
+"\n"
+"Use\n"
+"---\n"
+"\n"
+"- Buat pembayaran vendor dengan cara normal.\n"
+"\n"
+"    Pastikan **Vendor** memiliki akun pembayaran ABA yang valid.\n"
+"\n"
+"    Pilih **Payment Journal** yang benar yang disediakan untuk pembayaran ABA.\n"
+"\n"
+"    Pilih radio button **ABA Credit Transfer**.\n"
+"\n"
+"    Bila vendor memiliki lebih dari satu akun bank, Anda mungkin harus memilih\n"
+"    **Recipient Bank Account** yang benar.  Atau bila membayar vendor bill, proses tersebut mungkin\n"
+"    membutuhkan akun bank yang benar yang terkait.\n"
+"\n"
+"    Enter payment amount, etc.\n"
+"\n"
+"- *Vendors > Payments*\n"
+"\n"
+"    After payment(s) are confirmed, they will show up in the payments list.\n"
+"\n"
+"    Using filters, or sorting, select the payments to be included.  Under\n"
+"    *Actions* choose *Create batch payment*.\n"
+"\n"
+"- *Vendors > Batch Payments*\n"
+"\n"
+"    When validating a batch payment, the ABA file will be generated.  It can\n"
+"    be regenerated.  This file can then be uploaded to the bank.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_auto_transfer
@@ -9051,7 +9249,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_appointment
 msgid "Appointments"
-msgstr ""
+msgstr "Appointment"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_appraisal_skills
@@ -11055,7 +11253,7 @@ msgstr "Data Perusahaan"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__company_details
 msgid "Company Details"
-msgstr ""
+msgstr "Detail Perusahaan"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__favicon
@@ -13469,7 +13667,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.enable_profiling_wizard
 msgid "Enable profiling"
-msgstr ""
+msgstr "Aktifkan profiling"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_enable_profiling_wizard__duration
@@ -15394,7 +15592,7 @@ msgstr "Spasi Kop"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__company_details
 msgid "Header text displayed at the top of all reports."
-msgstr ""
+msgstr "Teks header ditampilkan pada bagian atas semua lapopran."
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_Q
@@ -17849,7 +18047,7 @@ msgstr "Muat Terjemahan"
 #. module: base
 #: model:ir.actions.act_window,name:base.demo_force_install_action
 msgid "Load demo data"
-msgstr ""
+msgstr "Load data demo"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__code
@@ -19043,7 +19241,7 @@ msgstr ""
 #: code:addons/model.py:0 code:addons/model.py:0
 #, python-format
 msgid "Model:"
-msgstr ""
+msgstr "Model:"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_model
@@ -23852,7 +24050,7 @@ msgstr ""
 #: model:ir.model,name:base.model_ir_qweb
 #: model:ir.model.fields,field_description:base.field_ir_profile__qweb
 msgid "Qweb"
-msgstr ""
+msgstr "Qweb"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field
@@ -23867,7 +24065,7 @@ msgstr "Barcode Kolom Qweb"
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
-msgstr ""
+msgstr "Kolom Kontak Qweb"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_date
@@ -24026,7 +24224,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Record Rule"
-msgstr ""
+msgstr "Peraturan Pencatatan"
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
@@ -24447,7 +24645,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__reset_view_arch_wizard__reset_mode__soft
 msgid "Restore previous version (soft reset)."
-msgstr ""
+msgstr "Pulihkan ke versi sebelumnya (soft reset)."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__on_delete__restrict
@@ -26011,7 +26209,7 @@ msgstr "Status"
 #: code:addons/base/static/src/js/res_config_settings.js:0
 #, python-format
 msgid "Stay Here"
-msgstr ""
+msgstr "Tunggu Di sini"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__number_increment
@@ -26415,7 +26613,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_asset__target
 msgid "Target"
-msgstr ""
+msgstr "Target"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__crud_model_id
@@ -27250,12 +27448,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_base
 msgid "This field is the same as `arch` field without translations"
-msgstr ""
+msgstr "Kolom ini sama dengan kolom `arch` tanpa terjemaha"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__code
 msgid "This field is used to set/get locales for user"
-msgstr ""
+msgstr "Kolom ini digunakan untuk set/get locales bagi user"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch
@@ -27263,11 +27461,13 @@ msgid ""
 "This field should be used when accessing view arch. It will use translation.\n"
 "                               Note that it will read `arch_db` or `arch_fs` if in dev-xml mode."
 msgstr ""
+"Kolom ini seharusnya digunakan saat mengakses tampilan arch. Kolom ini akan menggunakan terjemahan.\n"
+"                               Mohon dicatat bahwa kolom ini akan membaca `arch_db` atau `arch_fs` bila berada di mode dev-xml."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_db
 msgid "This field stores the view arch."
-msgstr ""
+msgstr "Kolom ini menyimpan tampilan arch"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_prev
@@ -27275,6 +27475,8 @@ msgid ""
 "This field will save the current `arch_db` before writing on it.\n"
 "                                                                         Useful to (soft) reset a broken view."
 msgstr ""
+"Kolom ini akan menyimpan `arch_db` yang tersedia saat ini sebelum kolom ini mulai mengganti.\n"
+"                                                                         Ini berguna untuk melakukan (soft) reset pada tampilan yang rusak."
 
 #. module: base
 #: code:addons/image.py:0
@@ -28354,7 +28556,7 @@ msgstr ""
 #: code:addons/base/static/src/js/res_config_settings.js:0
 #, python-format
 msgid "Unsaved changes"
-msgstr ""
+msgstr "Perubahan yang belum disave"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -28434,7 +28636,7 @@ msgstr "Url"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__image_url
 msgid "Url of static flag image"
-msgstr ""
+msgstr "Url dari gambar bendera statik"
 
 #. module: base
 #: model:res.country,name:base.uy
@@ -28968,7 +29170,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__mode
 msgid "View inheritance mode"
-msgstr ""
+msgstr "View inheritance mode"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_livechat
@@ -29481,7 +29683,7 @@ msgstr ""
 #: code:addons/base/static/src/js/res_config_settings.js:0
 #, python-format
 msgid "Would you like to save your changes?"
-msgstr ""
+msgstr "Apakah Anda ingin save perubahan Anda?"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access__perm_write
@@ -29945,7 +30147,7 @@ msgstr "id database"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__date
 msgid "date"
-msgstr ""
+msgstr "tanggal"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__datetime
@@ -30080,7 +30282,7 @@ msgstr "Pengiriman eCommerce"
 #: model:ir.module.category,name:base.module_category_website_elearning
 #: model:ir.module.module,shortdesc:base.module_website_slides
 msgid "eLearning"
-msgstr ""
+msgstr "eLearning"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_expenses
