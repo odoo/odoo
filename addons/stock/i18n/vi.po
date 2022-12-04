@@ -12,8 +12,8 @@
 # Phuc Tran Thanh <phuctran.odoo@gmail.com>, 2020
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2021
 # Vo Thanh Thuy, 2021
-# Duy BQ <duybq86@gmail.com>, 2022
 # Nguyễn Văn Sang, 2022
+# Duy BQ <duybq86@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-16 09:00+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Nguyễn Văn Sang, 2022\n"
+"Last-Translator: Duy BQ <duybq86@gmail.com>, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,7 +63,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Chuyển kho %s: Bạn không thể xác nhận các dịch chuyển này nếu không có số lượng đặt trước cũng như số lượng đã hoàn tất. Để bắt buộc các chuyển kho này, hãy chuyển sang chỉnh sửa thêm và đề số lượng đã thực hiện."
+"Phiếu chuyển kho %s: Bạn không thể xác nhận các dịch chuyển này nếu không có số lượng đặt trước cũng như số lượng đã hoàn tất. Để bắt buộc các chuyển kho này, hãy chuyển sang chỉnh sửa thêm và đề số lượng đã thực hiện."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -778,7 +778,7 @@ msgstr "Tất cả"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_action_picking_type
 msgid "All Transfers"
-msgstr "Tất cả các dịch chuyển"
+msgstr "Tất cả phiếu chuyển kho"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__procurement_group__move_type__one
@@ -851,8 +851,8 @@ msgid ""
 "Apply specific route(s) for the replenishment instead of product's default "
 "routes."
 msgstr ""
-"Áp dụng tuyến cung ứng cụ thể cho việc bổ sung thay vì sử dụng tuyến cung "
-"ứng mặc định của sản phẩm."
+"Chỉ định một tuyến cung ứng cụ thể cho việc bổ sung thay vì sử dụng tuyến "
+"cung ứng mặc định của sản phẩm."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -3115,7 +3115,7 @@ msgstr "Giao dịch nội bộ"
 #: model:stock.picking.type,name:stock.picking_type_internal
 #, python-format
 msgid "Internal Transfers"
-msgstr "Điều chuyển nội bộ"
+msgstr "Phiếu chuyển kho nội bộ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__internal_transit_location_id
@@ -3173,7 +3173,7 @@ msgstr "Kiểm kho"
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_pivot
 msgid "Inventory"
-msgstr "Kho vận"
+msgstr "Kho hàng"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
@@ -3520,7 +3520,7 @@ msgstr "Hoạt động trễ"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_late
 msgid "Late Transfers"
-msgstr "Phiếu kho trễ"
+msgstr "Phiếu chuyển kho bị trễ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__lead_days_date
@@ -3643,7 +3643,7 @@ msgstr "Khoá"
 #: model_terms:ir.ui.view,arch_db:stock.product_category_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "Logistics"
-msgstr "Kho vận"
+msgstr "Điều phối hàng hóa"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__barcode_rule__type__lot
@@ -5544,7 +5544,7 @@ msgstr "Thuật sĩ bổ sung"
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 #, python-format
 msgid "Replenishment"
-msgstr "Bổ sung"
+msgstr "Cần Bổ sung"
 
 #. module: stock
 #: code:addons/stock/models/stock_orderpoint.py:0
@@ -6142,7 +6142,7 @@ msgstr "Hiển thị tái cung ứng"
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__show_transfers
 #: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer__show_transfers
 msgid "Show Transfers"
-msgstr "Hiển thị việc chuyển kho"
+msgstr "Hiển thị Phiếu chuyển kho"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_validate
@@ -7031,7 +7031,7 @@ msgid ""
 "operations for this product."
 msgstr ""
 "Người dùng này sẽ có trách nhiệm thực hiện hoạt động tiếp theo liên quan đến"
-" hoạt động kho vận của sản phẩm này."
+" hoạt động điều phối hàng hóa của sản phẩm này."
 
 #. module: stock
 #: model:digest.tip,name:stock.digest_tip_stock_0
@@ -7199,13 +7199,14 @@ msgstr "Địa chỉ điều chuyển đích"
 #: model_terms:ir.ui.view,arch_db:stock.procurement_group_form_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Transfers"
-msgstr "Điều chuyển hàng"
+msgstr "Phiếu chuyển kho"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Transfers %s: Please add some items to move."
-msgstr "Phiếu kho %s: Vui lòng đưa sản phạm vào để chuyển kho."
+msgstr ""
+"Phiếu chuyển kho %s: Hãy thêm một vài sản phẩm để thực hiện dịch chuyển."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_form
@@ -7218,7 +7219,8 @@ msgstr "Phiếu kho %s: Vui lòng đưa sản phạm vào để chuyển kho."
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_action_picking_type
 msgid "Transfers allow you to move products from one location to another."
 msgstr ""
-"Phiếu kho cho phép bạn chuyển sản phẩm từ vị trí này sang vị trí khác."
+"Phiếu chuyển kho cho phép bạn chuyển sản phẩm từ vị trí này sang vị trí "
+"khác."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_pickings
@@ -7264,7 +7266,7 @@ msgstr "Kích hoạt một quy tắc khác nếu không có tồn kho"
 #: code:addons/stock/static/src/js/report_stock_forecasted.js:0
 #, python-format
 msgid "Try to add some incoming or outgoing transfers."
-msgstr "Cố gắng thêm một số phiếu nhập kho hoặc giao đi."
+msgstr "Thử thêm một Phiếu chuyển kho nhập hàng hoặc xuất hàng."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__type
@@ -7586,7 +7588,7 @@ msgstr "Chờ dịch chuyển"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_waiting
 msgid "Waiting Transfers"
-msgstr "Chờ chuyển"
+msgstr "Chờ chuyển kho"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_inventory_form
@@ -7933,6 +7935,13 @@ msgstr ""
 "hiệu sản phẩm này."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr ""
+"Bạn không thể thay đổi thể loại của sản phẩm một khi nó đã được sử dụng."
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -8241,18 +8250,6 @@ msgstr ""
 #, python-format
 msgid "You need to supply a Lot/Serial number for products %s."
 msgstr "Bạn cần cung cấp số Lô/Serial cho sản phẩm %s."
-
-#. module: stock
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid ""
-"You should not use a planned internal transfer to move some products between"
-" two warehouses. Instead, use an immediate internal transfer or the resupply"
-" route."
-msgstr ""
-"Bạn không nên dùng một kế hoạch dịch chuyển nội bộ để dịch chuyển một vài "
-"sản phẩm giữa hai Kho hàng. Thay vào đó, hãy sử dụng phương thức chuyển giao"
-" nội bộ ngay lập tức hoặc Loan báo cung ứng."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
