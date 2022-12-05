@@ -34,11 +34,12 @@ export async function insertPivotInSpreadsheet(model, params) {
     };
     const dataSource = model.config.custom.dataSources.create(PivotDataSource, definition);
     await dataSource.load();
-    const { cols, rows, measures } = dataSource.getTableStructure().export();
+    const { cols, rows, measures, rowTitle } = dataSource.getTableStructure().export();
     const table = {
         cols,
         rows,
         measures,
+        rowTitle,
     };
     const [col, row] = params.anchor || [0, 0];
     model.dispatch("INSERT_PIVOT", {

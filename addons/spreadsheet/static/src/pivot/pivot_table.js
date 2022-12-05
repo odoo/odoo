@@ -15,6 +15,7 @@
  * @property {Column[][]} cols
  * @property {Row[]} rows
  * @property {string[]} measures
+ * @property {string} rowTitle
  */
 
 /**
@@ -64,11 +65,13 @@ export class SpreadsheetPivotTable {
      * @param {Column[][]} cols
      * @param {Row[]} rows
      * @param {string[]} measures
+     * @param {string} rowTitle
      */
-    constructor(cols, rows, measures) {
+    constructor(cols, rows, measures, rowTitle = "") {
         this._cols = cols;
         this._rows = rows;
         this._measures = measures;
+        this._rowTitle = rowTitle;
     }
 
     /**
@@ -168,6 +171,10 @@ export class SpreadsheetPivotTable {
         return this._rows[index];
     }
 
+    getRowTitle() {
+        return this._rowTitle;
+    }
+
     /**
      * @returns {SpreadsheetTableData}
      */
@@ -176,6 +183,7 @@ export class SpreadsheetPivotTable {
             cols: this._cols,
             rows: this._rows,
             measures: this._measures,
+            rowTitle: this._rowTitle,
         };
     }
 }
