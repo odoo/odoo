@@ -515,9 +515,11 @@ class Monetary(models.AbstractModel):
     def from_html(self, model, field, element):
         lang = self.user_lang()
 
-        value = element.find('span').text.strip()
+        value = element.find('span')
+        if value is None or value.text is None:
+            return False
 
-        return float(value.replace(lang.thousands_sep, '')
+        return float(value.text.strip().replace(lang.thousands_sep, '')
                           .replace(lang.decimal_point, '.'))
 
 
