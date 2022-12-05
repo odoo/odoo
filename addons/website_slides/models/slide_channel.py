@@ -661,7 +661,6 @@ class Channel(models.Model):
         local_context = dict(
             self.env.context,
             default_channel_id=self.id,
-            default_use_template=bool(template),
             default_template_id=template and template.id or False,
             default_email_layout_xmlid='website_slides.mail_notification_channel_invite',
         )

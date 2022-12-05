@@ -177,7 +177,10 @@ class MailTemplate(models.Model):
                 'name': button_name,
                 'type': 'ir.actions.act_window',
                 'res_model': 'mail.compose.message',
-                'context': "{'default_composition_mode': 'mass_mail', 'default_template_id' : %d, 'default_use_template': True}" % (template.id),
+                'context': """{
+'default_composition_mode': 'mass_mail',
+'default_model': %s',
+'default_template_id' : %d}""" % (template.model, template.id),
                 'view_mode': 'form,tree',
                 'view_id': view.id,
                 'target': 'new',

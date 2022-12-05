@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest.mock import patch
+from ast import literal_eval
+from unittest.mock import DEFAULT, patch
 
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.models.test_mail_models import MailTestTicket
@@ -84,16 +85,16 @@ class TestMailComposer(TestMailCommon, TestRecipients):
         """
         base_context = {
             'default_model': records._name,
+            'default_res_ids': records.ids,
         }
         if len(records) == 1:
             base_context['default_composition_mode'] = 'comment'
-            base_context['default_res_id'] = records.id
         else:
             base_context['default_composition_mode'] = 'mass_mail'
-            base_context['active_ids'] = records.ids
         if add_web:
             base_context['active_model'] = records._name
             base_context['active_id'] = records[0].id
+            base_context['active_ids'] = records.ids
         if values:
             base_context.update(**values)
         return base_context
@@ -111,6 +112,7 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.auto_delete_message)
         self.assertEqual(composer_form.author_id, self.env.user.partner_id)
         self.assertFalse(composer_form.body)
+        self.assertFalse(composer_form.composition_batch)
         self.assertEqual(composer_form.composition_mode, 'comment')
         self.assertEqual(composer_form.email_from, self.env.user.email_formatted)
         self.assertFalse(composer_form.mail_server_id)
@@ -119,7 +121,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.record_name, self.test_record.name, 'MailComposer: comment mode should compute record name')
         self.assertFalse(composer_form.reply_to)
         self.assertFalse(composer_form.reply_to_force_new)
-        self.assertEqual(composer_form.res_id, self.test_record.id)
+        self.assertEqual(literal_eval(composer_form.res_ids), self.test_record.ids)
         self.assertEqual(
             composer_form.subject, 'Re: %s' % self.test_record.name,
             'MailComposer: comment mode should have default subject Re: record_name')
@@ -186,6 +188,7 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.auto_delete_message)
         self.assertEqual(composer_form.author_id, self.env.user.partner_id)
         self.assertEqual(composer_form.body, '<p>TemplateBody %s</p>' % self.test_record.name)
+        self.assertFalse(composer_form.composition_batch)
         self.assertEqual(composer_form.composition_mode, 'comment')
         self.assertEqual(composer_form.email_from, self.user_employee_2.email_formatted)
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
@@ -194,8 +197,37 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.record_name, self.test_record.name, 'MailComposer: comment mode should compute record name')
         self.assertEqual(composer_form.reply_to, 'info@test.example.com')
         self.assertFalse(composer_form.reply_to_force_new)
-        self.assertEqual(composer_form.res_id, self.test_record.id)
+        self.assertEqual(literal_eval(composer_form.res_ids), self.test_record.ids)
         self.assertEqual(composer_form.subject, 'TemplateSubject %s' % self.test_record.name)
+
+    @users('employee')
+    def test_mail_composer_comment_wtpl_batch(self):
+        """ Batch mode of composer in comment mode. """
+        composer_form = Form(self.env['mail.compose.message'].with_context(
+            self._get_web_context(
+                self.test_records,
+                add_web=True,
+                default_composition_mode='comment',
+                default_template_id=self.template.id),
+        ))
+        # self.assertTrue(composer_form.auto_delete)
+        self.assertFalse(composer_form.auto_delete)  # FIXME: currently not taking template value
+        self.assertFalse(composer_form.auto_delete_message)
+        self.assertEqual(composer_form.author_id, self.env.user.partner_id)
+        self.assertEqual(composer_form.body, self.template.body_html,
+                         'MailComposer: comment in batch mode should have template raw body if template')
+        self.assertTrue(composer_form.composition_batch)
+        self.assertEqual(composer_form.composition_mode, 'comment')
+        self.assertEqual(composer_form.email_from, self.template.email_from,
+                         'MailComposer: comment in batch mode should have template raw email_from if template')
+        self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
+        self.assertEqual(composer_form.model, self.test_record._name)
+        self.assertFalse(composer_form.record_name, 'MailComposer: comment in batch mode should have void record name')
+        self.assertEqual(composer_form.reply_to, self.template.reply_to)
+        self.assertFalse(composer_form.reply_to_force_new)
+        self.assertEqual(literal_eval(composer_form.res_ids), self.test_records.ids)
+        self.assertEqual(composer_form.subject, self.template.subject,
+                         'MailComposer: comment in batch mode should have template raw subject if template')
 
     @users('employee')
     def test_mail_composer_comment_wtpl_norecords(self):
@@ -211,6 +243,7 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.auto_delete_message)
         self.assertEqual(composer_form.author_id, self.env.user.partner_id)
         self.assertEqual(composer_form.body, '<p>TemplateBody </p>')
+        self.assertFalse(composer_form.composition_batch)
         self.assertEqual(composer_form.composition_mode, 'comment')
         self.assertEqual(composer_form.email_from, self.env.user.partner_id.email_formatted)
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
@@ -219,7 +252,7 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.record_name)
         self.assertEqual(composer_form.reply_to, 'info@test.example.com')
         self.assertFalse(composer_form.reply_to_force_new)
-        self.assertFalse(composer_form.res_id)
+        self.assertFalse(composer_form.res_ids)
         self.assertEqual(composer_form.subject, 'TemplateSubject ')
 
     @users('employee')
@@ -231,6 +264,7 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.auto_delete_message)
         self.assertEqual(composer_form.author_id, self.env.user.partner_id)
         self.assertFalse(composer_form.body)
+        self.assertTrue(composer_form.composition_batch)
         self.assertEqual(composer_form.composition_mode, 'mass_mail')
         self.assertEqual(composer_form.email_from, self.env.user.email_formatted)
         self.assertFalse(composer_form.mail_server_id)
@@ -238,8 +272,7 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.record_name, 'MailComposer: mass mode should have void record name')
         self.assertFalse(composer_form.reply_to)
         self.assertFalse(composer_form.reply_to_force_new)
-        self.assertEqual(composer_form.res_id, self.test_records[0].id,
-                         'MailComposer: even in mass mode web active_id presence may add a res_id')
+        self.assertEqual(sorted(literal_eval(composer_form.res_ids)), sorted(self.test_records.ids))
         self.assertFalse(composer_form.subject, 'MailComposer: mass mode should have void default subject if no template')
 
     @users('employee')
@@ -253,6 +286,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.author_id, self.env.user.partner_id)
         self.assertEqual(composer_form.body, self.template.body_html,
                          'MailComposer: mass mode should have template raw body if template')
+        self.assertTrue(composer_form.composition_batch)
         self.assertEqual(composer_form.composition_mode, 'mass_mail')
         self.assertEqual(composer_form.email_from, self.template.email_from,
                          'MailComposer: mass mode should have template raw email_from if template')
@@ -261,8 +295,7 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.record_name, 'MailComposer: mass mode should have void record name')
         self.assertEqual(composer_form.reply_to, self.template.reply_to)
         self.assertFalse(composer_form.reply_to_force_new)
-        self.assertEqual(composer_form.res_id, self.test_records[0].id,
-                         'MailComposer: even in mass mode web active_id presence may add a res_id')
+        self.assertEqual(sorted(literal_eval(composer_form.res_ids)), sorted(self.test_records.ids))
         self.assertEqual(composer_form.subject, self.template.subject,
                          'MailComposer: mass mode should have template raw subject if template')
 
@@ -281,6 +314,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.author_id, self.env.user.partner_id)
         self.assertEqual(composer_form.body, self.template.body_html,
                          'MailComposer: mass mode should have template raw body if template')
+        self.assertFalse(composer_form.composition_batch)
         self.assertEqual(composer_form.composition_mode, 'mass_mail')
         self.assertEqual(composer_form.email_from, self.template.email_from,
                          'MailComposer: mass mode should have template raw email_from if template')
@@ -289,7 +323,7 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.record_name, 'MailComposer: mass mode should have void record name')
         self.assertEqual(composer_form.reply_to, self.template.reply_to)
         self.assertFalse(composer_form.reply_to_force_new)
-        self.assertEqual(composer_form.res_id, 0)
+        self.assertFalse(composer_form.res_ids)
         self.assertEqual(composer_form.subject, self.template.subject,
                          'MailComposer: mass mode should have template raw subject if template')
 
@@ -313,7 +347,7 @@ class TestComposerInternals(TestMailComposer):
         composer = self.env['mail.compose.message'].with_context({
             'default_composition_mode': 'comment',
             'default_model': self.test_record._name,
-            'default_res_id': self.test_record.id,
+            'default_res_ids': self.test_record.ids,
             'default_template_id': self.template.id,
         }).create({
             'body': '<p>Test Body</p>',
@@ -336,10 +370,11 @@ class TestComposerInternals(TestMailComposer):
     def test_mail_composer_author(self):
         """ Test author_id / email_from synchronization, in both comment and mass mail
         modes. """
-        for composition_mode, batch in (('comment', False), ('mass_mail', True)):
+        for composition_mode, batch in (('comment', False), ('comment', True),
+                                        ('mass_mail', False), ('mass_mail', True)):
             with self.subTest(composition_mode=composition_mode, batch=batch):
                 test_records = self.test_records if batch else self.test_record
-                ctx = self._get_web_context(test_records, add_web=False, composition_mode=composition_mode)
+                ctx = self._get_web_context(test_records, add_web=False, default_composition_mode=composition_mode)
 
                 composer = self.env['mail.compose.message'].with_context(ctx).create({
                     'body': '<p>Test Body</p>',
@@ -347,6 +382,7 @@ class TestComposerInternals(TestMailComposer):
 
                 # default values are current user
                 self.assertEqual(composer.author_id, self.env.user.partner_id)
+                self.assertEqual(composer.composition_mode, composition_mode)
                 self.assertEqual(composer.email_from, self.env.user.email_formatted)
 
                 # author values reset email (FIXME: currently not synchronized)
@@ -361,12 +397,12 @@ class TestComposerInternals(TestMailComposer):
                 composer._onchange_template_id_wrapper()
                 self.assertEqual(composer.author_id, self.env.user.partner_id,
                                  'MailComposer: should take value given by user')
-                if composition_mode == 'comment':
+                if composition_mode == 'comment' and not batch:
                     self.assertEqual(composer.email_from, self.test_record.user_id.email_formatted,
-                                     'MailComposer: should take email_from rendered from template')
+                                     f'MailComposer: should take email_from rendered from template ({composition_mode}-{batch})')
                 else:
                     self.assertEqual(composer.email_from, self.template.email_from,
-                                     'MailComposer: should take email_from raw from template')
+                                     f'MailComposer: should take email_from raw from template ({composition_mode}-{batch})')
 
                 # manual values are kept over template values
                 composer.write({'email_from': self.test_from})
@@ -377,10 +413,11 @@ class TestComposerInternals(TestMailComposer):
     def test_mail_composer_content(self):
         """ Test content management (subject, body, server) in both comment and
         mass mailing mode. Template update is also tested. """
-        for composition_mode, batch in (('comment', False), ('mass_mail', True)):
+        for composition_mode, batch in (('comment', False), ('comment', True),
+                                        ('mass_mail', False), ('mass_mail', True)):
             with self.subTest(composition_mode=composition_mode, batch=batch):
                 test_records = self.test_records if batch else self.test_record
-                ctx = self._get_web_context(test_records, add_web=False, composition_mode=composition_mode)
+                ctx = self._get_web_context(test_records, add_web=False, default_composition_mode=composition_mode)
 
                 # 1. check without template + template update
                 composer = self.env['mail.compose.message'].with_context(ctx).create({
@@ -392,7 +429,7 @@ class TestComposerInternals(TestMailComposer):
                 self.assertEqual(composer.subject, 'My amazing subject')
                 self.assertEqual(composer.body, '<p>Test Body</p>')
                 self.assertEqual(composer.mail_server_id.id, False)
-                if composition_mode == 'comment':
+                if composition_mode == 'comment' and not batch:
                     self.assertEqual(composer.record_name, self.test_record.name)
                 else:
                     self.assertFalse(composer.record_name)
@@ -403,7 +440,7 @@ class TestComposerInternals(TestMailComposer):
                 composer._onchange_template_id_wrapper()
 
                 # values come from template
-                if composition_mode == 'comment':
+                if composition_mode == 'comment' and not batch:
                     self.assertEqual(composer.subject, 'TemplateSubject %s' % self.test_record.name)
                     self.assertEqual(composer.body, '<p>TemplateBody %s</p>' % self.test_record.name)
                     self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
@@ -424,7 +461,7 @@ class TestComposerInternals(TestMailComposer):
                 composer._onchange_template_id_wrapper()
 
                 # values are reset
-                if composition_mode == 'comment':
+                if composition_mode == 'comment' and not batch:
                     self.assertEqual(composer.subject, 'Re: %s' % self.test_record.name)
                     self.assertFalse(composer.body)
                     # TDE FIXME: server id is kept, not sure why
@@ -449,7 +486,7 @@ class TestComposerInternals(TestMailComposer):
                 composer._onchange_template_id_wrapper()
 
                 # values come from template
-                if composition_mode == 'comment':
+                if composition_mode == 'comment' and not batch:
                     self.assertEqual(composer.subject, 'TemplateSubject %s' % self.test_record.name)
                     self.assertEqual(composer.body, '<p>TemplateBody %s</p>' % self.test_record.name)
                     self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
@@ -469,7 +506,7 @@ class TestComposerInternals(TestMailComposer):
                 composer._onchange_template_id_wrapper()
 
                 # values come from template
-                if composition_mode == 'comment':
+                if composition_mode == 'comment' and not batch:
                     self.assertEqual(composer.subject, 'TemplateSubject %s' % self.test_record.name)
                     self.assertEqual(composer.body, '<p>TemplateBody %s</p>' % self.test_record.name)
                     self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
@@ -506,7 +543,8 @@ class TestComposerInternals(TestMailComposer):
             'email_cc': 'test.cc.1@test.example.com, test.cc.2@test.example.com'
         })
 
-        for composition_mode, batch in (('comment', False), ('mass_mail', True)):
+        for composition_mode, batch in (('comment', False), ('comment', True),
+                                        ('mass_mail', False), ('mass_mail', True)):
             with self.subTest(composition_mode=composition_mode, batch=batch):
                 self.assertFalse(
                     self.env['res.partner'].search([
@@ -516,7 +554,7 @@ class TestComposerInternals(TestMailComposer):
                 )
 
                 test_records = self.test_records if batch else self.test_record
-                ctx = self._get_web_context(test_records, add_web=False, composition_mode=composition_mode)
+                ctx = self._get_web_context(test_records, add_web=False, default_composition_mode=composition_mode)
 
                 # 1. check without template + template update
                 composer = self.env['mail.compose.message'].with_context(ctx).create({
@@ -543,7 +581,7 @@ class TestComposerInternals(TestMailComposer):
                 )
 
                 # values come from template
-                if composition_mode == 'comment':
+                if composition_mode == 'comment' and not batch:
                     self.assertEqual(len(new_partners), 2)
                     self.assertEqual(composer.partner_ids, self.partner_1 + new_partners, 'Template took customer_id as set on record')
                     self.assertEqual(composer.reply_to, 'info@test.example.com', 'Template was rendered')
@@ -564,7 +602,7 @@ class TestComposerInternals(TestMailComposer):
                 composer._onchange_template_id_wrapper()
 
                 # values are kepts, not sure why
-                if composition_mode == 'comment':
+                if composition_mode == 'comment' and not batch:
                     self.assertEqual(composer.partner_ids, self.partner_admin, 'Values are kept, not sure why')
                     self.assertEqual(composer.reply_to, 'info@test.example.com', 'Values are kept')
                     self.assertFalse(composer.reply_to_force_new)
@@ -582,11 +620,11 @@ class TestComposerInternals(TestMailComposer):
                 composer._onchange_template_id_wrapper()
 
                 # values come from template
-                if composition_mode == 'comment':
+                if composition_mode == 'comment' and not batch:
                     self.assertEqual(composer.partner_ids, self.partner_1 + new_partners)
                 else:
                     self.assertFalse(composer.partner_ids)
-                if composition_mode == 'comment':
+                if composition_mode == 'comment' and not batch:
                     self.assertEqual(composer.reply_to, "info@test.example.com")
                 else:
                     self.assertEqual(composer.reply_to, self.template.reply_to)
@@ -602,11 +640,11 @@ class TestComposerInternals(TestMailComposer):
                 composer._onchange_template_id_wrapper()
 
                 # values come from template
-                if composition_mode == 'comment':
+                if composition_mode == 'comment' and not batch:
                     self.assertEqual(composer.partner_ids, self.partner_1 + new_partners)
                 else:
                     self.assertFalse(composer.partner_ids)
-                if composition_mode == 'comment':
+                if composition_mode == 'comment' and not batch:
                     self.assertEqual(composer.reply_to, "info@test.example.com")
                 else:
                     self.assertEqual(composer.reply_to, self.template.reply_to)
@@ -1241,51 +1279,63 @@ class TestComposerResultsMass(TestMailComposer):
     @users('employee')
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_mail_composer_wtpl_recipients(self):
-        """ Test various combinations of recipients: active_domain, active_id,
+        """ Test various combinations of recipients: res_domain, active_id,
         active_ids, ... to ensure fallback behavior are working. """
-        # 1: active_domain
+        # 1: active ids
         composer_form = Form(self.env['mail.compose.message'].with_context(
-            self._get_web_context(self.test_records, add_web=True,
-                                  default_template_id=self.template.id,
-                                  active_ids=[],
-                                  default_use_active_domain=True,
-                                  default_active_domain=[('id', 'in', self.test_records.ids)])
+            active_ids=self.test_records.ids,
+            default_composition_mode='mass_mail',
+            default_model=self.test_records._name,
+            default_template_id=self.template.id,
         ))
         composer = composer_form.save()
+        self.assertEqual(sorted(literal_eval(composer.res_ids)), sorted(self.test_records.ids))
+
         with self.mock_mail_gateway(mail_unlink_sent=True):
             composer._action_send_mail()
 
         # global outgoing
-        self.assertEqual(len(self._new_mails), 2, 'Should have created 1 mail.mail per record')
-        self.assertEqual(len(self._mails), 2, 'Should have sent 1 email per record')
+        self.assertEqual(len(self._new_mails), 2, 'Should have created 1 mail.mail per record based on active_ids')
+        self.assertEqual(len(self._mails), 2, 'Should have sent 1 email per record based on  on active_ids')
 
         for record in self.test_records:
             # template is sent directly using customer field, even if author is partner_employee
             self.assertSentEmail(self.partner_employee_2.email_formatted,
                                  record.customer_id)
 
-        # 2: active_domain not taken into account if use_active_domain is False
+        # 2: default_res_ids + active_ids -> res_ids takes lead
         composer_form = Form(self.env['mail.compose.message'].with_context(
-            self._get_web_context(self.test_records, add_web=True,
+            self._get_web_context(self.test_record, add_web=False,
+                                  default_composition_mode='mass_mail',
+                                  default_res_ids=self.test_record.ids,
                                   default_template_id=self.template.id,
-                                  default_use_active_domain=False,
-                                  default_active_domain=[('id', 'in', -1)])
+                                  active_ids=self.test_records.ids,
+                                 )
         ))
         composer = composer_form.save()
+        self.assertEqual(literal_eval(composer.res_ids), self.test_record.ids)
+
         with self.mock_mail_gateway(mail_unlink_sent=True):
             composer._action_send_mail()
 
         # global outgoing
-        self.assertEqual(len(self._new_mails), 2, 'Should have created 1 mail.mail per record')
-        self.assertEqual(len(self._mails), 2, 'Should have sent 1 email per record')
+        self.assertEqual(len(self._new_mails), 1, 'Should have taken default_res_ids (1 record)')
+        self.assertEqual(len(self._mails), 1, 'Should have taken default_res_ids (1 record)')
+
+        # template is sent directly using customer field, even if author is partner_employee
+        self.assertSentEmail(self.partner_employee_2.email_formatted,
+                             self.test_record.customer_id)
 
         # 3: fallback on active_id if not active_ids
         composer_form = Form(self.env['mail.compose.message'].with_context(
-            self._get_web_context(self.test_records, add_web=True,
-                                  default_template_id=self.template.id,
-                                  active_ids=[])
+            active_id=self.test_record.id,
+            default_composition_mode='mass_mail',
+            default_model=self.test_records._name,
+            default_template_id=self.template.id,
         ))
         composer = composer_form.save()
+        self.assertEqual(literal_eval(composer.res_ids), self.test_record.ids)
+
         with self.mock_mail_gateway(mail_unlink_sent=False):
             composer._action_send_mail()
 
@@ -1293,7 +1343,7 @@ class TestComposerResultsMass(TestMailComposer):
         self.assertEqual(len(self._new_mails), 1, 'Should have created 1 mail.mail per record')
         self.assertEqual(len(self._mails), 1, 'Should have sent 1 email per record')
 
-        # 3: void is void: raise in comment mode, just don't send anything in mass mail mode
+        # 4: void is void: raise in comment mode, just don't send anything in mass mail mode
         composer_form = Form(self.env['mail.compose.message'].with_context(
             default_model='mail.test.ticket',
             default_template_id=self.template.id
@@ -1314,6 +1364,41 @@ class TestComposerResultsMass(TestMailComposer):
         with self.mock_mail_gateway(mail_unlink_sent=False):
             composer._action_send_mail()
         self.assertNotSentEmail()
+
+    @users('employee')
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_mail_composer_wtpl_recipients_res_domain(self):
+        """ Test specific use case of res_domain usage, in combination with
+        res_domain_user_id allowing to set the evaluation environment for
+        the domain. """
+        def _search_as_employee_2(recordset, *args, **kwargs):
+            """ Mock to return only one record, simulating a specific ir.rule """
+            if recordset.env.uid == self.user_employee_2.id:
+                return self.test_records[0]
+            return DEFAULT
+
+        composer_form = Form(self.env['mail.compose.message'].with_context(
+            default_composition_mode='mass_mail',
+            default_model=self.test_records._name,
+            default_res_domain=[('id', 'in', self.test_records.ids)],
+            default_res_domain_user_id=self.user_employee_2.id,
+            default_template_id=self.template.id,
+        ))
+        composer = composer_form.save()
+        self.assertEqual(literal_eval(composer.res_domain), [('id', 'in', self.test_records.ids)])
+        self.assertEqual(composer.res_domain_user_id, self.user_employee_2)
+
+        with self.mock_mail_gateway(mail_unlink_sent=True), \
+            patch.object(MailTestTicket, 'search', autospec=True, side_effect=_search_as_employee_2):
+            composer._action_send_mail()
+
+        # global outgoing
+        self.assertEqual(len(self._new_mails), 1, 'Should have created 1 mail.mail, search done by employee 2')
+        self.assertEqual(len(self._mails), 1, 'Should have sent 1 email, search done by employee 2')
+
+        # template is sent directly using customer field, whatever the author
+        self.assertSentEmail(self.partner_employee_2.email_formatted,
+                             self.test_records[0].customer_id)
 
     @users('employee')
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')

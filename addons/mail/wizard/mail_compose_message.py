@@ -3,11 +3,14 @@
 
 import ast
 import base64
-import re
+import logging
 
 from odoo import _, api, fields, models, tools, Command
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
+from odoo.osv import expression
 from odoo.tools import email_re
+
+_logger = logging.getLogger(__name__)
 
 
 def _reopen(self, res_id, model, context=None):
@@ -75,16 +78,22 @@ class MailComposer(models.TransientModel):
 
         if 'model' in fields and 'model' not in result:
             result['model'] = self._context.get('active_model')
-        if 'res_id' in fields and 'res_id' not in result:
-            result['res_id'] = self._context.get('active_id')
+        if 'default_res_id' in self.env.context:
+            _logger.warning('Usage of deprecated default_res_id')
+        if 'res_ids' in fields and 'res_ids' not in result:
+            if self.env.context.get('active_ids'):
+                result['res_ids'] = self.env.context.get('active_ids')
+            elif self.env.context.get('active_id'):
+                result['res_ids'] = [self.env.context.get('active_id')]
+            else:
+                result['res_ids'] = ''
+
         if 'reply_to_mode' in fields and 'reply_to_mode' not in result and result.get('model'):
             # doesn't support threading
             if result['model'] not in self.env or not hasattr(self.env[result['model']], 'message_post'):
                 result['reply_to_mode'] = 'new'
 
-        if 'active_domain' in self._context:  # not context.get() because we want to keep global [] domains
-            result['active_domain'] = '%s' % self._context.get('active_domain')
-        if result.get('composition_mode') == 'comment' and (set(fields) & set(['model', 'res_id', 'partner_ids', 'record_name', 'subject'])):
+        if result.get('composition_mode') == 'comment' and (set(fields) & set(['model', 'res_ids', 'partner_ids', 'record_name', 'subject'])):
             result.update(self.get_record_data(result))
 
         # when being in new mode, create_uid is not granted -> ACLs issue may arise
@@ -117,11 +126,15 @@ class MailComposer(models.TransientModel):
         selection=[('comment', 'Post on a document'),
                    ('mass_mail', 'Email Mass Mailing')],
         string='Composition mode', default='comment')
+    composition_batch = fields.Boolean(
+        'Batch composition', compute='_compute_composition_batch')  # more than 1 record (raw source)
     model = fields.Char('Related Document Model')
-    res_id = fields.Integer('Related Document ID')
+    res_ids = fields.Text('Related Document IDs')
+    res_domain = fields.Text('Active domain')
+    res_domain_user_id = fields.Many2one(
+        'res.users', string='Responsible',
+        help='Used as context used to evaluate composer domain')
     record_name = fields.Char('Message Record Name')
-    use_active_domain = fields.Boolean('Use active domain')
-    active_domain = fields.Text('Active domain', readonly=True)
     # characteristics
     message_type = fields.Selection([
         ('comment', 'Comment'),
@@ -155,6 +168,28 @@ class MailComposer(models.TransientModel):
     auto_delete_message = fields.Boolean('Delete Message Copy', help='Do not keep a copy of the email in the document communication history (mass mailing only)')
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server')
 
+    @api.constrains('res_ids')
+    def _check_res_ids(self):
+        """ Check res_ids is a valid list """
+        for composer in self:
+            self._parse_res_ids(composer.res_ids)
+
+    @api.constrains('res_domain')
+    def _check_res_domain(self):
+        """ Check domain is a valid list """
+        for composer in self:
+            self._parse_res_domain(composer.res_domain)
+
+    @api.depends('res_ids')
+    def _compute_composition_batch(self):
+        """ In case a valid res_ids is set, batch mode is activated once we have
+        more than 1 item in it. res_domain is considered as always batch. """
+        self.composition_batch = False
+        for composer in self.filtered('res_ids'):
+            res_ids = self._parse_res_ids(composer.res_ids)
+            composer.composition_batch = len(res_ids) > 1 if res_ids else False
+        self.filtered('res_domain').composition_batch = True
+
     @api.depends('reply_to_force_new')
     def _compute_reply_to_mode(self):
         for composer in self:
@@ -175,7 +210,7 @@ class MailComposer(models.TransientModel):
     @api.onchange('template_id')
     def _onchange_template_id_wrapper(self):
         self.ensure_one()
-        values = self._onchange_template_id(self.template_id.id, self.composition_mode, self.model, self.res_id)['value']
+        values = self._onchange_template_id(self.template_id.id, self.composition_mode, self.model, self._parse_res_ids(self.res_ids))['value']
         for fname, value in values.items():
             setattr(self, fname, value)
 
@@ -194,6 +229,7 @@ class MailComposer(models.TransientModel):
         a document (model, res_id). This is based on previously computed default
         values. """
         result, subject = {}, False
+        res_ids = self._parse_res_ids(values['res_ids']) if values.get('res_ids') else []
         if values.get('parent_id'):
             parent = self.env['mail.message'].browse(values.get('parent_id'))
             result['record_name'] = parent.record_name
@@ -201,18 +237,19 @@ class MailComposer(models.TransientModel):
             if not values.get('model'):
                 result['model'] = parent.model
             if not values.get('res_id'):
-                result['res_id'] = parent.res_id
+                result['res_ids'] = [parent.res_id]
             partner_ids = values.get('partner_ids', list()) + parent.partner_ids.ids
             result['partner_ids'] = partner_ids
-        elif values.get('model') and values.get('res_id'):
-            doc_name_get = self.env[values.get('model')].browse(values.get('res_id')).name_get()
+        elif values.get('model') and len(res_ids) == 1:
+            doc_name_get = self.env[values.get('model')].browse(res_ids[0]).name_get()
             result['record_name'] = doc_name_get and doc_name_get[0][1] or ''
             subject = tools.ustr(result['record_name'])
 
         re_prefix = _('Re:')
         if subject and not (subject.startswith('Re:') or subject.startswith(re_prefix)):
             subject = "%s %s" % (re_prefix, subject)
-        result['subject'] = subject
+        if values.get('parent_id') or len(res_ids) == 1:  # to be cleanup when moving to computed fields
+            result['subject'] = subject
 
         return result
 
@@ -272,18 +309,13 @@ class MailComposer(models.TransientModel):
                 new_attachment_ids.reverse()
                 wizard.write({'attachment_ids': [Command.set(new_attachment_ids)]})
 
-            # Mass Mailing
-            mass_mode = wizard.composition_mode == 'mass_mail'
-
-            # wizard works in batch mode: [res_id] or active_ids or active_domain
-            if mass_mode and wizard.use_active_domain and wizard.model:
-                res_ids = self.env[wizard.model].search(ast.literal_eval(wizard.active_domain)).ids
-            elif mass_mode and wizard.model and self._context.get('active_ids'):
-                res_ids = self._context['active_ids']
-            else:
-                res_ids = [wizard.res_id] if wizard.res_id else []
+            res_ids = wizard._parse_res_ids(wizard.res_ids)
+            if not res_ids and wizard.res_domain:
+                search_domain = self._parse_res_domain(wizard.res_domain)
+                search_user = wizard.res_domain_user_id or self.env.user
+                res_ids = self.env[wizard.model].with_user(search_user).search(search_domain).ids
             # in comment mode: raise here as anyway message_post will raise.
-            if not res_ids and not mass_mode:
+            if not res_ids and wizard.composition_mode == 'comment':
                 raise ValueError(
                     _('Mail composer in comment mode should run on at least one record. No records found (model %(model_name)s).',
                       model_name=wizard.model)
@@ -388,16 +420,16 @@ class MailComposer(models.TransientModel):
         or mail_mails. """
         self.ensure_one()
         mail_values_all = {}
-        mass_mode = self.composition_mode == 'mass_mail'
+        rendering_mode = self.composition_mode == 'mass_mail' or self.composition_batch
 
         # base values
         base_values = self._prepare_mail_values_common()
 
         # render all template-based value at once
         additional_values_all = {}
-        if mass_mode and self.model:
+        if rendering_mode and self.model:
             additional_values_all = self._prepare_mail_values_dynamic(res_ids)
-        elif not mass_mode:
+        elif not rendering_mode:
             additional_values_all = self._prepare_mail_values_static(res_ids)
 
         for res_id in res_ids:
@@ -462,7 +494,6 @@ class MailComposer(models.TransientModel):
         """
         self.ensure_one()
         records_sudo = None
-        mass_mail_mode = self.composition_mode == 'mass_mail'
 
         subjects = self._render_field('subject', res_ids)
         # We want to preserve comments in emails so as to keep mso conditionals
@@ -473,7 +504,7 @@ class MailComposer(models.TransientModel):
             res_id: {
                 'auto_delete': self.auto_delete,
                 'body': bodies[res_id],  # should be void
-                'body_html': bodies[res_id] if mass_mail_mode else False,
+                'body_html': bodies[res_id] if self.composition_mode == 'mass_mail' else False,
                 'email_from': emails_from[res_id],
                 'is_notification': not self.auto_delete_message,
                 'mail_server_id': self.mail_server_id.id,
@@ -688,12 +719,12 @@ class MailComposer(models.TransientModel):
     # TEMPLATE SPECIFIC
     # ----------------------------------------------------------------------
 
-    def _onchange_template_id(self, template_id, composition_mode, model, res_id):
+    def _onchange_template_id(self, template_id, composition_mode, model, res_ids):
         """ - mass_mailing: we cannot render, so return the template values
             - normal mode: return rendered values
             /!\ for x2many field, this onchange return command instead of ids
         """
-        if template_id and composition_mode == 'mass_mail':
+        if template_id and (composition_mode == 'mass_mail' or len(res_ids) > 1):
             template = self.env['mail.template'].browse(template_id)
             values = dict(
                 (field, template[field])
@@ -711,10 +742,12 @@ class MailComposer(models.TransientModel):
                 values['mail_server_id'] = template.mail_server_id.id
             if values.get('body_html'):
                 values['body'] = values.pop('body_html')
-        elif template_id:
+        elif template_id and len(res_ids) <= 1:
+            # trick to evaluate qweb even when having no records
+            template_res_ids = res_ids if res_ids else [0]
             values = self._generate_template_for_composer(
                 self.env['mail.template'].browse(template_id),
-                [res_id],
+                template_res_ids,
                 ('attachment_ids',
                  'body_html',
                  'email_cc',
@@ -726,7 +759,7 @@ class MailComposer(models.TransientModel):
                  'report_template',
                  'subject',
                 )
-            )[res_id]
+            )[template_res_ids[0]]
             # transform attachments into attachment_ids; not attached to the document because this will
             # be done further in the posting process, allowing to clean database if email not send
             attachment_ids = []
@@ -746,7 +779,7 @@ class MailComposer(models.TransientModel):
             default_values = self.with_context(
                 default_composition_mode=composition_mode,
                 default_model=model,
-                default_res_id=res_id
+                default_res_ids=res_ids
             ).default_get(['attachment_ids',
                            'body',
                            'composition_mode',
@@ -756,7 +789,7 @@ class MailComposer(models.TransientModel):
                            'parent_id',
                            'partner_ids',
                            'reply_to',
-                           'res_id',
+                           'res_ids',
                            'subject',
                           ])
             values = dict(
@@ -823,3 +856,45 @@ class MailComposer(models.TransientModel):
             }
 
         return render_results
+
+    # ----------------------------------------------------------------------
+    # MISC UTILS
+    # ----------------------------------------------------------------------
+
+    @api.model
+    def _parse_res_domain(self, domain_str):
+        """ Parse domain for composer, which can be: an already valid list or
+        tuple (generally in code), a list or tuple as a string (coming from
+        actions). Void strings are considered as a falsy domain. """
+        if isinstance(domain_str, (list, tuple)):
+            return domain_str
+        if not domain_str:
+            return expression.FALSE_DOMAIN
+        error_msg = _("Invalid domain %(domain_str)r (type %(domain_type)s)",
+                      domain_str=domain_str,
+                      domain_type=type(domain_str))
+        try:
+            domain = ast.literal_eval(domain_str)
+        except Exception as e:
+            raise ValidationError(error_msg) from e
+        if not isinstance(domain, (list, tuple)):
+            raise ValidationError(error_msg)
+        return domain
+
+    @api.model
+    def _parse_res_ids(self, res_ids_str):
+        """ Parse res_ids for composer, which can be: an already valid list or
+        tuple (generally in code), a list or tuple as a string (coming from
+        actions). Void strings are returned as it, to be managed by the caller. """
+        if isinstance(res_ids_str, (list, tuple)) or not res_ids_str:
+            return res_ids_str
+        error_msg = _("Invalid res_ids %(res_ids_str)s (type %(res_ids_type)s)",
+                      res_ids_str=res_ids_str,
+                      res_ids_type=type(res_ids_str))
+        try:
+            res_ids = ast.literal_eval(res_ids_str)
+        except Exception as e:
+            raise ValidationError(error_msg) from e
+        if not isinstance(res_ids, (list, tuple)):
+            raise ValidationError(error_msg)
+        return res_ids

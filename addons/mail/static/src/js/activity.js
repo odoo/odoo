@@ -341,9 +341,8 @@ const KanbanActivity = AbstractField.extend({
             views: [[false, "form"]],
             target: "new",
             context: {
-                default_res_id: this.res_id,
+                default_res_ids: [this.res_id],
                 default_model: this.model,
-                default_use_template: true,
                 default_template_id: templateID,
                 force_email: true,
             },
