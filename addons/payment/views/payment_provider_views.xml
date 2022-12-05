@@ -83,7 +83,7 @@
                                     <field name="allow_express_checkout" attrs="{'invisible': ['|', ('support_express_checkout', '=', False), ('show_allow_express_checkout', '=', False)]}"/>
                                 </group>
                                 <group string="Availability" name="availability">
-                                    <field name="maximum_amount" widget="monetary" options="{'currency_field': 'main_currency_id'}"/>
+                                    <field name="maximum_amount"/>
                                     <field name="available_country_ids"
                                            widget="many2many_tags"
                                            placeholder="Select countries. Leave empty to make available everywhere."
