@@ -7,8 +7,8 @@
             <field name="inherit_id" ref="account.view_move_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='fiscal_position_id']" position="after">
-                    <field name="l10n_sg_permit_number"/>
-                    <field name="l10n_sg_permit_number_date"/>
+                    <field name="l10n_sg_permit_number" attrs="{'invisible': [('country_code', '!=', 'SG')]}"/>
+                    <field name="l10n_sg_permit_number_date" attrs="{'invisible': [('country_code', '!=', 'SG')]}"/>
                 </xpath>
             </field>
         </record>

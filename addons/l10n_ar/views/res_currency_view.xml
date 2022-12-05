@@ -7,7 +7,7 @@
         <field name="model">res.currency</field>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="l10n_ar_afip_code"/>
+                <field name="l10n_ar_afip_code" attrs="{'invisible': [('fiscal_country_codes', 'not ilike', 'AR')]}"/>
             </field>
         </field>
     </record>

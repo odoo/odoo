@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account.view_tax_form" />
         <field name="arch" type="xml">
             <notebook position="inside">
-                <page name="l10n_ph" string="Philippines">
+                <page name="l10n_ph" string="Philippines" attrs="{'invisible': [('country_code', '!=', 'PH')]}">
                     <group>
                         <group>
                             <field name="l10n_ph_atc" />
