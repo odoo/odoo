@@ -90,8 +90,8 @@ export default class PivotCorePlugin extends CorePlugin {
                 const { sheetId, col, row, id, definition, dataSourceId } = cmd;
                 /** @type [number,number] */
                 const anchor = [col, row];
-                const { cols, rows, measures } = cmd.table;
-                const table = new SpreadsheetPivotTable(cols, rows, measures);
+                const { cols, rows, measures, rowTitle } = cmd.table;
+                const table = new SpreadsheetPivotTable(cols, rows, measures, rowTitle);
                 this._addPivot(id, definition, dataSourceId);
                 this._insertPivot(sheetId, anchor, id, table);
                 this.history.update("nextId", parseInt(id, 10) + 1);
@@ -101,8 +101,8 @@ export default class PivotCorePlugin extends CorePlugin {
                 const { sheetId, col, row, id } = cmd;
                 /** @type [number,number] */
                 const anchor = [col, row];
-                const { cols, rows, measures } = cmd.table;
-                const table = new SpreadsheetPivotTable(cols, rows, measures);
+                const { cols, rows, measures, rowTitle } = cmd.table;
+                const table = new SpreadsheetPivotTable(cols, rows, measures, rowTitle);
                 this._insertPivot(sheetId, anchor, id, table);
                 break;
             }
@@ -429,8 +429,15 @@ export default class PivotCorePlugin extends CorePlugin {
      * @param {SpreadsheetPivotTable} table
      */
     _insertRows(sheetId, anchor, id, table) {
-        let y = anchor[1] + table.getColHeight();
+        let y = anchor[1] + table.getColHeight() - 1;
         const x = anchor[0];
+        this.dispatch("UPDATE_CELL", {
+            col: x,
+            row: y,
+            sheetId,
+            content: table.getRowTitle(),
+        });
+        y++;
         for (const row of table.getRowHeaders()) {
             const args = [id];
             for (let i = 0; i < row.fields.length; i++) {

@@ -380,7 +380,10 @@ export class SpreadsheetPivotModel extends PivotModel {
         const rows = this._getSpreadsheetRows(this.data.rowGroupTree);
         rows.push(rows.shift()); //Put the Total row at the end.
         const measures = this.metaData.activeMeasures;
-        return new SpreadsheetPivotTable(cols, rows, measures);
+        const rowTitle = this.metaData.rowGroupBys[0]
+            ? this.getFormattedGroupBy(this.metaData.rowGroupBys[0])
+            : "";
+        return new SpreadsheetPivotTable(cols, rows, measures, rowTitle);
     }
 
     //--------------------------------------------------------------------------
