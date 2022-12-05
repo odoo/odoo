@@ -1090,11 +1090,21 @@ class SaleOrderLine(models.Model):
             'quantity': self.qty_to_invoice,
             'discount': self.discount,
             'price_unit': self.price_unit,
+<<<<<<< HEAD
             'tax_ids': [Command.set(self.tax_id.ids)],
             'analytic_distribution': self.analytic_distribution,
             'sale_line_ids': [Command.link(self.id)],
             'is_downpayment': self.is_downpayment,
+||||||| parent of 7fa26c7f331 (temp)
+            'tax_ids': [(6, 0, self.tax_id.ids)],
+            'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
+            'sale_line_ids': [(4, self.id)],
+=======
+            'tax_ids': [(6, 0, self.tax_id.ids)],
+            'sale_line_ids': [(4, self.id)],
+>>>>>>> 7fa26c7f331 (temp)
         }
+<<<<<<< HEAD
         analytic_account_id = self.order_id.analytic_account_id.id
         if analytic_account_id and not self.display_type:
             res['analytic_distribution'] = res['analytic_distribution'] or {}
@@ -1102,6 +1112,15 @@ class SaleOrderLine(models.Model):
                 res['analytic_distribution'][analytic_account_id] = self.analytic_distribution.get(analytic_account_id, 0) + 100
             else:
                 res['analytic_distribution'][analytic_account_id] = 100
+||||||| parent of 7fa26c7f331 (temp)
+        if self.order_id.analytic_account_id and not self.display_type:
+            res['analytic_account_id'] = self.order_id.analytic_account_id.id
+=======
+        if self.order_id.analytic_account_id and not self.display_type:
+            res['analytic_account_id'] = self.order_id.analytic_account_id.id
+        if self.analytic_tag_ids and not self.display_type:
+            res['analytic_tag_ids'] = [(6, 0, self.analytic_tag_ids.ids)]
+>>>>>>> 7fa26c7f331 (temp)
         if optional_values:
             res.update(optional_values)
         if self.display_type:
