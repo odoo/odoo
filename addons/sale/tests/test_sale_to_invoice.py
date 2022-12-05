@@ -460,6 +460,86 @@ class TestSaleToInvoice(TestSaleCommon):
         aml = self.env['account.move.line'].search([('move_id', 'in', so.invoice_ids.ids)])[0]
         self.assertRecordValues(aml, [{'analytic_account_id': analytic_account_so.id}])
 
+    def test_invoice_analytic_tag_so_not_default(self):
+        """
+        Tests whether, when an analytic tag rule is set and
+        the so has an analytic tag different from default,
+        the default analytic tag doesn't get overriden in invoice.
+        """
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_tags')
+        analytic_account_default = self.env['account.analytic.account'].create({'name': 'default'})
+        analytic_tag_default = self.env['account.analytic.tag'].create({'name': 'default'})
+        analytic_tag_super = self.env['account.analytic.tag'].create({'name': 'Super Tag'})
+
+        self.env['account.analytic.default'].create({
+            'analytic_id': analytic_account_default.id,
+            'analytic_tag_ids': [(6, 0, analytic_tag_default.ids)],
+            'product_id': self.product_a.id,
+        })
+
+        so = self.env['sale.order'].create({'partner_id': self.partner_a.id})
+        self.env['sale.order.line'].create({
+            'order_id': so.id,
+            'name': "test",
+            'product_id': self.product_a.id
+        })
+        so.order_line.analytic_tag_ids = [(6, 0, analytic_tag_super.ids)]
+        so.action_confirm()
+        so.order_line.qty_delivered = 1
+        aml = so._create_invoices().invoice_line_ids
+        self.assertRecordValues(aml, [{'analytic_tag_ids': analytic_tag_super.ids}])
+
+    def test_invoice_analytic_tag_set_manually(self):
+        """
+        Tests whether, when there is no analytic tag rule set,
+        the manually set analytic tag is passed from the so to the invoice.
+        """
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_tags')
+        analytic_tag_super = self.env['account.analytic.tag'].create({'name': 'Super Tag'})
+
+        so = self.env['sale.order'].create({'partner_id': self.partner_a.id})
+        self.env['sale.order.line'].create({
+            'order_id': so.id,
+            'name': "test",
+            'product_id': self.product_a.id
+        })
+        so.order_line.analytic_tag_ids = [(6, 0, analytic_tag_super.ids)]
+        so.action_confirm()
+        so.order_line.qty_delivered = 1
+        aml = so._create_invoices().invoice_line_ids
+        self.assertRecordValues(aml, [{'analytic_tag_ids': analytic_tag_super.ids}])
+
+    def test_invoice_analytic_tag_default_account_id(self):
+        """
+        Test whether, when an analytic tag rule with the condition `account_id` set,
+        the default tag is correctly set during the conversion from so to invoice
+        """
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_tags')
+        analytic_account_default = self.env['account.analytic.account'].create({'name': 'default'})
+        analytic_tag_default = self.env['account.analytic.tag'].create({'name': 'Super Tag'})
+
+        self.env['account.analytic.default'].create({
+            'analytic_id': analytic_account_default.id,
+            'analytic_tag_ids': [(6, 0, analytic_tag_default.ids)],
+            'product_id': self.product_a.id,
+            'account_id': self.company_data['default_account_revenue'].id,
+        })
+
+        so = self.env['sale.order'].create({'partner_id': self.partner_a.id})
+        self.env['sale.order.line'].create({
+            'order_id': so.id,
+            'name': "test",
+            'product_id': self.product_a.id
+        })
+        self.assertFalse(so.order_line.analytic_tag_ids, "There should be no tag set.")
+        so.action_confirm()
+        so.order_line.qty_delivered = 1
+        aml = so._create_invoices().invoice_line_ids
+        self.assertRecordValues(aml, [{'analytic_tag_ids': analytic_tag_default.ids}])
+
     def test_partial_invoicing_interaction_with_invoicing_switch_threshold(self):
         """ Let's say you partially invoice a SO, let's call the resuling invoice 'A'. Now if you change the
             'Invoicing Switch Threshold' such that the invoice date of 'A' is before the new threshold,
