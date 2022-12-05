@@ -249,7 +249,15 @@ class AccountEdiCommon(models.AbstractModel):
 
     def _import_invoice(self, journal, filename, tree, existing_invoice=None):
         move_type, qty_factor = self._get_import_document_amount_sign(filename, tree)
-        if not move_type or (existing_invoice and existing_invoice.move_type != move_type):
+        if not move_type:
+            return
+        if journal.type == 'sale':
+            move_type = 'out_' + move_type
+        elif journal.type == 'purchase':
+            move_type = 'in_' + move_type
+        else:
+            return
+        if existing_invoice and existing_invoice.move_type != move_type:
             return
 
         with (existing_invoice or self.env['account.move']).with_context(
@@ -351,7 +359,7 @@ class AccountEdiCommon(models.AbstractModel):
                     ('company_id', '=', journal.company_id.id),
                     ('amount', '=', float(tax_categ_percent_el.text)),
                     ('amount_type', '=', 'percent'),
-                    ('type_tax_use', '=', 'purchase'),
+                    ('type_tax_use', '=', journal.type),  # Journal type is ensured by _create_invoice_from_xml_tree to be either 'sale' or 'purchase'
                 ], limit=1)
                 if tax:
                     tax_ids += tax.ids
