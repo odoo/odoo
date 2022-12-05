@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="product.product_template_only_form_view"/>
             <field name="arch" type="xml">
                 <page name="invoicing" position="inside">
-                    <group name="l10n_eg_eta_edi" string="Egyptian Electronic Invoicing" attrs="{'invisible': [('product_variant_count', '>', 1)]}">
+                    <group name="l10n_eg_eta_edi" string="Egyptian Electronic Invoicing" attrs="{'invisible': ['|', ('fiscal_country_codes', 'not ilike', 'EG'), ('product_variant_count', '>', 1)]}">
                         <field name="l10n_eg_eta_code" help="ETA Field for GS1/EGS product codes. Please use the barcode field to store GS1/EGS ETA code if possible"/>
                     </group>
                 </page>
