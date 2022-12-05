@@ -398,7 +398,7 @@ export class ViewCompiler {
      * @returns {Element}
      */
     compileGenericNode(el, params) {
-        const compiled = createElement(el.nodeName);
+        const compiled = createElement(el.nodeName.toLowerCase());
         const metaAttrs = ["modifiers", "attrs", "invisible", "readonly"];
         for (const attr of el.attributes) {
             if (metaAttrs.includes(attr.name)) {
