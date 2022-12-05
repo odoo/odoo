@@ -203,6 +203,7 @@ class AccountMoveLine(models.Model):
         string="Tags",
         comodel_name='account.account.tag',
         ondelete='restrict',
+        context={'active_test': False},
         tracking=True,
         help="Tags assigned to this line by the tax creating it, if any. It determines its impact on financial reports.",
     )

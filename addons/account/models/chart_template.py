@@ -1478,7 +1478,7 @@ class AccountTaxRepartitionLineTemplate(models.Model):
                 domains.append(self.env['account.account.tag']._get_tax_tags_domain(report_expression.formula, country.id, sign=sign))
 
         if domains:
-            tags_to_add |= self.env['account.account.tag'].search(osv.expression.OR(domains))
+            tags_to_add |= self.env['account.account.tag'].with_context(active_test=False).search(osv.expression.OR(domains))
 
         return tags_to_add
 
