@@ -7,7 +7,7 @@ from freezegun import freeze_time
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
-from odoo import fields
+from odoo import fields, Command
 
 
 @freeze_time('2021-05-02')
@@ -23,6 +23,24 @@ class TestAccountFrFec(AccountTestInvoicingCommon):
 
         lines_data = [(1437.12, 'Hello\tDarkness'), (1676.64, 'my\rold\nfriend'), (3353.28, '\t\t\r')]
         today = fields.Date.today().strftime('%Y-%m-%d')
+
+        cls.tax_sale_a = cls.env['account.tax'].create({
+            'name': "TVA 20,0%",
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+            'amount': 20,
+            'invoice_repartition_line_ids': [
+                Command.create({
+                    'repartition_type': 'base',
+                }),
+                Command.create({
+                    'repartition_type': 'tax',
+                    'factor': 100,
+                    'account_id': cls.env['account.account'].search([('code', '=', "445710")], limit=1).id,
+                })
+            ]
+        })
+
         cls.invoice_a = cls.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': cls.partner_a.id,
