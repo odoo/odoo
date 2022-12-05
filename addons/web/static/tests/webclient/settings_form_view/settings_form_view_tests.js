@@ -77,9 +77,13 @@ QUnit.module("SettingsFormView", (hooks) => {
                         <block title="Title of group Bar">
                             <setting help="this is bar" documentation="/applications/technical/web/settings/this_is_a_test.html">
                                 <field name="bar"/>
+                                <button name="buttonName" icon="fa-arrow-right" type="action" string="Manage Users" class="btn-link"/>
                             </setting>
-                            <setting string="This is Big BAR" help="this is big bar">
-                                <field name="bar"/>
+                            <setting>
+                                <label string="Big BAZ" for="baz"/>
+                                <div class="text-muted">this is a baz</div>
+                                <field name="baz"/>
+                                <label>label with content</label>
                             </setting>
                         </block>
                         <block title="Title of group Foo">
@@ -113,11 +117,11 @@ QUnit.module("SettingsFormView", (hooks) => {
             [...target.querySelectorAll(".settings .o_settings_container .o_form_label")].map(
                 (x) => x.textContent
             ),
-            ["Bar", "This is Big BAR", "Foo", "Personalize setting"]
+            ["Bar", "Big BAZ", "Foo", "Personalize setting"]
         );
         assert.deepEqual(
             [...target.querySelectorAll(".settings .text-muted")].map((x) => x.textContent),
-            ["this is bar", "this is big bar", "this is foo", "this is full personalize setting"]
+            ["this is bar", "this is a baz", "this is foo", "this is full personalize setting"]
         );
         assert.deepEqual(
             [...target.querySelectorAll(".settings h2:not(.d-none)")].map((x) => x.textContent),
@@ -161,7 +165,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             [...target.querySelectorAll(".o_settings_container .o_setting_box .o_form_label")].map(
                 (x) => x.textContent
             ),
-            ["Bar", "This is Big BAR"],
+            ["Bar", "Big BAZ"],
             "Foo is not shown"
         );
 
@@ -181,13 +185,32 @@ QUnit.module("SettingsFormView", (hooks) => {
             [...target.querySelectorAll(".o_settings_container  .o_setting_box .o_form_label")].map(
                 (x) => x.textContent
             ),
-            ["This is Big BAR"],
-            "Only 'Big Bar' is shown"
+            ["Big BAZ"],
+            "Only 'Big Baz' is shown"
         );
         assert.deepEqual(
             [...target.querySelectorAll(".settings h2:not(.d-none)")].map((x) => x.textContent),
             ["Title of group Bar"],
             "The title of group Bar is also selected"
+        );
+        assert.containsOnce(
+            target,
+            ".app_settings_block:not(.d-none) .app_settings_header .o_setting_box"
+        );
+
+        await editSearch(target, "Manage Us");
+        await execTimeouts();
+        assert.strictEqual(
+            target.querySelector(".highlighter").textContent,
+            "Manage Us",
+            "Manage Us word highlighted"
+        );
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_settings_container .o_setting_box .o_form_label")].map(
+                (x) => x.textContent
+            ),
+            ["Bar"],
+            "Foo is not shown"
         );
         assert.containsOnce(
             target,
@@ -200,7 +223,21 @@ QUnit.module("SettingsFormView", (hooks) => {
             [...target.querySelectorAll(".o_settings_container  .o_setting_box .o_form_label")].map(
                 (x) => x.textContent
             ),
-            ["Bar", "This is Big BAR"],
+            ["Bar", "Big BAZ"],
+            "When searching a title, all group is shown"
+        );
+        assert.containsOnce(
+            target,
+            ".app_settings_block:not(.d-none) .app_settings_header .o_setting_box"
+        );
+
+        await editSearch(target, "different");
+        await execTimeouts();
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_settings_container  .o_setting_box .o_form_label")].map(
+                (x) => x.textContent
+            ),
+            ["Personalize setting"],
             "When searching a title, all group is shown"
         );
         assert.containsOnce(
@@ -418,11 +455,11 @@ QUnit.module("SettingsFormView", (hooks) => {
             serverData,
             arch: `
                 <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
-                            <app string="Base Setting" name="base-setting">
-                                <setting>
-                                    <field name="bar"/>Make Changes
-                                </setting>
-                            </app>
+                    <app string="Base Setting" name="base-setting">
+                        <setting>
+                            <field name="bar"/>Make Changes
+                        </setting>
+                    </app>
                 </form>`,
             mockRPC(route, { args, method, model }) {
                 if (method === "create" && model === "res.config.settings") {
@@ -454,9 +491,9 @@ QUnit.module("SettingsFormView", (hooks) => {
                     <app string="CRM" name="crm">
                         <block>
                             <setting>
-                                    <label for="foo" string="Label Before" class="a"/>
-                                    <field name="foo" class="b"/>
-                                    <label for="foo" string="Label After" class="c"/>
+                                <label for="foo" string="Label Before" class="a"/>
+                                <field name="foo" class="b"/>
+                                <label for="foo" string="Label After" class="c"/>
                             </setting>
                         </block>
                     </app>
@@ -482,13 +519,13 @@ QUnit.module("SettingsFormView", (hooks) => {
         serverData.views = {
             "res.config.settings,1,form": `
                     <form string="Settings" js_class="base_settings">
-                            <app string="CRM" name="crm">
-                                <block>
-                                    <setting help="this is foo">
-                                            <field name="foo"/>
-                                    </setting>
-                                </block>
-                            </app>
+                        <app string="CRM" name="crm">
+                            <block>
+                                <setting help="this is foo">
+                                    <field name="foo"/>
+                                </setting>
+                            </block>
+                        </app>
                     </form>`,
             "task,2,list": `
                     <tree>
@@ -648,14 +685,14 @@ QUnit.module("SettingsFormView", (hooks) => {
             serverData.views = {
                 "res.config.settings,1,form": `
                     <form string="Settings" js_class="base_settings">
-                            <app string="CRM" name="crm">
-                                <block>
-                                    <setting string="Foo" help="this is foo">
-                                        <field name="foo"/>
-                                    </setting>
-                                </block>
-                                <button name="4" string="Execute action" type="action"/>
-                            </app>
+                        <app string="CRM" name="crm">
+                            <block>
+                                <setting string="Foo" help="this is foo">
+                                    <field name="foo"/>
+                                </setting>
+                            </block>
+                            <button name="4" string="Execute action" type="action"/>
+                        </app>
                     </form>`,
                 "task,2,list": '<tree><field name="display_name"/></tree>',
                 "res.config.settings,false,search": "<search></search>",
@@ -1084,14 +1121,14 @@ QUnit.module("SettingsFormView", (hooks) => {
             serverData.views = {
                 "res.config.settings,1,form": `
                     <form string="Settings" js_class="base_settings">
-                            <app string="CRM" name="crm">
-                                <block>
-                                    <setting string="Foo" help="this is foo">
-                                            <field name="foo"/>
-                                    </setting>
-                                    <button name="4" string="Execute action" type="action"/>
-                                </block>
-                            </app>
+                        <app string="CRM" name="crm">
+                            <block>
+                                <setting string="Foo" help="this is foo">
+                                    <field name="foo"/>
+                                </setting>
+                                <button name="4" string="Execute action" type="action"/>
+                            </block>
+                        </app>
                     </form>
                 `,
                 "res.config.settings,false,search": "<search></search>",
@@ -1278,10 +1315,12 @@ QUnit.module("SettingsFormView", (hooks) => {
             serverData,
             arch: `
                 <form js_class="base_settings">
-                            <app string="CRM" name="crm">
-                                <label string="My&quot; little &apos;  Label" for="display_name" class="highhopes"/>
-                                <field name="display_name" />
-                            </app>
+                    <app string="CRM" name="crm">
+                        <setting>
+                            <label string="My&quot; little &apos;  Label" for="display_name" class="highhopes"/>
+                            <field name="display_name" />
+                        </setting>
+                    </app>
                 </form>`,
         });
 
@@ -1293,8 +1332,10 @@ QUnit.module("SettingsFormView", (hooks) => {
         const expectedCompiled = `
             <SettingsPage slots="{NoContentHelper:this.props.slots.NoContentHelper}" initialTab="this.props.initialApp" t-slot-scope="settings" modules="[{&quot;key&quot;:&quot;crm&quot;,&quot;string&quot;:&quot;CRM&quot;,&quot;imgurl&quot;:&quot;/crm/static/description/icon.png&quot;}]">
                 <SettingsApp key="\`crm\`" string="\`CRM\`" imgurl="\`/crm/static/description/icon.png\`" selectedTab="settings.selectedTab">
-                    <FormLabel id="'display_name'" fieldName="'display_name'" record="this.props.record" fieldInfo="this.props.archInfo.fieldNodes['display_name']" className="&quot;highhopes&quot;" string="\`My&quot; little '  Label\`"/>
-                    <Field id="'display_name'" name="'display_name'" record="this.props.record" fieldInfo="this.props.archInfo.fieldNodes['display_name']"/>
+                    <Setting title="\`\`"  help="\`\`" companyDependent="false" documentation="\`\`" record="this.props.record" string="\`\`" addLabel="true" labels="[&quot;\`My\\&quot; little '  Label\`&quot;]">
+                        <FormLabel id="'display_name'" fieldName="'display_name'" record="this.props.record" fieldInfo="this.props.archInfo.fieldNodes['display_name']" className="&quot;highhopes&quot;" string="\`My&quot; little '  Label\`"/>
+                        <Field id="'display_name'" name="'display_name'" record="this.props.record" fieldInfo="this.props.archInfo.fieldNodes['display_name']"/>
+                    </Setting>
                 </SettingsApp>
             </SettingsPage>`;
         assert.areEquivalent(compiled.firstChild.innerHTML, expectedCompiled);
@@ -1316,15 +1357,15 @@ QUnit.module("SettingsFormView", (hooks) => {
             serverData,
             arch: `
             <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
-                    <app string="CRM" name="crm">
-                        <block title="Title of group Bar">
-                            <setting>
-                                    <field name="bar"/>
-                                    <div class="text-muted">this is Baz value: <field name="baz" readonly="1"/> and this is the after text</div>
-                            </setting>
-                        </block>
-                    </app>
-        </form>`,
+                <app string="CRM" name="crm">
+                    <block title="Title of group Bar">
+                        <setting>
+                            <field name="bar"/>
+                            <div class="text-muted">this is Baz value: <field name="baz" readonly="1"/> and this is the after text</div>
+                        </setting>
+                    </block>
+                </app>
+            </form>`,
         });
 
         assert.strictEqual(
