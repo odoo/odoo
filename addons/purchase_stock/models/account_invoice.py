@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.tools.float_utils import float_compare
+from odoo.tools.float_utils import float_compare, float_is_zero
 
 
 class AccountMove(models.Model):
@@ -113,11 +113,13 @@ class AccountMove(models.Model):
                 price_unit_val_dif = price_unit - valuation_price_unit
                 price_subtotal = line.quantity * price_unit_val_dif
 
-                # We consider there is a price difference if the subtotal is not zero. In case a
-                # discount has been applied, we can't round the price unit anymore, and hence we
-                # can't compare them.
+                # We consider there is a price difference if:
+                # - price unit is not zero with respect to product price decimal precision.
+                # - subtotal is not zero with respect to move currency precision.
+                # - no discount was applied, as we can't round the price unit anymore
                 if (
                     not move.currency_id.is_zero(price_subtotal)
+                    and not float_is_zero(price_unit_val_dif, precision_digits=price_unit_prec)
                     and float_compare(line["price_unit"], line.price_unit, precision_digits=price_unit_prec) == 0
                 ):
 
