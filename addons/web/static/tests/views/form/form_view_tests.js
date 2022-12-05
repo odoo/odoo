@@ -4021,6 +4021,30 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_cp_action_menus span:contains(Unarchive)");
     });
 
+    QUnit.test("archive action not shown with readonly active field", async function (assert) {
+        // add active field on partner model in readonly mode to do not have Archive option
+        serverData.models.partner.fields.active = {
+            string: "Active",
+            type: "char",
+            default: true,
+            readonly: true,
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `<form><field name="active"/><field name="foo"/></form>`,
+            actionMenus: {},
+        });
+        await click(target, ".o_cp_action_menus .dropdown-toggle");
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_menu_item")].map((el) => el.textContent),
+            ["Duplicate", "Delete"],
+            "Should not contain an Archive action",
+        );
+    });
+
     QUnit.test("can duplicate a record", async function (assert) {
         await makeView({
             type: "form",
