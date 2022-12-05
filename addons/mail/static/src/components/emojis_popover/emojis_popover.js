@@ -4,6 +4,7 @@ odoo.define('mail/static/src/components/emojis_popover/emojis_popover.js', funct
 const emojis = require('mail.emojis');
 const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
+const { markEventHandled } = require("mail/static/src/utils/utils.js");
 
 const { Component } = owl;
 
@@ -60,6 +61,7 @@ class EmojisPopover extends Component {
      * @param {MouseEvent} ev
      */
     _onClickEmoji(ev) {
+        markEventHandled(ev, "EmojiPopover.onClickEmoji");
         this.close();
         this.trigger('o-emoji-selection', {
             unicode: ev.currentTarget.dataset.unicode,

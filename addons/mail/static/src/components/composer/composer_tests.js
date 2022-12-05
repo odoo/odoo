@@ -257,6 +257,7 @@ QUnit.test('add emoji replaces (keyboard) text selection', async function (asser
 
     // simulate selection of all the content by keyboard
     composerTextInputTextArea.setSelectionRange(0, composerTextInputTextArea.value.length);
+    composerTextInputTextArea.dispatchEvent(new KeyboardEvent("keyup"));
 
     // select emoji
     await afterNextRender(() => document.querySelector('.o_Composer_buttonEmojis').click());
@@ -267,6 +268,39 @@ QUnit.test('add emoji replaces (keyboard) text selection', async function (asser
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "😊",
         "whole text selection should have been replaced by emoji"
+    );
+    // ensure popover is closed
+    await nextAnimationFrame();
+    await nextAnimationFrame();
+    await nextAnimationFrame();
+});
+
+QUnit.test('selected text is not replaced after cancelling the selection', async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const composer = this.env.models['mail.composer'].create();
+    await this.createComposerComponent(composer);
+    const composerTextInputTextArea = document.querySelector(`.o_ComposerTextInput_textarea`);
+    await afterNextRender(() => {
+        composerTextInputTextArea.focus();
+        document.execCommand('insertText', false, "Blabla");
+    });
+
+    // simulate selection of all the content by keyboard
+    composerTextInputTextArea.setSelectionRange(0, composerTextInputTextArea.value.length);
+    composerTextInputTextArea.dispatchEvent(new KeyboardEvent("keyup"));
+    // cancel selection
+    await afterNextRender(() => document.querySelector(".o_Composer_sidebarMain").click());
+    // select emoji
+    await afterNextRender(() => document.querySelector('.o_Composer_buttonEmojis').click());
+    await afterNextRender(() =>
+        document.querySelector('.o_EmojisPopover_emoji[data-unicode="😊"]').click()
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "Blabla😊",
+        "Text should still be present"
     );
     // ensure popover is closed
     await nextAnimationFrame();

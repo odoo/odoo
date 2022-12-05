@@ -212,8 +212,13 @@ class ComposerTextInput extends Component {
      * @private
      */
     _onFocusoutTextarea() {
-        this.saveStateInStore();
         this.composer.update({ hasFocus: false });
+    }
+
+    resetSelectionState() {
+        const { el } = this._textareaRef;
+        el.selectionStart = el.selectionEnd = el.value.length;
+        this.saveStateInStore();
     }
 
     /**

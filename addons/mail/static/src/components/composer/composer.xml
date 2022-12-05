@@ -103,6 +103,7 @@
                                             'o-open': false and state.displayed,
                                             'o-mobile': env.messaging.device.isMobile,
                                         }"
+                                        t-on-click="_onClickAddEmoji"
                                         t-on-keydown="_onKeydownEmojiButton"
                                         aria-label="Emojis"
                                         t-att-aria-expanded="false and (state.displayed ? 'true' : 'false')"

@@ -237,11 +237,21 @@ class Composer extends Component {
      *
      * @private
      */
-    _onClickAddAttachment() {
+    _onClickAddAttachment(ev) {
+        markEventHandled(ev, 'Composer.onClickAddAttachment');
         this._fileUploaderRef.comp.openBrowserFileUploader();
         if (!this.env.device.isMobile) {
             this.focus();
         }
+    }
+
+    /**
+     * Called when clicking on emoji button.
+     *
+     * @private
+     */
+    _onClickAddEmoji(ev) {
+        markEventHandled(ev, 'Composer.onClickAddEmoji');
     }
 
     /**
@@ -250,8 +260,21 @@ class Composer extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickCaptureGlobal(ev) {
-        if (this.contains(ev.target)) {
+    async _onClickCaptureGlobal(ev) {
+        await new Promise(setTimeout);
+        if (!this.el) {
+            return;
+        }
+        if (
+            !this._textInputRef.el.contains(ev.target) &&
+            !this._fileUploaderRef.el.contains(ev.target) &&
+            !isEventHandled(ev, 'Composer.onClickAddAttachment') &&
+            !isEventHandled(ev, 'Composer.onClickAddEmoji') &&
+            !isEventHandled(ev, 'EmojiPopover.onClickEmoji')
+        ) {
+            this._textInputRef.comp.resetSelectionState();
+        }
+        if (this.contains(ev.target) || isEventHandled(ev, "EmojiPopover.onClickEmoji")) {
             return;
         }
         this.composer.discard();
