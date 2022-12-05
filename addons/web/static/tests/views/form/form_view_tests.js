@@ -295,6 +295,20 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, "label.o_form_label_empty:contains(timmy)");
     });
 
+    QUnit.test("generic tags are case insensitive", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <Div class="test">Hello</Div>
+                </form>`,
+        });
+
+        assert.containsOnce(target, "div.test");
+    });
+
     QUnit.test("form view with a group that contains an invisible group", async function (assert) {
         await makeView({
             type: "form",
