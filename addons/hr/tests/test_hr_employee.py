@@ -152,10 +152,14 @@ class TestHrEmployee(TestHrCommon):
 
     def test_employee_create_from_signup(self):
         # Test that an employee is not created when signin up on the website
+        partner = self.env['res.partner'].create({
+            'name': 'test partner'
+        })
         self.env['res.users'].signup({
             'name': 'Test User',
             'login': 'test_user',
             'email': 'test_user@odoo.com',
             'password': 'test_user_password',
+            'partner_id': partner.id,
         })
         self.assertFalse(self.env['res.users'].search([('login', '=', 'test_user')]).employee_id)
