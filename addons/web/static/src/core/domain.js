@@ -243,6 +243,11 @@ function matchCondition(record, condition) {
                 return false;
             }
             return fieldValue.indexOf(value) >= 0;
+        case "not like":
+            if (fieldValue === false) {
+                return false;
+            }
+            return fieldValue.indexOf(value) === -1;
         case "=like":
             if (fieldValue === false) {
                 return false;
@@ -253,6 +258,11 @@ function matchCondition(record, condition) {
                 return false;
             }
             return fieldValue.toLowerCase().indexOf(value.toLowerCase()) >= 0;
+        case "not ilike":
+            if (fieldValue === false) {
+                return false;
+            }
+            return fieldValue.toLowerCase().indexOf(value.toLowerCase()) === -1;
         case "=ilike":
             if (fieldValue === false) {
                 return false;
