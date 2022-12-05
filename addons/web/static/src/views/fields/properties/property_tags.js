@@ -218,7 +218,7 @@ export class PropertyTags extends Component {
      *
      * If we use the component for the tag configuration, clicking on "delete"
      * will remove the tags from the available tags. If we use the component
-     * the the tag selection, it will unselect the tag.
+     * the tag selection, it will unselect the tag.
      *
      * @param {string} deleteTag, ID of the tag to delete
      */
