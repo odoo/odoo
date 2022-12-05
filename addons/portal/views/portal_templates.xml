@@ -362,11 +362,11 @@
                 <div class="fa fa-envelope fa-fw me-1"></div>
                 <a t-att-href="'mailto:'+sales_user.email" t-esc="sales_user.email"/>
             </div>
-            <div class="d-flex flex-nowrap align-items-center mb-1">
+            <div class="d-flex flex-nowrap align-items-center mb-1" t-if="sales_user.phone">
                 <div class="fa fa-phone fa-fw me-1"></div>
                 <span t-esc="sales_user.phone"/>
             </div>
-            <div class="d-flex flex-nowrap align-items-center mb-1">
+            <div class="d-flex flex-nowrap align-items-center mb-1" t-if="sales_user.city">
                 <div class="fa fa-map-marker fa-fw me-1"></div>
                 <span t-esc="sales_user.city"/>
             </div>
