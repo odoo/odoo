@@ -74,7 +74,7 @@ class TestUBLCommon(AccountEdiTestCommon):
         Create an account.move directly from an xml file, asserts the invoice obtained is the same as the expected
         invoice.
         """
-        self.company_data['default_journal_purchase'].create_document_from_attachment(attachment.ids)
+        invoice.journal_id.create_document_from_attachment(attachment.ids)
         new_invoice = self.env['account.move'].search([], order='id desc', limit=1)
 
         self.assertTrue(new_invoice)
