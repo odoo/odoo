@@ -341,7 +341,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             composer = self.env['mail.compose.message'].with_context({
                 'default_composition_mode': 'comment',
                 'default_model': test_record._name,
-                'default_res_id': test_record.id,
+                'default_res_ids': test_record.ids,
             }).create({
                 'body': '<p>Test Body</p>',
                 'partner_ids': [(4, customer_id)],
@@ -361,7 +361,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             composer = self.env['mail.compose.message'].with_context({
                 'default_composition_mode': 'comment',
                 'default_model': test_record._name,
-                'default_res_id': test_record.id,
+                'default_res_ids': test_record.ids,
             }).create({
                 'attachment_ids': attachments.ids,
                 'body': '<p>Test Body</p>',
@@ -383,7 +383,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
                 self.env['mail.compose.message'].with_context({
                     'default_composition_mode': 'comment',
                     'default_model': test_record._name,
-                    'default_res_id': test_record.id,
+                    'default_res_ids': test_record.ids,
                 })
             )
             composer_form.body = '<p>Test Body</p>'
@@ -408,9 +408,9 @@ class TestMailAPIPerformance(BaseMailPerformance):
 
         with self.assertQueryCount(__system__=3, employee=3):
             composer = self.env['mail.compose.message'].with_context({
-                'active_ids': test_records.ids,
                 'default_composition_mode': 'mass_mail',
                 'default_model': test_records._name,
+                'default_res_ids': test_records.ids,
                 'default_template_id': test_template.id,
             }).create({})
             composer._onchange_template_id_wrapper()
@@ -430,7 +430,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             composer = self.env['mail.compose.message'].with_context({
                 'default_composition_mode': 'comment',
                 'default_model': test_record._name,
-                'default_res_id': test_record.id,
+                'default_res_ids': test_record.ids,
                 'mail_auto_delete': False,
             }).create({
                 'body': '<p>Test Body</p>',
@@ -451,7 +451,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             composer = self.env['mail.compose.message'].with_context({
                 'default_composition_mode': 'comment',
                 'default_model': test_record._name,
-                'default_res_id': test_record.id,
+                'default_res_ids': test_record.ids,
                 'default_template_id': test_template.id,
             }).create({})
             composer._onchange_template_id_wrapper()
@@ -476,7 +476,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             composer = self.env['mail.compose.message'].with_context({
                 'default_composition_mode': 'comment',
                 'default_model': test_record._name,
-                'default_res_id': test_record.id,
+                'default_res_ids': test_record.ids,
                 'default_template_id': test_template.id,
             }).create({})
             composer._onchange_template_id_wrapper()
@@ -507,7 +507,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
                 self.env['mail.compose.message'].with_context({
                     'default_composition_mode': 'comment',
                     'default_model': test_record._name,
-                    'default_res_id': test_record.id,
+                    'default_res_ids': test_record.ids,
                     'default_template_id': test_template.id,
                 })
             )
@@ -537,7 +537,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
                 self.env['mail.compose.message'].with_context({
                     'default_composition_mode': 'comment',
                     'default_model': test_record._name,
-                    'default_res_id': test_record.id,
+                    'default_res_ids': test_record.ids,
                     'default_template_id': test_template.id,
                 })
             )
@@ -883,9 +883,9 @@ class TestMailComplexPerformance(BaseMailPerformance):
 
         with self.assertQueryCount(__system__=3, employee=3):
             composer = self.env['mail.compose.message'].with_context({
-                'active_ids': test_records.ids,
                 'default_composition_mode': 'mass_mail',
                 'default_model': test_records._name,
+                'default_res_ids': test_records.ids,
                 'default_template_id': test_template.id,
             }).create({})
             composer._onchange_template_id_wrapper()

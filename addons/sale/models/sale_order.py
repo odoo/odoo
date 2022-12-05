@@ -713,8 +713,7 @@ class SaleOrder(models.Model):
             lang = mail_template._render_lang(self.ids)[self.id]
         ctx = {
             'default_model': 'sale.order',
-            'default_res_id': self.id,
-            'default_use_template': bool(mail_template),
+            'default_res_ids': self.ids,
             'default_template_id': mail_template.id if mail_template else None,
             'default_composition_mode': 'comment',
             'mark_so_as_sent': True,
@@ -877,7 +876,6 @@ class SaleOrder(models.Model):
             if template.lang:
                 lang = template._render_lang(self.ids)[self.id]
             ctx = {
-                'default_use_template': bool(template_id),
                 'default_template_id': template_id,
                 'default_order_id': self.id,
                 'mark_so_as_canceled': True,

@@ -167,7 +167,7 @@ class WebsiteVisitor(models.Model):
     def _prepare_message_composer_context(self):
         return {
             'default_model': 'res.partner',
-            'default_res_id': self.partner_id.id,
+            'default_res_ids': self.partner_id.ids,
             'default_partner_ids': [self.partner_id.id],
         }
 
@@ -178,7 +178,6 @@ class WebsiteVisitor(models.Model):
         visitor_composer_ctx = self._prepare_message_composer_context()
         compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
         compose_ctx = dict(
-            default_use_template=False,
             default_composition_mode='comment',
         )
         compose_ctx.update(**visitor_composer_ctx)

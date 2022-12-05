@@ -101,7 +101,7 @@ class MailComposeMessage(models.TransientModel):
             'body_html': self.body,
             'campaign_id': self.campaign_id.id,
             'mailing_model_id': self.env['ir.model']._get(self.model).id,
-            'mailing_domain': self.active_domain,
+            'mailing_domain': self.res_domain if self.res_domain else f"[('id', 'in', {self.res_ids})]",
             'name': self.mass_mailing_name,
             'reply_to': self.reply_to if self.reply_to_mode == 'new' else False,
             'reply_to_mode': self.reply_to_mode,

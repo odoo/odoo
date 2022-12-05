@@ -755,7 +755,6 @@ class Meeting(models.Model):
             default_composition_mode=default_composition_mode,
             default_model='calendar.event',
             default_res_ids=self.ids,
-            default_use_template=bool(template_id),
             default_template_id=template_id,
             default_partner_ids=self.partner_ids.ids,
             mail_tz=self.env.user.tz,

@@ -2170,12 +2170,9 @@ class MailThread(models.AbstractModel):
 
         mails_su = self.env['mail.mail'].sudo()
         for subset in [self] if template else self:
-            composer_ctx['active_ids'] = subset.ids  # still required for mass mail mode
-            if template:
-                composer_ctx['default_res_id'] = subset.ids[0] if subset.ids else 0
-            else:
+            composer_ctx['default_res_ids'] = subset.ids
+            if not template:
                 composer_values['body'] = bodies[subset.id]
-                composer_ctx['default_res_id'] = subset.id
 
             composer = self.env['mail.compose.message'].with_context(
                 **composer_ctx
@@ -2185,9 +2182,9 @@ class MailThread(models.AbstractModel):
             if template:
                 update_values = composer._onchange_template_id(
                     template.id,
-                    composer_values['composition_mode'],
+                    'mass_mail',
                     self._name,
-                    subset.ids[0] if subset.ids else 0
+                    subset.ids,
                 )['value']
                 composer.write(update_values)
 
@@ -2253,10 +2250,9 @@ class MailThread(models.AbstractModel):
         for record in self:
             if template:
                 composer = self.env['mail.compose.message'].with_context(
-                    active_ids=record.ids,  # still required for mass mail mode
                     default_composition_mode='comment',
                     default_model=self._name,
-                    default_res_id=record.id,
+                    default_res_ids=record.ids,
                     default_template_id=template.id,
                 ).create({
                     'message_type': message_type,
@@ -2270,7 +2266,7 @@ class MailThread(models.AbstractModel):
                     template.id,
                     'comment',
                     self._name,
-                    record.id,
+                    record.ids,
                 )['value']
                 composer.write(update_values)
                 _mails_as_sudo, messages_as_sudo = composer._action_send_mail()
@@ -3049,11 +3045,12 @@ class MailThread(models.AbstractModel):
         lang = False
         if force_email_lang:
             lang = force_email_lang
-        elif {'default_template_id', 'default_model', 'default_res_id'} <= self.env.context.keys():
+        elif {'default_template_id', 'default_model', 'default_res_ids'} <= self.env.context.keys():
             # TDE FIXME: this whole brol should be cleaned !
+            res_ids = self.env['mail.compose.message']._parse_res_ids(self.env.context['default_res_ids'])
             template = self.env['mail.template'].browse(self.env.context['default_template_id'])
-            if template and template.lang:
-                lang = template._render_lang([self.env.context['default_res_id']])[self.env.context['default_res_id']]
+            if res_ids and template and template.lang:
+                lang = template._render_lang(res_ids)[res_ids[0]]
         if not lang:
             lang = self.env.context.get('lang')
 
