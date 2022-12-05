@@ -524,6 +524,60 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         self.assertEqual(po.picking_ids.move_ids.product_uom_qty, 8)
 
+    def test_packaging_propagation(self):
+        """
+        Editing the packaging on an purchase.order.line
+        should propagate to the delivery order, so that
+        when we are editing the packaging, the lines can be merged
+        with the new packaging and quantity.
+        """
+        # set the 3 step route
+        warehouse = self.company_data['default_warehouse']
+        warehouse.reception_steps = 'three_steps'
+        packOf10 = self.env['product.packaging'].create({
+            'name': 'PackOf10',
+            'product_id': self.product_a.id,
+            'qty': 10
+        })
+
+        packOf20 = self.env['product.packaging'].create({
+            'name': 'PackOf20',
+            'product_id': self.product_a.id,
+            'qty': 20
+        })
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 10.0,
+                    'product_uom': self.product_a.uom_id.id,
+                    'product_packaging_id': packOf10.id,
+                })],
+        })
+        po.button_confirm()
+        # the 3 moves for the 3 steps
+        step_1 = po.order_line.move_ids
+        step_2 = step_1.move_dest_ids
+        step_3 = step_2.move_dest_ids
+        self.assertEqual(step_1.product_packaging_id, packOf10)
+        self.assertEqual(step_2.product_packaging_id, packOf10)
+        self.assertEqual(step_3.product_packaging_id, packOf10)
+
+        po.order_line[0].write({
+            'product_packaging_id': packOf20.id,
+            'product_uom_qty': 20
+        })
+        self.assertEqual(step_1.product_packaging_id, packOf20)
+        self.assertEqual(step_2.product_packaging_id, packOf20)
+        self.assertEqual(step_3.product_packaging_id, packOf20)
+
+        po.order_line[0].write({'product_packaging_id': False})
+        self.assertFalse(step_1.product_packaging_id)
+        self.assertFalse(step_2.product_packaging_id)
+        self.assertFalse(step_3.product_packaging_id)
+
     def test_putaway_strategy_in_backorder(self):
         stock_location = self.company_data['default_warehouse'].lot_stock_id
         sub_loc_01 = self.env['stock.location'].create([{
