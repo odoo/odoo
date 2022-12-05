@@ -30,10 +30,6 @@
                                         <field name="balance" readonly="1"/>
                                         <field name="quantity" readonly="1"/>
                                     </group>
-                                    <group string="Accounting Documents">
-                                        <field name="move_id" readonly="1"/>
-                                        <field name="statement_line_id" readonly="True" attrs="{'invisible': [('statement_line_id','=',False)]}"/>
-                                    </group>
                                     <group string="Dates">
                                         <field name="date" groups="account.group_account_readonly"/>
                                         <field name="date_maturity"/>
@@ -78,6 +74,14 @@
                             <page string="Analytic Lines" name="analytic_lines" groups="analytic.group_analytic_accounting">
                                 <field name="date" invisible="1"/>
                                 <field name="analytic_line_ids" context="{'tree_view_ref':'analytic.view_account_analytic_line_tree', 'default_general_account_id':account_id, 'default_name': name, 'default_date':date, 'amount': (debit or 0.0)-(credit or 0.0)}"/>
+                            </page>
+                            <page string="Accounting documents">
+                                <label for="move_id" string="Journal Entry"/>
+                                <field name="move_id" readonly="1" nolabel="1"/>
+                                <group readonly="1" attrs="{'invisible': [('statement_line_id','=',False)]}">
+                                    <label for="statement_line_id" string="Originator Statement Line"/>
+                                    <field name="statement_line_id"/>
+                                </group>
                             </page>
                         </notebook>
                     </sheet>
