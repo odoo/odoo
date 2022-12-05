@@ -7315,9 +7315,10 @@ QUnit.module("Fields", (hooks) => {
                             key: "yop",
                             active_field: 2,
                             someKey: "some value",
+                            bin_size: true,
                             uid: 7,
                         },
-                        "read partner_type context"
+                        "read partner_type context, bin_size should be true by default"
                     );
                 }
                 if (args.method === "write") {
