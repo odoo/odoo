@@ -688,10 +688,19 @@ class AccountJournal(models.Model):
         # We simply call the setup bar function.
         return self.env['res.company'].setting_init_bank_account_action()
 
-    def create_document_from_attachment(self, attachment_ids=None):
-        ''' Create the invoices from files.
-         :return: A action redirecting to account.move tree/form view.
-        '''
+    def _create_document_from_attachment(self, attachment_ids=None):
+        """ Create the invoices from files."""
+        context_move_type = self._context.get("default_move_type", "entry")
+        if not self:
+            if context_move_type in self.env['account.move'].get_sale_types():
+                journal_type = "sale"
+            elif context_move_type in self.env['account.move'].get_purchase_types():
+                journal_type = "purchase"
+            else:
+                raise UserError(_("The journal in which to upload the invoice is not specified. "))
+            self = self.env['account.journal'].search([
+                ('company_id', '=', self.env.company.id), ('type', '=', journal_type)
+            ], limit=1)
         attachments = self.env['ir.attachment'].browse(attachment_ids)
         if not attachments:
             raise UserError(_("No attachment was provided"))
@@ -703,14 +712,20 @@ class AccountJournal(models.Model):
                 decoders = self.env['account.move']._get_create_document_from_attachment_decoders()
                 invoice = False
                 for decoder in sorted(decoders, key=lambda d: d[0]):
-                    invoice = decoder[1](attachment)
+                    invoice = decoder[1](attachment, journal=self)
                     if invoice:
                         break
                 if not invoice:
                     invoice = self.env['account.move'].create({})
                 invoice.with_context(no_new_invoice=True).message_post(attachment_ids=[attachment.id])
                 invoices += invoice
+        return invoices
 
+    def create_document_from_attachment(self, attachment_ids=None):
+        """ Create the invoices from files.
+         :return: A action redirecting to account.move tree/form view.
+        """
+        invoices = self._create_document_from_attachment(attachment_ids=attachment_ids)
         action_vals = {
             'name': _('Generated Documents'),
             'domain': [('id', 'in', invoices.ids)],

@@ -1179,7 +1179,7 @@ class SaleOrder(models.Model):
         # We do this after the moves have been created since we need taxes, etc. to know if the total
         # is actually negative or not
         if final:
-            moves.sudo().filtered(lambda m: m.amount_total < 0).action_switch_invoice_into_refund_credit_note()
+            moves.sudo().filtered(lambda m: m.amount_total < 0).action_switch_move_type()
         for move in moves:
             move.message_post_with_view(
                 'mail.message_origin_link',

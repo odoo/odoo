@@ -128,11 +128,12 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         return self.env['account.move']
 
-    def _create_invoice_from_pdf_reader(self, filename, reader):
+    def _create_invoice_from_pdf_reader(self, filename, reader, journal):
         """ Create a new invoice with the data inside a pdf.
 
         :param filename: The name of the pdf.
         :param reader:   The OdooPdfFileReader of the pdf to import.
+        :param journal   The journal in which we want to create the invoice.
         :returns:        The created invoice.
         """
         # TO OVERRIDE
@@ -298,7 +299,7 @@ class AccountEdiFormat(models.Model):
 
         return to_process
 
-    def _create_document_from_attachment(self, attachment):
+    def _create_document_from_attachment(self, attachment, journal=None):
         """Decodes an ir.attachment to create an invoice.
 
         :param attachment:  An ir.attachment record.
@@ -309,9 +310,9 @@ class AccountEdiFormat(models.Model):
                 res = False
                 try:
                     if file_data['type'] == 'xml':
-                        res = edi_format.with_company(self.env.company)._create_invoice_from_xml_tree(file_data['filename'], file_data['xml_tree'])
+                        res = edi_format.with_company(self.env.company)._create_invoice_from_xml_tree(file_data['filename'], file_data['xml_tree'], journal)
                     elif file_data['type'] == 'pdf':
-                        res = edi_format.with_company(self.env.company)._create_invoice_from_pdf_reader(file_data['filename'], file_data['pdf_reader'])
+                        res = edi_format.with_company(self.env.company)._create_invoice_from_pdf_reader(file_data['filename'], file_data['pdf_reader'], journal)
                         file_data['pdf_reader'].stream.close()
                     else:
                         res = edi_format._create_invoice_from_binary(file_data['filename'], file_data['content'], file_data['extension'])
