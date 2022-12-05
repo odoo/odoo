@@ -363,6 +363,22 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_kanban_record:contains(gnap)");
     });
 
+    QUnit.test("generic tags are case insensitive", async function (assert) {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <templates><t t-name="kanban-box">
+                        <Div class="test">Hello</Div>
+                    </t></templates>
+                </kanban>`,
+        });
+
+        assert.containsN(target, "div.test", 4);
+    });
+
     QUnit.test("display full is supported on fields", async (assert) => {
         await makeView({
             type: "kanban",
