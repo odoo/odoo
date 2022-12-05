@@ -163,7 +163,7 @@ export class KanbanRecord extends Component {
 
         const { archInfo, Compiler, templates } = this.props;
         const { arch } = archInfo;
-        const ViewCompiler = Compiler || KanbanCompiler;
+        const ViewCompiler = Compiler || this.constructor.Compiler;
 
         this.templates = useViewCompiler(ViewCompiler, arch, templates);
 
@@ -356,7 +356,6 @@ export class KanbanRecord extends Component {
         };
     }
 }
-
 KanbanRecord.components = {
     Dropdown,
     DropdownItem,
@@ -383,5 +382,6 @@ KanbanRecord.props = [
     "record",
     "templates",
 ];
+KanbanRecord.Compiler = KanbanCompiler;
 KanbanRecord.KANBAN_BOX_ATTRIBUTE = KANBAN_BOX_ATTRIBUTE;
 KanbanRecord.template = "web.KanbanRecord";

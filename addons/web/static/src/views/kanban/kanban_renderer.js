@@ -606,6 +606,7 @@ export class KanbanRenderer extends Component {
 
 KanbanRenderer.props = [
     "archInfo",
+    "Compiler?", // optional in stable for backward compatibility
     "list",
     "openRecord",
     "readonly",
