@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
         <xpath expr="//div[hasclass('page')]/h2" position="replace">
             <h2>
                 <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">Tax Invoice</span>
