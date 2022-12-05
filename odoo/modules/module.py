@@ -305,7 +305,8 @@ def load_manifest(module, mod_path=None):
     manifest['icon'] = get_module_icon(module)
 
     with tools.file_open(manifest_file, mode='r') as f:
-        manifest.update(ast.literal_eval(f.read()))
+        file_data = {k: v for k, v in ast.literal_eval(f.read()).items() if v}
+        manifest.update(file_data)
 
     if not manifest['description']:
         readme_path = [opj(mod_path, x) for x in README
