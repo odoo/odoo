@@ -170,14 +170,18 @@ class MailTemplate(models.Model):
     def create_action(self):
         ActWindow = self.env['ir.actions.act_window']
         view = self.env.ref('mail.email_compose_message_wizard_form')
-
         for template in self:
+            context = {
+                'default_composition_mode': 'mass_mail',
+                'default_model': template.model,
+                'default_template_id' : template.id,
+            }
             button_name = _('Send Mail (%s)', template.name)
             action = ActWindow.create({
                 'name': button_name,
                 'type': 'ir.actions.act_window',
                 'res_model': 'mail.compose.message',
-                'context': "{'default_composition_mode': 'mass_mail', 'default_template_id' : %d, 'default_use_template': True}" % (template.id),
+                'context': repr(context),
                 'view_mode': 'form,tree',
                 'view_id': view.id,
                 'target': 'new',

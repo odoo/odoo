@@ -111,21 +111,20 @@ class ResCompany(models.Model):
         template = self.env.ref('sale.email_template_edi_sale', False)
 
         message_composer = self.env['mail.compose.message'].with_context(
-            default_use_template=bool(template),
             mark_so_as_sent=True,
             default_email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
             proforma=self.env.context.get('proforma', False),
             force_email=True,
         ).create({
-            'res_id': sample_sales_order.id,
-            'template_id': template and template.id or False,
-            'model': 'sale.order',
-            'composition_mode': 'comment'
+            'res_ids': sample_sales_order.ids,
+            'template_id': template.id if template else False,
+            'model': sample_sales_order._name,
+            'composition_mode': 'comment',
         })
 
         # Simulate the onchange (like trigger in form the view)
         update_values = message_composer._onchange_template_id(
-            template.id, 'comment', 'sale.order', sample_sales_order.id
+            template.id, 'comment', sample_sales_order._name, sample_sales_order.ids
         )['value']
         message_composer.write(update_values)
 

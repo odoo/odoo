@@ -550,7 +550,7 @@ Model({
                 default_is_log: this.composer.isLog,
                 default_model: this.composer.activeThread.model,
                 default_partner_ids: this.composer.recipients.map((partner) => partner.id),
-                default_res_id: this.composer.activeThread.id,
+                default_res_ids: [this.composer.activeThread.id],
                 default_subtype_xmlid: 'mail.mt_comment',
                 mail_post_autofollow: this.composer.activeThread.hasWriteAccess,
             };

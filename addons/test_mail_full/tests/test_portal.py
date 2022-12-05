@@ -218,9 +218,8 @@ class TestPortalFlow(MailCommon, HttpCase):
             'default_composition_mode': 'comment',
             'default_email_layout_xmlid': 'mail.mail_notification_layout_with_responsible_signature',
             'default_model': self.record_portal._name,
-            'default_res_id': self.record_portal.id,
+            'default_res_ids': self.record_portal.ids,
             'default_template_id': template_id,
-            'default_use_template': template_id,
             'force_email': True,
             'lang': '{{ object.partner_id.lang }}',
         })

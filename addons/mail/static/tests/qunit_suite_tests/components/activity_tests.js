@@ -619,7 +619,7 @@ QUnit.module("mail", {}, function () {
         });
 
         QUnit.test("activity with mail template: preview mail", async function (assert) {
-            assert.expect(10);
+            assert.expect(9);
 
             const pyEnv = await startServer();
             const resPartnerId1 = pyEnv["res.partner"].create({});
@@ -642,19 +642,15 @@ QUnit.module("mail", {}, function () {
             patchWithCleanup(env.services.action, {
                 doAction(action) {
                     assert.step("do_action");
-                    assert.strictEqual(
-                        action.context.default_res_id,
-                        resPartnerId1,
-                        "Action should have the activity res id as default res id in context"
+                    assert.deepEqual(
+                        action.context.default_res_ids,
+                        [resPartnerId1],
+                        "Action should have the activity res id as default res ids in context"
                     );
                     assert.strictEqual(
                         action.context.default_model,
                         "res.partner",
                         "Action should have the activity res model as default model in context"
-                    );
-                    assert.ok(
-                        action.context.default_use_template,
-                        "Action should have true as default use_template in context"
                     );
                     assert.strictEqual(
                         action.context.default_template_id,
