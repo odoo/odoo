@@ -4,7 +4,7 @@
 import re
 from collections import defaultdict
 
-from odoo import models, fields, api, _, osv
+from odoo import models, fields, api, _, osv, Command
 from odoo.exceptions import ValidationError, UserError
 
 FIGURE_TYPE_SELECTION_VALUES = [
@@ -387,6 +387,16 @@ class AccountReportLine(models.Model):
         if vals_list:
             self.env['account.report.expression'].create(vals_list)
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_child_expressions(self):
+        """
+        We explicitly unlink child expressions.
+        This is necessary even if there is an ondelete='cascade' on it, because
+        the @api.ondelete method _unlink_archive_used_tags is not automatically
+        called if the parent model is deleted.
+        """
+        self.expression_ids.unlink()
+
 
 class AccountReportExpression(models.Model):
     _name = "account.report.expression"
@@ -465,8 +475,9 @@ class AccountReportExpression(models.Model):
                 country = expression.report_line_id.report_id.country_id
                 existing_tags = self.env['account.account.tag']._get_tax_tags(tag_name, country.id)
 
-                if not existing_tags:
-                    tag_vals = self._get_tags_create_vals(tag_name, country.id)
+                if len(existing_tags) < 2:
+                    # We can have only one tag in case we archived it and deleted its unused complement sign
+                    tag_vals = self._get_tags_create_vals(tag_name, country.id, existing_tag=existing_tags)
                     self.env['account.account.tag'].create(tag_vals)
 
         return result
@@ -502,6 +513,35 @@ class AccountReportExpression(models.Model):
                         self.env['account.account.tag'].create(tag_vals)
 
         return result
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_archive_used_tags(self):
+        """
+        Manages unlink or archive of tax_tags when account.report.expression are deleted.
+        If a tag is still in use on amls, we archive it.
+        """
+        expressions_tags = self._get_matching_tags()
+        tags_to_archive = self.env['account.account.tag']
+        tags_to_unlink = self.env['account.account.tag']
+        for tag in expressions_tags:
+            other_expression_using_tag = self.env['account.report.expression'].sudo().search([
+                ('engine', '=', 'tax_tags'),
+                ('formula', '=', tag.name[1:]),  # we escape the +/- sign
+                ('report_line_id.report_id.country_id.id', '=', tag.country_id.id),
+                ('id', 'not in', self.ids),
+            ], limit=1)
+            if not other_expression_using_tag:
+                aml_using_tag = self.env['account.move.line'].sudo().search([('tax_tag_ids', 'in', tag.id)], limit=1)
+                if aml_using_tag:
+                    tags_to_archive += tag
+                else:
+                    tags_to_unlink += tag
+
+        if tags_to_archive or tags_to_unlink:
+            rep_lines_with_tag = self.env['account.tax.repartition.line'].sudo().search([('tag_ids', 'in', (tags_to_archive + tags_to_unlink).ids)])
+            rep_lines_with_tag.write({'tag_ids': [Command.unlink(tag.id) for tag in tags_to_archive + tags_to_unlink]})
+            tags_to_archive.active = False
+            tags_to_unlink.unlink()
 
     def name_get(self):
         return [(expr.id, f'{expr.report_line_name} [{expr.label}]') for expr in self]
@@ -563,10 +603,15 @@ class AccountReportExpression(models.Model):
             country = tag_expression.report_line_id.report_id.country_id
             or_domains.append(self.env['account.account.tag']._get_tax_tags_domain(tag_expression.formula, country.id))
 
-        return self.env['account.account.tag'].search(osv.expression.OR(or_domains))
+        return self.env['account.account.tag'].with_context(active_test=False).search(osv.expression.OR(or_domains))
 
     @api.model
-    def _get_tags_create_vals(self, tag_name, country_id):
+    def _get_tags_create_vals(self, tag_name, country_id, existing_tag=None):
+        """
+        We create the plus and minus tags with tag_name.
+        In case there is an existing_tag (which can happen if we deleted its unused complement sign)
+        we only recreate the missing sign.
+        """
         minus_tag_vals = {
           'name': '-' + tag_name,
           'applicability': 'taxes',
@@ -579,7 +624,12 @@ class AccountReportExpression(models.Model):
           'tax_negate': False,
           'country_id': country_id,
         }
-        return [(minus_tag_vals), (plus_tag_vals)]
+        res = []
+        if not existing_tag or not existing_tag.tax_negate:
+            res.append(minus_tag_vals)
+        if not existing_tag or existing_tag.tax_negate:
+            res.append(plus_tag_vals)
+        return res
 
     def _get_carryover_target_expression(self, options):
         self.ensure_one()

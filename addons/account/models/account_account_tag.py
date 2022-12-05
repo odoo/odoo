@@ -21,7 +21,7 @@ class AccountAccountTag(models.Model):
         in the specified country.
         """
         domain = self._get_tax_tags_domain(tag_name, country_id)
-        return self.env['account.account.tag'].search(domain)
+        return self.env['account.account.tag'].with_context(active_test=False).search(domain)
 
     @api.model
     def _get_tax_tags_domain(self, tag_name, country_id, sign=None):
