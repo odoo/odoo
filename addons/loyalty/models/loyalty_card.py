@@ -81,8 +81,7 @@ class LoyaltyCard(models.Model):
         compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
         ctx = dict(
             default_model='loyalty.card',
-            default_res_id=self.id,
-            default_use_template=bool(default_template),
+            default_res_ids=self.ids,
             default_template_id=default_template and default_template.id,
             default_composition_mode='comment',
             default_email_layout_xmlid='mail.mail_notification_light',

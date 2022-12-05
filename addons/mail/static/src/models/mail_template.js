@@ -16,9 +16,8 @@ Model({
                 views: [[false, "form"]],
                 target: "new",
                 context: {
-                    default_res_id: activity.thread.id,
+                    default_res_ids: [activity.thread.id],
                     default_model: activity.thread.model,
-                    default_use_template: true,
                     default_subtype_xmlid: 'mail.mt_comment',
                     default_template_id: this.id,
                     force_email: true,

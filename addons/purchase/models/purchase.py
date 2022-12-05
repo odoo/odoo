@@ -419,10 +419,7 @@ class PurchaseOrder(models.Model):
         ctx = dict(self.env.context or {})
         ctx.update({
             'default_model': 'purchase.order',
-            'active_model': 'purchase.order',
-            'active_id': self.ids[0],
-            'default_res_id': self.ids[0],
-            'default_use_template': bool(template_id),
+            'default_res_ids': self.ids,
             'default_template_id': template_id,
             'default_composition_mode': 'comment',
             'default_email_layout_xmlid': "mail.mail_notification_layout_with_responsible_signature",
@@ -781,10 +778,7 @@ class PurchaseOrder(models.Model):
         ctx = dict(self.env.context or {})
         ctx.update({
             'default_model': 'purchase.order',
-            'active_model': 'purchase.order',
-            'active_id': self.ids[0],
-            'default_res_id': self.ids[0],
-            'default_use_template': bool(template_id),
+            'default_res_ids': self.ids,
             'default_template_id': template_id,
             'default_composition_mode': 'comment',
             'default_email_layout_xmlid': "mail.mail_notification_layout_with_responsible_signature",

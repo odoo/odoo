@@ -1068,17 +1068,21 @@ class MassMailing(models.Model):
                 'record_name': False,
                 'reply_to_force_new': mailing.reply_to_mode == 'new',
                 'subject': mailing.subject,
-                'template_id': None,
+                'template_id': False,
             }
             if mailing.reply_to_mode == 'new':
                 composer_values['reply_to'] = mailing.reply_to
 
-            composer = self.env['mail.compose.message'].with_context(active_ids=res_ids).create(composer_values)
-            extra_context = mailing._get_mass_mailing_context()
-            composer = composer.with_context(active_ids=res_ids, **extra_context)
+            composer = self.env['mail.compose.message'].with_context(
+                active_ids=res_ids,
+                default_composition_mode='mass_mail',
+                **mailing._get_mass_mailing_context()
+            ).create(composer_values)
+
             # auto-commit except in testing mode
-            auto_commit = not getattr(threading.current_thread(), 'testing', False)
-            composer._action_send_mail(auto_commit=auto_commit)
+            composer._action_send_mail(
+                auto_commit=not getattr(threading.current_thread(), 'testing', False)
+            )
             mailing.write({
                 'state': 'done',
                 'sent_date': fields.Datetime.now(),

@@ -69,10 +69,11 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         with self.mock_smtplib_connection(), \
              patch.object(IrMailServer, 'build_email', autospec=True, wraps=IrMailServer, side_effect=_ir_mail_server_build_email) as build_email_mocked, \
              patch.object(IrMailServer, 'send_email', autospec=True, wraps=IrMailServer, side_effect=send_email_origin) as send_email_mocked, \
-             patch.object(MailMail, 'create', autospec=True, wraps=MailMail, side_effect=_mail_mail_create), \
+             patch.object(MailMail, 'create', autospec=True, wraps=MailMail, side_effect=_mail_mail_create) as mail_mail_create_mocked, \
              patch.object(MailMail, 'unlink', autospec=True, wraps=MailMail, side_effect=_mail_mail_unlink):
             self.build_email_mocked = build_email_mocked
             self.send_email_mocked = send_email_mocked
+            self.mail_mail_create_mocked = mail_mail_create_mocked
             yield
 
         if mail_unlink_sent:

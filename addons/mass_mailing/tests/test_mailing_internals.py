@@ -45,7 +45,7 @@ class TestMassMailValues(MassMailCommon):
         composer = self.env['mail.compose.message'].with_user(self.user_marketing).with_context({
             'default_composition_mode': 'mass_mail',
             'default_model': 'res.partner',
-            'default_res_id': recipient.id,
+            'default_res_ids': recipient.ids,
         }).create({
             'subject': 'Mass Mail Responsive',
             'body': 'I am Responsive body',

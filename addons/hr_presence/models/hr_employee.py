@@ -181,8 +181,7 @@ Do not hesitate to contact your manager or the human resource department.""")
         compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
         ctx = dict(
             default_model="hr.employee",
-            default_res_id=self.id,
-            default_use_template=bool(template),
+            default_res_ids=self.ids,
             default_template_id=template.id,
             default_composition_mode='comment',
             default_is_log=True,
