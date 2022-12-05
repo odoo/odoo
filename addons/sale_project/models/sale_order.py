@@ -376,11 +376,12 @@ class SaleOrderLine(models.Model):
                 analytic_account_ids = {rec['analytic_account_id'][0] for rec in (task_analytic_account_id + project_analytic_account_id)}
                 if len(analytic_account_ids) == 1:
                     values['analytic_account_id'] = analytic_account_ids.pop()
-        if self.task_id.analytic_tag_ids:
-            values['analytic_tag_ids'] += [Command.link(tag_id.id) for tag_id in self.task_id.analytic_tag_ids]
-        elif self.is_service and not self.is_expense:
+        analytic_tag_ids = [Command.link(tag_id.id) for tag_id in self.task_id.analytic_tag_ids]
+        if self.is_service and not self.is_expense:
             tag_ids = self.env['account.analytic.tag'].search([
                 ('task_ids.sale_line_id', '=', self.id)
             ])
-            values['analytic_tag_ids'] += [Command.link(tag_id.id) for tag_id in tag_ids]
+            analytic_tag_ids += [Command.link(tag_id.id) for tag_id in tag_ids]
+        if analytic_tag_ids:
+            values['analytic_tag_ids'] = values.get('analytic_tag_ids', []) + analytic_tag_ids
         return values
