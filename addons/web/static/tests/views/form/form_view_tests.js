@@ -10326,6 +10326,7 @@ QUnit.module("Views", (hooks) => {
                     });
                 } else if (args.model === "partner_type") {
                     assert.deepEqual(args.kwargs.context, {
+                        bin_size: true,
                         lang: "en",
                         tz: "taht",
                         uid: 7,
