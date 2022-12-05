@@ -42,7 +42,7 @@ class BaseMailPerformance(MailCommon, TransactionCaseWithUserDemo):
         })
 
         cls.test_attachments_vals = cls._generate_attachments_data(
-            cls, 3, res_model='mail.compose.message', res_id=0
+            3, res_model='mail.compose.message', res_id=0
         )
 
     def setUp(self):

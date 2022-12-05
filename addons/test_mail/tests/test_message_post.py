@@ -963,25 +963,28 @@ class TestMessagePostHelpers(TestMessagePostCommon):
             10,
         )
 
+        cls._attachments = cls._generate_attachments_data(count=2, res_id=0, res_model='mail.template')
+        cls.email_1 = 'test1@example.com'
+        cls.email_2 = 'test2@example.com'
+        cls.test_template = cls._create_template('mail.test.ticket', {
+            'attachment_ids': [(0, 0, attach_vals) for attach_vals in cls._attachments],
+            'auto_delete': True,
+            # After the HTML sanitizer, it will become "<p>Body for: <t t-out="object.name" /><a href="">link</a></p>"
+            'body_html': 'Body for: <t t-out="object.name" /><script>test</script><a href="javascript:alert(1)">link</a>',
+            'email_cc': cls.partner_1.email,
+            'email_to': f'{cls.email_1}, {cls.email_2}',
+            'partner_to': '{{ object.customer_id.id }},%s' % cls.partner_2.id,
+        })
+        cls.test_template.attachment_ids.write({'res_id': cls.test_template.id})
+        # Force the attachments of the template to be in the natural order.
+        cls.test_template.invalidate_recordset(['attachment_ids'])
+
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_message_mail_with_template(self):
         """ Test sending mass mail on documents based on a template """
-        _attachments = self._generate_attachments_data(count=2, res_id=0, res_model='mail.template')
-        email_1 = 'test1@example.com'
-        email_2 = 'test2@example.com'
-        template = self._create_template('mail.test.ticket', {
-            'attachment_ids': [(0, 0, attach_vals) for attach_vals in _attachments],
-            'auto_delete': True,
-            # After the HTML sanitizer, it will become "<p>Body for: <t t-out="object.name" /><a href="">link</a></p>"
-            'body_html': 'Body for: <t t-out="object.name" /><script>test</script><a href="javascript:alert(1)">link</a>',
-            'email_cc': self.partner_1.email,
-            'email_to': f'{email_1}, {email_2}',
-            'partner_to': '{{ object.customer_id.id }},%s' % self.partner_2.id,
-        })
-        template.attachment_ids.write({'res_id': template.id})
-
         test_records = self.test_records.with_env(self.env)
+        template = self.test_template.with_env(self.env)
         with self.mock_mail_gateway():
             _new_mails, _new_messages = test_records.with_user(self.user_employee).message_post_with_template(
                 template.id,
@@ -989,7 +992,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
             )
 
         # created partners from inline email addresses
-        new_partners = self.env['res.partner'].search([('email', 'in', (email_1, email_2))])
+        new_partners = self.env['res.partner'].search([('email', 'in', (self.email_1, self.email_2))])
         self.assertEqual(len(new_partners), 2,
                          'Post with template: should have created partners based on template emails')
 
@@ -1005,7 +1008,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
                         ('AttFileName_01.txt', b'AttContent_01', 'text/plain'),
                     ],
                     'subject': f'About {test_record.name}',
-                    'body_content': test_record.name,
+                    'body_content': f'Body for: {test_record.name}',
                 },
                 fields_values={
                     'auto_delete': True,
@@ -1030,13 +1033,13 @@ class TestMessagePostHelpers(TestMessagePostCommon):
             test_record.message_subscribe(test_record.customer_id.ids)
 
         with self.mock_mail_gateway():
-            res_messages = test_records.message_post_with_view(
+            new_messages = test_records.message_post_with_view(
                 'test_mail.mail_template_simple_test',
                 values={'partner': self.user_employee.partner_id},
                 composition_mode='mass_mail',
                 subject='About mass mailing',
             )
-        self.assertEqual(len(res_messages), 0)
+        self.assertEqual(len(new_messages), 0)
         self.assertEqual(len(self._new_mails), 10)
 
         # sent emails (mass mail mode)
@@ -1067,36 +1070,66 @@ class TestMessagePostHelpers(TestMessagePostCommon):
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_message_post_with_template(self):
         """ Test posting on a document based on a template content """
-        _attachments = self._generate_attachments_data(count=2, res_id=0, res_model='mail.template')
-        email_1 = 'test1@example.com'
-        email_2 = 'test2@example.com'
-        template = self._create_template('mail.test.ticket', {
-            'attachment_ids': [(0, 0, attach_vals) for attach_vals in _attachments],
-            'auto_delete': True,
-            'email_cc': self.partner_1.email,
-            'email_to': f'{email_1}, {email_2}',
-            'partner_to': '{{ object.customer_id.id }},%s' % self.partner_2.id,
-        })
-        template.attachment_ids.write({'res_id': template.id})
-        # Force the attachments of the template to be in the natural order.
-        self.email_template.invalidate_recordset(['attachment_ids'])
-
         test_record = self.test_records.with_env(self.env)[0]
         test_record.message_subscribe(test_record.customer_id.ids)
+        test_template = self.test_template.with_env(self.env)
         with self.mock_mail_gateway():
             _new_mail, new_message = test_record.with_user(self.user_employee).message_post_with_template(
-                self.email_template.id,
-                composition_mode='comment'
+                test_template.id,
+                composition_mode='comment',
+                message_type='comment',
+                subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'),
             )
 
         # created partners from inline email addresses
-        new_partners = self.env['res.partner'].search([('email', 'in', [email_1, email_2])])
+        new_partners = self.env['res.partner'].search([('email', 'in', [self.email_1, self.email_2])])
         self.assertEqual(len(new_partners), 2,
                          'Post with template: should have created partners based on template emails')
 
         # check notifications have been sent
         self.assertMailNotifications(new_message, [{
-            'content': f'<p>Hello {test_record.name}</p>',
+            'content': f'<p>Body for: {test_record.name}<a href="">link</a></p>',
+            'message_type': 'comment',
+            'notif': [
+                {'partner': self.partner_1, 'type': 'email'},
+                {'partner': self.partner_2, 'type': 'email'},
+                {'partner': new_partners[0], 'type': 'email'},
+                {'partner': new_partners[1], 'type': 'email'},
+                {'partner': test_record.customer_id, 'type': 'email'},
+            ],
+            'subtype': 'mail.mt_comment',
+        }])
+        self.assertMessageFields(
+            new_message,
+            {'author_id': self.partner_employee,
+             'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
+             'is_internal': False,
+             'model': test_record._name,
+             'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
+             'res_id': test_record.id,
+            }
+        )
+
+    @users('employee')
+    @mute_logger('odoo.addons.mail.models.mail')
+    def test_message_post_with_template_defaults(self):
+        """ Test default values, notably subtype being a comment """
+        test_record = self.test_records.with_env(self.env)[0]
+        test_record.message_subscribe(test_record.customer_id.ids)
+        test_template = self.test_template.with_env(self.env)
+        with self.mock_mail_gateway():
+            _new_mail, new_message = test_record.with_user(self.user_employee).message_post_with_template(
+                test_template.id,
+            )
+
+        # created partners from inline email addresses
+        new_partners = self.env['res.partner'].search([('email', 'in', [self.email_1, self.email_2])])
+        self.assertEqual(len(new_partners), 2,
+                         'Post with template: should have created partners based on template emails')
+
+        # check notifications have been sent
+        self.assertMailNotifications(new_message, [{
+            'content': f'<p>Body for: {test_record.name}<a href="">link</a></p>',
             'message_type': 'notification',
             'notif': [
                 {'partner': self.partner_1, 'type': 'email'},
@@ -1128,7 +1161,45 @@ class TestMessagePostHelpers(TestMessagePostCommon):
         with self.mock_mail_gateway():
             new_message = test_record.message_post_with_view(
                 'test_mail.mail_template_simple_test',
-                values={'partner': self.user_employee.partner_id}
+                message_type='comment',
+                values={'partner': self.user_employee.partner_id},
+                subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'),
+            )
+
+        # check notifications have been sent
+        self.assertMailNotifications(new_message, [{
+            'content': f'<p>Hello {self.user_employee.partner_id.name}, this comes from {test_record.name}.</p>',
+            'message_type': 'comment',
+            'notif': [
+                {'partner': test_record.customer_id, 'type': 'email'},
+            ],
+            'subtype': 'mail.mt_comment',
+        }])
+        self.assertMessageFields(
+            new_message,
+            {'author_id': self.partner_employee,
+             'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
+             'is_internal': False,
+             'message_type': 'comment',
+             'model': test_record._name,
+             'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
+             'res_id': test_record.id,
+            }
+        )
+
+    @users('employee')
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.tests')
+    def test_message_post_with_view_defaults(self):
+        """ Test posting on documents based on a view, check default values """
+        test_record = self.test_records.with_env(self.env)[0]
+        test_record.message_subscribe(test_record.customer_id.ids)
+
+        # defaults is a note, take into account specified recipients
+        with self.mock_mail_gateway():
+            new_message = test_record.message_post_with_view(
+                'test_mail.mail_template_simple_test',
+                values={'partner': self.user_employee.partner_id},
+                partner_ids=test_record.customer_id.ids,
             )
 
         # check notifications have been sent
@@ -1260,7 +1331,7 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
             test_records.message_post_with_template(
                 test_template.id,
                 composition_mode='mass_mail',
-                # email_layout_xmlid='mail.test_layout',  Not supported
+                email_layout_xmlid='mail.test_layout',
                 message_type='comment',
                 subtype_id=self.env.ref('mail.mt_comment').id,
             )

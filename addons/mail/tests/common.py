@@ -1180,13 +1180,10 @@ class MailCommon(common.TransactionCase, MailCase):
             }
         })
 
-    def _generate_attachments_data(self, count, res_model=None, res_id=None, attach_values=None):
+    @classmethod
+    def _generate_attachments_data(cls, count, res_model=None, res_id=None, attach_values=None):
         # attachment visibility depends on what they are attached to
         attach_values = attach_values or {}
-        if res_model is None:
-            res_model = self.template._name
-        if res_id is None:
-            res_id = self.template.id
         return [{
             'datas': base64.b64encode(b'AttContent_%02d' % x),
             'name': 'AttFileName_%02d.txt' % x,
