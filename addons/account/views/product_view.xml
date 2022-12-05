@@ -54,6 +54,9 @@
                 <xpath expr="//page[@name='purchase']" position="attributes">
                     <attribute name="invisible">0</attribute>
                 </xpath>
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="fiscal_country_codes" invisible="1"/>
+                </xpath>
                 <page name="inventory" position="after">
                     <page string="Accounting" name="invoicing" groups="account.group_account_readonly,account.group_account_invoice">
                         <group name="properties" groups="account.group_account_readonly">

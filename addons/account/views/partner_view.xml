@@ -43,6 +43,7 @@
                             <field name="company_id" invisible="1"/>
                             <field name="states_count" invisible="1"/>
                             <field name="company_country_id" invisible="1"/>
+                            <field name="fiscal_country_codes" invisible="1"/>
                             <field name="foreign_vat_header_mode" invisible="1"/>
                             <field name="name"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
@@ -192,6 +193,9 @@
             <field name="priority">2</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="fiscal_country_codes" invisible="1"/>
+                </xpath>
                 <xpath expr="//sheet" position="before">
                     <div groups="account.group_account_invoice,account.group_account_readonly" class="alert alert-warning" role="alert" style="margin-bottom:0px;"
                          attrs="{'invisible': [('duplicated_bank_account_partners_count', '=', 0)]}">
@@ -264,6 +268,7 @@
             <field name="inherit_id" ref="base.view_res_partner_filter"/>
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='inactive']" position="before">
+                   <field name="fiscal_country_codes" invisible="1"/>
                    <filter string="Customer Invoices" name="customer" domain="[('customer_rank','>', 0)]"/>
                    <filter string="Vendor Bills" name="supplier" domain="[('supplier_rank','>', 0)]"/>
                    <separator/>

@@ -7,6 +7,9 @@
             <field name="model">res.currency</field>
             <field name="inherit_id" ref="base.view_currency_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='is_current_company_currency']" position="after">
+                    <field name="fiscal_country_codes" invisible="1"/>
+                </xpath>
                 <xpath expr="//sheet" position="before">
                     <field name="display_rounding_warning" invisible="1"/>
                     <div class="alert alert-warning" role="alert" attrs="{'invisible': [('display_rounding_warning', '=', False)]}">

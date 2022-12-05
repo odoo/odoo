@@ -6,7 +6,7 @@
 			<field name="model">res.partner</field>
 			<field name="arch" type="xml">
 				<field name="vat" position="after">
-					<field name="nrc" placeholder="e.g. J12/1234/2012" class="oe_inline"/>
+					<field name="nrc" placeholder="e.g. J12/1234/2012" class="oe_inline" attrs="{'invisible': [('fiscal_country_codes', 'not ilike', 'RO')]}"/>
                 </field>
 			</field>
 		</record>

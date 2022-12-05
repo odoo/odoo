@@ -34,6 +34,7 @@
                 <form string="Payment Terms">
                     <sheet>
                         <field name="active" invisible="1"/>
+                        <field name="fiscal_country_codes" invisible="1"/>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_title">
                             <label for="name" string="Payment Terms Name"/>
