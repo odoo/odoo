@@ -30,6 +30,18 @@
                                         <field name="balance" readonly="1"/>
                                         <field name="quantity" readonly="1"/>
                                     </group>
+<<<<<<< HEAD
+||||||| parent of 49063179748 (temp)
+                                    <group string="Accounting Documents">
+                                        <field name="move_id" readonly="1"/>
+                                        <field name="statement_line_id" readonly="True" attrs="{'invisible': [('statement_line_id','=',False)]}"/>
+                                    </group>
+=======
+                                    <group string="Accounting Documents" colspan="2">
+                                        <field name="move_id" readonly="1"/>
+                                        <field name="statement_line_id" readonly="True" attrs="{'invisible': [('statement_line_id','=',False)]}"/>
+                                    </group>
+>>>>>>> 49063179748 (temp)
                                     <group string="Dates">
                                         <field name="date" groups="account.group_account_readonly"/>
                                         <field name="date_maturity"/>
