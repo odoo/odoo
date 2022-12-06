@@ -4,7 +4,7 @@
 from datetime import timedelta
 from itertools import groupby
 import operator as py_operator
-from odoo import api, fields, models
+from odoo import fields, models, _
 from odoo.tools import groupby
 from odoo.tools.float_utils import float_round, float_is_zero
 
@@ -91,6 +91,23 @@ class ProductTemplate(models.Model):
         templates = self.filtered(lambda t: t.bom_count > 0)
         if templates:
             return templates.mapped('product_variant_id').action_compute_bom_days()
+
+    def action_archive(self):
+        filtered_products = self.env['mrp.bom.line'].search([('product_id', 'in', self.product_variant_ids.ids)]).product_id.mapped('display_name')
+        res = super().action_archive()
+        if filtered_products:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                'title': _("Note that product(s): '%s' is/are still linked to active Bill of Materials, "
+                            "which means that the product can still be used on it/them.", filtered_products),
+                'type': 'warning',
+                'sticky': True,  #True/False will display for few seconds if false
+                'next': {'type': 'ir.actions.act_window_close'},
+                },
+            }
+        return res
 
 class ProductProduct(models.Model):
     _inherit = "product.product"
@@ -333,3 +350,20 @@ class ProductProduct(models.Model):
             if OPERATORS[operator](product.qty_available, value):
                 product_ids.append(product.id)
         return list(set(product_ids))
+
+    def action_archive(self):
+        filtered_products = self.env['mrp.bom.line'].search([('product_id', 'in', self.ids)]).product_id.mapped('display_name')
+        res = super().action_archive()
+        if filtered_products:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                'title': _("Note that product(s): '%s' is/are still linked to active Bill of Materials, "
+                            "which means that the product can still be used on it/them.", filtered_products),
+                'type': 'warning',
+                'sticky': True,  #True/False will display for few seconds if false
+                'next': {'type': 'ir.actions.act_window_close'},
+                },
+            }
+        return res
