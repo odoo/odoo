@@ -343,6 +343,17 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                 return false;
             }
 
+            //If this order is a refund, check if there is a cash payment
+            if (this.currentOrder.get_due() < 0) {
+                if (!this.payment_methods_from_config.some(payment_method => payment_method.is_cash_count)) {
+                    this.showPopup('ErrorPopup', {
+                        title: this.env._t('Cannot return change without a cash payment method'),
+                        body: this.env._t('There is no cash payment method available in this point of sale to handle the change.\n\n Please add a cash payment method in the point of sale configuration.')
+                    });
+                    return false;
+                }
+            }
+
             // The exact amount must be paid if there is no cash payment method defined.
             if (
                 Math.abs(

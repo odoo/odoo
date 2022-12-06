@@ -188,6 +188,18 @@ odoo.define('point_of_sale.tour.PaymentScreenTourMethods', function (require) {
                 },
             ];
         }
+        /**
+         * Check if en error popup is shown
+         */
+        errorPopupIsShown() {
+            return [
+                {
+                    content: 'error popup is shown',
+                    trigger: '.popup.popup-error',
+                    run: () => {},
+                },
+            ];
+        }
     }
 
     class Execute {
