@@ -31,7 +31,13 @@ patch(AttendeeCalendarController.prototype, "google_calendar_google_calendar_con
                     });
                 }
             } else if (syncResult.status === "need_auth") {
-                this.configureCalendarProviderSync("google");
+                this.dialog.add(ConfirmationDialog, {
+                    title: this.env._t("Redirection"),
+                    body: this.env._t("You will be redirected to Google to authorize access to your calendar, do you want to do it now?"),
+                    confirm: () => {
+                        window.location.assign(syncResult.url);
+                    }
+                });
             } else {
                 this.dialog.add(AlertDialog, {
                     title: this.env._t("Configuration"),
