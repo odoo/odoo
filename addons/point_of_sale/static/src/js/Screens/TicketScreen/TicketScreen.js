@@ -1,10 +1,11 @@
+
 odoo.define('point_of_sale.TicketScreen', function (require) {
     'use strict';
-
+    
+    const { usePos } = require('@point_of_sale/pos_ui/core/pos_service');
     const { Order } = require('point_of_sale.models');
     const Registries = require('point_of_sale.Registries');
     const IndependentToOrderScreen = require('point_of_sale.IndependentToOrderScreen');
-    const NumberBuffer = require('point_of_sale.NumberBuffer');
     const { useListener } = require("@web/core/utils/hooks");
     const { parse } = require('web.field_utils');
 
@@ -26,7 +27,8 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
             useListener('click-refund-order-uid', this._onClickRefundOrderUid);
             useListener('update-selected-orderline', this._onUpdateSelectedOrderline);
             useListener('do-refund', this._onDoRefund);
-            NumberBuffer.use({
+            this.pos = usePos();
+            this.pos.numberBuffer.use({
                 nonKeyboardInputEvent: 'numpad-click-input',
                 triggerAtInput: 'update-selected-orderline',
             });
@@ -90,7 +92,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                         this._state.ui.selectedOrderlineIds[clickedOrder.backendId] = firstLine.id;
                     }
                 }
-                NumberBuffer.reset();
+                this.pos.numberBuffer.reset();
             } else {
                 this._setOrder(clickedOrder);
             }
@@ -142,7 +144,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
         _onClickOrderline({ detail: orderline }) {
             const order = this.getSelectedSyncedOrder();
             this._state.ui.selectedOrderlineIds[order.backendId] = orderline.id;
-            NumberBuffer.reset();
+            this.pos.numberBuffer.reset();
         }
         _onClickRefundOrderUid({ detail: orderUid }) {
             // Open the refund order.
@@ -154,25 +156,25 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
         _onUpdateSelectedOrderline({ detail }) {
             const buffer = detail.buffer;
             const order = this.getSelectedSyncedOrder();
-            if (!order) return NumberBuffer.reset();
+            if (!order) return this.pos.numberBuffer.reset();
 
             const selectedOrderlineId = this.getSelectedOrderlineId();
             const orderline = order.orderlines.find((line) => line.id == selectedOrderlineId);
-            if (!orderline) return NumberBuffer.reset();
+            if (!orderline) return this.pos.numberBuffer.reset();
 
             const toRefundDetail = this._getToRefundDetail(orderline);
             // When already linked to an order, do not modify the to refund quantity.
-            if (toRefundDetail.destinationOrderUid) return NumberBuffer.reset();
+            if (toRefundDetail.destinationOrderUid) return this.pos.numberBuffer.reset();
 
             const refundableQty = toRefundDetail.orderline.qty - toRefundDetail.orderline.refundedQty;
-            if (refundableQty <= 0) return NumberBuffer.reset();
+            if (refundableQty <= 0) return this.pos.numberBuffer.reset();
 
             if (buffer == null || buffer == '') {
                 toRefundDetail.qty = 0;
             } else {
                 const quantity = Math.abs(parse.float(buffer));
                 if (quantity > refundableQty) {
-                    NumberBuffer.reset();
+                    this.pos.numberBuffer.reset();
                     this.showPopup('ErrorPopup', {
                         title: this.env._t('Maximum Exceeded'),
                         body: _.str.sprintf(

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="DebugWidget" owl="1">
+    <t t-name="point_of_sale.DebugWidget" owl="1">
         <Draggable limitArea="'.pos'">
             <div class="debug-widget" t-att-class="props.className">
                 <header class="drag-handle">
                     <h1>Debug Window</h1>
                 </header>
-                <div class="toggle" t-on-click="() => this.trigger('toggle-debug-widget')" title="Dismiss"
+                <div class="toggle" t-on-click="() => this.pos.toggleDebugWidget()" title="Dismiss"
                      role="img" aria-label="Dismiss"><i class="fa fa-times" /></div>
                 <div class="content">
                     <p class="category">Electronic Scale</p>

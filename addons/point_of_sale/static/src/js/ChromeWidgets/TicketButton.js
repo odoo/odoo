@@ -1,28 +1,22 @@
-odoo.define('point_of_sale.TicketButton', function (require) {
-    'use strict';
+/** @odoo-module */
 
-    const PosComponent = require('point_of_sale.PosComponent');
-    const Registries = require('point_of_sale.Registries');
+const PosComponent = require("point_of_sale.PosComponent");
 
-    class TicketButton extends PosComponent {
-        onClick() {
-            if (this.props.isTicketScreenShown) {
-                this.env.posbus.trigger('ticket-button-clicked');
-            } else {
-                this.showScreen('TicketScreen');
-            }
-        }
-        get count() {
-            if (this.env.pos) {
-                return this.env.pos.get_order_list().length;
-            } else {
-                return 0;
-            }
+// FIXME remove this component
+export class TicketButton extends PosComponent {
+    onClick() {
+        if (this.props.isTicketScreenShown) {
+            this.env.posbus.trigger("ticket-button-clicked");
+        } else {
+            this.showScreen("TicketScreen");
         }
     }
-    TicketButton.template = 'TicketButton';
-
-    Registries.Component.add(TicketButton);
-
-    return TicketButton;
-});
+    get count() {
+        if (this.env.pos) {
+            return this.env.pos.get_order_list().length;
+        } else {
+            return 0;
+        }
+    }
+}
+TicketButton.template = "point_of_sale.TicketButton";

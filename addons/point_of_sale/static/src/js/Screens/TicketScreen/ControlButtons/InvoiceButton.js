@@ -2,7 +2,7 @@ odoo.define('point_of_sale.InvoiceButton', function (require) {
     'use strict';
 
     const { useListener } = require("@web/core/utils/hooks");
-    const { isConnectionError } = require('point_of_sale.utils');
+    const { isConnectionError } = require('@point_of_sale/js/utils');
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
 

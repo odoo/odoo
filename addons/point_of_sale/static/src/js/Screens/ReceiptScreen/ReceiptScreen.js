@@ -3,7 +3,6 @@ odoo.define('point_of_sale.ReceiptScreen', function (require) {
 
     const { Printer } = require('point_of_sale.Printer');
     const { is_email } = require('web.utils');
-    const { useErrorHandlers } = require('point_of_sale.custom_hooks');
     const Registries = require('point_of_sale.Registries');
     const AbstractReceiptScreen = require('point_of_sale.AbstractReceiptScreen');
 
@@ -13,7 +12,6 @@ odoo.define('point_of_sale.ReceiptScreen', function (require) {
         class ReceiptScreen extends AbstractReceiptScreen {
             setup() {
                 super.setup();
-                useErrorHandlers();
                 this.orderReceipt = useRef('order-receipt');
                 const order = this.currentOrder;
                 const partner = order.get_partner();

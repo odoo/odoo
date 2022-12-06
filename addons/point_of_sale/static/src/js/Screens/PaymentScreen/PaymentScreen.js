@@ -1,13 +1,14 @@
+
 odoo.define('point_of_sale.PaymentScreen', function (require) {
     'use strict';
-
+    
+    const { usePos } = require('@point_of_sale/pos_ui/core/pos_service');
     const { parse } = require('web.field_utils');
     const PosComponent = require('point_of_sale.PosComponent');
     const { useErrorHandlers } = require('point_of_sale.custom_hooks');
-    const NumberBuffer = require('point_of_sale.NumberBuffer');
     const { useListener } = require("@web/core/utils/hooks");
     const Registries = require('point_of_sale.Registries');
-    const { isConnectionError } = require('point_of_sale.utils');
+    const { isConnectionError } = require('@point_of_sale/js/utils');
     const utils = require('web.utils');
 
     class PaymentScreen extends PosComponent {
@@ -22,8 +23,9 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             useListener('send-payment-reverse', this._sendPaymentReverse);
             useListener('send-force-done', this._sendForceDone);
             useListener('validate-order', () => this.validateOrder(false));
-            NumberBuffer.use(this._getNumberBufferConfig);
-            useErrorHandlers();
+            this.pos = usePos();
+            this.pos.numberBuffer.use(this._getNumberBufferConfig);
+            this._handlePushOrderError = useErrorHandlers();
             this.payment_interface = null;
             this.error = false;
             this.payment_methods_from_config = this.env.pos.payment_methods.filter(method => this.env.pos.config.payment_method_ids.includes(method.id));
@@ -64,7 +66,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             // original function: click_paymentmethods
             let result = this.currentOrder.add_paymentline(paymentMethod);
             if (result){
-                NumberBuffer.reset();
+                this.pos.numberBuffer.reset();
                 return true;
             }
             else{
@@ -88,10 +90,10 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             ) {
                 return;
             }
-            if (NumberBuffer.get() === null) {
+            if (this.pos.numberBuffer.get() === null) {
                 this.deletePaymentLine({ detail: { cid: this.selectedPaymentLine.cid } });
             } else {
-                this.selectedPaymentLine.set_amount(NumberBuffer.getFloat());
+                this.selectedPaymentLine.set_amount(this.pos.numberBuffer.getFloat());
             }
         }
         toggleIsToInvoice() {
@@ -135,13 +137,13 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                 line.set_payment_status('waitingCancel');
                 line.payment_method.payment_terminal.send_payment_cancel(this.currentOrder, cid).then(function() {
                     self.currentOrder.remove_paymentline(line);
-                    NumberBuffer.reset();
+                    this.pos.numberBuffer.reset();
                     self.render(true);
                 })
             }
             else if (line.get_payment_status() !== 'waitingCancel') {
                 this.currentOrder.remove_paymentline(line);
-                NumberBuffer.reset();
+                this.pos.numberBuffer.reset();
                 this.render(true);
             }
         }
@@ -149,7 +151,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             const { cid } = event.detail;
             const line = this.paymentLines.find((line) => line.cid === cid);
             this.currentOrder.select_paymentline(line);
-            NumberBuffer.reset();
+            this.pos.numberBuffer.reset();
             this.render(true);
         }
         async validateOrder(isForceValidate) {

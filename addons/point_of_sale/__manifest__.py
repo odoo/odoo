@@ -123,6 +123,7 @@
             'point_of_sale/static/lib/**/*.js',
             'web_editor/static/lib/html2canvas.js',
             'point_of_sale/static/src/js/**/*.js',
+            'point_of_sale/static/src/pos_ui/**/*',
             'web/static/lib/zxing-library/zxing-library.js',
             'point_of_sale/static/src/xml/**/*.xml',
         ],

@@ -116,7 +116,16 @@ td {
     list-style-type: none;
 }
 
+body {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    margin: 0;
+    min-height: 100vh;
+}
+
 .pos {
+    flex: 1 1 0;
     background: $gray-900;
     --btn-height-size: 54px;
     direction: ltr;
@@ -126,23 +135,9 @@ td {
     font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
     color: $gray-700;
     font-size: 12px;
-    /* Some elements inside .pos are allowed to be moved/resized. When
-     * this 'move/resize' event is performed in touch devices, .pos
-     * element also tries to scroll (as the default action of touchstart+
-     * touchmove events).
-     * Position is fixed to prevent the movement of .pos element during
-     * the described touch events.
-     */
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
+    user-select: none;
+    -moz-user-select: none;
     -webkit-user-select: none;
-       -moz-user-select: none;
-            user-select: none;
-    text-shadow: none;
-    overflow: hidden;
 }
 
 /*  ********* The black loading screen ********* */
@@ -319,10 +314,7 @@ td {
 /*  ********* The black header bar ********* */
 
 
-.pos .pos-topheader {
-    position:absolute;
-    left:0;
-    top:0;
+.pos-topheader {
     width: 100%;
     height: 48px;
     margin:0;
@@ -334,7 +326,7 @@ td {
 
 /*  a) The left part of the top-bar */
 
-.pos .pos-branding{
+.pos-branding{
     max-width: 503px;
     flex-grow: 1;
     height:100%;
@@ -346,13 +338,13 @@ td {
     display: flex;
     justify-content: flex-start;
 }
-.pos .pos-logo {
+.pos-logo {
     height: 50%;
     margin-left: 10px;
     margin-right: auto;
     align-self: center;
 }
-.pos .pos-branding .username{
+.pos-branding .username{
     float:right;
     color:#DDD;
     font-size:16px;
@@ -362,24 +354,24 @@ td {
     cursor: pointer;
 }
 
-.pos .ticket-button {
+.ticket-button {
     display: flex;
 }
 
 /*  b) The right part of the top-bar */
 
-.pos .pos-rightheader {
+.pos-rightheader {
     flex-grow: 1;
     height:100%;
     display: flex;
     overflow : hidden;
     overflow-x: auto;
 }
-.pos .pos-rightheader > * {
+.pos-rightheader > * {
     border-right: 1px solid $o-brand-odoo;
 }
 
-.pos .status-buttons {
+.status-buttons {
     flex: 1;
     display: flex;
     justify-content: flex-end;
@@ -387,26 +379,26 @@ td {
     color: white;
 }
 
-.pos .status-buttons > div {
+.status-buttons > div {
     display: flex;
     align-items: center;
     padding: 0 10px; /*$dropdown-item-padding-x * .5*/
 }
 
-.pos .status-buttons i.fa {
+.status-buttons i.fa {
     font-size: large;
 }
 
-.pos .status-buttons .avatar, .pos .status-buttons i.fa-sign-out {
+.status-buttons .avatar, .status-buttons i.fa-sign-out {
     vertical-align: middle;
 }
 
-.pos .status-buttons .avatar {
+.status-buttons .avatar {
     width: 25px;
     border-radius: 50%;
 }
 
-.pos .order-button{
+.order-button{
     color: #f0f0f0;
     display: inline-block;
     box-sizing: border-box;
@@ -428,7 +420,7 @@ td {
     min-width: 45px;
 }
 
-.pos .order-button.selected{
+.order-button.selected{
     font-weight: 900;
     background: #EEEEEE;
     color: rgb(75,75,75);
@@ -439,12 +431,12 @@ td {
     flex-shrink: 0;
 }
 
-.pos .order-button .order-sequence{
+.order-button .order-sequence{
     font-size: 16px;
     font-weight: 800;
     vertical-align: middle;
 }
-.pos .order-button.selected .order-sequence{
+.order-button.selected .order-sequence{
     color: white;
     background: black;
     display: inline-block;
@@ -455,24 +447,24 @@ td {
     margin-left: -4px;
 }
 
-.pos .order-button.square{
+.order-button.square{
     margin-left:1px;
     background: #5c5c5c;
     color: rgb(160,160,160);
     font-size: 18px;
     line-height: 45px;
 }
-.pos .order-button:not(.square) > .fa {
+.order-button:not(.square) > .fa {
     font-size: 16px;
     vertical-align: middle;
     margin-right: 4px;
 }
-.pos .order-button .order-sequence{
+.order-button .order-sequence{
     font-size: 16px;
     font-weight: 800;
 }
 
-.pos .order-selector {
+.order-selector {
     display: -webkit-flex;
     display: flex;
     -webkit-flex: 1;
@@ -481,7 +473,7 @@ td {
 
 /*  c) The session buttons */
 
-.pos .pos-rightheader .header-button {
+.pos-rightheader .header-button {
     cursor: pointer;
 
     -webkit-transition-property: background;
@@ -1222,10 +1214,8 @@ td {
 /*  ********* The Screens  ********* */
 
 .pos .screen {
-    position:absolute;
-    top:0px;
-    bottom:0px;
-    width:100%;
+    width: 100%;
+    height: 100%;
     background: $gray-100;
     overflow: auto;
     -webkit-overflow-scrolling: touch;

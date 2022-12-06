@@ -5,10 +5,10 @@ odoo.define('point_of_sale.Chrome', function(require) {
     const { useListener } = require("@web/core/utils/hooks");
     const BarcodeParser = require('barcodes.BarcodeParser');
     const PosComponent = require('point_of_sale.PosComponent');
-    const NumberBuffer = require('point_of_sale.NumberBuffer');
+    // const NumberBuffer = require('@point_of_sale');
     const Registries = require('point_of_sale.Registries');
     const IndependentToOrderScreen = require('point_of_sale.IndependentToOrderScreen');
-    const { identifyError, batched } = require('point_of_sale.utils');
+    const { identifyError, batched } = require('@point_of_sale/js/utils');
     const { odooExceptionTitleMap } = require("@web/core/errors/error_dialogs");
     const { ConnectionLostError, ConnectionAbortedError, RPCError } = require('@web/core/network/rpc_service');
     const { useBus } = require("@web/core/utils/hooks");

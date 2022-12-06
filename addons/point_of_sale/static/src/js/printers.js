@@ -96,6 +96,7 @@ var PrinterMixin = {
      * @param {String} receipt: The receipt to be printed, in HTML
      */
     htmlToImg: function (receipt) {
+        // FIXME: pos-receipt-print is removed.
         $('.pos-receipt-print').html(receipt);
         this.receipt = $('.pos-receipt-print>.pos-receipt');
         // Odoo RTL support automatically flip left into right but html2canvas

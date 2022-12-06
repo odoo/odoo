@@ -39,7 +39,6 @@ odoo.define('point_of_sale.Gui', function (require) {
             'showScreen',
             'showPopup',
             'showTempScreen',
-            'playSound',
             'setSyncStatus',
             'showNotification',
         ]);

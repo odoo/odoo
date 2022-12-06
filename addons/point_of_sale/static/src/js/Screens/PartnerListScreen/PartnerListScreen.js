@@ -3,7 +3,7 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
 
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
-    const { isConnectionError } = require('point_of_sale.utils');
+    const { isConnectionError } = require('@point_of_sale/js/utils');
 
     const { debounce } = require("@web/core/utils/timing");
     const { useListener } = require("@web/core/utils/hooks");

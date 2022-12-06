@@ -6,7 +6,7 @@ odoo.define('point_of_sale.ProductInfoButton', function(require) {
     const { useListener } = require("@web/core/utils/hooks");
     const Registries = require('point_of_sale.Registries');
     const { ConnectionLostError, ConnectionAbortedError } = require('@web/core/network/rpc_service')
-    const { identifyError } = require('point_of_sale.utils');
+    const { identifyError } = require('@point_of_sale/js/utils');
 
     class ProductInfoButton extends PosComponent {
         setup() {

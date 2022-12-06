@@ -1,7 +1,7 @@
 odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
     'use strict';
 
-    const { identifyError } = require('point_of_sale.utils');
+    const { identifyError } = require('@point_of_sale/js/utils');
     const { ConnectionLostError, ConnectionAbortedError } = require('@web/core/network/rpc_service');
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');

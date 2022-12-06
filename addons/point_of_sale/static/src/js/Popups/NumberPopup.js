@@ -1,12 +1,13 @@
+
 odoo.define('point_of_sale.NumberPopup', function(require) {
     'use strict';
     var core = require('web.core');
     var _t = core._t;
-
+    
     const AbstractAwaitablePopup = require('point_of_sale.AbstractAwaitablePopup');
-    const NumberBuffer = require('point_of_sale.NumberBuffer');
     const { useListener } = require("@web/core/utils/hooks");
     const Registries = require('point_of_sale.Registries');
+    const { usePos } = require('@point_of_sale/pos_ui/core/pos_service');
 
     const { useState } = owl;
 
@@ -31,7 +32,8 @@ odoo.define('point_of_sale.NumberPopup', function(require) {
                 startingBuffer = this.props.startingValue.toString().replace('.', this.decimalSeparator);
             }
             this.state = useState({ buffer: startingBuffer, toStartOver: this.props.isInputSelected });
-            NumberBuffer.use({
+            this.pos = usePos();
+            this.pos.numberBuffer.use({
                 nonKeyboardInputEvent: 'numpad-click-input',
                 triggerAtEnter: 'accept-input',
                 triggerAtEscape: 'close-this-popup',
@@ -52,7 +54,7 @@ odoo.define('point_of_sale.NumberPopup', function(require) {
             }
         }
         confirm(event) {
-            if (NumberBuffer.get()) {
+            if (this.pos.numberBuffer.get()) {
                 super.confirm();
             }
         }
@@ -60,7 +62,7 @@ odoo.define('point_of_sale.NumberPopup', function(require) {
             this.trigger('numpad-click-input', { key });
         }
         getPayload() {
-            return NumberBuffer.get();
+            return this.pos.numberBuffer.get();
         }
     }
     NumberPopup.template = 'NumberPopup';

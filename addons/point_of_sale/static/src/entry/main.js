@@ -33,4 +33,4 @@ function startPosApp() {
     startWebClient(PosApp);
 }
 
-startPosApp();
+// startPosApp();

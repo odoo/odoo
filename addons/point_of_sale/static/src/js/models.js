@@ -9,7 +9,7 @@ var field_utils = require('web.field_utils');
 var time = require('web.time');
 var utils = require('web.utils');
 var { Gui } = require('point_of_sale.Gui');
-const { batched, uuidv4 } = require("point_of_sale.utils");
+const { batched, uuidv4 } = require("@point_of_sale/js/utils");
 
 var QWeb = core.qweb;
 var _t = core._t;

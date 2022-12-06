@@ -2,13 +2,14 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="ConfirmPopup" owl="1">
+        <div role="dialog" class="modal-dialog">
             <Draggable>
                 <div class="popup popup-confirm">
                     <header class="title drag-handle">
                         <t t-esc="props.title" />
                     </header>
                     <main class="body">
-                        <t t-esc=" props.body" />
+                        <t t-esc="props.body" />
                     </main>
                     <footer class="footer">
                         <div class="button confirm" t-on-click="confirm">
@@ -20,6 +21,7 @@
                     </footer>
                 </div>
             </Draggable>
+        </div>
     </t>
 
 </templates>

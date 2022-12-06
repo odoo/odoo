@@ -10,9 +10,7 @@ odoo.define('point_of_sale.custom_hooks', function (require) {
      * the error when the order failed to sync.
      */
     function useErrorHandlers() {
-        const component = useComponent();
-
-        component._handlePushOrderError = async function (error) {
+        return async function _handlePushOrderError(error) {
             // This error handler receives `error` equivalent to `error.message` of the rpc error.
             if (error.message === 'Backend Invoice') {
                 await this.showPopup('ConfirmPopup', {

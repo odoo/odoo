@@ -10,7 +10,7 @@ import { configureGui } from "point_of_sale.Gui";
 import { registry } from "@web/core/registry";
 import env from "point_of_sale.env";
 import { debounce } from "@web/core/utils/timing";
-import { batched } from "point_of_sale.utils";
+import { batched } from "@point_of_sale/js/utils";
 
 const { Component, reactive, markRaw, useExternalListener, useSubEnv, onWillUnmount, xml } = owl;
 
