@@ -46,8 +46,6 @@ class PosConfig(models.Model):
         return self.env.ref('point_of_sale.group_pos_user')
 
     name = fields.Char(string='Point of Sale', required=True, help="An internal identification of the point of sale.")
-    is_installed_account_accountant = fields.Boolean(string="Is the Full Accounting Installed",
-        compute="_compute_is_installed_account_accountant")
     picking_type_id = fields.Many2one(
         'stock.picking.type',
         string='Operation Type',
@@ -187,11 +185,6 @@ class PosConfig(models.Model):
                 config.company_has_template = True
             else:
                 config.company_has_template = False
-
-    def _compute_is_installed_account_accountant(self):
-        account_accountant = self.env['ir.module.module'].sudo().search([('name', '=', 'account_accountant'), ('state', '=', 'installed')])
-        for pos_config in self:
-            pos_config.is_installed_account_accountant = account_accountant and account_accountant.id
 
     @api.depends('journal_id.currency_id', 'journal_id.company_id.currency_id', 'company_id', 'company_id.currency_id')
     def _compute_currency(self):
