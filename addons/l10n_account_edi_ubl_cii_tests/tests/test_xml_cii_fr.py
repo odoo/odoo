@@ -285,6 +285,9 @@ class TestCIIFR(TestUBLCommon):
             expected_file='from_odoo/facturx_out_invoice_tax_incl.xml'
         )
 
+    def test_encoding_in_attachment_facturx(self):
+        self._test_encoding_in_attachment('facturx_1_0_05', 'factur-x.xml')
+
     ####################################################
     # Test import
     ####################################################

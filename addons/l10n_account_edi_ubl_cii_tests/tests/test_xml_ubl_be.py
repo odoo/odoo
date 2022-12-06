@@ -213,6 +213,9 @@ class TestUBLBE(TestUBLCommon):
         self.assertEqual(attachment.name[-12:], "ubl_bis3.xml")
         self._assert_imported_invoice_from_etree(refund, attachment)
 
+    def test_encoding_in_attachment_ubl(self):
+        self._test_encoding_in_attachment('ubl_bis3', 'INV_2017_00002_ubl_bis3.xml')
+
     ####################################################
     # Test import
     ####################################################
