@@ -3,6 +3,7 @@
 import { useService } from '@web/core/utils/hooks';
 import { getLangDateFormat } from 'web.time';
 import widgetRegistry from 'web.widgetRegistry';
+import fieldUtils from 'web.field_utils';
 
 const { Component, useState, onWillStart, onWillUpdateProps } = owl;
 
@@ -82,8 +83,14 @@ export class LeaveStatsComponent extends Component {
 
         this.state.departmentLeaves = departmentLeaves.map((leave) => {
             return Object.assign({}, leave, {
-                dateFrom: moment(leave.date_from).format(dateFormat),
-                dateTo: moment(leave.date_to).format(dateFormat),
+                dateFrom: fieldUtils.parse.datetime(
+                    leave.date_from,
+                    false,
+                    { isUTC: true }).local().format(dateFormat),
+                dateTo: fieldUtils.parse.datetime(
+                    leave.date_to,
+                    false,
+                    { isUTC: true }).local().format(dateFormat),
                 sameEmployee: leave.employee_id[0] === employee.id,
             });
         });
