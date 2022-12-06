@@ -2517,6 +2517,7 @@ class Form(object):
         self._model.env.clear()  # discard cache and pending recomputations
         if result.get('warning'):
             _logger.getChild('onchange').warning("%(title)s %(message)s" % result.get('warning'))
+            object.__setattr__(self, '_warning', result["warning"])
         values = result.get('value', {})
         # mark onchange output as changed
         self._changed.update(values.keys() & self._view['fields'].keys())
