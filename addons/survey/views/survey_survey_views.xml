@@ -77,7 +77,7 @@
                                     <field name="triggering_question_id" invisible="1"/>
                                     <field name="random_questions_count"
                                         attrs="{'column_invisible': [('parent.questions_selection', '=', 'all')], 'invisible': [('is_page', '=', False)]}"/>
-                                    <button disabled="disabled" icon="fa-code-fork" attrs="{'invisible': [('triggering_question_id', '=', False)]}"
+                                    <button disabled="disabled" icon="fa-code-fork" attrs="{'invisible': ['|',  ('parent.questions_selection', '=', 'random'), ('triggering_question_id', '=', False)]}"
                                         title="This question depends on another question's answer." class="icon_rotates"/>
                                     <control>
                                         <create name="add_question_control" string="Add a question"/>
