@@ -53,6 +53,73 @@ class TestSlidesManagement(slides_common.SlidesCase):
             else:
                 self.assertTrue(slide.is_published, "All slides should be unpublished when a channel is archived, except categories")
 
+    @users('user_manager')
+    def test_channel_partner_next_slide(self):
+        """ Test the mechanic of the 'next_slide' field for memberships.
+         Next slide should be equal to the next slide in order (sequence, id) based on completion. """
+
+        channel = self.env['slide.channel'].create({
+            'name': 'Channel1',
+            'channel_type': 'documentation',
+            'enroll': 'public',
+            'visibility': 'public',
+            'is_published': True,
+        })
+
+        category_1, category_2 = self.env['slide.slide'].create([{
+            'name': 'Category %s' % i,
+            'channel_id': channel.id,
+            'is_category': True,
+            'is_published': True,
+        } for i in [1, 2]])
+
+        # create 2 slides within the first category
+        slide_1, slide_2 = self.env['slide.slide'].create([{
+            'name': 'slide %s' % i,
+            'channel_id': channel.id,
+            'category_id': category_1.id,
+            'slide_category': 'document',
+            'is_published': True,
+        } for i in [1, 2]])
+
+        # create 2 slides within the second category
+        slide_3, slide_4 = self.env['slide.slide'].create([{
+            'name': 'slide %s' % i,
+            'channel_id': channel.id,
+            'category_id': category_2.id,
+            'slide_category': 'document',
+            'is_published': True,
+        } for i in [3, 4]])
+
+        self.assertEqual(channel.slide_content_ids, slide_1 | slide_2 | slide_3 | slide_4)
+        # test the behavior on both employees and portal users
+        users = self.user_emp | self.user_portal
+        channel.sudo()._action_add_members(users.partner_id)
+        memberships = self.env['slide.channel.partner'].sudo().search([('partner_id', 'in', users.partner_id.ids)])
+
+        for membership in memberships:
+            for slide in channel.slide_content_ids:
+                self.assertEqual(
+                    membership.next_slide_id,
+                    slide,
+                    'Expected %(expected_slide)s but got %(actual_slide)s' % {
+                        'expected_slide': slide.name,
+                        'actual_slide': membership.next_slide_id.name,
+                    }
+                )
+
+                self.env['slide.slide.partner'].create({
+                    'slide_id': slide.id,
+                    'channel_id': channel.id,
+                    'partner_id': membership.partner_id.id,
+                    'completed': True
+                })
+
+                membership.invalidate_recordset(fnames=['next_slide_id'])
+
+            # we have gone through all the content, next slide should be False
+            self.assertFalse(membership.next_slide_id)
+
     def test_mail_completed(self):
         """ When the slide.channel is completed, an email is supposed to be sent to people that completed it. """
         channel_2 = self.env['slide.channel'].create({
