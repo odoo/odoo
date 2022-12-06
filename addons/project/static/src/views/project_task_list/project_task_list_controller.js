@@ -9,32 +9,17 @@ export class ProjectTaskListController extends ListController {
         this.taskRecurrence = useService('project_task_recurrence');
     }
 
-    getActionMenuItems() {
-        if (!this.archiveEnabled || this.model.root.isM2MGrouped) {
-            return super.getActionMenuItems();
-        }
+    getStaticActionMenuItems() {
+        const menuItems = super.getStaticActionMenuItems();
         const hasAnyRecurrences = this._anySelectedTasksWithRecurrence();
-        this.archiveEnabled = !hasAnyRecurrences;
-        const actionMenuItems = super.getActionMenuItems();
-        this.archiveEnabled = true;
-        if (actionMenuItems && hasAnyRecurrences) {
-            actionMenuItems.other.splice(
-                this.isExportEnable ? 1 : 0,
-                0,
-                {
-                    description: this.env._t('Archive'),
-                    callback: () => this.taskRecurrence.stopRecurrence(
-                        this.model.root.selection,
-                        () => this.toggleArchiveState(true),
-                    ),
-                },
-                {
-                    description: this.env._t('Unarchive'),
-                    callback: () => this.toggleArchiveState(false),
-                },
-            );
+
+        if (hasAnyRecurrences) {
+            menuItems.archive.callback = () =>
+                this.taskRecurrence.stopRecurrence(this.model.root.selection, () =>
+                    this.toggleArchiveState(true)
+                );
         }
-        return actionMenuItems;
+        return menuItems;
     }
 
     onDeleteSelectedRecords() {
