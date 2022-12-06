@@ -588,8 +588,6 @@ class HolidaysType(models.Model):
         ]
         action['context'] = {
             'default_holiday_status_id': self.ids[0],
-            'search_default_need_approval_approved': 1,
-            'search_default_this_year': 1,
         }
         return action
 

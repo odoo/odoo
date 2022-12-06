@@ -43,10 +43,9 @@
                 <field name="employee_id"/>
                 <field name="holiday_status_id"/>
                 <field name="name"/>
-                <filter domain="[('state','in',('confirm','validate1'))]" string="To Approve" name="approve"/>
-                <filter domain="[('state', '=', 'validate1')]" string="Need Second Approval" name="second_approval"/>
-                <filter string="Approved Time Off" domain="[('state', '=', 'validate')]" name="validated"/>
-                <filter string="To Approve or Need Second Approval or Approved Time Off" domain="[('state', 'in', ('validate', 'validate1', 'confirm'))]" name="need_approval_approved"/>
+                <filter domain="[('state','in',('confirm','validate1'))]" string="First Approval" name="approve"/>
+                <filter domain="[('state', '=', 'validate1')]" string="Second Approval" name="second_approval"/>
+                <filter string="Approved" domain="[('state', '=', 'validate')]" name="validated"/>
                 <separator/>
                 <filter string="My Time Off" name="my_leaves" domain="[('employee_id.user_id', '=', uid)]"/>
                 <filter string="My Team" name="my_team" domain="['|', ('employee_id.leave_manager_id', '=', uid), ('employee_id.user_id', '=', uid)]" help="Time off of people you are manager of"/>
@@ -56,17 +55,14 @@
                 <separator/>
                 <filter string="Active Employee" name="active_employee" domain="[('active_employee','=',True)]"/>
                 <separator/>
-                <filter name="this_year" string="Current Year"
-                    domain="['&amp;', ('date_from', '&gt;=', context_today().strftime('%Y-1-1')),
-                                      ('date_from', '&lt;=', context_today().strftime('%Y-12-31'))]"/>
                 <filter name="filter_date_from" date="date_from"/>
                 <separator/>
-                <filter name="active_time_off" string="Active Time Off"
+                <filter name="active_time_off" string="Active"
                     domain="[('holiday_status_id.active', '=', True)]" help="Active Time Off"/>
-                <filter name="archive" string="Archived Time Off"
+                <filter name="archive" string="Archived"
                     domain="[('holiday_status_id.active', '=', False)]" help="Archived Time Off"/>
                 <separator/>
-                <filter name="archived_leaves" string="Cancelled Time Off" domain="[('active', '=', False)]" />
+                <filter name="archived_leaves" string="Cancelled" domain="[('active', '=', False)]" />
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today"/>
