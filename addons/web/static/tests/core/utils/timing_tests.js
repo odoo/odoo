@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { debounce, throttleForAnimation } from "@web/core/utils/timing";
+import { debounce, throttle, throttleForAnimation } from "@web/core/utils/timing";
 import {
     makeDeferred,
     patchWithCleanup,
@@ -151,5 +151,48 @@ QUnit.module("utils", () => {
         throttledFn.cancel();
         execAnimationFrameCallbacks();
         assert.verifySteps([], "queued throttled function calls were cancelled correctly");
+    });
+
+    QUnit.test("throttle", async (assert) => {
+        const { execRegisteredTimeouts, advanceTime } = mockTimeout();
+        const throttledFn = throttle((val) => assert.step(`${val}`), 3000);
+
+        // A single call to the throttled function should execute immediately
+        throttledFn(1);
+        assert.verifySteps(["1"], "has been called on the leading edge");
+        execRegisteredTimeouts();
+        assert.verifySteps([], "has not been called on the trailing edge");
+
+        // Successive calls
+        throttledFn(1);
+        throttledFn(2);
+        throttledFn(3);
+        assert.verifySteps(["1"], "has been called on the leading edge");
+        execRegisteredTimeouts();
+        assert.verifySteps(["3"], "last call is executed on the trailing edge");
+
+        // Successive calls: more precise timing case
+        throttledFn(1);
+        assert.verifySteps(["1"], "has been called on the leading edge");
+        await advanceTime(2000);
+        throttledFn(2);
+        await advanceTime(999);
+        throttledFn(3);
+        assert.verifySteps([], "has not been called");
+        await advanceTime(1);
+        assert.verifySteps(["3"], "last call is executed on the trailing edge");
+        throttledFn(4);
+        assert.verifySteps([], "has not been called");
+        await advanceTime(3000);
+        assert.verifySteps(["4"], "last call is executed on the trailing edge");
+        execRegisteredTimeouts();
+
+        // Can be cancelled
+        throttledFn(1);
+        throttledFn(2);
+        assert.verifySteps(["1"], "has been called on the leading edge");
+        throttledFn.cancel();
+        execRegisteredTimeouts();
+        assert.verifySteps([], "has been cancelled");
     });
 });

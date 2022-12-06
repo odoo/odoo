@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { useService } from '@web/core/utils/hooks';
-import { throttle } from '@web/core/utils/timing';
+import { debounce } from '@web/core/utils/timing';
 import { qweb } from 'web.core';
 
 import { Component, useState, useRef, onMounted, onWillStart } from "@odoo/owl";
@@ -98,7 +98,7 @@ export class VideoSelector extends Component {
             }));
         });
 
-        this.onChangeUrl = throttle((ev) => this.updateVideo(ev.target.value), 500);
+        this.onChangeUrl = debounce((ev) => this.updateVideo(ev.target.value), 500);
     }
 
     get shownOptions() {
