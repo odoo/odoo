@@ -37,7 +37,7 @@ class AccountJournal(models.Model):
     _name = "account.journal"
     _description = "Journal"
     _order = 'sequence, type, code'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     _check_company_auto = True
     _rec_names_search = ['name', 'code']
 
@@ -708,6 +708,11 @@ class AccountJournal(models.Model):
         """
         # We simply call the setup bar function.
         return self.env['res.company'].setting_init_bank_account_action()
+
+    def action_new_transaction(self):
+        action = self.env['ir.actions.act_window']._for_xml_id('account.action_bank_statement_tree')
+        action['context'] = {'default_journal_id': self.id}
+        return action
 
     def _create_document_from_attachment(self, attachment_ids):
         """ Create the invoices from files."""
