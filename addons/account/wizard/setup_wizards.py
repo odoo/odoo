@@ -133,12 +133,13 @@ class SetupBarBankConfigWizard(models.TransientModel):
             if not selected_journal:
                 new_journal_code = self.env['account.journal'].get_next_bank_cash_default_code('bank', self.env.company)
                 company = self.env.company
-                selected_journal = self.env['account.journal'].create({
+                record.linked_journal_id = self.env['account.journal'].create({
                     'name': record.new_journal_name,
                     'code': new_journal_code,
                     'type': 'bank',
                     'company_id': company.id,
                     'bank_account_id': record.res_partner_bank_id.id,
+                    'bank_statements_source': 'file_import',
                 })
             else:
                 selected_journal.bank_account_id = record.res_partner_bank_id.id
