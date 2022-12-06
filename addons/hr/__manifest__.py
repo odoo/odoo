@@ -9,9 +9,6 @@
     'summary': 'Centralize employee information',
     'website': 'https://www.odoo.com/app/employees',
     'images': [
-        'images/hr_department.jpeg',
-        'images/hr_employee.jpeg',
-        'images/hr_job_position.jpeg',
         'static/src/img/default_image.png',
     ],
     'depends': [

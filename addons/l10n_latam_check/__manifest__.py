@@ -42,8 +42,6 @@ There are 2 main Payment Methods additions:
 """,
     'author': 'ADHOC SA',
     'license': 'LGPL-3',
-    'images': [
-    ],
     'depends': [
         'account_check_printing',
         'base_vat',
