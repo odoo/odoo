@@ -368,14 +368,10 @@ class MailComposer(models.TransientModel):
         mails_sudo = self.env['mail.mail'].sudo()
 
         batch_size = int(self.env['ir.config_parameter'].sudo().get_param('mail.batch_size')) or self._batch_size
-        sliced_res_ids = [res_ids[i:i + batch_size] for i in range(0, len(res_ids), batch_size)]
-
-        for res_ids_iter in sliced_res_ids:
-            mail_values_all = self._prepare_mail_values(res_ids_iter)
-
-            iter_mails_sudo = self.env['mail.mail'].sudo()
-            for _res_id, mail_values in mail_values_all.items():
-                iter_mails_sudo += mails_sudo.create(mail_values)
+        for res_ids_iter in (res_ids[i:i + batch_size] for i in range(0, len(res_ids), batch_size)):
+            iter_mails_sudo = mails_sudo.create(
+                self._prepare_mail_values(res_ids_iter).values()
+            )
             mails_sudo += iter_mails_sudo
 
             records = self.env[self.model].browse(res_ids_iter) if self.model and hasattr(self.env[self.model], 'message_post') else False
