@@ -410,7 +410,7 @@ class SaleOrder(models.Model):
             return groups
 
         self.ensure_one()
-        customer_portal_group = next(group for group in groups if group[0] == 'portal_customer')
+        customer_portal_group = next((group for group in groups if group[0] == 'portal_customer'), None)
         if customer_portal_group:
             access_opt = customer_portal_group[2].setdefault('button_access', {})
             if self._context.get('website_sale_send_recovery_email'):
