@@ -42,6 +42,10 @@ export function isIosApp() {
     return /OdooMobile \(iOS\)/i.test(browser.navigator.userAgent);
 }
 
+export function isAndroidApp() {
+    return /OdooMobile.+Android/i.test(browser.navigator.userAgent);
+}
+
 export function hasTouch() {
     return browser.ontouchstart !== undefined;
 }
