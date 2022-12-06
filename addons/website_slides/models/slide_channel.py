@@ -34,6 +34,7 @@ class ChannelUsersRelation(models.Model):
     channel_visibility = fields.Selection(related='channel_id.visibility')
     channel_enroll = fields.Selection(related='channel_id.enroll')
     channel_website_id = fields.Many2one('website', string='Website', related='channel_id.website_id')
+    next_slide_id = fields.Many2one('slide.slide', string='Next Lesson', compute='_compute_next_slide_id')
 
     _sql_constraints = [
         ('channel_partner_uniq',
@@ -45,6 +46,39 @@ class ChannelUsersRelation(models.Model):
          'The completion of a channel is a percentage and should be between 0% and 100.'
         )
     ]
+
+    def _compute_next_slide_id(self):
+        self.env['slide.channel.partner'].flush_model()
+        self.env['slide.slide'].flush_model()
+        self.env['slide.slide.partner'].flush_model()
+        query = """
+            SELECT DISTINCT ON (SCP.id)
+                SCP.id AS id,
+                SS.id AS slide_id
+            FROM slide_channel_partner SCP
+            JOIN slide_slide SS
+                ON SS.channel_id = SCP.channel_id
+                AND SS.is_published = TRUE
+                AND SS.active = TRUE
+                AND SS.is_category = FALSE
+                AND NOT EXISTS (
+                    SELECT 1
+                      FROM slide_slide_partner
+                     WHERE slide_id = SS.id
+                       AND partner_id = SCP.partner_id
+                       AND completed = TRUE
+                )
+            WHERE SCP.id IN %s
+            ORDER BY SCP.id, SS.sequence, SS.id
+        """
+        self.env.cr.execute(query, [tuple(self.ids)])
+        next_slide_per_membership = {
+            line['id']: line['slide_id']
+            for line in self.env.cr.dictfetchall()
+        }
+
+        for membership in self:
+            membership.next_slide_id = next_slide_per_membership.get(membership.id, False)
 
     def _recompute_completion(self):
         read_group_res = self.env['slide.slide.partner'].sudo()._read_group(
