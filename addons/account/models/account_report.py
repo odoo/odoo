@@ -596,7 +596,7 @@ class AccountReportExpression(models.Model):
             'type': 'ir.actions.act_window',
             'name': _('Carryover lines for: %s', self.report_line_name),
             'res_model': 'account.report.external.value',
-            'views': [(self.env.ref('account_reports.account_report_external_value_tree').id, 'list')],
+            'views': [(False, 'list')],
             'domain': [
                 ('target_report_expression_id', '=', self.id),
                 ('date', '>=', date_from),
