@@ -1674,6 +1674,7 @@ export class OdooEditor extends EventTarget {
         this._stopContenteditable();
 
         this._fixLinkMutatedElements = {
+            link,
             wasContenteditableTrue: [...editableChildren],
             wasContenteditableFalse: [],
             wasContenteditableNull: [],
@@ -2074,7 +2075,19 @@ export class OdooEditor extends EventTarget {
             }
         }
         if (editorCommands[method]) {
-            return editorCommands[method](this, ...args);
+            // Make sure to restore the content editable before applying an
+            // editor command, as it might have been temporarily disabled for
+            // browser behaviors which should not concern editor commands.
+            const link = this._fixLinkMutatedElements && this._fixLinkMutatedElements.link;
+            if (this._fixLinkMutatedElements) {
+                this.resetContenteditableLink();
+                this._activateContenteditable();
+            }
+            const returnValue = editorCommands[method](this, ...args);
+            if (link) {
+                this.setContenteditableLink(link);
+            }
+            return returnValue;
         }
         if (method.startsWith('justify')) {
             const mode = method.split('justify').join('').toLocaleLowerCase();
@@ -2662,23 +2675,33 @@ export class OdooEditor extends EventTarget {
             }
         }
         const paragraphDropdownButton = this.toolbar.querySelector('#paragraphDropdownButton');
-        for (const commandState of [
-            'justifyLeft',
-            'justifyRight',
-            'justifyCenter',
-            'justifyFull',
-        ]) {
-            const isStateTrue = this.document.queryCommandState(commandState);
-            const button = this.toolbar.querySelector('#' + commandState);
-            if (commandState.startsWith('justify')) {
-                if (paragraphDropdownButton) {
-                    button.classList.toggle('active', isStateTrue);
-                    const direction = commandState.replace('justify', '').toLowerCase();
-                    const newClass = `fa-align-${direction === 'full' ? 'justify' : direction}`;
-                    paragraphDropdownButton.classList.toggle(newClass, isStateTrue);
+        if (paragraphDropdownButton) {
+            for (const commandState of [
+                'justifyLeft',
+                'justifyRight',
+                'justifyCenter',
+                'justifyFull',
+            ]) {
+                const button = this.toolbar.querySelector('#' + commandState);
+                const direction = commandState === 'justifyFull'
+                    ? 'justify' : commandState.replace('justify', '').toLowerCase();
+                let isStateTrue = false;
+                const link = sel.anchorNode && closestElement(sel.anchorNode, 'a');
+                const linkBlock = link && closestBlock(link);
+                if (linkBlock) {
+                    // We don't support links with a width that is larger than
+                    // their contents so an alignment within the link is not
+                    // visible. Since the editor applies alignments to a node's
+                    // closest block, we show the alignment of the link's
+                    // closest block.
+                    const alignment = getComputedStyle(linkBlock).textAlign;
+                    isStateTrue = alignment === direction;
+                } else {
+                    isStateTrue = this.document.queryCommandState(commandState)
                 }
-            } else if (button) {
                 button.classList.toggle('active', isStateTrue);
+                const newClass = `fa-align-${direction}`;
+                paragraphDropdownButton.classList.toggle(newClass, isStateTrue);
             }
         }
         if (sel.rangeCount) {
