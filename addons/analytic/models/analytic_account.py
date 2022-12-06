@@ -186,3 +186,11 @@ class AccountAnalyticAccount(models.Model):
     def _compute_root_plan(self):
         for account in self:
             account.root_plan_id = int(account.plan_id.parent_path[:-1].split('/')[0]) if account.plan_id.parent_path else None
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get('plan_id'):
+                company = vals['company_id'] if vals.get('company_id') else self.env.company.id
+                vals['plan_id'] = self.env['account.analytic.plan'].with_company(company)._get_default().id
+        return super().create(vals_list)
