@@ -93,7 +93,7 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _get_public_users(cls):
-        return [request.env.ref('base.public_user').id]
+        return [request.env['ir.model.data']._xmlid_to_res_model_res_id('base.public_user')[1]]
 
     @classmethod
     def _auth_method_user(cls):
