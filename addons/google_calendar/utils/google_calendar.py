@@ -35,15 +35,15 @@ class GoogleCalendarService():
         params = {'access_token': token}
         if sync_token:
             params['syncToken'] = sync_token
-        # else:
-        # full sync, limit to a range of 1y in past to 1y in the futur by default
-        ICP = self.google_service.env['ir.config_parameter'].sudo()
-        day_range = int(ICP.get_param('google_calendar.sync.range_days', default=365))
-        _logger.info("Full cal sync, restricting to %s days range", day_range)
-        lower_bound = fields.Datetime.subtract(fields.Datetime.now(), days=day_range)
-        upper_bound = fields.Datetime.add(fields.Datetime.now(), days=day_range)
-        params['timeMin'] = lower_bound.isoformat() + 'Z'  # Z = UTC (RFC3339)
-        params['timeMax'] = upper_bound.isoformat() + 'Z'  # Z = UTC (RFC3339)
+        else:
+            # full sync, limit to a range of 1y in past to 1y in the futur by default
+            ICP = self.google_service.env['ir.config_parameter'].sudo()
+            day_range = int(ICP.get_param('google_calendar.sync.range_days', default=365))
+            _logger.info("Full cal sync, restricting to %s days range", day_range)
+            lower_bound = fields.Datetime.subtract(fields.Datetime.now(), days=day_range)
+            upper_bound = fields.Datetime.add(fields.Datetime.now(), days=day_range)
+            params['timeMin'] = lower_bound.isoformat() + 'Z'  # Z = UTC (RFC3339)
+            params['timeMax'] = upper_bound.isoformat() + 'Z'  # Z = UTC (RFC3339)
         try:
             status, data, time = self.google_service._do_request(url, params, headers, method='GET', timeout=timeout)
         except requests.HTTPError as e:
