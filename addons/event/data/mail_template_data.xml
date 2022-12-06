@@ -225,7 +225,10 @@
                             <div>
                                 <i class="fa fa-map-marker"/>
                                 <a t-attf-href="https://maps.google.com/maps?q={{ location }}" target="new">
-                                    See location on Google Maps
+                                    <img t-if="event_address.static_map_url and event_address.static_map_url_is_valid"
+                                         t-att-src="event_address.static_map_url"
+                                         style="vertical-align:bottom; width: 100%;" alt="Google Maps"/>
+                                    <t t-else="">See location on Google Maps</t>
                                 </a>
                             </div>
                         </td></tr></table>
@@ -442,11 +445,14 @@
 
                 <tr><td valign="top" style="font-size: 14px;">
                     <!-- GOOGLE MAPS LINK -->
-                    <table t-if="event_address" style="width:100%;"><tr><td>
+                    <table t-if="event_address and location" style="width:100%;"><tr><td>
                         <div>
                             <i class="fa fa-map-marker"/>
                             <a t-attf-href="https://maps.google.com/maps?q={{ location }}" target="new">
-                                See location on Google Maps
+                                <img t-if="event_address.static_map_url and event_address.static_map_url_is_valid"
+                                     t-attf-src="{{ event_address.static_map_url }}"
+                                     style="vertical-align:bottom; width: 100%;" alt="Google Maps"/>
+                                <span t-else="">See location on Google Maps</span>
                             </a>
                         </div>
                     </td></tr></table>
