@@ -87,12 +87,12 @@ class MrpWorkcenter(models.Model):
         MrpWorkorder = self.env['mrp.workorder']
         result = {wid: {} for wid in self._ids}
         result_duration_expected = {wid: 0 for wid in self._ids}
-        # Count Late Workorder
+        # Count Late Work order
         data = MrpWorkorder._read_group(
             [('workcenter_id', 'in', self.ids), ('state', 'in', ('pending', 'waiting', 'ready')), ('date_planned_start', '<', datetime.now().strftime('%Y-%m-%d'))],
             ['workcenter_id'], ['workcenter_id'])
         count_data = dict((item['workcenter_id'][0], item['workcenter_id_count']) for item in data)
-        # Count All, Pending, Ready, Progress Workorder
+        # Count All, Pending, Ready, Progress Work order
         res = MrpWorkorder._read_group(
             [('workcenter_id', 'in', self.ids)],
             ['workcenter_id', 'state', 'duration_expected'], ['workcenter_id', 'state'],
@@ -239,7 +239,7 @@ class MrpWorkcenter(models.Model):
         if there is none before 700 days, a tuple error (False, 'error message').
 
         :param start_datetime: begin the search at this datetime
-        :param duration: minutes needed to make the workorder (float)
+        :param duration: minutes needed to make the work order (float)
         :rtype: tuple
         """
         self.ensure_one()
@@ -327,7 +327,7 @@ class WorkcenterTag(models.Model):
 
 class MrpWorkcenterProductivityLossType(models.Model):
     _name = "mrp.workcenter.productivity.loss.type"
-    _description = 'MRP Workorder productivity losses'
+    _description = 'MRP Work Order productivity losses'
     _rec_name = 'loss_type'
 
     @api.depends('loss_type')
@@ -424,7 +424,7 @@ class MrpWorkcenterProductivity(models.Model):
         for workorder in self.workorder_id:
             open_time_ids_by_user = self.env["mrp.workcenter.productivity"].read_group([("id", "in", workorder.time_ids.ids), ("date_end", "=", False)], ["user_id", "open_time_ids_count:count(id)"], ["user_id"])
             if any(data["open_time_ids_count"] > 1 for data in open_time_ids_by_user):
-                raise ValidationError(_('The Workorder (%s) cannot be started twice!', workorder.display_name))
+                raise ValidationError(_('The Work Order (%s) cannot be started twice!', workorder.display_name))
 
     def button_block(self):
         self.ensure_one()

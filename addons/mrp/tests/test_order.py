@@ -2100,7 +2100,7 @@ class TestMrpOrder(TestMrpCommon):
         mo.button_plan()
 
         # Asia/Bangkok is UTC+7 and the start date is on Monday at 06:00 UTC (i.e., 13:00 UTC+7).
-        # So, in Bangkok, the first workorder uses the entire Monday afternoon slot 13:00 - 17:00 UTC+7 (i.e., 06:00 - 10:00 UTC)
+        # So, in Bangkok, the first work order uses the entire Monday afternoon slot 13:00 - 17:00 UTC+7 (i.e., 06:00 - 10:00 UTC)
         # The second job uses the beginning of the Tuesday morning slot: 08:00 - 09:00 UTC+7 (i.e., 01:00 - 02:00 UTC)
         self.assertEqual(mo.workorder_ids[0].date_planned_start, date_planned)
         self.assertEqual(mo.workorder_ids[0].date_planned_finished, date_planned + timedelta(hours=4))
@@ -2611,7 +2611,7 @@ class TestMrpOrder(TestMrpCommon):
 
     def test_propagate_quantity_on_backorders(self):
         """Create a MO for a product with several work orders.
-        Produce different quantities to test quantity propagation and workorder cancellation.
+        Produce different quantities to test quantity propagation and work order cancellation.
         """
 
         # setup test
@@ -2748,7 +2748,7 @@ class TestMrpOrder(TestMrpCommon):
 
     def test_planning_workorder(self):
         """
-            Check that the fastest work center is used when planning the workorder.
+            Check that the fastest work center is used when planning the work order.
             - create two work centers with similar production capacity
                 but the work_center_2 with a longer start and stop time.
             1:/ produce 2 units > work_center_1 faster because

@@ -1311,7 +1311,7 @@ class MrpProduction(models.Model):
         """ Plan all the production's workorders depending on the workcenters
         work schedule.
 
-        :param replan: If it is a replan, only ready and pending workorder will be taken into account
+        :param replan: If it is a replan, only ready and pending work order will be taken into account
         :type replan: bool.
         """
         self.ensure_one()
@@ -1499,7 +1499,7 @@ class MrpProduction(models.Model):
         ])
         for order in self:
             finish_moves = order.move_finished_ids.filtered(lambda m: m.product_id == order.product_id and m.state not in ('done', 'cancel'))
-            # the finish move can already be completed by the workorder.
+            # the finish move can already be completed by the work order.
             if finish_moves and not finish_moves.quantity_done:
                 finish_moves._set_quantity_done(float_round(order.qty_producing - order.qty_produced, precision_rounding=order.product_uom_id.rounding, rounding_method='HALF-UP'))
                 finish_moves.move_line_ids.lot_id = order.lot_producing_id

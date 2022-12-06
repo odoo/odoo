@@ -238,7 +238,7 @@
                             <field name="production_state" invisible="1"/>
                             <field name="state" widget="badge" decoration-warning="state == 'progress'" decoration-success="state == 'done'" decoration-info="state not in ('progress', 'done', 'cancel')"
                                 attrs="{'invisible': [('production_state', '=', 'draft')], 'column_invisible': [('parent.state', '=', 'draft')]}"/>
-                            <button class="oe_link float-end" string="View WorkOrder" name="action_open_wizard" type="object"/>
+                            <button class="oe_link float-end" string="View Work Order" name="action_open_wizard" type="object"/>
                         </tree>
                     </field>
                 </page>
