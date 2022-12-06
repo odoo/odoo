@@ -147,7 +147,7 @@
 
 @mixin o-field-pointer() {
     // Force `pointer`cursor on  inputs and labels
-    &:not(:disabled):not(.disabled) {
+    &:not(:disabled):not(.disabled):not(:has(:disabled)) {
         &, input, label {
             cursor: pointer;
         }
