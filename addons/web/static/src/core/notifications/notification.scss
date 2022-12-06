@@ -3,7 +3,7 @@
 // The notification just add overlays.
 
 .o_notification_manager {
-    @include o-position-absolute($o-navbar-height * 1.15, map-get($spacers, 2), $left: calc(100vw - #{$o-notification-max-width}));
+    @include o-position-absolute($o-navbar-height * 2.15, map-get($spacers, 2), $left: calc(100vw - #{$o-notification-max-width}));
     z-index: $o-notification-zindex;
 
     .o_notification {
