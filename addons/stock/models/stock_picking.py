@@ -521,6 +521,7 @@ class Picking(models.Model):
         picking_no_alert.json_popover = False
         for picking in (self - picking_no_alert):
             picking.json_popover = json.dumps({
+                'popoverTemplate': 'stock.PopoverStockRescheduling',
                 'delay_alert_date': format_datetime(self.env, picking.delay_alert_date, dt_format=False),
                 'late_elements': [{
                     'id': late_move.id,
@@ -819,6 +820,14 @@ class Picking(models.Model):
     def do_print_picking(self):
         self.write({'printed': True})
         return self.env.ref('stock.action_report_picking').report_action(self)
+
+    def should_print_delivery_address(self):
+        self.ensure_one()
+        return self.move_ids_without_package and self.move_ids_without_package[0].partner_id and self._is_to_external_location()
+
+    def _is_to_external_location(self):
+        self.ensure_one()
+        return self.picking_type_code == 'outgoing'
 
     def action_confirm(self):
         self._check_company()
