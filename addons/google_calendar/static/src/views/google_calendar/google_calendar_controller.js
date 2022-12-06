@@ -30,6 +30,8 @@ patch(AttendeeCalendarController.prototype, "google_calendar_google_calendar_con
                         confirm: this.actionService.doAction.bind(this.actionService, syncResult.action),
                     });
                 }
+            } else if (syncResult.status === "need_auth") {
+                this.configureCalendarProviderSync("google");
             } else {
                 this.dialog.add(AlertDialog, {
                     title: this.env._t("Configuration"),
