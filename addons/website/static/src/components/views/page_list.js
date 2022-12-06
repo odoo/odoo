@@ -16,6 +16,9 @@ export class PageListController extends PageControllerMixin(listView.Controller)
     setup() {
         super.setup();
         this.orm = useService('orm');
+        if (this.props.resModel === "website.page") {
+            this.archiveEnabled = false;
+        }
     }
 
     /**
@@ -30,28 +33,30 @@ export class PageListController extends PageControllerMixin(listView.Controller)
      *
      * @override
      */
-    getActionMenuItems() {
-        const actionMenuItems = super.getActionMenuItems();
-        // 'Archive' / 'Unarchive' options are disabled only on 'website.page' list view.
-        if (this.props.resModel === 'website.page') {
-            actionMenuItems.other = actionMenuItems.other
-                .filter(item => !['archive', 'unarchive'].includes(item.key));
-        }
-        actionMenuItems.other.splice(-1, 0, {
+    getStaticActionMenuItems() {
+        const menuItems = super.getStaticActionMenuItems();
+        menuItems.publish = {
+            sequence: 15,
             description: this.env._t("Publish"),
             callback: async () => {
                 this.dialogService.add(ConfirmationDialog, {
                     title: this.env._t("Publish Website Content"),
-                    body: sprintf(this.env._t("%s record(s) selected, are you sure you want to publish them all?"), this.model.root.selection.length),
+                    body: sprintf(
+                        this.env._t(
+                            "%s record(s) selected, are you sure you want to publish them all?"
+                        ),
+                        this.model.root.selection.length
+                    ),
                     confirm: () => this.togglePublished(true),
                 });
-            }
-        },
-        {
+            },
+        };
+        menuItems.unpublish = {
+            sequence: 16,
             description: this.env._t("Unpublish"),
             callback: async () => this.togglePublished(false),
-        });
-        return actionMenuItems;
+        };
+        return menuItems;
     }
 
     onDeleteSelectedRecords() {

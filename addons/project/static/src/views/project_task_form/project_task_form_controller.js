@@ -9,23 +9,15 @@ export class ProjectTaskFormController extends FormController {
         this.taskRecurrence = useService('project_task_recurrence');
     }
 
-    getActionMenuItems() {
-        if (!(this.archiveEnabled && this.model.root.isActive) || !this.model.root.data.recurrence_id) {
-            return super.getActionMenuItems();
+    getStaticActionMenuItems() {
+        const menuItems = super.getStaticActionMenuItems();
+        if (this.model.root.data.recurrence_id) {
+            menuItems.archive.callback = () =>
+                this.taskRecurrence.stopRecurrence([this.model.root], () =>
+                    this.model.root.archive()
+                );
         }
-        this.archiveEnabled = false;
-        const actionMenuItems = super.getActionMenuItems();
-        this.archiveEnabled = true;
-        if (actionMenuItems) {
-            actionMenuItems.other.unshift({
-                description: this.env._t('Archive'),
-                callback: () => this.taskRecurrence.stopRecurrence(
-                    [this.model.root],
-                    () => this.model.root.archive(),
-                ),
-            });
-        }
-        return actionMenuItems;
+        return menuItems;
     }
 
     deleteRecord() {

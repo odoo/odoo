@@ -35,17 +35,18 @@ export class InventoryReportListController extends ListController {
         });
     }
 
-    getActionMenuItems() {
-        const actionMenus = super.getActionMenuItems();
-        if (this.props.resModel === "stock.quant" && (!this.props.context.inventory_mode || this.props.context.inventory_report_mode)) {
+    get actionMenuItems() {
+        const actionMenus = super.actionMenuItems;
+        if (
+            this.props.resModel === "stock.quant" &&
+            (!this.props.context.inventory_mode || this.props.context.inventory_report_mode)
+        ) {
             // hack so we don't show some of the default actions when it's inappropriate to
-            const {print, action, other} = actionMenus;
-            return Object.assign(
-                {},
-                print.filter(a => a.name !== 'Count Sheet'),
-                action.filter(a => a.name !== 'Set'),
-                { other: other },
-                );
+            const { print, action } = actionMenus;
+            return {
+                action: action.filter((a) => a.name !== "Set"),
+                print: print.filter((a) => a.name !== "Count Sheet"),
+            };
         }
         return actionMenus;
     }

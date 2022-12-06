@@ -2,21 +2,22 @@
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { download } from "@web/core/network/download";
-import { DynamicRecordList } from "@web/views/relational_model";
 import { useService } from "@web/core/utils/hooks";
+import { omit } from "@web/core/utils/objects";
 import { sprintf } from "@web/core/utils/strings";
 import { ActionMenus } from "@web/search/action_menus/action_menus";
 import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
 import { session } from "@web/session";
 import { useModel } from "@web/views/model";
+import { DynamicRecordList } from "@web/views/relational_model";
 import { standardViewProps } from "@web/views/standard_view_props";
-import { useSetupView } from "@web/views/view_hook";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { ExportDataDialog } from "@web/views/view_dialogs/export_data_dialog";
+import { useSetupView } from "@web/views/view_hook";
 
-import { Component, onWillStart, useSubEnv, useEffect, useRef } from "@odoo/owl";
+import { Component, onWillStart, useEffect, useRef, useSubEnv } from "@odoo/owl";
 
 export class ListViewHeaderButton extends ViewButton {
     async onClick() {
@@ -253,19 +254,18 @@ export class ListController extends Component {
         return this.model.root.getResIds(true);
     }
 
-    getActionMenuItems() {
+    getStaticActionMenuItems() {
         const isM2MGrouped = this.model.root.isM2MGrouped;
-        const otherActionItems = [];
-        if (this.isExportEnable) {
-            otherActionItems.push({
-                key: "export",
+        return {
+            export: {
+                isAvailable: () => this.isExportEnable,
+                sequence: 10,
                 description: this.env._t("Export"),
                 callback: () => this.onExportData(),
-            });
-        }
-        if (this.archiveEnabled && !isM2MGrouped) {
-            otherActionItems.push({
-                key: "archive",
+            },
+            archive: {
+                isAvailable: () => this.archiveEnabled && !isM2MGrouped,
+                sequence: 20,
                 description: this.env._t("Archive"),
                 callback: () => {
                     const dialogProps = {
@@ -279,21 +279,33 @@ export class ListController extends Component {
                     };
                     this.dialogService.add(ConfirmationDialog, dialogProps);
                 },
-            });
-            otherActionItems.push({
-                key: "unarchive",
+            },
+            unarchive: {
+                isAvailable: () => this.archiveEnabled && !isM2MGrouped,
+                sequence: 30,
                 description: this.env._t("Unarchive"),
                 callback: () => this.toggleArchiveState(false),
-            });
-        }
-        if (this.activeActions.delete && !isM2MGrouped) {
-            otherActionItems.push({
-                key: "delete",
+            },
+            delete: {
+                isAvailable: () => this.activeActions.delete && !isM2MGrouped,
+                sequence: 40,
                 description: this.env._t("Delete"),
                 callback: () => this.onDeleteSelectedRecords(),
-            });
-        }
-        return Object.assign({}, this.props.info.actionMenus, { other: otherActionItems });
+            },
+        };
+    }
+
+    get actionMenuItems() {
+        const { actionMenus } = this.props.info;
+        const staticActionItems = Object.entries(this.getStaticActionMenuItems())
+            .filter(([key, item]) => item.isAvailable === undefined || item.isAvailable())
+            .sort(([k1, item1], [k2, item2]) => (item1.sequence || 0) - (item2.sequence || 0))
+            .map(([key, item]) => Object.assign({ key }, omit(item, "isAvailable", "sequence")));
+
+        return {
+            action: [...staticActionItems, ...(actionMenus.action || [])],
+            print: actionMenus.print,
+        };
     }
 
     async onSelectDomain() {
