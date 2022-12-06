@@ -51,8 +51,8 @@
                 <field name="partner_id"/>
                 <field name="program_id"/>
                 <separator/>
-                <filter name="active" string="Active" domain="['&amp;', ('points', '>', 0), '|', ('expiration_date', '>=', context_today().strftime('%Y-%m-%d 00:00:00')), ('expiration_date', '=', False)]"/>
-                <filter name="inactive" string="Inactive" domain="['|', ('points', '&lt;=', 0), ('expiration_date', '&lt;', context_today().strftime('%Y-%m-%d 23:59:59'))]"/>
+                <filter name="active" string="Active" domain="['&amp;', ('program_id.active', '=', True), '&amp;', ('points', '>', 0), '|', ('expiration_date', '>=', context_today().strftime('%Y-%m-%d 00:00:00')), ('expiration_date', '=', False)]"/>
+                <filter name="inactive" string="Inactive" domain="['|', ('program_id.active', '=', False), '|', ('points', '&lt;=', 0), ('expiration_date', '&lt;', context_today().strftime('%Y-%m-%d 23:59:59'))]"/>
             </search>
         </field>
     </record>
