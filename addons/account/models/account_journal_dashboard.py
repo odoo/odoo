@@ -280,11 +280,13 @@ class account_journal(models.Model):
                 SELECT COUNT(st_line.id)
                 FROM account_bank_statement_line st_line
                 JOIN account_move st_line_move ON st_line_move.id = st_line.move_id
+                JOIN account_move_line aml ON aml.move_id = st_line_move.id
                 WHERE st_line_move.journal_id IN %s
                 AND NOT st_line.is_reconciled
                 AND st_line_move.to_check IS NOT TRUE
                 AND st_line_move.state = 'posted'
-            ''', [tuple(self.ids)])
+                AND aml.account_id = %s
+            ''', [tuple(self.ids), self.default_account_id.id])
             number_to_reconcile = self.env.cr.fetchone()[0]
 
             to_check_ids = self.to_check_ids()
