@@ -17,6 +17,7 @@
         'views/loyalty_program_views.xml',
         'views/sale_order_views.xml',
         'views/templates.xml',
+        'views/res_partner_views.xml',
     ],
     'license': 'LGPL-3',
 }
