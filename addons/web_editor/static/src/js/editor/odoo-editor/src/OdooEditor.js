@@ -446,6 +446,7 @@ export class OdooEditor extends EventTarget {
                     priority: 110,
                     description: this.options._t('Create a simple bulleted list.'),
                     fontawesome: 'fa-list-ul',
+                    isDisabled: () => !this.isSelectionInBlockRoot(),
                     callback: () => {
                         this.execCommand('toggleList', 'UL');
                     },
@@ -456,6 +457,7 @@ export class OdooEditor extends EventTarget {
                     priority: 100,
                     description: this.options._t('Create a list with numbering.'),
                     fontawesome: 'fa-list-ol',
+                    isDisabled: () => !this.isSelectionInBlockRoot(),
                     callback: () => {
                         this.execCommand('toggleList', 'OL');
                     },
@@ -466,6 +468,7 @@ export class OdooEditor extends EventTarget {
                     priority: 90,
                     description: this.options._t('Track tasks with a checklist.'),
                     fontawesome: 'fa-check-square-o',
+                    isDisabled: () => !this.isSelectionInBlockRoot(),
                     callback: () => {
                         this.execCommand('toggleList', 'CL');
                     },
@@ -476,18 +479,9 @@ export class OdooEditor extends EventTarget {
                     priority: 80,
                     description: this.options._t('Insert a table.'),
                     fontawesome: 'fa-table',
+                    isDisabled: () => !this.isSelectionInBlockRoot(),
                     callback: () => {
                         this.powerboxTablePicker.show();
-                    },
-                },
-                {
-                    category: this.options._t('Structure'),
-                    name: this.options._t('Separator'),
-                    priority: 40,
-                    description: this.options._t('Insert an horizontal rule separator.'),
-                    fontawesome: 'fa-minus',
-                    callback: () => {
-                        this.execCommand('insertHorizontalRule');
                     },
                 },
                 {
@@ -496,6 +490,7 @@ export class OdooEditor extends EventTarget {
                     priority: 50,
                     description: this.options._t('Big section heading.'),
                     fontawesome: 'fa-header',
+                    isDisabled: () => !this.isSelectionInBlockRoot(),
                     callback: () => {
                         this.execCommand('setTag', 'H1');
                     },
@@ -506,6 +501,7 @@ export class OdooEditor extends EventTarget {
                     priority: 40,
                     description: this.options._t('Medium section heading.'),
                     fontawesome: 'fa-header',
+                    isDisabled: () => !this.isSelectionInBlockRoot(),
                     callback: () => {
                         this.execCommand('setTag', 'H2');
                     },
@@ -516,6 +512,7 @@ export class OdooEditor extends EventTarget {
                     priority: 30,
                     description: this.options._t('Small section heading.'),
                     fontawesome: 'fa-header',
+                    isDisabled: () => !this.isSelectionInBlockRoot(),
                     callback: () => {
                         this.execCommand('setTag', 'H3');
                     },
@@ -536,6 +533,7 @@ export class OdooEditor extends EventTarget {
                     priority: 10,
                     description: this.options._t('Paragraph block.'),
                     fontawesome: 'fa-paragraph',
+                    isDisabled: () => !this.isSelectionInBlockRoot(),
                     callback: () => {
                         this.execCommand('setTag', 'P');
                     },
@@ -567,6 +565,18 @@ export class OdooEditor extends EventTarget {
                     },
                 },
                 ...(this.options.commands || []),
+                ...(this.options.commands && !this.options.commands.find(c =>  c.title === this.options._t('Separator')) ? [
+                    {
+                        category: this.options._t('Structure'),
+                        name: this.options._t('Separator'),
+                        priority: 40,
+                        description: this.options._t('Insert an horizontal rule separator.'),
+                        fontawesome: 'fa-minus',
+                        isDisabled: () => !this.isSelectionInBlockRoot(),
+                        callback: () => {
+                            this.execCommand('insertHorizontalRule');
+                        },
+                    }] : []),
             ],
         });
 
@@ -1664,6 +1674,7 @@ export class OdooEditor extends EventTarget {
         this._stopContenteditable();
 
         this._fixLinkMutatedElements = {
+            link,
             wasContenteditableTrue: [...editableChildren],
             wasContenteditableFalse: [],
             wasContenteditableNull: [],
@@ -2064,7 +2075,19 @@ export class OdooEditor extends EventTarget {
             }
         }
         if (editorCommands[method]) {
-            return editorCommands[method](this, ...args);
+            // Make sure to restore the content editable before applying an
+            // editor command, as it might have been temporarily disabled for
+            // browser behaviors which should not concern editor commands.
+            const link = this._fixLinkMutatedElements && this._fixLinkMutatedElements.link;
+            if (this._fixLinkMutatedElements) {
+                this.resetContenteditableLink();
+                this._activateContenteditable();
+            }
+            const returnValue = editorCommands[method](this, ...args);
+            if (link) {
+                this.setContenteditableLink(link);
+            }
+            return returnValue;
         }
         if (method.startsWith('justify')) {
             const mode = method.split('justify').join('').toLocaleLowerCase();
@@ -2652,23 +2675,33 @@ export class OdooEditor extends EventTarget {
             }
         }
         const paragraphDropdownButton = this.toolbar.querySelector('#paragraphDropdownButton');
-        for (const commandState of [
-            'justifyLeft',
-            'justifyRight',
-            'justifyCenter',
-            'justifyFull',
-        ]) {
-            const isStateTrue = this.document.queryCommandState(commandState);
-            const button = this.toolbar.querySelector('#' + commandState);
-            if (commandState.startsWith('justify')) {
-                if (paragraphDropdownButton) {
-                    button.classList.toggle('active', isStateTrue);
-                    const direction = commandState.replace('justify', '').toLowerCase();
-                    const newClass = `fa-align-${direction === 'full' ? 'justify' : direction}`;
-                    paragraphDropdownButton.classList.toggle(newClass, isStateTrue);
+        if (paragraphDropdownButton) {
+            for (const commandState of [
+                'justifyLeft',
+                'justifyRight',
+                'justifyCenter',
+                'justifyFull',
+            ]) {
+                const button = this.toolbar.querySelector('#' + commandState);
+                const direction = commandState === 'justifyFull'
+                    ? 'justify' : commandState.replace('justify', '').toLowerCase();
+                let isStateTrue = false;
+                const link = sel.anchorNode && closestElement(sel.anchorNode, 'a');
+                const linkBlock = link && closestBlock(link);
+                if (linkBlock) {
+                    // We don't support links with a width that is larger than
+                    // their contents so an alignment within the link is not
+                    // visible. Since the editor applies alignments to a node's
+                    // closest block, we show the alignment of the link's
+                    // closest block.
+                    const alignment = getComputedStyle(linkBlock).textAlign;
+                    isStateTrue = alignment === direction;
+                } else {
+                    isStateTrue = this.document.queryCommandState(commandState)
                 }
-            } else if (button) {
                 button.classList.toggle('active', isStateTrue);
+                const newClass = `fa-align-${direction}`;
+                paragraphDropdownButton.classList.toggle(newClass, isStateTrue);
             }
         }
         if (sel.rangeCount) {
@@ -3432,6 +3465,26 @@ export class OdooEditor extends EventTarget {
         return selection && selection.anchorNode &&
             closestElement(selection.anchorNode).isContentEditable && closestElement(selection.focusNode).isContentEditable &&
             this.editable.contains(selection.anchorNode) && this.editable.contains(selection.focusNode);
+    }
+    /**
+     * Returns true if the current selection is in at least one block Element
+     * relative to the current contentEditable root.
+     *
+     * @returns {boolean}
+     */
+    isSelectionInBlockRoot() {
+        const selection = this.document.getSelection();
+        let selectionInBlockRoot;
+        let currentNode = closestElement(selection.anchorNode);
+        while (
+            !currentNode.classList.contains('o_editable') &&
+            !currentNode.classList.contains('odoo-editor-editable') &&
+            !selectionInBlockRoot
+            ) {
+            selectionInBlockRoot = isBlock(currentNode);
+            currentNode = currentNode.parentElement;
+        }
+        return !!selectionInBlockRoot;
     }
 
     /**

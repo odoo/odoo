@@ -5,6 +5,10 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
+class NonMatchingDistribution(Exception):
+    pass
+
+
 class AccountAnalyticDistributionModel(models.Model):
     _name = 'account.analytic.distribution.model'
     _inherit = 'analytic.mixin'
@@ -57,29 +61,38 @@ class AccountAnalyticDistributionModel(models.Model):
             domain += self._create_domain(fname, value) or []
         best_score = 0
         res = {}
+        fnames = set(self._get_fields_to_check())
         for rec in self.search(domain):
-            score = 0
-            for key, value in vals.items():
-                if value and rec[key]:
-                    if rec._check_score(key, value) == 1:
-                        score += 1
-                    else:
-                        score = -1
-                        break
-            if score > best_score:
-                res = rec.analytic_distribution
-                best_score = score
+            try:
+                score = sum(rec._check_score(key, vals.get(key)) for key in fnames)
+                if score > best_score:
+                    res = rec.analytic_distribution
+                    best_score = score
+            except NonMatchingDistribution:
+                continue
         return res
+
+    def _get_fields_to_check(self):
+        return (
+                set(self.env['account.analytic.distribution.model']._fields)
+                - set(self.env['analytic.mixin']._fields)
+                - set(models.MAGIC_COLUMNS) - {'display_name', '__last_update'}
+        )
 
     def _check_score(self, key, value):
         self.ensure_one()
-        if key == 'partner_category_id':
-            if self[key].id in value:
-                return 1
-        if value == self[key].id:
+        if key == 'company_id':
+            if not self.company_id or value == self.company_id.id:
+                return 1 if self.company_id else 0.5
+            raise NonMatchingDistribution
+        if not self[key]:
+            return 0
+        if value and ((self[key].id in value) if isinstance(value, (list, tuple))
+                      else (value.startswith(self[key])) if key.endswith('_prefix')
+                      else (value == self[key].id)
+                      ):
             return 1
-        else:
-            return -1
+        raise NonMatchingDistribution
 
     def _create_domain(self, fname, value):
         if not value:

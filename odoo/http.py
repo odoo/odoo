@@ -779,10 +779,10 @@ def _generate_routing_rules(modules, nodb_only, converters=None):
                 'readonly': False,
             }
 
-            for cls in unique(reversed(type(ctrl).mro())):  # ancestors first
-                submethod = getattr(cls, method_name, None)
-                if submethod is None:
+            for cls in unique(reversed(type(ctrl).mro()[:-2])):  # ancestors first
+                if method_name not in cls.__dict__:
                     continue
+                submethod = getattr(cls, method_name)
 
                 if not hasattr(submethod, 'original_routing'):
                     _logger.warning("The endpoint %s is not decorated by @route(), decorating it myself.", f'{cls.__module__}.{cls.__name__}.{method_name}')
@@ -1798,7 +1798,7 @@ class JsonRPCDispatcher(Dispatcher):
         self.request.params = dict(self.jsonrequest.get('params', {}), **args)
         ctx = self.request.params.pop('context', None)
         if ctx is not None and self.request.db:
-            self.request.update_env(context=ctx)
+            self.request.update_context(**ctx)
 
         if self.request.db:
             result = self.request.registry['ir.http']._dispatch(endpoint)

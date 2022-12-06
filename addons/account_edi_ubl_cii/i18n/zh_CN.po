@@ -89,28 +89,24 @@ msgid ""
 msgstr "无法检索货币：%s。 您是否启用了多币种选项并启用了该货币？"
 
 #. module: account_edi_ubl_cii
-#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
+#, python-format
+msgid "Could not retrieve the %s."
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Could not retrieve the tax: %s %% for line '%s'."
 msgstr "无法检索到行“%s”的税：%s%%。"
 
 #. module: account_edi_ubl_cii
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
-msgid ""
-"Could not retrieve the unit of measure for line with label '%s'. Did you "
-"install the inventory app and enabled the 'Units of Measure' option ?"
-msgstr "无法检索带有标签“%s”的行的度量单位。 您是否安装了库存应用程序并启用了“计量单位”选项？"
-
-#. module: account_edi_ubl_cii
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
-#, python-format
-msgid "Could not retrieve the vendor."
-msgstr "无法检索供应商."
+msgid "Could not retrieve the unit of measure for line with label '%s'."
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -397,6 +393,13 @@ msgstr ""
 "您应该在每个发票行中至少包含一项税费。 [BR-CO-04]-每个发票行 (BG-25) 应使用发票项目增值税类别代码 (BT-151) 进行分类。"
 
 #. module: account_edi_ubl_cii
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
+#, python-format
+msgid "customer"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "external"
 msgstr "外部"
@@ -425,3 +428,10 @@ msgstr "嵌入式XML结算单文件的名称"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
+
+#. module: account_edi_ubl_cii
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
+#, python-format
+msgid "vendor"
+msgstr ""

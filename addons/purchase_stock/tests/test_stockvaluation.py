@@ -1281,3 +1281,171 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         # Check if something was posted in the stock valuation account.
         stock_val_aml = invoice.line_ids.filtered(lambda l: l.account_id == self.stock_valuation_account)
         self.assertEqual(len(stock_val_aml), 0, "No line should have been generated in the stock valuation account.")
+
+    def test_price_diff_with_return_backorder_and_partial_bill(self):
+        """
+        Fifo + Real time.
+        Default UoM of the product is Unit.
+        Company in USD. 1 USD = 2 EUR.
+        Receive 10 Hundred @ $50:
+            Receive 10 Hundred (R1)
+            Return 10 Hundred (RET)
+            Receive 7 Hundred (R2)
+            Receive 3 Hundred (R3)
+        Deliver 5 Hundred
+        Bill
+            1 Hundred @ 120€ -> already out, should not generate any SVL
+            3 Hundred @ 120€ -> already out, should not generate any SVL
+            2 Hundred @ 120€ -> only one out, should generate an SVL for the other one and
+                    this SVL should be linked to SVL_R1
+            4 Hundred @ 120€ -> should generate two SVL: one for one product and attached to
+                    SVL_R1 and another one for the three last products of SVL_R2
+        Deliver 2 Hundred
+            The SVL should include:
+                - 2 x 50 (cost by hundred)
+                - 2 x 10 (the price diff from step "Bill 2 Hundred @ 60" and "Bill
+                          4 Hundred @ 60")
+        """
+        expected_svl_values = [] # USD
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        stock_location = warehouse.lot_stock_id
+        customer_location = self.env.ref('stock.stock_location_customers')
+
+        eur_curr = self.env.ref('base.EUR')
+        self.env['res.currency.rate'].create({
+            'name': fields.Date.today(),
+            'company_id': self.env.company.id,
+            'currency_id': eur_curr.id,
+            'rate': 2,
+        })
+
+        grp_uom = self.env.ref('uom.group_uom')
+        self.env.user.write({'groups_id': [(4, grp_uom.id)]})
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        uom_hundred = self.env['uom.uom'].create({
+            'name': '100 x U',
+            'category_id': uom_unit.category_id.id,
+            'ratio': 100.0,
+            'uom_type': 'bigger',
+            'rounding': uom_unit.rounding,
+        })
+        self.product1.write({
+            'uom_id': uom_unit.id,
+            'uom_po_id': uom_unit.id,
+        })
+
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.product_qty = 10
+            po_line.product_uom = uom_hundred
+            po_line.price_unit = 50.0
+        po = po_form.save()
+        po.button_confirm()
+
+        # Receive 10 Hundred
+        receipt01 = po.picking_ids[0]
+        receipt01.move_ids._set_quantities_to_reservation()
+        receipt01.button_validate()
+
+        expected_svl_values += [10 * 50]
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+
+        # Return 10 Hundred
+        return_form = Form(self.env['stock.return.picking'].with_context(active_id=receipt01.id, active_model='stock.picking'))
+        return_wizard = return_form.save()
+        return_picking_id, _pick_type_id = return_wizard._create_returns()
+        return_picking = self.env['stock.picking'].browse(return_picking_id)
+        return_picking.move_ids._set_quantities_to_reservation()
+        return_picking.button_validate()
+
+        expected_svl_values += [-10 * 50]
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+
+        # Receive 7 Hundred with backorder
+        return_form = Form(self.env['stock.return.picking'].with_context(active_id=return_picking_id, active_model='stock.picking'))
+        return_wizard = return_form.save()
+        receipt_id, _pick_type_id = return_wizard._create_returns()
+        receipt02 = self.env['stock.picking'].browse(receipt_id)
+        receipt02.move_ids.move_line_ids.qty_done = 700
+        action = receipt02.button_validate()
+        backorder_wizard = Form(self.env['stock.backorder.confirmation'].with_context(action['context'])).save()
+        backorder_wizard.process()
+
+        expected_svl_values += [7 * 50]
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+
+        # Receive 3 Hundred
+        receipt03 = receipt02.backorder_ids
+        receipt03.move_ids._set_quantities_to_reservation()
+        receipt03.button_validate()
+
+        expected_svl_values += [3 * 50]
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+
+        # Delivery 5 Hundred
+        delivery01 = self.env['stock.picking'].create({
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'picking_type_id': warehouse.out_type_id.id,
+            'move_ids': [(0, 0, {
+                'name': self.product1.name,
+                'product_id': self.product1.id,
+                'product_uom_qty': 5,
+                'product_uom': uom_hundred.id,
+                'location_id': stock_location.id,
+                'location_dest_id': customer_location.id,
+            })],
+        })
+        delivery01.action_confirm()
+        delivery01.move_ids._set_quantities_to_reservation()
+        delivery01.button_validate()
+
+        expected_svl_values += [-5 * 50]
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+
+        # We will create a price diff SVL only for the remaining quantities not yet billed
+        # On the bill, price unit is 120€, i.e. $60 -> price diff equal to $10
+        for qty, new_svl_expected in [(1, []), (3, []), (2, [1 * 10.0]), (4, [1 * 10.0, 3 * 10.0])]:
+            bill_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+            bill_form.invoice_date = bill_form.date
+            bill_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-po.id)
+            bill = bill_form.save()
+            bill.invoice_line_ids.quantity = qty
+            bill.invoice_line_ids.price_unit = 120.0
+            bill.invoice_line_ids.product_uom_id = uom_hundred
+            bill.currency_id = eur_curr
+            bill.action_post()
+
+            expected_svl_values += new_svl_expected
+            self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+
+        # Delivery 2 Hundred
+        delivery02 = self.env['stock.picking'].create({
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'picking_type_id': warehouse.out_type_id.id,
+            'move_ids': [(0, 0, {
+                'name': self.product1.name,
+                'product_id': self.product1.id,
+                'product_uom_qty': 2,
+                'product_uom': uom_hundred.id,
+                'location_id': stock_location.id,
+                'location_dest_id': customer_location.id,
+            })],
+        })
+        delivery02.action_confirm()
+        delivery02.move_ids._set_quantities_to_reservation()
+        delivery02.button_validate()
+
+        expected_svl_values += [-2 * 50 + -2 * 10]
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+
+        _svl_r01, _svl_ret, svl_r02, svl_r03, _svl_d01, svl_diff_01, svl_diff_02, svl_diff_03, _svl_d02 = self.product1.stock_valuation_layer_ids
+        self.assertEqual(svl_diff_01.stock_valuation_layer_id, svl_r02)
+        self.assertEqual(svl_diff_02.stock_valuation_layer_id, svl_r02)
+        self.assertEqual(svl_diff_03.stock_valuation_layer_id, svl_r03)
