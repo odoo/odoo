@@ -597,3 +597,15 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.write({'payment_method_ids': [(6, 0, bank_pm.ids)]})
         self.main_pos_config.open_session_cb()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenTour2', login="accountman")
+
+    def test_refund_without_cash_method(self):
+        """ Assert that a refund cannot be made without cash payment method.
+        """
+
+        bank_pm = self.env['pos.payment.method'].create({
+            'name': 'Bank',
+            'journal_id': self.bank_journal.id,
+        })
+        self.main_pos_config.write({"payment_method_ids": [(6, 0, bank_pm.ids)]})
+        self.main_pos_config.open_session_cb()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenTour3', login="accountman")
