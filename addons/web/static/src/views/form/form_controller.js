@@ -1,11 +1,13 @@
 /** @odoo-module **/
 
+import { hasTouch } from "@web/core/browser/feature_detection";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { makeContext } from "@web/core/context";
 import { useDebugCategory } from "@web/core/debug/debug_context";
 import { registry } from "@web/core/registry";
 import { SIZES } from "@web/core/ui/ui_service";
 import { useBus, useService } from "@web/core/utils/hooks";
+import { omit } from "@web/core/utils/objects";
 import { createElement } from "@web/core/utils/xml";
 import { ActionMenus } from "@web/search/action_menus/action_menus";
 import { Layout } from "@web/search/layout";
@@ -15,10 +17,9 @@ import { standardViewProps } from "@web/views/standard_view_props";
 import { isX2Many } from "@web/views/utils";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { useSetupView } from "@web/views/view_hook";
-import { hasTouch } from "@web/core/browser/feature_detection";
 import { FormStatusIndicator } from "./form_status_indicator/form_status_indicator";
 
-import { Component, onWillStart, useEffect, useRef, onRendered, useState, toRaw } from "@odoo/owl";
+import { Component, onRendered, onWillStart, toRaw, useEffect, useRef, useState } from "@odoo/owl";
 
 const viewRegistry = registry.category("views");
 
@@ -75,7 +76,11 @@ export async function loadSubViews(
         refinedContext.base_model_name = resModel;
 
         const comodel = field.relation;
-        const { fields: comodelFields, relatedModels, views } = await viewService.loadViews({
+        const {
+            fields: comodelFields,
+            relatedModels,
+            views,
+        } = await viewService.loadViews({
             resModel: comodel,
             views: [[false, viewType]],
             context: makeContext([fieldContext, userService.context, refinedContext]),
@@ -304,48 +309,55 @@ export class FormController extends Component {
         this.router.pushState({ id: this.model.root.resId || undefined });
     }
 
-    getActionMenuItems() {
-        const otherActionItems = [];
-        if (this.archiveEnabled) {
-            if (this.model.root.isActive) {
-                otherActionItems.push({
-                    key: "archive",
-                    description: this.env._t("Archive"),
-                    callback: () => {
-                        const dialogProps = {
-                            body: this.env._t(
-                                "Are you sure that you want to archive all this record?"
-                            ),
-                            confirm: () => this.model.root.archive(),
-                            cancel: () => {},
-                        };
-                        this.dialogService.add(ConfirmationDialog, dialogProps);
-                    },
-                });
-            } else {
-                otherActionItems.push({
-                    key: "unarchive",
-                    description: this.env._t("Unarchive"),
-                    callback: () => this.model.root.unarchive(),
-                });
-            }
-        }
-        if (this.archInfo.activeActions.create && this.archInfo.activeActions.duplicate) {
-            otherActionItems.push({
-                key: "duplicate",
+    getStaticActionMenuItems() {
+        const { activeActions } = this.archInfo;
+        return {
+            archive: {
+                isAvailable: () => this.archiveEnabled && this.model.root.isActive,
+                sequence: 10,
+                description: this.env._t("Archive"),
+                callback: () => {
+                    const dialogProps = {
+                        body: this.env._t("Are you sure that you want to archive all this record?"),
+                        confirm: () => this.model.root.archive(),
+                        cancel: () => {},
+                    };
+                    this.dialogService.add(ConfirmationDialog, dialogProps);
+                },
+            },
+            unarchive: {
+                isAvailable: () => this.archiveEnabled && !this.model.root.isActive,
+                sequence: 20,
+                description: this.env._t("Unarchive"),
+                callback: () => this.model.root.unarchive(),
+            },
+            duplicate: {
+                isAvailable: () => activeActions.create && activeActions.duplicate,
+                sequence: 30,
                 description: this.env._t("Duplicate"),
                 callback: () => this.duplicateRecord(),
-            });
-        }
-        if (this.archInfo.activeActions.delete && !this.model.root.isVirtual) {
-            otherActionItems.push({
-                key: "delete",
+            },
+            delete: {
+                isAvailable: () => activeActions.delete && !this.model.root.isVirtual,
+                sequence: 40,
                 description: this.env._t("Delete"),
                 callback: () => this.deleteRecord(),
                 skipSave: true,
-            });
-        }
-        return Object.assign({}, this.props.info.actionMenus, { other: otherActionItems });
+            },
+        };
+    }
+
+    get actionMenuItems() {
+        const { actionMenus } = this.props.info;
+        const staticActionItems = Object.entries(this.getStaticActionMenuItems())
+            .filter(([key, item]) => item.isAvailable === undefined || item.isAvailable())
+            .sort(([k1, item1], [k2, item2]) => (item1.sequence || 0) - (item2.sequence || 0))
+            .map(([key, item]) => Object.assign({ key }, omit(item, "isAvailable", "sequence")));
+
+        return {
+            action: [...staticActionItems, ...(actionMenus.action || [])],
+            print: actionMenus.print,
+        };
     }
 
     async shouldExecuteAction(item) {

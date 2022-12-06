@@ -5334,6 +5334,108 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("apply custom static action menu (archive)", async function (assert) {
+        // add active field on foo model and make all records active
+        serverData.models.foo.fields.active = { string: "Active", type: "boolean", default: true };
+
+        const listView = registry.category("views").get("list");
+        class CustomListController extends listView.Controller {
+            getStaticActionMenuItems() {
+                const menuItems = super.getStaticActionMenuItems();
+                menuItems.archive.callback = () => {
+                    assert.step("customArchive");
+                };
+                return menuItems;
+            }
+        }
+        registry.category("views").add("custom_list", {
+            ...listView,
+            Controller: CustomListController,
+        });
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree js_class="custom_list">
+                    <field name="foo"/>
+                </tree>`,
+            actionMenus: {},
+        });
+        assert.containsNone(target, "div.o_control_panel .o_cp_action_menus");
+
+        await click(target, "thead .o_list_record_selector input");
+        assert.containsOnce(target, "div.o_control_panel .o_cp_action_menus");
+
+        await toggleActionMenu(target);
+        await toggleMenuItem(target, "Archive");
+        assert.verifySteps(["customArchive"]);
+    });
+
+    QUnit.test("add custom static action menu", async function (assert) {
+        const listView = registry.category("views").get("list");
+        class CustomListController extends listView.Controller {
+            getStaticActionMenuItems() {
+                const menuItems = super.getStaticActionMenuItems();
+                menuItems.customAvailable = {
+                    isAvailable: () => true,
+                    description: "Custom Available",
+                    sequence: 35,
+                    callback: () => {
+                        assert.step("Custom Available");
+                    },
+                };
+                menuItems.customNotAvailable = {
+                    isAvailable: () => false,
+                    description: "Custom Not Available",
+                    callback: () => {
+                        assert.step("Custom Not Available");
+                    },
+                };
+                menuItems.customDefaultAvailable = {
+                    description: "Custom Default Available",
+                    callback: () => {
+                        assert.step("Custom Default Available");
+                    },
+                };
+                return menuItems;
+            }
+        }
+        registry.category("views").add("custom_list", {
+            ...listView,
+            Controller: CustomListController,
+        });
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree js_class="custom_list">
+                    <field name="foo"/>
+                </tree>`,
+            actionMenus: {},
+        });
+        assert.containsNone(target, "div.o_control_panel .o_cp_action_menus");
+
+        await click(target, "thead .o_list_record_selector input");
+        assert.containsOnce(target, "div.o_control_panel .o_cp_action_menus");
+
+        await toggleActionMenu(target);
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_cp_action_menus .dropdown-item")),
+            ["Custom Default Available", "Export", "Custom Available", "Delete"]
+        );
+
+        await toggleMenuItem(target, "Custom Available");
+        assert.verifySteps(["Custom Available"]);
+
+        await toggleActionMenu(target);
+        await toggleMenuItem(target, "Custom Default Available");
+        assert.verifySteps(["Custom Default Available"]);
+    });
+
     QUnit.test(
         "grouped, update the count of the group (and ancestors) when a record is deleted",
         async function (assert) {

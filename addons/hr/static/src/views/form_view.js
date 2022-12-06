@@ -15,16 +15,9 @@ export class EmployeeFormController extends FormController {
         this.archiveEmployee = useArchiveEmployee();
     }
 
-    getActionMenuItems() {
-        const menuItems = super.getActionMenuItems();
-        if (!this.archiveEnabled || !this.model.root.isActive) {
-            return menuItems;
-        }
-
-        const archiveAction = menuItems.other.find((item) => item.key === "archive");
-        if (archiveAction) {
-            archiveAction.callback = this.archiveEmployee.bind(this, this.model.root.resId);
-        }
+    getStaticActionMenuItems() {
+        const menuItems = super.getStaticActionMenuItems();
+        menuItems.archive.callback = this.archiveEmployee.bind(this, this.model.root.resId);
         return menuItems;
     }
 }

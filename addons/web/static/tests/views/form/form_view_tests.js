@@ -3845,6 +3845,109 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
+    QUnit.test("apply custom standard action menu (archive)", async function (assert) {
+        // add active field on partner model to have archive option
+        serverData.models.partner.fields.active = { string: "Active", type: "char", default: true };
+
+        const formView = registry.category("views").get("form");
+        class CustomFormController extends formView.Controller {
+            getStaticActionMenuItems() {
+                const menuItems = super.getStaticActionMenuItems();
+                menuItems.archive.callback = () => {
+                    assert.step("customArchive");
+                };
+                return menuItems;
+            }
+        }
+        registry.category("views").add("custom_form", {
+            ...formView,
+            Controller: CustomFormController,
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            resId: 1,
+            actionMenus: {},
+            arch: `
+                <form js_class="custom_form">
+                        <field name="active"/>
+                        <field name="foo"/>
+                </form>`,
+        });
+
+        assert.containsOnce(target, ".o_cp_action_menus");
+
+        await toggleActionMenu(target);
+        assert.containsOnce(target, ".o_cp_action_menus span:contains(Archive)");
+
+        await toggleMenuItem(target, "Archive");
+        assert.verifySteps(["customArchive"]);
+    });
+
+    QUnit.test("add custom static action menu", async function (assert) {
+        const formView = registry.category("views").get("form");
+        class CustomFormController extends formView.Controller {
+            getStaticActionMenuItems() {
+                const menuItems = super.getStaticActionMenuItems();
+                menuItems.customAvailable = {
+                    isAvailable: () => true,
+                    description: "Custom Available",
+                    sequence: 35,
+                    callback: () => {
+                        assert.step("Custom Available");
+                    },
+                };
+                menuItems.customNotAvailable = {
+                    isAvailable: () => false,
+                    description: "Custom Not Available",
+                    callback: () => {
+                        assert.step("Custom Not Available");
+                    },
+                };
+                menuItems.customDefaultAvailable = {
+                    description: "Custom Default Available",
+                    callback: () => {
+                        assert.step("Custom Default Available");
+                    },
+                };
+                return menuItems;
+            }
+        }
+        registry.category("views").add("custom_form", {
+            ...formView,
+            Controller: CustomFormController,
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            resId: 1,
+            actionMenus: {},
+            arch: `
+                <form js_class="custom_form">
+                        <field name="foo"/>
+                </form>`,
+        });
+
+        assert.containsOnce(target, ".o_cp_action_menus");
+
+        await toggleActionMenu(target);
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_cp_action_menus .dropdown-item")),
+            ["Custom Default Available", "Duplicate", "Custom Available", "Delete"]
+        );
+
+        await toggleMenuItem(target, "Custom Available");
+        assert.verifySteps(["Custom Available"]);
+
+        await toggleActionMenu(target);
+        await toggleMenuItem(target, "Custom Default Available");
+        assert.verifySteps(["Custom Default Available"]);
+    });
+
     QUnit.test("archive a record with intermediary action", async function (assert) {
         // add active field on partner model to have archive option
         serverData.models.partner.fields.active = { string: "Active", type: "char", default: true };
