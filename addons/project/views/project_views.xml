@@ -1663,6 +1663,30 @@
             </field>
         </record>
 
+        <record id="open_view_my_tasks_list_view" model="ir.ui.view">
+            <field name="name">open.view.my.tasks.list.view</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="view_task_tree2"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <field name="stage_id" position="replace">
+                    <field name="stage_display" optional="show" string="Stage"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="open_view_all_tasks_list_view" model="ir.ui.view">
+            <field name="name">open.view.all.tasks.list.view</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="view_task_tree2"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <field name="stage_id" position="replace">
+                    <field name="stage_display" optional="show" string="Stage"/>
+                </field>
+            </field>
+        </record>
+
         <record id="action_view_my_task" model="ir.actions.act_window">
             <field name="name">My Tasks</field>
             <field name="res_model">project.task</field>
@@ -1677,18 +1701,6 @@
                     Organize your tasks by dispatching them across the pipeline.<br/>
                     Collaborate efficiently by chatting in real-time or via email.
                 </p>
-            </field>
-        </record>
-
-        <record id="open_view_my_tasks_list_view" model="ir.ui.view">
-            <field name="name">open.view.my.tasks.list.view</field>
-            <field name="model">project.task</field>
-            <field name="inherit_id" ref="view_task_tree2"/>
-            <field name="mode">primary</field>
-            <field name="arch" type="xml">
-                <field name="stage_id" position="replace">
-                    <field name="stage_display" optional="show"/>
-                </field>
             </field>
         </record>
 
@@ -1743,6 +1755,7 @@
             <field name="sequence" eval="10"/>
             <field name="view_mode">tree</field>
             <field name="act_window_id" ref="action_view_all_task"/>
+            <field name="view_id" ref="open_view_all_tasks_list_view"/>
         </record>
         <record id="open_view_all_task_list_kanban" model="ir.actions.act_window.view">
             <field name="sequence" eval="20"/>
