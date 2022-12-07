@@ -287,6 +287,18 @@ export function getFurthestUneditableParent(node, parentLimit) {
  * @returns {HTMLElement}
  */
 export function closestElement(node, selector) {
+//    if (!node || !node.nodeType || node.nodeType === Node.COMMENT_NODE) {
+//        console.log('not a node');
+//        return null;
+//    }
+//    const element = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+//    if (!element || !node.nodeType || element.nodeType === Node.COMMENT_NODE) {
+//        console.log('parent is not a node');
+//    }
+//    if (selector && element) {
+//        const elementFound = element.closest(selector);
+//        return elementFound && elementFound.querySelector('.odoo-editor-editable') ? null : elementFound;
+//    }
     let element = node;
     while (element && element.nodeType !== Node.ELEMENT_NODE) {
         element = element.parentNode;
@@ -318,10 +330,20 @@ export function ancestors(node, editable) {
 export function descendants(node) {
     const posterity = [];
     for (const child of (node.childNodes || [])) {
-        posterity.push(child, ...descendants(child));
+        if (Node.COMMENT_NODE !== child.nodeType) {
+            posterity.push(child, ...descendants(child));
+        }
     }
     return posterity;
 }
+
+//export function descendants(node) {
+//    const posterity = [];
+//    for (const child of (node.childNodes || [])) {
+//        posterity.push(child, ...descendants(child));
+//    }
+//    return posterity;
+//}
 
 export function closestBlock(node) {
     return findNode(closestPath(node), node => isBlock(node));
