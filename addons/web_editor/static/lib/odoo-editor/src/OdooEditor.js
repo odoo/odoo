@@ -2467,7 +2467,9 @@ export class OdooEditor extends EventTarget {
                         const selectionBackup = this._latestComputedSelection;
                         setSelection(selectionBackup.anchorNode, selectionBackup.anchorOffset);
                     }
-                    insertText(selection, ev.data);
+                    // When the spellcheck of Safari modify text, ev.data is
+                    // null and the string can be found within ev.dataTranser.
+                    insertText(selection, ev.data === null ? ev.dataTransfer.getData('text/plain') : ev.data);
                     selection.collapseToEnd();
                 }
                 // Check for url after user insert a space so we won't transform an incomplete url.
