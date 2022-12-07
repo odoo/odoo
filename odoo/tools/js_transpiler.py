@@ -32,7 +32,6 @@ def transpile_javascript(url, content):
     steps = [
         convert_legacy_default_import,
         convert_basic_import,
-        convert_default_and_named_import,
         convert_default_and_star_import,
         convert_default_import,
         convert_star_import,
@@ -417,44 +416,6 @@ def convert_default_import(content):
     """
     repl = r"""\g<space>const \g<identifier> = require(\g<path>)[Symbol.for("default")]"""
     return IMPORT_DEFAULT.sub(repl, content)
-
-
-IS_PATH_LEGACY_RE = re.compile(r"""(?P<quote>["'`])([^@\."'`][^"'`]*)(?P=quote)""")
-
-IMPORT_DEFAULT_AND_NAMED_RE = re.compile(r"""
-    ^
-    (?P<space>\s*)                                  # space and empty line
-    import\s+                                       # import
-    (?P<default_export>\w+)\s*,\s*                  # default variable name,
-    (?P<named_exports>{(\s*\w+\s*,?\s*)+})\s*       # { a, b, c as x, ... }
-    from\s*                                         # from
-    (?P<path>(?P<quote>["'`])([^"'`]+)(?P=quote))   # "file path" ("some/path")
-    """, re.MULTILINE | re.VERBOSE)
-
-
-def convert_default_and_named_import(content):
-    """
-    Transpile default and named import on one line.
-
-    .. code-block:: javascript
-
-        // before
-        import something, { a } from "some/path";
-        import somethingElse, { b } from "legacy.module";
-        // after
-        const { [Symbol.for("default")]: something, a } = require("some/path");
-        const somethingElse = require("legacy.module");
-        const { b } = somethingElse;
-    """
-    def repl(matchobj):
-        is_legacy = IS_PATH_LEGACY_RE.match(matchobj['path'])
-        new_object = matchobj["named_exports"].replace(" as ", ": ")
-        if is_legacy:
-            return f"""{matchobj['space']}const {matchobj['default_export']} = require({matchobj['path']});
-{matchobj['space']}const {new_object} = {matchobj['default_export']}"""
-        new_object = f"""{{ [Symbol.for("default")]: {matchobj['default_export']},{new_object[1:]}"""
-        return f"{matchobj['space']}const {new_object} = require({matchobj['path']})"
-    return IMPORT_DEFAULT_AND_NAMED_RE.sub(repl, content)
 
 
 RELATIVE_REQUIRE_RE = re.compile(r"""

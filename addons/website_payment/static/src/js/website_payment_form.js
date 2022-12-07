@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import core, { _t } from 'web.core';
+import { bus, _t } from 'web.core';
 import checkoutForm from 'payment.checkout_form';
 
 checkoutForm.include({
@@ -12,7 +12,7 @@ checkoutForm.include({
      * @override
      */
     start: function () {
-        core.bus.on('update_shipping_cost', this, this._updateShippingCost);
+        bus.on('update_shipping_cost', this, this._updateShippingCost);
         return this._super.apply(this, arguments);
     },
 
