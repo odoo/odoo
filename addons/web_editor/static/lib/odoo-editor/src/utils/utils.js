@@ -834,7 +834,7 @@ const formatsSpecs = {
     },
     fontSize: {
         isFormatted: isFontSize,
-        hasStyle: (node, props) => node.style && node.style['font-size'] === props.size,
+        hasStyle: (node) => node.style && node.style['font-size'],
         addStyle: (node, props) => node.style['font-size'] = props.size,
         removeStyle: (node) => removeStyle(node, 'font-size'),
     },
@@ -875,7 +875,7 @@ const removeFormat = (node, formatSpec) => {
         }
     }
 
-    if (formatSpec.isTag(node)) {
+    if (formatSpec.isTag && formatSpec.isTag(node)) {
         const attributesNames = node.getAttributeNames().filter((name)=> {
             return name !== 'oe-zws-empty-inline';
         });
@@ -923,79 +923,48 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
 
     const formatSpec = formatsSpecs[formatName];
     for (const selectedTextNode of selectedTextNodes) {
-        // Compute inline ancestors until finding one which is a block or has a class.
         const inlineAncestors = [];
-        let node = selectedTextNode;
-        while ((node = node.parentElement) && (!isBlock(node) && !(node.classList && node.classList.length))) {
-            inlineAncestors.unshift(node);
-        }
-        const blockOrInlineClass = node;
+        let currentNode = selectedTextNode;
+        let parentNode = selectedTextNode.parentElement;
 
-        const firstBlockOrClassHasFormat = formatSpec.isFormatted(blockOrInlineClass, formatProps);
+        // Remove the format on all inline ancestors until a block or an element
+        // with a class (in case the formating comes from the class).
+        while (parentNode && (!isBlock(parentNode) && !(parentNode.classList && parentNode.classList.length))) {
+            const isUselessZws = parentNode.tagName === 'SPAN' &&
+                parentNode.hasAttribute('oe-zws-empty-inline') &&
+                parentNode.getAttributeNames().length === 1;
 
-        let previousAncestorHasFormat = firstBlockOrClassHasFormat;
-        let lastAncestorInlineFormat;
-
-        for (const ancestor of inlineAncestors) {
-            const ancestorIsTag = formatSpec.isTag && formatSpec.isTag(ancestor);
-            const ancestorHasStyle = formatSpec.hasStyle && formatSpec.hasStyle(ancestor, formatProps);
-            const ancestorTagIsFormated = ancestorIsTag || ancestorHasStyle;
-            const isUselessZwsSpan =
-                ancestor.tagName === 'SPAN' &&
-                ancestor.hasAttribute('oe-zws-empty-inline') &&
-                ancestor.getAttributeNames().length === 1;
-            const ancestorIsFormatted = formatSpec.isFormatted(ancestor, formatProps);
-
-            if (ancestorTagIsFormated && previousAncestorHasFormat !== ancestorIsFormatted) {
-                if (lastAncestorInlineFormat) {
-                    // Remove format on two node that switch the format to flatten the DOM.
-                    const newLastAncestorInlineFormat = splitAroundUntil(ancestor, lastAncestorInlineFormat);
-                    removeFormat(newLastAncestorInlineFormat, formatSpec);
-                    removeFormat(ancestor, formatSpec);
-                    lastAncestorInlineFormat = undefined;
-                } else {
-                    lastAncestorInlineFormat = ancestor;
+            if (isUselessZws) {
+                unwrapContents(parentNode);
+            } else {
+                const newLastAncestorInlineFormat = splitAroundUntil(currentNode, parentNode);
+                removeFormat(newLastAncestorInlineFormat, formatSpec);
+                if (newLastAncestorInlineFormat.isConnected) {
+                    inlineAncestors.push(newLastAncestorInlineFormat);
+                    currentNode = newLastAncestorInlineFormat;
                 }
-                // if there is two consecutive format that are the same, remove one.
-            } else if (
-                (ancestorIsTag || ancestorHasStyle) &&
-                (
-                    previousAncestorHasFormat ||
-                    (!previousAncestorHasFormat && !ancestorIsFormatted)
-                )
-            ) {
-                removeFormat(ancestor, formatSpec);
-            } else if (isUselessZwsSpan) {
-                unwrapContents(ancestor);
             }
-            previousAncestorHasFormat = ancestor.parentElement && formatSpec.isFormatted(ancestor, formatProps);
+
+            parentNode = currentNode.parentElement;
         }
 
-        if (selectedTextNode.nodeType === Node.TEXT_NODE) {
-            const isLeafNodeFormated = formatSpec.isFormatted(selectedTextNode, formatProps);
-            if (isLeafNodeFormated !== applyStyle) {
-                if (lastAncestorInlineFormat) {
-                    const splitNode = splitAroundUntil(selectedTextNode, lastAncestorInlineFormat);
-                    removeFormat(splitNode, formatSpec);
-                } else {
-                    if (firstBlockOrClassHasFormat && !applyStyle) {
-                        formatSpec.addNeutralStyle && formatSpec.addNeutralStyle(getOrCreateSpan(selectedTextNode, inlineAncestors));
-                    } else if (!firstBlockOrClassHasFormat && applyStyle) {
-                        const tag = formatSpec.tagName && document.createElement(formatSpec.tagName);
-                        if (tag) {
-                            selectedTextNode.after(tag);
-                            tag.append(selectedTextNode);
+        const firstBlockOrClassHasFormat = formatSpec.isFormatted(parentNode, formatProps);
 
-                            if (!formatSpec.isFormatted(tag, formatProps)) {
-                                tag.after(selectedTextNode);
-                                tag.remove();
-                                formatSpec.addStyle(getOrCreateSpan(selectedTextNode, inlineAncestors), formatProps);
-                            }
-                        } else {
-                            formatSpec.addStyle(getOrCreateSpan(selectedTextNode, inlineAncestors), formatProps);
-                        }
-                    }
+        if (firstBlockOrClassHasFormat && !applyStyle) {
+            formatSpec.addNeutralStyle && formatSpec.addNeutralStyle(getOrCreateSpan(selectedTextNode, inlineAncestors));
+        } else if (!firstBlockOrClassHasFormat && applyStyle) {
+            const tag = formatSpec.tagName && document.createElement(formatSpec.tagName);
+            if (tag) {
+                selectedTextNode.after(tag);
+                tag.append(selectedTextNode);
+
+                if (!formatSpec.isFormatted(tag, formatProps)) {
+                    tag.after(selectedTextNode);
+                    tag.remove();
+                    formatSpec.addStyle(getOrCreateSpan(selectedTextNode, inlineAncestors), formatProps);
                 }
+            } else {
+                formatSpec.addStyle(getOrCreateSpan(selectedTextNode, inlineAncestors), formatProps);
             }
         }
     }
