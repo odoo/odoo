@@ -6,6 +6,7 @@ import { registry } from "@web/core/registry";
 import { patch } from 'web.utils';
 
 const websiteSystrayRegistry = registry.category('website_systray');
+const { useEffect } = owl;
 
 patch(NavBar.prototype, 'website_navbar', {
     setup() {
@@ -21,8 +22,26 @@ patch(NavBar.prototype, 'website_navbar', {
         if (this.env.debug && !websiteSystrayRegistry.contains('web.debug_mode_menu')) {
             websiteSystrayRegistry.add('web.debug_mode_menu', registry.category('systray').get('web.debug_mode_menu'), {sequence: 100});
         }
+        // Similar to what is done in web/navbar. When the app menu or systray
+        // is updated, we need to adapt the navbar so that the "more" menu
+        // can be computed.
+        let adaptCounter = 0;
+        const renderAndAdapt = () => {
+            this.render(true);
+            adaptCounter++;
+        };
+        useEffect(
+            (adaptCounter) => {
+                // We do not want to adapt on the first render
+                // as the super class already does it.
+                if (adaptCounter > 0) {
+                    this.adapt();
+                }
+            },
+            () => [adaptCounter]
+        );
 
-        useBus(websiteSystrayRegistry, 'CONTENT-UPDATED', () => this.render(true));
+        useBus(websiteSystrayRegistry, 'CONTENT-UPDATED', renderAndAdapt);
     },
 
     /**
