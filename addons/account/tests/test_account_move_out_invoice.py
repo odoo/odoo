@@ -2868,11 +2868,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                     'value_amount': 100.0,
                     'days': 0,
                 }),
-                (0, 0, {
-                    'value': 'balance',
-                    'value_amount': 0.0,
-                    'days': 0,
-                }),
             ],
         })
 

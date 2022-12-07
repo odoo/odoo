@@ -13,10 +13,7 @@ class AccountPaymentTerm(models.Model):
     _order = "sequence, id"
 
     def _default_line_ids(self):
-        return [Command.create({'value': 'balance', 'value_amount': 0.0, 'days': 0, 'end_month': False})]
-
-    def _default_example_amount(self):
-        return self._context.get('example_amount') or 100  # Force default value if the context is set to False
+        return [Command.create({'value': 'percent', 'value_amount': 100.0, 'days': 0})]
 
     def _default_example_date(self):
         return self._context.get('example_date') or fields.Date.today()
@@ -28,11 +25,21 @@ class AccountPaymentTerm(models.Model):
     company_id = fields.Many2one('res.company', string='Company')
     fiscal_country_codes = fields.Char(compute='_compute_fiscal_country_codes')
     sequence = fields.Integer(required=True, default=10)
-    display_on_invoice = fields.Boolean(string='Display terms on invoice', help="If set, the payment deadlines and respective due amounts will be detailed on invoices.")
-    example_amount = fields.Float(default=_default_example_amount, store=False)
+    display_on_invoice = fields.Boolean(string='Hide installment dates', default=False)
+    early_pay_discount_computation = fields.Selection([
+        ('included', 'On early payment'),
+        ('excluded', 'Never'),
+        ('mixed', 'Always (upon invoice)'),
+    ], string='Cash Discount Tax Reduction', readonly=False, store=True, default='included')
+    early_discount = fields.Boolean(string='Early Discount', default=False)
+    example_amount = fields.Monetary(currency_field='currency_id', default=1000, store=False, readonly=True)
     example_date = fields.Date(string='Date example', default=_default_example_date, store=False)
     example_invalid = fields.Boolean(compute='_compute_example_invalid')
     example_preview = fields.Html(compute='_compute_example_preview')
+    example_preview_discount = fields.Html(compute='_compute_example_preview')
+    discount_percentage = fields.Float(string='Discount %', help='Early Payment Discount granted for this line', default='5')
+    discount_days = fields.Integer(string='Discount Days', help='Number of days before the early payment proposition expires', default='10')
+    currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id, store=True)
 
     @api.depends('company_id')
     @api.depends_context('allowed_company_ids')
@@ -44,15 +51,22 @@ class AccountPaymentTerm(models.Model):
     @api.depends('line_ids')
     def _compute_example_invalid(self):
         for payment_term in self:
-            payment_term.example_invalid = len(payment_term.line_ids.filtered(lambda l: l.value == 'balance')) != 1
+            payment_term.example_invalid = len(payment_term.line_ids) <= 1
 
-    @api.depends('example_amount', 'example_date', 'line_ids.value', 'line_ids.value_amount',
-                 'line_ids.months', 'line_ids.days', 'line_ids.end_month', 'line_ids.days_after')
+    @api.depends('example_amount', 'example_date', 'line_ids.value', 'line_ids.value_amount', 'line_ids.days', 'early_discount')
     def _compute_example_preview(self):
         for record in self:
             example_preview = ""
+            self.example_preview_discount = ""
+            currency = self.currency_id
+            if self.early_discount and len(self.line_ids) > 0:
+                date = format_date(self.env, record.example_date + relativedelta(days=self.discount_days))
+                discount_amount = self.example_amount - (self.example_amount * (self.discount_percentage / 100))
+                self.example_preview_discount = f"""
+                 Early Payment Discount: <b>{formatLang(self.env, discount_amount, monetary=True, currency_obj=currency)}</b> if paid before <b>{date}</b>:
+            """
+
             if not record.example_invalid:
-                currency = self.env.company.currency_id
                 terms = record._compute_terms(
                     date_ref=record.example_date,
                     currency=currency,
@@ -64,20 +78,14 @@ class AccountPaymentTerm(models.Model):
                     sign=1)
                 for i, info_by_dates in enumerate(record._get_amount_by_date(terms, currency).values()):
                     date = info_by_dates['date']
-                    discount_date = info_by_dates['discount_date']
                     amount = info_by_dates['amount']
-                    discount_amount = info_by_dates['discounted_amount'] or 0.0
                     example_preview += f"""
-                        <div style='margin-left: 20px;'>
+                        <div>
                             <b>{i+1}#</b>
                             Installment of
                             <b>{formatLang(self.env, amount, monetary=True, currency_obj=currency)}</b>
-                            on 
+                            due on 
                             <b style='color: #704A66;'>{date}</b>
-                    """
-                    if discount_date:
-                        example_preview += f"""
-                         (<b>{formatLang(self.env, discount_amount, monetary=True, currency_obj=currency)}</b> if paid before <b>{format_date(self.env, terms[i].get('discount_date'))}</b>)
                     """
                     example_preview += "</div>"
 
@@ -90,31 +98,35 @@ class AccountPaymentTerm(models.Model):
         (grouped by date, discounted percentage and discount last date,
         sorted by date and ignoring null amounts).
         """
-        terms = sorted(terms, key=lambda t: t.get('date'))
+        terms_lines = sorted(terms["line_ids"], key=lambda t: t.get('date'))
         amount_by_date = {}
-        for term in terms:
+        for term in terms_lines:
             key = frozendict({
                 'date': term['date'],
-                'discount_date': term['discount_date'],
-                'discount_percentage': term['discount_percentage'],
+                'discount_date': terms['discount_date'],
             })
             results = amount_by_date.setdefault(key, {
                 'date': format_date(self.env, term['date']),
                 'amount': 0.0,
-                'discounted_amount': 0.0,
-                'discount_date': format_date(self.env, term['discount_date']),
+                'discount_date': format_date(self.env, terms['discount_date']),
             })
             results['amount'] += term['foreign_amount']
-            results['discounted_amount'] += term['discount_amount_currency']
         return amount_by_date
 
     @api.constrains('line_ids')
     def _check_lines(self):
         for terms in self:
-            if len(terms.line_ids.filtered(lambda r: r.value == 'balance')) != 1:
-                raise ValidationError(_('The Payment Term must have one Balance line.'))
-            if terms.line_ids.filtered(lambda r: r.value == 'fixed' and r.discount_percentage):
+            if len(terms.line_ids.filtered(lambda r: r.value == 'percent')) > 0 and not self.get_sum_line_ids():
+                raise ValidationError(_('The Payment Term must have at least one percent line and the sum of the percent must be 100%.'))
+            if terms.line_ids.filtered(lambda r: r.value == 'fixed') and self.discount_percentage:
                 raise ValidationError(_("You can't mix fixed amount with early payment percentage"))
+
+    @api.model
+    def get_sum_line_ids(self):
+        amount = 0
+        for line in self.line_ids.filtered(lambda r: r.value == 'percent'):
+            amount += line.value_amount
+        return 100 - amount == 0
 
     def _compute_terms(self, date_ref, currency, company, tax_amount, tax_amount_currency, sign, untaxed_amount, untaxed_amount_currency):
         """Get the distribution of this payment term.
@@ -131,67 +143,44 @@ class AccountPaymentTerm(models.Model):
         """
         self.ensure_one()
         company_currency = company.currency_id
-        tax_amount_left = tax_amount
-        tax_amount_currency_left = tax_amount_currency
-        untaxed_amount_left = untaxed_amount
-        untaxed_amount_currency_left = untaxed_amount_currency
         total_amount = tax_amount + untaxed_amount
         total_amount_currency = tax_amount_currency + untaxed_amount_currency
-        result = []
 
-        for line in self.line_ids.sorted(lambda line: line.value == 'balance'):
+        pay_term = {
+            'total_amount': total_amount,
+            'discount_percentage': self.discount_percentage,
+            'discount_date': date_ref + relativedelta(days=(self.discount_days or 0)),
+            'discount_balance': 0,
+            'discount_amount_currency': 0,
+            'line_ids': [],
+        }
+
+        if self.early_discount:
+            discount_percentage = self.discount_percentage / 100.0
+            if self.early_pay_discount_computation in ('excluded', 'mixed'):
+                pay_term['discount_balance'] = company_currency.round(total_amount - untaxed_amount * discount_percentage)
+                pay_term['discount_amount_currency'] = currency.round(total_amount_currency - untaxed_amount_currency * discount_percentage)
+            else:
+                pay_term['discount_balance'] = company_currency.round(total_amount * (1 - (discount_percentage)))
+                pay_term['discount_amount_currency'] = currency.round(total_amount_currency * (1 - (discount_percentage)))
+
+        #We sort by the last line of a term
+        for line in self.line_ids.sorted(lambda l: l == self.line_ids[-1]):
             term_vals = {
                 'date': line._get_due_date(date_ref),
-                'has_discount': line.discount_percentage,
-                'discount_date': None,
-                'discount_amount_currency': 0.0,
-                'discount_balance': 0.0,
-                'discount_percentage': line.discount_percentage,
+                'company_amount': 0,
+                'foreign_amount': 0,
             }
 
             if line.value == 'fixed':
                 term_vals['company_amount'] = sign * company_currency.round(line.value_amount)
                 term_vals['foreign_amount'] = sign * currency.round(line.value_amount)
-                company_proportion = tax_amount/untaxed_amount if untaxed_amount else 1
-                foreign_proportion = tax_amount_currency/untaxed_amount_currency if untaxed_amount_currency else 1
-                line_tax_amount = company_currency.round(line.value_amount * company_proportion) * sign
-                line_tax_amount_currency = currency.round(line.value_amount * foreign_proportion) * sign
-                line_untaxed_amount = term_vals['company_amount'] - line_tax_amount
-                line_untaxed_amount_currency = term_vals['foreign_amount'] - line_tax_amount_currency
-            elif line.value == 'percent':
+            else:
                 term_vals['company_amount'] = company_currency.round(total_amount * (line.value_amount / 100.0))
                 term_vals['foreign_amount'] = currency.round(total_amount_currency * (line.value_amount / 100.0))
-                line_tax_amount = company_currency.round(tax_amount * (line.value_amount / 100.0))
-                line_tax_amount_currency = currency.round(tax_amount_currency * (line.value_amount / 100.0))
-                line_untaxed_amount = term_vals['company_amount'] - line_tax_amount
-                line_untaxed_amount_currency = term_vals['foreign_amount'] - line_tax_amount_currency
-            else:
-                line_tax_amount = line_tax_amount_currency = line_untaxed_amount = line_untaxed_amount_currency = 0.0
 
-            tax_amount_left -= line_tax_amount
-            tax_amount_currency_left -= line_tax_amount_currency
-            untaxed_amount_left -= line_untaxed_amount
-            untaxed_amount_currency_left -= line_untaxed_amount_currency
-
-            if line.value == 'balance':
-                term_vals['company_amount'] = tax_amount_left + untaxed_amount_left
-                term_vals['foreign_amount'] = tax_amount_currency_left + untaxed_amount_currency_left
-                line_tax_amount = tax_amount_left
-                line_tax_amount_currency = tax_amount_currency_left
-                line_untaxed_amount = untaxed_amount_left
-                line_untaxed_amount_currency = untaxed_amount_currency_left
-
-            if line.discount_percentage:
-                if company.early_pay_discount_computation in ('excluded', 'mixed'):
-                    term_vals['discount_balance'] = company_currency.round(term_vals['company_amount'] - line_untaxed_amount * line.discount_percentage / 100.0)
-                    term_vals['discount_amount_currency'] = currency.round(term_vals['foreign_amount'] - line_untaxed_amount_currency * line.discount_percentage / 100.0)
-                else:
-                    term_vals['discount_balance'] = company_currency.round(term_vals['company_amount'] * (1 - (line.discount_percentage / 100.0)))
-                    term_vals['discount_amount_currency'] = currency.round(term_vals['foreign_amount'] * (1 - (line.discount_percentage / 100.0)))
-                term_vals['discount_date'] = date_ref + relativedelta(days=line.discount_days)
-
-            result.append(term_vals)
-        return result
+            pay_term["line_ids"].append(term_vals)
+        return pay_term
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_referenced_terms(self):
@@ -212,42 +201,58 @@ class AccountPaymentTermLine(models.Model):
     _order = "id"
 
     value = fields.Selection([
-            ('balance', 'Balance'),
             ('percent', 'Percent'),
-            ('fixed', 'Fixed Amount')
-        ], string='Type', required=True, default='percent',
+            ('fixed', 'Fixed')
+        ], required=True, default='percent',
         help="Select here the kind of valuation related to this payment terms line.")
-    value_amount = fields.Float(string='Value', digits='Payment Terms', help="For percent enter a ratio between 0-100.")
-    months = fields.Integer(string='Months', required=True, default=0)
-    days = fields.Integer(string='Days', required=True, default=0)
-    end_month = fields.Boolean(string='End of month', help="Switch to end of the month after having added months or days")
-    days_after = fields.Integer(string='Days after End of month', help="Days to add after the end of the month")
-    discount_percentage = fields.Float(string='Discount %', help='Early Payment Discount granted for this line')
-    discount_days = fields.Integer(string='Discount Days', help='Number of days before the early payment proposition expires')
+    value_amount = fields.Float(string='Due', digits='Payment Terms',
+                                help="For percent enter a ratio between 0-100.",
+                                compute='_compute_value_amount', store=True, readonly=False)
+    delay_discount = fields.Selection([
+            ('days', 'Days after invoice date'),
+            ('days_after', 'Days after end of month'),
+        ], required=True, default='days')
+    days = fields.Integer(string='Days', readonly=False, store=True, compute='_compute_days')
     payment_id = fields.Many2one('account.payment.term', string='Payment Terms', required=True, index=True, ondelete='cascade')
 
     def _get_due_date(self, date_ref):
         self.ensure_one()
         due_date = fields.Date.from_string(date_ref)
-        due_date += relativedelta(months=self.months)
-        due_date += relativedelta(days=self.days)
-        if self.end_month:
+        if self.delay_discount == 'days_after':
             due_date += relativedelta(day=31)
-            due_date += relativedelta(days=self.days_after)
+        due_date += relativedelta(days=self.days)
         return due_date
 
-    @api.constrains('value', 'value_amount', 'discount_percentage')
+    @api.constrains('value', 'value_amount', 'payment_id')
     def _check_percent(self):
         for term_line in self:
+            discount_percentage = term_line.payment_id.discount_percentage
             if term_line.value == 'percent' and (term_line.value_amount < 0.0 or term_line.value_amount > 100.0):
                 raise ValidationError(_('Percentages on the Payment Terms lines must be between 0 and 100.'))
-            if term_line.discount_percentage and (term_line.discount_percentage < 0.0 or term_line.discount_percentage > 100.0):
+            if discount_percentage and (discount_percentage < 0.0 or discount_percentage > 100.0):
                 raise ValidationError(_('Discount percentages on the Payment Terms lines must be between 0 and 100.'))
 
-    @api.constrains('months', 'days', 'days_after', 'discount_days')
+    @api.constrains('days', 'payment_id')
     def _check_positive(self):
         for term_line in self:
-            if term_line.months < 0 or term_line.days < 0:
+            if term_line.days < 0:
                 raise ValidationError(_('The Months and Days of the Payment Terms lines must be positive.'))
-            if term_line.discount_days < 0:
+            if term_line.payment_id.discount_days < 0:
                 raise ValidationError(_('The discount days of the Payment Terms lines must be positive.'))
+
+    @api.depends('payment_id')
+    def _compute_days(self):
+        for line in self:
+            #Line.payment_id.line_ids[-1] is the new line that has been just added when clicking "add a new line"
+            if not line.days and len(line.payment_id.line_ids) > 1:
+                line.days = line.payment_id.line_ids[-2].days + 30
+            else:
+                line.days = line.days
+
+    @api.depends('payment_id')
+    def _compute_value_amount(self):
+        for line in self:
+            amount = 0
+            for i in line.payment_id.line_ids.filtered(lambda r: r.value == 'percent'):
+                amount += i['value_amount']
+            line.value_amount = 100 - amount

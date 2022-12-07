@@ -369,6 +369,7 @@ class AccountMoveLine(models.Model):
         store=True,
         help='Last date at which the discounted amount must be paid in order for the Early Payment Discount to be granted'
     )
+
     # Discounted amount to pay when the early payment discount is applied
     discount_amount_currency = fields.Monetary(
         string='Discount amount in Currency',
@@ -381,8 +382,6 @@ class AccountMoveLine(models.Model):
         store=True,
         currency_field='company_currency_id',
     )
-    discount_percentage = fields.Float(store=True,)
-
     # === Misc Information === #
     blocked = fields.Boolean(
         string='No Follow-up',
@@ -971,7 +970,7 @@ class AccountMoveLine(models.Model):
     @api.depends('tax_ids', 'account_id', 'company_id')
     def _compute_epd_key(self):
         for line in self:
-            if line.display_type == 'epd' and line.company_id.early_pay_discount_computation == 'mixed':
+            if line.display_type == 'epd' and line.move_id.invoice_payment_term_id.early_pay_discount_computation == 'mixed':
                 line.epd_key = frozendict({
                     'account_id': line.account_id.id,
                     'analytic_distribution': line.analytic_distribution,
@@ -988,60 +987,51 @@ class AccountMoveLine(models.Model):
             needed_terms = line.move_id.needed_terms
             line.epd_dirty = True
             line.epd_needed = False
-            if line.display_type != 'product' or not line.tax_ids.ids or line.company_id.early_pay_discount_computation != 'mixed':
+            discount_percentage = line.move_id.invoice_payment_term_id.discount_percentage
+
+            if discount_percentage and line.display_type != 'product' or not line.tax_ids.ids or line.move_id.invoice_payment_term_id.early_pay_discount_computation != 'mixed':
                 continue
 
-            percentages_to_apply = []
-            names = []
-            for term in needed_terms.values():
-                if term.get('discount_percentage'):
-                    percentages_to_apply.append({
-                        'discount_percentage': term['discount_percentage'],
-                        'term_percentage': abs(term['amount_currency'] / line.move_id.amount_total) if line.move_id.amount_total else 0
-                    })
-                    names.append(f"{term['discount_percentage']}%")
-
-            discount_percentage_name = ', '.join(names)
+            discount_percentage_name = f"{discount_percentage}%"
             epd_needed = {}
-            for percentages in percentages_to_apply:
-                percentage = percentages['discount_percentage'] / 100
-                line_percentage = percentages['term_percentage']
-                epd_needed_vals = epd_needed.setdefault(
-                    frozendict({
-                        'move_id': line.move_id.id,
-                        'account_id': line.account_id.id,
-                        'analytic_distribution': line.analytic_distribution,
-                        'tax_ids': [Command.set(line.tax_ids.ids)],
-                        'tax_tag_ids': [Command.set(line.tax_tag_ids.ids)],
-                        'display_type': 'epd',
-                    }),
-                    {
-                        'name': _("Early Payment Discount (%s)", discount_percentage_name),
-                        'amount_currency': 0.0,
-                        'balance': 0.0,
-                        'price_subtotal': 0.0,
-                    },
-                )
-                epd_needed_vals['amount_currency'] -= line.amount_currency * percentage * line_percentage
-                epd_needed_vals['balance'] -= line.balance * percentage * line_percentage
-                epd_needed_vals['price_subtotal'] -= line.price_subtotal * percentage * line_percentage
-                epd_needed_vals = epd_needed.setdefault(
-                    frozendict({
-                        'move_id': line.move_id.id,
-                        'account_id': line.account_id.id,
-                        'display_type': 'epd',
-                    }),
-                    {
-                        'name': _("Early Payment Discount (%s)", discount_percentage_name),
-                        'amount_currency': 0.0,
-                        'balance': 0.0,
-                        'price_subtotal': 0.0,
-                        'tax_ids': [],
-                    },
-                )
-                epd_needed_vals['amount_currency'] += line.amount_currency * percentage * line_percentage
-                epd_needed_vals['balance'] += line.balance * percentage * line_percentage
-                epd_needed_vals['price_subtotal'] += line.price_subtotal * percentage * line_percentage
+
+            percentage = discount_percentage / 100
+            epd_needed_vals = epd_needed.setdefault(
+                frozendict({
+                    'move_id': line.move_id.id,
+                    'account_id': line.account_id.id,
+                    'analytic_distribution': line.analytic_distribution,
+                    'tax_ids': [Command.set(line.tax_ids.ids)],
+                    'tax_tag_ids': [Command.set(line.tax_tag_ids.ids)],
+                    'display_type': 'epd',
+                }),
+                {
+                    'name': _("Early Payment Discount (%s)", discount_percentage_name),
+                    'amount_currency': 0.0,
+                    'balance': 0.0,
+                    'price_subtotal': 0.0,
+                },
+            )
+            epd_needed_vals['amount_currency'] -= line.amount_currency * percentage
+            epd_needed_vals['balance'] -= line.balance * percentage
+            epd_needed_vals['price_subtotal'] -= line.price_subtotal * percentage
+            epd_needed_vals = epd_needed.setdefault(
+                frozendict({
+                    'move_id': line.move_id.id,
+                    'account_id': line.account_id.id,
+                    'display_type': 'epd',
+                }),
+                {
+                    'name': _("Early Payment Discount (%s)", discount_percentage_name),
+                    'amount_currency': 0.0,
+                    'balance': 0.0,
+                    'price_subtotal': 0.0,
+                    'tax_ids': [],
+                },
+            )
+            epd_needed_vals['amount_currency'] += line.amount_currency * percentage
+            epd_needed_vals['balance'] += line.balance * percentage
+            epd_needed_vals['price_subtotal'] += line.price_subtotal * percentage
             line.epd_needed = {k: frozendict(v) for k, v in epd_needed.items()}
 
     @api.depends('move_id.move_type', 'balance', 'tax_ids')
@@ -1067,7 +1057,6 @@ class AccountMoveLine(models.Model):
                     'move_id': line.move_id.id,
                     'date_maturity': fields.Date.to_date(line.date_maturity),
                     'discount_date': line.discount_date,
-                    'discount_percentage': line.discount_percentage
                 })
             else:
                 line.term_key = False
@@ -2597,12 +2586,12 @@ class AccountMoveLine(models.Model):
     def _is_eligible_for_early_payment_discount(self, currency, reference_date):
         self.ensure_one()
         return self.display_type == 'payment_term' \
-            and self.currency_id == currency \
-            and self.move_id.move_type in ('out_invoice', 'out_receipt', 'in_invoice', 'in_receipt') \
-            and not self.matched_debit_ids \
-            and not self.matched_credit_ids \
-            and self.discount_date \
-            and reference_date <= self.discount_date
+               and self.currency_id == currency \
+               and self.move_id.move_type in ('out_invoice', 'out_receipt', 'in_invoice', 'in_receipt') \
+               and not self.matched_debit_ids \
+               and not self.matched_credit_ids \
+               and self.discount_date \
+               and reference_date <= self.discount_date
 
     # -------------------------------------------------------------------------
     # PUBLIC ACTIONS

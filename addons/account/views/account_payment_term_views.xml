@@ -37,42 +37,59 @@
                         <field name="fiscal_country_codes" invisible="1"/>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_title">
-                            <label for="name" string="Payment Terms Name"/>
+                            <label for="name" string="Payment Terms"/>
                             <h1><field name="name" nolabel="1" placeholder="e.g. 30 days"/></h1>
                         </div>
                         <group>
                             <field name="company_id" options="{'no_create': True}" class="w-25" groups="base.group_multi_company"/>
-                            <field name="note" string="Description on Invoices" placeholder="e.g. Payment terms: 30 days after invoice date"/>
-                            <field name="display_on_invoice" string="Display details"/>
-
-                            <field name="line_ids" nolabel="1" colspan="2">
-                                <tree string="Payment Terms" editable="top" no_open="True">
-                                    <field name="value" string="Due Type"/>
-                                    <field name="value_amount" attrs="{'invisible': [('value', '=', 'balance')]}" digits="[2, 2]"/>
-                                    <field name="months"/>
-                                    <field name="days"/>
-                                    <field name="end_month" widget="boolean_toggle"/>
-                                    <field name="days_after" attrs="{'invisible': [('end_month','=', False)]}"/>
-                                    <field name="discount_percentage"/>
-                                    <field name="discount_days"/>
-                                </tree>
-                            </field>
+                            <label for="early_discount"/>
+                            <div class="o_field_highlight">
+                                <field name="early_discount"/>
+                                <field name="discount_percentage"
+                                       class="text-end o_field_highlight o_input oe_inline"
+                                       attrs="{'invisible': [('early_discount', '=', False)]}"/>
+                                <span attrs="{'invisible': [('early_discount', '=', False)]}"> % after </span>
+                                <field name="discount_days"
+                                       class="text-end o_field_highlight o_input oe_inline"
+                                       attrs="{'invisible': [('early_discount', '=', False)]}"/>
+                                <span attrs="{'invisible': [('early_discount', '=', False)]}"> days</span>
+                                <div attrs="{'invisible': [('early_discount', '=', False)]}">
+                                    <span> Reduced tax:
+                                        <field name="early_pay_discount_computation" class="w-auto"/>
+                                    </span>
+                                </div>
+                            </div>
                         </group>
-                        <div class="oe_edit_only">
-                            <separator string="Example"/>
-                            <field name="example_invalid" invisible="1"/>
-                            <div attrs="{'invisible': [('example_invalid', '=', False)]}">
-                                The Payment Term must have one Balance line.
-                            </div>
-                            <div attrs="{'invisible': [('example_invalid', '=', True)]}" class="d-flex" >
-                                For any invoice of
-                                <span class="mx-1"/> <field name="example_amount" /> <span class="mx-1"/>
-                                dated
-                                <span class="mx-1"/> <field name="example_date" class="oe_inline" style="color: #704A66; font-weight: bold"/>,
-                                the due date(s) and amount(s) will be:
-                            </div>
-                            <field name="example_preview" attrs="{'invisible': [('example_invalid', '=', True)]}"/>
-                        </div>
+                        <group>
+                            <group string="Due Terms">
+                                <field name="line_ids" nolabel="1" colspan="2">
+                                    <tree string="Payment Terms" editable="bottom" no_open="True">
+                                        <field name="value_amount" string="Due" digits="[2, 2]" style="width:50%"/>
+                                        <field name="value" nolabel="1"/>
+                                        <field name="days" string="After"/>
+                                        <field name="delay_discount" nolabel="1"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <group string="Preview">
+                                <field name="currency_id" invisible="1"/>
+                                <div class="d-flex gap-2" colspan="2" col="4">
+                                    <span>Example: $ 1000 on</span>
+                                    <field name="example_date" class="fw-bold oe_inline"/>
+                                </div>
+                                <div colspan="2" style="background:#e0e0e0" class="pt4 pb4">
+                                    <field name="note" placeholder="e.g. Payment terms: 30 days after invoice date"/>
+                                    <field name="example_preview_discount" class="ps-2"
+                                           attrs="{'invisible': ['|', ('early_discount','=', False), ('display_on_invoice', '=', True)]}"/>
+                                    <field name="example_preview" class="ps-2"
+                                           attrs="{'invisible': [('display_on_invoice', '=', True)]}"/>
+                                </div>
+                                <div colspan="2">
+                                    <field name="display_on_invoice" nolabel="1"/>
+                                    <label for="display_on_invoice"/>
+                                </div>
+                            </group>
+                        </group>
                     </sheet>
                 </form>
             </field>

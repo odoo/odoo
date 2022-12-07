@@ -37,49 +37,49 @@
         <record id="account_payment_term_immediate" model="account.payment.term">
             <field name="name">Immediate Payment</field>
             <field name="note">Payment terms: Immediate Payment</field>
-            <field name="line_ids" eval="[Command.clear(), Command.create({'value': 'balance', 'value_amount': 0.0})]"/>
+            <field name="line_ids" eval="[Command.clear(), Command.create({'value': 'percent', 'value_amount': 100.0, 'days': 0})]"/>
         </record>
 
         <record id="account_payment_term_15days" model="account.payment.term">
             <field name="name">15 Days</field>
             <field name="note">Payment terms: 15 Days</field>
-            <field name="line_ids" eval="[Command.clear(), Command.create({'value': 'balance', 'value_amount': 0.0, 'days': 15})]"/>
+            <field name="line_ids" eval="[Command.clear(), Command.create({'value': 'percent', 'value_amount': 100.0, 'days': 15})]"/>
         </record>
 
         <record id="account_payment_term_21days" model="account.payment.term">
             <field name="name">21 Days</field>
             <field name="note">Payment terms: 21 Days</field>
-            <field name="line_ids" eval="[Command.clear(), Command.create({'value': 'balance', 'value_amount': 0.0, 'days': 21})]"/>
+            <field name="line_ids" eval="[Command.clear(), Command.create({'value': 'percent', 'value_amount': 100.0, 'days': 21})]"/>
         </record>
 
         <record id="account_payment_term_30days" model="account.payment.term">
             <field name="name">30 Days</field>
             <field name="note">Payment terms: 30 Days</field>
-            <field name="line_ids" eval="[Command.clear(), Command.create({'value': 'balance', 'value_amount': 0.0, 'days': 30})]"/>
+            <field name="line_ids" eval="[Command.clear(), Command.create({'value': 'percent', 'value_amount': 100.0, 'days': 30})]"/>
         </record>
 
         <record id="account_payment_term_45days" model="account.payment.term">
             <field name="name">45 Days</field>
             <field name="note">Payment terms: 45 Days</field>
-            <field name="line_ids" eval="[Command.clear(), Command.create({'value': 'balance', 'value_amount': 0.0, 'days': 45})]"/>
+            <field name="line_ids" eval="[Command.clear(), Command.create({'value': 'percent', 'value_amount': 100.0, 'days': 45})]"/>
         </record>
 
         <record id="account_payment_term_2months" model="account.payment.term">
             <field name="name">2 Months</field>
             <field name="note">Payment terms: 2 Months</field>
-            <field name="line_ids" eval="[Command.clear(), Command.create({'value': 'balance', 'value_amount': 0.0, 'months': 2})]"/>
+            <field name="line_ids" eval="[Command.clear(), Command.create({'value': 'percent', 'value_amount': 100.0, 'days': 60})]"/>
         </record>
 
         <record id="account_payment_term_end_following_month" model="account.payment.term">
             <field name="name">End of Following Month</field>
             <field name="note">Payment terms: End of Following Month</field>
-            <field name="line_ids" eval="[Command.clear(), Command.create({'value': 'balance', 'value_amount': 0.0, 'months': 1, 'end_month': True})]"/>
+            <field name="line_ids" eval="[Command.clear(), Command.create({'value': 'percent', 'value_amount': 100.0, 'days': 30})]"/>
         </record>
 
         <record id="account_payment_term_30_days_end_month_the_10" model="account.payment.term">
             <field name="name">30 days End of Month on the 10th</field>
             <field name="note">Payment terms: 30 days End of Month on the 10th</field>
-            <field name="line_ids" eval="[Command.clear(), Command.create({'value': 'balance', 'value_amount': 0.0, 'months': 1, 'end_month': True, 'days_after': 10})]"/>
+            <field name="line_ids" eval="[Command.clear(), Command.create({'value': 'percent', 'value_amount': 100.0, 'days': 10, 'delay_discount': 'days_after'})]"/>
         </record>
 
         <record id="account_payment_term_advance_60days" model="account.payment.term">
@@ -88,18 +88,19 @@
             <field name="line_ids" eval="[
                 Command.clear(),
                 Command.create({'value': 'percent', 'value_amount': 30.0, 'days': 0}),
-                Command.create({'value': 'balance', 'value_amount': 0.0, 'days': 60})]"/>
+                Command.create({'value': 'percent', 'value_amount': 70.0, 'days': 60})]"/>
         </record>
 
         <record id="account_payment_term_30days_early_discount" model="account.payment.term">
             <field name="name">2/7 Net 30</field>
             <field name="note">Payment terms: 30 Days, 2% Early Payment Discount under 7 days</field>
             <field name="display_on_invoice">True</field>
+            <field name="discount_percentage">2</field>
+            <field name="discount_days">7</field>
             <field name="line_ids" eval="[
                 Command.clear(),
-                Command.create({'value': 'balance', 'days': 30, 'discount_percentage': 2, 'discount_days': 7})]"/>
+                Command.create({'value': 'percent', 'value_amount': 100.0, 'days': 30})]"/>
         </record>
-
         <!--
         Account Statement Sequences
         -->

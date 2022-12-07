@@ -207,7 +207,7 @@
                     </p>
                     <t t-set="payment_term_details" t-value="o.payment_term_details"/>
                     <div t-field="o.invoice_payment_term_id.note" name="payment_term"/>
-                    <t t-if="o.invoice_payment_term_id.display_on_invoice and payment_term_details">
+                    <t t-if="not o.invoice_payment_term_id.display_on_invoice and payment_term_details">
                         <div t-if='o.show_payment_term_details' id="total_payment_term_details_table" class="row">
                             <div t-attf-class="#{'col-10' if report_type != 'html' else 'col-sm-10 col-md-9'}">
                                 <t t-if="len(payment_term_details) == 1 and payment_term_details[0].get('discount_date')">

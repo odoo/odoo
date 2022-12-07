@@ -52,9 +52,6 @@
                             <setting id="rounding_method" company_dependent="1" string="Rounding Method" help="How total tax amount is computed in orders and invoices" title="A rounding per line is advised if your prices are tax-included. That way, the sum of line subtotals equals the total with taxes.">
                                 <field name="tax_calculation_rounding_method" class="o_light_label mt16" widget="radio"/>
                             </setting>
-                            <setting string="Cash Discount Tax Reduction" company_dependent="1" help="When will the tax be reduced when offering a cash discount">
-                                <field name="early_pay_discount_computation"/>
-                            </setting>
                             <setting id="taxcloud_settings" string="TaxCloud" help="Compute tax rates based on U.S. ZIP codes">
                                 <field name="module_account_taxcloud" widget="upgrade_boolean"/>
                             </setting>
