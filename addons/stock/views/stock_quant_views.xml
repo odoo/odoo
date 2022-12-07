@@ -110,6 +110,12 @@
             <tree editable="bottom"
                   create="1" edit="1" js_class="inventory_report_list"
                   sample="1">
+                <header>
+                    <button name="action_inventory_at_date" string="Inventory at Date" type="object"
+                            invisible="((context.get('inventory_mode') and not context.get('inventory_report_mode')) or context.get('no_at_date'))"
+                            class="btn-primary ms-1"
+                            display="always"/>
+                </header>
                 <field name="create_date" invisible="1"/>
                 <field name="write_date" invisible="1"/>
                 <field name="id" invisible="1"/>
@@ -153,6 +159,12 @@
         <field name="arch" type="xml">
             <tree string="Inventory Valuation" js_class="inventory_report_list"
                   create="0" delete="0">
+                <header>
+                    <button name="action_inventory_at_date" string="Inventory at Date" type="object"
+                            invisible="((context.get('inventory_mode') and not context.get('inventory_report_mode')) or context.get('no_at_date'))"
+                            class="btn-primary ms-1"
+                            display="always"/>
+                </header>
                 <field name="product_id" invisible="context.get('single_product', False)"/>
                 <field name="location_id" invisible="context.get('hide_location', False)"/>
                 <field name="lot_id" groups="stock.group_production_lot"
@@ -354,6 +366,10 @@
         <field name="arch" type="xml">
             <tree default_order="location_id, inventory_date, product_id, package_id, lot_id, owner_id" decoration-warning='is_outdated' editable="bottom" create="1" edit="1" import="1" js_class="inventory_report_list" class="o_inventory_adjustments" sample="1">
                 <header>
+                    <button name="action_inventory_at_date" string="Inventory at Date" type="object"
+                            invisible="((context.get('inventory_mode') and not context.get('inventory_report_mode')) or context.get('no_at_date'))"
+                            class="btn-primary ms-1"
+                            display="always"/>
                     <button name="stock.action_stock_inventory_adjustement_name" groups="stock.group_stock_manager" type="action" string="Apply"/>
                     <button name="action_reset" type="object" string="Clear"/>
                     <button name="stock.action_stock_request_count" groups="stock.group_stock_manager" type="action" string="Request a Count"/>

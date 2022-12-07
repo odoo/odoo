@@ -71,6 +71,24 @@ class StockValuationLayer(models.Model):
             'res_id': self.id,
         }
 
+    def action_valuation_at_date(self):
+        #  Handler called when the user clicked on the 'Valuation at Date' button.
+        #  Opens wizard to display, at choice, the products inventory or a computed
+        #  inventory at a given date.
+        context = {}
+        if ("default_product_id" in self.env.context):
+            context.product_id = self.env.context.default_product_id
+        elif ("product_tmpl_id" in self.env.context):
+            context.product_tmpl_id = self.env.context.product_tmpl_id
+
+        return {
+            "res_model": "stock.quantity.history",
+            "views": [[False, "form"]],
+            "target": "new",
+            "type": "ir.actions.act_window",
+            "context": context,
+        }
+
     def action_open_reference(self):
         self.ensure_one()
         if self.stock_move_id:

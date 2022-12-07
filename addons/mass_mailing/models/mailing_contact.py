@@ -185,6 +185,12 @@ class MassMailingContact(models.Model):
             for r in self
         }
 
+    def action_import(self):
+        action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.mailing_contact_import_action")
+        action['context'] = self.env.context
+
+        return action
+
     def action_add_to_mailing_list(self):
         ctx = dict(self.env.context, default_contact_ids=self.ids)
         action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.mailing_contact_to_list_action")
