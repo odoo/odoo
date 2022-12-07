@@ -77,7 +77,6 @@ QUnit.module("SurveyQuestionTriggerWidget", (hooks) => {
                             <field name="name"/>
                             <field name="triggering_answer_id" invisible="1"/>
                             <field name="triggering_question_id" invisible="1"/> 
-                            <widget name="survey_question_trigger" nolabel="1"/>
                         </group>
                     </form>
                 `,
@@ -101,7 +100,7 @@ QUnit.module("SurveyQuestionTriggerWidget", (hooks) => {
                             <field name="name"/>
                             <field name="triggering_answer_id" invisible="1"/>
                             <field name="triggering_question_id" invisible="1"/> 
-                            <widget name="survey_question_trigger" options="{'isSurveyForm': True}"/>
+                            <widget name="survey_question_trigger"/>
                         </tree>
                     </field>
                 </form>

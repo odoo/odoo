@@ -386,6 +386,16 @@ class SurveyQuestion(models.Model):
     # CRUD
     # ------------------------------------------------------------
 
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        self.ensure_one()
+        clone = super().copy(default)
+        if self.is_conditional:
+            clone.is_conditional = True
+            clone.triggering_question_id = self.triggering_question_id.id
+            clone.triggering_answer_id = self.triggering_answer_id.id
+        return clone
+
     def unlink(self):
         """ Makes sure no question is left depending on the question we're deleting."""
         depending_questions = self.env['survey.question'].search([('triggering_question_id', 'in', self.ids)])

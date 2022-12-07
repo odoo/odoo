@@ -267,13 +267,10 @@
         <field name="model">survey.question</field>
         <field name="arch" type="xml">
             <tree string="Survey Question" create="false">
-                <field name="sequence" widget="handle"/>
                 <field name="title"/>
                 <field name="survey_id"/>
                 <field name="question_type"/>
-                <field name="triggering_question_id" invisible="1"/>
-                <field name="triggering_answer_id" invisible="1"/>
-                <widget name="survey_question_trigger"/>
+                <field name="constr_mandatory" optional="1"/>
             </tree>
         </field>
     </record>
