@@ -32,7 +32,6 @@ def transpile_javascript(url, content):
     steps = [
         convert_legacy_default_import,
         convert_basic_import,
-        convert_default_and_star_import,
         convert_default_import,
         convert_star_import,
         convert_unnamed_relative_import,
@@ -472,34 +471,6 @@ def convert_star_import(content):
     """
     repl = r"\g<space>const \g<identifier> = require(\g<path>)"
     return IMPORT_STAR.sub(repl, content)
-
-
-IMPORT_DEFAULT_AND_STAR = re.compile(r"""
-    ^(?P<space>\s*)                 # indentation
-    import\s+                       # import
-    (?P<default_export>\w+)\s*,\s*  # default export name,
-    \*\s+as\s+                      # * as
-    (?P<named_exports_alias>\w+)    # alias
-    \s*from\s*                      # from
-    (?P<path>[^;\n]+)               # path
-""", re.MULTILINE | re.VERBOSE)
-
-
-def convert_default_and_star_import(content):
-    """
-    Transpile import star.
-
-    .. code-block:: javascript
-
-        // before
-        import something, * as name from "some/path";
-        // after
-        const name = require("some/path");
-        const something = name[Symbol.for("default")];
-    """
-    repl = r"""\g<space>const \g<named_exports_alias> = require(\g<path>);
-\g<space>const \g<default_export> = \g<named_exports_alias>[Symbol.for("default")]"""
-    return IMPORT_DEFAULT_AND_STAR.sub(repl, content)
 
 
 IMPORT_UNNAMED_RELATIVE_RE = re.compile(r"""
