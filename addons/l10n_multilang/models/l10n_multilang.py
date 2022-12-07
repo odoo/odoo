@@ -151,10 +151,9 @@ class BaseLanguageInstall(models.TransientModel):
 
     def lang_install(self):
         self.ensure_one()
-        res = super(BaseLanguageInstall, self).lang_install()
-        lang_codes = set(self.lang_ids.mapped('code'))
         installed = {code for code, __ in self.env['res.lang'].get_installed()}
-        to_install = lang_codes - installed
+        res = super(BaseLanguageInstall, self).lang_install()
+        to_install = set(self.lang_ids.mapped('code')) - installed
         if not to_install:
             # update of translations instead of new installation
             # skip to avoid duplicating the translations
