@@ -44,7 +44,6 @@ Dashboard / Reports for Warehouse Management includes:
     'assets': {
         'web.assets_backend': [
             'stock_account/static/src/js/report_stock_forecasted.js',
-            'stock_account/static/src/xml/inventory_report.xml',
         ],
     },
     'license': 'LGPL-3',

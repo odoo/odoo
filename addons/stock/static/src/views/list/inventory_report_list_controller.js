@@ -12,29 +12,6 @@ export class InventoryReportListController extends ListController {
         }
     }
 
-    /**
-     * Handler called when the user clicked on the 'Valuation at Date' button.
-     * Opens wizard to display, at choice, the products inventory or a computed
-     * inventory at a given date.
-     */
-    async onClickInventoryAtDate() {
-        const context = {
-            active_model: this.props.resModel,
-        };
-        if (this.props.context.default_product_id) {
-            context.product_id = this.props.context.default_product_id;
-        } else if (this.props.context.product_tmpl_id) {
-            context.product_tmpl_id = this.props.context.product_tmpl_id;
-        }
-        this.actionService.doAction({
-            res_model: "stock.quantity.history",
-            views: [[false, "form"]],
-            target: "new",
-            type: "ir.actions.act_window",
-            context,
-        });
-    }
-
     get actionMenuItems() {
         const actionMenus = super.actionMenuItems;
         if (

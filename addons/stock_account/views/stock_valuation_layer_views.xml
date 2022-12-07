@@ -44,6 +44,12 @@
             <tree default_order="id desc" create="0"
                   import="0" js_class="inventory_report_list"
                   action="action_open_reference" type="object">
+                <header>
+                    <button name="action_valuation_at_date" string="Valuation at Date" type="object"
+                            invisible="((context.get('inventory_mode') and not context.get('inventory_report_mode')) or context.get('no_at_date'))"
+                            class="btn-primary ms-1"
+                            display="always"/>
+                </header>
                 <field name="create_date" string="Date" />
                 <field name="reference"/>
                 <button name="action_open_layer" icon="fa-arrow-right" title="Open Valuation Layer" type="object"/>
