@@ -1234,3 +1234,69 @@ class TestPacking(TestPackingCommon):
         self.assertEqual(picking.state, 'done')
         self.assertEqual(picking.move_lines.quantity_done, 0.4)
         self.assertEqual(len(picking.move_line_ids.result_package_id), 2)
+
+    def test_put_out_of_pack_transfer(self):
+        """ When a transfer has multiple products all in the same package, removing a product from the destination package
+        (i.e. removing it from the package but still putting it in the same location) shouldn't remove it for other products. """
+        loc_1 = self.env['stock.location'].create({
+            'name': 'Location A',
+            'location_id': self.stock_location.id,
+        })
+        loc_2 = self.env['stock.location'].create({
+            'name': 'Location B',
+            'location_id': self.stock_location.id,
+        })
+        pack = self.env['stock.quant.package'].create({'name': 'New Package'})
+        self.env['stock.quant']._update_available_quantity(self.productA, loc_1, 5, package_id=pack)
+        self.env['stock.quant']._update_available_quantity(self.productB, loc_1, 4, package_id=pack)
+
+        picking = self.env['stock.picking'].create({
+            'location_id': loc_1.id,
+            'location_dest_id': loc_2.id,
+            'picking_type_id': self.warehouse.int_type_id.id,
+        })
+        moveA = self.env['stock.move'].create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 5,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking.id,
+            'location_id': loc_1.id,
+            'location_dest_id': loc_2.id,
+        })
+        moveB = self.env['stock.move'].create({
+            'name': self.productB.name,
+            'product_id': self.productB.id,
+            'product_uom_qty': 4,
+            'product_uom': self.productB.uom_id.id,
+            'picking_id': picking.id,
+            'location_id': loc_1.id,
+            'location_dest_id': loc_2.id,
+        })
+        # Check availabilities
+        picking.action_assign()
+        self.assertEqual(len(moveA.move_line_ids), 1, "A move line should have been created for the reservation of the package.")
+        self.assertEqual(moveA.move_line_ids.package_id.id, pack.id, "The package should have been reserved for both products.")
+        self.assertEqual(moveB.move_line_ids.package_id.id, pack.id, "The package should have been reserved for both products.")
+        pack_level = moveA.move_line_ids.package_level_id
+
+        # Remove the product A from the package in the destination.
+        moveA.move_line_ids.result_package_id = False
+        self.assertEqual(moveA.move_line_ids.result_package_id.id, False, "No package should be linked in the destination.")
+        self.assertEqual(moveA.move_line_ids.package_level_id.id, False, "Package level should have been unlinked from this move line.")
+        self.assertEqual(moveB.move_line_ids.result_package_id.id, pack.id, "Package should have stayed the same.")
+        self.assertEqual(moveB.move_line_ids.package_level_id.id, pack_level.id, "Package level should have stayed the same.")
+
+        # Validate the picking
+        moveA.move_line_ids.qty_done = 5
+        moveB.move_line_ids.qty_done = 4
+        picking.button_validate()
+
+        # Check that the quants have their expected location/package/quantities
+        quantA = self.env['stock.quant'].search([('product_id', '=', self.productA.id), ('location_id', '=', loc_2.id)])
+        quantB = self.env['stock.quant'].search([('product_id', '=', self.productB.id), ('location_id', '=', loc_2.id)])
+        self.assertEqual(pack.location_id.id, loc_2.id, "Package should have been moved to Location B.")
+        self.assertEqual(quantA.quantity, 5, "All 5 units of product A should be in location B")
+        self.assertEqual(quantA.package_id.id, False, "There should be no package for product A as it was removed in the move.")
+        self.assertEqual(quantB.quantity, 4, "All 4 units of product B should be in location B")
+        self.assertEqual(quantB.package_id.id, pack.id, "Product B should still be in the initial package.")
