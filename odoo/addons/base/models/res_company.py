@@ -61,9 +61,9 @@ class Company(models.Model):
     parent_id = fields.Many2one('res.company', string='Parent Company', index=True)
     child_ids = fields.One2many('res.company', 'parent_id', string='Child Companies')
     partner_id = fields.Many2one('res.partner', string='Partner', required=True)
-    report_header = fields.Html(string='Company Tagline', help="Appears by default on the top right corner of your printed documents (report header).")
+    report_header = fields.Html(string='Company Tagline', translate=True, help="Appears by default on the top right corner of your printed documents (report header).")
     report_footer = fields.Html(string='Report Footer', translate=True, help="Footer text displayed at the bottom of all reports.")
-    company_details = fields.Html(string='Company Details', help="Header text displayed at the top of all reports.")
+    company_details = fields.Html(string='Company Details', translate=True, help="Header text displayed at the top of all reports.")
     logo = fields.Binary(related='partner_id.image_1920', default=_get_logo, string="Company Logo", readonly=False)
     # logo_web: do not store in attachments, since the image is retrieved in SQL for
     # performance reasons (see addons/web/controllers/main.py, Binary.company_logo)
