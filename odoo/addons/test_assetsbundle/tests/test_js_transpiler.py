@@ -199,6 +199,7 @@ export async function sayAsyncHello() {
   console.log("Hello Async");
 }
 
+
 """
         result = transpile_javascript("/test_assetsbundle/static/src/functions.js", input_content)
 
