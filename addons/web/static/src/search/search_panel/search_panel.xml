@@ -12,6 +12,11 @@
 
 <t t-name="web.SearchPanelContent" owl="1">
     <div class="o_search_panel flex-grow-0 flex-shrink-0 border-end pe-2 pb-5 ps-4 h-100 bg-view overflow-auto" t-att-class="env.searchModel.searchPanelInfo.className" t-ref="root">
+        <div t-if="!sections or sections.length === 0" class="o_search_panel_empty_state me-3">
+            <p class="mt-3 small text-muted">No quick filter available.</p>
+            <p class="small text-muted">Update the filters in the search bar to display more records.</p>
+            <p class="small text-muted">Quick filters will become available if the records shown can be filtered.</p>
+        </div>
         <section t-foreach="sections" t-as="section" t-key="section.id"
             t-attf-class="o_search_panel_section o_search_panel_{{ section.type }}"
             >
