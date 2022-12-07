@@ -947,9 +947,9 @@ QUnit.module("Search", (hooks) => {
 
         // unfold agrolait
         function getAgrolaitElement() {
-            return [
-                ...target.querySelectorAll(".o_search_panel_category_value > header"),
-            ].find((el) => el.innerText.includes("agrolait"));
+            return [...target.querySelectorAll(".o_search_panel_category_value > header")].find(
+                (el) => el.innerText.includes("agrolait")
+            );
         }
 
         await click(getAgrolaitElement());
@@ -3433,5 +3433,47 @@ QUnit.module("Search", (hooks) => {
         });
 
         assert.verifySteps(["special_key", "special_key"]);
+    });
+
+    QUnit.test("Display message when no filter availible", async (assert) => {
+        serverData.models.partner.records = [];
+        serverData.models.company.records = [];
+        serverData.models.category.records = [];
+
+        const { TestComponent } = makeTestComponent();
+        await makeWithSearch({
+            serverData,
+            Component: TestComponent,
+            resModel: "partner",
+            searchViewId: false,
+        });
+
+        assert.containsOnce(
+            target,
+            ".o_search_panel_empty_state",
+            "Search panel has the empty state container"
+        );
+        assert.containsN(
+            target,
+            ".o_search_panel_empty_state p",
+            3,
+            "Empty state container has 3 paragraphs"
+        );
+    });
+
+    QUnit.test("Don't display empty state message when some filters are availible", async (assert) => {
+        const { TestComponent } = makeTestComponent();
+        await makeWithSearch({
+            serverData,
+            Component: TestComponent,
+            resModel: "partner",
+            searchViewId: false,
+        });
+
+        assert.containsNone(
+            target,
+            ".o_search_panel_empty_state",
+            "Search panel does not have the empty state container"
+        );
     });
 });
