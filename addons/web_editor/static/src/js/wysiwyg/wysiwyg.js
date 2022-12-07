@@ -307,7 +307,14 @@ const Wysiwyg = Widget.extend({
                 $el.selectElement();
 
                 if (!$el.parent().hasClass('o_stars')) {
-                    self.openMediaDialog(params);
+                    // Waiting for all the options to be initialized before
+                    // opening the media dialog and only if the media has not
+                    // been deleted in the meantime.
+                    self.waitForEmptyMutexAction().then(() => {
+                        if ($el[0].parentElement) {
+                            self.openMediaDialog(params);
+                        }
+                    });
                 }
             }
         });
@@ -1403,6 +1410,18 @@ const Wysiwyg = Widget.extend({
     },
     getInSelection(selector) {
         return getInSelection(this.odooEditor.document, selector);
+    },
+    /**
+     * Adds an empty action in the mutex. Can be used to wait for some options
+     * to be initialized before doing something else.
+     *
+     * @returns {Promise}
+     */
+    waitForEmptyMutexAction() {
+        if (this.snippetsMenu) {
+            return this.snippetsMenu.execWithLoadingEffect(() => null, false);
+        }
+        return Promise.resolve();
     },
 
     //--------------------------------------------------------------------------
