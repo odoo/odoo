@@ -180,3 +180,75 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
                 },
             },
         )
+
+    def test_account_analytic_distribution_ratio(self):
+        """
+        When adding multiple account analytics on a purchase line, and one of those
+        is from a project (for ex: project created on confirmed SO),
+        then in the profitability only the corresponding ratio of the analytic distribution
+        for that project analytic account should be taken into account.
+        (for ex: if there are 2 accounts on 1 line, one is 60% project analytic account, 40% some other,
+        then the profitability should only reflect 60% of the cost of the line, not 100%)
+        """
+        # define the ratios for the analytic account of the line
+        analytic_ratios = {
+            "project_ratio": 60,
+            "other_ratio": 40,
+        }
+        self.assertEqual(sum(ratio for ratio in analytic_ratios.values()), 100)
+        # create another analytic_account that is not really relevant
+        other_analytic_account = self.env['account.analytic.account'].create({
+            'name': 'Not important',
+            'code': 'KO-1234',
+            'plan_id': self.analytic_plan.id,
+        })
+        # create a new purchase order
+        purchase_order = self.env['purchase.order'].create({
+            "name": "A purchase order",
+            "partner_id": self.partner_a.id,
+            "order_line": [Command.create({
+                "analytic_distribution": {
+                    # this is the analytic_account that is linked to the project
+                    self.analytic_account.id: analytic_ratios["project_ratio"],
+                    other_analytic_account.id: analytic_ratios["other_ratio"],
+                },
+                "product_id": self.product_order.id,
+                "product_qty": 1,
+                "price_unit": self.product_order.standard_price,
+            })],
+        })
+        purchase_order.button_confirm()
+        self.assertDictEqual(
+            self.project._get_profitability_items(False)['costs'],
+            {
+                'data': [{
+                    'id': 'purchase_order',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['purchase_order'],
+                    'to_bill': -(self.product_order.standard_price * (analytic_ratios["project_ratio"] / 100)),
+                    'billed': 0.0,
+                }],
+                'total': {
+                    'to_bill': -(self.product_order.standard_price * (analytic_ratios["project_ratio"] / 100)),
+                    'billed': 0.0,
+                },
+            },
+        )
+        purchase_order.action_create_invoice()
+        purchase_bill = purchase_order.invoice_ids  # get the bill from the purchase
+        purchase_bill.invoice_date = datetime.today()
+        purchase_bill.action_post()
+        self.assertDictEqual(
+            self.project._get_profitability_items(False)['costs'],
+            {
+                'data': [{
+                    'id': 'purchase_order',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['purchase_order'],
+                    'to_bill': 0.0,
+                    'billed': -(self.product_order.standard_price * (analytic_ratios["project_ratio"] / 100)),
+                }],
+                'total': {
+                    'to_bill': 0.0,
+                    'billed': -(self.product_order.standard_price * (analytic_ratios["project_ratio"] / 100)),
+                },
+            },
+        )
