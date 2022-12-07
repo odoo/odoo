@@ -76,6 +76,9 @@ PaymentForm.include({
         var stripe = this.stripe;
         var card = this.stripe_card_element;
         if (card._invalid) {
+            // if we don't enable the button again, at this point the button is displaying the 'loading' animation
+            // and since we break the workflow here it gives the impression that something is happening, but it isn't
+            self.enableButton(button);
             return;
         }
         this._createPaymentMethod(stripe, formData, card, addPmEvent).then(function(result) {
