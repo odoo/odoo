@@ -3,6 +3,7 @@
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { sprintf } from '@web/core/utils/strings';
+import { standardWidgetProps} from "@web/views/widgets/standard_widget_props";
 
 const { Component, useEffect, useRef, useState } = owl;
 
@@ -70,7 +71,12 @@ export class SurveyQuestionTriggerWidget extends Component {
             return undefined;
         }
         const triggerId = record.data.triggering_question_id[0];
-        const triggerRecord = record.model.root.data.question_and_page_ids.records.find(rec => rec.data.id === triggerId);
+        let triggerRecord;
+        if (this.props.fromPrimaryListView) {
+            triggerRecord = record.model.root.records.find(rec => rec.resId === triggerId);
+        } else {
+            triggerRecord = record.model.root.data.question_and_page_ids.records.find(rec => rec.data.id === triggerId);
+        }
 
         if (!triggerRecord) {
             return "MISSING_TRIGGER_ERROR";
@@ -87,6 +93,20 @@ export class SurveyQuestionTriggerWidget extends Component {
 }
 
 SurveyQuestionTriggerWidget.template = "survey.surveyQuestionTrigger";
+SurveyQuestionTriggerWidget.props = {
+    ...standardWidgetProps,
+    fromPrimaryListView: { type: Boolean, optional: true },
+};
+
+SurveyQuestionTriggerWidget.defaultProps = {
+    fromPrimaryListView: false
+};
+
+SurveyQuestionTriggerWidget.extractProps = ({ attrs }) => {
+    return {
+        fromPrimaryListView: attrs.options.fromPrimaryListView
+    };
+};
 
 SurveyQuestionTriggerWidget.displayName = 'Trigger';
 SurveyQuestionTriggerWidget.supportedTypes = ['many2one'];
