@@ -462,12 +462,14 @@ class AccountPaymentRegister(models.TransientModel):
         self.ensure_one()
         amount = 0.0
         mode = False
-        for aml in batch_result['lines']:
-            if early_payment_discount and aml._is_eligible_for_early_payment_discount(aml.currency_id, self.payment_date):
-                amount += aml.discount_amount_currency
+        moves = self.line_ids.move_id
+        for move in moves:
+            if early_payment_discount and move._is_eligible_for_early_payment_discount(move.currency_id, self.payment_date):
+                amount += move.invoice_payment_term_id._get_amount_due_after_discount(move.amount_total, move.amount_tax)#todo currencies
                 mode = 'early_payment'
             else:
-                amount += aml.amount_residual_currency
+                for aml in batch_result['lines'].filtered(lambda l: l.move_id.id == move.id):
+                    amount += aml.amount_residual_currency
         return abs(amount), mode
 
     def _get_total_amount_in_wizard_currency_to_full_reconcile(self, batch_result, early_payment_discount=True):
@@ -639,11 +641,10 @@ class AccountPaymentRegister(models.TransientModel):
         )
 
         if self.payment_difference_handling == 'reconcile':
-
             if self.early_payment_discount_mode:
                 epd_aml_values_list = []
                 for aml in batch_result['lines']:
-                    if aml._is_eligible_for_early_payment_discount(self.currency_id, self.payment_date):
+                    if aml.move_id._is_eligible_for_early_payment_discount(self.currency_id, self.payment_date):
                         epd_aml_values_list.append({
                             'aml': aml,
                             'amount_currency': -aml.amount_residual_currency,
@@ -717,7 +718,7 @@ class AccountPaymentRegister(models.TransientModel):
 
             epd_aml_values_list = []
             for aml in batch_result['lines']:
-                if aml._is_eligible_for_early_payment_discount(currency, self.payment_date):
+                if aml.move_id._is_eligible_for_early_payment_discount(currency, self.payment_date):
                     epd_aml_values_list.append({
                         'aml': aml,
                         'amount_currency': -aml.amount_residual_currency,
