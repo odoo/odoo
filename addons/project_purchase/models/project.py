@@ -128,7 +128,7 @@ class Project(models.Model):
                 '|', ('qty_to_invoice', '>', 0), ('product_uom_qty', '>', 0),
             ])
             query.add_where('purchase_order_line.analytic_distribution ? %s', [str(self.analytic_account_id.id)])
-            query_string, query_param = query.select('"purchase_order_line".id', 'qty_invoiced', 'qty_to_invoice', 'product_uom_qty', 'price_unit')
+            query_string, query_param = query.select('"purchase_order_line".id', 'qty_invoiced', 'qty_to_invoice', 'product_uom_qty', 'price_unit', '"purchase_order_line".analytic_distribution')
             self._cr.execute(query_string, query_param)
             purchase_order_line_read = [{
                 **pol,
@@ -141,11 +141,12 @@ class Project(models.Model):
                 for pol_read in purchase_order_line_read:
                     purchase_order_line_invoice_line_ids.extend(pol_read['invoice_lines'].ids)
                     price_unit = pol_read['price_unit']
-                    amount_invoiced -= price_unit * pol_read['qty_invoiced'] if pol_read['qty_invoiced'] > 0 else 0.0
+                    analytic_contribution = pol_read['analytic_distribution'][str(self.analytic_account_id.id)] / 100.
+                    amount_invoiced -= price_unit * pol_read['qty_invoiced'] * analytic_contribution if pol_read['qty_invoiced'] > 0 else 0.0
                     if pol_read['qty_to_invoice'] > 0:
-                        amount_to_invoice -= price_unit * pol_read['qty_to_invoice']
+                        amount_to_invoice -= price_unit * pol_read['qty_to_invoice'] * analytic_contribution
                     else:
-                        amount_to_invoice -= price_unit * (pol_read['product_uom_qty'] - pol_read['qty_invoiced'])
+                        amount_to_invoice -= price_unit * (pol_read['product_uom_qty'] - pol_read['qty_invoiced']) * analytic_contribution
                     purchase_order_line_ids.append(pol_read['id'])
                 costs = profitability_items['costs']
                 section_id = 'purchase_order'
