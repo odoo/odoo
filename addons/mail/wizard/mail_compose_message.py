@@ -89,7 +89,7 @@ class MailComposer(models.TransientModel):
             else:
                 result['res_ids'] = False
         # record / parent based computation
-        if result.get('composition_mode') == 'comment' and (set(fields_list) & {'model', 'res_ids', 'partner_ids', 'record_name', 'subject'}):
+        if result.get('composition_mode') == 'comment' and (set(fields_list) & {'model', 'res_ids', 'partner_ids', 'subject'}):
             result.update(self.get_record_data(result))
 
         # threading support check: 'update' requires to use message_update/post
@@ -155,7 +155,9 @@ class MailComposer(models.TransientModel):
     res_domain_user_id = fields.Many2one(
         'res.users', string='Responsible',
         help='Used as context used to evaluate composer domain')
-    record_name = fields.Char('Message Record Name')
+    record_name = fields.Char(
+        'Record Name',
+        compute='_compute_record_name', readonly=False, store=True)  # useful only in monorecord comment mode
     # characteristics
     message_type = fields.Selection([
         ('comment', 'Comment'),
@@ -234,6 +236,33 @@ class MailComposer(models.TransientModel):
         for composer in self:
             model = self.env['ir.model']._get(composer.model)
             composer.model_is_thread = model.is_mail_thread
+
+    @api.depends('composition_mode', 'model', 'parent_id', 'res_domain', 'res_ids')
+    def _compute_record_name(self):
+        """ Computation is coming either from parent message, either from the
+        record's display name in monorecord comment mode.
+
+        In batch mode it makes no sense to compute a single record name. In
+        email mode it is not used anyway. """
+        toreset = self.filtered(
+            lambda comp: comp.record_name
+                and (comp.composition_mode != 'comment' or comp.composition_batch)
+        )
+        if toreset:
+            toreset.record_name = False
+
+        toupdate = self.filtered(
+            lambda comp: not comp.record_name
+                            and comp.composition_mode == 'comment'
+                            and not comp.composition_batch
+        )
+        for composer in toupdate:
+            if composer.parent_id.record_name:
+                composer.record_name = composer.parent_id.record_name
+                continue
+            res_ids = composer._evaluate_res_ids()
+            if composer.model and len(res_ids) == 1:
+                composer.record_name = self.env[composer.model].browse(res_ids).display_name
 
     @api.depends('subtype_id')
     def _compute_subtype_is_log(self):
@@ -390,7 +419,7 @@ class MailComposer(models.TransientModel):
         wizard when sending an email related a previous email (parent_id) or
         a document (model, res_id). This is based on previously computed default
         values. """
-        result, record_name, subject = {}, False, False
+        result, subject = {}, False
         model = values.get('model')
         res_ids = self._parse_res_ids(values['res_ids']) if values.get('res_ids') else []
         if values.get('parent_id'):
@@ -402,21 +431,16 @@ class MailComposer(models.TransientModel):
                 res_ids = [parent.res_id]
                 result['res_ids'] = res_ids
             result['partner_ids'] = values.get('partner_ids', list()) + parent.partner_ids.ids
-            record_name = parent.record_name
             subject = tools.ustr(parent.subject or '')
-            if (not subject or not record_name) and model and res_ids and len(res_ids) == 1:
+            if not subject and model and res_ids and len(res_ids) == 1:
                 record = self.env[model].browse(res_ids[0])
-                if not record_name:
-                    record_name = record.display_name
                 if not subject:
                     subject = record._message_compute_subject()
         elif model and len(res_ids) == 1:
             record = self.env[model].browse(res_ids[0])
-            record_name = record.display_name or ''
             subject = record._message_compute_subject()
 
         if values.get('parent_id') or len(res_ids) == 1:  # to be cleanup when moving to computed fields
-            result['record_name'] = record_name
             result['subject'] = subject
 
         return result
@@ -612,7 +636,7 @@ class MailComposer(models.TransientModel):
             STA - 'message_type',
             STA - 'parent_id',
             DYN - 'partner_ids',
-            STA - 'record_name',  (to check, single post or False in email)
+            STA - 'record_name',
             DYN - 'reply_to',
             STA - 'reply_to_force_new',
             DYN - 'scheduled_date',

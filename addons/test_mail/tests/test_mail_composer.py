@@ -819,16 +819,14 @@ class TestComposerInternals(TestMailComposer):
                 composer._onchange_template_id_wrapper()
 
                 # values are reset with default_get call, if it returns value
-                # (aka subject for comment mode), and not record_name because
-                # it was forgotten probably
+                # (aka subject for comment mode)
                 if composition_mode == 'comment' and not batch:
                     self.assertFalse(composer.body)
                     # self.assertFalse(composer.mail_server_id.id)
                     self.assertEqual(composer.mail_server_id, self.mail_server_global,
                                      'TODO: Values are kept (should be reset ?)')
-                    # self.assertEqual(composer.record_name, self.test_record.name)
                     self.assertEqual(composer.record_name, 'Manual update',
-                                     'TODO: Reset not called')
+                                     'MailComposer: record name does not depend on template')
                     # self.assertFalse(composer.scheduled_date)
                     self.assertEqual(composer.scheduled_date, '{{ datetime.datetime(2023, 1, 10, 10, 0, 0) }}',
                                      'TODO: Values are kept (should be reset ?)')
@@ -840,9 +838,8 @@ class TestComposerInternals(TestMailComposer):
                     # self.assertFalse(composer.mail_server_id.id)
                     self.assertEqual(composer.mail_server_id, self.mail_server_global,
                                      'TODO: Values are kept (should be reset ?)')
-                    # self.assertFalse(composer.record_name)
                     self.assertEqual(composer.record_name, 'Manual update',
-                                     'TODO: Reset not called')
+                                     'MailComposer: record name does not depend on template')
                     # self.assertFalse(composer.scheduled_date)
                     self.assertEqual(composer.scheduled_date, '{{ datetime.datetime(2023, 1, 10, 10, 0, 0) }}',
                                      'TODO: Values are kept (should be reset ?)')
