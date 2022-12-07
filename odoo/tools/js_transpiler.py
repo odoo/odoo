@@ -222,32 +222,6 @@ def convert_variable_export(content):
     repl = r"\g<space>\g<type> \g<identifier> = __exports.\g<identifier>"
     return EXPORT_VAR_RE.sub(repl, content)
 
-
-EXPORT_DEFAULT_VAR_RE = re.compile(r"""
-    ^
-    (?P<space>\s*)              # space and empty line
-    export\s+default\s+         # export default
-    (?P<type>let|const|var)\s+  # let or const or var
-    (?P<identifier>\w+)\s*      # variable name
-    """, re.MULTILINE | re.VERBOSE)
-
-
-def convert_variable_export_default(content):
-    """
-    Transpile the variables that are exported as default values.
-
-    .. code-block:: javascript
-
-        // before
-        export default let name
-        // after
-        let name = __exports[Symbol.for("default")]
-
-    """
-    repl = r"""\g<space>\g<type> \g<identifier> = __exports[Symbol.for("default")]"""
-    return EXPORT_DEFAULT_VAR_RE.sub(repl, content)
-
-
 EXPORT_OBJECT_RE = re.compile(r"""
     ^
     (?P<space>\s*)                      # space and empty line
