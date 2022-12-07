@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Chart template -->
+    <record id="l10n_tn_chart_template" model="account.chart.template">
+            <field name="name">Plan comptable Général Tunisien</field>
+            <field name="code_digits">6</field>
+            <field name="bank_account_code_prefix">5321</field>
+            <field name="cash_account_code_prefix">5411</field>
+            <field name="transfer_account_code_prefix">58</field>
+            <!--<field name="spoken_languages" eval="'fr_FR'"/>-->
+            <field name="currency_id" ref="base.TND"/>
+            <field name="country_id" ref="base.tn"/>
+        </record>
+</odoo>

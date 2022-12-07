@@ -1,0 +1,872 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="account.tax.template" id="l10n_tn_tax_vat_sale_19">
+        <field name="name">19%</field>
+        <field name="description">19%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount" eval="19.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10n_tn_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_19"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_sale_19_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_sale_19_vat_due_tag')],
+                'account_id': ref('l10n_tn_436712'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_sale_19_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_sale_19_vat_due_tag')],
+                'account_id': ref('l10n_tn_436712'),
+            }),
+        ]"/>
+    </record>
+
+    <record model="account.tax.template" id="l10n_tn_tax_vat_sale_29">
+        <field name="name">29%</field>
+        <field name="description">29%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount" eval="29.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10n_tn_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_29"/>
+        <field name="active" eval="0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_tn_436712'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_tn_436712'),
+            }),
+        ]"/>
+    </record>
+
+    <record model="account.tax.template" id="l10n_tn_tax_vat_sale_13">
+        <field name="name">13%</field>
+        <field name="description">13%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount" eval="13.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10n_tn_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_13"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_sale_13_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_sale_13_vat_due_tag')],
+                'account_id': ref('l10n_tn_436712'),
+            }),]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                  'repartition_type': 'base',
+                  'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_sale_13_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_sale_13_vat_due_tag')],
+                'account_id': ref('l10n_tn_436712'),
+            }),
+        ]"/>
+    </record>
+
+    <record model="account.tax.template" id="l10n_tn_tax_vat_sale_7">
+        <field name="name">7%</field>
+        <field name="description">7%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount" eval="7.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10n_tn_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_7"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_sale_7_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_sale_7_vat_due_tag')],
+                'account_id': ref('l10n_tn_436712'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_sale_7_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_sale_7_vat_due_tag')],
+                'account_id': ref('l10n_tn_436712'),
+            }),
+        ]"/>
+    </record>
+
+    <record model="account.tax.template" id="l10n_tn_tax_vat_sale_6">
+        <field name="name">6%</field>
+        <field name="description">6%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount" eval="6.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10n_tn_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_6"/>
+        <field name="active" eval="0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_sale_6_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_sale_6_vat_due_tag')],
+                'account_id': ref('l10n_tn_436712'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_sale_6_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_sale_6_vat_due_tag')],
+                'account_id': ref('l10n_tn_436712'),
+            }),
+        ]"/>
+    </record>
+
+    <record model="account.tax.template" id="l10n_tn_tax_vat_sale_12">
+        <field name="name">12%</field>
+        <field name="description">12%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount" eval="12.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10n_tn_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_12"/>
+        <field name="active" eval="0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_sale_12_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_sale_12_vat_due_tag')],
+                'account_id': ref('l10n_tn_436712'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_sale_12_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_sale_12_vat_due_tag')],
+                'account_id': ref('l10n_tn_436712'),
+            }),
+        ]"/>
+    </record>
+
+    <record model="account.tax.template" id="l10n_tn_tax_vat_sale_18">
+        <field name="name">18%</field>
+        <field name="description">18%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount" eval="18.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10n_tn_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_18"/>
+        <field name="active" eval="0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_sale_18_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_sale_18_vat_due_tag')],
+                'account_id': ref('l10n_tn_436712'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_sale_18_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_sale_18_vat_due_tag')],
+                'account_id': ref('l10n_tn_436712'),
+            }),
+        ]"/>
+    </record>
+
+    <record model="account.tax.template" id="l10n_tn_tax_vat_sale_exo">
+        <field name="name">0% Exonération</field>
+        <field name="description">0%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10n_tn_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_sale_19_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            })
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_sale_19_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            })
+        ]"/>
+    </record>
+
+    <record model="account.tax.template" id="l10n_tn_tax_vat_sale_timbre_fiscal">
+            <field name="name">0.6D TF</field>
+            <field name="description">0.6D Timbre Fiscal</field>
+            <field name="type_tax_use">sale</field>
+            <field name="amount" eval="0.6"/>
+            <field name="amount_type">fixed</field>
+            <field name="chart_template_id" ref="l10n_tn_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tf"/>
+            <field name="active" eval="0"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_tn_437'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_tn_437'),
+                }),
+            ]"/>
+        </record>
+
+    <record model="account.tax.template" id="l10n_tn_tax_vat_purchase_19_fixed_assets">
+        <field name="name">19% IMMO</field>
+        <field name="description">19%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount" eval="19.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10n_tn_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_19"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_fixed_assets_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_tn_43666'),
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_fixed_assets_deductible_vat_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_fixed_assets_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_tn_43666'),
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_fixed_assets_deductible_vat_tag')],
+            }),
+        ]"/>
+    </record>
+    <record model="account.tax.template" id="l10n_tn_tax_vat_purchase_13_fixed_assets">
+        <field name="name">13% IMMO</field>
+        <field name="description">13%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount" eval="13.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10n_tn_chart_template"/>
+        <field name="active" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_vat_13"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_fixed_assets_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_tn_43666'),
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_fixed_assets_deductible_vat_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_fixed_assets_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_tn_43666'),
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_fixed_assets_deductible_vat_tag')],
+            }),
+        ]"/>
+    </record>
+    <record model="account.tax.template" id="l10n_tn_tax_vat_purchase_0_fixed_assets">
+        <field name="name">0% IMMO</field>
+        <field name="description">0%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10n_tn_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_0"/>
+        <field name="active" eval="0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_fixed_assets_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_fixed_assets_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <record model="account.tax.template" id="l10n_tn_tax_vat_purchase_19_local_equipment">
+        <field name="name">19% Equipements locaux</field>
+        <field name="description">19%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount" eval="19.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10n_tn_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_19"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_local_equipment_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_tn_43666'),
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_local_equipment_deductible_vat_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_local_equipment_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_tn_43666'),
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_local_equipment_deductible_vat_tag')],
+            }),
+        ]"/>
+    </record>
+    <record model="account.tax.template" id="l10n_tn_tax_vat_purchase_13_local_equipment">
+        <field name="name">TVA 13% Equipements locaux</field>
+        <field name="description">13%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount" eval="13.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10n_tn_chart_template"/>
+        <field name="active" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_vat_13"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_local_equipment_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_tn_43666'),
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_local_equipment_deductible_vat_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_local_equipment_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_tn_43666'),
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_local_equipment_deductible_vat_tag')],
+            }),
+        ]"/>
+    </record>
+    <record model="account.tax.template" id="l10n_tn_tax_vat_purchase_0_local_equipment">
+        <field name="name">0% Equipements locaux</field>
+        <field name="description">0%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10n_tn_chart_template"/>
+        <field name="active" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_vat_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_local_equipment_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_local_equipment_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <record model="account.tax.template" id="l10n_tn_tax_vat_purchase_19_imported_equipment">
+        <field name="name">19% Equipements importés</field>
+        <field name="description">19%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount" eval="19.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10n_tn_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_19"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_imported_equipment_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_tn_43666'),
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_imported_equipment_deductible_vat_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_imported_equipment_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_tn_43666'),
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_imported_equipment_deductible_vat_tag')],
+            }),
+        ]"/>
+    </record>
+    <record model="account.tax.template" id="l10n_tn_tax_vat_purchase_13_imported_equipment">
+        <field name="name">13% Equipements importés</field>
+        <field name="description">13%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount" eval="13.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10n_tn_chart_template"/>
+        <field name="active" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_vat_13"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_imported_equipment_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_tn_43666'),
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_imported_equipment_deductible_vat_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_imported_equipment_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_tn_43666'),
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_imported_equipment_deductible_vat_tag')],
+            }),
+        ]"/>
+    </record>
+    <record model="account.tax.template" id="l10n_tn_tax_vat_purchase_0_imported_equipment">
+        <field name="name">0% Equipements importés</field>
+        <field name="description">0%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10n_tn_chart_template"/>
+        <field name="active" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_vat_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_imported_equipment_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_imported_equipment_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <record model="account.tax.template" id="l10n_tn_tax_vat_purchase_19_other_local">
+        <field name="name">19% Autres achats locaux</field>
+        <field name="description">19%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount" eval="19.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10n_tn_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_19"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_other_local_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_tn_43666'),
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_other_local_deductible_vat_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_other_local_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_tn_43666'),
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_other_local_deductible_vat_tag')],
+            }),
+        ]"/>
+    </record>
+    <record model="account.tax.template" id="l10n_tn_tax_vat_purchase_13_other_local">
+        <field name="name">13% Autres achats locaux</field>
+        <field name="description">13%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount" eval="13.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10n_tn_chart_template"/>
+        <field name="active" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_vat_13"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_other_local_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_tn_43666'),
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_other_local_deductible_vat_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_other_local_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_tn_43666'),
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_other_local_deductible_vat_tag')],
+            }),
+        ]"/>
+    </record>
+    <record model="account.tax.template" id="l10n_tn_tax_vat_purchase_0_other_local">
+        <field name="name">0% Autres achats locaux</field>
+        <field name="description">0%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10n_tn_chart_template"/>
+        <field name="active" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_vat_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_other_local_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_other_local_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <record model="account.tax.template" id="l10n_tn_tax_vat_purchase_19_other_imported">
+        <field name="name">19% Autres achats importés</field>
+        <field name="description">19%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount" eval="19.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10n_tn_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_19"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_other_imported_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_tn_43666'),
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_other_imported_deductible_vat_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_other_imported_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_tn_43666'),
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_other_imported_deductible_vat_tag')],
+            }),
+        ]"/>
+    </record>
+    <record model="account.tax.template" id="l10n_tn_tax_vat_purchase_13_other_imported">
+        <field name="name">13% Autres achats importés</field>
+        <field name="description">13%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount" eval="13.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10n_tn_chart_template"/>
+        <field name="active" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_vat_13"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_other_imported_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_tn_43666'),
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_other_imported_deductible_vat_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_other_imported_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_tn_43666'),
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_other_imported_deductible_vat_tag')],
+            }),
+        ]"/>
+    </record>
+    <record model="account.tax.template" id="l10n_tn_tax_vat_purchase_0_other_imported">
+        <field name="name">0% Autres achats importés</field>
+        <field name="description">0%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount" eval="0.0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10n_tn_chart_template"/>
+        <field name="active" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_vat_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_other_imported_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('l10n_tn.l10n_tn_tr_VAT_purchase_other_imported_base_amount_tag')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <record model="account.tax.template" id="l10n_tn_tax_vat_purchase_timbre_fiscal">
+            <field name="name">0.6D TF</field>
+            <field name="description">0.6D Timbre Fiscal</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="amount" eval="0.6"/>
+            <field name="amount_type">fixed</field>
+            <field name="chart_template_id" ref="l10n_tn_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tf"/>
+            <field name="active" eval="0"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_tn_6654'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_tn_6654'),
+                }),
+            ]"/>
+        </record>
+</odoo>
