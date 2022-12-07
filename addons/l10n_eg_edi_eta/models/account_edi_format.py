@@ -78,6 +78,10 @@ class AccountEdiFormat(models.Model):
         }
         response_data = self._l10n_eg_eta_connect_to_server(request_data, request_url, 'POST', production_enviroment=invoice.company_id.l10n_eg_production_env)
         if response_data.get('error'):
+            error = response_data.get('error').json()
+            if isinstance(error, dict) and error.get('code') == 'NotFound' and error.get('target') == 'GetSubmissionDetailsQueryHandler':
+                # if the error is due to the invoice not being signed, we can retry by getting a new one and sending it
+                invoice.l10n_eg_submission_number = False
             return response_data
         response_data = response_data.get('response').json()
         if response_data.get('rejectedDocuments', False) and isinstance(response_data.get('rejectedDocuments'), list):
