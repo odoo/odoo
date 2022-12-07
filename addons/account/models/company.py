@@ -67,11 +67,6 @@ class ResCompany(models.Model):
     account_journal_payment_credit_account_id = fields.Many2one('account.account', string='Journal Outstanding Payments Account')
     account_journal_early_pay_discount_gain_account_id = fields.Many2one(comodel_name='account.account', string='Cash Discount Write-Off Gain Account')
     account_journal_early_pay_discount_loss_account_id = fields.Many2one(comodel_name='account.account', string='Cash Discount Write-Off Loss Account')
-    early_pay_discount_computation = fields.Selection([
-        ('included', 'On early payment'),
-        ('excluded', 'Never'),
-        ('mixed', 'Always (upon invoice)')
-    ], string='Cash Discount Tax Reduction', readonly=False, store=True, compute='_compute_early_pay_discount_computation')
     transfer_account_code_prefix = fields.Char(string='Prefix of the transfer accounts')
     account_sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax")
     account_purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax")
@@ -687,13 +682,3 @@ class ResCompany(models.Model):
 
         return {'date_from': datetime(year=current_date.year, month=1, day=1).date(),
                 'date_to': datetime(year=current_date.year, month=12, day=31).date()}
-
-    @api.depends('country_code')
-    def _compute_early_pay_discount_computation(self):
-        for company in self:
-            if company.country_code == 'BE':
-                company.early_pay_discount_computation = 'mixed'
-            elif company.country_code == 'NL':
-                company.early_pay_discount_computation = 'excluded'
-            else:
-                company.early_pay_discount_computation = 'included'

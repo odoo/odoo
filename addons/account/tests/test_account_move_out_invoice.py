@@ -2866,12 +2866,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 (0, 0, {
                     'value': 'percent',
                     'value_amount': 100.0,
-                    'days': 0,
-                }),
-                (0, 0, {
-                    'value': 'balance',
-                    'value_amount': 0.0,
-                    'days': 0,
+                    'nb_days': 0,
                 }),
             ],
         })

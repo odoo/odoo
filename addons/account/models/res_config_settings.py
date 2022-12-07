@@ -162,7 +162,6 @@ class ResConfigSettings(models.TransientModel):
     # Quick encoding (fiduciary mode)
     quick_edit_mode = fields.Selection(string="Quick encoding", readonly=False, related='company_id.quick_edit_mode')
 
-    early_pay_discount_computation = fields.Selection(related='company_id.early_pay_discount_computation', string='Tax setting', readonly=False)
     account_journal_early_pay_discount_loss_account_id = fields.Many2one(
         comodel_name='account.account',
         string='Cash Discount Loss account',

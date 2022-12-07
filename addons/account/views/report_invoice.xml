@@ -218,10 +218,12 @@
                             <t t-if="o.invoice_payment_term_id.display_on_invoice and payment_term_details">
                                 <div t-if='o.show_payment_term_details' id="total_payment_term_details_table" class="row">
                                     <div t-attf-class="#{'col-10' if report_type != 'html' else 'col-sm-10 col-md-9'}">
-                                        <t t-if="len(payment_term_details) == 1 and payment_term_details[0].get('discount_date')">
-                                            <span t-options='{"widget": "monetary", "display_currency": o.currency_id}'
-                                                  t-out="payment_term_details[0].get('discount_amount_currency')"/> due if paid before
-                                            <span t-out="payment_term_details[0].get('discount_date')"/>
+                                        <t t-if="o._is_eligible_for_early_payment_discount(o.currency_id,o.invoice_date)">
+                                            <td>
+                                                <span t-options='{"widget": "monetary", "display_currency": o.currency_id}'
+                                                      t-out="o.invoice_payment_term_id._get_amount_due_after_discount(o.amount_total, o.amount_tax)"/> due if paid before
+                                                <span t-out="o.invoice_payment_term_id._get_last_discount_date_formatted(o.invoice_date)"/>
+                                            </td>
                                         </t>
                                         <t t-elif="len(payment_term_details) > 1" t-foreach="payment_term_details" t-as="term">
                                             <div>
@@ -229,11 +231,6 @@
                                                 <t t-options='{"widget": "monetary", "display_currency": o.currency_id}' t-out="term.get('amount')" class="text-end"/>
                                                 <span> due on </span>
                                                 <t t-out="term.get('date')" class="text-start"/>
-                                                <t t-if="term.get('discount_date')" class="text-end">(
-                                                    <span t-options='{"widget": "monetary", "display_currency": o.currency_id}'
-                                                          t-out="term.get('discount_amount_currency')"/> if paid before
-                                                    <span t-out="term.get('discount_date')"/>)
-                                                </t>
                                             </div>
                                         </t>
                                     </div>
