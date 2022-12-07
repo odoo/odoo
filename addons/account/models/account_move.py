@@ -967,22 +967,21 @@ class AccountMove(models.Model):
                         company=invoice.company_id,
                         sign=sign
                     )
-                    multiple_installments = len(invoice_payment_terms) > 1
-                    for i, term in enumerate(invoice_payment_terms):
+                    multiple_installments = len(invoice_payment_terms['line_ids']) > 1
+                    for i, term_line in enumerate(invoice_payment_terms['line_ids']):
                         key = frozendict({
                             'move_id': invoice.id,
-                            'date_maturity': fields.Date.to_date(term.get('date')),
-                            'discount_date': term.get('discount_date'),
-                            'discount_percentage': term.get('discount_percentage'),
+                            'date_maturity': fields.Date.to_date(term_line.get('date')),
+                            'discount_date': invoice_payment_terms.get('discount_date'),
                         })
                         values = {
-                            'balance': term['company_amount'],
-                            'amount_currency': term['foreign_amount'],
+                            'balance': term_line['company_amount'],
+                            'amount_currency': term_line['foreign_amount'],
                             'name': invoice.payment_reference or '',
-                            'discount_amount_currency': term['discount_amount_currency'] or 0.0,
-                            'discount_balance': term['discount_balance'] or 0.0,
-                            'discount_date': term['discount_date'],
-                            'discount_percentage': term['discount_percentage'],
+                            'discount_date': invoice_payment_terms.get('discount_date'),
+                            'discount_balance': invoice_payment_terms.get('discount_balance') or 0.0,
+                            'discount_amount_currency': invoice_payment_terms.get('discount_amount_currency') or 0.0,
+
                         }
                         if multiple_installments:
                             values['name'] = f'{values["name"]} installment #{i + 1}'.lstrip()
@@ -996,7 +995,8 @@ class AccountMove(models.Model):
                         'move_id': invoice.id,
                         'date_maturity': fields.Date.to_date(invoice.invoice_date_due),
                         'discount_date': False,
-                        'discount_percentage': 0
+                        'discount_balance': 0.0,
+                        'discount_amount_currency': 0.0
                     })] = {
                         'balance': invoice.amount_total_signed,
                         'amount_currency': invoice.amount_total_in_currency_signed,
@@ -1203,8 +1203,6 @@ class AccountMove(models.Model):
                     payment_term_details.append({
                         'date': format_date(self.env, line.date_maturity),
                         'amount': sign * line.amount_currency,
-                        'discount_date': format_date(self.env, line.discount_date),
-                        'discount_amount_currency': sign * line.discount_amount_currency,
                     })
                 invoice.payment_term_details = payment_term_details
 
@@ -1218,7 +1216,7 @@ class AccountMove(models.Model):
         for invoice in self:
             if invoice.move_type in ('out_invoice', 'out_receipt', 'in_invoice', 'in_receipt') and invoice.payment_state == 'not_paid':
                 payment_term_lines = invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term')
-                invoice.show_discount_details = any(line.discount_date for line in payment_term_lines)
+                invoice.show_discount_details = invoice.invoice_payment_term_id.early_discount
                 invoice.show_payment_term_details = len(payment_term_lines) > 1 or invoice.show_discount_details
             else:
                 invoice.show_discount_details = False
@@ -1766,6 +1764,17 @@ class AccountMove(models.Model):
                 raise ValidationError(_("This entry contains one or more taxes that are incompatible with your fiscal country. Check company fiscal country in the settings and tax country in taxes configuration."))
 
     # -------------------------------------------------------------------------
+    # EARLY PAYMENT DISCOUNT
+    # -------------------------------------------------------------------------
+    def _is_eligible_for_early_payment_discount(self, currency, reference_date):
+        self.ensure_one()
+        return self.currency_id == currency \
+            and self.move_type in ('out_invoice', 'out_receipt', 'in_invoice', 'in_receipt') \
+            and self.invoice_payment_term_id.early_discount \
+            and reference_date <= self.invoice_payment_term_id._get_last_discount_date(self.invoice_date)\
+            and self.payment_state == 'not_paid'
+
+    # -------------------------------------------------------------------------
     # BUSINESS MODELS SYNCHRONIZATION
     # -------------------------------------------------------------------------
 
@@ -2001,16 +2010,6 @@ class AccountMove(models.Model):
             if bline in inv_existing_after
         }
 
-        # # do not alter manually inputted values if there is no change done in business field
-        # if set(needed_before) == set(needed_after) and all(
-        #     needed_before[key]['amount_currency'] == needed_after[key]['amount_currency']
-        #     for key in needed_after
-        #     if 'amount_currency' in needed_after[key]
-        # ):
-        #     for key in needed_after:
-        #         if 'amount_currency' in needed_after[key]:
-        #             del needed_after[key]['amount_currency']
-        #             del needed_before[key]['amount_currency']
         if needed_after == needed_before:
             return
 
@@ -2790,133 +2789,126 @@ class AccountMove(models.Model):
             'base_lines': defaultdict(lambda: {}),
         }
 
-        early_pay_discount_computation = self.company_id.early_pay_discount_computation
+        bases_details = {}
+        payment_term_line = self.line_ids.filtered(lambda x: x.display_type == 'payment_term')
+        discount_percentage = payment_term_line.move_id.invoice_payment_term_id.discount_percentage
+        if not discount_percentage:
+            return res
+        early_pay_discount_computation = payment_term_line.move_id.invoice_payment_term_id.early_pay_discount_computation
+        term_amount_currency = payment_term_line.amount_currency - payment_term_line.discount_amount_currency
+        term_balance = payment_term_line.balance - payment_term_line.discount_balance
+        if early_pay_discount_computation == 'included' and product_lines.tax_ids:
+             # Compute the base amounts.
+            resulting_delta_base_details = {}
+            to_process = []
+            for base_line in base_lines:
+                invoice_line = base_line['record']
+                to_update_vals, tax_values_list = self.env['account.tax']._compute_taxes_for_single_line(
+                    base_line,
+                    early_pay_discount_computation=early_pay_discount_computation,
+                    early_pay_discount_percentage=discount_percentage,
+                )
+                to_process.append((base_line, to_update_vals, tax_values_list))
 
-        base_per_percentage = {}
-        tax_computation_per_percentage = {}
-        for aml in self.line_ids.filtered(lambda x: x.display_type == 'payment_term'):
-            if not aml.discount_percentage:
-                continue
-
-            term_amount_currency = aml.amount_currency - aml.discount_amount_currency
-            term_balance = aml.balance - aml.discount_balance
-
-            if early_pay_discount_computation == 'included' and product_lines.tax_ids:
-
-                # Compute the amounts for each percentage.
-                if aml.discount_percentage not in tax_computation_per_percentage:
-
-                    # Compute the base amounts.
-                    base_per_percentage[aml.discount_percentage] = resulting_delta_base_details = {}
-                    to_process = []
-                    for base_line in base_lines:
-                        invoice_line = base_line['record']
-                        to_update_vals, tax_values_list = self.env['account.tax']._compute_taxes_for_single_line(
-                            base_line,
-                            early_pay_discount_computation=early_pay_discount_computation,
-                            early_pay_discount_percentage=aml.discount_percentage,
-                        )
-                        to_process.append((base_line, to_update_vals, tax_values_list))
-
-                        grouping_dict = {
-                            'tax_ids': [Command.set(base_line['taxes'].ids)],
-                            'tax_tag_ids': to_update_vals['tax_tag_ids'],
-                            'partner_id': base_line['partner'].id,
-                            'currency_id': base_line['currency'].id,
-                            'account_id': cash_discount_account.id,
-                            'analytic_distribution': base_line['analytic_distribution'],
-                        }
-                        base_detail = resulting_delta_base_details.setdefault(frozendict(grouping_dict), {
-                            'balance': 0.0,
-                            'amount_currency': 0.0,
-                        })
-
-                        amount_currency = self.currency_id\
-                            .round(self.direction_sign * to_update_vals['price_subtotal'] - invoice_line.amount_currency)
-                        balance = self.company_currency_id\
-                            .round(amount_currency / base_line['rate'])
-
-                        base_detail['balance'] += balance
-                        base_detail['amount_currency'] += amount_currency
-
-                    # Compute the tax amounts.
-                    tax_details_with_epd = self.env['account.tax']._aggregate_taxes(
-                        to_process,
-                        grouping_key_generator=grouping_key_generator,
-                    )
-
-                    tax_computation_per_percentage[aml.discount_percentage] = resulting_delta_tax_details = {}
-                    for tax_detail in tax_details_with_epd['tax_details'].values():
-                        tax_amount_without_epd = tax_amounts.get(tax_detail['tax_repartition_line_id'])
-                        if not tax_amount_without_epd:
-                            continue
-
-                        tax_amount_currency = self.currency_id\
-                            .round(self.direction_sign * tax_detail['tax_amount_currency'] - tax_amount_without_epd['amount_currency'])
-                        tax_amount = self.company_currency_id\
-                            .round(self.direction_sign * tax_detail['tax_amount'] - tax_amount_without_epd['balance'])
-
-                        if self.currency_id.is_zero(tax_amount_currency) and self.company_currency_id.is_zero(tax_amount):
-                            continue
-
-                        resulting_delta_tax_details[tax_detail['tax_repartition_line_id']] = {
-                            **tax_detail,
-                            'amount_currency': tax_amount_currency,
-                            'balance': tax_amount,
-                        }
-
-                # Multiply each amount by the percentage paid by the current payment term line.
-                percentage_paid = abs(aml.amount_residual_currency / self.amount_total)
-                for tax_detail in tax_computation_per_percentage[aml.discount_percentage].values():
-                    tax_rep = self.env['account.tax.repartition.line'].browse(tax_detail['tax_repartition_line_id'])
-                    tax = tax_rep.tax_id
-
-                    grouping_dict = {
-                        'account_id': tax_detail['account_id'],
-                        'partner_id': tax_detail['partner_id'],
-                        'currency_id': tax_detail['currency_id'],
-                        'analytic_distribution': tax_detail['analytic_distribution'],
-                        'tax_repartition_line_id': tax_rep.id,
-                        'tax_ids': tax_detail['tax_ids'],
-                        'tax_tag_ids': tax_detail['tax_tag_ids'],
-                        'group_tax_id': tax_detail['tax_id'] if tax_detail['tax_id'] != tax.id else None,
-                    }
-
-                    res['tax_lines'][aml][frozendict(grouping_dict)] = {
-                        'name': _("Early Payment Discount (%s)", tax.name),
-                        'amount_currency': aml.currency_id.round(tax_detail['amount_currency'] * percentage_paid),
-                        'balance': aml.company_currency_id.round(tax_detail['balance'] * percentage_paid),
-                    }
-
-                for grouping_dict, base_detail in base_per_percentage[aml.discount_percentage].items():
-                    res['base_lines'][aml][grouping_dict] = {
-                        'name': _("Early Payment Discount"),
-                        'amount_currency': aml.currency_id.round(base_detail['amount_currency'] * percentage_paid),
-                        'balance': aml.company_currency_id.round(base_detail['balance'] * percentage_paid),
-                    }
-
-                # Fix the rounding issue if any.
-                delta_amount_currency = term_amount_currency \
-                                        - sum(x['amount_currency'] for x in res['base_lines'][aml].values()) \
-                                        - sum(x['amount_currency'] for x in res['tax_lines'][aml].values())
-                delta_balance = term_balance \
-                                - sum(x['balance'] for x in res['base_lines'][aml].values()) \
-                                - sum(x['balance'] for x in res['tax_lines'][aml].values())
-
-                last_tax_line = (list(res['tax_lines'][aml].values()) or list(res['base_lines'][aml].values()))[-1]
-                last_tax_line['amount_currency'] += delta_amount_currency
-                last_tax_line['balance'] += delta_balance
-
-            else:
-                grouping_dict = {'account_id': cash_discount_account.id}
-
-                res['term_lines'][aml][frozendict(grouping_dict)] = {
-                    'name': _("Early Payment Discount"),
-                    'partner_id': aml.partner_id.id,
-                    'currency_id': aml.currency_id.id,
-                    'amount_currency': term_amount_currency,
-                    'balance': term_balance,
+                grouping_dict = {
+                    'tax_ids': [Command.set(base_line['taxes'].ids)],
+                    'tax_tag_ids': to_update_vals['tax_tag_ids'],
+                    'partner_id': base_line['partner'].id,
+                    'currency_id': base_line['currency'].id,
+                    'account_id': cash_discount_account.id,
+                    'analytic_distribution': base_line['analytic_distribution'],
                 }
+                base_detail = resulting_delta_base_details.setdefault(frozendict(grouping_dict), {
+                    'balance': 0.0,
+                    'amount_currency': 0.0,
+                })
+
+                amount_currency = self.currency_id\
+                    .round(self.direction_sign * to_update_vals['price_subtotal'] - invoice_line.amount_currency)
+                balance = self.company_currency_id\
+                    .round(amount_currency / base_line['rate'])
+
+                base_detail['balance'] += balance
+                base_detail['amount_currency'] += amount_currency
+
+                bases_details[frozendict(grouping_dict)] = base_detail
+
+                # Compute the tax amounts.
+                tax_details_with_epd = self.env['account.tax']._aggregate_taxes(
+                    to_process,
+                    grouping_key_generator=grouping_key_generator,
+                )
+
+                resulting_delta_tax_details = {}
+                for tax_detail in tax_details_with_epd['tax_details'].values():
+                    tax_amount_without_epd = tax_amounts.get(tax_detail['tax_repartition_line_id'])
+                    if not tax_amount_without_epd:
+                        continue
+
+                    tax_amount_currency = self.currency_id\
+                        .round(self.direction_sign * tax_detail['tax_amount_currency'] - tax_amount_without_epd['amount_currency'])
+                    tax_amount = self.company_currency_id\
+                        .round(self.direction_sign * tax_detail['tax_amount'] - tax_amount_without_epd['balance'])
+
+                    if self.currency_id.is_zero(tax_amount_currency) and self.company_currency_id.is_zero(tax_amount):
+                        continue
+
+                    resulting_delta_tax_details[tax_detail['tax_repartition_line_id']] = {
+                        **tax_detail,
+                        'amount_currency': tax_amount_currency,
+                        'balance': tax_amount,
+                    }
+
+            # Multiply the amount by the percentage
+            percentage_paid = abs(payment_term_line.amount_residual_currency / self.amount_total)
+            tax_rep = self.env['account.tax.repartition.line'].browse(tax_detail['tax_repartition_line_id'])
+            tax = tax_rep.tax_id
+
+            grouping_dict = {
+                'account_id': tax_detail['account_id'],
+                'partner_id': tax_detail['partner_id'],
+                'currency_id': tax_detail['currency_id'],
+                'analytic_distribution': tax_detail['analytic_distribution'],
+                'tax_repartition_line_id': tax_rep.id,
+                'tax_ids': tax_detail['tax_ids'],
+                'tax_tag_ids': tax_detail['tax_tag_ids'],
+                'group_tax_id': tax_detail['tax_id'] if tax_detail['tax_id'] != tax.id else None,
+            }
+
+            res['tax_lines'][payment_term_line][frozendict(grouping_dict)] = {
+                'name': _("Early Payment Discount (%s)", tax.name),
+                'amount_currency': payment_term_line.currency_id.round(tax_detail['tax_amount_currency'] * percentage_paid),
+                'balance': payment_term_line.company_currency_id.round(tax_detail['tax_amount'] * percentage_paid),
+            }
+            for grouping_dict, base_detail in bases_details.items():
+                res['base_lines'][payment_term_line][grouping_dict] = {
+                    'name': _("Early Payment Discount"),
+                    'amount_currency': payment_term_line.currency_id.round(base_detail['amount_currency'] * percentage_paid),
+                    'balance': payment_term_line.company_currency_id.round(base_detail['balance'] * percentage_paid),
+                }
+
+            # Fix the rounding issue if any.
+            delta_amount_currency = term_amount_currency \
+                                    - sum(x['amount_currency'] for x in res['base_lines'][payment_term_line].values()) \
+                                    - sum(x['amount_currency'] for x in res['tax_lines'][payment_term_line].values())
+            delta_balance = term_balance \
+                            - sum(x['balance'] for x in res['base_lines'][payment_term_line].values()) \
+                            - sum(x['balance'] for x in res['tax_lines'][payment_term_line].values())
+
+            last_tax_line = (list(res['tax_lines'][payment_term_line].values()) or list(res['base_lines'][payment_term_line].values()))[-1]
+            last_tax_line['amount_currency'] += delta_amount_currency
+            last_tax_line['balance'] += delta_balance
+
+        else:
+            grouping_dict = {'account_id': cash_discount_account.id}
+
+            res['term_lines'][payment_term_line][frozendict(grouping_dict)] = {
+                'name': _("Early Payment Discount"),
+                'partner_id': payment_term_line.partner_id.id,
+                'currency_id': payment_term_line.currency_id.id,
+                'amount_currency': term_amount_currency,
+                'balance': term_balance,
+            }
 
         return res
 
