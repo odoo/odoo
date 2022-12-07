@@ -3,7 +3,7 @@
 import { loadJS } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 
-export default async function startClickEverywhere(xmlId, appsMenusOnly) {
+export async function startClickEverywhere(xmlId, appsMenusOnly) {
     await loadJS("web/static/src/webclient/clickbot/clickbot.js");
     window.clickEverywhere(xmlId, appsMenusOnly);
 }

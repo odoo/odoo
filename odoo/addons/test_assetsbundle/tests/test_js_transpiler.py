@@ -199,10 +199,6 @@ export async function sayAsyncHello() {
   console.log("Hello Async");
 }
 
-
-export default function sayHelloDefault() {
-  console.log("Hello Default");
-}
 """
         result = transpile_javascript("/test_assetsbundle/static/src/functions.js", input_content)
 
@@ -219,11 +215,6 @@ __exports.sayHelloWorld = sayHelloWorld; function sayHelloWorld() {
 
 __exports.sayAsyncHello = sayAsyncHello; async function sayAsyncHello() {
   console.log("Hello Async");
-}
-
-
-__exports[Symbol.for("default")] = sayHelloDefault; function sayHelloDefault() {
-  console.log("Hello Default");
 }
 
 return __exports;

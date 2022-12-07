@@ -173,35 +173,6 @@ def convert_export_class(content):
     return EXPORT_CLASS_RE.sub(repl, content)
 
 
-EXPORT_FCT_DEFAULT_RE = re.compile(r"""
-    ^
-    (?P<space>\s*)                          # space and empty line
-    export\s+default\s+                     # export default
-    (?P<type>(async\s+)?function)\s+        # async function or function
-    (?P<identifier>\w+)                     # name of the function
-    """, re.MULTILINE | re.VERBOSE)
-
-
-def convert_export_function_default(content):
-    """
-    Transpile functions that are being exported as default value.
-
-    .. code-block:: javascript
-
-        // before
-        export default function name
-        // after
-        __exports[Symbol.for("default")] = name; function name
-
-        // before
-        export default async function name
-        // after
-        __exports[Symbol.for("default")] = name; async function name
-
-    """
-    repl = r"""\g<space>__exports[Symbol.for("default")] = \g<identifier>; \g<type> \g<identifier>"""
-    return EXPORT_FCT_DEFAULT_RE.sub(repl, content)
-
 EXPORT_CLASS_DEFAULT_RE = re.compile(r"""
     ^
     (?P<space>\s*)                          # space and empty line
