@@ -161,7 +161,7 @@ class AccountEdiDocument(models.Model):
                     old_attachment = document.attachment_id
                     values = {
                         'attachment_id': move_result['attachment'].id,
-                        'error': move_result.get('error', False),
+                        'error': f'''{move_result.get('error', False)} @ {fields.Datetime.now()} utc''',
                         'blocking_level': move_result.get('blocking_level', DEFAULT_BLOCKING_LEVEL) if 'error' in move_result else False,
                     }
                     if not values.get('error'):
