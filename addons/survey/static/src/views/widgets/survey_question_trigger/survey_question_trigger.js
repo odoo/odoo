@@ -70,7 +70,12 @@ export class SurveyQuestionTriggerWidget extends Component {
             return undefined;
         }
         const triggerId = record.data.triggering_question_id[0];
-        const triggerRecord = record.model.root.data.question_and_page_ids.records.find(rec => rec.data.id === triggerId);
+        let triggerRecord;
+        if (this.props.fromPrimaryListView) {
+            triggerRecord = record.model.root.records.find(rec => rec.resId === triggerId);
+        } else {
+            triggerRecord = record.model.root.data.question_and_page_ids.records.find(rec => rec.data.id === triggerId);
+        }
 
         if (!triggerRecord) {
             return "MISSING_TRIGGER_ERROR";
@@ -87,6 +92,25 @@ export class SurveyQuestionTriggerWidget extends Component {
 }
 
 SurveyQuestionTriggerWidget.template = "survey.surveyQuestionTrigger";
+SurveyQuestionTriggerWidget.props = {
+    fromPrimaryListView: { type: Boolean, optional: true },
+    record: { type: Object, optional: false },
+    options: { type: Object, optional: true },
+    // additional props passed by list
+    className: {},
+    rawAttrs: {},
+    WidgetComponent: {},
+};
+
+SurveyQuestionTriggerWidget.defaultProps = {
+    fromPrimaryListView: false
+};
+
+SurveyQuestionTriggerWidget.extractProps = ({ attrs }) => {
+    return {
+        fromPrimaryListView: attrs.options.fromPrimaryListView
+    };
+};
 
 SurveyQuestionTriggerWidget.displayName = 'Trigger';
 SurveyQuestionTriggerWidget.supportedTypes = ['many2one'];
