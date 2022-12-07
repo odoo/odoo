@@ -30,7 +30,7 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
 
         self.assertEqual(
             link_trackers.mapped('url'),
-            ['http://odoo.com', 'http://example.com', 'http://test.example.com'],
+            ['https://odoo.com', 'http://example.com', 'http://test.example.com'],
         )
 
         self.assertEqual(len(set(link_trackers.mapped('code'))), 3)

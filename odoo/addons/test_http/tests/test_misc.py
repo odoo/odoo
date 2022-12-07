@@ -66,13 +66,13 @@ class TestHttpMisc(TestHttpBase):
         # Valid URLs
         self.assertEqual(root.get_static_file(f'/{uri}'), path, "Valid file")
         self.assertEqual(root.get_static_file(f'odoo.com/{uri}', host='odoo.com'), path, "Valid file with valid host")
-        self.assertEqual(root.get_static_file(f'http://odoo.com/{uri}', host='odoo.com'), path, "Valid file with valid host")
+        self.assertEqual(root.get_static_file(f'https://odoo.com/{uri}', host='odoo.com'), path, "Valid file with valid host")
 
         # Invalid URLs
         self.assertIsNone(root.get_static_file('/test_http/i-dont-exist'), "File doesn't exist")
         self.assertIsNone(root.get_static_file('/test_http/__manifest__.py'), "File is not static")
         self.assertIsNone(root.get_static_file(f'odoo.com/{uri}'), "No host allowed")
-        self.assertIsNone(root.get_static_file(f'http://odoo.com/{uri}'), "No host allowed")
+        self.assertIsNone(root.get_static_file(f'https://odoo.com/{uri}'), "No host allowed")
 
     def test_misc4_rpc_qweb(self):
         jack = new_test_user(self.env, 'jackoneill', context={'lang': 'en_US'})

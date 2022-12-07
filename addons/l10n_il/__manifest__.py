@@ -14,7 +14,7 @@ This module consists of:
  - Taxes and tax report
  - Multiple Fiscal positions
  """,
-    'website': 'http://www.odoo.com/accounting',
+    'website': 'https://www.odoo.com/accounting',
     'depends': ['l10n_multilang'],
     'data': [
         'data/account_chart_template_data.xml',
