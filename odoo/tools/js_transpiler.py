@@ -331,9 +331,9 @@ def convert_default_export(content):
         // after
         __exports[Symbol.for("default")] =
     """
-    new_content = convert_export_function_default(content)
-    new_content = convert_export_class_default(new_content)
-    new_content = convert_variable_export_default(new_content)
+    new_content = convert_export_class_default(content)
+    # new_content = convert_export_function_default(content)
+    # new_content = convert_variable_export_default(new_content)
     repl = r"""\g<space>__exports[Symbol.for("default")] ="""
     return EXPORT_DEFAULT_RE.sub(repl, new_content)
 
