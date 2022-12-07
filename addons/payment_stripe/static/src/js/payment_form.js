@@ -129,7 +129,9 @@ PaymentForm.include({
         var stripe = Stripe(formData.stripe_publishable_key);
         var element = stripe.elements();
         var card = element.create('card', {hidePostalCode: true});
-        card.mount('#card-element');
+        // use more specific css selector so that '#card-element' is found inside the selected stripe card, otherwise
+        // this won't happen, and the card will be mounted to the first element found.
+        card.mount(`#o_payment_add_token_acq_${acquirerID} #card-element`);
         card.on('ready', function(ev) {
             card.focus();
         });
