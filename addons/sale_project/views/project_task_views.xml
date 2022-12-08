@@ -60,6 +60,7 @@
         <field name="name">project.task.view.inherit</field>
         <field name="model">project.task</field>
         <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="priority">100</field>
         <field name="arch" type="xml">
             <xpath expr="//span[@id='start_rating_buttons']" position="before">
                 <button class="oe_stat_button"
