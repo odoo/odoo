@@ -359,7 +359,7 @@ Object.assign(PaletteSelectionScreen, {
     template: 'website.Configurator.PaletteSelectionScreen',
 });
 
-class FeaturesSelectionScreen extends Component {
+export class FeaturesSelectionScreen extends Component {
     setup() {
         this.state = useStore();
         this.router = useRouter();
@@ -415,7 +415,7 @@ class ThemeSelectionScreen extends Component {
 
 ThemeSelectionScreen.template = 'website.Configurator.ThemeSelectionScreen';
 
-class Configurator extends Component {
+export class Configurator extends Component {
     setup() {
         this.router = useRouter();
     }
