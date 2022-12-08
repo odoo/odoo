@@ -319,7 +319,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         this.observer = new MutationObserver(processRecords);
         const observe = () => {
             if (this.observer) {
-                this.observer.observe(document.body, {
+                this.observer.observe($wrapwrap[0], {
                     childList: true,
                     subtree: true,
                     attributes: true,
