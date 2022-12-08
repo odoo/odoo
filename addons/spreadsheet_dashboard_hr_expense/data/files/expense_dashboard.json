@@ -150,47 +150,37 @@
                 },
                 "C21": {
                     "style": 7,
-                    "format": 2,
                     "content": "=ODOO.LIST(1,1,\"total_amount\")"
                 },
                 "C22": {
-                    "format": 2,
                     "content": "=ODOO.LIST(1,2,\"total_amount\")"
                 },
                 "C23": {
                     "style": 7,
-                    "format": 2,
                     "content": "=ODOO.LIST(1,3,\"total_amount\")"
                 },
                 "C24": {
-                    "format": 2,
                     "content": "=ODOO.LIST(1,4,\"total_amount\")"
                 },
                 "C25": {
                     "style": 7,
-                    "format": 2,
                     "content": "=ODOO.LIST(1,5,\"total_amount\")"
                 },
                 "C26": {
-                    "format": 2,
                     "content": "=ODOO.LIST(1,6,\"total_amount\")"
                 },
                 "C27": {
                     "style": 7,
-                    "format": 2,
                     "content": "=ODOO.LIST(1,7,\"total_amount\")"
                 },
                 "C28": {
-                    "format": 2,
                     "content": "=ODOO.LIST(1,8,\"total_amount\")"
                 },
                 "C29": {
                     "style": 7,
-                    "format": 2,
                     "content": "=ODOO.LIST(1,9,\"total_amount\")"
                 },
                 "C30": {
-                    "format": 2,
                     "content": "=ODOO.LIST(1,10,\"total_amount\")"
                 },
                 "E19": {
@@ -380,47 +370,37 @@
                 },
                 "G21": {
                     "style": 7,
-                    "format": 2,
                     "content": "=ODOO.PIVOT(1,\"total_amount\",\"#product_id\",1)"
                 },
                 "G22": {
-                    "format": 2,
                     "content": "=ODOO.PIVOT(1,\"total_amount\",\"#product_id\",2)"
                 },
                 "G23": {
                     "style": 7,
-                    "format": 2,
                     "content": "=ODOO.PIVOT(1,\"total_amount\",\"#product_id\",3)"
                 },
                 "G24": {
-                    "format": 2,
                     "content": "=ODOO.PIVOT(1,\"total_amount\",\"#product_id\",4)"
                 },
                 "G25": {
                     "style": 7,
-                    "format": 2,
                     "content": "=ODOO.PIVOT(1,\"total_amount\",\"#product_id\",5)"
                 },
                 "G26": {
-                    "format": 2,
                     "content": "=ODOO.PIVOT(1,\"total_amount\",\"#product_id\",6)"
                 },
                 "G27": {
                     "style": 7,
-                    "format": 2,
                     "content": "=ODOO.PIVOT(1,\"total_amount\",\"#product_id\",7)"
                 },
                 "G28": {
-                    "format": 2,
                     "content": "=ODOO.PIVOT(1,\"total_amount\",\"#product_id\",8)"
                 },
                 "G29": {
                     "style": 7,
-                    "format": 2,
                     "content": "=ODOO.PIVOT(1,\"total_amount\",\"#product_id\",9)"
                 },
                 "G30": {
-                    "format": 2,
                     "content": "=ODOO.PIVOT(1,\"total_amount\",\"#product_id\",10)"
                 },
                 "C33": {
@@ -430,47 +410,37 @@
                 },
                 "C34": {
                     "style": 7,
-                    "format": 2,
                     "content": "=ODOO.PIVOT(4,\"total_amount\",\"#employee_id\",1)"
                 },
                 "C35": {
-                    "format": 2,
                     "content": "=ODOO.PIVOT(4,\"total_amount\",\"#employee_id\",2)"
                 },
                 "C36": {
                     "style": 7,
-                    "format": 2,
                     "content": "=ODOO.PIVOT(4,\"total_amount\",\"#employee_id\",3)"
                 },
                 "C37": {
-                    "format": 2,
                     "content": "=ODOO.PIVOT(4,\"total_amount\",\"#employee_id\",4)"
                 },
                 "C38": {
                     "style": 7,
-                    "format": 2,
                     "content": "=ODOO.PIVOT(4,\"total_amount\",\"#employee_id\",5)"
                 },
                 "C39": {
-                    "format": 2,
                     "content": "=ODOO.PIVOT(4,\"total_amount\",\"#employee_id\",6)"
                 },
                 "C40": {
                     "style": 7,
-                    "format": 2,
                     "content": "=ODOO.PIVOT(4,\"total_amount\",\"#employee_id\",7)"
                 },
                 "C41": {
-                    "format": 2,
                     "content": "=ODOO.PIVOT(4,\"total_amount\",\"#employee_id\",8)"
                 },
                 "C42": {
                     "style": 7,
-                    "format": 2,
                     "content": "=ODOO.PIVOT(4,\"total_amount\",\"#employee_id\",9)"
                 },
                 "C43": {
-                    "format": 2,
                     "content": "=ODOO.PIVOT(4,\"total_amount\",\"#employee_id\",10)"
                 },
                 "A8": {
@@ -536,7 +506,6 @@
                     "tag": "chart",
                     "data": {
                         "title": "",
-                        "id": "6ce637db-4068-457f-91a4-ce83736932ff",
                         "background": "#FFFFFF",
                         "legendPosition": "right",
                         "metaData": {
@@ -988,17 +957,12 @@
         {
             "id": "54e94f8d-739d-4a02-8205-c25be895720e",
             "type": "date",
-            "label": "Year",
-            "defaultValue": {},
-            "rangeType": "year",
+            "label": "Period",
+            "defaultValue": "last_year",
+            "rangeType": "relative",
             "defaultsToCurrentPeriod": true,
             "pivotFields": {
                 "1": {
-                    "field": "date",
-                    "type": "date",
-                    "offset": 0
-                },
-                "3": {
                     "field": "date",
                     "type": "date",
                     "offset": 0
@@ -1058,10 +1022,6 @@
                     "field": "product_id",
                     "type": "many2one"
                 },
-                "3": {
-                    "field": "product_id",
-                    "type": "many2one"
-                },
                 "4": {
                     "field": "product_id",
                     "type": "many2one"
@@ -1079,6 +1039,10 @@
                     "type": "many2one"
                 },
                 "8": {
+                    "field": "product_id",
+                    "type": "many2one"
+                },
+                "9": {
                     "field": "product_id",
                     "type": "many2one"
                 }
@@ -1110,10 +1074,6 @@
                     "field": "employee_id",
                     "type": "many2one"
                 },
-                "3": {
-                    "field": "employee_id",
-                    "type": "many2one"
-                },
                 "4": {
                     "field": "employee_id",
                     "type": "many2one"
@@ -1131,6 +1091,10 @@
                     "type": "many2one"
                 },
                 "8": {
+                    "field": "employee_id",
+                    "type": "many2one"
+                },
+                "9": {
                     "field": "employee_id",
                     "type": "many2one"
                 }

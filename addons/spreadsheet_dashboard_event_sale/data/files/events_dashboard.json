@@ -607,7 +607,6 @@
                     "tag": "chart",
                     "data": {
                         "title": "",
-                        "id": "d9898682-9b91-4fe2-9900-a4b2583eb459",
                         "background": "#FFFFFF",
                         "legendPosition": "none",
                         "metaData": {
@@ -643,7 +642,6 @@
                     "tag": "chart",
                     "data": {
                         "title": "",
-                        "id": "092dd971-dc10-41c5-96c4-d760820e9cf2",
                         "background": "#FFFFFF",
                         "legendPosition": "none",
                         "metaData": {
@@ -1294,6 +1292,22 @@
                     "field": "address_id",
                     "type": "many2one"
                 },
+                "5": {
+                    "field": "event_id.address_id",
+                    "type": "many2one"
+                },
+                "6": {
+                    "field": "event_id.address_id",
+                    "type": "many2one"
+                },
+                "7": {
+                    "field": "event_id.address_id",
+                    "type": "many2one"
+                },
+                "8": {
+                    "field": "event_id.address_id",
+                    "type": "many2one"
+                },
                 "9": {
                     "field": "address_id",
                     "type": "many2one"
@@ -1304,7 +1318,16 @@
                 }
             },
             "listFields": {},
-            "graphFields": {}
+            "graphFields": {
+                "d9898682-9b91-4fe2-9900-a4b2583eb459": {
+                    "field": "event_id.address_id",
+                    "type": "many2one"
+                },
+                "092dd971-dc10-41c5-96c4-d760820e9cf2": {
+                    "field": "address_id",
+                    "type": "many2one"
+                }
+            }
         },
         {
             "id": "d9cfb0b0-01a0-45be-996e-723f4283000b",
@@ -1332,6 +1355,14 @@
                     "field": "event_type_id",
                     "type": "many2one"
                 },
+                "5": {
+                    "field": "event_id.event_type_id",
+                    "type": "many2one"
+                },
+                "6": {
+                    "field": "event_id.event_type_id",
+                    "type": "many2one"
+                },
                 "7": {
                     "field": "event_type_id",
                     "type": "many2one"
@@ -1351,6 +1382,10 @@
             },
             "listFields": {},
             "graphFields": {
+                "d9898682-9b91-4fe2-9900-a4b2583eb459": {
+                    "field": "event_id.event_type_id",
+                    "type": "many2one"
+                },
                 "092dd971-dc10-41c5-96c4-d760820e9cf2": {
                     "field": "event_type_id",
                     "type": "many2one"
@@ -1383,6 +1418,22 @@
                     "field": "tag_ids",
                     "type": "many2many"
                 },
+                "5": {
+                    "field": "event_id.tag_ids",
+                    "type": "many2many"
+                },
+                "6": {
+                    "field": "event_id.tag_ids",
+                    "type": "many2many"
+                },
+                "7": {
+                    "field": "event_id.tag_ids",
+                    "type": "many2many"
+                },
+                "8": {
+                    "field": "event_id.tag_ids",
+                    "type": "many2many"
+                },
                 "9": {
                     "field": "tag_ids",
                     "type": "many2many"
@@ -1394,6 +1445,10 @@
             },
             "listFields": {},
             "graphFields": {
+                "d9898682-9b91-4fe2-9900-a4b2583eb459": {
+                    "field": "event_id.tag_ids",
+                    "type": "many2many"
+                },
                 "092dd971-dc10-41c5-96c4-d760820e9cf2": {
                     "field": "tag_ids",
                     "type": "many2many"
@@ -1432,6 +1487,14 @@
                 },
                 "6": {
                     "field": "event_organizer_id",
+                    "type": "many2one"
+                },
+                "7": {
+                    "field": "event_id.organizer_id",
+                    "type": "many2one"
+                },
+                "8": {
+                    "field": "event_id.organizer_id",
                     "type": "many2one"
                 },
                 "9": {
