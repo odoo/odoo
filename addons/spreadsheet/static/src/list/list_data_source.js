@@ -50,13 +50,27 @@ export default class ListDataSource extends OdooViewsDataSource {
         this.data = await this._orm.searchRead(
             this._metaData.resModel,
             domain,
-            this._metaData.columns.filter((f) => this.getField(f)),
+            this._getFieldsToFetch(),
             {
                 order: orderByToString(orderBy),
                 limit: this.limit,
                 context,
             }
         );
+    }
+
+    /**
+     * Get the fields to fetch from the server.
+     * Automatically add the currency field if the field is a monetary field.
+     */
+    _getFieldsToFetch() {
+        const fields = this._metaData.columns.filter((f) => this.getField(f));
+        for (const field of fields) {
+            if (this.getField(field).type === "monetary") {
+                fields.push(this.getField(field).currency_field);
+            }
+        }
+        return fields;
     }
 
     /**
