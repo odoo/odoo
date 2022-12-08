@@ -205,16 +205,6 @@ body.editor_enable.editor_has_snippets {
     }
 }
 
-.editor_enable {
-    @if o-website-value('header-template') == 'sidebar' {
-        #wrapwrap > header {
-            @if o-website-value('hamburger-position') != 'right' {
-                right: $o-we-sidebar-width;
-            }
-        }
-    }
-}
-
 // s_countdown preview classes
 body.editor_enable {
     .s_countdown {
