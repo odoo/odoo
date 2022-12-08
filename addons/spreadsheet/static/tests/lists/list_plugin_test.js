@@ -492,4 +492,18 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         assert.deepEqual(model.getters.getListFieldMatching("1", filter.id), undefined);
         assert.deepEqual(model.getters.getListDataSource("1").getComputedDomain(), []);
     });
+
+    QUnit.test("Preload currency of monetary field", async function (assert) {
+        assert.expect(3);
+        await createSpreadsheetWithList({
+            columns: ["pognon"],
+            mockRPC: async function (route, args, performRPC) {
+                if (args.method === "search_read" && args.model === "partner") {
+                    assert.strictEqual(args.kwargs.fields.length, 2);
+                    assert.strictEqual(args.kwargs.fields[0], "pognon");
+                    assert.strictEqual(args.kwargs.fields[1], "currency_id");
+                }
+            },
+        });
+    });
 });
