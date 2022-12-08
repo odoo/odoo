@@ -182,6 +182,66 @@ table.editorbar-panel {
     }
 }
 
+<<<<<<< HEAD
+||||||| parent of 84a112dfe1a (temp)
+body.editor_enable.editor_has_snippets {
+    padding-top: 0 !important;
+
+    .s_popup .modal {
+        // s_popup in edit mode
+        background-color: transparent;
+
+        &.fade .modal-dialog {
+            transform: none;
+        }
+    }
+
+    #oe_main_menu_navbar + #wrapwrap .o_header_affixed {
+        top: 0;
+    }
+}
+
+.editor_has_snippets {
+    .o_header_affixed {
+        right: $o-we-sidebar-width !important;
+    }
+}
+
+.editor_enable {
+    @if o-website-value('header-template') == 'sidebar' {
+        #wrapwrap > header {
+            @if o-website-value('hamburger-position') != 'right' {
+                right: $o-we-sidebar-width;
+            }
+        }
+    }
+}
+
+=======
+body.editor_enable.editor_has_snippets {
+    padding-top: 0 !important;
+
+    .s_popup .modal {
+        // s_popup in edit mode
+        background-color: transparent;
+
+        &.fade .modal-dialog {
+            transform: none;
+        }
+    }
+
+    #oe_main_menu_navbar + #wrapwrap .o_header_affixed {
+        top: 0;
+    }
+}
+
+.editor_has_snippets {
+    .o_header_affixed {
+        right: $o-we-sidebar-width !important;
+    }
+}
+
+>>>>>>> 84a112dfe1a (temp)
 // s_countdown preview classes
 body.editor_enable {
     .s_countdown {
