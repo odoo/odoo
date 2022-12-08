@@ -104,7 +104,7 @@
                 <group expand="0" string="Group By">
                     <filter string="Resource" name="resource" domain="[]" context="{'group_by':'resource_id'}"/>
                     <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <filter string="Leave Date" name="leave_month" domain="[]" context="{'group_by':'date_from'}" help="Starting Date of Leave"/>
+                    <filter string="Time Off Date" name="leave_month" domain="[]" context="{'group_by':'date_from'}" help="Starting Date of Time Off"/>
                 </group>
            </search>
         </field>
@@ -126,7 +126,7 @@
         <field name="name">resource.calendar.leaves.form</field>
         <field name="model">resource.calendar.leaves</field>
         <field name="arch" type="xml">
-            <form string="Leave Detail">
+            <form string="Time Off Detail">
             <field name="company_id" invisible="1"/>
             <sheet>
                 <group>
@@ -151,7 +151,7 @@
         <field name="model">resource.calendar.leaves</field>
         <field name="priority">1</field>
         <field name="arch" type="xml">
-            <tree string="Leave Detail">
+            <tree string="Time Off Detail">
                 <field name="name" string="Reason"/>
                 <field name="resource_id" />
                 <field name="company_id" groups="base.group_multi_company"/>

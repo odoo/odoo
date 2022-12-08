@@ -105,7 +105,7 @@
                 <div class="float-end"
                      t-if="record.hr_icon_display.raw_value == 'presence_holiday_absent'"
                      name="presence_absent">
-                    <span class="fa fa-plane text-warning" role="img" aria-label="To define" title="On Leave"/>
+                    <span class="fa fa-plane text-warning" role="img" aria-label="To define" title="On Time Off"/>
                 </div>
             </xpath>
         </field>
@@ -138,7 +138,7 @@
                 <div class="float-end"
                      t-if="record.hr_icon_display.raw_value == 'presence_holiday_absent'"
                      name="presence_absent">
-                    <span class="fa fa-plane text-warning" role="img" aria-label="To define" title="On Leave"/>
+                    <span class="fa fa-plane text-warning" role="img" aria-label="To define" title="On Time Off"/>
                 </div>
            </xpath>
             <xpath expr="//li[@id='last_login']" position="inside">
@@ -167,7 +167,7 @@
                 <!-- Employee is absent, in holiday but he is connected -->
                 <div role="img" class="fa fa-fw fa-plane text-success o_button_icon hr_presence" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_holiday_present')]}" aria-label="Present but on leave" title="Present but on leave" name="presence_absent_active"/>
                 <!-- Employee is on holiday, not present and not connected -->
-                <div role="img" class="fa fa-fw fa-plane text-warning o_button_icon hr_presence" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_holiday_absent')]}"  aria-label="On Leave" title="On Leave" name="presence_absent"/>
+                <div role="img" class="fa fa-fw fa-plane text-warning o_button_icon hr_presence" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_holiday_absent')]}"  aria-label="On Time Off" title="On Time Off" name="presence_absent"/>
             </xpath>
             <xpath expr="//group[@name='managers']" position="inside">
                 <field name="leave_manager_id"/>
