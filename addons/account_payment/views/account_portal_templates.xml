@@ -93,11 +93,6 @@
             <div t-if="(invoice.amount_residual or not tx_ids) and invoice.state == 'posted' and invoice.payment_state in ('not_paid', 'partial') and invoice.amount_total" id="portal_pay">
                 <t t-call="account_payment.portal_invoice_payment"/>
             </div>
-            <div class="panel-body" t-if="existing_token">
-                <div class="offset-lg-3 col-lg-6">
-                    <i class="fa fa-info"></i> You have credits card registered, you can log-in to be able to use them.
-                </div>
-            </div>
         </xpath>
     </template>
 

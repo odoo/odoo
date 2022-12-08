@@ -31,7 +31,7 @@ class PortalAccount(portal.PortalAccount):
             currency_id=invoice.currency_id.id
         )  # In sudo mode to read the fields of providers and partner (if not logged in)
         tokens = request.env['payment.token']._get_available_tokens(
-            providers_sudo.ids, partner_id=partner_sudo.id, logged_in=logged_in
+            providers_sudo.ids, partner_sudo.id
         )
 
         # Make sure that the partner's company matches the invoice's company.
@@ -54,7 +54,7 @@ class PortalAccount(portal.PortalAccount):
             'tokens': tokens,
             'fees_by_provider': fees_by_provider,
             'show_tokenize_input': PaymentPortal._compute_show_tokenize_input_mapping(
-                providers_sudo, logged_in=logged_in
+                providers_sudo
             ),
             'amount': invoice.amount_residual,
             'currency': invoice.currency_id,
@@ -64,10 +64,4 @@ class PortalAccount(portal.PortalAccount):
             'landing_route': _build_url_w_params(invoice.access_url, {'access_token': access_token})
         }
         values.update(**portal_page_values, **payment_form_values)
-        if not logged_in:
-            # Don't display payment tokens of the invoice partner if the user is not logged in, but
-            # inform that logging in will make them available.
-            values.update({
-                'existing_token': bool(tokens),
-            })
         return values
