@@ -277,7 +277,8 @@
                                     <field name="date_deadline" optional="hide"/>
                                     <field name="is_initial_demand_editable" invisible="1"/>
                                     <field name="is_quantity_done_editable" invisible="1"/>
-                                    <field name="product_packaging_id" groups="product.group_stock_packaging"/>
+                                    <field name="product_packaging_qty" invisible="1"/>
+                                    <field name="product_packaging_id" context="{'default_product_id': product_id, 'form_view_ref':'product.product_packaging_form_view', 'product_packaging_qty': product_packaging_qty}" widget="product_packaging_widget" optional="hide" options="{'no_open': True}" groups="product.group_stock_packaging"/>
                                     <field name="product_uom_qty" string="Demand" attrs="{'column_invisible': [('parent.immediate_transfer', '=', True)], 'readonly': ['|', ('is_initial_demand_editable', '=', False), '&amp;', '&amp;', ('show_operations', '=', True), ('is_locked', '=', True), ('is_initial_demand_editable', '=', False)]}"/>
                                     <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" 
                                         attrs="{'invisible': ['|', ('forecast_availability', '&lt;', 0), '|', ('parent.immediate_transfer', '=', True), '&amp;', ('parent.picking_type_code', '=', 'outgoing'), ('state', '!=', 'draft')]}"/>

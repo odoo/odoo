@@ -860,22 +860,6 @@ class ProductTemplate(models.Model):
             raise UserError(_("Available quantity should be set to zero before changing type"))
         return super(ProductTemplate, self).write(vals)
 
-    def copy(self, default=None):
-        res = super().copy(default=default)
-        # Since we don't copy product variants directly, we need to match the newly
-        # created product variants with the old one, and copy the storage category
-        # capacity from them.
-        new_product_dict = {}
-        for product in res.product_variant_ids:
-            product_attribute_value = product.product_template_attribute_value_ids.product_attribute_value_id
-            new_product_dict[product_attribute_value] = product.id
-        storage_category_capacity_vals = []
-        for storage_category_capacity in self.product_variant_ids.storage_category_capacity_ids:
-            product_attribute_value = storage_category_capacity.product_id.product_template_attribute_value_ids.product_attribute_value_id
-            storage_category_capacity_vals.append(storage_category_capacity.copy_data({'product_id': new_product_dict[product_attribute_value]})[0])
-        self.env['stock.storage.category.capacity'].create(storage_category_capacity_vals)
-        return res
-
     # Be aware that the exact same function exists in product.product
     def action_open_quants(self):
         return self.product_variant_ids.filtered(lambda p: p.active or p.qty_available != 0).action_open_quants()

@@ -75,7 +75,7 @@
     <record model="ir.actions.act_window" id="action_packaging_view">
         <field name="name">Product Packagings</field>
         <field name="res_model">product.packaging</field>
-        <field name="domain">[('product_id', '!=', False)]</field>
+        <field name="view_mode">tree,form</field>
         <field name="view_ids" eval="[(5, 0, 0),
             (0, 0, {'view_mode': 'tree', 'view_id': ref('product_packaging_tree_view')}),
             (0, 0, {'view_mode': 'form', 'view_id': ref('product_packaging_form_view')})]"/>

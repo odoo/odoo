@@ -174,17 +174,17 @@ class TestPurchase(AccountTestInvoicingCommon):
             activity.note,
         )
 
-    def test_onchange_packaging_00(self):
+    def test_packaging_suggestion_00(self):
         """Create a PO and use packaging. Check we suggested suitable packaging
         according to the product_qty. Also check product_qty or product_packaging
         are correctly calculated when one of them changed.
         """
         # Required for `product_packaging_qty` to be visible in the view
         self.env.user.groups_id += self.env.ref('product.group_stock_packaging')
-        packaging_single = self.env['product.packaging'].create({
+        packaging_two = self.env['product.packaging'].create({
             'name': "I'm a packaging",
             'product_id': self.product_a.id,
-            'qty': 1.0,
+            'qty': 2.0,
         })
         packaging_dozen = self.env['product.packaging'].create({
             'name': "I'm also a packaging",
@@ -196,47 +196,55 @@ class TestPurchase(AccountTestInvoicingCommon):
             'partner_id': self.partner_a.id,
         })
         po_form = Form(po)
+
+        # set product_qty to 1.0, no packaging will be added
         with po_form.order_line.new() as line:
             line.product_id = self.product_a
             line.product_qty = 1.0
         po_form.save()
-        self.assertEqual(po.order_line.product_packaging_id, packaging_single)
+        self.assertFalse(po.order_line.product_packaging_id)
+        self.assertEqual(po.order_line.product_packaging_qty, 0)
+
+        # change product_qty to 2.0, packaging_two will be added
+        with po_form.order_line.edit(0) as line:
+            line.product_qty = 2.0
+        po_form.save()
+        self.assertEqual(po.order_line.product_packaging_id, packaging_two)
         self.assertEqual(po.order_line.product_packaging_qty, 1.0)
-        with po_form.order_line.edit(0) as line:
-            line.product_packaging_qty = 2.0
-        po_form.save()
-        self.assertEqual(po.order_line.product_qty, 2.0)
 
+        # change to packaging_dozen, product_qty will be change to 12
+        with self.assertLogs(level='WARNING'):
+            with po_form.order_line.edit(0) as line:
+                line.product_packaging_id = packaging_dozen
+        po_form.save()
+        self.assertEqual(po.order_line.product_qty, 12.0)
+        self.assertEqual(po.order_line.product_packaging_qty, 1.0)
 
+        # change to product_qty to 13, packaging will be removed
         with po_form.order_line.edit(0) as line:
-            line.product_qty = 24.0
+            line.product_qty = 13.0
         po_form.save()
-        self.assertEqual(po.order_line.product_packaging_id, packaging_dozen)
-        self.assertEqual(po.order_line.product_packaging_qty, 2.0)
-        with po_form.order_line.edit(0) as line:
-            line.product_packaging_qty = 1.0
-        po_form.save()
-        self.assertEqual(po.order_line.product_qty, 12)
+        self.assertFalse(po.order_line.product_packaging_id)
+        self.assertEqual(po.order_line.product_packaging_qty, 0)
 
         # Do the same test but without form, to check the `product_packaging_id` and `product_packaging_qty` are set
-        # without manual call to onchanges
+        # without manual call to onchanges, except the part changing the packaging manually
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 Command.create({'product_id': self.product_a.id, 'product_qty': 1.0}),
             ]
         })
-        self.assertEqual(po.order_line.product_packaging_id, packaging_single)
+        self.assertFalse(po.order_line.product_packaging_id)
+        self.assertEqual(po.order_line.product_packaging_qty, 0)
+
+        po.order_line.product_qty = 2.0
+        self.assertEqual(po.order_line.product_packaging_id, packaging_two)
         self.assertEqual(po.order_line.product_packaging_qty, 1.0)
-        po.order_line.product_packaging_qty = 2.0
-        self.assertEqual(po.order_line.product_qty, 2.0)
 
-        po.order_line.product_qty = 24.0
-        self.assertEqual(po.order_line.product_packaging_id, packaging_dozen)
-        self.assertEqual(po.order_line.product_packaging_qty, 2.0)
-        po.order_line.product_packaging_qty = 1.0
-        self.assertEqual(po.order_line.product_qty, 12)
-
+        po.order_line.product_qty = 13.0
+        self.assertFalse(po.order_line.product_packaging_id)
+        self.assertEqual(po.order_line.product_packaging_qty, 0)
 
     def test_with_different_uom(self):
         """ This test ensures that the unit price is correctly computed"""

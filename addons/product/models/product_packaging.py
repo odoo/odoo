@@ -18,15 +18,21 @@ class ProductPackaging(models.Model):
     name = fields.Char('Product Packaging', required=True)
     sequence = fields.Integer('Sequence', default=1, help="The first in the sequence is the default one.")
     product_id = fields.Many2one('product.product', string='Product', check_company=True)
+    product_tmpl_id = fields.Many2one('product.template', string='Product Template', check_company=True)
     qty = fields.Float('Contained Quantity', default=1, digits='Product Unit of Measure', help="Quantity of products contained in the packaging.")
     barcode = fields.Char('Barcode', copy=False, help="Barcode used for packaging identification. Scan this packaging barcode from a transfer in the Barcode app to move all the contained units")
-    product_uom_id = fields.Many2one('uom.uom', related='product_id.uom_id', readonly=True)
+    product_uom_id = fields.Many2one('uom.uom', compute="_compute_product_uom_id", readonly=True)
     company_id = fields.Many2one('res.company', 'Company', index=True)
 
     _sql_constraints = [
         ('positive_qty', 'CHECK(qty > 0)', 'Contained Quantity should be positive.'),
         ('barcode_uniq', 'unique(barcode)', 'A barcode can only be assigned to one packaging.'),
     ]
+
+    @api.depends('product_tmpl_id', 'product_id')
+    def _compute_product_uom_id(self):
+        for packaging in self:
+            packaging.product_uom_id = packaging.product_id.uom_id or packaging.product_tmpl_id.uom_id
 
     @api.constrains('barcode')
     def _check_barcode_uniqueness(self):
@@ -42,7 +48,7 @@ class ProductPackaging(models.Model):
         according to the rounding_method "UP", "HALF-UP or "DOWN".
         """
         self.ensure_one()
-        default_uom = self.product_id.uom_id
+        default_uom = self.product_id.uom_id or self.product_tmpl_id.uom_id
         packaging_qty = default_uom._compute_quantity(self.qty, uom_id)
         # We do not use the modulo operator to check if qty is a mltiple of q. Indeed the quantity
         # per package might be a float, leading to incorrect results. For example:
@@ -64,3 +70,44 @@ class ProductPackaging(models.Model):
             if new_qty == product_qty:
                 return packaging
         return self.env['product.packaging']
+
+    @api.model
+    def _compute_packaging(self, product_packaging_id, product_id, product_uom_qty, product_uom, optional_type=False):
+        """Helper method to be used to compute packaging and packaging_qty for
+        stock.move, purchase.order.line, and sale.order.line.
+        If there is product_packaging_id, check with current product_uom_qty, the
+        packaging_qty is an integer or not. If no, remove it.
+        If there is no product_packaging_id or it's removed during the above process,
+        try suggest a packaging with integer packaging_qty.
+        """
+        if not product_id or not product_uom_qty or not product_uom:
+            return False
+        else:
+            # remove packaging if not match the product
+            if product_packaging_id.product_id != product_id and product_packaging_id.product_tmpl_id != product_id.product_tmpl_id:
+                product_packaging_id = False
+            # remove packaging if product_uom_qty is not a multiple of packaging_uom_qty
+            if product_packaging_id:
+                packaging_uom = product_packaging_id.product_uom_id
+                packaging_uom_qty = product_uom._compute_quantity(product_uom_qty, packaging_uom)
+                product_packaging_qty = packaging_uom_qty / product_packaging_id.qty
+                product_packaging_qty_integer = float_round(product_packaging_qty, precision_rounding=1.0)
+                if not float_compare(product_packaging_qty,
+                                        product_packaging_qty_integer,
+                                        precision_rounding=product_uom.rounding) == 0:
+                    product_packaging_id = False
+            # if now no packaging, try find a suitable one
+            if not product_packaging_id:
+                condidate_packagings = product_id.packaging_ids + product_id.product_tmpl_id.tmpl_packaging_ids
+                if optional_type:
+                    condidate_packagings = condidate_packagings.filtered(optional_type)
+                product_packaging_id = condidate_packagings._find_suitable_product_packaging(product_uom_qty, product_uom)
+            return product_packaging_id
+
+    @api.model
+    def _compute_packaging_qty(self, product_packaging_id, product_uom_qty, product_uom):
+        if not product_packaging_id:
+            return 0
+        packaging_uom = product_packaging_id.product_uom_id
+        packaging_uom_qty = product_uom._compute_quantity(product_uom_qty, packaging_uom)
+        return packaging_uom_qty / product_packaging_id.qty

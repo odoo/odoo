@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.fields import Command
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 from odoo.tools import float_round
@@ -1263,3 +1264,64 @@ class TestPacking(TestPackingCommon):
         self.assertEqual(picking.state, 'done')
         self.assertEqual(picking.move_ids.quantity_done, 0.4)
         self.assertEqual(len(picking.move_line_ids.result_package_id), 2)
+
+    def test_packaging_suggestion_00(self):
+        """Create a picking and use packaging. Check we suggested suitable packaging
+        according to the product_qty. Also check product_qty or product_packaging
+        are correctly calculated when one of them changed.
+        """
+        # Required for `product_packaging_qty` to be visible in the view
+        self.env.user.groups_id += self.env.ref('product.group_stock_packaging')
+        product_tmpl = self.env['product.template'].create({'name': "I'm a product"})
+        product = product_tmpl.product_variant_id
+        packaging_two = self.env['product.packaging'].create({
+            'name': "I'm a packaging",
+            'product_id': product.id,
+            'qty': 2.0,
+        })
+        packaging_dozen = self.env['product.packaging'].create({
+            'name': "I'm also a packaging",
+            'product_id': product.id,
+            'qty': 12.0,
+        })
+
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'location_id': self.customer_location.id,
+            'location_dest_id': self.stock_location.id,
+            'state': 'draft',
+        })
+
+        # set product_uom_qty to 1.0, no packaging will be added
+        picking.write({
+            'move_ids': [
+                Command.create({
+                    'name': product.name,
+                    'product_id': product.id,
+                    'product_uom_qty': 1.0,
+                    'location_id': self.customer_location.id,
+                    'location_dest_id': self.stock_location.id,
+                }),
+            ]
+        })
+        self.assertFalse(picking.move_ids.product_packaging_id)
+        self.assertEqual(picking.move_ids.product_packaging_qty, 0)
+
+        # change product_uom_qty to 2.0, packaging_two will be added
+        picking.move_ids.product_uom_qty = 2.0
+        self.assertEqual(picking.move_ids.product_packaging_id, packaging_two)
+        self.assertEqual(picking.move_ids.product_packaging_qty, 1.0)
+
+        # change to packaging_dozen, product_uom_qty will be change to 12
+        picking_form = Form(picking)
+        with self.assertLogs(level='WARNING'):
+            with picking_form.move_ids_without_package.edit(0) as line:
+                line.product_packaging_id = packaging_dozen
+        picking_form.save()
+        self.assertEqual(picking.move_ids.product_uom_qty, 12.0)
+        self.assertEqual(picking.move_ids.product_packaging_qty, 1.0)
+
+        # change to product_uom_qty to 13, packaging will be removed
+        picking.move_ids.product_uom_qty = 13.0
+        self.assertFalse(picking.move_ids.product_packaging_id)
+        self.assertEqual(picking.move_ids.product_packaging_qty, 0)

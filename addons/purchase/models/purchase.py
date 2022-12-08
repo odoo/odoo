@@ -10,7 +10,7 @@ from werkzeug.urls import url_encode
 from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, format_amount, format_date, formatLang, get_lang, groupby
-from odoo.tools.float_utils import float_compare, float_is_zero, float_round
+from odoo.tools.float_utils import float_compare, float_is_zero
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -962,8 +962,10 @@ class PurchaseOrderLine(models.Model):
     currency_id = fields.Many2one(related='order_id.currency_id', store=True, string='Currency', readonly=True)
     date_order = fields.Datetime(related='order_id.date_order', string='Order Date', readonly=True)
     date_approve = fields.Datetime(related="order_id.date_approve", string='Confirmation Date', readonly=True)
-    product_packaging_id = fields.Many2one('product.packaging', string='Packaging', domain="[('purchase', '=', True), ('product_id', '=', product_id)]", check_company=True,
-                                           compute="_compute_product_packaging_id", store=True, readonly=False)
+    product_packaging_id = fields.Many2one(
+        'product.packaging', string='Packaging',
+        domain="[('purchase', '=', True), '|', ('product_id', '=', product_id), ('product_tmpl_id.product_variant_ids', 'in', product_id)]",
+        compute="_compute_product_packaging_id", store=True, readonly=False, check_company=True)
     product_packaging_qty = fields.Float('Packaging Quantity', compute="_compute_product_packaging_qty", store=True, readonly=False)
 
     display_type = fields.Selection([
@@ -1249,40 +1251,35 @@ class PurchaseOrderLine(models.Model):
     @api.depends('product_id', 'product_qty', 'product_uom')
     def _compute_product_packaging_id(self):
         for line in self:
-            # remove packaging if not match the product
-            if line.product_packaging_id.product_id != line.product_id:
-                line.product_packaging_id = False
-            # suggest biggest suitable packaging
-            if line.product_id and line.product_qty and line.product_uom:
-                line.product_packaging_id = line.product_id.packaging_ids.filtered('purchase')._find_suitable_product_packaging(line.product_qty, line.product_uom) or line.product_packaging_id
+            line.product_packaging_id = self.env["product.packaging"]._compute_packaging(
+                line.product_packaging_id, line.product_id, line.product_qty, line.product_uom, 'purchase')
+
+    @api.depends('product_packaging_id', 'product_qty', 'product_uom')
+    def _compute_product_packaging_qty(self):
+        for line in self:
+            line.product_packaging_qty = self.env["product.packaging"]._compute_packaging_qty(
+                line.product_packaging_id, line.product_qty, line.product_uom)
 
     @api.onchange('product_packaging_id')
     def _onchange_product_packaging_id(self):
         if self.product_packaging_id and self.product_qty:
-            newqty = self.product_packaging_id._check_qty(self.product_qty, self.product_uom, "UP")
-            if float_compare(newqty, self.product_qty, precision_rounding=self.product_uom.rounding) != 0:
-                return {
-                    'warning': {
-                        'title': _('Warning'),
-                        'message': _(
-                            "This product is packaged by %(pack_size).2f %(pack_name)s. You should purchase %(quantity).2f %(unit)s.",
-                            pack_size=self.product_packaging_id.qty,
-                            pack_name=self.product_id.uom_id.name,
-                            quantity=newqty,
-                            unit=self.product_uom.name
-                        ),
-                    },
-                }
-
-    @api.depends('product_packaging_id', 'product_uom', 'product_qty')
-    def _compute_product_packaging_qty(self):
-        for line in self:
-            if not line.product_packaging_id:
-                line.product_packaging_qty = 0
-            else:
-                packaging_uom = line.product_packaging_id.product_uom_id
-                packaging_uom_qty = line.product_uom._compute_quantity(line.product_qty, packaging_uom)
-                line.product_packaging_qty = float_round(packaging_uom_qty / line.product_packaging_id.qty, precision_rounding=packaging_uom.rounding)
+            current_qty = self.product_qty
+            new_qty = self.product_packaging_id._check_qty(self.product_qty, self.product_uom, "UP")
+            if float_compare(new_qty, self.product_qty, precision_rounding=self.product_uom.rounding) != 0:
+                self.product_qty = new_qty
+                if float_compare(1.0, current_qty, precision_rounding=self.product_uom.rounding) != 0:
+                    return {
+                        'warning': {
+                            'title': _('Warning'),
+                            'message': _(
+                                "This product is packaged by %(pack_size).2f %(pack_name)s. You should purchase %(quantity).2f %(unit)s.",
+                                pack_size=self.product_packaging_id.qty,
+                                pack_name=self.product_id.uom_id.name,
+                                quantity=new_qty,
+                                unit=self.product_uom.name
+                            ),
+                        },
+                    }
 
     @api.depends('product_packaging_qty')
     def _compute_product_qty(self):
