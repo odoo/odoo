@@ -21,6 +21,9 @@ class LoyaltyProgram(models.Model):
     currency_id = fields.Many2one('res.currency', 'Currency', compute='_compute_currency_id',
         readonly=False, required=True, store=True, precompute=True)
     currency_symbol = fields.Char(related='currency_id.symbol')
+    pricelist_ids = fields.Many2many(
+        'product.pricelist', string="Pricelist", domain="[('currency_id', '=', currency_id)]"
+    )
 
     total_order_count = fields.Integer("Total Order Count", compute="_compute_total_order_count")
 
@@ -99,6 +102,17 @@ class LoyaltyProgram(models.Model):
         ('check_max_usage', 'CHECK (limit_usage = False OR max_usage > 0)',
             'Max usage must be strictly positive if a limit is used.'),
     ]
+
+    @api.constrains('currency_id', 'pricelist_ids')
+    def _check_pricelist_currency(self):
+        if any(
+            pricelist.currency_id != program.currency_id
+            for program in self
+            for pricelist in program.pricelist_ids
+        ):
+            raise UserError(_(
+                "The loyalty program's currency must be the same as all it's pricelists ones."
+            ))
 
     @api.constrains('date_from', 'date_to')
     def _check_date_from_date_to(self):

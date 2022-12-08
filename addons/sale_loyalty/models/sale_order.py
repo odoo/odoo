@@ -386,6 +386,7 @@ class SaleOrder(models.Model):
         today = fields.Date.context_today(self)
         return [('active', '=', True), ('sale_ok', '=', True),
                 ('company_id', 'in', (self.company_id.id, False)),
+                '|', ('pricelist_ids', '=', False), ('pricelist_ids', 'in', [self.pricelist_id.id]),
                 '|', ('date_from', '=', False), ('date_from', '<=', today),
                 '|', ('date_to', '=', False), ('date_to', '>=', today)]
 
@@ -397,6 +398,8 @@ class SaleOrder(models.Model):
         today = fields.Date.context_today(self)
         return [('active', '=', True), ('program_id.sale_ok', '=', True),
                 ('company_id', 'in', (self.company_id.id, False)),
+                '|', ('program_id.pricelist_ids', '=', False),
+                     ('program_id.pricelist_ids', 'in', [self.pricelist_id.id]),
                 '|', ('program_id.date_from', '=', False), ('program_id.date_from', '<=', today),
                 '|', ('program_id.date_to', '=', False), ('program_id.date_to', '>=', today)]
 
