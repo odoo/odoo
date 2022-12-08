@@ -56,8 +56,65 @@
             <t t-set="footer_template_id"
                t-value="footer_template_id or 'payment.footer'"/>
 
+            <!-- === Tokens === -->
+            <t t-if="token_count > 0">
+                <span class="fs-4">Saved payment methods</span>
+                <div class="card">
+                    <t t-foreach="tokens" t-as="token">
+                        <t t-set="provider" t-value="token.provider_id"/>
+                        <div name="o_payment_option_card" class="card-body o_payment_option_card">
+                            <label>
+                                <!-- === Radio button === -->
+                                <input name="o_payment_radio"
+                                       type="radio"
+                                       t-att-checked="token.id == default_payment_option_id"
+                                       t-att-data-payment-option-id="token.id"
+                                       t-att-data-provider="token.provider_code"
+                                       data-payment-option-type="token"/>
+                                <!-- === Token name === -->
+                                <span class="payment_option_name" t-esc="token.display_name"/>
+                                <!-- === "V" check mark === -->
+                                <t t-call="payment.verified_token_checkmark"/>
+                                <!-- === "Fees" badge === -->
+                                <span t-if="fees_by_provider.get(provider)"
+                                      class="badge rounded-pill text-bg-secondary ms-1">
+                                        + <t t-esc="fees_by_provider.get(provider)"
+                                             t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                        Fees
+                                </span>
+                                <!-- === "Test token" badge === -->
+                                <t t-call="payment.test_token_badge"/>
+                                <!-- === "Unpublished" badge === -->
+                                <span t-if="not provider.is_published" class="badge rounded-pill text-bg-danger ms-1">
+                                    Unpublished
+                                </span>
+                                <div class="ms-4 fst-italic small text-muted">
+                                    Managed by
+                                    <span t-esc="dict(provider._fields['code']._description_selection(provider.env))[provider.code]"/>
+                                    — created on 
+                                    <span t-esc="token.create_date.date()"/>
+                                </div>
+                            </label>
+                        </div>
+                        <!-- === Token inline form === -->
+                        <div t-attf-id="o_payment_token_inline_form_{{token.id}}"
+                             name="o_payment_inline_form"
+                             class="card-footer d-none">
+                            <t t-set="token_inline_form_xml_id"
+                               t-value="token.sudo().provider_id.token_inline_form_view_id.xml_id"/>
+                            <!-- === Inline form content (filled by provider) === -->
+                            <div t-if="token_inline_form_xml_id" class="clearfix">
+                                <t t-call="{{token_inline_form_xml_id}}">
+                                    <t t-set="token" t-value="token"/>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </t>
+            <!-- === Providers === -->
+            <span t-if="token_count > 0" class="fs-4 mt-3 d-block">Other payment methods</span>
             <div class="card">
-                <!-- === Providers === -->
                 <t t-foreach="providers" t-as="provider">
                     <div name="o_payment_option_card" class="card-body o_payment_option_card">
                         <label>
@@ -121,50 +178,6 @@
                         </label>
                     </div>
                 </t>
-                <!-- === Tokens === -->
-                <t t-foreach="tokens" t-as="token">
-                    <div name="o_payment_option_card" class="card-body o_payment_option_card">
-                        <label>
-                            <!-- === Radio button === -->
-                            <input name="o_payment_radio"
-                                   type="radio"
-                                   t-att-checked="token.id == default_payment_option_id"
-                                   t-att-data-payment-option-id="token.id"
-                                   t-att-data-provider="token.provider_code"
-                                   data-payment-option-type="token"/>
-                            <!-- === Token name === -->
-                            <span class="payment_option_name" t-esc="token.display_name"/>
-                            <!-- === "V" check mark === -->
-                            <t t-call="payment.verified_token_checkmark"/>
-                            <!-- === "Fees" badge === -->
-                            <span t-if="fees_by_provider.get(token.provider_id)"
-                                  class="badge rounded-pill text-bg-secondary ms-1">
-                                    + <t t-esc="fees_by_provider.get(token.provider_id)"
-                                         t-options="{'widget': 'monetary', 'display_currency': currency}"/>
-                                    Fees
-                            </span>
-                            <!-- === "Test token" badge === -->
-                            <t t-call="payment.test_token_badge"/>
-                            <!-- === "Unpublished" badge === -->
-                            <span t-if="not token.provider_id.is_published" class="badge rounded-pill text-bg-danger ms-1">
-                                Unpublished
-                            </span>
-                        </label>
-                    </div>
-                    <!-- === Token inline form === -->
-                    <div t-attf-id="o_payment_token_inline_form_{{token.id}}"
-                         name="o_payment_inline_form"
-                         class="card-footer d-none">
-                        <t t-set="token_inline_form_xml_id"
-                           t-value="token.sudo().provider_id.token_inline_form_view_id.xml_id"/>
-                        <!-- === Inline form content (filled by provider) === -->
-                        <div t-if="token_inline_form_xml_id" class="clearfix">
-                            <t t-call="{{token_inline_form_xml_id}}">
-                                <t t-set="token" t-value="token"/>
-                            </t>
-                        </div>
-                    </div>
-                </t>
             </div>
             <!-- === "Pay" button === -->
             <t t-call="{{footer_template_id}}">
@@ -209,8 +222,66 @@
                         else None"/>
             <t t-set="footer_template_id"
                t-value="footer_template_id or 'payment.footer'"/>
+            <!-- === Tokens === -->
+            <t t-if="token_count > 0"> 
+                <span class="fs-4">Saved payment methods</span>
+                <div class="card">
+                    <t t-foreach="tokens" t-as="token">
+                        <t t-set="provider" t-value="token.provider_id"/>
+                        <div name="o_payment_option_card" class="card-body o_payment_option_card">
+                            <label>
+                                <!-- === Radio button === -->
+                                <!-- Only shown if 'assign_token_route' is set -->
+                                <input name="o_payment_radio"
+                                       type="radio"
+                                       t-att-checked="token.id == default_payment_option_id"
+                                       t-att-class="'' if bool(assign_token_route) else 'd-none'"
+                                       t-att-data-payment-option-id="token.id"
+                                       t-att-data-provider="token.provider_code"
+                                       data-payment-option-type="token"/>
+                                <!-- === Token name === -->
+                                <span class="payment_option_name" t-esc="token.display_name"/>
+                                <!-- === "V" check mark === -->
+                                <t t-call="payment.verified_token_checkmark"/>
+                                <!-- === "Test token" badge === -->
+                                <t t-call="payment.test_token_badge"/>
+                                <!-- === "Unpublished" badge === -->
+                                <span t-if="not provider.is_published and token.env.user._is_internal()"
+                                      class="badge rounded-pill text-bg-danger ms-1">
+                                    Unpublished
+                                </span>
+                            </label>
+                            <!-- === "Delete" token button === -->
+                            <button name="o_payment_delete_token"
+                                    class="btn btn-primary btn-sm float-end">
+                                <i class="fa fa-trash"/> Delete
+                            </button>
+                            <div class="fst-italic small text-muted">
+                                    Managed by
+                                    <span t-esc="dict(provider._fields['code']._description_selection(provider.env))[provider.code]"/>
+                                    – created on 
+                                    <span t-esc="token.create_date.date()"/>
+                            </div>                      
+                        </div>
+                        <!-- === Token inline form === -->
+                        <div t-attf-id="o_payment_token_inline_form_{{token.id}}"
+                             name="o_payment_inline_form"
+                             class="card-footer d-none">
+                            <t t-set="token_inline_form_xml_id"
+                               t-value="token.sudo().provider_id.token_inline_form_view_id.xml_id"/>
+                            <!-- === Inline form content (filled by provider) === -->
+                            <div t-if="token_inline_form_xml_id" class="clearfix">
+                                <t t-call="{{token_inline_form_xml_id}}">
+                                    <t t-set="token" t-value="token"/>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </t>
+            <!-- === Providers === -->
+            <div t-if="token_count>0" class="fs-4 mt-3 d-block">Add new payment method</div>
             <div class="card">
-                <!-- === Providers === -->
                 <t t-foreach="providers" t-as="provider">
                     <div name="o_payment_option_card" class="card-body o_payment_option_card">
                         <label>
@@ -260,51 +331,6 @@
                             </div>
                         </div>
                     </t>
-                </t>
-                <!-- === Tokens === -->
-                <t t-foreach="tokens" t-as="token">
-                    <div name="o_payment_option_card" class="card-body o_payment_option_card">
-                        <label>
-                            <!-- === Radio button === -->
-                            <!-- Only shown if 'assign_token_route' is set -->
-                            <input name="o_payment_radio"
-                                   type="radio"
-                                   t-att-checked="token.id == default_payment_option_id"
-                                   t-att-class="'' if bool(assign_token_route) else 'd-none'"
-                                   t-att-data-payment-option-id="token.id"
-                                   t-att-data-provider="token.provider_code"
-                                   data-payment-option-type="token"/>
-                            <!-- === Token name === -->
-                            <span class="payment_option_name" t-esc="token.display_name"/>
-                            <!-- === "V" check mark === -->
-                            <t t-call="payment.verified_token_checkmark"/>
-                            <!-- === "Test token" badge === -->
-                            <t t-call="payment.test_token_badge"/>
-                            <!-- === "Unpublished" badge === -->
-                            <span t-if="not token.provider_id.is_published and token.env.user._is_internal()"
-                                  class="badge rounded-pill text-bg-danger ms-1">
-                                Unpublished
-                            </span>
-                        </label>
-                        <!-- === "Delete" token button === -->
-                        <button name="o_payment_delete_token"
-                                class="btn btn-primary btn-sm float-end">
-                            <i class="fa fa-trash"/> Delete
-                        </button>
-                    </div>
-                    <!-- === Token inline form === -->
-                    <div t-attf-id="o_payment_token_inline_form_{{token.id}}"
-                         name="o_payment_inline_form"
-                         class="card-footer d-none">
-                        <t t-set="token_inline_form_xml_id"
-                           t-value="token.sudo().provider_id.token_inline_form_view_id.xml_id"/>
-                        <!-- === Inline form content (filled by provider) === -->
-                        <div t-if="token_inline_form_xml_id" class="clearfix">
-                            <t t-call="{{token_inline_form_xml_id}}">
-                                <t t-set="token" t-value="token"/>
-                            </t>
-                        </div>
-                    </div>
                 </t>
             </div>
             <!-- === "Save Payment Method" button === -->
@@ -416,7 +442,7 @@
 
     <!-- Test token badge -->
     <template id="test_token_badge" name="Test Token Badge">
-        <span t-if="provider.state == 'test'" class="badge rounded-pill test-bg-warning">
+        <span t-if="token.provider_id.state == 'test'" class="badge rounded-pill text-bg-warning">
             Test Token
         </span>
     </template>
