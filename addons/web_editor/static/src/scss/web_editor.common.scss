@@ -953,7 +953,9 @@ section, .oe_img_bg, [data-oe-shape-data] {
 
 .oe-qweb-select {
     position: absolute;
-    z-index: 1051;
+    // Bootstrap sets .modal z-index at 1055.
+    // Ensure qweb-select is visible in modals.
+    z-index: 1056;
     background-color: white;
 }
 
