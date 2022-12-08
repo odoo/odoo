@@ -1720,9 +1720,14 @@ body.editor_enable.editor_has_snippets {
                         color: $o-we-fg-lighter;
                     }
                 }
-                > .oe_snippet_remove {
+                // TODO In master: restore `.oe_snippet_remove`.
+                > .fa-trash {
                     margin-left: $o-we-sidebar-content-field-button-group-button-spacing;
-                    background-color: mix($o-we-color-danger, $o-we-sidebar-content-field-clickable-bg);;
+                    background-color: mix($o-we-color-danger, $o-we-sidebar-content-field-clickable-bg);
+                    // TODO In master: use `.o_disabled`.
+                    &:not(.oe_snippet_remove) {
+                        opacity: 0.5;
+                    }
                 }
                 > .o_overlay_move_options > .o_move_handle {
                     cursor: move;
@@ -1743,9 +1748,14 @@ body.editor_enable.editor_has_snippets {
                             }
                         }
                     }
-                    > .oe_snippet_remove:hover {
+                    // TODO In master: restore `.oe_snippet_remove`.
+                    > .fa-trash:hover {
                         border-color: mix($o-we-color-danger, $o-we-sidebar-content-field-pressed-bg, .4);
                         background-color: $o-we-color-danger;
+                        // TODO In master: use `.o_disabled`.
+                        &:not(.oe_snippet_remove) {
+                            opacity: 0.5;
+                        }
                     }
                 }
             }

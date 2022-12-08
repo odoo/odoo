@@ -571,6 +571,7 @@ var SnippetEditor = Widget.extend({
         $optionsSection.on('mouseenter', this._onOptionsSectionMouseEnter.bind(this));
         $optionsSection.on('mouseleave', this._onOptionsSectionMouseLeave.bind(this));
         $optionsSection.on('click', 'we-title > span', this._onOptionsSectionClick.bind(this));
+        // TODO In master: restrict selectors to `:not(.o_disabled)`.
         $optionsSection.on('click', '.oe_snippet_clone', this._onCloneClick.bind(this));
         $optionsSection.on('click', '.oe_snippet_remove', this._onRemoveClick.bind(this));
         this._customize$Elements.push($optionsSection);
@@ -726,6 +727,13 @@ var SnippetEditor = Widget.extend({
             } else {
                 $selectorChildren = $selectorChildren.add(self.selectorChildren[i].all());
             }
+        }
+        // TODO In master, do not reference other module class + find a better
+        // system to define such cases + avoid duplicated code (drag & drop from
+        // editor panel + drag & drop from move button of existing block).
+        // Prevent dropping ToC inside another ToC. grep: NO_DOUBLE_TOC
+        if (this.$target[0].classList.contains('s_table_of_content')) {
+            $selectorChildren = $selectorChildren.filter((i, el) => !el.closest('.s_table_of_content'));
         }
         const canBeSanitizedUnless = this._canBeSanitizedUnless(this.$target[0]);
 
@@ -2175,6 +2183,15 @@ var SnippetsMenu = Widget.extend({
                     // allow to add it in another snippet
                     if ($baseBody[0].matches('.s_popup, .o_newsletter_popup')) {
                         $selectorChildren = $selectorChildren.not('[data-snippet] *');
+                    }
+                    // TODO In master, do not reference other module class +
+                    // find a better system to define such cases + avoid
+                    // duplicated code (drag & drop from editor panel + drag &
+                    // drop from move button of existing block).
+                    // Prevent dropping ToC inside another ToC.
+                    // grep: NO_DOUBLE_TOC
+                    if ($baseBody[0].classList.contains('s_table_of_content')) {
+                        $selectorChildren = $selectorChildren.filter((i, el) => !el.closest('.s_table_of_content'));
                     }
 
                     $toInsert = $baseBody.clone();
