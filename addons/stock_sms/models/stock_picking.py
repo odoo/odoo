@@ -45,11 +45,6 @@ class Picking(models.Model):
             'context': self.env.context,
         }
 
-    def _sms_get_number_fields(self):
-        """ This method returns the fields to use to find the number to use to
-        send an SMS on a record. """
-        return ['mobile', 'phone']
-
     def _send_confirmation_email(self):
         super(Picking, self)._send_confirmation_email()
         if not self.env.context.get('skip_sms') and not getattr(threading.current_thread(), 'testing', False) and not self.env.registry.in_test_mode():

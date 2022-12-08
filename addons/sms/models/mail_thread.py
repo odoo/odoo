@@ -119,7 +119,7 @@ class MailThread(models.AbstractModel):
                     'partner_store': False,
                     'field_store': fname,
                 }
-            elif all_partners and partner_fallback:
+            else:
                 partner = self.env['res.partner']
                 for partner in all_partners:
                     for fname in self.env['res.partner']._sms_get_number_fields():
@@ -128,29 +128,28 @@ class MailThread(models.AbstractModel):
                             break
 
                 if not valid_number:
-                    fname = 'mobile' if partner.mobile else ('phone' if partner.phone else 'mobile')
+                    fname = 'mobile' if partner.mobile else ('phone' if partner.phone else False)
 
-                result[record.id] = {
-                    'partner': partner,
-                    'sanitized': valid_number if valid_number else False,
-                    'number': partner[fname],
-                    'partner_store': True,
-                    'field_store': fname,
-                }
-            else:
-                # did not find any sanitized number -> take first set value as fallback;
-                # if none, just assign False to the first available number field
-                value, fname = next(
-                    ((value, fname) for value, fname in zip(all_numbers, tocheck_fields) if value),
+                if all_partners and partner_fallback:
+                    result[record.id] = {
+                        'partner': partner,
+                        'sanitized': valid_number if valid_number else False,
+                        'number': partner[fname],
+                        'partner_store': True,
+                        'field_store': fname,
+                    }
+                else:
+                    value, fnameing = next(
+                    ((value, fnameing) for value, fnameing in zip(all_numbers, tocheck_fields) if value),
                     (False, tocheck_fields[0] if tocheck_fields else False)
                 )
-                result[record.id] = {
-                    'partner': self.env['res.partner'],
-                    'sanitized': False,
-                    'number': value,
-                    'partner_store': False,
-                    'field_store': fname
-                }
+                    result[record.id] = {
+                        'partner': partner or self.env['res.partner'],
+                        'sanitized': valid_number if valid_number else False,
+                        'number': partner[fname] if partner else value,
+                        'partner_store': True if partner else False,
+                        'field_store': fnameing
+                    }
         return result
 
     def _message_sms_schedule_mass(self, body='', template=False, **composer_values):
