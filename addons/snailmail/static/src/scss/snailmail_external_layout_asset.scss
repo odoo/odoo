@@ -38,3 +38,28 @@ div .address.row > div[name="address"] {
 		max-height: 33mm;
     }
 }
+
+/* Follow-up Letters */
+div .pt-5:empty {
+    display: none;
+}
+
+div .row.fallback_header {
+    margin-top: -4mm !important;
+    height: 68mm !important;
+    width: 117% !important;
+    > div .col-5.offset-7 {
+        background-color: #ffffff;
+        margin-left: 48.5% !important;
+        position: relative !important;
+        > div:first-child {
+            width: 100%;
+            padding-left: 2mm !important;
+            height: 33mm;
+            max-height: 33mm !important;
+            line-height: 1.1em;
+            position: absolute;
+            bottom: 0;
+        }
+    }
+}
