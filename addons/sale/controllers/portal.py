@@ -177,7 +177,6 @@ class CustomerPortal(portal.CustomerPortal):
         :return: The payment-specific values.
         :rtype: dict
         """
-        logged_in = not request.env.user._is_public()
         partner = order_sudo.partner_id
         company = order_sudo.company_id
         amount = order_sudo.amount_total
@@ -198,11 +197,11 @@ class CustomerPortal(portal.CustomerPortal):
         payment_form_values = {
             'providers': providers_sudo,
             'tokens': request.env['payment.token']._get_available_tokens(
-                providers_sudo.ids, partner_id=partner.id, logged_in=logged_in, **kwargs
+                providers_sudo.ids, partner.id, **kwargs
             ),
             'fees_by_provider': fees_by_provider,
             'show_tokenize_input': PaymentPortal._compute_show_tokenize_input_mapping(
-                providers_sudo, logged_in=logged_in, sale_order_id=order_sudo.id
+                providers_sudo, sale_order_id=order_sudo.id
             ),
             'amount': amount,
             'currency': currency,

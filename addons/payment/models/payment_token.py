@@ -3,7 +3,7 @@
 import logging
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class PaymentToken(models.Model):
@@ -74,6 +74,13 @@ class PaymentToken(models.Model):
 
         return super().write(values)
 
+    @api.constrains('partner_id')
+    def _check_partner_is_never_public(self):
+        """ Check that the partner associated with the token is never public. """
+        for token in self:
+            if token.partner_id.is_public:
+                raise ValidationError(_("No token can be assigned to the public partner."))
+
     def _handle_archiving(self):
         """ Handle the archiving of tokens.
 
@@ -89,9 +96,7 @@ class PaymentToken(models.Model):
 
     #=== BUSINESS METHODS ===#
 
-    def _get_available_tokens(
-        self, providers_ids, partner_id=None, is_validation=False, logged_in=False, **kwargs
-    ):
+    def _get_available_tokens(self, providers_ids, partner_id, is_validation=False, **kwargs):
         """ Return the available tokens linked to the given providers and partner.
 
         For a module to retrieve the available tokens, it must override this method and add
@@ -100,14 +105,10 @@ class PaymentToken(models.Model):
         :param list providers_ids: The ids of the providers available for the transaction.
         :param int partner_id: The id of the partner.
         :param bool is_validation: Whether the transaction is a validation operation.
-        :param bool logged_in: Whether the user is logged in.
         :param dict kwargs: Locally unused keywords arguments.
         :return: The available tokens.
-        :rtype: `payment.token`
+        :rtype: payment.token
         """
-        if partner_id is None or not logged_in:
-            return self.env['payment.token']
-
         if not is_validation:
             return self.env['payment.token'].search(
                 [('provider_id', 'in', providers_ids), ('partner_id', '=', partner_id)]

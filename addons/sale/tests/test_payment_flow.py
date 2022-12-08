@@ -32,7 +32,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
             '._compute_show_tokenize_input_mapping'
         ) as patched:
             tx_context = self._get_tx_checkout_context(**route_values)
-            patched.assert_called_once_with(ANY, logged_in=ANY, sale_order_id=ANY)
+            patched.assert_called_once_with(ANY, sale_order_id=ANY)
 
         self.assertEqual(tx_context['currency_id'], self.sale_order.currency_id.id)
         self.assertEqual(tx_context['partner_id'], self.sale_order.partner_id.id)
