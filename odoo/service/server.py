@@ -883,7 +883,7 @@ class PreforkServer(CommonServer):
             self.worker_kill(self.long_polling_pid, signal.SIGKILL)
             self.long_polling_pid = None
         if self.socket:
-            self.socket.close()
+            self.close_socket(self.socket)
         if graceful:
             _logger.info("Stopping gracefully")
             super().stop()
@@ -1100,7 +1100,9 @@ class WorkerHTTP(Worker):
             client, addr = self.multi.socket.accept()
             self.process_request(client, addr)
         except socket.error as e:
-            if e.errno not in (errno.EAGAIN, errno.ECONNABORTED):
+            if e.errno == errno.EINVAL:  # socket was shut down
+                self.alive = False
+            elif e.errno not in (errno.EAGAIN, errno.ECONNABORTED):
                 raise
 
     def start(self):
