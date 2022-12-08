@@ -567,7 +567,7 @@ export class OdooEditor extends EventTarget {
                     },
                 },
                 ...(this.options.commands || []),
-                ...(this.options.commands && !this.options.commands.find(c =>  c.name === this.options._t('Separator')) ? [
+                ...(!this.options.commands || !this.options.commands.find(c =>  c.name === this.options._t('Separator')) ? [
                     {
                         category: this.options._t('Structure'),
                         name: this.options._t('Separator'),
