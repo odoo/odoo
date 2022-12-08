@@ -2791,7 +2791,12 @@ class _Relational(Field):
         domain = self.domain
         if callable(domain):
             domain = domain(model)
-        return domain if isinstance(domain, list) else []
+        if isinstance(domain, list):
+            return domain
+        elif isinstance(domain, str):
+            return eval(domain)
+        else:
+            return []
 
     @property
     def _related_domain(self):
