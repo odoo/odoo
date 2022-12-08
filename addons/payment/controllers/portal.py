@@ -113,7 +113,7 @@ class PaymentPortal(portal.CustomerPortal):
         if provider_id in providers_sudo.ids:  # Only keep the desired provider if it's suitable
             providers_sudo = providers_sudo.browse(provider_id)
         tokens_sudo = request.env['payment.token'].sudo()._get_available_tokens(
-            providers_sudo.ids, partner_id=partner_sudo.id, logged_in=logged_in
+            providers_sudo.ids, partner_sudo.id
         )  # In sudo mode to be able to read tokens of other partners.
 
         # Make sure that the partner's company matches the company passed as parameter.
@@ -138,7 +138,7 @@ class PaymentPortal(portal.CustomerPortal):
             'tokens': tokens_sudo,
             'fees_by_provider': fees_by_provider,
             'show_tokenize_input': self._compute_show_tokenize_input_mapping(
-                providers_sudo, logged_in=logged_in, **kwargs
+                providers_sudo, **kwargs
             ),
             'reference_prefix': reference,
             'amount': amount,
@@ -154,13 +154,12 @@ class PaymentPortal(portal.CustomerPortal):
         return request.render(self._get_payment_page_template_xmlid(**kwargs), rendering_context)
 
     @staticmethod
-    def _compute_show_tokenize_input_mapping(providers_sudo, logged_in=False, **kwargs):
+    def _compute_show_tokenize_input_mapping(providers_sudo, **kwargs):
         """ Determine for each provider whether the tokenization input should be shown or not.
 
         :param recordset providers_sudo: The providers for which to determine whether the
                                          tokenization input should be shown or not, as a sudoed
                                          `payment.provider` recordset.
-        :param bool logged_in: Whether the user is logged in or not.
         :param dict kwargs: The optional data passed to the helper methods.
         :return: The mapping of the computed value for each provider id.
         :rtype: dict
@@ -168,8 +167,7 @@ class PaymentPortal(portal.CustomerPortal):
         show_tokenize_input_mapping = {}
         for provider_sudo in providers_sudo:
             show_tokenize_input = provider_sudo.allow_tokenization \
-                                  and not provider_sudo._is_tokenization_required(**kwargs) \
-                                  and logged_in
+                                  and not provider_sudo._is_tokenization_required(**kwargs)
             show_tokenize_input_mapping[provider_sudo.id] = show_tokenize_input
         return show_tokenize_input_mapping
 
@@ -196,7 +194,7 @@ class PaymentPortal(portal.CustomerPortal):
         rendering_context = {
             'providers': providers_sudo,
             'tokens': request.env['payment.token'].sudo()._get_available_tokens(
-                None, partner_id=partner_sudo.id, is_validation=True, logged_in=True
+                None, partner_sudo.id, is_validation=True
             ),  # In sudo mode to read the commercial partner's fields.
             'reference_prefix': payment_utils.singularize_reference_prefix(prefix='V'),
             'partner_id': partner_sudo.id,
