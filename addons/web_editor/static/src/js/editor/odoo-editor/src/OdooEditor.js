@@ -2214,26 +2214,34 @@ export class OdooEditor extends EventTarget {
             range.setStart(startRange.startContainer, 0);
             range.setEnd(endRange.startContainer, 0);
         } else {
-            range = getDeepRange(this.editable);
+            // We need the triple click correction only for a bug in firefox
+            // where it gives a selection of a full cell as tr 0 tr 1. The
+            // correction makes it so it gives us the cell and not its neighbor.
+            // In all other cases we don't want to make that correction so as to
+            // avoid flicker when hovering borders.
+            range = getDeepRange(this.editable, { correctTripleClick: anchorNode && anchorNode.nodeName === 'TR' });
         }
         const startTd = closestElement(range.startContainer, 'td');
         const endTd = closestElement(range.endContainer, 'td');
         let appliedCustomSelection = false;
-        const startTable = closestElement(range.startContainer, 'table');
-        const endTable = closestElement(range.endContainer, 'table');
+        // Get the top table ancestors at range bounds.
+        const startTable = ancestors(range.startContainer, this.editable).filter(node => node.nodeName === 'TABLE').pop();
+        const endTable = ancestors(range.endContainer, this.editable).filter(node => node.nodeName === 'TABLE').pop();
         if (startTd !== endTd && startTable === endTable) {
             // The selection goes through at least two different cells -> select
             // cells.
             this._selectTableCells(range);
             appliedCustomSelection = true;
-        } else if (!traversedNodes.every(node => !!closestElement(node, 'td'))) {
+        } else if (!traversedNodes.every(node => node.parentElement && closestElement(node.parentElement, 'table'))) {
             // The selection goes through a table but also outside of it ->
             // select the whole table.
             this.observerUnactive('handleSelectionInTable');
-            for (const table of new Set(traversedNodes.map(node => closestElement(node, 'table')))) {
-                if (table) {
+            const traversedTables = new Set(traversedNodes.map(node => closestElement(node, 'table')));
+            for (const table of traversedTables) {
+                // Don't apply several nested levels of selection.
+                if (table && !ancestors(table, this.editable).some(node => [...traversedTables].includes(node))) {
                     table.classList.toggle('o_selected_table', true);
-                    for (const td of table.querySelectorAll('td')) {
+                    for (const td of [...table.querySelectorAll('td')].filter(td => closestElement(td, 'table') === table)) {
                         td.classList.toggle('o_selected_td', true);
                     }
                     appliedCustomSelection = true;
@@ -2275,20 +2283,24 @@ export class OdooEditor extends EventTarget {
      */
     _selectTableCells(range) {
         this.observerUnactive('_selectTableCells');
-        const table = closestElement(range.startContainer, 'table');
+        const table = closestElement(range.commonAncestorContainer, 'table');
         const alreadyHadSelection = table.classList.contains('o_selected_table');
         this.deselectTable(); // Undo previous selection.
         table.classList.toggle('o_selected_table', true);
-        const columns = table.querySelectorAll('td');
-        const startCol = closestElement(range.startContainer, 'td') || columns[0];
-        const endCol = closestElement(range.endContainer, 'td') || columns[columns.length - 1];
-        const [startRow, endRow] = [closestElement(startCol, 'tr'), closestElement(range.endContainer, 'tr')];
+        const columns = [...table.querySelectorAll('td')].filter(td => closestElement(td, 'table') === table);
+        const startCol = [range.startContainer, ...ancestors(range.startContainer, this.editable)]
+            .find(node => node.nodeName === 'TD' && closestElement(node, 'table') === table) || columns[0];
+        const endCol = [range.endContainer, ...ancestors(range.endContainer, this.editable)]
+            .find(node => node.nodeName === 'TD' && closestElement(node, 'table') === table) || columns[columns.length - 1];
+        const [startRow, endRow] = [closestElement(startCol, 'tr'), closestElement(endCol, 'tr')];
         const [startColIndex, endColIndex] = [getColumnIndex(startCol), getColumnIndex(endCol)];
         const [startRowIndex, endRowIndex] = [getRowIndex(startRow), getRowIndex(endRow)];
         const [minRowIndex, maxRowIndex] = [Math.min(startRowIndex, endRowIndex), Math.max(startRowIndex, endRowIndex)];
         const [minColIndex, maxColIndex]  = [Math.min(startColIndex, endColIndex), Math.max(startColIndex, endColIndex)];
         // Create an array of arrays of tds (each of which is a row).
-        const grid = [...table.querySelectorAll('tr')].map(tr => [...tr.children].filter(child => child.nodeName === 'TD'));
+        const grid = [...table.querySelectorAll('tr')]
+            .filter(tr => closestElement(tr, 'table') === table)
+            .map(tr => [...tr.children].filter(child => child.nodeName === 'TD'));
         for (const tds of grid.filter((_, index) => index >= minRowIndex && index <= maxRowIndex)) {
             for (const td of tds.filter((_, index) => index >= minColIndex && index <= maxColIndex)) {
                 td.classList.toggle('o_selected_td', true);
