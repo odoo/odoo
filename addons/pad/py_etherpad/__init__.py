@@ -181,7 +181,7 @@ class EtherpadLiteClient:
     def setHtmlFallbackText(self, padID, html):
         try:
             # Prevents malformed HTML errors
-            html_wellformed = Markup("<html><body>%s</body></html>") % html
+            html_wellformed = Markup("<html><body>%s</body></html>" % html)
             return self.setHtml(padID, html_wellformed)
         except Exception:
             _logger.exception('Falling back to setText. SetHtml failed with message:')
