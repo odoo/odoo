@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_task_form2_mrp_inherit" model="ir.ui.view">
+        <field name="name">project.task.form.mrp.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="mrp_order_count" invisible="1"/>
+                <button name="action_open_task_mrp_orders" type="object" class="oe_stat_button" icon="fa-wrench" groups="mrp.group_mrp_user"
+                    attrs="{'invisible': [('mrp_order_count', '=', 0)]}" help="Manufacturing Order">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="mrp_order_count" nolabel="1"/>
+                        </span>
+                        <span class="o_stat_text">
+                            Manufacturing Orders
+                        </span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_create_mrp_order" model="ir.actions.server">
+        <field name="name">Create Manufacturing Order</field>
+        <field name="model_id" ref="project.model_project_task"/>
+        <field name="binding_model_id" ref="project.model_project_task"/>
+        <field name="binding_view_types">form</field>
+        <field name="groups_id" eval="[Command.link(ref('mrp.group_mrp_user'))]"/>
+        <field name="state">code</field>
+        <field name="code">action = records.action_create_mrp_order_from_task()</field>
+    </record>
+
+</odoo>

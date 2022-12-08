@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_task_form2_purchase_inherit" model="ir.ui.view">
+        <field name="name">project.task.form.purchase.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="purchase_order_count" invisible="1" groups="purchase.group_purchase_user"/>
+                <button name="action_open_task_purchase_orders" type="object" class="oe_stat_button" icon="fa-credit-card" groups="purchase.group_purchase_user"
+                    attrs="{'invisible': [('purchase_order_count', '=', 0)]}" help="Purchase Order">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="purchase_order_count" nolabel="1"/>
+                        </span>
+                        <span class="o_stat_text">
+                            Purchase Orders
+                        </span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_create_purchase_order" model="ir.actions.server">
+        <field name="name">Create Purchase Order</field>
+        <field name="model_id" ref="project.model_project_task"/>
+        <field name="binding_model_id" ref="project.model_project_task"/>
+        <field name="binding_view_types">form</field>
+        <field name="groups_id" eval="[Command.link(ref('purchase.group_purchase_user'))]"/>
+        <field name="state">code</field>
+        <field name="code">action = records.action_create_purchase_order_from_task()</field>
+    </record>
+
+</odoo>
