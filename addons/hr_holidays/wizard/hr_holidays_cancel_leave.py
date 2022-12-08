@@ -2,14 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, _
-from odoo.exceptions import ValidationError
 
 
 class HrHolidaysCancelLeave(models.TransientModel):
     _name = 'hr.holidays.cancel.leave'
-    _description = 'Cancel Leave Wizard'
+    _description = 'Cancel Time Off Wizard'
 
-    leave_id = fields.Many2one('hr.leave', required=True)
+    leave_id = fields.Many2one('hr.leave', string="Time Off Request", required=True)
     reason = fields.Text(required=True)
 
     def action_cancel_leave(self):

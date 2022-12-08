@@ -46,13 +46,13 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         })
 
         cls.global_leave = cls.env['resource.calendar.leaves'].create({
-            'name': 'Global Leave',
+            'name': 'Global Time Off',
             'date_from': date(2022, 3, 7),
             'date_to': date(2022, 3, 7),
         })
 
         cls.calendar_leave = cls.env['resource.calendar.leaves'].create({
-            'name': 'Global Leave',
+            'name': 'Global Time Off',
             'date_from': date(2022, 3, 8),
             'date_to': date(2022, 3, 8),
             'calendar_id': cls.calendar_1.id,
@@ -61,7 +61,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
     def test_leave_on_global_leave(self):
         with self.assertRaises(ValidationError):
             self.env['resource.calendar.leaves'].create({
-                'name': 'Wrong Leave',
+                'name': 'Wrong Time Off',
                 'date_from': date(2022, 3, 7),
                 'date_to': date(2022, 3, 7),
                 'calendar_id': self.calendar_1.id,
@@ -69,14 +69,14 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
 
         with self.assertRaises(ValidationError):
             self.env['resource.calendar.leaves'].create({
-                'name': 'Wrong Leave',
+                'name': 'Wrong Time Off',
                 'date_from': date(2022, 3, 7),
                 'date_to': date(2022, 3, 7),
             })
 
     def test_leave_on_calendar_leave(self):
         self.env['resource.calendar.leaves'].create({
-                'name': 'Correct Leave',
+                'name': 'Correct Time Off',
                 'date_from': date(2022, 3, 8),
                 'date_to': date(2022, 3, 8),
                 'calendar_id': self.calendar_2.id,
@@ -84,14 +84,14 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
 
         with self.assertRaises(ValidationError):
             self.env['resource.calendar.leaves'].create({
-                'name': 'Wrong Leave',
+                'name': 'Wrong Time Off',
                 'date_from': date(2022, 3, 8),
                 'date_to': date(2022, 3, 8),
             })
 
         with self.assertRaises(ValidationError):
             self.env['resource.calendar.leaves'].create({
-                'name': 'Wrong Leave',
+                'name': 'Wrong Time Off',
                 'date_from': date(2022, 3, 8),
                 'date_to': date(2022, 3, 8),
                 'calendar_id': self.calendar_1.id,

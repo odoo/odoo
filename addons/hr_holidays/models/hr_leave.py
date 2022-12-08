@@ -35,7 +35,7 @@ def get_employee_from_context(values, context, user_employee_id):
     return employee_id_value or context.get('default_employee_id', context.get('employee_id', user_employee_id))
 
 class HolidaysRequest(models.Model):
-    """ Leave Requests Access specifications
+    """ Time Off Requests Access specifications
 
      - a regular employee / user
       - can see all leaves;
@@ -1454,7 +1454,7 @@ class HolidaysRequest(models.Model):
                         raise UserError(_('You must either be a Time off Officer or Time off Manager to approve this leave'))
 
     ###################################################
-    # Leave modification methods
+    # Time Off modification methods
     ###################################################
 
     def _split_leave_on_gto(self, gto): #gto = global time off
