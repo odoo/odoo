@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 from odoo.tools import format_amount
 
 ACCOUNT_DOMAIN = "['&', '&', '&', ('deprecated', '=', False), ('internal_type','=','other'), ('company_id', '=', current_company_id), ('is_off_balance', '=', False)]"
@@ -81,6 +82,12 @@ class ProductTemplate(models.Model):
             tax_string = " "
         return tax_string
 
+    @api.constrains('uom_id')
+    def _check_uom_not_in_invoice(self):
+        for template in self:
+            invoices = self.env['account.move.line'].sudo().search([('product_id.product_tmpl_id.id', '=', template.id)], limit=1)
+            if invoices:
+                raise ValidationError(_('The product "%s" is used in invoices. You cannot change its Unit of Measure.', template.display_name))
 
 class ProductProduct(models.Model):
     _inherit = "product.product"
