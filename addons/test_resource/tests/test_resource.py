@@ -124,7 +124,7 @@ class TestCalendar(TestResourceCommon):
 
     def test_get_work_hours_count(self):
         self.env['resource.calendar.leaves'].create({
-            'name': 'Global Leave',
+            'name': 'Global Time Off',
             'resource_id': False,
             'calendar_id': self.calendar_jean.id,
             'date_from': datetime_str(2018, 4, 3, 0, 0, 0, tzinfo=self.jean.tz),
@@ -248,7 +248,7 @@ class TestCalendar(TestResourceCommon):
 
         # 2 weeks calendar week 2, leave during a day where he doesn't work this week
         leave = self.env['resource.calendar.leaves'].create({
-            'name': 'Leave Jules week 2',
+            'name': 'Time Off Jules week 2',
             'calendar_id': self.calendar_jules.id,
             'resource_id': False,
             'date_from': datetime_str(2018, 4, 11, 4, 0, 0, tzinfo=self.jules.tz),
@@ -265,7 +265,7 @@ class TestCalendar(TestResourceCommon):
 
         # 2 weeks calendar week 2, leave during a day where he works this week
         leave = self.env['resource.calendar.leaves'].create({
-            'name': 'Leave Jules week 2',
+            'name': 'Time Off Jules week 2',
             'calendar_id': self.calendar_jules.id,
             'resource_id': False,
             'date_from': datetime_str(2018, 4, 9, 0, 0, 0, tzinfo=self.jules.tz),

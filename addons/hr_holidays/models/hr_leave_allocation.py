@@ -134,7 +134,7 @@ class HolidaysAllocation(models.Model):
     is_officer = fields.Boolean(compute='_compute_is_officer')
     accrual_plan_id = fields.Many2one('hr.leave.accrual.plan', compute="_compute_from_holiday_status_id", store=True, readonly=False, domain="['|', ('time_off_type_id', '=', False), ('time_off_type_id', '=', holiday_status_id)]", tracking=True)
     max_leaves = fields.Float(compute='_compute_leaves')
-    leaves_taken = fields.Float(compute='_compute_leaves')
+    leaves_taken = fields.Float(compute='_compute_leaves', string='Time off Taken')
     taken_leave_ids = fields.One2many('hr.leave', 'holiday_allocation_id', domain="[('state', 'in', ['confirm', 'validate1', 'validate'])]")
 
     _sql_constraints = [

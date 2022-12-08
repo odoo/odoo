@@ -68,7 +68,7 @@ class HolidaysType(models.Model):
         ('no_validation', 'No Validation'),
         ('hr', 'By Time Off Officer'),
         ('manager', "By Employee's Approver"),
-        ('both', "By Employee's Approver and Time Off Officer")], default='hr', string='Leave Validation')
+        ('both', "By Employee's Approver and Time Off Officer")], default='hr', string='Time Off Validation')
     requires_allocation = fields.Selection([
         ('yes', 'Yes'),
         ('no', 'No Limit')], default="yes", required=True, string='Requires allocation',

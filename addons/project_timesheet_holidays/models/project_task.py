@@ -6,7 +6,7 @@ from odoo import fields, models, _
 class Task(models.Model):
     _inherit = 'project.task'
 
-    leave_types_count = fields.Integer(compute='_compute_leave_types_count')
+    leave_types_count = fields.Integer(compute='_compute_leave_types_count', string="Time Off Types Count")
     is_timeoff_task = fields.Boolean("Is Time off Task", compute="_compute_is_timeoff_task", search="_search_is_timeoff_task")
 
     def _compute_leave_types_count(self):
