@@ -11,6 +11,7 @@ from markupsafe import Markup
 
 from odoo import api, models, _
 from odoo.exceptions import UserError
+from odoo.tools import html_sanitize
 
 from ..py_etherpad import EtherpadLiteClient
 
@@ -67,7 +68,8 @@ class PadCommon(models.AbstractModel):
             res_id = self.env.context.get("object_id")
             record = model.browse(res_id)
             # get content of the real field
-            real_field_value = record[real_field] or self.env.context.get('record', {}).get(real_field, '')
+            real_field_value = record[real_field] or html_sanitize(self.env.context.get('record', {}).get(real_field, ''))
+
             if real_field_value:
                 myPad.setHtmlFallbackText(path, real_field_value)
 
@@ -108,9 +110,10 @@ class PadCommon(models.AbstractModel):
     # reverse engineer protocol to be setHtml without using the api key
 
     def write(self, vals):
-        self._set_field_to_pad(vals)
         self._set_pad_to_field(vals)
-        return super(PadCommon, self).write(vals)
+        super(PadCommon, self).write(vals)
+        self._update_pad_from_field(vals)
+        return True
 
     @api.model
     def create(self, vals):
@@ -134,8 +137,7 @@ class PadCommon(models.AbstractModel):
                 pad[k] = pad_info.get('url')
         return pad
 
-    def _set_field_to_pad(self, vals):
-        # Update the pad if the `pad_content_field` is modified
+    def _update_pad_from_field(self, vals):
         for k, field in self._fields.items():
             if hasattr(field, 'pad_content_field') and vals.get(field.pad_content_field) and self[k]:
                 pad = {
@@ -144,7 +146,7 @@ class PadCommon(models.AbstractModel):
                 }
                 myPad = EtherpadLiteClient(pad['key'], (pad['server'] or '') + '/api')
                 path = self[k].split('/p/')[1]
-                myPad.setHtmlFallbackText(path, vals[field.pad_content_field])
+                myPad.setHtmlFallbackText(path, self[field.pad_content_field])
 
     def _set_pad_to_field(self, vals):
         # Update the `pad_content_field` if the pad is modified
