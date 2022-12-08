@@ -653,7 +653,7 @@ class Applicant(models.Model):
             contact_name = self.partner_id.display_name
         else:
             if not self.partner_name:
-                raise UserError(_('You must define a Contact Name for this applicant.'))
+                raise UserError(_('Please provide an applicant name.'))
             new_partner_id = self.env['res.partner'].create({
                 'is_company': False,
                 'type': 'private',
