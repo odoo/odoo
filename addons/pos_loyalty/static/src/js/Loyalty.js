@@ -301,7 +301,23 @@ patch(Order.prototype, "pos_loyalty.Order", {
         return orderLines[orderLines.length - 1];
     },
     set_pricelist(pricelist) {
+        const oldPricelist = this.pricelist
         this._super(...arguments);
+        if (this.couponPointChanges && oldPricelist !== pricelist) {
+            // Remove couponPointChanges for cards in no longer available programs.
+            // This makes sure that counting of points on loyalty and ewallet programs is updated after pricelist changes.
+            const loyaltyProgramIds = new Set(
+                this.pos.programs
+                    .filter((program) => program.pricelist_ids.length > 0
+                        && (!pricelist || !program.pricelist_ids.includes(pricelist.id)))
+                    .map((program) => program.id)
+            );
+            for (const [key, pointChange] of Object.entries(this.couponPointChanges)) {
+                if (loyaltyProgramIds.has(pointChange.program_id)) {
+                    delete this.couponPointChanges[key];
+                }
+            }
+        }
         this._updateRewards();
     },
     set_orderline_options(line, options) {
@@ -701,6 +717,9 @@ patch(Order.prototype, "pos_loyalty.Order", {
         if (program.limit_usage && program.total_order_count >= program.max_usage) {
             return false;
         }
+        if (program.pricelist_ids.length > 0 && (!this.pricelist || !program.pricelist_ids.includes(this.pricelist.id))) {
+            return false;
+        }
         return true;
     },
     /**
@@ -929,6 +948,10 @@ patch(Order.prototype, "pos_loyalty.Order", {
             : 0;
         for (const couponProgram of allCouponPrograms) {
             const program = this.pos.program_by_id[couponProgram.program_id];
+            if (program.pricelist_ids.length > 0
+                && (!this.pricelist || !program.pricelist_ids.includes(this.pricelist.id))) {
+                continue;
+            }
             if (program.trigger == "with_code") {
                 // For coupon programs, the rules become conditions.
                 // Points to purchase rewards will only come from the scanned coupon.
@@ -1471,6 +1494,11 @@ patch(Order.prototype, "pos_loyalty.Order", {
         let claimableRewards = null;
         let coupon = null;
         if (rule) {
+            let program_pricelists = rule.program_id.pricelist_ids;
+            if (program_pricelists.length > 0
+                && (!this.pricelist || !program_pricelists.includes(this.pricelist.id))) {
+                return _t("That promo code program requires a specific pricelist.");
+            }
             if (this.codeActivatedProgramRules.includes(rule.id)) {
                 return _t("That promo code program has already been activated.");
             }
@@ -1481,11 +1509,11 @@ patch(Order.prototype, "pos_loyalty.Order", {
             if (this.codeActivatedCoupons.find((coupon) => coupon.code === code)) {
                 return _t("That coupon code has already been scanned and activated.");
             }
-            const customer = this.get_partner();
+            const customerId = this.get_partner() ? this.get_partner().id : false;
             const { successful, payload } = await this.env.services.orm.call(
                 "pos.config",
                 "use_coupon_code",
-                [[this.pos.config.id], code, this.creation_date, customer ? customer.id : false]
+                [[this.pos.config.id], code, this.creation_date, customerId, this.pricelist ? this.pricelist.id : false]
             );
             if (successful) {
                 // Allow rejecting a gift card that is not yet paid.

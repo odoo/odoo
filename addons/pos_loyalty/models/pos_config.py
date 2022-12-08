@@ -71,7 +71,7 @@ class PosConfig(models.Model):
 
         return super()._check_before_creating_new_session()
 
-    def use_coupon_code(self, code, creation_date, partner_id):
+    def use_coupon_code(self, code, creation_date, partner_id, pricelist_id):
         self.ensure_one()
         # Ordering by partner id to use the first assigned to the partner in case multiple coupons have the same code
         #  it could happen with loyalty programs using a code
@@ -79,7 +79,8 @@ class PosConfig(models.Model):
         coupon = self.env['loyalty.card'].search(
             [('program_id', 'in', self._get_program_ids().ids), ('partner_id', 'in', (False, partner_id)), ('code', '=', code)],
             order='partner_id, points desc', limit=1)
-        if not coupon or not coupon.program_id.active:
+        program = coupon.program_id
+        if not coupon or not program.active:
             return {
                 'successful': False,
                 'payload': {
@@ -91,17 +92,19 @@ class PosConfig(models.Model):
         error_message = False
         if (
             (coupon.expiration_date and coupon.expiration_date < check_date)
-            or (coupon.program_id.date_to and coupon.program_id.date_to < today_date)
-            or (coupon.program_id.limit_usage and coupon.program_id.total_order_count >= coupon.program_id.max_usage)
+            or (program.date_to and program.date_to < today_date)
+            or (program.limit_usage and program.total_order_count >= program.max_usage)
         ):
             error_message = _("This coupon is expired (%s).", code)
-        elif coupon.program_id.date_from and coupon.program_id.date_from > today_date:
+        elif program.date_from and program.date_from > today_date:
             error_message = _("This coupon is not yet valid (%s).", code)
         elif (
-            not coupon.program_id.reward_ids or
-            not any(r.required_points <= coupon.points for r in coupon.program_id.reward_ids)
+            not program.reward_ids or
+            not any(r.required_points <= coupon.points for r in program.reward_ids)
         ):
             error_message = _("No reward can be claimed with this coupon.")
+        elif program.pricelist_ids and pricelist_id not in program.pricelist_ids.ids:
+            error_message = _("This coupon is not available with the current pricelist.")
 
         if error_message:
             return {
@@ -114,7 +117,7 @@ class PosConfig(models.Model):
         return {
             'successful': True,
             'payload': {
-                'program_id': coupon.program_id.id,
+                'program_id': program.id,
                 'coupon_id': coupon.id,
                 'coupon_partner_id': coupon.partner_id.id,
                 'points': coupon.points,
