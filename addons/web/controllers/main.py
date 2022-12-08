@@ -1025,14 +1025,20 @@ class WebClient(http.Controller):
 
     @http.route('/web/tests', type='http', auth="user")
     def test_suite(self, mod=None, **kwargs):
+        if not self.env['ir.config_parameter'].sudo().get_param('web.enable_test'):
+            raise NotImplementedError()
         return request.render('web.qunit_suite')
 
     @http.route('/web/tests/mobile', type='http', auth="none")
     def test_mobile_suite(self, mod=None, **kwargs):
+        if not self.env['ir.config_parameter'].sudo().get_param('web.enable_test'):
+            raise NotImplementedError()
         return request.render('web.qunit_mobile_suite')
 
     @http.route('/web/benchmarks', type='http', auth="none")
     def benchmarks(self, mod=None, **kwargs):
+        if not self.env['ir.config_parameter'].sudo().get_param('web.enable_test'):
+            raise NotImplementedError()
         return request.render('web.benchmark_suite')
 
 
