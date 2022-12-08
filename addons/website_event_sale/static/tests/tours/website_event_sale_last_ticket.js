@@ -61,7 +61,7 @@ registry.category("web_tour.tours").add('event_buy_last_ticket', {
     },
     {
         content: "Validate address",
-        trigger: '.btn-primary:contains("Continue checkout")',
+        trigger: 'a.a-submit.btn-primary',
     },
     ...wsTourUtils.payWithTransfer(true),
 ]});
