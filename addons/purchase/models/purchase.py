@@ -335,7 +335,7 @@ class PurchaseOrder(models.Model):
             self.filtered(lambda o: o.state == 'draft').write({'state': 'sent'})
         po_ctx = {'mail_post_autofollow': self.env.context.get('mail_post_autofollow', True)}
         if self.env.context.get('mark_rfq_as_sent'):
-            po_ctx['mail_notify_author'] = self.env.user.partner_id.id in kwargs.get('partner_ids') or []
+            po_ctx['mail_notify_author'] = self.env.user.partner_id.id in (kwargs.get('partner_ids') or [])
         return super(PurchaseOrder, self.with_context(**po_ctx)).message_post(**kwargs)
 
     def _notify_get_recipients_groups(self, msg_vals=None):
