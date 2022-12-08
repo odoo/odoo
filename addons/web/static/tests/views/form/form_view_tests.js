@@ -8661,7 +8661,7 @@ QUnit.module("Views", (hooks) => {
         // Verify .field_group content
         var $fieldGroupRows = $fieldGroup.find("> .o_wrap_field");
         assert.strictEqual($fieldGroupRows.length, 5, "there should be 5 rows in .o_wrap_field");
-        var $fieldGroupFirstRowTds = $fieldGroupRows.eq(0).children(".o_cell");
+        var $fieldGroupFirstRowTds = $fieldGroupRows.eq(0).find(".o_cell");
         assert.strictEqual(
             $fieldGroupFirstRowTds.length,
             2,
@@ -8693,7 +8693,7 @@ QUnit.module("Views", (hooks) => {
             "width: 33",
             "second cell colspan should be default one (no style) and be 33.3333%"
         );
-        var $fieldGroupThirdRowTds = $fieldGroupRows.eq(2).children(".o_cell"); // new row as label/field pair colspan is greater than remaining space
+        var $fieldGroupThirdRowTds = $fieldGroupRows.eq(2).find(".o_cell"); // new row as label/field pair colspan is greater than remaining space
         assert.strictEqual(
             $fieldGroupThirdRowTds.length,
             2,
@@ -8720,7 +8720,7 @@ QUnit.module("Views", (hooks) => {
             "grid-column: span 3;width: 100",
             "the cell should have a colspan equal to 3 and have 100% width"
         );
-        var $fieldGroupFifthRowTds = $fieldGroupRows.eq(4).children(".o_cell"); // label/field pair can be put after the 1-colspan span
+        var $fieldGroupFifthRowTds = $fieldGroupRows.eq(4).find(".o_cell"); // label/field pair can be put after the 1-colspan span
         assert.strictEqual(
             $fieldGroupFifthRowTds.length,
             3,
@@ -8909,7 +8909,7 @@ QUnit.module("Views", (hooks) => {
         );
         assert.containsN(
             target,
-            ".main_inner_group > .o_wrap_field:last > .o_wrap_label",
+            ".main_inner_group > .o_wrap_field:last .o_wrap_label",
             2,
             "there should be two labels in the second row"
         );

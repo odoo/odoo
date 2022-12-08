@@ -42,8 +42,11 @@
             }
 
             .o_field_widget {
-                width: 100%;
                 margin-bottom: $o-form-spacing-unit * 2;
+
+                &:not(.o_field_boolean){
+                    width: 100%;
+                }
 
                 > .o_field_widget {
                     margin-bottom: 0;
@@ -487,9 +490,14 @@
     .o_checkbox_optional_field {
         display: flex;
 
-        @include media-breakpoint-down(md) {
+        @include media-breakpoint-down(sm) {
             flex-wrap: wrap;
-            justify-content: space-between;
+            .o_field_boolean {
+                order: -1;
+            }
+            .o_field_boolean + div {
+                width: 100%;
+            }
         }
 
         > .o_form_label {
@@ -863,11 +871,9 @@
         }
     }
 
-    // Boolean
-    .o_field_boolean {
-        margin-right: $o-form-spacing-unit;
-        max-width: 40px !important;
-        padding-right: 0 !important;
+    // Boolean 
+    .o_field_boolean + .o_form_label {
+        margin-right: $o-form-spacing-unit * 3;
     }
 
     // Timezone widget warning
