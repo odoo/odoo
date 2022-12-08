@@ -163,6 +163,11 @@ patch(PosStore.prototype, "pos_loyalty.PosStore", {
         const result = [];
         for (const couponProgram of allCouponPrograms) {
             const program = this.program_by_id[couponProgram.program_id];
+            if (program.pricelist_ids.length > 0
+                && (!order.pricelist || !program.pricelist_ids.includes(order.pricelist.id))) {
+                continue;
+            }
+
             const points = order._getRealCouponPoints(couponProgram.coupon_id);
             const hasLine = order.orderlines.filter((line) => !line.is_reward_line).length > 0;
             for (const reward of program.rewards.filter(

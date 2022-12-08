@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import tagged, new_test_user
-from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
-from odoo.tools.float_utils import float_compare
 from odoo import Command
+from odoo.exceptions import ValidationError
+from odoo.tests import tagged, new_test_user
+from odoo.tools.float_utils import float_compare
+
+from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
+
 
 @tagged('post_install', '-at_install')
 class TestLoyalty(TestSaleCouponCommon):
@@ -339,3 +342,133 @@ class TestLoyalty(TestSaleCouponCommon):
         order._update_programs_and_rewards()
         self._claim_reward(order, coupon_program)
         self.assertEqual(float_compare(order.amount_total, 218.7, precision_rounding=3), 0, "300 * 0.9 * 0.9 * 0.9 = 218.7")
+
+    def test_promotion_program_restricted_to_pricelists(self):
+        self.env['product.pricelist'].search([]).action_archive()
+        company_currency = self.env.company.currency_id
+        pricelist_1, pricelist_2 = self.env['product.pricelist'].create([
+            {'name': 'Basic company_currency pricelist', 'currency_id': company_currency.id},
+            {'name': 'Other company_currency pricelist', 'currency_id': company_currency.id},
+        ])
+        self.immediate_promotion_program.active = True
+        order = self.empty_order.copy()
+        order.write({'order_line': [
+            (0, False, {
+                'product_id': self.product_A.id,
+                'name': '1 Product A',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 1.0,
+            }),
+            (0, False, {
+                'product_id': self.product_B.id,
+                'name': '2 Product B',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 1.0,
+            }),
+        ]})
+
+        applied_message = "The promo offer should have been applied."
+        not_applied_message = "The promo offer should not have been applied because the order's " \
+                              "pricelist is not eligible to this promotion."
+
+        order.pricelist_id = self.env['product.pricelist']
+        order._update_programs_and_rewards()
+        self._claim_reward(order, self.immediate_promotion_program)
+        self.assertEqual(len(order.order_line.ids), 3, applied_message)
+
+        order.pricelist_id = pricelist_1
+        order._update_programs_and_rewards()
+        self._claim_reward(order, self.immediate_promotion_program)
+        self.assertEqual(len(order.order_line.ids), 3, applied_message)
+
+        self.immediate_promotion_program.pricelist_ids = [pricelist_1.id]
+        order.pricelist_id = self.env['product.pricelist']
+        order._update_programs_and_rewards()
+        self._claim_reward(order, self.immediate_promotion_program)
+        self.assertEqual(len(order.order_line.ids), 2, not_applied_message)
+
+        order.pricelist_id = pricelist_1
+        order._update_programs_and_rewards()
+        self._claim_reward(order, self.immediate_promotion_program)
+        self.assertEqual(len(order.order_line.ids), 3, applied_message)
+
+        order.pricelist_id = pricelist_2
+        order._update_programs_and_rewards()
+        self._claim_reward(order, self.immediate_promotion_program)
+        self.assertEqual(len(order.order_line.ids), 2, not_applied_message)
+
+        self.immediate_promotion_program.pricelist_ids = [pricelist_1.id, pricelist_2.id]
+        order.pricelist_id = self.env['product.pricelist']
+        order._update_programs_and_rewards()
+        self._claim_reward(order, self.immediate_promotion_program)
+        self.assertEqual(len(order.order_line.ids), 2, not_applied_message)
+
+        order.pricelist_id = pricelist_1
+        order._update_programs_and_rewards()
+        self._claim_reward(order, self.immediate_promotion_program)
+        self.assertEqual(len(order.order_line.ids), 3, applied_message)
+
+    def test_coupon_program_restricted_to_pricelists(self):
+        self.env['product.pricelist'].search([]).action_archive()
+        company_currency = self.env.company.currency_id
+        pricelist_1, pricelist_2 = self.env['product.pricelist'].create([
+            {'name': 'Basic company_currency pricelist', 'currency_id': company_currency.id},
+            {'name': 'Other company_currency pricelist', 'currency_id': company_currency.id},
+        ])
+
+        self.code_promotion_program.active = True
+        self.env['loyalty.generate.wizard'].with_context(
+            active_id=self.code_promotion_program.id
+        ).create({'coupon_qty': 7, 'points_granted': 1}).generate_coupons()
+        coupons = self.code_promotion_program.coupon_ids
+
+        order_no_pricelist = self.empty_order.copy()
+        order_no_pricelist.write({'pricelist_id': None, 'order_line': [
+            (0, False, {
+                'product_id': self.product_A.id,
+                'name': '1 Product A',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 1.0,
+            }),
+        ]})
+        order_pricelist_1 = order_no_pricelist.copy()
+        order_pricelist_1.pricelist_id = pricelist_1
+        order_pricelist_2 = order_no_pricelist.copy()
+        order_pricelist_2.pricelist_id = pricelist_2
+
+        applied_message = "The coupon code should have been applied."
+        not_applied_message = "The coupon code should not have been applied because the order's " \
+                              "pricelist is not eligible to this promotion."
+
+        order_0 = order_no_pricelist.copy()
+        self._apply_promo_code(order_0, coupons[0].code)
+        self.assertEqual(len(order_0.order_line.ids), 2, applied_message)
+
+        order_1 = order_pricelist_1.copy()
+        self._apply_promo_code(order_1, coupons[1].code)
+        self.assertEqual(len(order_1.order_line.ids), 2, applied_message)
+
+        self.code_promotion_program.pricelist_ids = [pricelist_1.id]
+        order_2 = order_no_pricelist.copy()
+        with self.assertRaises(ValidationError):
+            self._apply_promo_code(order_2, coupons[2].code)
+        self.assertEqual(len(order_2.order_line.ids), 1, not_applied_message)
+
+        order_3 = order_pricelist_1.copy()
+        self._apply_promo_code(order_3, coupons[3].code)
+        self.assertEqual(len(order_3.order_line.ids), 2, applied_message)
+
+        order_4 = order_pricelist_2.copy()
+        with self.assertRaises(ValidationError):
+            self._apply_promo_code(order_4, coupons[4].code)
+        self.assertEqual(len(order_4.order_line.ids), 1, not_applied_message)
+
+        self.code_promotion_program.pricelist_ids = [pricelist_1.id, pricelist_2.id]
+        order_5 = order_no_pricelist.copy()
+        with self.assertRaises(ValidationError):
+            self._apply_promo_code(order_5, coupons[5].code)
+        self.assertEqual(len(order_5.order_line.ids), 1, not_applied_message)
+
+        order_6 = order_pricelist_1.copy()
+        self._apply_promo_code(order_6, coupons[6].code)
+        self.assertEqual(len(order_6.order_line.ids), 2, applied_message)
