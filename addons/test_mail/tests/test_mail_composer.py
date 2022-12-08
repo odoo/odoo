@@ -484,8 +484,6 @@ class TestComposerInternals(TestMailComposer):
                 composer = self.env['mail.compose.message'].with_context(ctx).create({
                     'body': '<p>Test Body</p>',
                 })
-                # currently onchange necessary
-                composer._onchange_template_id_wrapper()
 
                 # values coming from template: attachment_ids + report in comment
                 if composition_mode == 'comment' and not batch:
@@ -515,29 +513,22 @@ class TestComposerInternals(TestMailComposer):
                 else:
                     self.assertEqual(composer.attachment_ids, attachs + extra_attach)
 
-                # update with template with void values: values are kept
+                # update with template with void values: values are kept, void
+                # value is not forced in rendering mode as well as when copying
+                # template values
                 composer.write({'template_id': template_void.id})
-                # currently onchange necessary
-                composer._onchange_template_id_wrapper()
 
                 if composition_mode == 'comment' and not batch:
-                    self.assertEqual(composer.attachment_ids, attachs + extra_attach + generated,
-                                     'TODO: Values are kept (should be reset ?)')
+                    self.assertEqual(composer.attachment_ids, attachs + extra_attach + generated)
                 else:
-                    self.assertEqual(composer.attachment_ids, attachs + extra_attach,
-                                     'TODO: Values are kept (should be reset ?)')
+                    self.assertEqual(composer.attachment_ids, attachs + extra_attach)
 
-                # reset template: values are kept
+                # reset template: values are reset
                 composer.write({'template_id': False})
-                # currently onchange necessary
-                composer._onchange_template_id_wrapper()
-
                 if composition_mode == 'comment' and not batch:
-                    self.assertEqual(composer.attachment_ids, attachs + extra_attach + generated,
-                                     'TODO: Values are kept (should be reset ?)')
+                    self.assertFalse(composer.attachment_ids)
                 else:
-                    self.assertEqual(composer.attachment_ids, attachs + extra_attach,
-                                     'TODO: Values are kept (should be reset ?)')
+                    self.assertFalse(composer.attachment_ids)
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -1098,10 +1089,8 @@ class TestComposerInternals(TestMailComposer):
             self._get_web_context(self.test_record)
         ).create({
             'body': '<p>Template Body</p>',
-            'partner_ids': [self.partner_employee_2.id],
             'template_id': template_1.id,
         })
-        composer._onchange_template_id_wrapper()
         composer._action_send_mail()
 
         self.assertEqual(
