@@ -1719,7 +1719,7 @@ class AccountMove(models.Model):
 
             move.tax_totals_json = json.dumps({
                 **self._get_tax_totals(move.partner_id, tax_lines_data, move.amount_total, move.amount_untaxed, move.currency_id),
-                'allow_tax_edition': move.is_purchase_document(include_receipts=False) and move.state == 'draft',
+                'allow_tax_edition': move.is_purchase_document(include_receipts=True) and move.state == 'draft',
             })
 
     def _prepare_tax_lines_data_for_totals_from_invoice(self, tax_line_id_filter=None, tax_ids_filter=None):
