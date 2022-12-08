@@ -168,6 +168,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(formatFloatTime(2), "02:00");
         assert.strictEqual(formatFloatTime(3.5), "03:30");
         assert.strictEqual(formatFloatTime(0.25), "00:15");
+        assert.strictEqual(formatFloatTime(0.58), "00:35");
         assert.strictEqual(formatFloatTime(2 / 60, { displaySeconds: true }), "00:02:00");
         assert.strictEqual(
             formatFloatTime(2 / 60 + 1 / 3600, { displaySeconds: true }),
