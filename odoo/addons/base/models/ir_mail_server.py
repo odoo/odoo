@@ -667,6 +667,12 @@ class IrMailServer(models.Model):
             _test_logger.info("skip sending email in test mode")
             return message['Message-Id']
 
+        # Do not actually send emails during an install!
+        if not self.env.registry.loaded:
+            _test_logger.info("skip sending email during install")
+            return message['Message-Id']
+
+
         try:
             message_id = message['Message-Id']
 

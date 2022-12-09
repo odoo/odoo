@@ -527,5 +527,6 @@ class TestEmailMessage(TransactionCase):
 
         smtp = FakeSMTP()
         self.patch(threading.current_thread(), 'testing', False)
+        self.patch(self.env.registry, 'loaded', True)
         self.env['ir.mail_server'].send_email(msg, smtp_session=smtp)
         self.assertTrue(smtp.email_sent)
