@@ -426,7 +426,6 @@ var MetaTitleDescription = Widget.extend({
         const slugified = this.$seoName.val().toString().trim().normalize('NFKD').toLowerCase()
             .replace(/\s+/g, '-')           // Replace spaces with -
             .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
-            .replace(/\-$/g, '')            // Remove trailing -
             .replace(/\-\-+/g, '-');        // Replace multiple - with single -
         this.$seoName.val(slugified);
         self._renderPreview();
