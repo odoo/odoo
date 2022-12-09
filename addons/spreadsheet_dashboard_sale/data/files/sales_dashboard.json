@@ -43,10 +43,10 @@
             },
             "cols": {
                 "0": {
-                    "size": 175
+                    "size": 100
                 },
                 "1": {
-                    "size": 100
+                    "size": 175
                 },
                 "2": {
                     "size": 100
@@ -58,10 +58,10 @@
                     "size": 50
                 },
                 "5": {
-                    "size": 175
+                    "size": 100
                 },
                 "6": {
-                    "size": 100
+                    "size": 175
                 },
                 "7": {
                     "size": 100
@@ -724,47 +724,37 @@
                 },
                 "D21": {
                     "style": 9,
-                    "format": 2,
                     "content": "=ODOO.LIST(1,1,\"amount_untaxed\")"
                 },
                 "D22": {
-                    "format": 2,
                     "content": "=ODOO.LIST(1,2,\"amount_untaxed\")"
                 },
                 "D23": {
                     "style": 9,
-                    "format": 2,
                     "content": "=ODOO.LIST(1,3,\"amount_untaxed\")"
                 },
                 "D24": {
-                    "format": 2,
                     "content": "=ODOO.LIST(1,4,\"amount_untaxed\")"
                 },
                 "D25": {
                     "style": 9,
-                    "format": 2,
                     "content": "=ODOO.LIST(1,5,\"amount_untaxed\")"
                 },
                 "D26": {
-                    "format": 2,
                     "content": "=ODOO.LIST(1,6,\"amount_untaxed\")"
                 },
                 "D27": {
                     "style": 9,
-                    "format": 2,
                     "content": "=ODOO.LIST(1,7,\"amount_untaxed\")"
                 },
                 "D28": {
-                    "format": 2,
                     "content": "=ODOO.LIST(1,8,\"amount_untaxed\")"
                 },
                 "D29": {
                     "style": 9,
-                    "format": 2,
                     "content": "=ODOO.LIST(1,9,\"amount_untaxed\")"
                 },
                 "D30": {
-                    "format": 2,
                     "content": "=ODOO.LIST(1,10,\"amount_untaxed\")"
                 },
                 "D32": {
@@ -1664,47 +1654,37 @@
                 },
                 "I21": {
                     "style": 9,
-                    "format": 2,
                     "content": "=ODOO.LIST(2,1,\"amount_untaxed\")"
                 },
                 "I22": {
-                    "format": 2,
                     "content": "=ODOO.LIST(2,2,\"amount_untaxed\")"
                 },
                 "I23": {
                     "style": 9,
-                    "format": 2,
                     "content": "=ODOO.LIST(2,3,\"amount_untaxed\")"
                 },
                 "I24": {
-                    "format": 2,
                     "content": "=ODOO.LIST(2,4,\"amount_untaxed\")"
                 },
                 "I25": {
                     "style": 9,
-                    "format": 2,
                     "content": "=ODOO.LIST(2,5,\"amount_untaxed\")"
                 },
                 "I26": {
-                    "format": 2,
                     "content": "=ODOO.LIST(2,6,\"amount_untaxed\")"
                 },
                 "I27": {
                     "style": 9,
-                    "format": 2,
                     "content": "=ODOO.LIST(2,7,\"amount_untaxed\")"
                 },
                 "I28": {
-                    "format": 2,
                     "content": "=ODOO.LIST(2,8,\"amount_untaxed\")"
                 },
                 "I29": {
                     "style": 9,
-                    "format": 2,
                     "content": "=ODOO.LIST(2,9,\"amount_untaxed\")"
                 },
                 "I30": {
-                    "format": 2,
                     "content": "=ODOO.LIST(2,10,\"amount_untaxed\")"
                 },
                 "I32": {
@@ -2083,7 +2063,6 @@
                     "tag": "chart",
                     "data": {
                         "title": "",
-                        "id": "a527960b-0812-4291-baba-f6b4b5280a0d",
                         "background": "#FFFFFF",
                         "legendPosition": "none",
                         "metaData": {
@@ -2865,7 +2844,7 @@
             "id": "13d30fda-b14d-4a56-b186-25468af3b1e9",
             "type": "date",
             "label": "Period",
-            "defaultValue": "last_month",
+            "defaultValue": "last_three_months",
             "rangeType": "relative",
             "defaultsToCurrentPeriod": false,
             "pivotFields": {
@@ -2983,21 +2962,21 @@
                     "type": "many2one"
                 },
                 "11": {
-                    "field": "tax_country_id",
+                    "field": "partner_id.country_id",
                     "type": "many2one"
                 },
                 "12": {
-                    "field": "tax_country_id",
+                    "field": "partner_id.country_id",
                     "type": "many2one"
                 }
             },
             "listFields": {
                 "1": {
-                    "field": "tax_country_id",
+                    "field": "partner_id.country_id",
                     "type": "many2one"
                 },
                 "2": {
-                    "field": "tax_country_id",
+                    "field": "partner_id.country_id",
                     "type": "many2one"
                 }
             },
@@ -3051,22 +3030,22 @@
                     "type": "many2one"
                 },
                 "11": {
-                    "field": "order_line",
-                    "type": "one2many"
+                    "field": "order_line.product_id",
+                    "type": "many2one"
                 },
                 "12": {
-                    "field": "order_line",
-                    "type": "one2many"
+                    "field": "order_line.product_id",
+                    "type": "many2one"
                 }
             },
             "listFields": {
                 "1": {
-                    "field": "order_line",
-                    "type": "one2many"
+                    "field": "order_line.product_id",
+                    "type": "many2one"
                 },
                 "2": {
-                    "field": "order_line",
-                    "type": "one2many"
+                    "field": "order_line.product_id",
+                    "type": "many2one"
                 }
             },
             "graphFields": {
@@ -3187,22 +3166,22 @@
                     "type": "many2one"
                 },
                 "11": {
-                    "field": "order_line",
-                    "type": "one2many"
+                    "field": "order_line.product_id.categ_id",
+                    "type": "many2one"
                 },
                 "12": {
-                    "field": "order_line",
-                    "type": "one2many"
+                    "field": "order_line.product_id.categ_id",
+                    "type": "many2one"
                 }
             },
             "listFields": {
                 "1": {
-                    "field": "order_line",
-                    "type": "one2many"
+                    "field": "order_line.product_id.categ_id",
+                    "type": "many2one"
                 },
                 "2": {
-                    "field": "order_line",
-                    "type": "one2many"
+                    "field": "order_line.product_id.categ_id",
+                    "type": "many2one"
                 }
             },
             "graphFields": {

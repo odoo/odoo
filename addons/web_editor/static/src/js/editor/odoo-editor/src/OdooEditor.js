@@ -567,7 +567,7 @@ export class OdooEditor extends EventTarget {
                     },
                 },
                 ...(this.options.commands || []),
-                ...(this.options.commands && !this.options.commands.find(c =>  c.title === this.options._t('Separator')) ? [
+                ...(!this.options.commands || !this.options.commands.find(c =>  c.name === this.options._t('Separator')) ? [
                     {
                         category: this.options._t('Structure'),
                         name: this.options._t('Separator'),
@@ -1887,7 +1887,7 @@ export class OdooEditor extends EventTarget {
         }
         if (joinWith) {
             const el = closestElement(joinWith);
-            fillEmpty(el);
+            el && fillEmpty(el);
         }
     }
 
@@ -3247,6 +3247,44 @@ export class OdooEditor extends EventTarget {
                 list.replaceChildren(...rangeContent.childNodes);
                 rangeContent = list;
             }
+            if (rangeContent.firstChild.nodeName === 'TR' || rangeContent.firstChild.nodeName === 'TD') {
+                // We enter this case only if selection is within single table.
+                const table = closestElement(range.commonAncestorContainer, 'table');
+                const tableClone = table.cloneNode(true);
+                // A table is considered fully selected if it is nested inside a
+                // cell that is itself selected, or if all its own cells are
+                // selected.
+                const isTableFullySelected =
+                    table.parentElement && closestElement(table.parentElement, 'td.o_selected_td') ||
+                    [...table.querySelectorAll('td')]
+                        .filter(td => closestElement(td, 'table') === table)
+                        .every(td => td.classList.contains('o_selected_td'));
+                if (!isTableFullySelected(table)) {
+                    for (const td of tableClone.querySelectorAll('td:not(.o_selected_td)')) {
+                        if (closestElement(td, 'table') === tableClone) { // ignore nested
+                            td.remove();
+                        }
+                    }
+                    for (const tr of tableClone.querySelectorAll('tr:not(:has(td))')) {
+                        if (closestElement(tr, 'table') === tableClone) { // ignore nested
+                            tr.remove();
+                        }
+                    }
+                }
+                // If it is fully selected, clone the whole table rather than
+                // just its rows.
+                rangeContent = tableClone;
+            }
+            if (rangeContent.firstChild.nodeName === 'TABLE') {
+                // Make sure the full leading table is copied.
+                rangeContent.firstChild.after(closestElement(range.startContainer, 'table').cloneNode(true));
+                rangeContent.firstChild.remove();
+            }
+            if (rangeContent.lastChild.nodeName === 'TABLE') {
+                // Make sure the full trailing table is copied.
+                rangeContent.lastChild.before(closestElement(range.endContainer, 'table').cloneNode(true));
+                rangeContent.lastChild.remove();
+            }
 
             const dataHtmlElement = document.createElement('data');
             dataHtmlElement.append(rangeContent);
@@ -3464,9 +3502,14 @@ export class OdooEditor extends EventTarget {
      */
     isSelectionInEditable(selection) {
         selection = selection || this.document.getSelection();
-        return selection && selection.anchorNode &&
-            closestElement(selection.anchorNode).isContentEditable && closestElement(selection.focusNode).isContentEditable &&
-            this.editable.contains(selection.anchorNode) && this.editable.contains(selection.focusNode);
+        if (selection && selection.anchorNode && selection.focusNode) {
+            const anchorElement = closestElement(selection.anchorNode);
+            const focusElement = closestElement(selection.focusNode);
+            return anchorElement && anchorElement.isContentEditable && focusElement && focusElement.isContentEditable &&
+                this.editable.contains(selection.anchorNode) && this.editable.contains(selection.focusNode);
+        } else {
+            return false;
+        }
     }
     /**
      * Returns true if the current selection is in at least one block Element
