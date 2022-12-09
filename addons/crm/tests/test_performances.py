@@ -178,7 +178,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
 
         # randomness
         with self.with_user('user_sales_manager'):
-            with self.assertQueryCount(user_sales_manager=6280):  # crm 6226 / com 6276 / ent 6278
+            with self.assertQueryCount(user_sales_manager=6280):  # crm 6226 / com 6212 / ent 6214
                 self.env['crm.team'].browse(sales_teams.ids)._action_assign_leads(work_days=30)
 
         # teams assign
