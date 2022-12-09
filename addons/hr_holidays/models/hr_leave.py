@@ -918,9 +918,11 @@ class HolidaysRequest(models.Model):
                     hour_from = hour_from.hour + hour_from.minute / 60
                     hour_to = hour_to.hour + hour_to.minute / 60
 
-                    values['date_from'] = self._get_start_or_end_from_attendance(hour_from, date_from.date(), employee)
-                    values['date_to'] = self._get_start_or_end_from_attendance(hour_to, date_to.date(), employee)
-                    values['request_date_from'], values['request_date_to'] = values['date_from'].date(), values['date_to'].date()
+                    # If the leave has a parent (e.g. a department leave), timezone offset has already been applied
+                    if not values.get('parent_id'):
+                        values['date_from'] = self._get_start_or_end_from_attendance(hour_from, date_from.date(), employee)
+                        values['date_to'] = self._get_start_or_end_from_attendance(hour_to, date_to.date(), employee)
+                        values['request_date_from'], values['request_date_to'] = values['date_from'].date(), values['date_to'].date()
                     values['number_of_days'] = employee_leave_date_duration[(date_from, date_to)][values['employee_id']]['days']
 
         """ Override to avoid automatic logging of creation """
