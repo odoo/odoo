@@ -2361,6 +2361,16 @@ var SnippetsMenu = Widget.extend({
         // Force non editable part to contentEditable=false
         $html.find('.o_not_editable').attr('contentEditable', false);
 
+        // TODO remove me in 16.0: introduced in a 14.0 fix to allow users to
+        // switch between the different tabs of a custom tabs even in the
+        // editor mode. Before this fix, it was not possible because the
+        // elements of the tabs located on the website and the elements of the
+        // save tabs located on the editor had the same id's so the anchors
+        // were referring to the wrong elements.
+        for (const customTabPaneEl of $html.find('#snippet_custom_body .tab-pane')) {
+            customTabPaneEl.removeAttribute('id');
+        }
+
         // Add the computed template and make elements draggable
         this.$el.html($html);
         this.$el.append(this.customizePanel);
