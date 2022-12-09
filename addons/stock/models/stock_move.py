@@ -2238,3 +2238,16 @@ Please change the quantity done or the rounding precision of your unit of measur
             'views': [[False, "form"]],
             'res_id': self.id,
         }
+
+    def _get_moves_orig(self, moves=False):
+        self.ensure_one()
+        if not moves:
+            moves = self.env['stock.move']
+        if self in moves:
+            return self.env['stock.move']
+        if self.picking_type_id.code == 'incoming':
+            return self.env['stock.move']
+        moves |= self
+        for move in self.move_orig_ids:
+            moves |= move._get_moves_orig(moves)
+        return moves
