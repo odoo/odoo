@@ -2,8 +2,8 @@
 
 import { registry } from "@web/core/registry";
 import { kanbanView } from '@web/views/kanban/kanban_view';
-import { ProjectTaskKanbanModel } from "./project_task_kanban_model";
-import { ProjectTaskKanbanRenderer } from './project_task_kanban_renderer';
+import { ProjectTaskKanbanModel } from "@note/views/project_task_kanban/project_task_kanban_model";
+import { ProjectTaskKanbanRenderer } from '@note/views/project_task_kanban/project_task_kanban_renderer';
 import { ProjectControlPanel } from "../../components/project_control_panel/project_control_panel";
 
 export const projectTaskKanbanView = {

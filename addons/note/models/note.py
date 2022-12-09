@@ -5,144 +5,221 @@ from random import randint
 
 from odoo import api, fields, models, _
 from odoo.tools import html2plaintext
+from odoo.exceptions import ValidationError
 
 
 class Stage(models.Model):
 
-    _name = "note.stage"
-    _description = "Note Stage"
+    _name = "project.task.type"
+    _description = "Task Stage"
     _order = 'sequence'
+
+    def _get_default_user_id(self):
+        todo_stage = self.env.context.get('default_todo_stage', False)
+        if todo_stage:
+            return self.env.uid
 
     name = fields.Char('Stage Name', translate=True, required=True)
     sequence = fields.Integer(default=1)
-    user_id = fields.Many2one('res.users', string='Owner', required=True, ondelete='cascade', default=lambda self: self.env.uid)
-    fold = fields.Boolean('Folded by Default')
+    user_id = fields.Many2one('res.users', string='Stage Owner', index=True, ondelete='cascade', default=_get_default_user_id) #TODO: default should only be set if no project_id assigned to the task
+    fold = fields.Boolean(string='Folded in Kanban',
+        help='If enabled, this stage will be displayed as folded in the Kanban view of your tasks. Tasks in a folded stage are considered as closed.')
+    todo_stage = fields.Boolean(default=False, help='If enabled, this stage will be used to manage display of tasks in the To-Do app.')
+
+    def copy(self, default=None):
+        default = dict(default or {})
+        if not default.get('name'):
+            default['name'] = _("%s (copy)") % (self.name)
+        return super().copy(default)
+    def toggle_active(self):
+        res = super().toggle_active()
+        stage_active = self.filtered('active')
+        inactive_tasks = self.env['project.task'].with_context(active_test=False).search(
+            [('active', '=', False), ('stage_id', 'in', stage_active.ids)], limit=1)
+        if stage_active and inactive_tasks:
+            wizard = self.env['project.task.type.delete.wizard'].create({
+                'stage_ids': stage_active.ids,
+            })
+            return {
+                'name': _('Unarchive Tasks'),
+                'view_mode': 'form',
+                'res_model': 'project.task.type.delete.wizard',
+                'views': [(self.env.ref('project.view_project_task_type_unarchive_wizard').id, 'form')],
+                'type': 'ir.actions.act_window',
+                'res_id': wizard.id,
+                'target': 'new',
+            }
+        return res
+
+    def remove_personal_stage(self): # NOTE: could it be merged with the unlink method ? (why separate method to deal with personal stage and other stage ?? # TODO: Import ValidationError # Why is it really needed ? task with no stage should be assigned one in the compute method of personal_stage
+        """
+        Remove a personal stage, tasks using that stage will move to the first
+        stage with a lower priority if it exists higher if not.
+        This method will not allow to delete the last personal stage.
+        Having no personal_stage_type_id makes the task not appear when grouping by personal stage.
+        """
+        self.ensure_one()
+        assert self.user_id == self.env.user or self.env.su
+
+        users_personal_stages = self.env['project.task.type']\
+            .search([('user_id', '=', self.user_id.id), ('todo_stage', '=', self.todo_stage)], order='sequence DESC')
+        if len(users_personal_stages) == 1:
+            raise ValidationError(_("You should at least have one personal stage. Create a new stage to which the tasks can be transferred after this one is deleted."))
+
+        # Find the most suitable stage, they are already sorted by sequence
+        new_stage = self.env['project.task.type']
+        for stage in users_personal_stages:
+            if stage == self:
+                continue
+            if stage.sequence > self.sequence:
+                new_stage = stage
+            elif stage.sequence <= self.sequence:
+                new_stage = stage
+                break
+
+        self.env['project.task'].search([('personal_stage_type_id', '=', self.id)]).write({
+            'personal_stage_type_id': new_stage.id,
+        })#Search on a computed field ?? Easier to do the search on the M2M (ids) with a 'in' ?
+        self.unlink()
 
 
-class Tag(models.Model):
+class Tag(models.Model): # TODO- address functional security questions related to tags (see notes in odoo)
 
-    _name = "note.tag"
-    _description = "Note Tag"
+    _name = "project.tags"
+    _description = "Task Tag"
 
     def _get_default_color(self):
         return randint(1, 11)
 
     name = fields.Char('Tag Name', required=True, translate=True)
-    color = fields.Integer('Color Index', default=_get_default_color)
+    color = fields.Integer(string='Color', default=_get_default_color, #Move default_color here or adapt logic for note ??
+        help="Transparent tags are not visible in kanban views.")#NOTE: to update
+    todo_tag = fields.Boolean(default=False, help='If enabled, this tag will be used to add information to a note in the To-Do app.')
+    task_ids = fields.Many2many('project.task', string='Tasks')
 
-    _sql_constraints = [
-        ('name_uniq', 'unique (name)', "Tag name already exists !"),
+    _sql_constraints = [ #TO UPDATE (can be duplicated if todo_tags is different
+        ('name_uniq', 'unique (name, todo_tag)', "A tag with the same name already exists."),
     ]
 
+class Task(models.Model):
 
-class Note(models.Model):
+    # ---------------------------------------- Private Attributes ---------------------------------
 
-    _name = 'note.note'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
-    _description = "Note"
+    _name = 'project.task'
+    _inherit = ['mail.thread.cc', 'mail.activity.mixin']
+    _description = "Task"
     _order = 'sequence, id desc'
 
-    def _get_default_stage_id(self):
-        return self.env['note.stage'].search([('user_id', '=', self.env.uid)], limit=1)
+    # ---------------------------------------- Default Methods ------------------------------------
 
-    name = fields.Text(
-        compute='_compute_name', string='Note Summary', store=True, readonly=False)
-    company_id = fields.Many2one('res.company')
+    @api.model
+    def _default_personal_stage_type_id(self):
+        todo_display = self.env.context.get('default_is_todo', False)
+        return self.env['project.task.type'].search([('user_id', '=', self.env.user.id), ('todo_stage', '=', todo_display)], limit=1)
+
+
+
+    # --------------------------------------- Fields Declaration ----------------------------------
+
+    name = fields.Char(string='Title', tracking=True, required=True, index='trigram')
+    company_id = fields.Many2one('res.company') #TODO: to update (see project)
     user_id = fields.Many2one('res.users', string='Owner', default=lambda self: self.env.uid)
-    memo = fields.Html('Note Content')
-    sequence = fields.Integer('Sequence', default=0)
-    stage_id = fields.Many2one('note.stage', compute='_compute_stage_id',
-        inverse='_inverse_stage_id', string='Stage', default=_get_default_stage_id)
-    stage_ids = fields.Many2many('note.stage', 'note_stage_rel', 'note_id', 'stage_id',
-        string='Stages of Users',  default=_get_default_stage_id)
-    open = fields.Boolean(string='Active', default=True)
-    date_done = fields.Date('Date done')
+    description = fields.Html(string='Description')
+    sequence = fields.Integer('Sequence', default=10)
+    personal_stage_type_ids = fields.Many2many('project.task.type', 'project_task_stage_rel', column1='task_id', column2='stage_id',
+        ondelete='restrict', default=_default_personal_stage_type_id, domain="[('user_id', '=', user.id)]", string='Personal Stage', group_expand='_read_group_personal_stage_type_ids')
+    personal_stage_type_id = fields.Many2one('project.task.type', string='Personal User Stage',
+        compute='_compute_personal_stage_type_id', inverse='_inverse_personal_stage_type_id', store=False,
+        search='_search_personal_stage_type_id', default=_default_personal_stage_type_id,
+        help="The current user's personal task stage.")
+    active = fields.Boolean(string='Active', default=True)
     color = fields.Integer(string='Color Index')
-    tag_ids = fields.Many2many('note.tag', 'note_tags_rel', 'note_id', 'tag_id', string='Tags')
+    tag_ids = fields.Many2many('project.tags', string='Tags',
+        help="You can only see tags that are already present in your project. If you try creating a tag that is already existing in other projects, it won't generate any duplicates.") #UPDATE STRING ??
+
     # modifying property of ``mail.thread`` field
     message_partner_ids = fields.Many2many(compute_sudo=True)
 
-    @api.depends('memo')
-    def _compute_name(self):
-        """ Read the first line of the memo to determine the note name """
-        for note in self:
-            if note.name:
-                continue
-            text = html2plaintext(note.memo) if note.memo else ''
-            note.name = text.strip().replace('*', '').split("\n")[0]
+    is_todo = fields.Boolean(default=False, required=True)
 
-    def _compute_stage_id(self):
-        first_user_stage = self.env['note.stage'].search([('user_id', '=', self.env.uid)], limit=1)
-        for note in self:
-            for stage in note.stage_ids.filtered(lambda stage: stage.user_id == self.env.user):
-                note.stage_id = stage
-            # note without user's stage
-            if not note.stage_id:
-                note.stage_id = first_user_stage
+    # ---------------------------------------- Compute methods ------------------------------------
+    @api.depends_context('uid')
+    def _compute_personal_stage_type_id(self):
+        default_user_stage = self.env['project.task.type'].search([('user_id', '=', self.env.uid), ('todo_stage', '=', True)], limit=1)
+        # Only computing personal stage for followers or note owner
+        for task in self.filtered(lambda t: t.user_id.id == self.env.uid or self.env.user.partner_id in t.message_partner_ids):
+            for personal_stage in task.personal_stage_type_ids.filtered(lambda stage: stage.user_id == self.env.user and stage.todo_stage):
+                task.personal_stage_type_id = personal_stage
+                break
+            if not task.personal_stage_type_id:
+                task.personal_stage_type_id = default_user_stage
 
-    def _inverse_stage_id(self):
-        for note in self.filtered('stage_id'):
-            note.stage_ids = note.stage_id + note.stage_ids.filtered(lambda stage: stage.user_id != self.env.user)
+    def _inverse_personal_stage_type_id(self): #TODO: override in project
+        for task in self.filtered('personal_stage_type_id'):
+            task.personal_stage_type_ids = task.personal_stage_type_id + task.personal_stage_type_ids.filtered(lambda stage: stage.user_id != self.env.user or stage.todo_stage != task.is_todo)
+
+
+    # ----------------------------------- Constrains and Onchanges --------------------------------
+
+    # ------------------------------------------ CRUD Methods -------------------------------------
+
+    # def write(self, vals): # !!!!!!!!!   WARNING: A part of the write/CREATE method should probably be moved here (see below) !!!!!!!!!!!!
+    #     #breakpoint()
+    #     #if "personal_stage_type_id" in vals and not vals['personal_stage_type_id']:
+    #     #    del vals['personal_stage_type_id']
+
+    #     result = super(Task, self).write(vals)
+
+    #     #if 'user_ids' in vals:
+    #     #    tasks._populate_missing_personal_stages()
+
+    #     if 'message_partner_ids' in vals:
+    #         breakpoint()
+
+    #     #message_partner_ids', '=', user.partner_id.id
+    #     return result
+
+
+    # ---------------------------------------- Action Methods -------------------------------------
+
+    # ----------------------------------------- Other Methods -------------------------------------
 
     @api.model
-    def name_create(self, name):
-        return self.create({'memo': name}).name_get()[0]
+    def _read_group_personal_stage_type_ids(self, stages, domain, order):
+        todo_display = self.env.context.get('default_is_todo', False)
+        return stages.search(['|', ('id', 'in', stages.ids), ('user_id', '=', self.env.user.id), ('todo_stage', '=', todo_display)])
+
+    def _get_todo_default_personal_stage_create_vals(self, user_id):
+        return [
+            {'sequence': 1, 'name': _('New'), 'user_id': user_id, 'fold': False, 'todo_stage': True},
+            {'sequence': 2, 'name': _('Meeting Minutes'), 'user_id': user_id, 'fold': False, 'todo_stage': True},
+            {'sequence': 3, 'name': _('Notes'), 'user_id': user_id, 'fold': False, 'todo_stage': True},
+            {'sequence': 4, 'name': _('Todo'), 'user_id': user_id, 'fold': False, 'todo_stage': True},
+        ]
+
+    def _ensure_todo_personal_stages(self):
+        user = self.env.user
+        ProjectTaskTypeSudo = self.env['project.task.type'].sudo()
+        # In the case no stages have been found, we create the default stages for the user
+        if not ProjectTaskTypeSudo.search_count([('user_id', '=', user.id), ('todo_stage', '=', True)], limit=1):
+            ProjectTaskTypeSudo.with_context(lang=user.lang, default_project_id=False).create(
+                self.with_context(lang=user.lang)._get_todo_default_personal_stage_create_vals(user.id)
+            )
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        if groupby and groupby[0] == "stage_id" and (len(groupby) == 1 or lazy):
-            stages = self.env['note.stage'].search([('user_id', '=', self.env.uid)])
-            if stages:
-                # if the user has some stages
-                result = []
-                for stage in stages:
-                    # notes by stage for stages user
-                    nb_stage_counts = self.search_count(domain + [('stage_ids', '=', stage.id)])
-                    result.append({
-                        '__context': {'group_by': groupby[1:]},
-                        '__domain': domain + [('stage_ids.id', '=', stage.id)],
-                        'stage_id': (stage.id, stage.name),
-                        'stage_id_count': nb_stage_counts,
-                        '__count': nb_stage_counts,
-                        '__fold': stage.fold,
-                    })
-                # note without user's stage
-                nb_notes_ws = self.search_count(domain + [('stage_ids', 'not in', stages.ids)])
-                if nb_notes_ws:
-                    # add note to the first column if it's the first stage
-                    dom_not_in = ('stage_ids', 'not in', stages.ids)
-                    if result and result[0]['stage_id'][0] == stages[0].id:
-                        dom_in = result[0]['__domain'].pop()
-                        result[0]['__domain'] = domain + ['|', dom_in, dom_not_in]
-                        result[0]['stage_id_count'] += nb_notes_ws
-                        result[0]['__count'] += nb_notes_ws
-                    else:
-                        # add the first stage column
-                        result = [{
-                            '__context': {'group_by': groupby[1:]},
-                            '__domain': domain + [dom_not_in],
-                            'stage_id': (stages[0].id, stages[0].name),
-                            'stage_id_count': nb_notes_ws,
-                            '__count': nb_notes_ws,
-                            '__fold': stages[0].name,
-                        }] + result
-            else:  # if stage_ids is empty, get note without user's stage
-                nb_notes_ws = self.search_count(domain)
-                if nb_notes_ws:
-                    result = [{  # notes for unknown stage
-                        '__context': {'group_by': groupby[1:]},
-                        '__domain': domain,
-                        'stage_id': False,
-                        'stage_id_count': nb_notes_ws,
-                        '__count': nb_notes_ws
-                    }]
-                else:
-                    result = []
-            return result
-        return super(Note, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+        # Missing personal stages are attributed at reading by the affected user and not at writing anymore (which can be lengthy if a lot of followers/assignees are added) --> Like an inbox
+        # Change in behavior: if an assignee is removed from a task and then assigned to it again, it goes back in the original personal stage --> TODO: move to the commit message
+        if groupby and groupby[0] == "personal_stage_type_ids" and (len(groupby) == 1 or lazy): #To update personal...ids # TODO: populates personal stages if it does not exist for the user
+            self._ensure_todo_personal_stages()
+            todo_display = self.env.context.get('default_is_todo', False)
+            stages = self.env['project.task.type'].search([('user_id', '=', self.env.uid), ('todo_stage', '=', todo_display)])
+            # task without user's personal stage
+            nb_tasks_ws = self.env['project.task'].search(domain + [('personal_stage_type_ids', 'not in', stages.ids)])
+            if nb_tasks_ws:
+                for task in nb_tasks_ws:
+                    task.sudo().personal_stage_type_ids |= stages[0]
+        return super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
-    def action_close(self):
-        return self.write({'open': False, 'date_done': fields.date.today()})
-
-    def action_open(self):
-        return self.write({'open': True})
+# TO DO: SQL check that todo tasks are only related to todo stages (and inversly)
+# TODO : add a word about security of every models in the commit message

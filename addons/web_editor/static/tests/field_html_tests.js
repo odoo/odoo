@@ -37,7 +37,7 @@ QUnit.module('web_editor', {}, function () {
                                       '<p>New external link</p><p>New internal link</p>';
 
             this.data = weTestUtils.wysiwygData({
-                'note.note': {
+                'project.task': {
                     fields: {
                         display_name: {
                             string: "Displayed name",
@@ -166,7 +166,7 @@ QUnit.module('web_editor', {}, function () {
 
             var form = await testUtils.createView({
                 View: FormView,
-                model: 'note.note',
+                model: 'project.task',
                 data: this.data,
                 arch: '<form>' +
                     '<field name="body" widget="html" style="height: 100px"/>' +
@@ -196,7 +196,7 @@ QUnit.module('web_editor', {}, function () {
 
             var form = await testUtils.createView({
                 View: FormView,
-                model: 'note.note',
+                model: 'project.task',
                 data: this.data,
                 arch: '<form>' +
                     '<field name="body" widget="html" style="height: 100px"/>' +
@@ -217,7 +217,7 @@ QUnit.module('web_editor', {}, function () {
 
             var form = await testUtils.createView({
                 View: FormView,
-                model: 'note.note',
+                model: 'project.task',
                 data: this.data,
                 arch: '<form>' +
                         '<field name="header" widget="html" style="height: 100px" />' +
@@ -246,7 +246,7 @@ QUnit.module('web_editor', {}, function () {
 
             var form = await testUtils.createView({
                 View: FormView,
-                model: 'note.note',
+                model: 'project.task',
                 data: this.data,
                 arch: '<form>' +
                     '<field name="body" widget="html" style="height: 100px"/>' +
@@ -322,7 +322,7 @@ QUnit.module('web_editor', {}, function () {
 
             var form = await testUtils.createView({
                 View: FormView,
-                model: 'note.note',
+                model: 'project.task',
                 data: this.data,
                 arch: '<form>' +
                     '<field name="body" widget="html" style="height: 100px"/>' +
@@ -387,7 +387,7 @@ QUnit.module('web_editor', {}, function () {
 
             var form = await testUtils.createView({
                 View: FormView,
-                model: 'note.note',
+                model: 'project.task',
                 data: this.data,
                 arch: '<form>' +
                     '<field name="body" widget="html" style="height: 100px"/>' +
@@ -445,7 +445,7 @@ QUnit.module('web_editor', {}, function () {
 
             const form = await testUtils.createView({
                 View: FormView,
-                model: 'note.note',
+                model: 'project.task',
                 data: this.data,
                 arch: '<form>' +
                     '<field name="body" widget="html" style="height: 100px"/>' +
@@ -494,7 +494,7 @@ QUnit.module('web_editor', {}, function () {
 
             const form = await testUtils.createView({
                 View: FormView,
-                model: 'note.note',
+                model: 'project.task',
                 data: this.data,
                 arch: '<form>' +
                     '<field name="body" widget="html" style="height: 100px"/>' +
@@ -544,7 +544,7 @@ QUnit.module('web_editor', {}, function () {
 
             const form = await testUtils.createView({
                 View: FormView,
-                model: 'note.note',
+                model: 'project.task',
                 data: this.data,
                 arch: '<form>' +
                     '<field name="body" widget="html" style="height: 100px"/>' +
@@ -594,7 +594,7 @@ QUnit.module('web_editor', {}, function () {
 
             const form = await testUtils.createView({
                 View: FormView,
-                model: 'note.note',
+                model: 'project.task',
                 data: this.data,
                 arch: '<form>' +
                     '<field name="body" widget="html" style="height: 100px"/>' +
@@ -664,7 +664,7 @@ QUnit.module('web_editor', {}, function () {
 
             var form = await testUtils.createView({
                 View: FormView,
-                model: 'note.note',
+                model: 'project.task',
                 data: this.data,
                 arch: '<form>' +
                     '<field name="body" widget="html" style="height: 100px"/>' +
@@ -689,7 +689,7 @@ QUnit.module('web_editor', {}, function () {
         QUnit.test('Quick Edition: click on link inside html field', async function (assert) {
             assert.expect(6);
 
-            this.data['note.note'].records[0]['body'] = '<p><a href="#">hello</a> world</p>';
+            this.data['project.task'].records[0]['body'] = '<p><a href="#">hello</a> world</p>';
 
             const MULTI_CLICK_DELAY = 6498651354; // arbitrary large number to identify setTimeout calls
             let quickEditCB;
@@ -718,7 +718,7 @@ QUnit.module('web_editor', {}, function () {
 
             const form = await testUtils.createView({
                 View: FormView,
-                model: 'note.note',
+                model: 'project.task',
                 data: this.data,
                 arch: '<form>' +
                     '<field name="body" widget="html" style="height: 100px"/>' +
@@ -751,7 +751,7 @@ QUnit.module('web_editor', {}, function () {
 
             const form = await testUtils.createView({
                 View: FormView,
-                model: 'note.note',
+                model: 'project.task',
                 data: this.data,
                 arch: '<form>' +
                     '<field name="body" widget="html" style="height: 100px"/>' +
@@ -820,7 +820,7 @@ QUnit.module('web_editor', {}, function () {
 
             await makeView({
                 type: "form",
-                resModel: "note.note",
+                resModel: "project.task",
                 resId: 1,
                 serverData: { models: this.data },
                 arch: /* xml */ `<form><field name="body" widget="html" /></form>`,
@@ -846,7 +846,7 @@ QUnit.module('web_editor', {}, function () {
 
             var form = await testUtils.createView({
                 View: FormView,
-                model: 'note.note',
+                model: 'project.task',
                 data: this.data,
                 arch: '<form>' +
                     '<field name="body" widget="html" style="height: 100px" options="{\'cssReadonly\': \'template.assets\'}"/>' +
@@ -882,18 +882,18 @@ QUnit.module('web_editor', {}, function () {
             var multiLang = _t.database.multi_lang;
             _t.database.multi_lang = true;
 
-            this.data['note.note'].fields.body.translate = true;
+            this.data['project.task'].fields.body.translate = true;
 
             var form = await testUtils.createView({
                 View: FormView,
-                model: 'note.note',
+                model: 'project.task',
                 data: this.data,
                 arch: '<form string="Partners">' +
                     '<field name="body" widget="html"/>' +
                     '</form>',
                 res_id: 1,
                 mockRPC: function (route, args) {
-                    if (route === "/web/dataset/call_kw/note.note/get_field_translations") {
+                    if (route === "/web/dataset/call_kw/project.task/get_field_translations") {
                         assert.deepEqual(args.args, [[1],"body"], "should translate the body field of the record");
                         return Promise.resolve([
                             [{lang: "en_US", source: "first paragraph", value: "first paragraph"},

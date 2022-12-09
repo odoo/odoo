@@ -68,7 +68,7 @@
     </record>
 
     <record model="ir.rule" id="project_public_members_rule">
-        <field name="name">Project: employees: following required for follower-only projects</field>
+        <field name="name">Project: employees: following required for follower-only projects</field><!-- restriction to add on only read for group_user ??-->
         <field name="model_id" ref="model_project_project"/>
         <field name="domain_force">['|',
                                         ('privacy_visibility', '!=', 'followers'),
@@ -77,14 +77,8 @@
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>
     </record>
 
-    <record model="ir.rule" id="task_comp_rule">
-        <field name="name">Project/Task: multi-company</field>
-        <field name="model_id" ref="model_project_task"/>
-        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
-    </record>
-
-    <record model="ir.rule" id="task_visibility_rule">
-        <field name="name">Project/Task: employees: follow required for follower-only projects</field>
+    <record model="ir.rule" id="project_task_visibility_rule_group_user">
+        <field name="name">Task: employees: follow required for follower-only projects</field>
         <field name="model_id" ref="model_project_task"/>
         <field name="domain_force">[
             '|',
@@ -98,8 +92,30 @@
                     # to subscribe check access to the record, follower is not enough at creation
                     ('user_ids', 'in', user.id)
         ]</field>
+        <field name="perm_write">0</field>
+        <field name="perm_create">0</field>
+        <field name="perm_unlink">0</field>
         <field name="groups" eval="[(4,ref('base.group_user'))]"/>
     </record>
+
+    <record model="ir.rule" id="project_task_visibility_rule_group_project_user">
+        <field name="name">Task: project user: follow required for follower-only projects</field>
+        <field name="model_id" ref="model_project_task"/>
+        <field name="domain_force">[
+            '|',
+                '&amp;',
+                    ('project_id', '!=', False),
+                    '|',
+                        ('project_id.privacy_visibility', '!=', 'followers'),
+                        ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                '|',
+                    ('message_partner_ids', 'in', [user.partner_id.id]),
+                    # to subscribe check access to the record, follower is not enough at creation
+                    ('user_ids', 'in', user.id)
+        ]</field>
+        <field name="groups" eval="[(4,ref('project.group_project_user'))]"/>
+    </record>
+  
 
     <record model="ir.rule" id="project_manager_all_project_tasks_rule">
         <field name="name">Project/Task: project manager: see all tasks linked to a project or its own tasks</field>
@@ -111,23 +127,24 @@
         <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
     </record>
 
-    <record model="ir.rule" id="task_type_manager_rule">
-        <field name="name">Project/Task Type: manager sees all</field>
+<!--    <record model="ir.rule" id="task_type_manager_rule">
+        <field name="name">Project/Task Type: manager sees all note personal stages</field>
         <field name="model_id" ref="model_project_task_type"/>
-        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="domain_force">[('todo_stage', '=', False)]</field>
         <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
-    </record>
+    </record>--><!-- No reason that project manager has access to personal stages-->
 
-    <record model="ir.rule" id="task_type_visibility_rule">
+    <record model="ir.rule" id="task_type_visibility_rule"><!-- To check (remove r/w/u for internal ??)-->
         <field name="name">Project/Task Type: see own or unowned stages</field>
         <field name="model_id" ref="model_project_task_type"/>
-        <field name="domain_force">[('user_id', 'in', (False, user.id))]</field>
+        <field name="domain_force">[('todo_stage', '=', False), ('user_id', 'in', (False, user.id))]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
     </record>
 
     <record model="ir.rule" id="task_type_own_write_rule">
         <field name="name">Project/Task Type: write own stages</field>
         <field name="model_id" ref="model_project_task_type"/>
-        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="domain_force">[('todo_stage', '=', False), ('user_id', '=', user.id)]</field>
         <field name="perm_read" eval="False"/>
         <field name="perm_write" eval="True"/>
         <field name="perm_create" eval="True"/>
@@ -135,16 +152,31 @@
         <field name="groups" eval="[(4,ref('project.group_project_user'))]"/>
     </record>
 
+    <record model="ir.rule" id="tags_manager_edit_rule">
+        <field name="name">Project/Tags: only project managers can edit tags</field>
+        <field name="model_id" ref="model_project_tags"/>
+        <field name="domain_force">[('todo_tag', '=', False)]</field>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
+    </record>
+
+    <record model="ir.rule" id="tags_project_users_read_rule"> <!-- Add the same for portal users ??? -->
+        <field name="name">Project/Tags: only project users can see project tags</field>
+        <field name="model_id" ref="model_project_tags"/>
+        <field name="domain_force">[('todo_tag', '=', False)]</field>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4,ref('project.group_project_user'))]"/>
+    </record>
+
     <record model="ir.rule" id="report_project_task_user_report_comp_rule">
         <field name="name">Task Analysis multi-company</field>
         <field name="model_id" ref="model_report_project_task_user"/>
         <field name="domain_force">[('company_id', 'in', company_ids)]</field>
-    </record>
-
-    <record id="ir_rule_project_personal_stage_my" model="ir.rule">
-        <field name="name">Project: See my own personal stage</field>
-        <field name="model_id" ref="project.model_project_task_stage_personal"/>
-        <field name="domain_force">[('user_id', '=', user.id)]</field>
     </record>
 
     <record id="ir_rule_private_task" model="ir.rule">

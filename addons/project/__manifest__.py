@@ -18,6 +18,7 @@
         'web',
         'web_tour',
         'digest',
+        'note',
     ],
     'data': [
         'security/project_security.xml',
@@ -81,6 +82,9 @@
             'project/static/src/scss/portal_rating.scss',
             'project/static/src/scss/project_sharing_frontend.scss',
             'project/static/src/js/portal_rating.js',
+        ],
+        'note.assets_backend': [
+            'note/static/src/views/project_task_kanban/*',
         ],
         'web.qunit_suite_tests': [
             'project/static/tests/**/*.js',

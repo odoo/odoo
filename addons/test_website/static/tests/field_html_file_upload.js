@@ -92,9 +92,9 @@ QUnit.module('field html file upload', {
         const mockRPC = (route, args) => {
             if (route === "/web_editor/attachment/add_data") {
                 return Promise.resolve({"id": 5, "name": "test.jpg", "description": false, "mimetype": "image/jpeg", "checksum": "7951a43bbfb08fd742224ada280913d1897b89ab",
-                                        "url": false, "type": "binary", "res_id": 1, "res_model": "note.note", "public": false, "access_token": false,
+                                        "url": false, "type": "binary", "res_id": 1, "res_model": "project.task", "public": false, "access_token": false,
                                         "image_src": "/web/image/1-a0e63e61/test.jpg", "image_width": 1, "image_height": 1, "original_id": false
-                                        });
+                                        });/*TO CHECK - note.note replaced by project.task*/
             }
             else if (route === "/web/dataset/call_kw/ir.attachment/generate_access_token") {
                 return Promise.resolve(["129a52e1-6bf2-470a-830e-8e368b022e13"]);

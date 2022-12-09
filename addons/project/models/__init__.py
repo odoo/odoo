@@ -5,8 +5,6 @@ from . import analytic_account
 from . import project_milestone
 from . import project_project_stage
 from . import project_task_recurrence
-# `project_task_stage_personal` has to be loaded before `project`
-from . import project_task_stage_personal
 from . import project
 from . import project_collaborator
 from . import project_update
