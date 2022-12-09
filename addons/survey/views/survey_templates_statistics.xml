@@ -62,6 +62,7 @@
         <t t-set="comment_lines" t-value="question_data['comment_line_ids']"/>
         <t t-set="graph_data" t-value="question_data['graph_data']"/>
         <t t-set="table_data" t-value="question_data['table_data']"/>
+        <t t-set="question_has_image_answers" t-value="any(answer.value_image_filename for answer in question.suggested_answer_ids)"/>
 
         <div class="o_survey_results_question pb-5 border-bottom">
         <div class="row mb-3">
@@ -348,9 +349,9 @@
             </li>
             <li class="nav-item">
                 <a t-att-href="'#survey_data_question_%d' % question.id"
-                   t-att-aria-controls="'survey_data_question_%d' % question.id"
-                   t-attf-class="nav-link #{'active' if not question_answered else ''}"
-                   data-bs-toggle="tab" role="tab">
+                    t-att-aria-controls="'survey_data_question_%d' % question.id"
+                    t-attf-class="nav-link #{'active' if not question_answered else ''}"
+                    data-bs-toggle="tab" role="tab">
                     <i class="fa fa-list-alt me-1"/>Data
                 </a>
             </li>
@@ -366,11 +367,12 @@
                 <canvas/>
             </div>
             <div role="tabpanel" t-att-id="'survey_data_question_%d' % question.id"
-                 t-attf-class="tab-pane #{'active' if not question_answered else ''}">
+                t-attf-class="tab-pane #{'active' if not question_answered else ''}">
                 <table class="table table-hover">
                     <thead>
                         <tr>
                             <th>Answer</th>
+                            <th t-if="question_has_image_answers">Image</th>
                             <th>User Choice</th>
                             <th t-if="question.is_scored_question">Score</th>
                         </tr>
@@ -385,6 +387,11 @@
                                     <span t-else="" t-esc="choice_data['value']"/>
                                     <i t-if="question.is_scored_question and choice_data['suggested_answer'].is_correct" class="fa fa-check"/>
                                 </p>
+                            </td>
+                            <td t-if="question_has_image_answers">
+                               <div t-if="choice_data['suggested_answer'].value_image"
+                                    t-field="choice_data['suggested_answer'].value_image"
+                                    t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_64_max o_survey_answer_image", "alt-field": "name", "itemprop": "image"}'/>
                             </td>
                             <td class="o_survey_answer">
                                 <span t-esc="round(choice_data['count'] * 100.0/ (len(question_data['answer_line_done_ids']) or 1), 2)"></span> %
