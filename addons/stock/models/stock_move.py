@@ -85,7 +85,8 @@ class StockMove(models.Model):
     partner_id = fields.Many2one(
         'res.partner', 'Destination Address ',
         states={'done': [('readonly', True)]},
-        help="Optional address where goods are to be delivered, specifically used for allotment")
+        help="Optional address where goods are to be delivered, specifically used for allotment",
+        compute='_compute_partner_id', store=True, readonly=False)
     move_dest_ids = fields.Many2many(
         'stock.move', 'stock_move_move_rel', 'move_orig_id', 'move_dest_id', 'Destination Moves',
         copy=False,
@@ -298,6 +299,11 @@ class StockMove(models.Model):
         for move in self:
             move.product_qty = move.product_uom._compute_quantity(
                 move.product_uom_qty, move.product_id.uom_id, rounding_method='HALF-UP')
+
+    @api.depends('picking_id.partner_id')
+    def _compute_partner_id(self):
+        for move in self.filtered(lambda m: m.picking_id):
+            move.partner_id = move.picking_id.partner_id
 
     def _get_move_lines(self):
         """ This will return the move lines to consider when applying _quantity_done_compute on a stock.move.
