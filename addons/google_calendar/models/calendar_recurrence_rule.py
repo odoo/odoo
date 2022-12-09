@@ -176,6 +176,10 @@ class RecurrenceRule(models.Model):
         }
         return values
 
+    def _is_allowed_user(self):
+        base = self.base_event_id
+        return not base.user_id or base.user_id == self.env.user or not bool(base.user_id.sudo().google_calendar_token)
+
     def _notify_attendees(self):
         recurrences = self.filtered(
             lambda recurrence: recurrence.base_event_id.alarm_ids and (

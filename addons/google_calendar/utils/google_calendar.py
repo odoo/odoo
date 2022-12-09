@@ -70,7 +70,8 @@ class GoogleCalendarService():
     def patch(self, event_id, values, token=None, timeout=TIMEOUT):
         url = "/calendar/v3/calendars/primary/events/%s?sendUpdates=all" % event_id
         headers = {'Content-type': 'application/json', 'Authorization': 'Bearer %s' % token}
-        self.google_service._do_request(url, json.dumps(values), headers, method='PATCH', timeout=timeout)
+        status, _, _ = self.google_service._do_request(url, json.dumps(values), headers, method='PATCH', timeout=timeout)
+        return status
 
     @requires_auth_token
     def delete(self, event_id, token=None, timeout=TIMEOUT):

@@ -211,7 +211,7 @@ class Meeting(models.Model):
             values['visibility'] = self.privacy
         if not self.active:
             values['status'] = 'cancelled'
-        if self.user_id and self.user_id != self.env.user:
+        if self.user_id and self.user_id != self.env.user and not bool(self.user_id.sudo().google_calendar_token):
             values['extendedProperties']['shared']['%s_owner_id' % self.env.cr.dbname] = self.user_id.id
         elif not self.user_id:
             # We don't store the real owner identity (mail)
@@ -228,6 +228,9 @@ class Meeting(models.Model):
                 },
             }
         return values
+
+    def _is_allowed_user(self):
+        return not self.user_id or self.user_id == self.env.user or not bool(self.user_id.sudo().google_calendar_token)
 
     def _cancel(self):
         # only owner can delete => others refuse the event

@@ -461,3 +461,40 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         event.with_context(send_updates=False)._sync_odoo2google(self.google_service)
         self.call_post_commit_hooks()
         self.assertGoogleEventSendUpdates('none')
+
+    @patch.object(GoogleService, '_do_request')
+    def test_sync_event_with_other_users(self, mock_do_request):
+        first_user = self.env['res.users'].create({
+            'name': 'First User',
+            'login': 'first_user',
+            'email': 'first_user@example.com',
+            'groups_id': [(6, 0, self.env.user.groups_id.ids)],
+            'google_calendar_token': 'dummy-token'
+        })
+        second_user = self.env['res.users'].create({
+            'name': 'Second User',
+            'login': 'second_user',
+            'email': 'second_user@example.com',
+            'groups_id': [(6, 0, self.env.user.groups_id.ids)],
+            'google_calendar_token': 'dummy-token'
+        })
+        event = self.env['calendar.event'].with_user(first_user).sudo().create({
+            'name': "Event",
+            'allday': True,
+            'start': datetime(2020, 1, 15),
+            'stop': datetime(2020, 1, 15),
+            'need_sync': True,
+        })
+
+        event._sync_odoo2google(self.google_service)
+        self.call_post_commit_hooks()
+        self.assertFalse(event.need_sync)
+
+        event.with_user(second_user).sudo().write({
+            'start': datetime(2020, 2, 15),
+            'stop': datetime(2020, 2, 15),
+        })
+
+        event.with_user(second_user).sudo()._sync_odoo2google(self.google_service)
+        self.call_post_commit_hooks()
+        self.assertTrue(event.need_sync)

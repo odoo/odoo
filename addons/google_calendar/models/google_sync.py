@@ -77,7 +77,7 @@ class GoogleSync(models.AbstractModel):
 
         result = super().write(vals)
         for record in self.filtered('need_sync'):
-            if record.google_id:
+            if record.google_id and record._is_allowed_user():
                 record._google_patch(google_service, record.google_id, record._google_values(), timeout=3)
 
         return result
@@ -133,7 +133,7 @@ class GoogleSync(models.AbstractModel):
             record._google_delete(google_service, record.google_id)
         for record in new_records:
             record._google_insert(google_service, record._google_values())
-        for record in updated_records:
+        for record in updated_records.filtered(lambda r: r._is_allowed_user()):
             record._google_patch(google_service, record.google_id, record._google_values())
 
     def _cancel(self):
@@ -190,8 +190,9 @@ class GoogleSync(models.AbstractModel):
     def _google_patch(self, google_service: GoogleCalendarService, google_id, values, timeout=TIMEOUT):
         with google_calendar_token(self.env.user.sudo()) as token:
             if token:
-                google_service.patch(google_id, values, token=token, timeout=timeout)
-                self.need_sync = False
+                status = google_service.patch(google_id, values, token=token, timeout=timeout)
+                if status == 200:
+                    self.need_sync = False
 
     @after_commit
     def _google_insert(self, google_service: GoogleCalendarService, values, timeout=TIMEOUT):
@@ -242,6 +243,13 @@ class GoogleSync(models.AbstractModel):
         """Implements this method to return a dict with values formatted
         according to the Google Calendar API
         :return: dict of Google formatted values
+        """
+        raise NotImplementedError()
+
+    def _is_allowed_user(self):
+        """If the event's owner is another user who exists in Odoo and has synced with Google,
+        the synchronization with Google must be done with its user with Google synchronization cron.
+        Return a boolean that shows the user can sync the event with Google
         """
         raise NotImplementedError()
 
