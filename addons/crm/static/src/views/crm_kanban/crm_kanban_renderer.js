@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
-import { session } from "@web/session";
 import { useService } from "@web/core/utils/hooks";
 
 const { onWillStart } = owl;
@@ -24,8 +23,8 @@ export class CrmKanbanRenderer extends KanbanRenderer {
         const value = group.getAggregates(rrField.name);
         const title = rrField.string || this.env._t("Count");
         let currency = false;
-        if (value && rrField.currency_field) {
-            currency = session.currencies[session.company_currency_id];
+        if (value && rrField.currency_field && group.list.records.length) {
+            currency = group.list.records[0].data[rrField.currency_field];
         }
         return { value, currency, title };
     }

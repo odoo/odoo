@@ -55,7 +55,6 @@
 
                     <t t-foreach="totals.groups_by_subtotal[subtotal['name']]" t-as="taxGroup" t-key="taxGroup.group_key">
                         <TaxGroupComponent
-                            currency="currency"
                             taxGroup="taxGroup"
                             isReadonly="readonly"
                             onChangeTaxGroup.bind="_onChangeTaxValueByTaxGroup"

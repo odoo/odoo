@@ -9,7 +9,6 @@ import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { useSortable } from "@web/core/utils/sortable";
 import { sprintf } from "@web/core/utils/strings";
-import { session } from "@web/session";
 import { isAllowedDateField } from "@web/views/relational_model";
 import { isNull, isRelational } from "@web/views/utils";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
@@ -284,8 +283,8 @@ export class KanbanRenderer extends Component {
         const value = group.getAggregates(sumField && sumField.name);
         const title = sumField ? sumField.string : this.env._t("Count");
         let currency = false;
-        if (sumField && value && sumField.currency_field) {
-            currency = session.currencies[session.company_currency_id];
+        if (sumField && value && sumField.currency_field && group.list.records.length) {
+            currency = group.list.records[0].data[sumField.currency_field];
         }
         return { value, currency, title };
     }

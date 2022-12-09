@@ -1,6 +1,5 @@
 /** @odoo-module alias=web.SampleServer **/
 
-    import session from 'web.session';
     import utils from 'web.utils';
     import Registry from 'web.Registry';
     import viewUtils from 'web.viewUtils';
@@ -249,7 +248,7 @@
                     return this._getRandomInt(SampleServer.MAX_MONETARY);
                 case "many2one":
                     if (field.relation === 'res.currency') {
-                        return session.company_currency_id;
+                        return 1;
                     }
                     if (field.relation === 'ir.attachment') {
                         return false;
