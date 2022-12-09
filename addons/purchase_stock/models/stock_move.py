@@ -196,3 +196,6 @@ class StockMove(models.Model):
                 and self.warehouse_id
                 and self.location_dest_id not in self.env["stock.location"].search([("id", "child_of", self.warehouse_id.view_location_id.id)])
         )
+
+    def _get_all_related_aml(self):
+        return super()._get_all_related_aml() | self.purchase_line_id.invoice_lines.move_id.line_ids
