@@ -26,6 +26,11 @@ class StockMove(models.Model):
     def _prepare_merge_negative_moves_excluded_distinct_fields(self):
         return super()._prepare_merge_negative_moves_excluded_distinct_fields() + ['created_purchase_line_id']
 
+    def _compute_partner_id(self):
+        # dropshipped moves should have their partner_ids directly set
+        not_dropshipped_moves = self.filtered(lambda m: not m._is_dropshipped())
+        super(StockMove, not_dropshipped_moves)._compute_partner_id()
+
     def _get_price_unit(self):
         """ Returns the unit price for the move"""
         self.ensure_one()
