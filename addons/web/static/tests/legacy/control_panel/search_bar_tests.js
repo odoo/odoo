@@ -675,4 +675,28 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
                 '[["ref","ilike","ref002"]]',
             ]);
         });
+
+        QUnit.test('globalContext keys in name_search', async function (assert) {
+            assert.expect(1);
+
+            serverData.models.partner.fields.company = { string: "Company", type: "many2one", relation: "partner" };
+            serverData.actions[1].context = { specialKey: "ABCD" };
+            serverData.views['partner,false,search'] = `
+                <search>
+                    <field name="company"/>
+                </search>
+            `;
+
+            const webClient = await createWebClient({
+                serverData,
+                mockRPC(_, args) {
+                    if (args.method  === "name_search") {
+                        assert.strictEqual(args.kwargs.context.specialKey, "ABCD");
+                    }
+                }
+            });
+            await doAction(webClient, 1);
+            await testUtils.controlPanel.editSearch(target, "F");
+            await testUtils.dom.triggerEvent(target.querySelector(".o_searchview input"), "keydown", { key: "ArrowRight" });
+        });
 });

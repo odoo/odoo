@@ -170,7 +170,7 @@ odoo.define('web.SearchBar', function (require) {
                 const results = await this.rpc({
                     kwargs: {
                         args,
-                        context: source.context,
+                        context: { ...this.model.config.context, ...source.context },
                         limit: 8,
                         name: this.state.inputValue.trim(),
                     },
