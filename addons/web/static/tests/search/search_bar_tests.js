@@ -1029,4 +1029,30 @@ QUnit.module("Search", (hooks) => {
         assert.containsOnce(target, ".o_control_panel");
         assert.strictEqual(getFacetTexts(target)[0].replace("\n", ""), "CompanyFirst record");
     });
+
+    QUnit.test("globalContext keys in name_search", async function (assert) {
+        assert.expect(1);
+
+        await makeWithSearch({
+            serverData,
+            resModel: "partner",
+            Component: ControlPanel,
+            searchMenuTypes: [],
+            searchViewId: false,
+            searchViewArch: `
+                <search>
+                    <field name="company"/>
+                </search>
+            `,
+            context: { specialKey: "ABCD" },
+            mockRPC(_, args) {
+                if (args.method === "name_search") {
+                    assert.strictEqual(args.kwargs.context.specialKey, "ABCD");
+                }
+            },
+        });
+
+        await editSearch(target, "F");
+        await triggerEvent(target, ".o_searchview input", "keydown", { key: "ArrowRight" });
+    });
 });
