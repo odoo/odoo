@@ -77,6 +77,17 @@
                     <field name="color"/>
                     <field name="total_employee"/>
                     <templates>
+                        <t t-name="kanban-menu" t-if="!selection_mode">
+                            <div class="o_kanban_card_manage_section">
+                                <div role="menuitem" class="o_kanban_manage_reports">
+                                    <div class="o_kanban_card_manage_title ps-4 pb-1">
+                                        <span class="fw-bolder">Reporting</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <a t-if="widget.editable" role="menuitem" class="dropdown-item" type="edit">Configuration</a>
+                            <ul t-if="widget.editable" class="oe_kanban_colorpicker" data-field="color" role="menu"/>
+                        </t>
                         <t t-name="kanban-box">
                             <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
                                 <div t-attf-class="o_kanban_card_header">
@@ -87,9 +98,6 @@
                                                 <i class="fa fa-building-o" role="img" aria-label="Company" title="Company"/> <field name="company_id"/>
                                             </small>
                                         </div>
-                                    </div>
-                                    <div class="o_kanban_manage_button_section" t-if="!selection_mode">
-                                        <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
                                     </div>
                                 </div>
                                 <div class="container o_kanban_card_content" t-if="!selection_mode">
@@ -106,17 +114,6 @@
                                          style="justify-content: end">
                                         <!-- placeholder for bottom content -->
                                     </div>
-                                </div>
-                                <div class="o_kanban_card_manage_pane dropdown-menu" role="menu">
-                                    <div class="o_kanban_card_manage_section">
-                                        <div role="menuitem" class="o_kanban_manage_reports">
-                                            <div class="o_kanban_card_manage_title ps-4 pb-1">
-                                                <span class="fw-bolder">Reporting</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <a t-if="widget.editable" role="menuitem" class="dropdown-item" type="edit">Configuration</a>
-                                    <ul t-if="widget.editable" class="oe_kanban_colorpicker" data-field="color" role="menu"/>
                                 </div>
                             </div>
                         </t>

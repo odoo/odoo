@@ -106,6 +106,10 @@
                 <field name="state"/>
                 <field name="supported_attachment_ids_count"/>
                 <templates>
+                    <t t-name="kanban-menu" groups="base.group_user">
+                        <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit Time Off</a>
+                        <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                    </t>
                     <t t-name="kanban-box">
                         <div class="d-flex flex-column justify-content-between oe_kanban_global_click container">
                             <div class="row g-0">
@@ -114,15 +118,6 @@
                                     <strong class="o_kanban_record_title"><t t-esc="record.employee_id.value"/></strong>
                                     <div class="text-muted o_kanban_record_subtitle">
                                         <t t-esc="record.holiday_status_id.value"/>
-                                    </div>
-                                    <div class="o_dropdown_kanban dropdown" groups="base.group_user">
-                                        <a role="button" class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
-                                            <span class="fa fa-ellipsis-v"/>
-                                        </a>
-                                        <div class="dropdown-menu" role="menu">
-                                            <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit Time Off</a>
-                                            <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
-                                        </div>
                                     </div>
                                     <div>
                                         <span class="text-muted">from </span>

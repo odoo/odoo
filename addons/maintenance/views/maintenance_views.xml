@@ -137,19 +137,13 @@
                           <li t-if="record.user_id.raw_value"><b>Request to:</b> <t t-esc="record.user_id.value"/></li>
                        </ul>
                     </t>
+                    <t t-name="kanban-menu">
+                        <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit...</a></t>
+                        <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                    </t>
                     <t t-name="kanban-box">
                         <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click oe_semantic_html_override">
-                            <div class="o_dropdown_kanban dropdown">
-
-                                <a role="button" class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" data-bs-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
-                                    <span class="fa fa-ellipsis-v"/>
-                                </a>
-                                <div class="dropdown-menu" role="menu">
-                                    <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit...</a></t>
-                                    <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
-                                    <ul class="oe_kanban_colorpicker" data-field="color"/>
-                                </div>
-                            </div>
                             <div class="oe_kanban_content" tooltip="kanban-tooltip">
                                 <div class="o_kanban_record_top">
                                     <b class="o_kanban_record_title"><field name="name"/></b>
@@ -437,21 +431,15 @@
                             <li t-if="record.model.raw_value"><b>Model Number:</b> <t t-esc="record.model.value"/></li>
                         </ul>
                     </t>
+                    <t t-name="kanban-menu">
+                        <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit...</a></t>
+                        <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                        <div role="separator" class="dropdown-divider"></div>
+                        <div role="separator" class="dropdown-header">Record Colour</div>
+                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                    </t>
                     <t t-name="kanban-box">
                         <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click">
-                            <div class="o_dropdown_kanban dropdown" t-if="!selection_mode">
-
-                                <a role="button" class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" data-bs-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
-                                    <span class="fa fa-ellipsis-v"/>
-                                </a>
-                                <div class="dropdown-menu" role="menu">
-                                    <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit...</a></t>
-                                    <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
-                                    <div role="separator" class="dropdown-divider"></div>
-                                    <div role="separator" class="dropdown-header">Record Colour</div>
-                                    <ul class="oe_kanban_colorpicker" data-field="color"/>
-                                </div>
-                            </div>
                             <div class="oe_kanban_content" tooltip="kanban-tooltip">
                                 <div class="o_kanban_record_top">
                                     <b class="o_kanban_record_title"><field name="name"/><small><span t-if="record.model.raw_value"> (<field name="model"/>)</span></small></b>
@@ -825,6 +813,55 @@
                 <field name="todo_request_count_block"/>
                 <field name="todo_request_count_unscheduled"/>
                 <templates>
+                    <t t-name="kanban-menu">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
+                                    <div role="menuitem" class="o_kanban_card_manage_title">
+                                        <span>Requests</span>
+                                    </div>
+                                    <div role="menuitem">
+                                        <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action">
+                                            All
+                                        </a>
+                                    </div>
+                                    <div role="menuitem">
+                                        <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_todo': 1}">
+                                            To Do
+                                        </a>
+                                    </div>
+                                    <div role="menuitem">
+                                        <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_progress': 1}">
+                                            In Progress
+                                        </a>
+                                    </div>
+                                    <div role="menuitem">
+                                        <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_done': 1}">
+                                            Done
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">
+                                    <div role="menuitem" class="o_kanban_card_manage_title">
+                                        <span>Reporting</span>
+                                    </div>
+                                    <div role="menuitem">
+                                        <a name="%(maintenance_request_action_reports)d" type="action" context="{'search_default_maintenance_team_id': active_id}">
+                                        Maintenance Requests
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
+                                <div class="col-8" role="menuitem" aria-haspopup="true">
+                                    <ul role="menu" class="oe_kanban_colorpicker" data-field="color"/>
+                                </div>
+                                <div role="menuitem" class="col-4">
+                                    <a type="edit" class="dropdown-item">Configuration</a>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
                     <t t-name="kanban-box">
                         <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
                             <div t-attf-class="o_kanban_card_header">
@@ -833,9 +870,6 @@
                                         <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action">
                                             <field name="name"/>
                                         </a></div>
-                                </div>
-                                <div class="o_kanban_manage_button_section">
-                                    <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
                                 </div>
                             </div>
                             <div class="container o_kanban_card_content">
@@ -870,52 +904,6 @@
                                                 Unscheduled
                                             </a>
                                         </div>
-                                    </div>
-                                </div>
-                            </div><div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
-                                <div class="row">
-                                    <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
-                                        <div role="menuitem" class="o_kanban_card_manage_title">
-                                            <span>Requests</span>
-                                        </div>
-                                        <div role="menuitem">
-                                            <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action">
-                                                All
-                                            </a>
-                                        </div>
-                                        <div role="menuitem">
-                                            <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_todo': 1}">
-                                                To Do
-                                            </a>
-                                        </div>
-                                        <div role="menuitem">
-                                            <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_progress': 1}">
-                                                In Progress
-                                            </a>
-                                        </div>
-                                        <div role="menuitem">
-                                            <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_done': 1}">
-                                                Done
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">
-                                        <div role="menuitem" class="o_kanban_card_manage_title">
-                                            <span>Reporting</span>
-                                        </div>
-                                        <div role="menuitem">
-                                            <a name="%(maintenance_request_action_reports)d" type="action" context="{'search_default_maintenance_team_id': active_id}">
-                                            Maintenance Requests
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
-                                    <div class="col-8" role="menuitem" aria-haspopup="true">
-                                        <ul role="menu" class="oe_kanban_colorpicker" data-field="color"/>
-                                    </div>
-                                    <div role="menuitem" class="col-4">
-                                        <a type="edit" class="dropdown-item">Configuration</a>
                                     </div>
                                 </div>
                             </div>

@@ -195,16 +195,11 @@
             <kanban>
                 <field name="color"/>
                 <templates>
+                    <t t-name="kanban-menu" t-if="!selection_mode">
+                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                    </t>
                     <t t-name="kanban-box">
                         <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} oe_kanban_global_click">
-                            <div class="o_dropdown_kanban dropdown" t-if="!selection_mode">
-                                <a class="dropdown-toggle o-no-caret btn" role="button" data-bs-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
-                                    <span class="fa fa-ellipsis-v"/>
-                                </a>
-                                <div class="dropdown-menu" role="menu">
-                                    <ul class="oe_kanban_colorpicker" data-field="color"/>
-                                </div>
-                            </div>
                             <div class="oe_kanban_content">
                                 <div>
                                     <strong class="o_kanban_record_title"><span><field name="name"/></span></strong>

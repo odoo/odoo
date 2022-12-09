@@ -10,7 +10,7 @@ tour.register('burndown_chart_tour', {
     trigger: '.o_app[data-menu-xmlid="project.menu_main_pm"]',
 }, {
     content: 'Open "Burndown Chart Test" project menu',
-    trigger: '.o_kanban_record:contains("Burndown Chart Test") .o_kanban_manage_toggle_button',
+    trigger: '.o_kanban_record:contains("Burndown Chart Test") .o_dropdown_kanban .dropdown-toggle',
 }, {
     content: `Open "Burndown Chart Test" project's "Burndown Chart" view`,
     trigger: '.o_kanban_record:contains("Burndown Chart Test") .o_kanban_manage_reporting div[role="menuitem"] a:contains("Burndown Chart")',
