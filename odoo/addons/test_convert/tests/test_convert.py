@@ -77,7 +77,7 @@ class TestEvalXML(common.TransactionCase):
             self.eval_xml(Field('test_nofile.txt', type='file'), obj)
 
     def test_function(self):
-        obj = xml_import(self.cr, 'test_convert', None, 'init')
+        obj = xml_import(self.env, 'test_convert', None, 'init')
 
         # pass args in eval
         xml = E.function(
@@ -126,7 +126,7 @@ class TestEvalXML(common.TransactionCase):
         self.assertEqual(kwargs, {})
 
     def test_function_kwargs(self):
-        obj = xml_import(self.cr, 'test_convert', None, 'init')
+        obj = xml_import(self.env, 'test_convert', None, 'init')
 
         # pass args and kwargs in child elements
         xml = E.function(
@@ -175,7 +175,7 @@ class TestEvalXML(common.TransactionCase):
         self.assertEqual(kwargs, {})
 
     def test_function_function(self):
-        obj = xml_import(self.cr, 'test_convert', None, 'init')
+        obj = xml_import(self.env, 'test_convert', None, 'init')
 
         xml = E.function(
             E.function(model="test_convert.usered", name="search", eval="[[]]"),
@@ -210,7 +210,7 @@ class TestEvalXML(common.TransactionCase):
                 </field>
             </record>
         """.strip())
-        obj = xml_import(self.cr, 'test_convert', None, 'init')
+        obj = xml_import(self.env, 'test_convert', None, 'init')
         obj._tag_record(xml)
 
         # check that field 'usered_ids' is not passed

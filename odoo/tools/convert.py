@@ -577,10 +577,10 @@ form: module.record_id""" % (xml_id,)
     def noupdate(self):
         return self._noupdate[-1]
 
-    def __init__(self, cr, module, idref, mode, noupdate=False, xml_filename=None):
+    def __init__(self, env, module, idref, mode, noupdate=False, xml_filename=None):
         self.mode = mode
         self.module = module
-        self.envs = [odoo.api.Environment(cr, SUPERUSER_ID, {})]
+        self.envs = [env]
         self.idref = {} if idref is None else idref
         self._noupdate = [noupdate]
         self.xml_filename = xml_filename
@@ -599,27 +599,27 @@ form: module.record_id""" % (xml_id,)
         self._tag_root(de)
     DATA_ROOTS = ['odoo', 'data', 'openerp']
 
-def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kind=None, pathname=None):
+def convert_file(env, module, filename, idref, mode='update', noupdate=False, kind=None, pathname=None):
     if pathname is None:
         pathname = os.path.join(module, filename)
     ext = os.path.splitext(filename)[1].lower()
 
     with file_open(pathname, 'rb') as fp:
         if ext == '.csv':
-            convert_csv_import(cr, module, pathname, fp.read(), idref, mode, noupdate)
+            convert_csv_import(env, module, pathname, fp.read(), idref, mode, noupdate)
         elif ext == '.sql':
-            convert_sql_import(cr, fp)
+            convert_sql_import(env, fp)
         elif ext == '.xml':
-            convert_xml_import(cr, module, fp, idref, mode, noupdate)
+            convert_xml_import(env, module, fp, idref, mode, noupdate)
         elif ext == '.js':
             pass # .js files are valid but ignored here.
         else:
             raise ValueError("Can't load unknown file type %s.", filename)
 
-def convert_sql_import(cr, fp):
-    cr.execute(fp.read()) # pylint: disable=sql-injection
+def convert_sql_import(env, fp):
+    env.cr.execute(fp.read()) # pylint: disable=sql-injection
 
-def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
+def convert_csv_import(env, module, fname, csvcontent, idref=None, mode='init',
         noupdate=False):
     '''Import csv file :
         quote: "
@@ -647,14 +647,13 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         'install_filename': fname,
         'noupdate': noupdate,
     }
-    env = odoo.api.Environment(cr, SUPERUSER_ID, context)
-    result = env[model].load(fields, datas)
+    result = env[model].with_context(**context).load(fields, datas)
     if any(msg['type'] == 'error' for msg in result['messages']):
         # Report failed import and abort module install
         warning_msg = "\n".join(msg['message'] for msg in result['messages'])
         raise Exception(_('Module loading %s failed: file %s could not be processed:\n %s') % (module, fname, warning_msg))
 
-def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=False, report=None):
+def convert_xml_import(env, module, xmlfile, idref=None, mode='init', noupdate=False, report=None):
     doc = etree.parse(xmlfile)
     schema = os.path.join(config['root_path'], 'import_xml.rng')
     relaxng = etree.RelaxNG(etree.parse(schema))
@@ -675,5 +674,5 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=Fa
         xml_filename = xmlfile
     else:
         xml_filename = xmlfile.name
-    obj = xml_import(cr, module, idref, mode, noupdate=noupdate, xml_filename=xml_filename)
+    obj = xml_import(env, module, idref, mode, noupdate=noupdate, xml_filename=xml_filename)
     obj.parse(doc.getroot())

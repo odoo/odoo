@@ -99,7 +99,7 @@ class TemplateResetMixin(models.AbstractModel):
                     # We don't have a way to pass context while loading record from a file, so we use this hack
                     # to pass the context key that is needed to reset the fields not available in data file
                     rec.set('context', json.dumps({'reset_template': 'True'}))
-                    obj = xml_import(template.env.cr, module, {}, mode='init', xml_filename=fullpath)
+                    obj = xml_import(template.env, module, {}, mode='init', xml_filename=fullpath)
                     obj._tag_record(rec)
                     template._override_translation_term(module, [xml_id, external_id])
             else:
