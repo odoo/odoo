@@ -1462,3 +1462,69 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         self.assertEqual(svl_diff_01.stock_valuation_layer_id, svl_r01)
         self.assertEqual(svl_diff_02.stock_valuation_layer_id, svl_r01)
         self.assertEqual(svl_diff_03.stock_valuation_layer_id, svl_r02)
+
+    def test_partial_bills_and_reconciliation(self):
+        """
+        Fifo, Auto
+        Receive 5
+        Deliver 5
+        Bill 1 (with price diff)
+        Bill 4 (with price diff)
+        The lines in stock input account should be reconciled
+        """
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
+
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        stock_location = warehouse.lot_stock_id
+        customer_location = self.env.ref('stock.stock_location_customers')
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.product_qty = 5
+            po_line.price_unit = 50.0
+        po = po_form.save()
+        po.button_confirm()
+
+        receipt = po.picking_ids[0]
+        receipt.move_ids._set_quantities_to_reservation()
+        receipt.button_validate()
+
+        delivery = self.env['stock.picking'].create({
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'picking_type_id': warehouse.out_type_id.id,
+            'move_ids': [(0, 0, {
+                'name': self.product1.name,
+                'product_id': self.product1.id,
+                'product_uom_qty': 5,
+                'location_id': stock_location.id,
+                'location_dest_id': customer_location.id,
+            })],
+        })
+        delivery.action_confirm()
+        delivery.move_ids._set_quantities_to_reservation()
+        delivery.button_validate()
+
+        bill01_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        bill01_form.invoice_date = bill01_form.date
+        bill01_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-po.id)
+        bill01 = bill01_form.save()
+        bill01.invoice_line_ids.quantity = 1
+        bill01.invoice_line_ids.price_unit = 60
+        bill01.action_post()
+
+        bill02_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        bill02_form.invoice_date = bill02_form.date
+        bill02_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-po.id)
+        bill02 = bill02_form.save()
+        bill02.invoice_line_ids.quantity = 4
+        bill02.invoice_line_ids.price_unit = 60
+        bill02.action_post()
+
+        input_amls = (bill01 + bill02).line_ids.filtered(lambda aml: aml.account_id == self.stock_input_account)
+        full_reconcile = input_amls[0].full_reconcile_id
+        self.assertTrue(full_reconcile)
+        self.assertTrue(all(aml.full_reconcile_id == full_reconcile for aml in input_amls))
