@@ -14898,7 +14898,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(finalWidths[2], originalWidths[2]);
     });
 
-    QUnit.test("editable list: resize column headers with max-width", async function (assert) {
+    QUnit.test("editable list: resize column headers", async function (assert) {
         // This test will ensure that, on resize list header,
         // the resized element have the correct size and other elements are not resized
         serverData.models.foo.records[0].foo = "a".repeat(200);
@@ -14928,12 +14928,10 @@ QUnit.module("Views", (hooks) => {
 
         const thFinalWidth = th.getBoundingClientRect().width;
         const thNextFinalWidth = thNext.getBoundingClientRect().width;
-        // const thWidthDiff = thExpectedWidth - thFinalWidth;
 
-        assert.strictEqual(
-            Math.floor(thFinalWidth),
-            Math.floor(thExpectedWidth),
-            "Wrong width on resize"
+        assert.ok(
+            Math.abs(Math.floor(thFinalWidth) - Math.floor(thExpectedWidth)) <= 1,
+            `Wrong width on resize (final: ${thFinalWidth}, expected: ${thExpectedWidth})`
         );
         assert.strictEqual(
             Math.floor(thNextOriginalWidth),
