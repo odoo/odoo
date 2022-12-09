@@ -54,7 +54,7 @@ class TestMassMailPerformance(TestMassMailPerformanceBase):
         self.assertEqual(mailing.delivered, 50)
 
         # runbot needs +3 compared to local
-        with self.assertQueryCount(__system__=69, marketing=67):  # tm 66/66
+        with self.assertQueryCount(__system__=68, marketing=67):  # tm 66/66
             self.env['mail.mail'].sudo().search([('to_delete', '=', True)]).unlink()
 
         mails = self.env['mail.mail'].sudo().search([('mailing_id', '=', mailing.id)])
@@ -94,14 +94,14 @@ class TestMassMailBlPerformance(TestMassMailPerformanceBase):
         })
 
         # runbot needs +2 compared to local
-        with self.assertQueryCount(__system__=488, marketing=489):  # tm 485/486
+        with self.assertQueryCount(__system__=487, marketing=489):  # tm 485/486
             mailing.action_send_mail()
 
         self.assertEqual(mailing.sent, 50)
         self.assertEqual(mailing.delivered, 50)
 
         # runbot needs +3 compared to local
-        with self.assertQueryCount(__system__=69, marketing=67):  # tm 66/66
+        with self.assertQueryCount(__system__=68, marketing=67):  # tm 66/66
             self.env['mail.mail'].sudo().search([('to_delete', '=', True)]).unlink()
 
         cancelled_mail_count = self.env['mail.mail'].sudo().search([('mailing_id', '=', mailing.id)])

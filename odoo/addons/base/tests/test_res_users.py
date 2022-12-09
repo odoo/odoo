@@ -405,7 +405,7 @@ class TestUsersGroupWarning(TransactionCase):
         # 97 requests if only base is installed
         # 412 runbot community
         # 549 runbot enterprise
-        with self.assertQueryCount(__system__=549), \
+        with self.assertQueryCount(__system__=420), \
              Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
             UserForm._values[self.sales_categ_field] = False
             UserForm._perform_onchange([self.sales_categ_field])
@@ -427,7 +427,7 @@ class TestUsersGroupWarning(TransactionCase):
         # 97 requests if only base is installed
         # 412 runbot community
         # 549 runbot enterprise
-        with self.assertQueryCount(__system__=549), \
+        with self.assertQueryCount(__system__=428), \
              Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
             UserForm._values[self.sales_categ_field] = self.group_sales_user.id
             UserForm._perform_onchange([self.sales_categ_field])
@@ -451,7 +451,7 @@ class TestUsersGroupWarning(TransactionCase):
         # 101 requests if only base is installed
         # 416 runbot community
         # 553 runbot enterprise
-        with self.assertQueryCount(__system__=553), \
+        with self.assertQueryCount(__system__=430), \
              Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
             UserForm._values[self.sales_categ_field] = self.group_sales_user.id
             UserForm._values[self.project_categ_field] = self.group_project_user.id
@@ -479,7 +479,7 @@ class TestUsersGroupWarning(TransactionCase):
         # 98 requests if only base is installed
         # 413 runbot community
         # 550 runbot enterprise
-        with self.assertQueryCount(__system__=550), \
+        with self.assertQueryCount(__system__=429), \
              Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
             UserForm._values[self.timesheets_categ_field] = self.group_timesheets_user_own_timesheet.id
             UserForm._perform_onchange([self.timesheets_categ_field])
@@ -500,7 +500,7 @@ class TestUsersGroupWarning(TransactionCase):
         # 83 requests if only base is installed
         # 397 runbot community
         # 534 runbot enterprise
-        with self.assertQueryCount(__system__=534), \
+        with self.assertQueryCount(__system__=412), \
              Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
             UserForm._values[self.field_service_categ_field] = self.group_field_service_user.id
             UserForm._perform_onchange([self.field_service_categ_field])
