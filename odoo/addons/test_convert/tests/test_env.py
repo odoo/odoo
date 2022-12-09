@@ -21,7 +21,7 @@ function = E.function
 class TestEnv(common.TransactionCase):
     def setUp(self):
         super().setUp()
-        self._importer = xml_import(self.env.cr, 'test_convert', None, 'init')
+        self._importer = xml_import(self.env, 'test_convert', None, 'init')
 
     def importer(self, doc):
         etree.RelaxNG(

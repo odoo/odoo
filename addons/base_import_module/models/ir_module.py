@@ -83,7 +83,7 @@ class IrModule(models.Model):
                     noupdate = True
                 pathname = opj(path, filename)
                 idref = {}
-                convert_file(self.env.cr, module, filename, idref, mode=mode, noupdate=noupdate, kind=kind, pathname=pathname)
+                convert_file(self.env, module, filename, idref, mode=mode, noupdate=noupdate, kind=kind, pathname=pathname)
 
         path_static = opj(path, 'static')
         IrAttachment = self.env['ir.attachment']
