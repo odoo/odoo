@@ -4,7 +4,13 @@
 from collections import defaultdict
 
 from odoo import api, models
+<<<<<<< HEAD
 from odoo.tools import float_is_zero, format_date, float_round, float_compare
+||||||| parent of 560b48990da (temp)
+from odoo.tools import float_is_zero, format_date, float_round
+=======
+from odoo.tools import float_compare, float_is_zero, format_date, float_round
+>>>>>>> 560b48990da (temp)
 
 
 class StockForecasted(models.AbstractModel):
@@ -270,10 +276,48 @@ class StockForecasted(models.AbstractModel):
         )
 
         outs = self.env['stock.move'].search(out_domain, order='reservation_date, priority desc, date, id')
+<<<<<<< HEAD
         outs_per_product = defaultdict(list)
         for out in outs:
             outs_per_product[out.product_id.id].append(out)
 
+||||||| parent of 560b48990da (temp)
+        reserved_outs = self.env['stock.move'].search(
+            out_domain + [('state', 'in', ('partially_available', 'assigned'))],
+            order='priority desc, date, id')
+        outs_per_product = outs.grouped('product_id')
+        reserved_outs_per_product = reserved_outs.grouped('product_id')
+=======
+        outs_per_product = defaultdict(list)
+        reserved_outs = self.env['stock.move']
+        reserved_outs_quantitites = defaultdict(float)
+        reserved_outs_per_product = defaultdict(list)
+        outs_reservation = {}
+        for out in outs:
+            outs_per_product[out.product_id.id].append(out)
+            out_qty_reserved = 0
+            moves_orig = out._get_moves_orig()
+            for move in moves_orig:
+                rounding = move.product_id.uom_id.rounding
+                move_qty_reserved = sum(move.move_line_ids.mapped('reserved_qty'))
+                if float_is_zero(move_qty_reserved, precision_rounding=rounding):
+                    continue
+                already_used_qty = reserved_outs_quantitites.get(move, 0)
+                remaining_qty = move_qty_reserved - already_used_qty
+                if float_compare(remaining_qty, 0, precision_rounding=rounding) <= 0:
+                    continue
+                qty_reserved = min(remaining_qty, out.product_qty - out_qty_reserved)
+                out_qty_reserved += qty_reserved
+                reserved_outs_quantitites[move] += qty_reserved
+                if float_compare(out_qty_reserved, out.product_qty, precision_rounding=rounding) >= 0:
+                    break
+            if not float_is_zero(out_qty_reserved, out.product_id.uom_id.rounding):
+                reserved_outs |= out
+                reserved_outs_per_product[out.product_id.id].append(out)
+                outs_reservation[out.id] = out_qty_reserved
+        # Different sort than unreserved outs
+        reserved_outs = self.env['stock.move'].search([('id', 'in', reserved_outs.ids)], order="priority desc, date, id")
+>>>>>>> 560b48990da (temp)
         ins = self.env['stock.move'].search(in_domain, order='priority desc, date, id')
         ins_per_product = defaultdict(list)
         for in_ in ins:
@@ -305,7 +349,25 @@ class StockForecasted(models.AbstractModel):
         lines = []
         for product in (ins | outs).product_id:
             product_rounding = product.uom_id.rounding
+<<<<<<< HEAD
+||||||| parent of 560b48990da (temp)
+            for out in reserved_outs_per_product.get(product, []):
+                # Reconcile with reserved stock.
+                reserved = out.product_uom._compute_quantity(out.reserved_availability, product.uom_id)
+                currents[product.id] -= reserved
+                lines.append(self._prepare_report_line(reserved, move_out=out, reservation=True))
+
+=======
+            for out in reserved_outs_per_product.get(product.id, []):
+                # Reconcile with reserved stock.
+                reserved = outs_reservation[out.id]
+                current = currents[product.id]
+                currents[product.id] -= reserved
+                lines.append(self._prepare_report_line(reserved, move_out=out, reservation=True))
+
+>>>>>>> 560b48990da (temp)
             unreconciled_outs = []
+<<<<<<< HEAD
             # remaining stock
             free_stock = currents[product.id, wh_stock_location.id]
             transit_stock = sum([v if k[0] == product.id else 0 for k, v in currents.items()]) - free_stock
@@ -320,6 +382,22 @@ class StockForecasted(models.AbstractModel):
                     demand_out = max(demand_out - reserved_out, 0)
                     in_transit = bool(reserved_move.move_orig_ids)
                     lines.append(self._prepare_report_line(reserved_out, move_out=out, reserved_move=reserved_move, in_transit=in_transit))
+||||||| parent of 560b48990da (temp)
+            for out in outs_per_product.get(product, []):
+                # Reconcile with the current stock.
+                reserved = 0.0
+                if out.state in ('partially_available', 'assigned'):
+                    reserved = out.product_uom._compute_quantity(out.reserved_availability, product.uom_id)
+                demand = out.product_qty - reserved
+=======
+            for out in outs_per_product[product.id]:
+                reserved_availability = outs_reservation.get(out.id, 0)
+                # Reconcile with the current stock.
+                reserved = 0.0
+                if not float_is_zero(reserved_availability, precision_rounding=product_rounding):
+                    reserved = out.product_uom._compute_quantity(reserved_availability, product.uom_id)
+                demand = out.product_qty - reserved
+>>>>>>> 560b48990da (temp)
 
                 if float_is_zero(demand_out, precision_rounding=product_rounding):
                     continue
