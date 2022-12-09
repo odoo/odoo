@@ -54,15 +54,25 @@ class PaymentTransaction(models.Model):
         :return: The Checkout Session
         :rtype: dict
         """
+        def get_linked_pmts(linked_pms_):
+            linked_pmts_ = linked_pms_
+            card_pms_ = [
+                self.env.ref(f'payment.payment_method_{pm_code_}', raise_if_not_found=False)
+                for pm_code_ in ('visa', 'mastercard', 'american_express', 'discover')
+            ]
+            card_pms_ = [pm_ for pm_ in card_pms_ if pm_ is not None]  # Remove deleted card PMs.
+            if any(pm_.name.lower() in linked_pms_ for pm_ in card_pms_):
+                linked_pmts_ += ['card']
+            return linked_pmts_
+
         # Filter payment method types by available payment method
-        existing_pms = [pm.name.lower() for pm in self.env['payment.method'].search([])]
+        existing_pms = [pm.name.lower() for pm in self.env['payment.method'].search([])] + ['card']
         linked_pms = [pm.name.lower() for pm in self.provider_id.payment_method_ids]
         pm_filtered_pmts = filter(
-            lambda pmt: pmt.name == 'card'
             # If the PM record related to a PMT doesn't exist, don't filter out the PMT because the
             # user couldn't even have linked it to the provider in the first place.
-            or (pmt.name in linked_pms or pmt.name not in existing_pms),
-            PAYMENT_METHOD_TYPES
+            lambda pmt: pmt.name in get_linked_pmts(linked_pms) or pmt.name not in existing_pms,
+            PAYMENT_METHOD_TYPES,
         )
         # Filter payment method types by country code
         country_code = self.partner_country_id and self.partner_country_id.code.lower()
