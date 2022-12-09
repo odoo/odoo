@@ -12,7 +12,7 @@ from odoo.modules.module import get_module_resource
 class TestQweb(TransactionCaseWithUserDemo):
     def _load(self, module, *args):
         tools.convert_file(
-            self.cr, 'test_website',
+            self.env, 'test_website',
             get_module_resource(module, *args),
             {}, 'init', False, 'test'
         )

@@ -152,7 +152,7 @@ class TestMailTemplate(MailCommon):
 class TestMailTemplateReset(MailCommon):
 
     def _load(self, module, *args):
-        convert_file(self.cr, module='mail',
+        convert_file(self.env, module='mail',
                      filename=get_module_resource(module, *args),
                      idref={}, mode='init', noupdate=False, kind='test')
 
