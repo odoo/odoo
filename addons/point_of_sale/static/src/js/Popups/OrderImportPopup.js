@@ -1,28 +1,26 @@
-odoo.define('point_of_sale.OrderImportPopup', function(require) {
-    'use strict';
+/** @odoo-module */
 
-    const AbstractAwaitablePopup = require('point_of_sale.AbstractAwaitablePopup');
-    const Registries = require('point_of_sale.Registries');
-    const { _lt } = require('@web/core/l10n/translation');
+import AbstractAwaitablePopup from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
+import Registries from "@point_of_sale/js/Registries";
+import { _lt } from "@web/core/l10n/translation";
 
-    // formerly OrderImportPopupWidget
-    class OrderImportPopup extends AbstractAwaitablePopup {
-        get unpaidSkipped() {
-            return (
-                (this.props.report.unpaid_skipped_existing || 0) +
-                (this.props.report.unpaid_skipped_session || 0)
-            );
-        }
-        getPayload() {}
+// formerly OrderImportPopupWidget
+class OrderImportPopup extends AbstractAwaitablePopup {
+    get unpaidSkipped() {
+        return (
+            (this.props.report.unpaid_skipped_existing || 0) +
+            (this.props.report.unpaid_skipped_session || 0)
+        );
     }
-    OrderImportPopup.template = 'OrderImportPopup';
-    OrderImportPopup.defaultProps = {
-        confirmText: _lt('Ok'),
-        cancelKey: false,
-        body: '',
-    };
+    getPayload() {}
+}
+OrderImportPopup.template = "OrderImportPopup";
+OrderImportPopup.defaultProps = {
+    confirmText: _lt("Ok"),
+    cancelKey: false,
+    body: "",
+};
 
-    Registries.Component.add(OrderImportPopup);
+Registries.Component.add(OrderImportPopup);
 
-    return OrderImportPopup;
-});
+export default OrderImportPopup;

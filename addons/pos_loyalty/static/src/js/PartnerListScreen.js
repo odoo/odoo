@@ -1,21 +1,19 @@
-odoo.define('pos_loyalty.PartnerListScreen', function (require) {
-    'use strict';
+/** @odoo-module */
 
-    const PartnerListScreen = require('point_of_sale.PartnerListScreen');
-    const Registries = require('point_of_sale.Registries');
+import PartnerListScreen from "@point_of_sale/js/Screens/PartnerListScreen/PartnerListScreen";
+import Registries from "@point_of_sale/js/Registries";
 
-    const PosLoyaltyPartnerListScreen = (PartnerListScreen) =>
-        class extends PartnerListScreen {
-            /**
-             * Needs to be set to true to show the loyalty points in the partner list.
-             * @override
-             */
-            get isBalanceDisplayed() {
-                return true;
-            }
-        };
+const PosLoyaltyPartnerListScreen = (PartnerListScreen) =>
+    class extends PartnerListScreen {
+        /**
+         * Needs to be set to true to show the loyalty points in the partner list.
+         * @override
+         */
+        get isBalanceDisplayed() {
+            return true;
+        }
+    };
 
-    Registries.Component.extend(PartnerListScreen, PosLoyaltyPartnerListScreen);
+Registries.Component.extend(PartnerListScreen, PosLoyaltyPartnerListScreen);
 
-    return PartnerListScreen;
-});
+export default PartnerListScreen;

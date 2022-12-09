@@ -1,17 +1,15 @@
-odoo.define('point_of_sale.SyncNotification', function(require) {
-    'use strict';
+/** @odoo-module */
 
-    const PosComponent = require('point_of_sale.PosComponent');
-    const Registries = require('point_of_sale.Registries');
+import PosComponent from "@point_of_sale/js/PosComponent";
+import Registries from "@point_of_sale/js/Registries";
 
-    class SyncNotification extends PosComponent {
-        onClick() {
-            this.env.pos.push_orders(null, { show_error: true });
-        }
+class SyncNotification extends PosComponent {
+    onClick() {
+        this.env.pos.push_orders(null, { show_error: true });
     }
-    SyncNotification.template = 'SyncNotification';
+}
+SyncNotification.template = "SyncNotification";
 
-    Registries.Component.add(SyncNotification);
+Registries.Component.add(SyncNotification);
 
-    return SyncNotification;
-});
+export default SyncNotification;

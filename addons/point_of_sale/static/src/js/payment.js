@@ -1,20 +1,19 @@
-odoo.define('point_of_sale.PaymentInterface', function (require) {
-"use strict";
+/** @odoo-module */
 
-var core = require('web.core');
+import core from "web.core";
 
 /**
  * Implement this interface to support a new payment method in the POS:
  *
- * var PaymentInterface = require('point_of_sale.PaymentInterface');
+ import var PaymentInterface from "@point_of_sale/js/payment";
  * var MyPayment = PaymentInterface.extend({
  *     ...
  * })
  *
  * To connect the interface to the right payment methods register it:
  *
- * var models = require('point_of_sale.models');
- * models.register_payment_method('my_payment', MyPayment);
+ * import { register_payment_method } models from "@point_of_sale/js/models";
+ * register_payment_method('my_payment', MyPayment);
  *
  * my_payment is the technical name of the added selection in
  * use_payment_terminal.
@@ -91,5 +90,4 @@ var PaymentInterface = core.Class.extend({
     close: function () {},
 });
 
-return PaymentInterface;
-});
+export default PaymentInterface;

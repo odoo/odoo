@@ -1,8 +1,8 @@
 /** @odoo-module alias=pos_sale_loyalty.models **/
 
 
-import { Orderline } from 'point_of_sale.models';
-import Registries from 'point_of_sale.Registries';
+import { Orderline } from '@point_of_sale/js/models';
+import Registries from '@point_of_sale/js/Registries';
 
 export const PosSaleLoyaltyOrderline = (Orderline) => class PosSaleLoyaltyOrderline extends Orderline {
     //@override

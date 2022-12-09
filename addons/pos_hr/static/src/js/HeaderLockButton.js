@@ -1,28 +1,26 @@
-odoo.define('point_of_sale.HeaderLockButton', function(require) {
-    'use strict';
+/** @odoo-module */
 
-    const PosComponent = require('point_of_sale.PosComponent');
-    const Registries = require('point_of_sale.Registries');
+import PosComponent from "@point_of_sale/js/PosComponent";
+import Registries from "@point_of_sale/js/Registries";
 
-    const { useState } = owl;
+const { useState } = owl;
 
-    class HeaderLockButton extends PosComponent {
-        setup() {
-            super.setup();
-            this.state = useState({ isUnlockIcon: true, title: 'Unlocked' });
-        }
-        async showLoginScreen() {
-            this.env.pos.reset_cashier();
-            await this.showTempScreen('LoginScreen');
-        }
-        onMouseOver(isMouseOver) {
-            this.state.isUnlockIcon = !isMouseOver;
-            this.state.title = isMouseOver ? 'Lock' : 'Unlocked';
-        }
+class HeaderLockButton extends PosComponent {
+    setup() {
+        super.setup();
+        this.state = useState({ isUnlockIcon: true, title: "Unlocked" });
     }
-    HeaderLockButton.template = "HeaderLockButton";
+    async showLoginScreen() {
+        this.env.pos.reset_cashier();
+        await this.showTempScreen("LoginScreen");
+    }
+    onMouseOver(isMouseOver) {
+        this.state.isUnlockIcon = !isMouseOver;
+        this.state.title = isMouseOver ? "Lock" : "Unlocked";
+    }
+}
+HeaderLockButton.template = "HeaderLockButton";
 
-    Registries.Component.add(HeaderLockButton);
+Registries.Component.add(HeaderLockButton);
 
-    return HeaderLockButton;
-});
+export default HeaderLockButton;
