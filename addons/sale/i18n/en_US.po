@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0\n"
+"Project-Id-Version: Odoo Server 15.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-24 08:20+0000\n"
-"PO-Revision-Date: 2022-01-24 08:20+0000\n"
+"POT-Creation-Date: 2022-12-09 12:24+0000\n"
+"PO-Revision-Date: 2022-12-09 12:24+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1002,12 +1002,6 @@ msgid "Contact"
 msgstr ""
 
 #. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid "Contact Us"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__product_uom_category_id
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
@@ -1334,9 +1328,7 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
 msgid ""
 "Delivery date you can promise to the customer, computed from the minimum "
-"lead time of the order lines in case of Service products. In case of "
-"shipping, the shipping policy of the order will be taken into account to "
-"either use the minimum or maximum lead time of the order lines."
+"lead time of the order lines."
 msgstr ""
 
 #. module: sale
@@ -1520,12 +1512,6 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__confirmation_mail_template_id
 msgid "Email sent to the customer once the order is paid."
-msgstr ""
-
-#. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid "Ergonomic"
 msgstr ""
 
 #. module: sale
@@ -2054,12 +2040,6 @@ msgid "Lets keep electronic signature for now."
 msgstr ""
 
 #. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid "Locally handmade"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
 msgid "Lock"
 msgstr ""
@@ -2073,14 +2053,6 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__done
 msgid "Locked"
-msgstr ""
-
-#. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid ""
-"Looking for a custom bamboo stain to match existing furniture? Contact us "
-"for a quote."
 msgstr ""
 
 #. module: sale
@@ -2230,11 +2202,6 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
 msgid "New Quotation"
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
 msgstr ""
 
 #. module: sale
@@ -2440,7 +2407,6 @@ msgid "Order Count"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/controllers/portal.py:0
 #: code:addons/sale/controllers/portal.py:0
 #: model:ir.model.fields,field_description:sale.field_sale_order__date_order
 #: model:ir.model.fields,field_description:sale.field_sale_report__date
@@ -2649,14 +2615,6 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_url
 msgid "Portal Access URL"
-msgstr ""
-
-#. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid ""
-"Press a button and watch your desk glide effortlessly from sitting to "
-"standing height in seconds."
 msgstr ""
 
 #. module: sale
@@ -2973,7 +2931,6 @@ msgid "Recompute all prices based on this pricelist"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/controllers/portal.py:0
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Reference"
@@ -3411,6 +3368,9 @@ msgid ""
 "content about a product (instructions, rules, links, media, etc.). Create "
 "and set the email template from the product detail form (in Sales tab)."
 msgstr ""
+"Sending an email is useful if you need to share specific information or "
+"content about a product (instructions, rules, links, media, etc.). Create "
+"and set the email template from the product detail form (in Accounting tab)."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sequence
@@ -3537,7 +3497,6 @@ msgid "Specific Email"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/controllers/portal.py:0
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Stage"
@@ -3776,14 +3735,6 @@ msgstr ""
 msgid ""
 "The margin is computed as the sum of product sales prices minus the cost set"
 " in their detail form."
-msgstr ""
-
-#. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid ""
-"The minimum height is 65 cm, and for standing work the maximum height "
-"position is 125 cm."
 msgstr ""
 
 #. module: sale
@@ -4196,6 +4147,8 @@ msgid "Volume"
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 #: model:ir.model.fields.selection,name:sale.selection__product_template__sale_line_warn__warning
 #: model:ir.model.fields.selection,name:sale.selection__res_partner__sale_warn__warning
@@ -4219,14 +4172,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 msgid "Warning when Selling this Product"
-msgstr ""
-
-#. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid ""
-"We pay special attention to detail, which is why our desks are of a superior"
-" quality."
 msgstr ""
 
 #. module: sale
