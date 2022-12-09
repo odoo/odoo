@@ -232,8 +232,9 @@ class AccountMove(models.Model):
 
                     # Search for anglo-saxon lines linked to the product in the stock moves.
                     product_stock_moves = stock_moves.filtered(lambda stock_move: stock_move.product_id == prod)
-                    product_account_moves += product_stock_moves.mapped('account_move_ids.line_ids')\
-                        .filtered(lambda line: line.account_id == product_interim_account and not line.reconciled)
+                    product_account_moves |= product_stock_moves._get_all_related_aml().filtered(
+                        lambda line: line.account_id == product_interim_account and not line.reconciled
+                    )
 
                     # Reconcile.
                     if any(aml.amount_currency and not aml.balance for aml in product_account_moves):
