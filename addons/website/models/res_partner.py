@@ -41,3 +41,16 @@ class Partner(models.Model):
     def _compute_display_name(self):
         self2 = self.with_context(display_website=False)
         super(Partner, self2)._compute_display_name()
+
+    def _compute_signup_url(self):
+        # Force website if defined
+        super()._compute_signup_url()
+        for partner in self:
+            if partner.website_id:
+                url = werkzeug.urls.url_parse(partner.signup_url)
+                query = url.decode_query()
+                query.add('path', url.path)
+                partner.signup_url = url.replace(
+                    query=werkzeug.urls.url_encode(query),
+                    path='/website/force/%s' % partner.website_id.id,
+                ).to_url()
