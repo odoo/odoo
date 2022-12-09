@@ -24,7 +24,7 @@
             <field name="taxes_id" eval="[(5,)]"/>
         </record>
 
-        <record model="pos.config" id="pos_config_main">
+        <record model="pos.config" id="pos_config_main" forcecreate="0">
             <field name="name">Shop</field>
             <field name="barcode_nomenclature_id" ref="barcodes.default_barcode_nomenclature"/>
         </record>
