@@ -1,29 +1,28 @@
-odoo.define('point_of_sale.tour.ChromeTourMethods', function (require) {
-    'use strict';
+/** @odoo-module */
 
-    const { createTourMethods } = require('point_of_sale.tour.utils');
+import { createTourMethods } from "@point_of_sale/../tests/tours/helpers/utils";
 
-    class Do {
-        confirmPopup() {
-            return [
-                {
-                    content: 'confirm popup',
-                    trigger: '.popups .modal-dialog .button.confirm',
-                },
-            ];
-        }
-        clickTicketButton() {
-            return [
-                {
-                    trigger: '.pos-topheader .ticket-button',
-                },
-                {
-                    trigger: '.subwindow .ticket-screen',
-                    run: () => {},
-                },
-            ];
-        }
+class Do {
+    confirmPopup() {
+        return [
+            {
+                content: "confirm popup",
+                trigger: ".popups .modal-dialog .button.confirm",
+            },
+        ];
     }
-
-    return createTourMethods('Chrome', Do);
-});
+    clickTicketButton() {
+        return [
+            {
+                trigger: ".pos-topheader .ticket-button",
+            },
+            {
+                trigger: ".subwindow .ticket-screen",
+                run: () => {},
+            },
+        ];
+    }
+}
+// FIXME: this is a horrible hack to export an object as named exports.
+// eslint-disable-next-line no-undef
+Object.assign(__exports, createTourMethods("Chrome", Do));

@@ -1,13 +1,11 @@
-odoo.define('point_of_sale.WrappedProductNameLines', function(require) {
-    'use strict';
+/** @odoo-module */
 
-    const PosComponent = require('point_of_sale.PosComponent');
-    const Registries = require('point_of_sale.Registries');
+import PosComponent from "@point_of_sale/js/PosComponent";
+import Registries from "@point_of_sale/js/Registries";
 
-    class WrappedProductNameLines extends PosComponent {}
-    WrappedProductNameLines.template = 'WrappedProductNameLines';
+class WrappedProductNameLines extends PosComponent {}
+WrappedProductNameLines.template = "WrappedProductNameLines";
 
-    Registries.Component.add(WrappedProductNameLines);
+Registries.Component.add(WrappedProductNameLines);
 
-    return WrappedProductNameLines;
-});
+export default WrappedProductNameLines;

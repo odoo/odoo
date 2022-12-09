@@ -1,10 +1,9 @@
-odoo.define('pos_adyen.payment', function (require) {
-"use strict";
+/** @odoo-module */
 
-var core = require('web.core');
-var rpc = require('web.rpc');
-var PaymentInterface = require('point_of_sale.PaymentInterface');
-const { Gui } = require('point_of_sale.Gui');
+import core from "web.core";
+import rpc from "web.rpc";
+import PaymentInterface from "@point_of_sale/js/payment";
+import { Gui } from "@point_of_sale/js/Gui";
 
 var _t = core._t;
 
@@ -27,8 +26,13 @@ var PaymentAdyen = PaymentInterface.extend({
     },
 
     pending_adyen_line() {
-      return this.pos.get_order().paymentlines.find(
-        paymentLine => paymentLine.payment_method.use_payment_terminal === 'adyen' && (!paymentLine.is_done()));
+        return this.pos
+            .get_order()
+            .paymentlines.find(
+                (paymentLine) =>
+                    paymentLine.payment_method.use_payment_terminal === "adyen" &&
+                    !paymentLine.is_done()
+            );
     },
 
     // private methods
@@ -42,30 +46,39 @@ var PaymentAdyen = PaymentInterface.extend({
         // handle timeout
         var line = this.pending_adyen_line();
         if (line) {
-            line.set_payment_status('retry');
+            line.set_payment_status("retry");
         }
-        this._show_error(_t('Could not connect to the Odoo server, please check your internet connection and try again.'));
+        this._show_error(
+            _t(
+                "Could not connect to the Odoo server, please check your internet connection and try again."
+            )
+        );
 
         return Promise.reject(data); // prevent subsequent onFullFilled's from being called
     },
 
     _call_adyen: function (data, operation) {
-        return rpc.query({
-            model: 'pos.payment.method',
-            method: 'proxy_adyen_request',
-            args: [[this.payment_method.id], data, operation],
-        }, {
-            // When a payment terminal is disconnected it takes Adyen
-            // a while to return an error (~6s). So wait 10 seconds
-            // before concluding Odoo is unreachable.
-            timeout: 10000,
-            shadow: true,
-        }).catch(this._handle_odoo_connection_failure.bind(this));
+        return rpc
+            .query(
+                {
+                    model: "pos.payment.method",
+                    method: "proxy_adyen_request",
+                    args: [[this.payment_method.id], data, operation],
+                },
+                {
+                    // When a payment terminal is disconnected it takes Adyen
+                    // a while to return an error (~6s). So wait 10 seconds
+                    // before concluding Odoo is unreachable.
+                    timeout: 10000,
+                    shadow: true,
+                }
+            )
+            .catch(this._handle_odoo_connection_failure.bind(this));
     },
 
     _adyen_get_sale_id: function () {
         var config = this.pos.config;
-        return _.str.sprintf('%s (ID: %s)', config.display_name, config.id);
+        return _.str.sprintf("%s (ID: %s)", config.display_name, config.id);
     },
 
     _adyen_common_message_header: function () {
@@ -74,12 +87,12 @@ var PaymentAdyen = PaymentInterface.extend({
         this.most_recent_service_id = this.most_recent_service_id.substring(0, 10); // max length is 10
 
         return {
-            'ProtocolVersion': '3.0',
-            'MessageClass': 'Service',
-            'MessageType': 'Request',
-            'SaleID': this._adyen_get_sale_id(config),
-            'ServiceID': this.most_recent_service_id,
-            'POIID': this.payment_method.adyen_terminal_identifier
+            ProtocolVersion: "3.0",
+            MessageClass: "Service",
+            MessageType: "Request",
+            SaleID: this._adyen_get_sale_id(config),
+            ServiceID: this.most_recent_service_id,
+            POIID: this.payment_method.adyen_terminal_identifier,
         };
     },
 
@@ -88,29 +101,30 @@ var PaymentAdyen = PaymentInterface.extend({
         var config = this.pos.config;
         var line = order.selected_paymentline;
         var data = {
-            'SaleToPOIRequest': {
-                'MessageHeader': _.extend(this._adyen_common_message_header(), {
-                    'MessageCategory': 'Payment',
+            SaleToPOIRequest: {
+                MessageHeader: _.extend(this._adyen_common_message_header(), {
+                    MessageCategory: "Payment",
                 }),
-                'PaymentRequest': {
-                    'SaleData': {
-                        'SaleTransactionID': {
-                            'TransactionID': order.uid,
-                            'TimeStamp': moment().format(), // iso format: '2018-01-10T11:30:15+00:00'
-                        }
+                PaymentRequest: {
+                    SaleData: {
+                        SaleTransactionID: {
+                            TransactionID: order.uid,
+                            TimeStamp: moment().format(), // iso format: '2018-01-10T11:30:15+00:00'
+                        },
                     },
-                    'PaymentTransaction': {
-                        'AmountsReq': {
-                            'Currency': this.pos.currency.name,
-                            'RequestedAmount': line.amount,
-                        }
-                    }
-                }
-            }
+                    PaymentTransaction: {
+                        AmountsReq: {
+                            Currency: this.pos.currency.name,
+                            RequestedAmount: line.amount,
+                        },
+                    },
+                },
+            },
         };
 
         if (config.adyen_ask_customer_for_tip) {
-            data.SaleToPOIRequest.PaymentRequest.SaleData.SaleToAcquirerData = "tenderOption=AskGratuity";
+            data.SaleToPOIRequest.PaymentRequest.SaleData.SaleToAcquirerData =
+                "tenderOption=AskGratuity";
         }
 
         return data;
@@ -121,7 +135,7 @@ var PaymentAdyen = PaymentInterface.extend({
         var order = this.pos.get_order();
 
         if (order.selected_paymentline.amount < 0) {
-            this._show_error(_t('Cannot process transactions with negative amount.'));
+            this._show_error(_t("Cannot process transactions with negative amount."));
             return Promise.resolve();
         }
 
@@ -131,7 +145,7 @@ var PaymentAdyen = PaymentInterface.extend({
         }
 
         var data = this._adyen_pay_data();
-        var line = order.paymentlines.find(paymentLine => paymentLine.cid === cid);
+        var line = order.paymentlines.find((paymentLine) => paymentLine.cid === cid);
         line.setTerminalServiceId(this.most_recent_service_id);
         return this._call_adyen(data).then(function (data) {
             return self._adyen_handle_response(data);
@@ -143,28 +157,32 @@ var PaymentAdyen = PaymentInterface.extend({
         var config = this.pos.config;
         var previous_service_id = this.most_recent_service_id;
         var header = _.extend(this._adyen_common_message_header(), {
-            'MessageCategory': 'Abort',
+            MessageCategory: "Abort",
         });
 
         var data = {
-            'SaleToPOIRequest': {
-                'MessageHeader': header,
-                'AbortRequest': {
-                    'AbortReason': 'MerchantAbort',
-                    'MessageReference': {
-                        'MessageCategory': 'Payment',
-                        'SaleID': this._adyen_get_sale_id(config),
-                        'ServiceID': previous_service_id,
-                    }
+            SaleToPOIRequest: {
+                MessageHeader: header,
+                AbortRequest: {
+                    AbortReason: "MerchantAbort",
+                    MessageReference: {
+                        MessageCategory: "Payment",
+                        SaleID: this._adyen_get_sale_id(config),
+                        ServiceID: previous_service_id,
+                    },
                 },
-            }
+            },
         };
 
         return this._call_adyen(data).then(function (data) {
             // Only valid response is a 200 OK HTTP response which is
             // represented by true.
-            if (! ignore_error && data !== true) {
-                self._show_error(_t('Cancelling the payment failed. Please cancel it manually on the payment terminal.'));
+            if (!ignore_error && data !== true) {
+                self._show_error(
+                    _t(
+                        "Cancelling the payment failed. Please cancel it manually on the payment terminal."
+                    )
+                );
                 self.was_cancelled = !!self.polling;
             }
         });
@@ -174,14 +192,14 @@ var PaymentAdyen = PaymentInterface.extend({
         return output_text.reduce(function (acc, entry) {
             var params = new URLSearchParams(entry.Text);
 
-            if (params.get('name') && !params.get('value')) {
-                return acc + _.str.sprintf('<br/>%s', params.get('name'));
-            } else if (params.get('name') && params.get('value')) {
-                return acc + _.str.sprintf('<br/>%s: %s', params.get('name'), params.get('value'));
+            if (params.get("name") && !params.get("value")) {
+                return acc + _.str.sprintf("<br/>%s", params.get("name"));
+            } else if (params.get("name") && params.get("value")) {
+                return acc + _.str.sprintf("<br/>%s: %s", params.get("name"), params.get("value"));
             }
 
             return acc;
-        }, '');
+        }, "");
     },
 
     _poll_for_response: function (resolve, reject) {
@@ -191,110 +209,135 @@ var PaymentAdyen = PaymentInterface.extend({
             return Promise.resolve();
         }
 
-        return rpc.query({
-            model: 'pos.payment.method',
-            method: 'get_latest_adyen_status',
-            args: [[this.payment_method.id], this._adyen_get_sale_id()],
-        }, {
-            timeout: 5000,
-            shadow: true,
-        }).catch(function (data) {
-            if (self.remaining_polls != 0) {
-                self.remaining_polls--;
-            } else {
-                reject();
-                self.poll_error_order = self.pos.get_order();
-                return self._handle_odoo_connection_failure(data);
-            }
-            // This is to make sure that if 'data' is not an instance of Error (i.e. timeout error),
-            // this promise don't resolve -- that is, it doesn't go to the 'then' clause.
-            return Promise.reject(data);
-        }).then(function (status) {
-            var notification = status.latest_response;
-            var order = self.pos.get_order();
-            var line = self.pending_adyen_line() || resolve(false);
-
-            if (notification && notification.SaleToPOIResponse.MessageHeader.ServiceID == line.terminalServiceId) {
-                var response = notification.SaleToPOIResponse.PaymentResponse.Response;
-                var additional_response = new URLSearchParams(response.AdditionalResponse);
-
-                if (response.Result == 'Success') {
-                    var config = self.pos.config;
-                    var payment_response = notification.SaleToPOIResponse.PaymentResponse;
-                    var payment_result = payment_response.PaymentResult;
-
-                    var cashier_receipt = payment_response.PaymentReceipt.find(function (receipt) {
-                        return receipt.DocumentQualifier == 'CashierReceipt';
-                    });
-
-                    if (cashier_receipt) {
-                        line.set_cashier_receipt(self._convert_receipt_info(cashier_receipt.OutputContent.OutputText));
-                    }
-
-                    var customer_receipt = payment_response.PaymentReceipt.find(function (receipt) {
-                        return receipt.DocumentQualifier == 'CustomerReceipt';
-                    });
-
-                    if (customer_receipt) {
-                        line.set_receipt_info(self._convert_receipt_info(customer_receipt.OutputContent.OutputText));
-                    }
-
-                    var tip_amount = payment_result.AmountsResp.TipAmount;
-                    if (config.adyen_ask_customer_for_tip && tip_amount > 0) {
-                        order.set_tip(tip_amount);
-                        line.set_amount(payment_result.AmountsResp.AuthorizedAmount);
-                    }
-
-                    line.transaction_id = additional_response.get('pspReference');
-                    line.card_type = additional_response.get('cardType');
-                    line.cardholder_name = additional_response.get('cardHolderName') || '';
-                    resolve(true);
-                } else {
-                    var message = additional_response.get('message');
-                    self._show_error(_.str.sprintf(_t('Message from Adyen: %s'), message));
-
-                    // this means the transaction was cancelled by pressing the cancel button on the device
-                    if (message.startsWith('108 ')) {
-                        resolve(false);
-                    } else {
-                        line.set_payment_status('retry');
-                        reject();
-                    }
+        return rpc
+            .query(
+                {
+                    model: "pos.payment.method",
+                    method: "get_latest_adyen_status",
+                    args: [[this.payment_method.id], this._adyen_get_sale_id()],
+                },
+                {
+                    timeout: 5000,
+                    shadow: true,
                 }
-            } else {
-                line.set_payment_status('waitingCard')
-            }
-        });
+            )
+            .catch(function (data) {
+                if (self.remaining_polls != 0) {
+                    self.remaining_polls--;
+                } else {
+                    reject();
+                    self.poll_error_order = self.pos.get_order();
+                    return self._handle_odoo_connection_failure(data);
+                }
+                // This is to make sure that if 'data' is not an instance of Error (i.e. timeout error),
+                // this promise don't resolve -- that is, it doesn't go to the 'then' clause.
+                return Promise.reject(data);
+            })
+            .then(function (status) {
+                var notification = status.latest_response;
+                var order = self.pos.get_order();
+                var line = self.pending_adyen_line() || resolve(false);
+
+                if (
+                    notification &&
+                    notification.SaleToPOIResponse.MessageHeader.ServiceID == line.terminalServiceId
+                ) {
+                    var response = notification.SaleToPOIResponse.PaymentResponse.Response;
+                    var additional_response = new URLSearchParams(response.AdditionalResponse);
+
+                    if (response.Result == "Success") {
+                        var config = self.pos.config;
+                        var payment_response = notification.SaleToPOIResponse.PaymentResponse;
+                        var payment_result = payment_response.PaymentResult;
+
+                        var cashier_receipt = payment_response.PaymentReceipt.find(function (
+                            receipt
+                        ) {
+                            return receipt.DocumentQualifier == "CashierReceipt";
+                        });
+
+                        if (cashier_receipt) {
+                            line.set_cashier_receipt(
+                                self._convert_receipt_info(cashier_receipt.OutputContent.OutputText)
+                            );
+                        }
+
+                        var customer_receipt = payment_response.PaymentReceipt.find(function (
+                            receipt
+                        ) {
+                            return receipt.DocumentQualifier == "CustomerReceipt";
+                        });
+
+                        if (customer_receipt) {
+                            line.set_receipt_info(
+                                self._convert_receipt_info(
+                                    customer_receipt.OutputContent.OutputText
+                                )
+                            );
+                        }
+
+                        var tip_amount = payment_result.AmountsResp.TipAmount;
+                        if (config.adyen_ask_customer_for_tip && tip_amount > 0) {
+                            order.set_tip(tip_amount);
+                            line.set_amount(payment_result.AmountsResp.AuthorizedAmount);
+                        }
+
+                        line.transaction_id = additional_response.get("pspReference");
+                        line.card_type = additional_response.get("cardType");
+                        line.cardholder_name = additional_response.get("cardHolderName") || "";
+                        resolve(true);
+                    } else {
+                        var message = additional_response.get("message");
+                        self._show_error(_.str.sprintf(_t("Message from Adyen: %s"), message));
+
+                        // this means the transaction was cancelled by pressing the cancel button on the device
+                        if (message.startsWith("108 ")) {
+                            resolve(false);
+                        } else {
+                            line.set_payment_status("retry");
+                            reject();
+                        }
+                    }
+                } else {
+                    line.set_payment_status("waitingCard");
+                }
+            });
     },
 
     _adyen_handle_response: function (response) {
         var line = this.pending_adyen_line();
 
         if (response.error && response.error.status_code == 401) {
-            this._show_error(_t('Authentication failed. Please check your Adyen credentials.'));
-            line.set_payment_status('force_done');
+            this._show_error(_t("Authentication failed. Please check your Adyen credentials."));
+            line.set_payment_status("force_done");
             return Promise.resolve();
         }
 
         response = response.SaleToPOIRequest;
-        if (response && response.EventNotification && response.EventNotification.EventToNotify == 'Reject') {
-            console.error('error from Adyen', response);
+        if (
+            response &&
+            response.EventNotification &&
+            response.EventNotification.EventToNotify == "Reject"
+        ) {
+            console.error("error from Adyen", response);
 
-            var msg = '';
+            var msg = "";
             if (response.EventNotification) {
                 var params = new URLSearchParams(response.EventNotification.EventDetails);
-                msg = params.get('message');
+                msg = params.get("message");
             }
 
-            this._show_error(_.str.sprintf(_t('An unexpected error occurred. Message from Adyen: %s'), msg));
+            this._show_error(
+                _.str.sprintf(_t("An unexpected error occurred. Message from Adyen: %s"), msg)
+            );
             if (line) {
-                line.set_payment_status('force_done');
+                line.set_payment_status("force_done");
             }
 
             return Promise.resolve();
         } else {
-            line.set_payment_status('waitingCard');
-            return this.start_get_status_polling()
+            line.set_payment_status("waitingCard");
+            return this.start_get_status_polling();
         }
     },
 
@@ -320,14 +363,13 @@ var PaymentAdyen = PaymentInterface.extend({
 
     _show_error: function (msg, title) {
         if (!title) {
-            title =  _t('Adyen Error');
+            title = _t("Adyen Error");
         }
-        Gui.showPopup('ErrorPopup',{
-            'title': title,
-            'body': msg,
+        Gui.showPopup("ErrorPopup", {
+            title: title,
+            body: msg,
         });
     },
 });
 
-return PaymentAdyen;
-});
+export default PaymentAdyen;

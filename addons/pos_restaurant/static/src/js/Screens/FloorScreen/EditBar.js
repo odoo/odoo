@@ -1,20 +1,18 @@
-odoo.define('pos_restaurant.EditBar', function(require) {
-    'use strict';
+/** @odoo-module */
 
-    const PosComponent = require('point_of_sale.PosComponent');
-    const Registries = require('point_of_sale.Registries');
+import PosComponent from "@point_of_sale/js/PosComponent";
+import Registries from "@point_of_sale/js/Registries";
 
-    const { useState } = owl;
+const { useState } = owl;
 
-    class EditBar extends PosComponent {
-        setup() {
-            super.setup();
-            this.state = useState({ isColorPicker: false })
-        }
+class EditBar extends PosComponent {
+    setup() {
+        super.setup();
+        this.state = useState({ isColorPicker: false });
     }
-    EditBar.template = 'EditBar';
+}
+EditBar.template = "EditBar";
 
-    Registries.Component.add(EditBar);
+Registries.Component.add(EditBar);
 
-    return EditBar;
-});
+export default EditBar;
