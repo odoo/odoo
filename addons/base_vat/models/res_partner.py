@@ -7,6 +7,7 @@ import re
 import stdnum
 from stdnum.eu.vat import check_vies
 from stdnum.exceptions import InvalidComponent
+from stdnum.it import codicefiscale as it_codicefiscale, iva as it_iva
 import logging
 
 from odoo import api, models, tools, _
@@ -279,6 +280,14 @@ class ResPartner(models.Model):
                                    br"(?P<ano>[0-9]{2})(?P<mes>[01][0-9])(?P<dia>[0-3][0-9])" \
                                    br"[ \-_]?" \
                                    br"(?P<code>[A-Za-z0-9&\xd1\xf1]{3})$")
+
+    def check_vat_it(self, vat):
+        """
+        Check Italian vat
+        Checking both vat and codicefiscale because both are used,
+        depending on whether it is an individual or a company
+        """
+        return it_codicefiscale.is_valid(vat) or it_iva.is_valid(vat)
 
     def check_vat_mx(self, vat):
         ''' Mexican VAT verification
