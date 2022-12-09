@@ -1,36 +1,33 @@
-odoo.define('pos_hr.CashierName', function (require) {
-    'use strict';
+/** @odoo-module */
 
-    const CashierName = require('point_of_sale.CashierName');
-    const Registries = require('point_of_sale.Registries');
-    const SelectCashierMixin = require('pos_hr.SelectCashierMixin');
-    const { useBarcodeReader } = require('point_of_sale.custom_hooks');
+import CashierName from "@point_of_sale/js/ChromeWidgets/CashierName";
+import Registries from "@point_of_sale/js/Registries";
+import SelectCashierMixin from "@pos_hr/js/SelectCashierMixin";
+import { useBarcodeReader } from "@point_of_sale/js/custom_hooks";
 
-    const PosHrCashierName = (CashierName) =>
-        class extends SelectCashierMixin(CashierName) {
-            setup() {
-                super.setup();
-                useBarcodeReader({ cashier: this.barcodeCashierAction });
+const PosHrCashierName = (CashierName) =>
+    class extends SelectCashierMixin(CashierName) {
+        setup() {
+            super.setup();
+            useBarcodeReader({ cashier: this.barcodeCashierAction });
+        }
+        //@Override
+        get avatar() {
+            if (this.env.pos.config.module_pos_hr) {
+                const cashier = this.env.pos.get_cashier();
+                return `/web/image/hr.employee/${cashier.id}/avatar_128`;
             }
-            //@Override
-            get avatar() {
-                if (this.env.pos.config.module_pos_hr) {
-                    const cashier = this.env.pos.get_cashier();
-                    return `/web/image/hr.employee/${cashier.id}/avatar_128`;
-                }
-                return super.avatar;
+            return super.avatar;
+        }
+        //@Override
+        get cssClass() {
+            if (this.env.pos.config.module_pos_hr) {
+                return { oe_status: true };
             }
-            //@Override
-            get cssClass() {
-                if (this.env.pos.config.module_pos_hr) {
-                    return {'oe_status': true};
-                }
-                return super.cssClass;
+            return super.cssClass;
+        }
+    };
 
-            }
-        };
+Registries.Component.extend(CashierName, PosHrCashierName);
 
-    Registries.Component.extend(CashierName, PosHrCashierName);
-
-    return CashierName;
-});
+export default CashierName;

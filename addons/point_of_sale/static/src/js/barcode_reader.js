@@ -1,8 +1,7 @@
-odoo.define('point_of_sale.BarcodeReader', function (require) {
-"use strict";
+/** @odoo-module */
 
-var concurrency = require('web.concurrency');
-var core = require('web.core');
+import concurrency from "web.concurrency";
+import core from "web.core";
 var Mutex = concurrency.Mutex;
 
 // this module interfaces with the barcode reader. It assumes the barcode reader
@@ -10,11 +9,7 @@ var Mutex = concurrency.Mutex;
 // and deactivate the barcode reader. Use set_action_callbacks to tell it
 // what to do when it reads a barcode.
 var BarcodeReader = core.Class.extend({
-    actions:[
-        'product',
-        'cashier',
-        'client',
-    ],
+    actions: ["product", "cashier", "client"],
 
     init: function (attributes) {
         this.mutex = new Mutex();
@@ -29,7 +24,7 @@ var BarcodeReader = core.Class.extend({
 
         this.action_callback_stack = [];
 
-        core.bus.on('barcode_scanned', this, function (barcode) {
+        core.bus.on("barcode_scanned", this, function (barcode) {
             // use mutex to make sure scans are done one after the other
             this.mutex.exec(async () => {
                 await this.scan(barcode);
@@ -59,7 +54,7 @@ var BarcodeReader = core.Class.extend({
         }
     },
 
-    remove_action_callback: function(name, callback) {
+    remove_action_callback: function (name, callback) {
         if (!callback) {
             delete this.action_callbacks[name];
             return;
@@ -105,13 +100,15 @@ var BarcodeReader = core.Class.extend({
     },
 
     scan: async function (code) {
-        if (!code) return;
+        if (!code) {
+            return;
+        }
 
         const callbacks = Object.keys(this.exclusive_callbacks).length
             ? this.exclusive_callbacks
             : this.action_callbacks;
         let parsed_results = this.barcode_parser.parse_barcode(code);
-        if (! Array.isArray(parsed_results)) {
+        if (!Array.isArray(parsed_results)) {
             parsed_results = [parsed_results];
         }
         for (const parsed_result of parsed_results) {
@@ -120,9 +117,9 @@ var BarcodeReader = core.Class.extend({
                     await cb(parsed_result);
                 }
             } else if (callbacks.error) {
-                [...callbacks.error].map(cb => cb(parsed_result));
+                [...callbacks.error].map((cb) => cb(parsed_result));
             } else {
-                console.warn('Ignored Barcode Scan:', parsed_result);
+                console.warn("Ignored Barcode Scan:", parsed_result);
             }
         }
     },
@@ -137,23 +134,26 @@ var BarcodeReader = core.Class.extend({
         }
         this.remote_active = 1;
 
-        function waitforbarcode(){
-            return self.proxy.connection.rpc('/hw_proxy/scanner',{},{shadow: true, timeout:7500})
-                .then(function (barcode) {
-                    if (!self.remote_scanning) {
-                        self.remote_active = 0;
-                        return;
+        function waitforbarcode() {
+            return self.proxy.connection
+                .rpc("/hw_proxy/scanner", {}, { shadow: true, timeout: 7500 })
+                .then(
+                    function (barcode) {
+                        if (!self.remote_scanning) {
+                            self.remote_active = 0;
+                            return;
+                        }
+                        self.scan(barcode);
+                        waitforbarcode();
+                    },
+                    function () {
+                        if (!self.remote_scanning) {
+                            self.remote_active = 0;
+                            return;
+                        }
+                        waitforbarcode();
                     }
-                    self.scan(barcode);
-                    waitforbarcode();
-                },
-                function () {
-                    if (!self.remote_scanning) {
-                        self.remote_active = 0;
-                        return;
-                    }
-                    waitforbarcode();
-                });
+                );
         }
         waitforbarcode();
     },
@@ -164,6 +164,4 @@ var BarcodeReader = core.Class.extend({
     },
 });
 
-return BarcodeReader;
-
-});
+export default BarcodeReader;

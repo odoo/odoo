@@ -1,18 +1,16 @@
-odoo.define('point_of_sale.PaymentScreenNumpad', function(require) {
-    'use strict';
+/** @odoo-module */
 
-    const PosComponent = require('point_of_sale.PosComponent');
-    const Registries = require('point_of_sale.Registries');
+import PosComponent from "@point_of_sale/js/PosComponent";
+import Registries from "@point_of_sale/js/Registries";
 
-    class PaymentScreenNumpad extends PosComponent {
-        setup() {
-            super.setup();
-            this.decimalPoint = this.env._t.database.parameters.decimal_point;
-        }
+class PaymentScreenNumpad extends PosComponent {
+    setup() {
+        super.setup();
+        this.decimalPoint = this.env._t.database.parameters.decimal_point;
     }
-    PaymentScreenNumpad.template = 'PaymentScreenNumpad';
+}
+PaymentScreenNumpad.template = "PaymentScreenNumpad";
 
-    Registries.Component.add(PaymentScreenNumpad);
+Registries.Component.add(PaymentScreenNumpad);
 
-    return PaymentScreenNumpad;
-});
+export default PaymentScreenNumpad;

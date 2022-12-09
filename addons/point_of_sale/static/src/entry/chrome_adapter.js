@@ -2,15 +2,15 @@
 
 import { useService } from "@web/core/utils/hooks";
 
-import Chrome from "point_of_sale.Chrome";
-import ProductScreen from "point_of_sale.ProductScreen";
-import Registries from "point_of_sale.Registries";
-import { PosGlobalState } from "point_of_sale.models";
-import { configureGui } from "point_of_sale.Gui";
+import Chrome from "@point_of_sale/js/Chrome";
+import ProductScreen from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
+import Registries from "@point_of_sale/js/Registries";
+import { PosGlobalState } from "@point_of_sale/js/models";
+import { configureGui } from "@point_of_sale/js/Gui";
 import { registry } from "@web/core/registry";
-import env from "point_of_sale.env";
+import env from "@point_of_sale/js/pos_env";
 import { debounce } from "@web/core/utils/timing";
-import { batched } from "point_of_sale.utils";
+import { batched } from "@point_of_sale/js/utils";
 
 const { Component, reactive, markRaw, useExternalListener, useSubEnv, onWillUnmount, xml } = owl;
 
@@ -58,8 +58,8 @@ export class ChromeAdapter extends Component {
 
     async configureAndStart(chrome) {
         // Add the pos error handler when the chrome component is available.
-        registry.category('error_handlers').add(
-            'posErrorHandler',
+        registry.category("error_handlers").add(
+            "posErrorHandler",
             (env, ...noEnvArgs) => {
                 if (chrome) {
                     return chrome.errorHandler(this.env, ...noEnvArgs);

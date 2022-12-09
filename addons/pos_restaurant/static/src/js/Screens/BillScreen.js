@@ -1,31 +1,29 @@
-odoo.define('pos_restaurant.BillScreen', function (require) {
-    'use strict';
+/** @odoo-module */
 
-    const ReceiptScreen = require('point_of_sale.ReceiptScreen');
-    const Registries = require('point_of_sale.Registries');
+import ReceiptScreen from "@point_of_sale/js/Screens/ReceiptScreen/ReceiptScreen";
+import Registries from "@point_of_sale/js/Registries";
 
-    const BillScreen = (ReceiptScreen) => {
-        class BillScreen extends ReceiptScreen {
-            confirm() {
-                this.props.resolve({ confirmed: true, payload: null });
-                this.trigger('close-temp-screen');
-            }
-            whenClosing() {
-                this.confirm();
-            }
-            /**
-             * @override
-             */
-            async printReceipt() {
-                await super.printReceipt();
-                this.currentOrder._printed = false;
-            }
+const BillScreen = (ReceiptScreen) => {
+    class BillScreen extends ReceiptScreen {
+        confirm() {
+            this.props.resolve({ confirmed: true, payload: null });
+            this.trigger("close-temp-screen");
         }
-        BillScreen.template = 'BillScreen';
-        return BillScreen;
-    };
-
-    Registries.Component.addByExtending(BillScreen, ReceiptScreen);
-
+        whenClosing() {
+            this.confirm();
+        }
+        /**
+         * @override
+         */
+        async printReceipt() {
+            await super.printReceipt();
+            this.currentOrder._printed = false;
+        }
+    }
+    BillScreen.template = "BillScreen";
     return BillScreen;
-});
+};
+
+Registries.Component.addByExtending(BillScreen, ReceiptScreen);
+
+export default BillScreen;

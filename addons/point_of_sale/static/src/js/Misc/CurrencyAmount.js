@@ -1,13 +1,11 @@
-odoo.define('point_of_sale.CurrencyAmount', function(require) {
-    'use strict';
+/** @odoo-module */
 
-    const PosComponent = require('point_of_sale.PosComponent');
-    const Registries = require('point_of_sale.Registries');
+import PosComponent from "@point_of_sale/js/PosComponent";
+import Registries from "@point_of_sale/js/Registries";
 
-    class CurrencyAmount extends PosComponent {}
-    CurrencyAmount.template = 'CurrencyAmount';
+class CurrencyAmount extends PosComponent {}
+CurrencyAmount.template = "CurrencyAmount";
 
-    Registries.Component.add(CurrencyAmount);
+Registries.Component.add(CurrencyAmount);
 
-    return CurrencyAmount;
-});
+export default CurrencyAmount;

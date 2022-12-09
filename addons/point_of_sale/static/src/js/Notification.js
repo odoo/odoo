@@ -1,27 +1,25 @@
-odoo.define('point_of_sale.Notification', function (require) {
-    'use strict';
+/** @odoo-module */
 
-    const { useListener } = require("@web/core/utils/hooks");
-    const PosComponent = require('point_of_sale.PosComponent');
-    const Registries = require('point_of_sale.Registries');
+import { useListener } from "@web/core/utils/hooks";
+import PosComponent from "@point_of_sale/js/PosComponent";
+import Registries from "@point_of_sale/js/Registries";
 
-    const { onMounted } = owl;
+const { onMounted } = owl;
 
-    class Notification extends PosComponent {
-        setup() {
-            super.setup();
-            useListener('click', this.closeNotification);
+class Notification extends PosComponent {
+    setup() {
+        super.setup();
+        useListener("click", this.closeNotification);
 
-            onMounted(() => {
-                setTimeout(() => {
-                    this.closeNotification();
-                }, this.props.duration)
-            });
-        }
+        onMounted(() => {
+            setTimeout(() => {
+                this.closeNotification();
+            }, this.props.duration);
+        });
     }
-    Notification.template = 'Notification';
+}
+Notification.template = "Notification";
 
-    Registries.Component.add(Notification);
+Registries.Component.add(Notification);
 
-    return Notification;
-});
+export default Notification;

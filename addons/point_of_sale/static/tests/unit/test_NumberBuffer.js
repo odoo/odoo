@@ -1,44 +1,43 @@
-odoo.define('point_of_sale.tests.NumberBuffer', function(require) {
-    'use strict';
+/** @odoo-module */
 
-    const NumberBuffer = require('point_of_sale.NumberBuffer');
-    const makeTestEnvironment = require('web.test_env');
-    const testUtils = require('web.test_utils');
-    const { mount } = require('@web/../tests/helpers/utils');
-    const { LegacyComponent } = require("@web/legacy/legacy_component");
+import NumberBuffer from "@point_of_sale/js/Misc/NumberBuffer";
+import makeTestEnvironment from "web.test_env";
+import testUtils from "web.test_utils";
+import { mount } from "@web/../tests/helpers/utils";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
-    const { useState, xml } = owl;
+const { useState, xml } = owl;
 
-    QUnit.module('unit tests for NumberBuffer', {
-        before() {},
-    });
+QUnit.module("unit tests for NumberBuffer", {
+    before() {},
+});
 
-    QUnit.test('simple fast inputs with capture in between', async function(assert) {
-        assert.expect(3);
-        const target = testUtils.prepareTarget();
-        const env = makeTestEnvironment();
+QUnit.test("simple fast inputs with capture in between", async function (assert) {
+    assert.expect(3);
+    const target = testUtils.prepareTarget();
+    const env = makeTestEnvironment();
 
-        class Root extends LegacyComponent {
-            setup() {
-                this.state = useState({ buffer: '' });
-                NumberBuffer.activate();
-                NumberBuffer.use({
-                    nonKeyboardInputEvent: 'numpad-click-input',
-                    state: this.state,
-                });
-            }
-            resetBuffer() {
-                NumberBuffer.capture();
-                NumberBuffer.reset();
-            }
-            onClickOne() {
-                this.trigger('numpad-click-input', { key: '1' });
-            }
-            onClickTwo() {
-                this.trigger('numpad-click-input', { key: '2' });
-            }
+    class Root extends LegacyComponent {
+        setup() {
+            this.state = useState({ buffer: "" });
+            NumberBuffer.activate();
+            NumberBuffer.use({
+                nonKeyboardInputEvent: "numpad-click-input",
+                state: this.state,
+            });
         }
-        Root.template = xml/* html */ `
+        resetBuffer() {
+            NumberBuffer.capture();
+            NumberBuffer.reset();
+        }
+        onClickOne() {
+            this.trigger("numpad-click-input", { key: "1" });
+        }
+        onClickTwo() {
+            this.trigger("numpad-click-input", { key: "2" });
+        }
+    }
+    Root.template = xml/* html */ `
             <div>
                 <p><t t-esc="state.buffer" /></p>
                 <button class="one" t-on-click="onClickOne">1</button>
@@ -47,23 +46,22 @@ odoo.define('point_of_sale.tests.NumberBuffer', function(require) {
             </div>
         `;
 
-        await mount(Root, target, { env });
+    await mount(Root, target, { env });
 
-        const oneButton = target.querySelector('button.one');
-        const twoButton = target.querySelector('button.two');
-        const resetButton = target.querySelector('button.reset');
-        const bufferEl = target.querySelector('p');
+    const oneButton = target.querySelector("button.one");
+    const twoButton = target.querySelector("button.two");
+    const resetButton = target.querySelector("button.reset");
+    const bufferEl = target.querySelector("p");
 
-        testUtils.dom.click(oneButton);
-        testUtils.dom.click(twoButton);
-        await testUtils.nextTick();
-        assert.strictEqual(bufferEl.textContent, '12');
-        testUtils.dom.click(resetButton);
-        await testUtils.nextTick();
-        assert.strictEqual(bufferEl.textContent, '');
-        testUtils.dom.click(twoButton);
-        testUtils.dom.click(oneButton);
-        await testUtils.nextTick();
-        assert.strictEqual(bufferEl.textContent, '21');
-    });
+    testUtils.dom.click(oneButton);
+    testUtils.dom.click(twoButton);
+    await testUtils.nextTick();
+    assert.strictEqual(bufferEl.textContent, "12");
+    testUtils.dom.click(resetButton);
+    await testUtils.nextTick();
+    assert.strictEqual(bufferEl.textContent, "");
+    testUtils.dom.click(twoButton);
+    testUtils.dom.click(oneButton);
+    await testUtils.nextTick();
+    assert.strictEqual(bufferEl.textContent, "21");
 });

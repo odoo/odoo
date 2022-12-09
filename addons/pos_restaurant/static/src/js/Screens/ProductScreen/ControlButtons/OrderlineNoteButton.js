@@ -1,42 +1,42 @@
-odoo.define('pos_restaurant.OrderlineNoteButton', function(require) {
-    'use strict';
+/** @odoo-module */
 
-    const PosComponent = require('point_of_sale.PosComponent');
-    const ProductScreen = require('point_of_sale.ProductScreen');
-    const { useListener } = require("@web/core/utils/hooks");
-    const Registries = require('point_of_sale.Registries');
+import PosComponent from "@point_of_sale/js/PosComponent";
+import ProductScreen from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
+import { useListener } from "@web/core/utils/hooks";
+import Registries from "@point_of_sale/js/Registries";
 
-    class OrderlineNoteButton extends PosComponent {
-        setup() {
-            super.setup();
-            useListener('click', this.onClick);
+class OrderlineNoteButton extends PosComponent {
+    setup() {
+        super.setup();
+        useListener("click", this.onClick);
+    }
+    get selectedOrderline() {
+        return this.env.pos.get_order().get_selected_orderline();
+    }
+    async onClick() {
+        if (!this.selectedOrderline) {
+            return;
         }
-        get selectedOrderline() {
-            return this.env.pos.get_order().get_selected_orderline();
-        }
-        async onClick() {
-            if (!this.selectedOrderline) return;
 
-            const { confirmed, payload: inputNote } = await this.showPopup('TextAreaPopup', {
-                startingValue: this.selectedOrderline.get_note(),
-                title: this.env._t('Add Internal Note'),
-            });
+        const { confirmed, payload: inputNote } = await this.showPopup("TextAreaPopup", {
+            startingValue: this.selectedOrderline.get_note(),
+            title: this.env._t("Add Internal Note"),
+        });
 
-            if (confirmed) {
-                this.selectedOrderline.set_note(inputNote);
-            }
+        if (confirmed) {
+            this.selectedOrderline.set_note(inputNote);
         }
     }
-    OrderlineNoteButton.template = 'OrderlineNoteButton';
+}
+OrderlineNoteButton.template = "OrderlineNoteButton";
 
-    ProductScreen.addControlButton({
-        component: OrderlineNoteButton,
-        condition: function() {
-            return this.env.pos.config.iface_orderline_notes;
-        },
-    });
-
-    Registries.Component.add(OrderlineNoteButton);
-
-    return OrderlineNoteButton;
+ProductScreen.addControlButton({
+    component: OrderlineNoteButton,
+    condition: function () {
+        return this.env.pos.config.iface_orderline_notes;
+    },
 });
+
+Registries.Component.add(OrderlineNoteButton);
+
+export default OrderlineNoteButton;

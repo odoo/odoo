@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import OrderSummary from 'point_of_sale.OrderSummary';
-import Registries from 'point_of_sale.Registries';
+import OrderSummary from "@point_of_sale/js/Screens/ProductScreen/OrderSummary";
+import Registries from "@point_of_sale/js/Registries";
 
-export const PosLoyaltyOrderSummary = (OrderSummary) => 
+export const PosLoyaltyOrderSummary = (OrderSummary) =>
     class PosLoyaltyOrderSummary extends OrderSummary {
         getLoyaltyPoints() {
             const order = this.env.pos.get_order();
@@ -11,4 +11,4 @@ export const PosLoyaltyOrderSummary = (OrderSummary) =>
         }
     };
 
-Registries.Component.extend(OrderSummary, PosLoyaltyOrderSummary)
+Registries.Component.extend(OrderSummary, PosLoyaltyOrderSummary);

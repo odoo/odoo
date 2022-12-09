@@ -1,27 +1,25 @@
-odoo.define('point_of_sale.OrderSummary', function(require) {
-    'use strict';
+/** @odoo-module */
 
-    const PosComponent = require('point_of_sale.PosComponent');
-    const Registries = require('point_of_sale.Registries');
-    const { float_is_zero } = require('web.utils');
+import PosComponent from "@point_of_sale/js/PosComponent";
+import Registries from "@point_of_sale/js/Registries";
+import { float_is_zero } from "web.utils";
 
-    class OrderSummary extends PosComponent {
-        getTotal() {
-            return this.env.pos.format_currency(this.props.order.get_total_with_tax());
-        }
-        getTax() {
-            const total = this.props.order.get_total_with_tax();
-            const totalWithoutTax = this.props.order.get_total_without_tax();
-            const taxAmount = total - totalWithoutTax;
-            return {
-                hasTax: !float_is_zero(taxAmount, this.env.pos.currency.decimal_places),
-                displayAmount: this.env.pos.format_currency(taxAmount),
-            };
-        }
+class OrderSummary extends PosComponent {
+    getTotal() {
+        return this.env.pos.format_currency(this.props.order.get_total_with_tax());
     }
-    OrderSummary.template = 'OrderSummary';
+    getTax() {
+        const total = this.props.order.get_total_with_tax();
+        const totalWithoutTax = this.props.order.get_total_without_tax();
+        const taxAmount = total - totalWithoutTax;
+        return {
+            hasTax: !float_is_zero(taxAmount, this.env.pos.currency.decimal_places),
+            displayAmount: this.env.pos.format_currency(taxAmount),
+        };
+    }
+}
+OrderSummary.template = "OrderSummary";
 
-    Registries.Component.add(OrderSummary);
+Registries.Component.add(OrderSummary);
 
-    return OrderSummary;
-});
+export default OrderSummary;

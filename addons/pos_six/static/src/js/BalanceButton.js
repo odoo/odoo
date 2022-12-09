@@ -1,21 +1,19 @@
-odoo.define('pos_six.BalanceButton', function(require) {
-    'use strict';
+/** @odoo-module */
 
-    const PosComponent = require('point_of_sale.PosComponent');
-    const Registries = require('point_of_sale.Registries');
+import PosComponent from "@point_of_sale/js/PosComponent";
+import Registries from "@point_of_sale/js/Registries";
 
-    class BalanceButton extends PosComponent {
-        sendBalance() {
-            this.env.pos.payment_methods.map(pm => {
-                if (pm.use_payment_terminal === 'six') {
-                    pm.payment_terminal.send_balance();
-                }
-            });
-        }
+class BalanceButton extends PosComponent {
+    sendBalance() {
+        this.env.pos.payment_methods.map((pm) => {
+            if (pm.use_payment_terminal === "six") {
+                pm.payment_terminal.send_balance();
+            }
+        });
     }
-    BalanceButton.template = 'BalanceButton';
+}
+BalanceButton.template = "BalanceButton";
 
-    Registries.Component.add(BalanceButton);
+Registries.Component.add(BalanceButton);
 
-    return BalanceButton;
-});
+export default BalanceButton;
