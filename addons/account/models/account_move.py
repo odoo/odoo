@@ -3228,7 +3228,7 @@ class AccountMoveLine(models.Model):
     account_internal_group = fields.Selection(related='account_id.user_type_id.internal_group', string="Internal Group", readonly=True)
     account_root_id = fields.Many2one(related='account_id.root_id', string="Account Root", store=True, readonly=True)
     sequence = fields.Integer(default=10)
-    name = fields.Char(string='Label', tracking=True)
+    name = fields.Char(string='Label', tracking=True, index=True)
     quantity = fields.Float(string='Quantity',
         default=lambda self: 0 if self._context.get('default_display_type') else 1.0, digits='Product Unit of Measure',
         help="The optional quantity expressed by this line, eg: number of product sold. "
