@@ -1825,3 +1825,10 @@ class StockMove(models.Model):
         moves_to_reserve = self.env['stock.move'].search(expression.AND([static_domain, expression.OR(domains)]),
                                                          order='priority desc, date asc, id asc')
         moves_to_reserve._action_assign()
+
+    def _get_orig_reserved_availability(self):
+        self.ensure_one()
+        reserved = self.reserved_availability if self.show_reserved_availability else 0.0
+        if not reserved and self.move_orig_ids:
+            reserved = sum([m._get_orig_reserved_availability() for m in self.move_orig_ids])
+        return reserved

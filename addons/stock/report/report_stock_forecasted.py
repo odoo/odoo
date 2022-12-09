@@ -163,8 +163,10 @@ class ReplenishmentReport(models.AbstractModel):
         )
         outs = self.env['stock.move'].search(out_domain, order='priority desc, date, id')
         outs_per_product = defaultdict(lambda: [])
+        outs_reservation = {}
         for out in outs:
             outs_per_product[out.product_id.id].append(out)
+            outs_reservation[out.id] = out._get_orig_reserved_availability()
         ins = self.env['stock.move'].search(in_domain, order='priority desc, date, id')
         ins_per_product = defaultdict(lambda: [])
         for in_ in ins:
@@ -178,20 +180,22 @@ class ReplenishmentReport(models.AbstractModel):
         lines = []
         for product in (ins | outs).product_id:
             for out in outs_per_product[product.id]:
-                if out.state not in ('partially_available', 'assigned'):
+                reserved_availability = outs_reservation[out.id]
+                if float_is_zero(reserved_availability, precision_rounding=product.uom_id.rounding):
                     continue
                 current = currents[out.product_id.id]
-                reserved = out.product_uom._compute_quantity(out.reserved_availability, product.uom_id)
+                reserved = out.product_uom._compute_quantity(reserved_availability, product.uom_id)
                 currents[product.id] -= reserved
                 lines.append(self._prepare_report_line(reserved, move_out=out, reservation=True))
 
             unreconciled_outs = []
             for out in outs_per_product[product.id]:
+                reserved_availability = outs_reservation[out.id]
                 # Reconcile with the current stock.
                 current = currents[out.product_id.id]
                 reserved = 0.0
-                if out.state in ('partially_available', 'assigned'):
-                    reserved = out.product_uom._compute_quantity(out.reserved_availability, product.uom_id)
+                if not float_is_zero(reserved_availability, precision_rounding=product.uom_id.rounding):
+                    reserved = out.product_uom._compute_quantity(reserved_availability, product.uom_id)
                 demand = out.product_qty - reserved
                 taken_from_stock = min(demand, current)
                 if not float_is_zero(taken_from_stock, precision_rounding=product.uom_id.rounding):
