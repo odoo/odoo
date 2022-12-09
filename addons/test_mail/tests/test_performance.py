@@ -446,7 +446,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         test_record, test_template = self._create_test_records()
         test_template.write({'attachment_ids': [(5, 0)]})
 
-        with self.assertQueryCount(__system__=24, employee=25):  # tm 14/15 / com 23/24
+        with self.assertQueryCount(__system__=26, employee=27):  # tm 16/17 / com 25/26
             composer = self.env['mail.compose.message'].with_context({
                 'default_composition_mode': 'comment',
                 'default_model': test_record._name,
@@ -454,7 +454,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
                 'default_template_id': test_template.id,
             }).create({})
 
-        with self.assertQueryCount(__system__=25, employee=31):
+        with self.assertQueryCount(__system__=27, employee=29):
             composer._action_send_mail()
 
         # notifications
@@ -470,7 +470,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     def test_mail_composer_w_template_attachments(self):
         test_record, test_template = self._create_test_records()
 
-        with self.assertQueryCount(__system__=25, employee=26):  # tm 15/16 / com 24/25
+        with self.assertQueryCount(__system__=27, employee=28):  # tm 17/18 / com 26/27
             composer = self.env['mail.compose.message'].with_context({
                 'default_composition_mode': 'comment',
                 'default_model': test_record._name,
@@ -478,7 +478,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
                 'default_template_id': test_template.id,
             }).create({})
 
-        with self.assertQueryCount(__system__=33, employee=44):
+        with self.assertQueryCount(__system__=35, employee=42):
             composer._action_send_mail()
 
         # notifications
@@ -499,7 +499,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         test_template.write({'attachment_ids': [(5, 0)]})
 
         customer = self.env['res.partner'].browse(self.customer.ids)
-        with self.assertQueryCount(__system__=35, employee=37):  # tm 24/26 / com 34/36
+        with self.assertQueryCount(__system__=37, employee=39):  # tm 27/29 / com 35/38
             composer_form = Form(
                 self.env['mail.compose.message'].with_context({
                     'default_composition_mode': 'comment',
@@ -510,7 +510,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             )
             composer = composer_form.save()
 
-        with self.assertQueryCount(__system__=35, employee=41):
+        with self.assertQueryCount(__system__=37, employee=39):
             composer._action_send_mail()
 
         # notifications
@@ -529,7 +529,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         test_record, test_template = self._create_test_records()
 
         customer = self.env['res.partner'].browse(self.customer.ids)
-        with self.assertQueryCount(__system__=36, employee=38):  # tm 25/27 / com 35/37
+        with self.assertQueryCount(__system__=38, employee=40):  # tm 28/30 / com 37/39
             composer_form = Form(
                 self.env['mail.compose.message'].with_context({
                     'default_composition_mode': 'comment',
@@ -540,7 +540,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             )
             composer = composer_form.save()
 
-        with self.assertQueryCount(__system__=47, employee=64):
+        with self.assertQueryCount(__system__=49, employee=62):
             composer._action_send_mail()
 
         # notifications
@@ -879,7 +879,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         _partners, test_records, test_template = self._create_test_records_for_batch()
 
         with self.assertQueryCount(__system__=4, employee=4):
-            composer = self.env['mail.compose.message'].with_context({
+            _composer = self.env['mail.compose.message'].with_context({
                 'default_composition_mode': 'mass_mail',
                 'default_model': test_records._name,
                 'default_res_ids': test_records.ids,
