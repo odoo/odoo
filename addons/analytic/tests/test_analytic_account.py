@@ -165,3 +165,29 @@ class TestAnalyticAccount(TransactionCase):
         })
         self.assertEqual(distribution_json, distribution_4.analytic_distribution,
                          "Distribution 4 should be given, as the partner_category_id is better than the company_id")
+
+    def test_analytic_applicability(self):
+        """ Test the applicability returned from a plan """
+        self.assertEqual(self.analytic_plan_2._get_applicability(**{}), 'optional')
+
+        self.analytic_plan_2.write({
+            'applicability_ids': [Command.create({
+                'business_domain': 'general',
+                'applicability': 'unavailable',
+            })]
+        })
+
+        self.assertEqual(self.analytic_plan_2._get_applicability(**{}), 'optional')
+        self.assertEqual(self.analytic_plan_2._get_applicability(**{'business_domain': 'other'}), 'optional')
+        self.assertEqual(self.analytic_plan_2._get_applicability(**{'business_domain': 'general'}), 'unavailable')
+
+        self.analytic_plan_2.write({
+            'applicability_ids': [Command.create({
+                'business_domain': 'general',
+                'applicability': 'mandatory',
+            })]
+        })
+        self.assertEqual(self.analytic_plan_2._get_applicability(**{'business_domain': 'other'}), 'optional')
+
+        # In case of equality of applicability rules: take the last created
+        self.assertEqual(self.analytic_plan_2._get_applicability(**{'business_domain': 'general'}), 'mandatory')

@@ -210,3 +210,43 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon):
         invoice.invoice_line_ids.analytic_distribution = {self.analytic_account_b.id: 0.9}
         invoice.action_post()
         self.assertEqual(invoice.state, 'posted')
+
+    def test_order_analytic_distribution(self):
+        """ Tests the order of applicability with the last one the better in case of equality """
+        account_code = self.company_data.get('default_account_revenue').code
+        self.default_plan.write({
+            'applicability_ids': [
+                Command.create({
+                    'business_domain': 'invoice',
+                    'product_categ_id': self.product_a.categ_id.id,
+                    'applicability': 'optional',
+                }),
+                Command.create({
+                    'business_domain': 'invoice',
+                    'account_prefix': account_code[:2],
+                    'applicability': 'mandatory',
+                }),
+                Command.create({
+                    'business_domain': 'invoice',
+                    'account_prefix': account_code[:1],
+                    'applicability': 'unavailable',
+                }),
+            ]
+        })
+        applicability = self.default_plan._get_applicability(**{
+            'business_domain': 'invoice',
+            'product': self.product_a.id,
+            'account': self.company_data.get('default_account_revenue').id,
+        })
+        self.assertEqual(applicability, 'unavailable')
+
+        self.default_plan.applicability_ids[1].applicability = 'unavailable'
+        self.default_plan.applicability_ids[2].applicability = 'mandatory'
+
+        # different account => the one with product should prevail
+        applicability = self.default_plan._get_applicability(**{
+            'business_domain': 'invoice',
+            'product': self.product_a.id,
+            'account': self.company_data.get('default_account_expense').id,
+        })
+        self.assertEqual(applicability, 'optional')

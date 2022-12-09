@@ -171,11 +171,13 @@ class AccountAnalyticPlan(models.Model):
             # For models for example, we want all plans to be visible, so we force the applicability
             return kwargs['applicability']
         else:
-            score = 0
+            # If an applicability is valid it should return with a score of 1+, so better than the default one
+            # In case of equality, the most recent one should prevail
+            score = 1
             applicability = self.default_applicability
             for applicability_rule in self.applicability_ids:
                 score_rule = applicability_rule._get_score(**kwargs)
-                if score_rule > score:
+                if score_rule >= score:
                     applicability = applicability_rule.applicability
                     score = score_rule
             return applicability
