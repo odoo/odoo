@@ -48,6 +48,11 @@
                 <field name="has_late_and_unreached_milestone"/>
                 <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger", "normal": "200"}'/>
                 <templates>
+                <t t-name="kanban-menu" t-if="!selection_mode">
+                    <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit</a>
+                    <div role="separator" class="dropdown-divider"></div>
+                    <ul class="oe_kanban_colorpicker" data-field="color"/>
+                </t>
                 <t t-name="kanban-box">
                     <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click">
                         <div class="oe_kanban_content">
@@ -72,16 +77,6 @@
                                         </span>
                                     </t>
                                     <t t-else="record.email_from.raw_value"><span><field name="email_from"/></span></t>
-                                </div>
-                                <div class="o_dropdown_kanban dropdown" t-if="!selection_mode">
-                                    <a role="button" class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" data-bs-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
-                                        <span class="fa fa-ellipsis-v"/>
-                                    </a>
-                                    <div class="dropdown-menu" role="menu">
-                                        <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit</a>
-                                        <div role="separator" class="dropdown-divider"></div>
-                                        <ul class="oe_kanban_colorpicker" data-field="color"/>
-                                    </div>
                                 </div>
                             </div>
                             <div class="o_kanban_record_body">

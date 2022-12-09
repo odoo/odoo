@@ -87,9 +87,10 @@
                     <AccountDropZone
                         visible="state.dropzoneVisible"
                         hideZone="() => state.dropzoneVisible = false"/>
-                    <t t-call="{{ templates['kanban-box'] }}" t-call-context="renderingContext"/>
+                    <t t-call="{{ templates[this.constructor.KANBAN_BOX_ATTRIBUTE] }}" t-call-context="renderingContext"/>
                 </t>
             </AccountFileUploader>
+            <t t-call="{{ this.constructor.menuTemplate }}"/>
         </div>
     </t>
 

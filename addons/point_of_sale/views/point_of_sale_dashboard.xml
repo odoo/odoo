@@ -62,6 +62,37 @@
                 <field name="currency_id"/>
                 <field name="number_of_opened_session"/>
                 <templates>
+                    <t t-name="kanban-menu">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
+                                    <div role="menuitem" class="o_kanban_card_manage_title">
+                                        <span>View</span>
+                                    </div>
+                                    <div role="menuitem">
+                                        <a name="%(action_pos_order_filtered)d" type="action">Orders</a>
+                                    </div>
+                                    <div role="menuitem">
+                                        <a name="%(action_pos_session_filtered)d" type="action">Sessions</a>
+                                    </div>
+                                </div>
+                                <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">
+                                    <div role="menuitem" class="o_kanban_card_manage_title">
+                                        <span>Reporting</span>
+                                    </div>
+                                    <div role="menuitem">
+                                        <a name="%(action_report_pos_order_all_filtered)d" type="action">Orders</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div t-if="widget.editable" class="o_kanban_card_manage_settings row" groups="point_of_sale.group_pos_manager">
+                                <div role="menuitem" class="col-12">
+                                    <a name="action_pos_config_modal_edit" type="object">Edit</a>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
                     <t t-name="kanban-box">
                         <div>
                             <div class="o_kanban_card_header">
@@ -84,9 +115,6 @@
                                              To Close
                                         </div>
                                     </t>
-                                </div>
-                                <div class="o_kanban_manage_button_section">
-                                    <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
                                 </div>
                             </div>
                             <div class="container o_kanban_card_content">
@@ -130,34 +158,6 @@
                                     <field name="current_user_id" widget="many2one_avatar_user"/>
                                 </div>
 
-                            </div><div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
-                                <div class="row">
-                                    <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
-                                        <div role="menuitem" class="o_kanban_card_manage_title">
-                                            <span>View</span>
-                                        </div>
-                                        <div role="menuitem">
-                                            <a name="%(action_pos_order_filtered)d" type="action">Orders</a>
-                                        </div>
-                                        <div role="menuitem">
-                                            <a name="%(action_pos_session_filtered)d" type="action">Sessions</a>
-                                        </div>
-                                    </div>
-                                    <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">
-                                        <div role="menuitem" class="o_kanban_card_manage_title">
-                                            <span>Reporting</span>
-                                        </div>
-                                        <div role="menuitem">
-                                            <a name="%(action_report_pos_order_all_filtered)d" type="action">Orders</a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div t-if="widget.editable" class="o_kanban_card_manage_settings row" groups="point_of_sale.group_pos_manager">
-                                    <div role="menuitem" class="col-12">
-                                        <a name="action_pos_config_modal_edit" type="object">Edit</a>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </t>

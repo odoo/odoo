@@ -25,6 +25,7 @@ import { Widget } from "@web/views/widgets/widget";
  */
 
 export const KANBAN_BOX_ATTRIBUTE = "kanban-box";
+export const KANBAN_MENU_ATTRIBUTE = "kanban-menu";
 export const KANBAN_TOOLTIP_ATTRIBUTE = "kanban-tooltip";
 
 export class KanbanArchParser extends XMLParser {

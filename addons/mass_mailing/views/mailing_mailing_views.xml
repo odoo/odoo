@@ -490,23 +490,18 @@
                     <field name='next_departure'/>
                     <field name='active'/>
                     <templates>
+                        <t t-name="kanban-menu" t-if="!selection_mode">
+                            <ul class="oe_kanban_colorpicker" data-field="color"/>
+                            <t t-if="widget.deletable">
+                                <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                            </t>
+                            <a role="menuitem" class="dropdown-item o_kanban_mailing_active" name="toggle_active" type="object">
+                                <t t-if="record.active.raw_value">Archive</t>
+                                <t t-if="!record.active.raw_value">Restore</t>
+                            </a>
+                        </t>
                         <t t-name="kanban-box">
                             <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click oe_kanban_mass_mailing">
-                                <div class="o_dropdown_kanban dropdown" t-if="!selection_mode">
-                                    <a role="button" class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" href="#" data-bs-display="static" aria-label="Dropdown menu" title="Dropdown menu">
-                                        <span class="fa fa-ellipsis-v"/>
-                                    </a>
-                                    <div class="dropdown-menu" role="menu">
-                                        <ul class="oe_kanban_colorpicker" data-field="color"/>
-                                        <t t-if="widget.deletable">
-                                            <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
-                                        </t>
-                                        <a role="menuitem" class="dropdown-item o_kanban_mailing_active" name="toggle_active" type="object">
-                                            <t t-if="record.active.raw_value">Archive</t>
-                                            <t t-if="!record.active.raw_value">Restore</t>
-                                        </a>
-                                    </div>
-                                </div>
                                  <div class="oe_kanban_content">
                                     <div class="o_kanban_record_top">
                                         <div class="o_kanban_record_headings">

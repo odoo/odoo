@@ -14,7 +14,11 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewCompiler } from "@web/views/view_compiler";
 import { Widget } from "@web/views/widgets/widget";
 import { evalDomain } from "../utils";
-import { KANBAN_BOX_ATTRIBUTE, KANBAN_TOOLTIP_ATTRIBUTE } from "./kanban_arch_parser";
+import {
+    KANBAN_BOX_ATTRIBUTE,
+    KANBAN_MENU_ATTRIBUTE,
+    KANBAN_TOOLTIP_ATTRIBUTE,
+} from "./kanban_arch_parser";
 import { KanbanCompiler } from "./kanban_compiler";
 import { KanbanCoverImageDialog } from "./kanban_cover_image_dialog";
 import { KanbanDropdownMenuWrapper } from "./kanban_dropdown_menu_wrapper";
@@ -121,6 +125,10 @@ export class KanbanRecord extends Component {
         const ViewCompiler = Compiler || this.constructor.Compiler;
 
         this.templates = useViewCompiler(ViewCompiler, arch, templates);
+
+        if (this.constructor.KANBAN_MENU_ATTRIBUTE in templates) {
+            this.showMenu = true;
+        }
 
         if (KANBAN_TOOLTIP_ATTRIBUTE in templates) {
             useTooltip("root", {
@@ -327,4 +335,6 @@ KanbanRecord.props = [
 ];
 KanbanRecord.Compiler = KanbanCompiler;
 KanbanRecord.KANBAN_BOX_ATTRIBUTE = KANBAN_BOX_ATTRIBUTE;
+KanbanRecord.KANBAN_MENU_ATTRIBUTE = KANBAN_MENU_ATTRIBUTE;
+KanbanRecord.menuTemplate = "web.KanbanRecordMenu";
 KanbanRecord.template = "web.KanbanRecord";
