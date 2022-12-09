@@ -22,7 +22,7 @@
                     <div class="col-auto col-3 mw-100 mb-2">
                         <p t-if="o.l10n_ke_cu_qrcode">
                             <strong class="text-center">TIMS URL</strong><br/><br/>
-                            <img style="display:block;"  t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('QR', quote_plus(o.l10n_ke_cu_qrcode), 130, 130)" alt="QR Code"/>
+                            <img style="display:block;" t-att-src="'/report/barcode/?type=QR&amp;value=%s&amp;width=%s&amp;height=%s' % (quote_plus(o.l10n_ke_cu_qrcode), 130, 130)" alt="QR Code"/>
                         </p>
                     </div>
                 </div>
