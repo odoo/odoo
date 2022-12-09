@@ -3,7 +3,7 @@
 import tour from 'web_tour.tour';
 
 const projectSharingSteps = [...tour.stepUtils.goToAppSteps("project.menu_main_pm", 'Go to the Project App.'), {
-    trigger: '.oe_kanban_global_click :contains("Project Sharing") button.o_dropdown_kanban',
+    trigger: '.o_kanban_record:contains("Project Sharing") .o_dropdown_kanban .dropdown-toggle',
     content: 'Open the project dropdown.'
 }, {
     trigger: '.o_kanban_record:contains("Project Sharing") .dropdown-menu a:contains("Share")',

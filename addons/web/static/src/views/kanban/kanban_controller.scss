@@ -26,17 +26,12 @@
     --o-view-nocontent-zindex: 1;
     // ----------------------------------------------------------------------------
 
-    .dropdown,
-    .o_kanban_manage_button_section {
-        position: inherit;
-    }
-
     @include media-breakpoint-down(md) {
         --KanbanRecord-padding-h: #{$o-kanban-inside-hgutter * 2};
         padding: 0px !important;
     }
 
-    .o_kanban_record > div,
+    .o_kanban_record > div:not(.o_dropdown_kanban),
     .o_kanban_quick_create {
         border: 1px solid $border-color;
         background-color: $o-view-background-color;
@@ -57,7 +52,7 @@
         min-width: 150px;
         margin: 0 0 -1px;
 
-        > div {
+        > div:not(.o_dropdown_kanban) {
             padding: var(--KanbanRecord-padding-v) var(--KanbanRecord-padding-h);
             width: 100%;
             height: 100%;
@@ -258,13 +253,7 @@
         // -------  v11 Layout + generic layouts (~v10) -------
         // Kanban Record - Dropdown
         .o_dropdown_kanban {
-            @include o-position-absolute(
-                calc(var(--KanbanRecord-padding-v) + var(--KanbanRecord__dropdown-gap)),
-                calc(var(--KanbanRecord-padding-h) + var(--KanbanRecord__dropdown-gap))
-            );
             visibility: hidden;
-            margin: calc(var(--KanbanRecord-padding-v) * -1)
-                calc(var(--KanbanRecord-padding-h) * -1) 0 0;
             @include media-breakpoint-down(md) {
                 visibility: visible;
             }

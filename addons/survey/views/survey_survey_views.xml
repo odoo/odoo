@@ -213,6 +213,14 @@
                 <field name="session_state"/>
                 <field name="success_ratio"/>
                 <templates>
+                    <div t-name="kanban-menu" t-if="widget.editable">
+                        <a role="menuitem" type="edit" class="dropdown-item">Edit Survey</a>
+                        <a t-if="record.active.raw_value" role="menuitem" type="object" class="dropdown-item" name="action_send_survey">Share</a>
+                        <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                        <div role="separator" class="dropdown-divider"/>
+                        <div role="separator" class="dropdown-item-text">Color</div>
+                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                    </div>
                     <div t-name="kanban-box"
                         t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)}
                                       oe_kanban_card oe_kanban_global_click
@@ -311,22 +319,6 @@
                             <widget name="web_ribbon" title="Archived"
                                 bg_color="bg-danger"
                                 attrs="{'invisible': [('active', '=', True)]}"/>
-                            <div class="o_dropdown_kanban dropdown" t-if="widget.editable">
-                                <a href="#" role="button"
-                                    class="dropdown-toggle o-no-caret btn"
-                                    data-bs-toggle="dropdown" data-bs-display="static"
-                                    aria-label="Dropdown menu" title="Dropdown menu">
-                                    <span class="fa fa-ellipsis-v"/>
-                                </a>
-                                <div class="dropdown-menu" role="menu">
-                                    <a role="menuitem" type="edit" class="dropdown-item">Edit Survey</a>
-                                    <a t-if="record.active.raw_value" role="menuitem" type="object" class="dropdown-item" name="action_send_survey">Share</a>
-                                    <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
-                                    <div role="separator" class="dropdown-divider"/>
-                                    <div role="separator" class="dropdown-item-text">Color</div>
-                                    <ul class="oe_kanban_colorpicker" data-field="color"/>
-                                </div>
-                            </div>
                             <div class="o_kanban_record_top">
                                 <h4 class="o_kanban_record_title p-0 mb4"><field name="title" /></h4>
                             </div>

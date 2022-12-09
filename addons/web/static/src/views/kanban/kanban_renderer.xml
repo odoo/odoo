@@ -155,7 +155,12 @@
 
     <t t-name="web.KanbanColorPicker" owl="1">
         <ul class="oe_kanban_colorpicker">
-            <t t-foreach="props.colors" t-as="color" t-key="color">
+            <!--
+                Used in KanbanRecord
+                Note: `props` is only accessible through `this` as we call the compiled template with
+                `t-call-context` directive.
+            -->
+            <t t-foreach="this.props.colors" t-as="color" t-key="color">
                 <li role="menuitem" t-on-click="() => this.selectColor(color_index)" t-att-title="color" t-att-aria-label="color">
                     <a href="#" t-attf-class="oe_kanban_color_{{ color_index }}" />
                 </li>

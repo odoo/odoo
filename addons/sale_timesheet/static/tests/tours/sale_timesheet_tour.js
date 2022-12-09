@@ -181,7 +181,7 @@ tour.register('sale_timesheet_tour', {
     trigger: '.dropdown-item[data-menu-xmlid="project.menu_main_pm"]',
     content: 'Select Project main menu',
 }, {
-    trigger: '.oe_kanban_global_click :contains("Project for Freeman") button.o_dropdown_kanban',
+    trigger: '.o_kanban_record:contains("Project for Freeman") .o_dropdown_kanban .dropdown-toggle',
     content: 'Open the project dropdown',
 }, {
     trigger: '.o_kanban_record:contains("Project for Freeman") .dropdown-menu a:contains("Settings")',

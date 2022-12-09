@@ -243,28 +243,23 @@
                     <field name="enroll"/>
                     <field name="website_published"/>
                     <templates>
+                        <t t-name="kanban-menu">
+                            <div role="menuitem" aria-haspopup="true" class="o_no_padding_kanban_colorpicker">
+                                <ul class="oe_kanban_colorpicker" data-field="color" role="popup"/>
+                            </div>
+                            <div class="o_kanban_slides_card_manage_pane">
+                                <t t-if="widget.deletable">
+                                    <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                                </t>
+                                <a role="menuitem" type="edit" class="dropdown-item">Edit</a>
+                                <a role="menuitem" name="action_channel_invite" class="dropdown-item"
+                                    type="object" attrs="{'invisible': [('enroll', '!=', 'invite')]}">
+                                    Invite
+                                </a>
+                            </div>
+                        </t>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
-                                <div class="o_dropdown_kanban dropdown">
-                                    <a role="button" class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
-                                        <span class="fa fa-ellipsis-v" aria-hidden="false"/>
-                                    </a>
-                                    <div class="o_kanban_card_manage_pane dropdown-menu" role="menu">
-                                        <div role="menuitem" aria-haspopup="true" class="o_no_padding_kanban_colorpicker">
-                                            <ul class="oe_kanban_colorpicker" data-field="color" role="popup"/>
-                                        </div>
-                                        <div class="o_kanban_slides_card_manage_pane">
-                                            <t t-if="widget.deletable">
-                                                <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
-                                            </t>
-                                            <a role="menuitem" type="edit" class="dropdown-item">Edit</a>
-                                            <a role="menuitem" name="action_channel_invite" class="dropdown-item"
-                                               type="object" attrs="{'invisible': [('enroll', '!=', 'invite')]}">
-                                                Invite
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="o_kanban_card_header">
                                     <div class="o_kanban_card_header_title mb16">
                                         <div class="o_primary">

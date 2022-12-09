@@ -26,6 +26,52 @@
                 <field name="user_id"/>
                 <field name="application_count"/>
                 <templates>
+                    <t t-name="kanban-menu" groups="hr_recruitment.group_hr_recruitment_user">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-6 o_kanban_card_manage_section">
+                                    <div role="menuitem" class="o_kanban_card_manage_title">
+                                        <span>View</span>
+                                    </div>
+                                    <div role="menuitem" name="menu_view_applications">
+                                        <a name="%(action_hr_job_applications)d" type="action">Applications</a>
+                                    </div>
+                                    <div role="menuitem">
+                                        <a name="action_open_activities" type="object">Activities</a>
+                                    </div>
+                                    <div role="menuitem">
+                                        <a name="%(action_hr_job_sources)d" type="action" context="{'default_job_id': active_id}">Trackers</a>
+                                    </div>
+                                </div>
+                                <div class="col-6 o_kanban_card_manage_section">
+                                    <div role="menuitem" class="o_kanban_card_manage_title">
+                                        <span>New</span>
+                                    </div>
+                                    <div role="menuitem" name="menu_new_applications">
+                                        <a name="%(hr_recruitment.action_hr_applicant_new)d" type="action">Application</a>
+                                    </div>
+                                </div>
+                                <div class="col-6 o_kanban_card_manage_section">
+                                    <div role="menuitem" class="o_kanban_card_manage_title">
+                                        <span>Reporting</span>
+                                    </div>
+                                    <div role="menuitem" name="o_kanban_job_reporting">
+                                        <a name="%(hr_recruitment.action_hr_recruitment_report_filtered_job)d" type="action">Analysis</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="o_kanban_card_manage_settings row">
+                                <div class="col-6" role="menuitem" aria-haspopup="true">
+                                    <ul class="oe_kanban_colorpicker" data-field="color" role="popup"/>
+                                </div>
+                                <div class="col-6" role="menuitem">
+                                    <a class="dropdown-item" t-if="widget.editable" name="edit_job" type="edit">Configuration</a>
+                                    <a class="dropdown-item" t-if="record.active.raw_value" name="toggle_active" type="object">Archive</a>
+                                    <a class="dropdown-item" t-if="!record.active.raw_value" name="toggle_active" type="object">Unarchive</a>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
                     <t t-name="kanban-box">
                         <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
                             <div class="o_kanban_card_header">
@@ -43,9 +89,6 @@
                                     <div t-if="record.alias_name.value and record.alias_domain.value" class="ps-3 o_secondary o_job_alias">
                                         <small><i class="fa fa-envelope-o" role="img" aria-label="Alias" title="Alias"></i> <field name="alias_id"/></small>
                                     </div>
-                                </div>
-                                <div class="o_kanban_manage_button_section" groups="hr_recruitment.group_hr_recruitment_user">
-                                    <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
                                 </div>
                             </div>
                             <div class="container o_recruitment_job_container o_kanban_card_content mt-0 mt-sm-3">
@@ -76,50 +119,6 @@
                                     </ul>
                                 </div>
                                 <div name="kanban_boxes" class="row flex-nowrap" groups="hr_recruitment.group_hr_recruitment_user"></div>
-                            </div>
-                            <div class="container o_recruitment_job_container o_kanban_card_manage_pane dropdown-menu" role="menu">
-                                <div class="row">
-                                    <div class="col-6 o_kanban_card_manage_section">
-                                        <div role="menuitem" class="o_kanban_card_manage_title">
-                                            <span>View</span>
-                                        </div>
-                                        <div role="menuitem" name="menu_view_applications">
-                                            <a name="%(action_hr_job_applications)d" type="action">Applications</a>
-                                        </div>
-                                        <div role="menuitem">
-                                            <a name="action_open_activities" type="object">Activities</a>
-                                        </div>
-                                        <div role="menuitem">
-                                            <a name="%(action_hr_job_sources)d" type="action" context="{'default_job_id': active_id}">Trackers</a>
-                                        </div>
-                                    </div>
-                                    <div class="col-6 o_kanban_card_manage_section">
-                                        <div role="menuitem" class="o_kanban_card_manage_title">
-                                            <span>New</span>
-                                        </div>
-                                        <div role="menuitem" name="menu_new_applications">
-                                            <a name="%(hr_recruitment.action_hr_applicant_new)d" type="action">Application</a>
-                                        </div>
-                                    </div>
-                                    <div class="col-6 o_kanban_card_manage_section">
-                                        <div role="menuitem" class="o_kanban_card_manage_title">
-                                            <span>Reporting</span>
-                                        </div>
-                                        <div role="menuitem" name="o_kanban_job_reporting">
-                                            <a name="%(hr_recruitment.action_hr_recruitment_report_filtered_job)d" type="action">Analysis</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="o_kanban_card_manage_settings row">
-                                    <div class="col-6" role="menuitem" aria-haspopup="true">
-                                        <ul class="oe_kanban_colorpicker" data-field="color" role="popup"/>
-                                    </div>
-                                    <div class="col-6" role="menuitem">
-                                        <a class="dropdown-item" t-if="widget.editable" name="edit_job" type="edit">Configuration</a>
-                                        <a class="dropdown-item" t-if="record.active.raw_value" name="toggle_active" type="object">Archive</a>
-                                        <a class="dropdown-item" t-if="!record.active.raw_value" name="toggle_active" type="object">Unarchive</a>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </t>

@@ -318,6 +318,12 @@
                 <field name="refuse_reason_id" />
                 <progressbar field="activity_state" colors='{"planned": "success", "overdue": "danger", "today": "warning"}'/>
                 <templates>
+                    <t t-name="kanban-menu">
+                        <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                        <a role="menuitem" name="action_makeMeeting" type="object" class="dropdown-item">Schedule Interview</a>
+                        <div role="separator" class="dropdown-divider"></div>
+                        <ul class="oe_kanban_colorpicker text-center" data-field="color"/>
+                    </t>
                     <t t-name="kanban-box">
                         <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click oe_applicant_kanban oe_semantic_html_override">
                             <field name="date_closed" invisible="1"/>
@@ -325,17 +331,6 @@
                                 <span class="bg-success">Hired</span>
                             </div>
                             <span class="badge rounded-pill text-bg-danger float-end me-4" attrs="{'invisible': ['|', ('active', '=', True), ('refuse_reason_id', '=', False)]}">Refused</span>
-                            <div class="o_dropdown_kanban dropdown">
-                                <a class="dropdown-toggle o-no-caret btn" role="button" data-bs-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu" data-bs-display="static">
-                                    <span class="fa fa-ellipsis-v"/>
-                                </a>
-                                <div class="dropdown-menu" role="menu">
-                                    <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
-                                    <a role="menuitem" name="action_makeMeeting" type="object" class="dropdown-item">Schedule Interview</a>
-                                    <div role="separator" class="dropdown-divider"></div>
-                                    <ul class="oe_kanban_colorpicker text-center" data-field="color"/>
-                                </div>
-                            </div>
                             <div class="oe_kanban_content">
                                 <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_headings">
