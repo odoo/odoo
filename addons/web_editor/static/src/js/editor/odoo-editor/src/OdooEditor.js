@@ -3958,6 +3958,7 @@ export class OdooEditor extends EventTarget {
                     star.classList.toggle('fa-star', false);
                 };
             }
+            this.historyStep();
         }
 
         // Handle table selection.
