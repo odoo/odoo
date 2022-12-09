@@ -3653,7 +3653,6 @@
         "SET_FORMATTING",
         "CLEAR_FORMATTING",
         "SET_BORDER",
-        "SET_DECIMAL",
         /** CHART */
         "CREATE_CHART",
         "UPDATE_CHART",
@@ -26729,7 +26728,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
      */
     function repairInitialMessages(data, initialMessages) {
         initialMessages = fixTranslatedSheetIds(data, initialMessages);
-        initialMessages = dropSortCommands(data, initialMessages);
+        initialMessages = dropCommands(initialMessages, "SORT_CELLS");
+        initialMessages = dropCommands(initialMessages, "SET_DECIMAL");
         return initialMessages;
     }
     /**
@@ -26767,14 +26767,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         return messages;
     }
-    function dropSortCommands(data, initialMessages) {
+    function dropCommands(initialMessages, commandType) {
         const messages = [];
         for (const message of initialMessages) {
             if (message.type === "REMOTE_REVISION") {
                 messages.push({
                     ...message,
-                    // @ts-ignore
-                    commands: message.commands.filter((command) => command.type !== "SORT_CELLS"),
+                    commands: message.commands.filter((command) => command.type !== commandType),
                 });
             }
             else {
@@ -34268,6 +34267,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 case 0 /* LAYERS.Background */:
                     this.boxes = this.getGridBoxes();
                     this.drawBackground(renderingContext);
+                    this.drawOverflowingCellBackground(renderingContext);
                     this.drawCellBackground(renderingContext);
                     this.drawBorders(renderingContext);
                     this.drawTexts(renderingContext);
@@ -34285,58 +34285,27 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         drawBackground(renderingContext) {
             const { ctx, thinLineWidth } = renderingContext;
             const { width, height } = this.getters.getSheetViewDimensionWithHeaders();
-            const sheetId = this.getters.getActiveSheetId();
             // white background
             ctx.fillStyle = "#ffffff";
             ctx.fillRect(0, 0, width + CANVAS_SHIFT, height + CANVAS_SHIFT);
-            // background grid
-            const visibleCols = this.getters.getSheetViewVisibleCols();
-            const left = visibleCols[0];
-            const right = visibleCols[visibleCols.length - 1];
-            const visibleRows = this.getters.getSheetViewVisibleRows();
-            const top = visibleRows[0];
-            const bottom = visibleRows[visibleRows.length - 1];
-            if (!this.getters.getGridLinesVisibility(sheetId) || this.getters.isDashboard()) {
-                return;
-            }
-            ctx.lineWidth = 2 * thinLineWidth;
-            ctx.strokeStyle = CELL_BORDER_COLOR;
-            ctx.beginPath();
-            // vertical lines
-            for (const i of visibleCols) {
-                const zone = { top, bottom, left: i, right: i };
-                const { x, width: colWidth, height: colHeight } = this.getters.getVisibleRect(zone);
-                ctx.moveTo(x + colWidth, 0);
-                ctx.lineTo(x + colWidth, Math.min(height, colHeight + (this.getters.isDashboard() ? 0 : HEADER_HEIGHT)));
-            }
-            // horizontal lines
-            for (const i of visibleRows) {
-                const zone = { left, right, top: i, bottom: i };
-                const { y, width: rowWidth, height: rowHeight } = this.getters.getVisibleRect(zone);
-                ctx.moveTo(0, y + rowHeight);
-                ctx.lineTo(Math.min(width, rowWidth + (this.getters.isDashboard() ? 0 : HEADER_WIDTH)), y + rowHeight);
-            }
-            ctx.stroke();
-        }
-        drawCellBackground(renderingContext) {
-            const { ctx, thinLineWidth } = renderingContext;
             const areGridLinesVisible = !this.getters.isDashboard() &&
                 this.getters.getGridLinesVisibility(this.getters.getActiveSheetId());
-            ctx.lineWidth = areGridLinesVisible ? 0.3 * thinLineWidth : thinLineWidth;
             const inset = areGridLinesVisible ? 0.1 * thinLineWidth : 0;
-            ctx.strokeStyle = "#111";
-            for (let box of this.boxes) {
-                // fill color
+            if (areGridLinesVisible) {
+                for (const box of this.boxes) {
+                    ctx.strokeStyle = CELL_BORDER_COLOR;
+                    ctx.lineWidth = thinLineWidth;
+                    ctx.strokeRect(box.x + inset, box.y + inset, box.width - 2 * inset, box.height - 2 * inset);
+                }
+            }
+        }
+        drawCellBackground(renderingContext) {
+            const { ctx } = renderingContext;
+            for (const box of this.boxes) {
                 let style = box.style;
-                if ((style.fillColor && style.fillColor !== "#ffffff") || box.isMerge) {
+                if (style.fillColor && style.fillColor !== "#ffffff") {
                     ctx.fillStyle = style.fillColor || "#ffffff";
-                    if (areGridLinesVisible) {
-                        ctx.fillRect(box.x, box.y, box.width, box.height);
-                        ctx.strokeRect(box.x + inset, box.y + inset, box.width - 2 * inset, box.height - 2 * inset);
-                    }
-                    else {
-                        ctx.fillRect(box.x - thinLineWidth, box.y - thinLineWidth, box.width + 2 * thinLineWidth, box.height + 2 * thinLineWidth);
-                    }
+                    ctx.fillRect(box.x, box.y, box.width, box.height);
                 }
                 if (box.error) {
                     ctx.fillStyle = "red";
@@ -34345,6 +34314,35 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     ctx.lineTo(box.x + box.width, box.y);
                     ctx.lineTo(box.x + box.width, box.y + 5);
                     ctx.fill();
+                }
+            }
+        }
+        drawOverflowingCellBackground(renderingContext) {
+            var _a, _b;
+            const { ctx, thinLineWidth } = renderingContext;
+            for (const box of this.boxes) {
+                if (box.content && box.isOverflow) {
+                    const align = box.content.align || "left";
+                    let x;
+                    let width;
+                    const y = box.y + thinLineWidth / 2;
+                    const height = box.height - thinLineWidth;
+                    const clipWidth = Math.min(((_a = box.clipRect) === null || _a === void 0 ? void 0 : _a.width) || Infinity, box.content.width);
+                    if (align === "left") {
+                        x = box.x + thinLineWidth / 2;
+                        width = clipWidth - 2 * thinLineWidth;
+                    }
+                    else if (align === "right") {
+                        x = box.x + box.width - thinLineWidth / 2;
+                        width = -clipWidth + 2 * thinLineWidth;
+                    }
+                    else {
+                        x =
+                            (((_b = box.clipRect) === null || _b === void 0 ? void 0 : _b.x) || box.x + box.width / 2 - box.content.width / 2) + thinLineWidth / 2;
+                        width = clipWidth - 2 * thinLineWidth;
+                    }
+                    ctx.fillStyle = "#ffffff";
+                    ctx.fillRect(x, y, width, height);
                 }
             }
         }
@@ -34746,6 +34744,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 else {
                     nextColIndex = this.findNextEmptyCol(col, right, row);
                     previousColIndex = this.findPreviousEmptyCol(col, left, row);
+                    box.isOverflow = true;
                 }
                 switch (align) {
                     case "left": {
@@ -35314,6 +35313,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.clientId = "local";
             this.pendingMessages = [];
             this.waitingAck = false;
+            this.isReplayingInitialRevisions = false;
             this.processedRevisions = new Set();
             this.uuidGenerator = new UuidGenerator();
             this.debouncedMove = debounce(this._move.bind(this), DEBOUNCE_TIME);
@@ -35373,6 +35373,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.transportService.onNewMessage(this.clientId, this.onMessageReceived.bind(this));
         }
         loadInitialMessages(messages) {
+            this.isReplayingInitialRevisions = true;
             this.on("unexpected-revision-id", this, ({ revisionId }) => {
                 throw new Error(`The spreadsheet could not be loaded. Revision ${revisionId} is corrupted.`);
             });
@@ -35380,6 +35381,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 this.onMessageReceived(message);
             }
             this.off("unexpected-revision-id", this);
+            this.isReplayingInitialRevisions = false;
         }
         /**
          * Notify the server that the user client left the collaborative session
@@ -35567,6 +35569,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     clientId: revision.clientId,
                     commands: revision.commands,
                 };
+            }
+            if (this.isReplayingInitialRevisions) {
+                throw new Error(`Trying to send a new revision while replaying initial revision. This can lead to endless dispatches every time the spreadsheet is open.
+      ${JSON.stringify(message)}`);
             }
             this.transportService.sendMessage({
                 ...message,
@@ -42563,7 +42569,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     case 3 /* Status.Finalizing */:
                         throw new Error("Cannot dispatch commands in the finalize state");
                     case 2 /* Status.RunningCore */:
-                        throw new Error("A UI plugin cannot dispatch while handling a core command");
+                        if (isCoreCommand(command)) {
+                            throw new Error(`A UI plugin cannot dispatch ${type} while handling a core command`);
+                        }
+                        this.dispatchToHandlers(this.handlers, command);
                 }
                 return DispatchResult.Success;
             };
@@ -42697,7 +42706,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         onRemoteRevisionReceived({ commands }) {
             for (let command of commands) {
+                const previousStatus = this.status;
+                this.status = 2 /* Status.RunningCore */;
                 this.dispatchToHandlers(this.allUIPlugins, command);
+                this.status = previousStatus;
             }
             this.finalize();
         }
@@ -42988,8 +43000,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2022-12-07T09:37:54.145Z';
-    exports.__info__.hash = '300da46';
+    exports.__info__.date = '2022-12-09T15:01:03.892Z';
+    exports.__info__.hash = '1419e57';
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map
