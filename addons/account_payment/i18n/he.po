@@ -115,6 +115,8 @@ msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
 "                                If you believe that it is an error, please contact the website administrator."
 msgstr ""
+"<strong>לא נמצאה אפשרות תשלום מתאימה.</strong><br/>\n"
+"                                אם לדעתך מדובר בטעות, נא ליצור קשר עם מנהלי האתר."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
@@ -128,7 +130,7 @@ msgstr ""
 #: code:addons/account_payment/models/account_payment.py:0
 #, python-format
 msgid "A payment transaction with reference %s already exists."
-msgstr ""
+msgstr "תשלום עם מספר אסמכתא %s כבר קיים"
 
 #. module: account_payment
 #: code:addons/account_payment/models/account_payment.py:0
@@ -417,7 +419,7 @@ msgstr "רשום תשלום"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_journal_form
 msgid "SETUP"
-msgstr ""
+msgstr "הגדרה"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__payment_token_id
@@ -450,6 +452,13 @@ msgstr ""
 #, python-format
 msgid ""
 "The amount to be refunded must be positive and cannot be superior to %s."
+msgstr "סכום הזיכוי צריך להיות מספר חיובי ולא יכול להיות יותר מ-%s."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/payment.py:0
+#, python-format
+msgid "The access token is invalid."
 msgstr ""
 
 #. module: account_payment

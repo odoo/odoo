@@ -1346,6 +1346,14 @@ msgstr ""
 " '%s')."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "A line of this move is using a deprecated account, you cannot post it."
+msgstr ""
+"Una línea de este movimiento utiliza una cuenta obsoleta, no puede "
+"publicarla."
+
+#. module: account
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "A payment must always belongs to a bank or cash journal."
@@ -3723,6 +3731,12 @@ msgstr "Redondeos de efectivo"
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Cash Statement"
 msgstr "Estado de cuenta de efectivo"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Cash basis rounding difference"
+msgstr "Diferencia por redondeo de base de efectivo"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -13810,11 +13824,11 @@ msgstr "El país al que aplica este impuesto."
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid ""
-"The country set on the the foreign VAT fiscal position must match the one "
-"set on the report."
+"The country set on the foreign VAT fiscal position must match the one set on"
+" the report."
 msgstr ""
-"El país establecido en la posición fiscal de impuestos extranjeros debe "
-"coincidir con el establecido en el reporte."
+"El país que se estableció en la posición fiscal de impuestos extranjeros "
+"debe coincidir con el que se estableció en el reporte."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template__country_id

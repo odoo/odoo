@@ -8,6 +8,7 @@
 # Dao Nguyen <trucdao.uel@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
+# Thi Huong Nguyen, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022\n"
+"Last-Translator: Thi Huong Nguyen, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,8 +37,8 @@ msgstr ""
 "\n"
 "\n"
 "Bút toán (%s) chưa được cân đối.\n"
-"Tổng nợ đang là %s và tổng có đang là %s.\n"
-"Bạn có thể muốn chỉ định một tài khoản mặc định trên sổ\"%s\" để tự động can đối mỗi bút toán."
+"Tổng nợ là %s và tổng có là %s.\n"
+"Bạn có thể chỉ định một tài khoản mặc định trên sổ \"%s\" để tự động cân đối mỗi bút toán."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -54,26 +55,26 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"    - Nhóm thuế: Thuế được dùng là tập hợp của các loại thuế con.\n"
-"    - Cố định: Số tiền tính thuế luôn bằng nhau dù giá có thay đổi.\n"
-"    - Phần trăm giá: Số tiền tính thuế theo % giá:\n"
-"        e.g 100 * 10% = 110 (chưa bao gồm giá)\n"
-"        e.g 110 / (1 + 10%) = 100 (đã gồm giá)\n"
-"    - Phần trăm của giá đã bao gồm thuế: Tiền thuế là khoản tiền được chia ra từ giá:\n"
-"        e.g 180 / (1 - 10%) = 200 (chưa bao gồm giá)\n"
-"        e.g 200 * (1 - 10%) = 180 (đã gồm giá)\n"
+"    - Nhóm Thuế: Thuế gồm một tập hợp của các loại thuế phụ.\n"
+"    - Cố định: Tiền thuế không đổi dù giá thay đổi.\n"
+"    - Phần trăm Giá: Tiền thuế tính theo % giá:\n"
+"        Ví dụ: 100 * (1 + 10%) = 110 (chưa bao gồm trong giá)\n"
+"        Ví dụ: 100 / (1 + 10%) = 100 (đã bao gồm trong giá)\n"
+"    - Phần trăm của Giá đã Bao gồm Thuế: Tiền thuế là khoản tiền được chia ra từ giá:\n"
+"        Ví dụ: 180 / (1 - 10%) = 200 (chưa bao gồm trong giá)\n"
+"        Ví dụ: 200 * (1 - 10%) = 180 (đã gồm trong giá)\n"
 "        "
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid " The %(lock_type)s lock date is set on %(lock_date)s."
-msgstr " Loại %(lock_type)s có ngày khóa được cài ngày %(lock_date)s."
+msgstr " Loại %(lock_type)s có ngày khóa được cài đặt vào %(lock_date)s."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
 msgid "# Reconciled Bills"
-msgstr "# Đã được đối soát"
+msgstr "# Hóa đơn thanh toán đã đối soát"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
@@ -1339,6 +1340,12 @@ msgstr ""
 msgid "A line cannot have both children and a groupby value (line '%s')."
 msgstr ""
 "Một dòng không được có cả giá trị con và giá trị theo nhóm (line '%s')."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "A line of this move is using a deprecated account, you cannot post it."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -3705,6 +3712,12 @@ msgstr "Làm tròn tiền"
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Cash Statement"
 msgstr "Sổ tiền mặt"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Cash basis rounding difference"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -13721,11 +13734,9 @@ msgstr "Quốc gia áp dụng thuế này."
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid ""
-"The country set on the the foreign VAT fiscal position must match the one "
-"set on the report."
+"The country set on the foreign VAT fiscal position must match the one set on"
+" the report."
 msgstr ""
-"Quốc gia được đặt trên vị trí tài chính VAT ở nước ngoài phải khớp với quốc "
-"gia được đặt trên báo cáo."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template__country_id
