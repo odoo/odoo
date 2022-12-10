@@ -3251,6 +3251,13 @@ msgid "Maximum Exceeded"
 msgstr "Maximaal overschreden"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Misc/NumberBuffer.js:0
+#, python-format
+msgid "Maximum value reached"
+msgstr "Maximum waarde bereikt"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error
 msgid "Message Delivery error"
 msgstr "Bericht afleverfout"
@@ -4210,6 +4217,8 @@ msgid "Picking Type"
 msgstr "Type levering"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Pickings"
@@ -4355,6 +4364,17 @@ msgstr "Selecteer een klant aub"
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__pos_categ_id
 msgid "PoS Category"
 msgstr "Kassacategorie"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Please close and validate the following open PoS Sessions before modifying this payment method.\n"
+"Open sessions: %s"
+msgstr ""
+"Sluit en valideer de volgende open kassa-sessies voordat je deze betaalmethode wijzigt.\n"
+"Open sessies: %s"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6079,6 +6099,17 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid ""
+"The amount cannot be higher than the due amount if you don't have a cash "
+"payment method configured."
+msgstr ""
+"Het bedrag kan niet hoger zijn dan het verschuldigde bedrag als je geen "
+"contante betaalmethode hebt geconfigureerd."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid ""
 "The amount of your payment lines must be rounded to validate the "
 "transaction."
 msgstr ""
@@ -6441,8 +6472,8 @@ msgid ""
 "orders, it is probably caused by taxes or accounting configurations changes."
 msgstr ""
 "Er is een verschil tussen de te boeken bedragen en de bedragen van de "
-"bestellingen, dit wordt waarschijnlijk veroorzaakt door wijzigingen in "
-"belastingen of boekhoudkundige configuraties."
+"orders, dit wordt waarschijnlijk veroorzaakt door wijzigingen in BTW of "
+"boekhoudkundige instellingen."
 
 #. module: point_of_sale
 #. openerp-web
@@ -7002,9 +7033,7 @@ msgstr "Gebruik barcodes om producten, klantenkaarten etc. te scannen."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Use fiscal positions to get different taxes by order"
-msgstr ""
-"Gebruik fiscale posities om verschillende belastingen op bestelling te "
-"krijgen"
+msgstr "Gebruik fiscale posities om verschillende BTW's op orders te krijgen"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form

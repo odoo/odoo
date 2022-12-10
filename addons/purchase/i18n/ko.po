@@ -332,7 +332,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<strong class=\"d-block mb-1\">Invoices</strong>"
-msgstr "<strong class=\"d-block mb-1\">인보이스</strong>"
+msgstr "<strong class=\"d-block mb-1\">청구서</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -1299,7 +1299,7 @@ msgstr "Incoterm(국제 상업 약관)은 국제 거래에서 사용되는 미�
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Invoices and Incoming Shipments"
-msgstr "인보이스 및 입고 배송"
+msgstr "청구서 및 입고 배송"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1434,7 +1434,7 @@ msgstr "수동"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Manual Invoices"
-msgstr "인보이스 직접 입력"
+msgstr "청구서 직접 입력"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_manual
@@ -2062,12 +2062,12 @@ msgstr "구매 경고"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "Purchase orders that have been invoiced."
-msgstr "인보이스 발행 완료된 발주서"
+msgstr "청구서 발행 완료된 구매 발주서"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "Purchase orders that include lines not invoiced."
-msgstr "인보이스 미발행 내역을 포함한 발주서"
+msgstr "청구서 미발행 내역을 포함한 구매 발주서"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2765,7 +2765,7 @@ msgstr "결재 대기"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_to_invoice
 msgid "To Invoice Quantity"
-msgstr "인보이스 발행할 수량"
+msgstr "청구서 발행할 수량"
 
 #. module: purchase
 #. openerp-web
@@ -2942,6 +2942,15 @@ msgstr "공급업체 청구서"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Vendor Bills"
 msgstr "공급업체 청구서"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/report/purchase_report.py:0
+#, python-format
+msgid ""
+"Value: 'avg_days_to_purchase' should only be used to show an average. If you"
+" are seeing this message then it is being accessed incorrectly."
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search

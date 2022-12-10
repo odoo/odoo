@@ -239,7 +239,7 @@ msgid ""
 "Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
 "                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
 msgstr ""
-"所有传入库存变动的对应会计分录将过帐在此帐户中，除非有特定的计价科目\n"
+"所有进货库存变动的对应会计分录将过帐在此帐户中，除非有特定的计价科目\n"
 "                设置在源库位。这是此类别中所有产品的默认值。也可以直接设置每个产品。"
 
 #. module: stock_account
@@ -354,7 +354,7 @@ msgstr "ID"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Incoming"
-msgstr "入向"
+msgstr "进货"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
@@ -487,7 +487,7 @@ msgstr "其他信息"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Outgoing"
-msgstr "出向"
+msgstr "出货"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -673,12 +673,12 @@ msgstr "库存计价科目"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__valuation_in_account_id
 msgid "Stock Valuation Account (Incoming)"
-msgstr "库存计价科目(入向)"
+msgstr "库存计价科目(进货)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__valuation_out_account_id
 msgid "Stock Valuation Account (Outgoing)"
-msgstr "库存计价科目(出向)"
+msgstr "库存计价科目(出货)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer
@@ -910,7 +910,7 @@ msgid ""
 "                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
 "                It can also directly be set on each product."
 msgstr ""
-"在进行自动库存计价时，所有外发库存凭证的对应会计分录将在此帐户中过帐，\n"
+"在进行自动库存计价时，所有出货库存凭证的对应会计分录将在此帐户中过帐，\n"
 "               除非在目的地设置了特定的计价帐户。 这是此类别中所有产品的默认值。\n"
 "                它也可以直接在每个产品上设置。"
 

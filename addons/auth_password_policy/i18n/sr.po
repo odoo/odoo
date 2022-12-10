@@ -28,13 +28,15 @@ msgstr "Podešavanje konfiguracije"
 #. module: auth_password_policy
 #: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__minlength
 msgid "Minimum Password Length"
-msgstr ""
+msgstr "Minimalna dužina lozinke"
 
 #. module: auth_password_policy
 #: model:ir.model.fields,help:auth_password_policy.field_res_config_settings__minlength
 msgid ""
 "Minimum number of characters passwords must contain, set to 0 to disable."
 msgstr ""
+"Minimalan broj karaktera koje lozinka mora da sadrži, postavite na 0 da "
+"onemogućite."
 
 #. module: auth_password_policy
 #. openerp-web
@@ -47,7 +49,7 @@ msgstr "Lozinka"
 #: code:addons/auth_password_policy/models/res_users.py:0
 #, python-format
 msgid "Passwords must have at least %d characters, got %d."
-msgstr ""
+msgstr "Lozinka mora imati najmanje %d karaktera, a ima %d."
 
 #. module: auth_password_policy
 #. openerp-web
@@ -58,6 +60,9 @@ msgid ""
 "\n"
 "Hint: to increase password strength, increase length, use multiple words, and use non-letter characters."
 msgstr ""
+"Obavezno: %s\n"
+"\n"
+"Savet: da povećate jačinu lozinke, produžite je, koristite više karaktera i koristite karaktere koji nisu slova."
 
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_users
@@ -69,25 +74,25 @@ msgstr "Korisnik"
 #: code:addons/auth_password_policy/static/src/password_policy.js:0
 #, python-format
 msgid "at least %s character classes"
-msgstr ""
+msgstr "najmanje %s klasa karaktera"
 
 #. module: auth_password_policy
 #. openerp-web
 #: code:addons/auth_password_policy/static/src/password_policy.js:0
 #, python-format
 msgid "at least %s characters"
-msgstr ""
+msgstr "najmanje %s karaktera"
 
 #. module: auth_password_policy
 #. openerp-web
 #: code:addons/auth_password_policy/static/src/password_policy.js:0
 #, python-format
 msgid "at least %s words"
-msgstr ""
+msgstr "najmanje %s reči"
 
 #. module: auth_password_policy
 #. openerp-web
 #: code:addons/auth_password_policy/static/src/password_meter.js:0
 #, python-format
 msgid "no requirements"
-msgstr ""
+msgstr "nema zahteva"

@@ -12,11 +12,10 @@
 # Daniel Salazar, 2022
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
 # Cristian Cruz, 2022
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2022
 # Farouk Jabiri, 2022
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2022
-# Juan Rivero <jr@adhoc.com.ar>, 2022
 # Mariana Torres <mt@adhoc.com.ar>, 2022
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -24,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Mariana Torres <mt@adhoc.com.ar>, 2022\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1348,6 +1347,12 @@ msgid "A line cannot have both children and a groupby value (line '%s')."
 msgstr ""
 "Una línea no puede tener hijos y el valor \"agrupar por\" simultáneamente "
 "(línea'%s')."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "A line of this move is using a deprecated account, you cannot post it."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -3723,6 +3728,12 @@ msgstr "Redondeos de Efectivo"
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Cash Statement"
 msgstr "Estado de efectivo"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Cash basis rounding difference"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -10511,7 +10522,7 @@ msgstr "Mapeo de empresas para modelos de conciliación"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner
 msgid "Partner is Set"
-msgstr "Partner está seteado"
+msgstr "La empresa está establecida"
 
 #. module: account
 #: code:addons/account/models/partner.py:0
@@ -13757,8 +13768,8 @@ msgstr "El país al que aplica este impuesto."
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid ""
-"The country set on the the foreign VAT fiscal position must match the one "
-"set on the report."
+"The country set on the foreign VAT fiscal position must match the one set on"
+" the report."
 msgstr ""
 
 #. module: account
