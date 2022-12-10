@@ -283,7 +283,12 @@
   </t>
 
   <t t-name="o-spreadsheet-SpreadsheetDashboard" owl="1">
-    <div class="o-grid o-two-columns" tabindex="-1" t-on-wheel="onMouseWheel" t-on-copy="copy">
+    <div
+      class="o-grid o-two-columns"
+      tabindex="-1"
+      t-on-wheel="onMouseWheel"
+      t-on-copy="copy"
+      t-on-click="onClosePopover">
       <div class="mx-auto h-100 position-relative" t-ref="grid" t-att-style="gridContainer">
         <GridOverlay
           onCellHovered.bind="onCellHovered"
@@ -465,7 +470,7 @@
   </t>
 
   <t t-name="o-spreadsheet-FilterIcon" owl="1">
-    <div class="o-filter-icon" t-att-style="style" t-on-click="props.onClick">
+    <div class="o-filter-icon" t-att-style="style" t-on-click.stop="props.onClick">
       <t t-if="props.isActive" t-call="o-spreadsheet-Icon.FILTER_ICON_ACTIVE"/>
       <t t-else="" t-call="o-spreadsheet-Icon.FILTER_ICON"/>
     </div>
@@ -650,7 +655,7 @@
       class="o-grid-overlay"
       t-att-style="props.gridOverlayDimensions"
       t-on-mousedown="onMouseDown"
-      t-on-dblclick="onDoubleClick"
+      t-on-dblclick.self="onDoubleClick"
       t-on-contextmenu="onContextMenu">
       <!-- TODO remove sidePanelIsOpen props. It is wrong.
       If you have a CF sidepanel open, selecting a figure should
