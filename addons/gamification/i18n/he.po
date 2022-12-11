@@ -35,13 +35,13 @@ msgstr ""
 #: code:addons/gamification/models/challenge.py:0
 #, python-format
 msgid "%s has joined the challenge"
-msgstr ""
+msgstr "%s הצטרפ/ה לאתגר"
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:0
 #, python-format
 msgid "%s has refused the challenge"
-msgstr ""
+msgstr "%s סירב/ה להצטרף לאתגר"
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.email_template_badge_received
@@ -149,7 +149,7 @@ msgstr ""
 #: code:addons/gamification/models/challenge.py:0
 #, python-format
 msgid "<br/> %(rank)d. %(user_name)s - %(reward_name)s"
-msgstr ""
+msgstr "<br/> %(rank)d. %(user_name)s - %(reward_name)s"
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:0
@@ -158,6 +158,7 @@ msgid ""
 "<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this"
 " challenge."
 msgstr ""
+"<br/>אף אחד לא הצליח להגיע לכל היעדים, ואין מדליות להעניק עבור אתגר זה."
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:0
@@ -171,7 +172,7 @@ msgstr ""
 msgid ""
 "<br/>Special rewards were sent to the top competing users. The ranking for "
 "this challenge is :"
-msgstr ""
+msgstr "<br/>פרסים מיוחדים נשלחו למתחרים המובילים. הדירוג לאתגר זה:"
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.mail_template_data_new_rank_reached
@@ -230,6 +231,8 @@ msgid ""
 "<i role=\"img\" class=\"fa fa-clock-o fa-3x\" title=\"Goal in Progress\" "
 "aria-label=\"Goal in Progress\"/>"
 msgstr ""
+"<i role=\"img\" class=\"fa fa-clock-o fa-3x\" title=\"Goal in Progress\" "
+"aria-label=\"Goal in Progress\"/>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
@@ -237,6 +240,8 @@ msgid ""
 "<i role=\"img\" class=\"o_green fa fa-check fa-3x\" title=\"Goal Reached\" "
 "aria-label=\"Goal Reached\"/>"
 msgstr ""
+"<i role=\"img\" class=\"o_green fa fa-check fa-3x\" title=\"Goal Reached\" "
+"aria-label=\"Goal Reached\"/>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
@@ -244,6 +249,8 @@ msgid ""
 "<i role=\"img\" class=\"o_red fa fa-times fa-3x\" title=\"Goal Failed\" "
 "aria-label=\"Goal Failed\"/>"
 msgstr ""
+"<i role=\"img\" class=\"o_red fa fa-times fa-3x\" title=\"Goal Failed\" "
+"aria-label=\"Goal Failed\"/>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -251,6 +258,8 @@ msgid ""
 "<span class=\"o_stat_text\">Related</span>\n"
 "                                <span class=\"o_stat_text\">Goals</span>"
 msgstr ""
+"<span class=\"o_stat_text\">קשור</span>\n"
+"                                <span class=\"o_stat_text\">יעדים</span>"
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.simple_report_template
@@ -494,7 +503,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__rule_auth__users
 msgid "A selected list of users"
-msgstr ""
+msgstr "רשימה נבחרת של משתמשים"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__action_id
@@ -520,12 +529,12 @@ msgstr "אפשריות מתקדמות"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_auth
 msgid "Allowance to Grant"
-msgstr ""
+msgstr "הרשאות להעניק"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__user_domain
 msgid "Alternative to a list of users"
-msgstr ""
+msgstr "רשימה חלופית של משתמשים"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__category
@@ -598,7 +607,7 @@ msgstr "תיאור תג"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__level
 msgid "Badge Level"
-msgstr ""
+msgstr "רמת מדליה"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_list_view
@@ -630,12 +639,12 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__batch_mode
 msgid "Batch Mode"
-msgstr ""
+msgstr "מצב סבב בבת אחת"
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_idea
 msgid "Brilliant"
-msgstr ""
+msgstr "מרהיב"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__level__bronze
@@ -645,18 +654,18 @@ msgstr "ארד"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__bronze_badge
 msgid "Bronze badges count"
-msgstr ""
+msgstr "מספר מדליות ארד"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "Can not grant"
-msgstr ""
+msgstr "לא יכול להעניק"
 
 #. module: gamification
 #: code:addons/gamification/models/goal.py:0
 #, python-format
 msgid "Can not modify the configuration of a started goal"
-msgstr ""
+msgstr "אי אפשר לשנות הגדרות יעד שהחל"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
@@ -678,22 +687,22 @@ msgstr "קטגוריה"
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__challenge_id
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__challenge_id
 msgid "Challenge"
-msgstr ""
+msgstr "אתגר"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__line_id
 msgid "Challenge Line"
-msgstr ""
+msgstr "שורת אתגר"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_line_list_view
 msgid "Challenge Lines"
-msgstr ""
+msgstr "שורות אתגר"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__name
 msgid "Challenge Name"
-msgstr ""
+msgstr "שם אתגר"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__challenge_id
@@ -712,7 +721,7 @@ msgstr ""
 #: model:ir.ui.menu,name:gamification.gamification_challenge_menu
 #: model_terms:ir.ui.view,arch_db:gamification.view_challenge_kanban
 msgid "Challenges"
-msgstr ""
+msgstr "אתגרים"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_max
@@ -738,12 +747,12 @@ msgstr "הערה"
 #. module: gamification
 #: model:gamification.challenge,name:gamification.challenge_base_discover
 msgid "Complete your Profile"
-msgstr ""
+msgstr "השלמת הפרופיל שלך"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__completeness
 msgid "Completeness"
-msgstr ""
+msgstr "שלמות"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__computation_mode
@@ -760,27 +769,27 @@ msgstr "יצירת משתמש"
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.badge_list_action
 msgid "Create a new badge"
-msgstr ""
+msgstr "יצירת מדליה חדשה"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.challenge_list_action
 msgid "Create a new challenge"
-msgstr ""
+msgstr "יצירת אתגר חדש"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goal_list_action
 msgid "Create a new goal"
-msgstr ""
+msgstr "יצירת יעד חדש"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goal_definition_list_action
 msgid "Create a new goal definition"
-msgstr ""
+msgstr "יצירת הגדרה ליעד חדש"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.gamification_karma_ranks_action
 msgid "Create a new rank"
-msgstr ""
+msgstr "יצירת דרגה חדשה"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.action_new_simplified_res_users
@@ -828,7 +837,7 @@ msgstr "נוכחי"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__current
 msgid "Current Value"
-msgstr ""
+msgstr "ערך נוכחי"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__period__daily
@@ -844,7 +853,7 @@ msgstr "נתונים"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__field_date_id
 msgid "Date Field"
-msgstr ""
+msgstr "שדה תאריך"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__category
@@ -1010,22 +1019,22 @@ msgstr "עוקבים (שותפים)"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_first_id
 msgid "For 1st user"
-msgstr ""
+msgstr "למשתמש ראשון"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_second_id
 msgid "For 2nd user"
-msgstr ""
+msgstr "למשתמש שני"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_third_id
 msgid "For 3rd user"
-msgstr ""
+msgstr "למשתמש שלישי"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_id
 msgid "For Every Succeeding User"
-msgstr ""
+msgstr "לכל משתמש נוסף"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
@@ -1045,7 +1054,7 @@ msgstr "מאת"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__full_suffix
 msgid "Full Suffix"
-msgstr ""
+msgstr "סיומת מלאה"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge
@@ -1104,7 +1113,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 #: model_terms:ir.ui.view,arch_db:gamification.view_challenge_kanban
 msgid "Goal"
-msgstr ""
+msgstr "יעד"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__definition_id
@@ -1112,24 +1121,24 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__name
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Goal Definition"
-msgstr ""
+msgstr "הגדרת יעד"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.goal_definition_list_action
 #: model:ir.ui.menu,name:gamification.gamification_definition_menu
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_list_view
 msgid "Goal Definitions"
-msgstr ""
+msgstr "הגדרות יעד"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__description
 msgid "Goal Description"
-msgstr ""
+msgstr "תיאור יעד"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Goal Failed"
-msgstr ""
+msgstr "יעד נכשל"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_list_view
@@ -1161,7 +1170,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 #: model_terms:ir.ui.view,arch_db:gamification.view_challenge_kanban
 msgid "Goals"
-msgstr ""
+msgstr "יעדים"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__level__gold
@@ -1176,39 +1185,39 @@ msgstr ""
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_good_job
 msgid "Good Job"
-msgstr ""
+msgstr "סחטיין"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "Grant"
-msgstr ""
+msgstr "להעניק"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.action_grant_wizard
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 msgid "Grant Badge"
-msgstr ""
+msgstr "לעניק מדליה"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 #: model_terms:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Grant Badge To"
-msgstr ""
+msgstr "להעניק מדליה ל"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Grant this Badge"
-msgstr ""
+msgstr "להעמיק את המדליה הזו"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_user_kanban_view
 msgid "Granted by"
-msgstr ""
+msgstr "הוענק על-ידי"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Granting"
-msgstr ""
+msgstr "הענקת"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
@@ -1225,7 +1234,7 @@ msgstr ""
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
 msgid "HR Challenges"
-msgstr ""
+msgstr "אתגרי כח-אדם"
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_hidden
@@ -1258,12 +1267,12 @@ msgstr "תעודה מזהה"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__res_id_field
 msgid "ID Field of user"
-msgstr ""
+msgstr "שדה מספר זיהוי של המשתמש"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__remaining_sending
 msgid "If a maximum is set"
-msgstr ""
+msgstr "אם הוגדר מקסימום"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_needaction
@@ -1282,7 +1291,7 @@ msgstr "אם סומן, בחלק מההודעות קיימת שגיאת משלו�
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user__challenge_id
 msgid "If this badge was rewarded through a challenge"
-msgstr ""
+msgstr "אם המדליה ניתנה בעקבות אתגר"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_1920
@@ -1355,7 +1364,7 @@ msgstr ""
 #: model:gamification.challenge.line,name:gamification.line_base_admin3
 #: model:gamification.goal.definition,name:gamification.definition_base_invite
 msgid "Invite new Users"
-msgstr ""
+msgstr "הזמנת משתמשים חדשים"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_is_follower
@@ -1366,7 +1375,7 @@ msgstr "האם עוקב"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__karma
 msgid "Karma"
-msgstr ""
+msgstr "קארמה"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge____last_update
@@ -1384,7 +1393,7 @@ msgstr "שינוי אחרון ב"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__last_report_date
 msgid "Last Report Date"
-msgstr ""
+msgstr "תאריך דוח אחרון"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__last_update
@@ -1420,7 +1429,7 @@ msgstr "עדכון אחרון ב"
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__visibility_mode__ranking
 msgid "Leader Board (Group Ranking)"
-msgstr ""
+msgstr "לוח מובילים (דירוג קבוצתי)"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_max_number
@@ -1445,7 +1454,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__user_ids
 msgid "List of users participating to the challenge"
-msgstr ""
+msgstr "רשימת משתמשים שמשתתפים באתגר"
 
 #. module: gamification
 #: model:gamification.goal.definition,name:gamification.definition_nbr_following
@@ -1483,7 +1492,7 @@ msgstr "הודעות"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_karma_rank__karma_min
 msgid "Minimum karma needed to reach this rank"
-msgstr ""
+msgstr "דרוש רמת קארמה מינימלית כדי להגיע לדרגה זו"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__model_id
@@ -1499,7 +1508,7 @@ msgstr "כספי"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__monetary
 msgid "Monetary Value"
-msgstr ""
+msgstr "ערך כספי"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__period__monthly
@@ -1515,22 +1524,22 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_this_month
 msgid "Monthly total"
-msgstr ""
+msgstr "סך חודשי"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__description_motivational
 msgid "Motivational"
-msgstr ""
+msgstr "מוטיבציה ומורל"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_karma_rank__description_motivational
 msgid "Motivational phrase to reach this rank"
-msgstr ""
+msgstr "טקסט שיתן מוטיבציה להגיע לדרגה זו"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "My Goals"
-msgstr ""
+msgstr "היעדים שלי"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_my_monthly_sending
@@ -1540,12 +1549,12 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_my_this_month
 msgid "My Monthly Total"
-msgstr ""
+msgstr "הסיכום החדשי שלי"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_my
 msgid "My Total"
-msgstr ""
+msgstr "הסיכום שלי"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__name
@@ -1575,22 +1584,22 @@ msgstr ""
 #. module: gamification
 #: model:gamification.karma.rank,name:gamification.rank_newbie
 msgid "Newbie"
-msgstr ""
+msgstr "פעור"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__next_rank_id
 msgid "Next Rank"
-msgstr ""
+msgstr "דרגה הבאה"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__next_report_date
 msgid "Next Report Date"
-msgstr ""
+msgstr "מועד דיווח הבא"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goals_from_challenge_act
 msgid "No goal found"
-msgstr ""
+msgstr "לא נמצא יעד"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
@@ -1600,7 +1609,7 @@ msgstr ""
 #. module: gamification
 #: model:gamification.badge,description:gamification.badge_problem_solver
 msgid "No one can solve challenges like you do."
-msgstr ""
+msgstr "אף אחד לא יכול לעמוד באתגריך כמוך."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__rule_auth__nobody
@@ -1611,12 +1620,12 @@ msgstr ""
 #: code:addons/gamification/models/challenge.py:0
 #, python-format
 msgid "Nobody reached the required conditions to receive special badges."
-msgstr ""
+msgstr "אף אחד לא הגיע לתנאים הנדרשים כדי לקבל מדליה מיוחדת."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__period__once
 msgid "Non recurring"
-msgstr ""
+msgstr "לא מחזורי"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__remind_update_delay
@@ -1661,7 +1670,7 @@ msgstr "מספר ההודעות שלא נקראו"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_count_distinct
 msgid "Number of users"
-msgstr ""
+msgstr "מספר המשתמשים"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__report_message_frequency__onchange
@@ -1671,12 +1680,12 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_auth_badge_ids
 msgid "Only the people having these badges can give this badge"
-msgstr ""
+msgstr "רק אנשים עם המדליות האלו יכולים להעניק את המדליה הזו"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_auth_user_ids
 msgid "Only these people can give this badge"
-msgstr ""
+msgstr "רק אנשים אלו יכולים להעניק את המדליה הזו"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
@@ -1691,12 +1700,12 @@ msgstr "בעלים"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__owner_ids
 msgid "Owners"
-msgstr ""
+msgstr "אחראים"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__rule_auth__having
 msgid "People having some badges"
-msgstr ""
+msgstr "אנשים עם כמה מדליות"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
@@ -1718,7 +1727,7 @@ msgstr "מחזוריות"
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_problem_solver
 msgid "Problem Solver"
-msgstr ""
+msgstr "פותר בעיות"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__display_mode__progress
@@ -1741,17 +1750,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_res_users__rank_id
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
 msgid "Rank"
-msgstr ""
+msgstr "רמה"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__name
 msgid "Rank Name"
-msgstr ""
+msgstr "שם רמה"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_karma_rank
 msgid "Rank based on karma"
-msgstr ""
+msgstr "רמה מבוססת על קארמה"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.gamification_karma_ranks_action
@@ -1762,27 +1771,27 @@ msgstr "דרגות"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_ranks_view_tree
 msgid "Ranks List"
-msgstr ""
+msgstr "רשימת דרגות"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_bachelor
 msgid "Reach the next rank and gain a very magic wand !"
-msgstr ""
+msgstr "עלו לדרגה הבאה וקבלו מקל קסמים מיוחד!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_master
 msgid "Reach the next rank and gain a very nice hat !"
-msgstr ""
+msgstr "עלו לדרגה הבאה וקבלו כובע מאד יפה!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_student
 msgid "Reach the next rank and gain a very nice mug !"
-msgstr ""
+msgstr "עלו לדרגה הבאה וקבלו ספל מאד יפה!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_doctor
 msgid "Reach the next rank and gain a very nice unicorn !"
-msgstr ""
+msgstr "עלו לדרגה הבאה וקבלו חד-קרן מהמם!"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__reached
@@ -1792,12 +1801,12 @@ msgstr "הגיע"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Reached when current value is"
-msgstr ""
+msgstr "הגיע כשהערך הנוכחי הוא"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__computation_mode__manually
 msgid "Recorded manually"
-msgstr ""
+msgstr "נרשם ידנית"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
@@ -1807,12 +1816,12 @@ msgstr "מזהה"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Refresh Challenge"
-msgstr ""
+msgstr "רענון האתגר"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.goals_from_challenge_act
 msgid "Related Goals"
-msgstr ""
+msgstr "יעדים קשורים"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user_wizard__user_id
@@ -1822,42 +1831,42 @@ msgstr "שם משתמש קשור למשאב לניהול הגישה שלו."
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__remaining_sending
 msgid "Remaining Sending Allowed"
-msgstr ""
+msgstr "כמות שליחות שנותרה"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__remind_update_delay
 msgid "Remind delay"
-msgstr ""
+msgstr "תזכורת יומית"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Reminders for Manual Goals"
-msgstr ""
+msgstr "תזכורות ליעדים ידניים"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__report_message_frequency
 msgid "Report Frequency"
-msgstr ""
+msgstr "תדירות דיווח"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__report_template_id
 msgid "Report Template"
-msgstr ""
+msgstr "תבנית דיווח"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_auth_badge_ids
 msgid "Required Badges"
-msgstr ""
+msgstr "מדליות נדרשות"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__karma_min
 msgid "Required Karma"
-msgstr ""
+msgstr "קארמה נדרשת"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Reset Completion"
-msgstr ""
+msgstr "איפוס בוצע"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__manager_id
@@ -1878,22 +1887,22 @@ msgstr "הטבה"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_failure
 msgid "Reward Bests if not Succeeded?"
-msgstr ""
+msgstr "להעניק פרסים לטובים ביותר אם אף אחד לא הצליח?"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_realtime
 msgid "Reward as soon as every goal is reached"
-msgstr ""
+msgstr "להעניק פרס ברגע שמגיעים לכל יעד"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__challenge_ids
 msgid "Reward of Challenges"
-msgstr ""
+msgstr "פרס על אתגר"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__goal_definition_ids
 msgid "Rewarded by"
-msgstr ""
+msgstr "הפרס ניתן על-ידי"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
@@ -1908,7 +1917,7 @@ msgstr "פעיל"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
 msgid "Running Challenges"
-msgstr ""
+msgstr "אתגרים פעילים"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
@@ -1918,27 +1927,27 @@ msgstr "לוח זמנים"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_badge_view_search
 msgid "Search Badge"
-msgstr ""
+msgstr "חיפוש מדליה"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
 msgid "Search Challenges"
-msgstr ""
+msgstr "חיפוש אתגרים"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_search_view
 msgid "Search Goal Definitions"
-msgstr ""
+msgstr "חיפוש הגדרות יעדים"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Search Goals"
-msgstr ""
+msgstr "חיפוש יעדים"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_ranks_view_search
 msgid "Search Ranks"
-msgstr ""
+msgstr "חיפוש דרגות"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
@@ -1955,12 +1964,12 @@ msgstr "שלח דוח"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__report_message_group_id
 msgid "Send a copy to"
-msgstr ""
+msgstr "שליחת עותק ל"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__sender_id
 msgid "Sender"
-msgstr ""
+msgstr "שולח"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__sequence
@@ -1981,13 +1990,13 @@ msgstr ""
 #: model:gamification.challenge.line,name:gamification.line_base_admin1
 #: model:gamification.goal.definition,name:gamification.definition_base_company_data
 msgid "Set your Company Data"
-msgstr ""
+msgstr "הגדרת מידע ארגוני"
 
 #. module: gamification
 #: model:gamification.challenge.line,name:gamification.line_base_admin2
 #: model:gamification.goal.definition,name:gamification.definition_base_company_logo
 msgid "Set your Company Logo"
-msgstr ""
+msgstr "הגדרת לוגו ארגון"
 
 #. module: gamification
 #: model:gamification.challenge.line,name:gamification.line_base_discover1
@@ -2003,7 +2012,7 @@ msgstr ""
 #. module: gamification
 #: model:gamification.challenge,name:gamification.challenge_base_configure
 msgid "Setup your Company"
-msgstr ""
+msgstr "הגדרת הארגון"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__level__silver
@@ -2013,12 +2022,12 @@ msgstr "כסף"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__silver_badge
 msgid "Silver badges count"
-msgstr ""
+msgstr "מספר מדליות כסף"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Start Challenge"
-msgstr ""
+msgstr "התחלת אתגר"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__start_date
@@ -2029,7 +2038,7 @@ msgstr "תאריך התחלה"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Start goal"
-msgstr ""
+msgstr "התחלת יעד"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__state
@@ -2064,7 +2073,7 @@ msgstr "סיומת"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__invited_user_ids
 msgid "Suggest to users"
-msgstr ""
+msgstr "להציע למשתמשים"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__target_goal
@@ -2074,7 +2083,7 @@ msgstr ""
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
 msgid "Target: less than"
-msgstr ""
+msgstr "יעד: פחות מ"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__action_id
@@ -2085,7 +2094,7 @@ msgstr ""
 #: code:addons/gamification/models/challenge.py:0
 #, python-format
 msgid "The challenge %s is finished."
-msgstr ""
+msgstr "האתגר %s הסתיים."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line__definition_full_suffix
@@ -2125,7 +2134,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__field_id
 msgid "The field containing the value to evaluate"
-msgstr ""
+msgstr "השדה שמכיל את הערך להערכה"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__res_id_field
@@ -2137,28 +2146,28 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__condition__higher
 msgid "The higher the better"
-msgstr ""
+msgstr "כמה שיותר יותר טוב"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__owner_ids
 msgid "The list of instances of this badge granted to users"
-msgstr ""
+msgstr "רשימת הפעמים שמדליה זו ניתנה למשתמשים"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__unique_owner_ids
 msgid "The list of unique users having received this badge."
-msgstr ""
+msgstr "רשימת משתמשים ייחודיים שקיבלו את המדליה הזו"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__condition__lower
 msgid "The lower the better"
-msgstr ""
+msgstr "עדיף כמה שפחות"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_max_number
 msgid ""
 "The maximum number of time this badge can be sent per month per person."
-msgstr ""
+msgstr "המספר המקסימלי שאפשר לשלוח את המדליה הזו למשתמש יחיד בחודש"
 
 #. module: gamification
 #: code:addons/gamification/models/goal.py:0
@@ -2194,32 +2203,32 @@ msgstr ""
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_my_this_month
 msgid ""
 "The number of time the current user has received this badge this month."
-msgstr ""
+msgstr "מספר הפעמים שהמשתמש הזה קיבל את המדליה הזו החודש."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_my
 msgid "The number of time the current user has received this badge."
-msgstr ""
+msgstr "מספר הפעמים שהמשתמש הזה קיבל את המדליה הזו."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_my_monthly_sending
 msgid "The number of time the current user has sent this badge this month."
-msgstr ""
+msgstr "מספר הפעמים שמשתמש זה שלח את המדליה הזו החודש."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_count_distinct
 msgid "The number of time this badge has been received by unique users."
-msgstr ""
+msgstr "מספר הפעמים שמדליה זו התקבלה על-ידי משתמשים ייחודיים."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_this_month
 msgid "The number of time this badge has been received this month."
-msgstr ""
+msgstr "מספר הפעמים שמדליה זו התקבלה החודש"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_count
 msgid "The number of time this badge has been received."
-msgstr ""
+msgstr "מספר הפעמים שמדליה זו התקבלה."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line__definition_monetary
@@ -2236,12 +2245,12 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__manager_id
 msgid "The user responsible for the challenge."
-msgstr ""
+msgstr "המשתמש שאחראי על האתגר הזה."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user__sender_id
 msgid "The user who has send the badge"
-msgstr ""
+msgstr "המשתמש ששלח את המדליה"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__goal_definition_ids
@@ -2268,13 +2277,13 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__closed
 msgid "These goals will not be recomputed."
-msgstr ""
+msgstr "יעדים אלו לא יחושבו מחדש."
 
 #. module: gamification
 #: code:addons/gamification/models/badge.py:0
 #, python-format
 msgid "This badge can not be sent by users."
-msgstr ""
+msgstr "מדליה זו לא יכולה להיות מוענקת על-ידי משתמשים."
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
@@ -2284,12 +2293,12 @@ msgstr "אל"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__target_goal
 msgid "To Reach"
-msgstr ""
+msgstr "להגעה"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__to_update
 msgid "To update"
-msgstr ""
+msgstr "לעדכון"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_count
@@ -2299,7 +2308,7 @@ msgstr "סה\"כ"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__unique_owner_ids
 msgid "Unique Owners"
-msgstr ""
+msgstr "בעלים ייחודיים"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__definition_suffix
@@ -2327,7 +2336,7 @@ msgstr "עדכן"
 #: code:addons/gamification/models/goal.py:0
 #, python-format
 msgid "Update %s"
-msgstr ""
+msgstr "עדכון %s"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__user_id
@@ -2352,7 +2361,7 @@ msgstr "משתמשים"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_karma_rank__user_ids
 msgid "Users having this rank"
-msgstr ""
+msgstr "משתמשים עם דרגה זו"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
@@ -2368,12 +2377,12 @@ msgstr "שבועי"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_auth
 msgid "Who can grant this badge"
-msgstr ""
+msgstr "מי יכול להעניק את המדליה הזו"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 msgid "Who would you like to reward?"
-msgstr ""
+msgstr "למי תרצה להעניק פרס?"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__reward_realtime
@@ -2381,11 +2390,13 @@ msgid ""
 "With this option enabled, a user can receive a badge only once. The top 3 "
 "badges are still rewarded only at the end of the challenge."
 msgstr ""
+"אם מסמנים אפשרות זו, משתמש יכול לקבל מדליה רק פעם אחת. שלושת המדליה הכי "
+"טובות עדיין יינתנו בסוף האתגר."
 
 #. module: gamification
 #: model:gamification.badge,description:gamification.badge_idea
 msgid "With your brilliant ideas, you are an inspiration to others."
-msgstr ""
+msgstr "עם הרעיונות הגאוניים שלך, את/ה פשוט השראה לכל השאר!"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__period__yearly
@@ -2397,35 +2408,35 @@ msgstr "שנתי"
 #: code:addons/gamification/models/badge.py:0
 #, python-format
 msgid "You are not in the user allowed list."
-msgstr ""
+msgstr "אינך ברשימת המשתמשים המורשים."
 
 #. module: gamification
 #: code:addons/gamification/wizard/grant_badge.py:0
 #, python-format
 msgid "You can not grant a badge to yourself."
-msgstr ""
+msgstr "אינך יכול/ה לתת לעצמך מדליה."
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:0
 #, python-format
 msgid "You can not reset a challenge with unfinished goals."
-msgstr ""
+msgstr "אינך יכול/ה לאפס אתגר כאשר יש יעדים שטרם מומשו."
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "You can still grant"
-msgstr ""
+msgstr "ביכולתך עדיין להעניק"
 
 #. module: gamification
 #: model:gamification.badge,description:gamification.badge_good_job
 msgid "You did great at your job."
-msgstr ""
+msgstr "עשית עבודה מצויינת."
 
 #. module: gamification
 #: code:addons/gamification/models/badge.py:0
 #, python-format
 msgid "You do not have the required badges."
-msgstr ""
+msgstr "אין לך את המדליות הנדרשות."
 
 #. module: gamification
 #: code:addons/gamification/models/badge.py:0
@@ -2436,27 +2447,27 @@ msgstr "הענקת את המדליה הזו יותר מדי פעמים החוד�
 #. module: gamification
 #: model:gamification.badge,description:gamification.badge_hidden
 msgid "You have found the hidden badge"
-msgstr ""
+msgstr "מצאת מדליה סודית"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description:gamification.rank_doctor
 msgid "You have reached the last rank. Congratulations!"
-msgstr ""
+msgstr "הגעת לדרגה הכי גבוהה. כל הכבוד!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description:gamification.rank_newbie
 msgid "You just began the adventure! Welcome!"
-msgstr ""
+msgstr "רק התחלת את ההרפתקה! כיף שבאת!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description:gamification.rank_master
 msgid "You know what you are talking about. People learn from you."
-msgstr ""
+msgstr "את/ה יודע/ת על מה את/ה מדבר/ת. אנשים לומדים ממך."
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description:gamification.rank_bachelor
 msgid "You love learning things. Curiosity is a good way to progress."
-msgstr ""
+msgstr "את/ה אוהב/ת ללמוד דברים. סקרנות זה דרך טובה להתקדם."
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description:gamification.rank_student
@@ -2466,7 +2477,7 @@ msgstr ""
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "badges this month"
-msgstr ""
+msgstr "מדליות החודש"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -2479,27 +2490,27 @@ msgstr "ימים"
 msgid ""
 "e.g. A Master Chief knows quite everything on the forum! You cannot beat "
 "him!"
-msgstr ""
+msgstr "לדוג' מאסטר צ'יף יודע הכל בפורום, אין לך סיכוי לנצח אותו!"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
 msgid "e.g. Master Chief"
-msgstr ""
+msgstr "לדוג' מאסטר צ'יף"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "e.g. Monthly Sales Objectives"
-msgstr ""
+msgstr "לדוג' יעד מכירות חדשי"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
 msgid "e.g. Reach this rank to gain a free mug !"
-msgstr ""
+msgstr "לדוג' הגיעו לשלב זה לקבל ספל חינם!"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "e.g. days"
-msgstr ""
+msgstr "לדוג' ימים"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
@@ -2516,7 +2527,7 @@ msgstr ""
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "granted,"
-msgstr ""
+msgstr "הוענק,"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
@@ -2536,4 +2547,4 @@ msgstr "ה"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "this month"
-msgstr ""
+msgstr "החודש"

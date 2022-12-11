@@ -18,7 +18,8 @@
 # marcescu, 2022
 # CristianCruzParra, 2022
 # Pete M, 2022
-# jabelchi, 2022
+# Josep Anton Belchi, 2022
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: jabelchi, 2022\n"
+"Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -655,7 +656,7 @@ msgstr "Planificació d'assignacions"
 #: model:ir.cron,cron_name:hr_holidays.hr_leave_allocation_cron_accrual
 #: model:ir.cron,name:hr_holidays.hr_leave_allocation_cron_accrual
 msgid "Accrual Time Off: Updates the number of time off"
-msgstr ""
+msgstr "Temps d'espera: Actualitza el nombre de temps d'espera"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_needaction
@@ -780,7 +781,7 @@ msgstr "Aprovació d'assignacions"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__allocation_display
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__allocation_display
 msgid "Allocation Display"
-msgstr ""
+msgstr "Visualització de l'assignació"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__holiday_type
@@ -792,7 +793,7 @@ msgstr "Mode d'assignació"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__allocation_notif_subtype_id
 msgid "Allocation Notification Subtype"
-msgstr ""
+msgstr "Subtipus de notificació d'assignació"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report__leave_type__allocation
@@ -851,7 +852,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "Allocation request must be confirmed in order to approve it."
-msgstr ""
+msgstr "La sol·licitud d'assignació s'ha de confirmar per aprovar-la."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -859,6 +860,7 @@ msgstr ""
 msgid ""
 "Allocation request must be confirmed or validated in order to refuse it."
 msgstr ""
+"La sol·licitud d'assignació s'ha de confirmar o validar per rebutjar-la."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -867,6 +869,8 @@ msgid ""
 "Allocation request must be in Draft state (\"To Submit\") in order to "
 "confirm it."
 msgstr ""
+"La sol·licitud d'assignació ha d'estar en l'estat d'Esbós («Enviar») per tal"
+" de confirmar-ho."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -928,7 +932,7 @@ msgstr "Aprova"
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.ir_actions_server_approve_allocations
 msgid "Approve Allocations"
-msgstr ""
+msgstr "Aprova les assignacions"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__validate
@@ -954,7 +958,7 @@ msgstr "Peticions aprovades"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Approved Time Off"
-msgstr ""
+msgstr "Temps d'inactivitat aprovat"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1166,14 +1170,14 @@ msgstr "Creat el"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__current_leave_state
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__current_leave_state
 msgid "Current Time Off Status"
-msgstr ""
+msgstr "Estat actual de l'hora desactivada"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__current_leave_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__current_leave_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__current_leave_id
 msgid "Current Time Off Type"
-msgstr ""
+msgstr "Tipus de temps excedit actual"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
@@ -1274,7 +1278,7 @@ msgstr "Nom a mostrar"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__create_calendar_meeting
 msgid "Display Time Off in Calendar"
-msgstr ""
+msgstr "Mostra el temps d'apagat al calendari"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
@@ -1399,6 +1403,8 @@ msgid ""
 "Filters only on allocations that belong to an time off type that is 'active'"
 " (active field is True)"
 msgstr ""
+"Filtra només en assignacions que pertanyen a un tipus de temps d'espera que "
+"és «actiu» (el camp actiu és cert)"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
@@ -1406,6 +1412,8 @@ msgid ""
 "Filters only on requests that belong to an time off type that is 'active' "
 "(active field is True)"
 msgstr ""
+"Filtra només en les sol·licituds que pertanyen a un tipus de temps d'espera "
+"que sigui «actiu» (el camp actiu és cert)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__first_approver_id
@@ -1485,12 +1493,12 @@ msgstr "Agrupar per"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__group_days_leave
 msgid "Group Time Off"
-msgstr ""
+msgstr "Temps d'inactivitat del grup"
 
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.action_hr_approval
 msgid "HR Approval"
-msgstr ""
+msgstr "Aprovació de l'HR"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__report_note
@@ -1572,6 +1580,8 @@ msgid ""
 "If Accrual Allocation: Number of days allocated in addition to the ones you "
 "will get via the accrual' system."
 msgstr ""
+"Si l'assignació de la meritació: Nombre de dies assignats a més dels que "
+"obtindreu a través del sistema de meritació."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_hours_display
@@ -1579,6 +1589,8 @@ msgid ""
 "If Accrual Allocation: Number of hours allocated in addition to the ones you"
 " will get via the accrual' system."
 msgstr ""
+"Si l'assignació de l'ingrés és: Nombre d'hores assignades a més de les que "
+"obtindreu a través del sistema d'acumulació."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction
@@ -1607,6 +1619,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the time off "
 "type without removing it."
 msgstr ""
+"Si el camp actiu està establert a fals, us permetrà ocultar el tipus de "
+"temps de desactivació sense eliminar-lo."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_duration_check
@@ -1691,7 +1705,7 @@ msgstr "Tipus d'absència"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__leaves_taken
 msgid "Leaves Taken"
-msgstr ""
+msgstr "Fulles agafades"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -1759,7 +1773,7 @@ msgstr "Director"
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.action_manager_approval
 msgid "Manager Approval"
-msgstr ""
+msgstr "Gestor d'aprovació"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_manager
@@ -1775,12 +1789,12 @@ msgstr "Directors"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__max_leaves
 msgid "Max Leaves"
-msgstr ""
+msgstr "Fulles màximes"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
 msgid "Max Time Off:"
-msgstr ""
+msgstr "Temps màxim desactivat:"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__max_leaves
@@ -1790,7 +1804,7 @@ msgstr "Màxim permès"
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__remaining_leaves
 msgid "Maximum Time Off Allowed - Time Off Already Taken"
-msgstr ""
+msgstr "Temps màxim desactivat permès - Temps desactivat ja pres"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__virtual_remaining_leaves
@@ -1798,6 +1812,8 @@ msgid ""
 "Maximum Time Off Allowed - Time Off Already Taken - Time Off Waiting "
 "Approval"
 msgstr ""
+"Temps màxim desactivat permès - Temps desactivat ja pres - Temps d'espera "
+"d'aprovació"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__accrual_limit
@@ -1882,7 +1898,7 @@ msgstr "Les meves absències"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Need Second Approval"
-msgstr ""
+msgstr "Necessita la segona aprovació"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__draft
@@ -1943,7 +1959,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__validation_type__no_validation
 msgid "No Validation"
-msgstr ""
+msgstr "Sense validació"
 
 #. module: hr_holidays
 #. openerp-web
@@ -1984,6 +2000,8 @@ msgid ""
 "Number of days of the time off request according to your working schedule. "
 "Used for interface."
 msgstr ""
+"Nombre de dies del temps d'espera sol·licitat segons la vostra planificació "
+"de treball. Utilitzat per a la interfície."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_days
@@ -1991,6 +2009,8 @@ msgid ""
 "Number of days of the time off request. Used in the calculation. To manually"
 " correct the duration, use this field."
 msgstr ""
+"Nombre de dies de la sol·licitud de desconnexió. S'utilitza en el càlcul. "
+"Per a corregir manualment la durada, utilitzeu aquest camp."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_error_counter
@@ -2004,6 +2024,8 @@ msgid ""
 "Number of hours of the time off request according to your working schedule. "
 "Used for interface."
 msgstr ""
+"Nombre d'hores del temps d'espera sol·licitat segons la vostra planificació "
+"de treball. Utilitzat per a la interfície."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction_counter
@@ -2038,7 +2060,7 @@ msgstr "Nombre de missatges no llegits"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
 msgid "Off Till"
-msgstr ""
+msgstr "Fora de l'abast"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_my
@@ -2092,12 +2114,15 @@ msgstr ""
 #, python-format
 msgid "Only a time off Manager can approve its own requests."
 msgstr ""
+"Només un gestor de temps lliure pot aprovar les seves pròpies peticions."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "Only a time off Manager can reset other people allocation."
 msgstr ""
+"Només un gestor de temps lliure pot restablir l'assignació d'altres "
+"persones."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -2106,6 +2131,8 @@ msgid ""
 "Only a time off Officer/Responsible or Manager can approve or refuse time "
 "off requests."
 msgstr ""
+"Només un temps fora d'oficina/esponsable o gerent pot aprovar o rebutjar les"
+" sol·licituds de temps lliure."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -2122,7 +2149,7 @@ msgstr "Altres"
 #: code:addons/hr_holidays/static/src/xml/discuss.xml:0
 #, python-format
 msgid "Out of office"
-msgstr ""
+msgstr "Fora de l'oficina"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_cl
@@ -2198,7 +2225,7 @@ msgstr "Rebutjada"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__allocation_type__regular
 msgid "Regular Allocation"
-msgstr ""
+msgstr "Assignació regular"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__user_id
@@ -2220,7 +2247,7 @@ msgstr "Absències pagades restants"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__remaining_leaves
 msgid "Remaining Time Off"
-msgstr ""
+msgstr "Temps restant desactivat"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
@@ -2322,7 +2349,7 @@ msgstr "Cercar absències"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_holidays_status_filter
 msgid "Search Time Off Type"
-msgstr ""
+msgstr "Tipus de temps per a la cerca"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
@@ -2341,7 +2368,7 @@ msgstr "Segona aprovació"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__holiday_type
 msgid "Select Time Off Type"
-msgstr ""
+msgstr "Seleccioneu el tipus de temps d'apagada"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__sequence
@@ -2482,6 +2509,10 @@ msgid ""
 "The status is 'Refused', when an allocation request is refused by manager.\n"
 "The status is 'Approved', when an allocation request is approved by manager."
 msgstr ""
+"L'estat s'estableix a 'Enviar', quan es crea una sol·licitud d'assignació.\n"
+"L'estat és 'Aprovar', quan una sol·licitud d'assignació és confirmada per l'usuari.\n"
+"L'estat és «Rebutjat», quan el gestor rebutja una sol·licitud d'assignació.\n"
+"L'estat és \"Aprovat\", quan una sol·licitud d'assignació és aprovada pel gestor."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -2599,17 +2630,17 @@ msgstr "Assignació d'absències"
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_action_department
 #, python-format
 msgid "Time Off Analysis"
-msgstr ""
+msgstr "Anàlisi de temps excedit"
 
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_approval
 msgid "Time Off Approval"
-msgstr ""
+msgstr "Temps de desaprovació"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__leave_notif_subtype_id
 msgid "Time Off Notification Subtype"
-msgstr ""
+msgstr "Subtipus de notificació per apagar el temps"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__validation_type__hr
@@ -2624,6 +2655,8 @@ msgid ""
 "Time Off Officers allocate time off days to employees (e.g. paid time off).<br>\n"
 "                Employees request allocations to Time Off Officers (e.g. recuperation days)."
 msgstr ""
+"El temps d'espera dels oficials assigna temps d'espera als empleats (p. ex. temps de pagament).<br>\n"
+"                Els empleats sol·liciten assignacions per a l'Oficial Time Off (p. ex. dies de recuperació)."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report__leave_type__request
@@ -2648,7 +2681,7 @@ msgstr "Peticions d'absència"
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_second_approval
 msgid "Time Off Second Approve"
-msgstr ""
+msgstr "Temps d'apagada de la segona aproximació"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_employee
@@ -2669,7 +2702,7 @@ msgstr "Resum / informe d'absències"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
 msgid "Time Off Taken:"
-msgstr ""
+msgstr "Temps d'espera ocupat:"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_type
@@ -2693,7 +2726,7 @@ msgstr "Tipus d'absències"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Time Off of Your Team Member"
-msgstr ""
+msgstr "Temps d'espera del membre de l'equip"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__leave_to_approve_count
@@ -2713,12 +2746,12 @@ msgstr "Absències."
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__leaves_taken
 msgid "Time off Already Taken"
-msgstr ""
+msgstr "Temps d'apagat ja ocupat"
 
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.act_hr_employee_holiday_request
 msgid "Time off Analysis"
-msgstr ""
+msgstr "Anàlisi de temps exhaurit"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -2732,6 +2765,8 @@ msgstr "Absències del personal que gestioneu"
 msgid ""
 "Time off request must be confirmed (\"To Approve\") in order to approve it."
 msgstr ""
+"Per aprovar-la cal confirmar el temps d'espera de la sol·licitud "
+"(\"Aprovar\")."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -2744,6 +2779,7 @@ msgstr "La petició d'absència ha de confirmar-se per a poder ser aprovada"
 #, python-format
 msgid "Time off request must be confirmed or validated in order to refuse it."
 msgstr ""
+"Per rebutjar-ho cal confirmar o validar el temps d'espera de la sol·licitud."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -2752,6 +2788,8 @@ msgid ""
 "Time off request must be in Draft state (\"To Submit\") in order to confirm "
 "it."
 msgstr ""
+"El temps de desconnexió ha de ser en estat d'Esbós («Enviar») per tal de "
+"confirmar-ho."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -2760,6 +2798,8 @@ msgid ""
 "Time off request state must be \"Refused\" or \"To Approve\" in order to be "
 "reset to draft."
 msgstr ""
+"L'estat de la sol·licitud ha de ser \"Rebutjat\" o \"Aprovat\" per tal de "
+"ser reiniciat a esborrany."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__validity_stop
@@ -2827,7 +2867,7 @@ msgstr "Total empleat"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__allocation_count
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__allocation_count
 msgid "Total number of days allocated."
-msgstr ""
+msgstr "Nombre total de dies assignats."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__allocation_used_count
@@ -2846,6 +2886,9 @@ msgid ""
 "to create allocation/time off request. Total based on all the time off types"
 " without overriding limit."
 msgstr ""
+"Nombre total de temps de pagament assignat a aquest empleat, canvieu aquest "
+"valor per crear una sol·licitud d'assignació/temps de baixa. Total basat en "
+"tots els tipus de temps inactiu sense límit absolut."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -2911,7 +2954,7 @@ msgstr "L' usuari és en línia"
 #: code:addons/hr_holidays/static/src/xml/discuss.xml:0
 #, python-format
 msgid "User is out of office"
-msgstr ""
+msgstr "L'usuari està fora de l'oficina"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_employee__leave_manager_id
@@ -2968,7 +3011,7 @@ msgstr "Violeta"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__virtual_remaining_leaves
 msgid "Virtual Remaining Time Off"
-msgstr ""
+msgstr "Temps restant virtual desactivat"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__confirm
@@ -3050,6 +3093,7 @@ msgstr "No podeu esborrar una absència en estat %s "
 #, python-format
 msgid "You cannot delete an allocation request which is in %s state."
 msgstr ""
+"No podeu suprimir una sol·licitud d'assignació que estigui en estat %s."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -3086,6 +3130,8 @@ msgid ""
 "You must have manager rights to modify/validate a time off that already "
 "begun"
 msgstr ""
+"Heu de tenir drets de gestor per modificar/validar un temps de baixa que ja "
+"s'ha començat"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
