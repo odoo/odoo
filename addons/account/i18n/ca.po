@@ -22,13 +22,13 @@
 # Jonatan Gk, 2022
 # Anh Thao PHAM <pta@odoo.com>, 2022
 # Martin Trigaux, 2022
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2022
 # marcescu, 2022
 # oscaryuu, 2022
 # eriiikgt, 2022
-# jabelchi, 2022
+# Josep Anton Belchi, 2022
 # Harcogourmet, 2022
 # Quim - eccit <quim@eccit.com>, 2022
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -36,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-02 08:11+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Quim - eccit <quim@eccit.com>, 2022\n"
+"Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -341,6 +341,36 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Benvolgut\n"
+"        <t t-if=\"object.partnerid.parentid\">\n"
+"            <t t-out=\"object.partnerid.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partnerid.parentid.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Brandon Freeman <t t-out=\"object.partnerid.name or ''\">,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Aquí tens el teu\n"
+"        <t t-if=\"object.name\">\n"
+"            nota de crèdit <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            nota de crèdit\n"
+"        </t>\n"
+"        <t t-if=\"object.invoiceorigin\">\n"
+"            (amb referència: <t t-out=\"object.invoiceorigin or ''\">sub003</t>)\n"
+"        </t>\n"
+"        import en <span style=\"font-weight:bold;\" t-out=\"formatamount(object.amounttotal, object.currencyid) or ''\">$ 143,750.00</span>\n"
+"        de <t t-out=\"object.companyid.name or ''\">YourCompany</t>.\n"
+"        <br/><br/>\n"
+"        No dubteu a contactar amb nosaltres si teniu cap pregunta.\n"
+"        <t t-if=\"not ishtmlempty(object.invoiceuserid.signature)\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.invoiceuserid.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -387,6 +417,46 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Benvolgut\n"
+"        <t t-if=\"object.partnerid.parentid\">\n"
+"            <t t-out=\"object.partnerid.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partnerid.parentid.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Brandon Freeman <t t-out=\"object.partnerid.name or ''\">,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Aquí tens el teu\n"
+"        <t t-if=\"object.name\">\n"
+"            Factura <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Factura\n"
+"        </t>\n"
+"        <t t-if=\"object.invoiceorigin\">\n"
+"            (amb referència: <t t-out=\"object.invoiceorigin or ''\">sub003</t>)\n"
+"        </t>\n"
+"        import en <span style=\"font-weight:bold;\" t-out=\"formatamount(object.amounttotal, object.currencyid) or ''\">$ 143,750.00</span>\n"
+"        de <t t-out=\"object.companyid.name or ''\">YourCompany</t>.\n"
+"        <t t-if=\"object.paymentstate in ('paid', 'inpayment')\">\n"
+"            Aquesta factura ja està pagada.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Si us plau, recomaneu el pagament al més aviat possible.\n"
+"            <t t-if=\"object.paymentreference\">\n"
+"                <br/><br/>\n"
+"                Utilitzeu la següent comunicació per al pagament: <span style=\"font-weight:bold;\" t-out=\"object.paymentreference or ''\">INV/2021/05/0005</span>.\n"
+"            </t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        No dubteu a contactar amb nosaltres si teniu cap pregunta.\n"
+"        <t t-if=\"not ishtmlempty(object.invoiceuserid.signature)\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.invoiceuserid.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>"
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -408,6 +478,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Benvolgut <t t-out=\"object.partnerid.name or ''\">Interior d'Azure</t><br/><br/>\n"
+"        Gràcies pel pagament.\n"
+"        Aquí teniu el rebut de pagament <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> amounting\n"
+"        a <span style=\"font-weight:bold;\" t-out=\"formatamount(object.amount, object.currencyid) or ''\">$ 10,00</span> de <t t-out=\"object.companyid.name or ''\">YourCompany</t>.\n"
+"        <br/><br/>\n"
+"        No dubteu a contactar amb nosaltres si teniu cap pregunta.\n"
+"        <br/><br/>\n"
+"        Benvolguts,\n"
+"        <t t-if=\"not ishtmlempty(user.signature)\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -1087,7 +1173,7 @@ msgstr "<strong>Import vençut</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Credit Note Date:</strong>"
-msgstr ""
+msgstr "<strong>Data de la nota de crèdit:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1263,6 +1349,14 @@ msgid ""
 msgstr ""
 "Un diari s'utilitza per anotar transaccions de les dades comptables "
 "associades als negocis diaris."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "A line of this move is using a deprecated account, you cannot post it."
+msgstr ""
+"Una línia d'aquest moviment utilitza un compte obsolet, no podeu publicar-"
+"lo."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -2109,6 +2203,9 @@ msgid ""
 "cancelling {percent:.2f}%% of {amount}</li><li>%(link0)s postponing it to "
 "{new_date}</li></ul>"
 msgstr ""
+"S'han creat entrades d'ajust per a aquesta factura:<ul><li>%(link1)s "
+"cancel·lant {percent:.2f}%% de {amount}</li><li>%(link0)s posposant-lo a "
+"{newdate}</li></ul>"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -2125,6 +2222,8 @@ msgid ""
 "Adjusting Entry for {link}: {percent:.2f}% of {amount} recognized on "
 "{new_date}"
 msgstr ""
+"S'està ajustant l'entrada per a {link}: {percent:.2f}% de {amount} reconegut"
+" el {newdate}"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -2138,6 +2237,8 @@ msgstr ""
 msgid ""
 "Adjusting Entry {link}: {percent:.2f}% of {amount} recognized from {date}"
 msgstr ""
+"S'està ajustant l'entrada {link}: {percent:.2f}% de {amount} reconegut des "
+"de {date}"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__adjustment_type
@@ -3594,6 +3695,12 @@ msgstr "Arrodoniments Efectiu"
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Cash Statement"
 msgstr "Declaració en Efectiu"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Cash basis rounding difference"
+msgstr "Diferència d'arrodoniment de la base de caixa"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -5776,7 +5883,7 @@ msgstr "Duplicar"
 #: model:ir.model.fields,field_description:account.field_res_partner__duplicated_bank_account_partners_count
 #: model:ir.model.fields,field_description:account.field_res_users__duplicated_bank_account_partners_count
 msgid "Duplicated Bank Account Partners Count"
-msgstr ""
+msgstr "Comptador de socis de comptes bancaris duplicats"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -5842,7 +5949,7 @@ msgstr "Àlies de correu electrònic"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__email_layout_xmlid
 msgid "Email Notification Layout"
-msgstr ""
+msgstr "Disposició de notificacions per correu electrònic"
 
 #. module: account
 #: model:ir.model,name:account.model_mail_thread
@@ -5979,6 +6086,8 @@ msgid ""
 "Error when reading the original PDF for: %r.\n"
 "Please make sure the file is valid."
 msgstr ""
+"Error en llegir el PDF original per a: %r.\n"
+"Assegureu-vos que el fitxer és vàlid."
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -6170,7 +6279,7 @@ msgstr "Etiquetes Financeres"
 #. module: account
 #: model:account.account.tag,name:account.account_tag_financing
 msgid "Financing Activities"
-msgstr ""
+msgstr "Activitats de finançament"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__payment_ref_regex
@@ -6461,17 +6570,17 @@ msgstr "Des de:"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Non Trade Receivable accounts"
-msgstr ""
+msgstr "De comptes no comercials"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Trade Payable accounts"
-msgstr ""
+msgstr "De comptes comercials pagables"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Trade Receivable accounts"
-msgstr ""
+msgstr "Des dels comptes comptables"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line__amount_type__regex
@@ -6926,6 +7035,8 @@ msgid ""
 "If set, this account will belong to Non Trade Receivable/Payable in reports and filters.\n"
 "If not, this account will belong to Trade Receivable/Payable in reports and filters."
 msgstr ""
+"Si s'estableix, aquest compte pertanyerà a No Comercial Receptible/Payable en informes i filtres.\n"
+"Si no, aquest compte pertanyerà a Trade Receivable/Payable en informes i filtres."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__preceding_subtotal
@@ -7418,7 +7529,7 @@ msgstr "Inverteix les etiquetes"
 #. module: account
 #: model:account.account.tag,name:account.account_tag_investing
 msgid "Investing & Extraordinary Activities"
-msgstr ""
+msgstr "Invertir activitats extraordinàries"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -7805,7 +7916,7 @@ msgstr "És la línia arrodonida"
 #: model:ir.model.fields,field_description:account.field_account_move__is_storno
 #: model:ir.model.fields,field_description:account.field_account_payment__is_storno
 msgid "Is Storno"
-msgstr ""
+msgstr "És Storno"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_valid_balance_start
@@ -8672,7 +8783,7 @@ msgstr "Varis"
 #: model:ir.model.fields,field_description:account.field_account_move__made_sequence_hole
 #: model:ir.model.fields,field_description:account.field_account_payment__made_sequence_hole
 msgid "Made Sequence Hole"
-msgstr ""
+msgstr "Forat de la seqüència feta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mail_activity_type_id
@@ -9263,17 +9374,17 @@ msgstr "Núm. de dígits a utilitzar per a codi de compte"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__non_trade
 msgid "Non Trade"
-msgstr ""
+msgstr "No comercial"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Non Trade Payable"
-msgstr ""
+msgstr "Pagable no comercial"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Non Trade Receivable"
-msgstr ""
+msgstr "No percebible"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_non_current_assets
@@ -9596,6 +9707,8 @@ msgstr "Una vegada estigui a punt la teva factura, premeu CONFRIRM."
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "One or more Bank Accounts set on this partner are also used by other"
 msgstr ""
+"Un o més comptes bancaris establerts en aquest soci també són utilitzats per"
+" altres"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_category_ids
@@ -9749,7 +9862,7 @@ msgstr "S' està obrint el valor de bits per aquest compte."
 #. module: account
 #: model:account.account.tag,name:account.account_tag_operating
 msgid "Operating Activities"
-msgstr ""
+msgstr "Activitats operatives"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -14406,7 +14519,7 @@ msgstr "L'informe fiscal pare d'aquesta línia"
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid "The partner cannot be deleted because it is used in Accounting"
-msgstr ""
+msgstr "El company no es pot suprimir perquè s'utilitza en la comptabilitat"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__has_unreconciled_entries
@@ -15053,6 +15166,8 @@ msgid ""
 "This is the default credit limit that will be used on partners that do not "
 "have a specific limit on them."
 msgstr ""
+"Aquest és el límit de crèdit per defecte que s'utilitzarà en socis que no "
+"tenen un límit específic."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -15409,6 +15524,8 @@ msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
 "Total Receivable amount exceeding a limit."
 msgstr ""
+"Activador d'alertes en crear factures i comandes de vendes per a socis amb "
+"un import total percebible que excedeix el límit."
 
 #. module: account
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
@@ -15780,6 +15897,8 @@ msgid ""
 "Utility field to express whether the journal item is subject to storno "
 "accounting"
 msgstr ""
+"Camp d'utilitat per a expressar si l'element del diari està subjecte a la "
+"comptabilitat storno"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
@@ -16372,6 +16491,8 @@ msgid ""
 "You can't provide a foreign currency without specifying an amount in 'Amount"
 " in Currency' field."
 msgstr ""
+"No podeu proporcionar una moneda estrangera sense especificar una quantitat "
+"en el camp «Importa en moneda»."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0

@@ -1329,6 +1329,14 @@ msgstr ""
 "пов'язаних з повсякденним бізнесом."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "A line of this move is using a deprecated account, you cannot post it."
+msgstr ""
+"Рядок цієї проводки використовує застарілий рахунок, ви не можете його "
+"опублікувати."
+
+#. module: account
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "A payment must always belongs to a bank or cash journal."
@@ -3662,7 +3670,7 @@ msgstr "Виписка по касі"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Cash basis rounding difference"
-msgstr ""
+msgstr "Різниця округлення касовим методом"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -7483,7 +7491,7 @@ msgstr "Інвертувати теги"
 #. module: account
 #: model:account.account.tag,name:account.account_tag_investing
 msgid "Investing & Extraordinary Activities"
-msgstr ""
+msgstr "Інвестиції та надзвичайна діяльність"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -7868,7 +7876,7 @@ msgstr "Є рядком округлення"
 #: model:ir.model.fields,field_description:account.field_account_move__is_storno
 #: model:ir.model.fields,field_description:account.field_account_payment__is_storno
 msgid "Is Storno"
-msgstr ""
+msgstr "Сторно"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_valid_balance_start
@@ -8090,7 +8098,7 @@ msgstr "Запис у журналі"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Journal Item %s updated"
-msgstr ""
+msgstr "Елемент журналу %s оновлено"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_label
@@ -9326,7 +9334,7 @@ msgstr "К-сть цифр для коду рахунку"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__non_trade
 msgid "Non Trade"
-msgstr ""
+msgstr "Не торговий"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -9657,6 +9665,8 @@ msgstr "Натисніть ПІДТВЕРДИТИ, коли ваш рахуно�
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "One or more Bank Accounts set on this partner are also used by other"
 msgstr ""
+"Один або кілька банківських рахунків, встановлених для цього партнера, також"
+" використовуються іншими"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_category_ids
@@ -9810,7 +9820,7 @@ msgstr "Відкриття вартості дебету для цього ра�
 #. module: account
 #: model:account.account.tag,name:account.account_tag_operating
 msgid "Operating Activities"
-msgstr ""
+msgstr "Оперативна діяльність"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -10190,7 +10200,7 @@ msgstr "Контракти партнера"
 #: model:ir.model.fields,field_description:account.field_account_move__partner_credit_warning
 #: model:ir.model.fields,field_description:account.field_account_payment__partner_credit_warning
 msgid "Partner Credit Warning"
-msgstr ""
+msgstr "Попередження про кредит партнера"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_partner
@@ -10207,7 +10217,7 @@ msgstr "Розрахунки з партнерами"
 #: model:ir.model.fields,field_description:account.field_res_partner__use_partner_credit_limit
 #: model:ir.model.fields,field_description:account.field_res_users__use_partner_credit_limit
 msgid "Partner Limit"
-msgstr ""
+msgstr "Ліміт партнера"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -11062,7 +11072,7 @@ msgstr "Повторна послідовність"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__real_amount
 msgid "Real amount to apply"
-msgstr ""
+msgstr "Реальна сума до застосування"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
@@ -11740,7 +11750,7 @@ msgstr "Продажі"
 #: model:ir.model.fields,field_description:account.field_res_company__account_use_credit_limit
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_use_credit_limit
 msgid "Sales Credit Limit"
-msgstr ""
+msgstr "Ліміт кредиту продажів"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_receipt
@@ -12371,7 +12381,7 @@ msgstr "Показати функцію бухобліку - лише читан
 #: model:ir.model.fields,field_description:account.field_res_partner__show_credit_limit
 #: model:ir.model.fields,field_description:account.field_res_users__show_credit_limit
 msgid "Show Credit Limit"
-msgstr ""
+msgstr "Показати кредитний ліміт"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__show_decimal_separator
@@ -12732,13 +12742,13 @@ msgstr "Крок завершено!"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Storno Accounting"
-msgstr ""
+msgstr "Рахунок сторно"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_storno
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_storno
 msgid "Storno accounting"
-msgstr ""
+msgstr "Бухоблік сторно"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__string_to_hash
@@ -13134,6 +13144,8 @@ msgid ""
 "Tax current account used as a counterpart to the Tax Closing Entry when in "
 "favor of the authorities."
 msgstr ""
+"Податковий поточний рахунок, який використовується як відповідник до "
+"податкового звіту про закриття, коли на користь органів влади."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__property_tax_receivable_account_id
@@ -13141,6 +13153,8 @@ msgid ""
 "Tax current account used as a counterpart to the Tax Closing Entry when in "
 "favor of the company."
 msgstr ""
+"Податковий поточний рахунок, який використовується як відповідник до "
+"податкового звіту про закриття, коли на користь компанії."
 
 #. module: account
 #: model:res.groups,name:account.group_show_line_subtotals_tax_excluded
@@ -14443,7 +14457,7 @@ msgstr "Податковий звіт партнера цього рядка"
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid "The partner cannot be deleted because it is used in Accounting"
-msgstr ""
+msgstr "Партнера неможливо видалити, тому що він використовується в Бухобліку"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__has_unreconciled_entries
@@ -15078,6 +15092,8 @@ msgid ""
 "This is the default credit limit that will be used on partners that do not "
 "have a specific limit on them."
 msgstr ""
+"Це ліміт кредиту за замовчуванням, який використовуватиметься для партнерів,"
+" які не мають спеціального ліміту."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -15152,7 +15168,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "This payment has been created from %s"
-msgstr ""
+msgstr "Цей платіж створено з %s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_supplier_payment_term_id
@@ -15429,6 +15445,9 @@ msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
 "Total Receivable amount exceeding a limit."
 msgstr ""
+"Активуйте сповіщення під час створення рахунків-фактур і замовлень на продаж"
+" для партнерів із загальною сумою дебіторської заборгованості, що перевищує "
+"ліміт."
 
 #. module: account
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
@@ -15664,7 +15683,7 @@ msgstr "Використовуйте спеціальний журнал"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_storno_accounting
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Use Storno accounting"
-msgstr ""
+msgstr "Викорисовуйте бухоблік Сторно"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__use_active_domain
@@ -15801,7 +15820,7 @@ msgstr ""
 msgid ""
 "Utility field to express whether the journal item is subject to storno "
 "accounting"
-msgstr ""
+msgstr "Допоміжне поле, щоб вказати, чи підлягає запис журналу обліку сторно"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
@@ -16391,6 +16410,8 @@ msgid ""
 "You can't provide a foreign currency without specifying an amount in 'Amount"
 " in Currency' field."
 msgstr ""
+"Ви не можете надати іноземну валюту, не вказавши суму в полі «Сума у "
+"валюті»."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -16701,6 +16722,8 @@ msgid ""
 "You cannot remove/deactivate the accounts \"%s\" which are set on a tax "
 "repartition line."
 msgstr ""
+"Ви не можете видалити/деактивувати рахунки \"%s\" встновлені на рядку "
+"розподілу податку."
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -16709,6 +16732,8 @@ msgid ""
 "You cannot remove/deactivate the accounts \"%s\" which are set on the "
 "account mapping of a fiscal position."
 msgstr ""
+"Ви не можете видалити/деактивувати рахунки \"%s\" встановлені на узгодженні "
+"рахунку схеми оподаткування."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

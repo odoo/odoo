@@ -9,9 +9,10 @@
 # Tariq Almutairi <tareq.s.m.79@gmail.com>, 2022
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2022
 # Walid Slim, 2022
-# Malaz Abuidris <msea@odoo.com>, 2022
 # Martin Trigaux, 2022
 # Talal Albahra <talal.albahra@outlook.com>, 2022
+# Malaz Abuidris <msea@odoo.com>, 2022
+# Niyas Raphy, 2022
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-02 08:11+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Talal Albahra <talal.albahra@outlook.com>, 2022\n"
+"Last-Translator: Niyas Raphy, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1325,6 +1326,12 @@ msgid ""
 msgstr ""
 "يُستخدم دفتر اليومية لتسجيل المعاملات لكافة البيانات المحاسبية\n"
 "                المتعلقة بالأعمال اليومية. "
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "A line of this move is using a deprecated account, you cannot post it."
+msgstr "يستخدم أحد بنود هذه الحركة حساباً مهملاً، ولذا لا يمكنك ترحيله. "
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -3641,6 +3648,12 @@ msgstr "تقريب النقد "
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Cash Statement"
 msgstr "الكشف النقدي"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Cash basis rounding difference"
+msgstr "فرق تقريب الأساس النقدي"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -9882,7 +9895,7 @@ msgid ""
 "non-payment by the due date,"
 msgstr ""
 "يمكن تسديد فواتيرنا خلال 21 يوم عمل، إلا إذا تم تحديد فترة زمنية مختلفة في "
-"الفاتورة أو الأمر. في حال التخلف عن الدفع في الوقت المحدد، "
+"الفاتورة أو الطلب. في حال التخلف عن الدفع في الوقت المحدد، "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_method__payment_type__outbound
@@ -11544,7 +11557,7 @@ msgstr "بنود التقرير المصدري "
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__tax_calculation_rounding_method__round_globally
 msgid "Round Globally"
-msgstr "تقريب على الصعيد العالمي"
+msgstr "التقريب الشامل "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__tax_calculation_rounding_method__round_per_line
@@ -11741,7 +11754,7 @@ msgstr "جدولة نشاط "
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
 msgid "Search Account Journal"
-msgstr "البحث في دفتر اليومية الحساب "
+msgstr "البحث في دفتر يومية الحساب "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_template_search
@@ -14128,8 +14141,8 @@ msgid ""
 "The journal entry %s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one journal item involving the bank/cash account."
 msgstr ""
-"لقد وصل قيد اليومية %s إلى حالة لا تصلح فيما يتعلق ببند كفش الحساب ذي الصلة.\n"
-"حتى تكون منتظماً، يجل أن يحتوي قيد اليومية على عنصر يومية واحد فقط دائماً متعلق بحساب البنك/حساب النقد. "
+"لقد وصل قيد اليومية %s إلى حالة لا تصلح فيما يتعلق ببند كشف الحساب ذي الصلة.\n"
+"حتى تكون منتظماً، يجب أن يحتوي قيد اليومية على عنصر يومية واحد فقط دائماً متعلق بحساب البنك/حساب النقد. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -14790,7 +14803,7 @@ msgid ""
 "account for the current partner"
 msgstr ""
 "سوف يتم استخدام هذا الحساب بدلًا من الحساب الافتراضي كحساب مدين للشريك "
-"الحالير"
+"الحالي "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_income_categ_id
@@ -14872,8 +14885,8 @@ msgid ""
 "This entry transfers the following amounts to "
 "<strong>%(destination)s</strong> <ul>"
 msgstr ""
-"يقوم هذا القيد بتحويل المبالغ التاليةإلى <strong>%(destination)s</strong> "
-"<ul>"
+"يقوم هذا القيد بتحويل المبالغ التالية إلى <strong>%(destination)s</strong> "
+"<ul> "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__journal_id
@@ -16161,7 +16174,7 @@ msgid ""
 "You can't create a new statement line without a suspense account set on the "
 "%s journal."
 msgstr ""
-"لا يمكنك إنشاء يند كشف حساب جديد دون أن يكون هناك حساب معلق معين في اليومية "
+"لا يمكنك إنشاء بند كشف حساب جديد دون أن يكون هناك حساب معلق معين في اليومية "
 "%s.  "
 
 #. module: account
