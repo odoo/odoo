@@ -107,7 +107,8 @@ class SaleReport(models.Model):
         if not fields:
             fields = {}
         res = super()._query(with_clause, fields, groupby, from_clause)
+        sale_fields = self._select_additional_fields(fields)
         current = '(SELECT %s FROM %s GROUP BY %s)' % \
-                  (self._select_pos(fields), self._from_pos(), self._group_by_pos())
+                  (self._select_pos(sale_fields), self._from_pos(), self._group_by_pos())
 
         return '%s UNION ALL %s' % (res, current)
