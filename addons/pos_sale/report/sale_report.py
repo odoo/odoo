@@ -112,10 +112,19 @@ class SaleReport(models.Model):
         if not fields:
             fields = {}
         res = super()._query(with_clause, fields, groupby, from_clause)
+<<<<<<< HEAD
         sale_fields = self._select_additional_fields(fields)
         for key in sale_fields:
             fields[key] = ', NULL as %s' % (key)
         current = '(SELECT %s FROM %s WHERE %s GROUP BY %s)' % \
                   (self._select_pos(fields), self._from_pos(), self._where_pos(), self._group_by_pos())
+||||||| parent of 7c06da498ff (temp)
+        current = '(SELECT %s FROM %s GROUP BY %s)' % \
+                  (self._select_pos(fields), self._from_pos(), self._group_by_pos())
+=======
+        sale_fields = self._select_additional_fields(fields)
+        current = '(SELECT %s FROM %s GROUP BY %s)' % \
+                  (self._select_pos(sale_fields), self._from_pos(), self._group_by_pos())
+>>>>>>> 7c06da498ff (temp)
 
         return '%s UNION ALL %s' % (res, current)
