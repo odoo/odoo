@@ -837,8 +837,8 @@ msgid ""
 "Add and customize route operations to process product moves in your warehouse(s): e.g. unload > quality control > stock for incoming products, pick > pack > ship for outgoing products. \n"
 " You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
-"添加并自定义路线作业以处理您库存中的产品调拨：例如：卸货>品控>入库，拣货>包装>发运。\n"
-"您也可以在仓位置置设置上架策略，以便直接将入库产品发送到特定的子位置（例如：特定的货位、货架）。"
+"添加并自定义路线作业以处理您库存中的产品调拨：例如：卸货>品控>进货，拣货>包装>发运。\n"
+"您也可以在仓位置置设置上架策略，以便直接将进货产品发送到特定的子位置（例如：特定的货位、货架）。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -849,7 +849,7 @@ msgid ""
 "strategies on warehouse locations in order to send incoming products into "
 "specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
-"添加并自定义路线作业以处理您库存中的产品调拨：例如：卸货>品控>入库，拣货>包装>发运。您也可以在仓位置置设置上架策略，以便直接将入库产品发送到特定的子位置（例如：特定的货位、货架）。"
+"添加并自定义路线作业以处理您库存中的产品调拨：例如：卸货>品控>进货，拣货>包装>发运。您也可以在仓位置置设置上架策略，以便直接将进货产品发送到特定的子位置（例如：特定的货位、货架）。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1361,17 +1361,17 @@ msgstr "无法从此库存调拨中设置完成数量，直接使用调拨路线
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__capacity_ids
 msgid "Capacity"
-msgstr "产能"
+msgstr "能力"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_form
 msgid "Capacity by Package"
-msgstr "按包裹的容量"
+msgstr "按包裹的能力"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_form
 msgid "Capacity by Product"
-msgstr "按产品分类的容量"
+msgstr "按产品分类的能力"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2174,7 +2174,7 @@ msgstr "默认入向路线"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__delivery_steps
 msgid "Default outgoing route to follow"
-msgstr "默认出向路线"
+msgstr "默认出货路线"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__product_uom_id
@@ -2794,7 +2794,7 @@ msgstr "预计交货"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_product_expiry
 msgid "Expiration Dates"
-msgstr "到期日"
+msgstr "过期日期"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -2911,7 +2911,7 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
-"预测数量(计算为手上数量 - 出库 + 入库) \n"
+"预测数量(在手数量 - 出货 + 进货) \n"
 "对于单一库存位置来说，这包括了存储在此位置及其子位置的货物。\n"
 "对于单一库存来说，这包括了存储在此库存的库存位置及其子位置的货物。\n"
 "否则，这包括存储在任何“内部”类型的任何库存位置的货物。"
@@ -3491,29 +3491,29 @@ msgstr "为使其可被受理，我公司（芝加哥）必须在交付货物或
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #, python-format
 msgid "Incoming"
-msgstr "入库"
+msgstr "进货"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__in_date
 msgid "Incoming Date"
-msgstr "进入日期"
+msgstr "进货"
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Incoming Draft Transfer"
-msgstr "转入的草稿调拨"
+msgstr "进货的草稿调拨"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__incoming_move_line_ids
 msgid "Incoming Move Line"
-msgstr "入向移动行"
+msgstr "进货移动行"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__reception_steps
 msgid "Incoming Shipments"
-msgstr "入向运输"
+msgstr "进货"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__inventory_diff_quantity
@@ -4623,7 +4623,7 @@ msgstr "倍数数量"
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_unique_package_type
 msgid "Multiple capacity rules for one package type."
-msgstr "一种包裹类型的多种容量规则。"
+msgstr "一种包裹类型的多种能力规则。"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_unique_product
@@ -4958,7 +4958,7 @@ msgstr "发送错误的消息数量"
 #: model:ir.model.fields,help:stock.field_product_product__nbr_moves_out
 #: model:ir.model.fields,help:stock.field_product_template__nbr_moves_out
 msgid "Number of outgoing stock moves in the past 12 months"
-msgstr "在过去的12个月里，出向库存移动数"
+msgstr "在过去的12个月里，出货库存移动数"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__days_to_order
@@ -5211,24 +5211,24 @@ msgstr "出库类型"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #, python-format
 msgid "Outgoing"
-msgstr "发出"
+msgstr "出货"
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Outgoing Draft Transfer"
-msgstr "转出的草稿调拨"
+msgstr "出货草稿调拨"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__outgoing_move_line_ids
 msgid "Outgoing Move Line"
-msgstr "出向调拨行"
+msgstr "出货调拨行"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__delivery_steps
 msgid "Outgoing Shipments"
-msgstr "出向运输"
+msgstr "出货运输"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -5338,7 +5338,7 @@ msgstr "有内容物的包裹条码"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__package_capacity_ids
 msgid "Package Capacity"
-msgstr "包裹容量"
+msgstr "包裹能力"
 
 #. module: stock
 #: code:addons/stock/models/stock_package_level.py:0
@@ -5782,7 +5782,7 @@ msgstr "产品可用性"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__product_capacity_ids
 msgid "Product Capacity"
-msgstr "产品产能"
+msgstr "产品能力"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__categ_ids
@@ -6230,7 +6230,7 @@ msgid ""
 "In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
 msgstr ""
-"计划出货产品的数量。\n"
+"计划进货产品的数量。\n"
 "在单个库存位置的情况下，这包括离开该位置或其任何子位置的货品。\n"
 "在单个库存的情况下，这包括离开库存的库存位置或其任何子位置的货物。\n"
 "否则，这包括任何离开“内部”类型库存位置的货物。"
@@ -6243,7 +6243,7 @@ msgid ""
 "In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods leaving any Stock Location with 'internal' type."
 msgstr ""
-"计划到达的产品数量。\n"
+"计划出货的产品数量。\n"
 "对于一个位置来说，这包括了将要到达此位置或其子位置的货物。\n"
 "对于一个库存来说，这包括了将要到达这个库存的的这个位置,或其子位置的货物。\n"
 "另外，这包括了所有“内部”类型位置要到达的货物。"
@@ -7289,7 +7289,7 @@ msgstr "显示标记为代办"
 #: model:ir.model.fields,field_description:stock.field_product_product__show_on_hand_qty_status_button
 #: model:ir.model.fields,field_description:stock.field_product_template__show_on_hand_qty_status_button
 msgid "Show On Hand Qty Status Button"
-msgstr "显示在手数量状态按钮"
+msgstr "在状态按钮显示在手数量"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_operations
@@ -7561,7 +7561,7 @@ msgstr "库存拣货"
 #: model:ir.model.fields,field_description:stock.field_product_product__stock_quant_ids
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_view_graph
 msgid "Stock Quant"
-msgstr "库存量化"
+msgstr "库存量"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_quantity_history
@@ -7704,7 +7704,7 @@ msgstr "存储类别"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_capacity_tree
 msgid "Storage Category Capacity"
-msgstr "存储类别容量"
+msgstr "存储类别能力"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_multi_locations
@@ -8327,7 +8327,7 @@ msgstr "完全免费使用"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 msgid "Total Incoming"
-msgstr "入向总计"
+msgstr "总计进货"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
@@ -8338,7 +8338,7 @@ msgstr "在手总计"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 msgid "Total Outgoing"
-msgstr "出向总计"
+msgstr "总计出货"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
@@ -8522,7 +8522,7 @@ msgstr "手动触发"
 #: code:addons/stock/static/src/stock_forecasted/stock_forecasted.js:0
 #, python-format
 msgid "Try to add some incoming or outgoing transfers."
-msgstr "尝试添加一些传入或传出的调拨。"
+msgstr "尝试添加一些进货或出货的调拨。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__type

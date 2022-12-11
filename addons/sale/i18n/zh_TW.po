@@ -3928,6 +3928,13 @@ msgid "The order is not in a state requiring customer signature."
 msgstr "訂單未處於需要客戶簽名的狀態。"
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/controllers/portal.py:0
+#, python-format
+msgid "The access token is invalid."
+msgstr "存取代碼(token)無效。"
+
+#. module: sale
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "The ordered quantity has been updated."
@@ -4183,6 +4190,7 @@ msgid "Type Name"
 msgstr "類型名稱"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Type a message..."

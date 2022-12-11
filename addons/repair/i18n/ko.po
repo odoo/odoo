@@ -93,7 +93,7 @@ msgid ""
 "                                <span class=\"o_stat_text\">Invoices</span>"
 msgstr ""
 "<span class=\"o_stat_text\">1</span>\n"
-"                                <span class=\"o_stat_text\">인보이스</span>"
+"                                <span class=\"o_stat_text\">청구서</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
@@ -293,12 +293,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Create Invoice"
-msgstr "인보이스 발행"
+msgstr "청구서 발행"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order_make_invoice
 msgid "Create Mass Invoice (repair)"
-msgstr "인보이스 일괄 발행 (수리용)"
+msgstr "청구서 일괄 발행 (수리용)"
 
 #. module: repair
 #: code:addons/repair/models/stock_picking.py:0
@@ -321,7 +321,7 @@ msgstr "새 태그 만들기"
 #: model:ir.actions.act_window,name:repair.act_repair_invoice
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Create invoices"
-msgstr "인보이스 발행"
+msgstr "청구서 발행"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__create_uid
@@ -396,7 +396,7 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Do you really want to create the invoice(s)?"
-msgstr "정말 인보이스를 발행하시겠습니까?"
+msgstr "정말 청구서를 발행하시겠습니까?"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_line__state__done
@@ -412,7 +412,7 @@ msgstr "임시"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid ""
 "Draft invoices for this order will be cancelled. Do you confirm the action?"
-msgstr "이 주문 항목의 인보이스 초안이 삭제되었습니다. 작업을 승인하겠습니까?"
+msgstr "이 주문 항목의 청구서 초안이 삭제되었습니다. 작업을 승인하겠습니까?"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -463,7 +463,7 @@ msgstr "그룹별"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__group
 msgid "Group by partner invoice address"
-msgstr "파트너 인보이스 주소별"
+msgstr "파트너 청구 주소지 기준 그룹화"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__has_message
@@ -543,23 +543,23 @@ msgstr "재고 이동"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_id
 msgid "Invoice"
-msgstr "인보이스"
+msgstr "청구서"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__invoice_line_id
 #: model:ir.model.fields,field_description:repair.field_repair_line__invoice_line_id
 msgid "Invoice Line"
-msgstr "인보이스 내역"
+msgstr "청구서 내역"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_method
 msgid "Invoice Method"
-msgstr "인보이스 발행 방식"
+msgstr "청구서 발행 방식"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_state
 msgid "Invoice State"
-msgstr "인보이스 상태"
+msgstr "청구서 상태"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -575,7 +575,7 @@ msgstr "청구지 및 배송 주소 :"
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Invoice created"
-msgstr "인보이스 생성 완료"
+msgstr "청구서 생성 완료"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__invoiced
@@ -583,7 +583,7 @@ msgstr "인보이스 생성 완료"
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoiced
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Invoiced"
-msgstr "인보이스 발행 완료"
+msgstr "청구서 발행 완료"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__partner_invoice_id
@@ -696,7 +696,7 @@ msgstr "다음 업무 유형"
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__invoice_method__none
 msgid "No Invoice"
-msgstr "인보이스 미발행"
+msgstr "청구서 미발행"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
@@ -1257,7 +1257,7 @@ msgstr "수리할 상품이 있는 위치입니다."
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__2binvoiced
 msgid "To be Invoiced"
-msgstr "인보이스 발행 예정"
+msgstr "청구서 발행 예정"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -1389,7 +1389,7 @@ msgstr ""
 msgid ""
 "You can not delete a repair order which is linked to an invoice which has "
 "been posted once."
-msgstr "관련 인보이스가 승인된 내역이 있는 경우 수리요청서는 삭제할 수 없습니다. "
+msgstr "관련 청구서가 승인된 내역이 있는 경우 수리요청서는 삭제할 수 없습니다. "
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -1411,7 +1411,7 @@ msgstr ""
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You have to select an invoice address in the repair form."
-msgstr "수리요청서의 인보이스 발행 주소를 선택해주십시오."
+msgstr "수리요청서의 청구서 발행 주소를 선택해주십시오."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view

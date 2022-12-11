@@ -1000,7 +1000,7 @@ msgstr "<span title=\"Latest Statement\">最新对账单</span>"
 msgid ""
 "<span title=\"Outstanding Payments/Receipts\">Outstanding "
 "Payments/Receipts</span>"
-msgstr "<span title=\"Outstanding Payments/Receipts\">未结付款/收据</span>"
+msgstr "<span title=\"Outstanding Payments/Receipts\">未结付款/收款</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
@@ -1317,6 +1317,12 @@ msgid "A line cannot have both children and a groupby value (line '%s')."
 msgstr "一行不能同时包含子项和 groupby 值（行“%s”）。"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "A line of this move is using a deprecated account, you cannot post it."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "A payment must always belongs to a bank or cash journal."
@@ -1493,7 +1499,7 @@ msgstr "具有相同单位的帐户组不能重叠"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__partner_id
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__partner_id
 msgid "Account Holder"
-msgstr "账户持有人"
+msgstr "科目持有人"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__acc_holder_name
@@ -1543,7 +1549,7 @@ msgstr "科目名称"
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__acc_number
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Account Number"
-msgstr "账户号码"
+msgstr "科目号码"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_onboarding_create_invoice_state_flag
@@ -1671,7 +1677,7 @@ msgstr "计入费用折扣后的差额"
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
 msgid ""
 "Account for the difference amount after the income discount has been granted"
-msgstr "计入给予收入折扣后的差额"
+msgstr "计入收入折扣后的差额"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_search
@@ -2252,7 +2258,7 @@ msgstr "别名"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_domain
 msgid "Alias domain"
-msgstr "域名别名"
+msgstr "别名域"
 
 #. module: account
 #: code:addons/account/controllers/portal.py:0
@@ -2325,7 +2331,7 @@ msgstr "允许的日记账"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__account_control_ids
 msgid "Allowed accounts"
-msgstr "允许的帐户"
+msgstr "允许的科目"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3047,7 +3053,7 @@ msgstr "银行对账单"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_suspense_account_id
 #, python-format
 msgid "Bank Suspense Account"
-msgstr "银行担保账户"
+msgstr "银行搁置科目"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -3066,8 +3072,8 @@ msgid ""
 "Bank Transactions are posted immediately after import or synchronization. Their counterparty is the bank suspense account.\n"
 "Reconciliation replaces the latter by the definitive account(s)."
 msgstr ""
-"银行交易在导入或同步后立即发布。他们的对手是银行暂记账户。\n"
-"对账将后者替换为最终账户。"
+"银行交易在导入或同步后立即发布。他们的对手是银行搁置科目。\n"
+"对账将后者替换为最终科目。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__acc_type
@@ -3092,7 +3098,7 @@ msgstr "银行设置手动配置"
 msgid ""
 "Bank statements transactions will be posted on the suspense account until "
 "the final reconciliation allowing finding the right account."
-msgstr "银行对帐单交易将发布在暂记帐户中，直到最终核对允许找到正确的帐户为止。"
+msgstr "银行对帐单交易将发布在搁置科目中，直到最终核对允许找到正确的帐户为止。"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -3252,7 +3258,7 @@ msgstr "待验证账单"
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Bills to pay"
-msgstr "待付账单"
+msgstr "待支付账单"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__blank_if_zero
@@ -3474,7 +3480,7 @@ msgstr "现金"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Cash Account"
-msgstr "现金账户"
+msgstr "现金科目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_exigibility
@@ -3548,7 +3554,7 @@ msgstr "现金折扣收益"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
 msgid "Cash Discount Gain account"
-msgstr "现金折扣收益账户"
+msgstr "现金折扣收益科目"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -3559,7 +3565,7 @@ msgstr "现金折扣损失"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
 msgid "Cash Discount Loss account"
-msgstr "现金贴现损失账户"
+msgstr "现金贴现损失科目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__early_pay_discount_computation
@@ -3570,13 +3576,13 @@ msgstr "现金折扣减税"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_early_pay_discount_gain_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_early_pay_discount_gain_account_id
 msgid "Cash Discount Write-Off Gain Account"
-msgstr "现金折扣冲销收益账户"
+msgstr "现金折扣冲销收益科目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_early_pay_discount_loss_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_early_pay_discount_loss_account_id
 msgid "Cash Discount Write-Off Loss Account"
-msgstr "现金折扣核销损失账户"
+msgstr "现金折扣核销损失科目"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
@@ -3606,6 +3612,12 @@ msgstr "现金舍入"
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Cash Statement"
 msgstr "现金对账单"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Cash basis rounding difference"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -5047,12 +5059,12 @@ msgstr "专用支付顺序"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_id
 msgid "Default Account"
-msgstr "默认帐号"
+msgstr "默认科目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_type
 msgid "Default Account Type"
-msgstr "默认帐户类型"
+msgstr "默认科目类型"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5072,7 +5084,7 @@ msgstr "默认费用科目"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Default Income Account"
-msgstr "默认收入账户"
+msgstr "默认收入科目"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6366,7 +6378,7 @@ msgstr "可折叠的"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Follow Customer Payments"
-msgstr "跟踪客户付款"
+msgstr "关注客户付款"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_follower_ids
@@ -6404,7 +6416,7 @@ msgstr "关注者(业务伙伴)"
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__activity_type_icon
 #: model:ir.model.fields,help:account.field_res_partner_bank__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "完美的图标，例如FA任务"
+msgstr "完美字体图标，例如 fa-tasks"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -6743,7 +6755,7 @@ msgstr "有已调节分录"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_sequence_holes
 msgid "Has Sequence Holes"
-msgstr "有序列孔"
+msgstr "有序列孔洞"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__has_unreconciled_entries
@@ -8051,19 +8063,19 @@ msgstr "日记账名称"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_payment_credit_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_payment_credit_account_id
 msgid "Journal Outstanding Payments Account"
-msgstr "日记账未付款项账户"
+msgstr "日记账未结付款科目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_payment_debit_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_payment_debit_account_id
 msgid "Journal Outstanding Receipts Account"
-msgstr "日记账未结收据账户"
+msgstr "日记账未结收款科目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_suspense_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_suspense_account_id
 msgid "Journal Suspense Account"
-msgstr "日记账暂记帐"
+msgstr "日记账搁置科目"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_code_company_uniq
@@ -8486,7 +8498,7 @@ msgstr "留空以指派开结算单的业务员。"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Leave empty to use the default outstanding account"
-msgstr "留空以使用默认未结帐科目"
+msgstr "留空以使用默认未结科目"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -9891,7 +9903,7 @@ msgstr "出"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__outbound_payment_method_line_ids
 msgid "Outbound Payment Methods"
-msgstr "境外支付方式"
+msgstr "出向支付方式"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -9937,7 +9949,7 @@ msgstr "未结付款科目"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Outstanding Payments accounts"
-msgstr "未支付账户"
+msgstr "未结付款科目"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -9948,12 +9960,12 @@ msgstr "未结收据"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_debit_account_id
 msgid "Outstanding Receipts Account"
-msgstr "未结收据科目"
+msgstr "未结收款科目"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Outstanding Receipts accounts"
-msgstr "未结收据账户"
+msgstr "未结收款科目"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12535,7 +12547,7 @@ msgstr "供应商排名"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__suspense_account_id
 msgid "Suspense Account"
-msgstr "暂记帐户"
+msgstr "搁置科目"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
@@ -13236,7 +13248,7 @@ msgstr "一个群组中的税的应用范围必须和群组的设置一样或者
 #, python-format
 msgid ""
 "The bank account of a bank journal must belong to the same company (%s)."
-msgstr "银行分录的银行科目必须属于同一公司 (%s)."
+msgstr "银行分录的银行账户必须属于同一公司 (%s)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
@@ -13309,9 +13321,9 @@ msgstr "适用此税的国家。"
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid ""
-"The country set on the the foreign VAT fiscal position must match the one "
-"set on the report."
-msgstr "外国增值税财务状况中设置的国家/地区必须与报告中设置的国家/地区相匹配。"
+"The country set on the foreign VAT fiscal position must match the one set on"
+" the report."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template__country_id
@@ -15041,7 +15053,7 @@ msgstr "供应商付款条件"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Vendor Payments"
-msgstr "供应商账单"
+msgstr "供应商付款"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
