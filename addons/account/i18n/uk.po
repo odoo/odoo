@@ -1270,6 +1270,14 @@ msgstr ""
 "пов'язаних з повсякденним бізнесом."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "A line of this move is using a deprecated account, you cannot post it."
+msgstr ""
+"Рядок цієї проводки використовує застарілий рахунок, ви не можете його "
+"опублікувати."
+
+#. module: account
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "A payment must always belongs to a bank or cash journal."
@@ -7381,7 +7389,7 @@ msgstr "Інвертувати теги"
 #. module: account
 #: model:account.account.tag,name:account.account_tag_investing
 msgid "Investing & Extraordinary Activities"
-msgstr ""
+msgstr "Інвестиції та надзвичайна діяльність"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -7766,7 +7774,7 @@ msgstr "Є рядком округлення"
 #: model:ir.model.fields,field_description:account.field_account_move__is_storno
 #: model:ir.model.fields,field_description:account.field_account_payment__is_storno
 msgid "Is Storno"
-msgstr ""
+msgstr "Сторно"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_valid_balance_start
@@ -9210,7 +9218,7 @@ msgstr "К-сть цифр для коду рахунку"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__non_trade
 msgid "Non Trade"
-msgstr ""
+msgstr "Не торговий"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -9554,6 +9562,8 @@ msgstr "Натисніть ПІДТВЕРДИТИ, коли ваш рахуно�
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "One or more Bank Accounts set on this partner are also used by other"
 msgstr ""
+"Один або кілька банківських рахунків, встановлених для цього партнера, також"
+" використовуються іншими"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_category_ids
@@ -9707,7 +9717,7 @@ msgstr "Відкриття вартості дебету для цього ра�
 #. module: account
 #: model:account.account.tag,name:account.account_tag_operating
 msgid "Operating Activities"
-msgstr ""
+msgstr "Оперативна діяльність"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -10946,7 +10956,7 @@ msgstr "Повторна послідовність"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__real_amount
 msgid "Real amount to apply"
-msgstr ""
+msgstr "Реальна сума до застосування"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
@@ -12608,13 +12618,13 @@ msgstr "Крок завершено!"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Storno Accounting"
-msgstr ""
+msgstr "Рахунок сторно"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_storno
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_storno
 msgid "Storno accounting"
-msgstr ""
+msgstr "Бухоблік сторно"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__string_to_hash
@@ -13011,6 +13021,8 @@ msgid ""
 "Tax current account used as a counterpart to the Tax Closing Entry when in "
 "favor of the authorities."
 msgstr ""
+"Податковий поточний рахунок, який використовується як відповідник до "
+"податкового звіту про закриття, коли на користь органів влади."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__property_tax_receivable_account_id
@@ -13018,6 +13030,8 @@ msgid ""
 "Tax current account used as a counterpart to the Tax Closing Entry when in "
 "favor of the company."
 msgstr ""
+"Податковий поточний рахунок, який використовується як відповідник до "
+"податкового звіту про закриття, коли на користь компанії."
 
 #. module: account
 #: model:res.groups,name:account.group_show_line_subtotals_tax_excluded
@@ -15585,7 +15599,7 @@ msgstr "Використовуйте спеціальний журнал"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_storno_accounting
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Use Storno accounting"
-msgstr ""
+msgstr "Викорисовуйте бухоблік Сторно"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__use_active_domain
@@ -15722,7 +15736,7 @@ msgstr ""
 msgid ""
 "Utility field to express whether the journal item is subject to storno "
 "accounting"
-msgstr ""
+msgstr "Допоміжне поле, щоб вказати, чи підлягає запис журналу обліку сторно"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required

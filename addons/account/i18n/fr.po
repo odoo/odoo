@@ -1294,6 +1294,14 @@ msgstr ""
 "comptables liées à vos activités quotidiennes."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "A line of this move is using a deprecated account, you cannot post it."
+msgstr ""
+"Une ligne de ce mouvement utilise un compte expiré, vous ne pouvez pas la "
+"publier."
+
+#. module: account
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "A payment must always belongs to a bank or cash journal."
@@ -6421,7 +6429,7 @@ msgstr "Numéro d'identification fiscal étranger"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
 msgid "Foreign Vat Header Mode"
-msgstr ""
+msgstr "Mode TVA étrangère"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -6932,6 +6940,8 @@ msgid ""
 "If set, this account will belong to Non Trade Receivable/Payable in reports and filters.\n"
 "If not, this account will belong to Trade Receivable/Payable in reports and filters."
 msgstr ""
+"Si défini, ce compte figure dans les dettes/créances non commerciales dans les rapports et les filtres.\n"
+"Sinon, ce compte figure dans les dettes/créances commerciales dans les rapports et filtres."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__preceding_subtotal
@@ -8805,19 +8815,19 @@ msgstr "Match Regex"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_text_location_label
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_text_location_label
 msgid "Match Text Location Label"
-msgstr ""
+msgstr "Rechercher texte dans étiquette"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_text_location_note
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_text_location_note
 msgid "Match Text Location Note"
-msgstr ""
+msgstr "Rechercher texte dans note"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_text_location_reference
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_text_location_reference
 msgid "Match Text Location Reference"
-msgstr ""
+msgstr "Rechercher texte dans référence"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__matched_credit_ids
@@ -8980,6 +8990,8 @@ msgstr "'active_model' manquant sur le contexte."
 #, python-format
 msgid "Missing foreign currencies on partials having ids: %s"
 msgstr ""
+"Devises étrangères manquantes sur réconciliations partielles ayant des ID: "
+"%s"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_accountable_required_fields
@@ -10057,7 +10069,7 @@ msgstr "Payé/Reçu"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__paired_internal_transfer_payment_id
 msgid "Paired Internal Transfer Payment"
-msgstr ""
+msgstr "Paiement de transfert interne jumelé"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_group__parent_id
@@ -10156,7 +10168,7 @@ msgstr "Association du partenaire"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__partner_mapping_line_ids
 msgid "Partner Mapping Lines"
-msgstr ""
+msgstr "Lignes de mapping partenaire"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_name
@@ -10760,7 +10772,7 @@ msgstr "Prévisualiser les Modifications"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__preview_move_data
 msgid "Preview Move Data"
-msgstr ""
+msgstr "Prévisualiser les données du mouvement"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__preview_moves
@@ -11102,7 +11114,7 @@ msgstr "Recalculer la ligne de taxe"
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_line_template
 msgid "Reconcile Model Line Template"
-msgstr ""
+msgstr "Modèle de ligne de modèle de réconciliation"
 
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_template
@@ -11275,7 +11287,7 @@ msgstr "Modèle de document concerné"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__related_taxes_amount
 msgid "Related Taxes Amount"
-msgstr ""
+msgstr "Montant des taxes liées"
 
 #. module: account
 #: model:ir.model,name:account.model_account_resequence_wizard
@@ -11853,12 +11865,16 @@ msgstr "Chercher des taxes"
 msgid ""
 "Search in the Statement's Label to find the Invoice/Payment's reference"
 msgstr ""
+"Rechercher dans l'étiquette du relevé pour trouver la référence de la "
+"facture/du paiement"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_text_location_note
 #: model:ir.model.fields,help:account.field_account_reconcile_model_template__match_text_location_note
 msgid "Search in the Statement's Note to find the Invoice/Payment's reference"
 msgstr ""
+"Rechercher dans la note du relevé pour trouver la référence de la facture/du"
+" paiement"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_text_location_reference
@@ -11866,6 +11882,8 @@ msgstr ""
 msgid ""
 "Search in the Statement's Reference to find the Invoice/Payment's reference"
 msgstr ""
+"Rechercher dans la référence du relevé pour trouver la référence de la "
+"facture/du paiement"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__line_section
@@ -13023,7 +13041,7 @@ msgstr "Base de la taxe"
 #: model:ir.model.fields,field_description:account.field_product_product__tax_string
 #: model:ir.model.fields,field_description:account.field_product_template__tax_string
 msgid "Tax String"
-msgstr ""
+msgstr "String fiscal"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_search

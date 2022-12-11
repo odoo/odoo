@@ -188,6 +188,87 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Модуль локалізації для Данії\n"
+"===============================\n"
+"\n"
+"Це модуль для керування **схемою бухгалтерського обліку для Данії**. Охоплює як індивідуальний бізнес, так і I/S, IVS, ApS та A/S\n"
+"\n"
+"**Modulet opsætter:**\n"
+"\n"
+"- **Dansk kontoplan**\n"
+"\n"
+"- Dansk moms\n"
+"        - 25% moms\n"
+"        - Resturationsmoms 6,25%\n"
+"        - Omvendt betalingspligt\n"
+"\n"
+"- Konteringsgrupper\n"
+"        - EU (Virksomhed)\n"
+"        - EU (Privat)\n"
+"        - 3.lande\n"
+"\n"
+"- Finans raporter\n"
+"        - Resulttopgørelse\n"
+"        - Balance\n"
+"        - Momsafregning\n"
+"            - Afregning\n"
+"            - Rubrik A, B og C\n"
+"\n"
+"- **Anglo-Saxon regnskabsmetode**\n"
+"\n"
+".\n"
+"\n"
+"Produkt setup:\n"
+"==============\n"
+"\n"
+"**Vare**\n"
+"\n"
+"**Salgsmoms:**      Salgmoms 25%\n"
+"\n"
+"**Salgskonto:**     1010 Salg af vare, m/moms\n"
+"\n"
+"**Købsmoms:**       Købsmoms 25%\n"
+"\n"
+"**Købskonto:**      2010 Direkte omkostninger vare, m/moms\n"
+"\n"
+".\n"
+"\n"
+"**Ydelse**\n"
+"\n"
+"**Salgsmoms:**      Salgmoms 25%, ydelser\n"
+"\n"
+"**Salgskonto:**     1011 Salg af ydelser, m/moms\n"
+"\n"
+"**Købsmoms:**       Købsmoms 25%, ydelser\n"
+"\n"
+"**Købskonto:**      2011 Direkte omkostninger ydelser, m/moms\n"
+"\n"
+".\n"
+"\n"
+"**Vare med omvendt betalingspligt**\n"
+"\n"
+"**Salgsmoms:**      Salg omvendt betalingspligt\n"
+"\n"
+"**Salgskonto:**     1012 Salg af vare, u/moms\n"
+"\n"
+"**Købsmoms:**       Køb omvendt betalingspligt\n"
+"\n"
+"**Købskonto:**      2012 Direkte omkostninger vare, u/moms\n"
+"\n"
+"\n"
+".\n"
+"\n"
+"**Restauration**\n"
+"\n"
+"**Købsmoms:**       Restaurationsmoms 6,25%, købsmoms\n"
+"\n"
+"**Købskonto:**      4010 Restaurationsbesøg\n"
+"\n"
+".\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do
@@ -1003,6 +1084,9 @@ msgid ""
 "        Enable the VAT wizard when posting a tax return journal entry\n"
 "    "
 msgstr ""
+"\n"
+"        Увімкніть помічника ПДВ під час проведення в журналі податкової декларації\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_digest_enterprise
@@ -11430,7 +11514,7 @@ msgstr "Бухоблік - MRP"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subcontracting_account_enterprise
 msgid "Accounting - MRP Subcontracting"
-msgstr ""
+msgstr "Бухоблік - Субпідряд MRP"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_timesheet_account_budget
@@ -11450,7 +11534,7 @@ msgstr "Бухгалтерські звіти"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_reports_tax_reminder
 msgid "Accounting Reports Tax Reminder"
-msgstr ""
+msgstr "Нагадування податкового звіту бухобліку"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet_account_budget
@@ -11701,6 +11785,8 @@ msgid ""
 "Add Subcontracting information in Cost Analysis Reports and Production "
 "Analysis"
 msgstr ""
+"Додайте інформацію про субпідряд у звіти про аналіз витрат і аналіз "
+"виробництва"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_transifex
@@ -11710,7 +11796,7 @@ msgstr "Додайте посилання для редагування пере
 #. module: base
 #: model:ir.module.module,summary:base.module_account_reports_tax_reminder
 msgid "Add a notification when the tax report has been generated"
-msgstr ""
+msgstr "Додати сповіщення після формування податкової звітності"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_form_project
@@ -17101,7 +17187,7 @@ msgstr "Співробітники у мобільній версії"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_appointment_hr
 msgid "Employees on Appointments"
-msgstr ""
+msgstr "Співробітники на Зустрічах"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -17694,7 +17780,7 @@ msgstr "F БУДІВНИЦТВО"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__from_filter
 msgid "FROM Filtering"
-msgstr ""
+msgstr "Фільтрування З"
 
 #. module: base
 #: model:ir.actions.server,name:base.demo_failure_action
@@ -18854,7 +18940,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_google_gmail
 msgid "Gmail support for incoming / outgoing mail servers"
-msgstr ""
+msgstr "Підтримка Gmail для серверів вхідної та вихідної пошти"
 
 #. module: base
 #: code:addons/base/models/res_config.py:0
@@ -18882,7 +18968,7 @@ msgstr "Інтеграція Google Диска™ "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_gmail
 msgid "Google Gmail"
-msgstr ""
+msgstr "Google Gmail"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_google_map
@@ -19166,7 +19252,7 @@ msgstr "Допомога"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_forum
 msgid "Help Center for helpdesk based on Odoo Forum"
-msgstr ""
+msgstr "Довідковий центр служби підтримки на основі форуму Odoo"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -19237,12 +19323,12 @@ msgstr "Складська служба підтримки"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_stock_account
 msgid "Helpdesk Stock Account"
-msgstr ""
+msgstr "Служба підтримки Склад Бухоблік"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_holidays
 msgid "Helpdesk Time Off"
-msgstr ""
+msgstr "Служба підтримки Відпустки"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_timesheet
@@ -19252,17 +19338,17 @@ msgstr "Інформаційна панель табеля"
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_holidays
 msgid "Helpdesk integration with holidays"
-msgstr ""
+msgstr "Інтеграція Служби підтримки з вихідними"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_stock_account
 msgid "Helpdesk, Stock, Account"
-msgstr ""
+msgstr "Служба підтримки, Склад, Бухоблік"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_forum
 msgid "Helpdesk: Help Center"
-msgstr ""
+msgstr "Служба підтримки: Центр допомоги"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_sales_point_of_sale
@@ -19552,7 +19638,7 @@ msgstr "Угорщина"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hu_reports
 msgid "Hungary - Accounting Reports"
-msgstr ""
+msgstr "Угорщина - Бухгалтерьскі звіти"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_I
@@ -19970,7 +20056,7 @@ msgstr "Збірне зображення"
 #: code:addons/fields.py:0
 #, python-format
 msgid "Image is not encoded in base64."
-msgstr ""
+msgstr "Зображення не закодовано в base64."
 
 #. module: base
 #: code:addons/image.py:0
@@ -21497,7 +21583,7 @@ msgstr "Сесії живого чату з лідами"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_crm
 msgid "Leads statistics and generation on social"
-msgstr ""
+msgstr "Веде статистику та генерацію в соцмережах"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
@@ -22020,7 +22106,7 @@ msgstr "Мальта"
 #. module: base
 #: model:ir.module.module,summary:base.module_appointment_hr
 msgid "Manage Appointments with Employees"
-msgstr ""
+msgstr "Керуйте зустрічами зі співробітниками"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_title_contact
@@ -22157,7 +22243,7 @@ msgstr "Керуйте та публікуйте платформу електр
 #. module: base
 #: model:ir.module.module,summary:base.module_account_asset_fleet
 msgid "Manage assets with fleets"
-msgstr ""
+msgstr "Керуйте активами з автотранпсортом"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_disallowed_expenses
@@ -22597,7 +22683,7 @@ msgstr "Мікронезія"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_microsoft_outlook
 msgid "Microsoft Outlook"
-msgstr ""
+msgstr "Microsoft Outlook"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_microsoft_account
@@ -27297,7 +27383,7 @@ msgstr "Рейтинг порталу"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_search
 msgid "Portal Users"
-msgstr ""
+msgstr "Користувачі порталу"
 
 #. module: base
 #: model:res.groups,comment:base.group_portal
