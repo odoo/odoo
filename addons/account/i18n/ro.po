@@ -1241,6 +1241,12 @@ msgstr ""
 "                legate de activitatea zilnică."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "A line of this move is using a deprecated account, you cannot post it."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "A payment must always belongs to a bank or cash journal."
@@ -11925,7 +11931,7 @@ msgid ""
 " line are always rendered one after the other)."
 msgstr ""
 "Secvență care determină ordinea liniilor din raport (primele sunt cele mai "
-"mici). Această comandă se aplică local pe secțiune (deci, copiii de aceeași "
+"mici). Această ordine se aplică local pe secțiune (deci, copiii de aceeași "
 "linie sunt întotdeauna redați unul după altul)."
 
 #. module: account

@@ -121,6 +121,8 @@ msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
 "                                If you believe that it is an error, please contact the website administrator."
 msgstr ""
+"<strong>לא נמצאה אפשרות תשלום מתאימה.</strong><br/>\n"
+"                                אם לדעתך מדובר בטעות, נא ליצור קשר עם מנהלי האתר."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_refund_wizard_view_form
@@ -147,18 +149,18 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<strong>Warning</strong> The currency is missing or incorrect."
-msgstr ""
+msgstr "<strong>אזהרה</strong> המטבע אינו תקין או חסר."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<strong>Warning</strong> You must be logged in to pay."
-msgstr ""
+msgstr "<strong>אזהרה</strong> עליך להכנס למערכת כדי לשלם."
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:0
 #, python-format
 msgid "A payment transaction with reference %s already exists."
-msgstr ""
+msgstr "תשלום עם מספר אסמכתא %s כבר קיים"
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -167,6 +169,8 @@ msgid ""
 "A refund request of %(amount)s has been sent. The payment will be created "
 "soon. Refund transaction reference: %(ref)s (%(acq_name)s)."
 msgstr ""
+"בקשה לזיכוי של %(amount)s נשלחה. התשלום יווצר בקרוב. אסמכתא לפעולה הזיכוי: "
+"%(ref)s(%(acq_name)s)."
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:0
@@ -179,7 +183,7 @@ msgstr "נדרש אסימון ליצירת עסקת תשלום חדשה."
 #, python-format
 msgid ""
 "A transaction with reference %(ref)s has been initiated (%(acq_name)s)."
-msgstr ""
+msgstr "עסקה עם מספר אסמכתא %(ref)s נוצרה (%(acq_name)s)"
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -188,6 +192,8 @@ msgid ""
 "A transaction with reference %(ref)s has been initiated using the payment "
 "method %(token_name)s (%(acq_name)s)."
 msgstr ""
+"עסקה עם מספר אסמכתא %(ref)s נוצרה באמצעי התשלום %(token_name)s "
+"(%(acq_name)s)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__access_token
@@ -1599,7 +1605,7 @@ msgstr "חיוב ישיר של SEPA"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_account_journal_form
 msgid "SETUP"
-msgstr ""
+msgstr "הגדרה"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.manage
@@ -1780,7 +1786,7 @@ msgstr "מצב בדיקה"
 #: model:ir.model.fields,help:payment.field_payment_token__provider
 #: model:ir.model.fields,help:payment.field_payment_transaction__provider
 msgid "The Payment Service Provider to use with this acquirer"
-msgstr ""
+msgstr "שירות התשלום לשימוש עם רוכש זה"
 
 #. module: payment
 #: code:addons/payment/controllers/portal.py:0
@@ -1803,7 +1809,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The amount to be refunded must be positive and cannot be superior to %s."
-msgstr ""
+msgstr "סכום הזיכוי צריך להיות מספר חיובי ולא יכול להיות יותר מ-%s."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__name
@@ -1976,7 +1982,7 @@ msgstr "ערך הסכום לתשלום חייב להיות חיובי."
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
 msgid "There are no transactions to show"
-msgstr ""
+msgstr "אין עסקאות להציג"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -2009,7 +2015,7 @@ msgstr ""
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "This payment has not been processed yet."
-msgstr ""
+msgstr "התשלום עדיין לא טופל."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
@@ -2076,7 +2082,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__validation
 msgid "Validation of the payment method"
-msgstr ""
+msgstr "אימות אמצעי התשלום"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_dom_var
@@ -2130,7 +2136,7 @@ msgstr "אזהרה!"
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "We are not able to delete your payment method."
-msgstr ""
+msgstr "איננו יכולים למחוק את אמצעי התשלום."
 
 #. module: payment
 #. openerp-web

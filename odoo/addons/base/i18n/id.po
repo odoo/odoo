@@ -1111,6 +1111,23 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"        Modul untuk Impor file standar FEC, berguna untuk riwayat impor akun.\n"
+"\n"
+"        File FEC (fichier des écritures comptables) adalah laporan akuntansi standar yang bisnis Prancis harus kirim ke lembaga pajak.\n"
+"        Module ini memungkinkan impor akun, jurnal, mitra dan perpindahan file-file tersebut.\n"
+"\n"
+"        Hanya format CSV dari FEC yang diimplementasikan.\n"
+"        'utf-8', 'utf-8-sig' dan 'iso8859_15' adalah encode yang diizinkan.\n"
+"        Beberapa delimiter diizinkan : ';' atau '|' atau ',' atau '\t'.\n"
+"\n"
+"        Spesifikasi Teknis Resmi (fr)\n"
+"        https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000027804775/\n"
+"\n"
+"        Alat Testing FEC dari lembaga pajak\n"
+"        https://github.com/DGFiP/Test-Compta-Demat\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es_reports_2021
@@ -1129,6 +1146,11 @@ msgid ""
 "        Manage user and manager notifications\n"
 "    "
 msgstr ""
+"\n"
+"        Tetapkan rental produk (produk, penawaran, faktur, ...)\n"
+"        Kelola status produk, rental, delay\n"
+"        Kelola notifikasi user dan manajer\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_sparse_field
@@ -1140,6 +1162,12 @@ msgid ""
 "        fields are stored in a \"serialized\" field in the form of a JSON mapping.\n"
 "    "
 msgstr ""
+"\n"
+"        Tujuan dari modul ini untuk mengimplementasikan field yang \"sparse\", contohnya field\n"
+"        yang sebagian besar null. Implementasi ini menghindari batasan PostgreSQL\n"
+"        pada jumlah kolom di tabel. Value dari semua field yang sparse\n"
+"        akan disimpan di field yang \"serialized\" dalam bentuk pemetaan JSON.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_purchase
@@ -1216,6 +1244,12 @@ msgid ""
 "        Delivery price pre-configured is an example, you need to adapt the pricing's rules.\n"
 "    "
 msgstr ""
+"\n"
+"        Module ini memungkinkan pelanggan Anda untuk memilih Point Relais® dan menggunakannya sebagai alamat pengiriman.\n"
+"        Modul ini tidak mengimplementasikan WebService. Modul ini hanya untuk integrasi widget.\n"
+"\n"
+"        Harga pengiriman yang di pra-konfigurasi adalah salah satu contoh, Anda harus menggunakan peraturan pricing.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_product_matrix
@@ -1248,6 +1282,15 @@ msgid ""
 "        Forecast shifts and keep an eye on the hours consumed on your plannable products.\n"
 "    "
 msgstr ""
+"\n"
+"        Modul ini memungkinkan Anda untuk menjadwalkan Sales Order Anda berdasarkan konfigurasi produk.\n"
+"\n"
+"        Untuk produk yang memiliki opsi \"Plan Services\" diaktifkan, Anda akan memiliki kesempatan\n"
+"        untuk secara otomatis forecast shift karyawan Anda yang dapat mengambil shift tersebut\n"
+"        (contohnya karyawan yang peran yang sama dengan yang dikonfigurasi pada produk).\n"
+"\n"
+"        Forecast shift Anda dan perhatikan terus jam yang digunakan pada produk yang direncanakan.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_planning
@@ -1262,6 +1305,15 @@ msgid ""
 "        Plan shifts and keep an eye on the hours consumed on your plannable products.\n"
 "    "
 msgstr ""
+"\n"
+"        Modul ini memungkinkan Anda untuk menjadwalkan Sales Order Anda berdasarkan konfigurasi produk.\n"
+"\n"
+"        Untuk produk yang memiliki opsi \"Plan Services\" diaktifkan, Anda akan memiliki kesempatan\n"
+"        untuk secara otomatis merencanakan shift untuk karyawan Anda yang dapat mengambil shift tersebut\n"
+"        (contohnya karyawan dengan peran yang sama dengan yang dikonfigurasi pada produk).\n"
+"\n"
+"        Rencanakan shift Anda dan perhatikan terus jam yang digunakan pada produk yang direncanakan.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa_direct_debit
@@ -1384,6 +1436,22 @@ msgid ""
 "        You need to configure your certificate and the tax agency.  \n"
 "    "
 msgstr ""
+"\n"
+"        Modul ini mengirimkan informasi pajak (kebanyakan besar PPN) \n"
+"        tentang tagihan vendor dan faktur pelanggan ke SII.  Ini disebut \n"
+"        Procedimiento G417 - IVA. Llevanza de libros registro.  Ini \n"
+"        diperlukan oleh setiap perusahaan dengan turnover 6M€+ dan orang lain sudah \n"
+"        bisa menggunakannya lagi.  Faktur-faktur secara otomatis \n"
+"        dikirim setelah validasi.  \n"
+"        \n"
+"        Bagaimana informasi dikirim ke SII tergantung pada \n"
+"        konfigurasi yang ada pada pajak.  Pajak-pajak \n"
+"        yang ada di templat bagan (l10n_es) secara otomatis \n"
+"        dikonfigurasi untuk memiliki tipe yang benar.  Ini dapat dilakukan namun \n"
+"        pajak-pajak ekstra harus dibuat untuk beberapa alasan tertenu seperti exempt/no sujeta.   \n"
+"        \n"
+"        Anda harus konfigurasi sertifikat Anda dan agensi pajak.  \n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_maintenance
@@ -1457,6 +1525,13 @@ msgid ""
 "          templates to target objects.\n"
 "    "
 msgstr ""
+"\n"
+"    * Dukungan multi-language untuk Bagan Akun, Pajak, Kode Pajak, Jurnal,\n"
+"      Templat Akuntansi, Bagan Akun Analitik dan Jurnal Analitik.\n"
+"    * Perubahan pada setup wizard\n"
+"        - Salin terjemahan untuk COA, Pajak, Kode Pajak dan Posisi Fiskal dari\n"
+"          templat ke objek sasaran.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp_workorder_iot
@@ -1497,6 +1572,11 @@ msgid ""
 "    - extended address fields\n"
 "    "
 msgstr ""
+"\n"
+"    Menjembatani modul untuk memperpanjang pedoman pengiriman (Complemento XML Carta de Porte)\n"
+"    - barang ekspor (COMEX)\n"
+"    - field alamat yang diperluas\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_workorder_iot
@@ -1629,6 +1709,11 @@ msgid ""
 "    Necessary master data is also included.\n"
 "    "
 msgstr ""
+"\n"
+"    SAF-T Norwegia adalah file format standar untuk beragam tipe ekspor dari data transaksi akuntansi yang menggunakan format XML.\n"
+"    Versi pertama dari SAF-T Financial dibatasi ke tingkat jurnal umum yang termasuk transaksi pelanggan dan pemasok.\n"
+"    Master data yang diperlukan juga disertakan.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_forecast
@@ -1681,6 +1766,13 @@ msgid ""
 "    guide.\n"
 "    "
 msgstr ""
+"\n"
+"    Pedoman pengiriman (Complemento XML Carta de Porte) dibutuhkan sebagai bukti\n"
+"    bahwa Anda mengirimkan barang dari A ke B.\n"
+"\n"
+"    Hanya saat order delivery divalidasi Anda dapat membuat pedoman\n"
+"    delivery.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cl_edi_stock
@@ -1698,6 +1790,18 @@ msgid ""
 "    the SII.  \n"
 "    "
 msgstr ""
+"\n"
+"    Pedoman delivery (guia de despacho) dibutuhkan sebagai bukti\n"
+"    bahwa Anda mengirimkan barang dari A ke B.  \n"
+"    \n"
+"    Pedoman ini dapat dikonfigurasi pada mitra bila harga dibutuhkan pada \n"
+"    pedoman delivery dan bila mereka harus datang dari sale order \n"
+"    atau dari produk tersebut sendiri.  \n"
+"    \n"
+"    Hanya saat order delivery divalidasi Anda dapat membuat pedoman \n"
+"    delivery.  Proses ini lalu akan mengikuti alur yang sama seperti untuk faktur, dengan mengirimkannya ke \n"
+"    SII.  \n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ie
@@ -1708,6 +1812,11 @@ msgid ""
 "    - a Chart of Accounts customised to Ireland\n"
 "    - VAT Rates and Structure"
 msgstr ""
+"\n"
+"    Modul ini adalah untuk semua UKM Irlandia yang ingin menyiapkan akuntansi mereka dengan cepat. Modul menyediakan:\n"
+"\n"
+"    - Bagan Akun yang dikustomisasi untuk Irlandia\n"
+"    - Tarif Pajak dan Struktur"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_ebay
@@ -1789,6 +1898,12 @@ msgid ""
 "This module gives the details of the goods traded between the countries of\n"
 "European Union."
 msgstr ""
+"\n"
+"Modul yang menambahkan manajemen stok di laporan intrastat.\n"
+"============================================================\n"
+"\n"
+"Modul ini mengirimkan detail barang yang didagangkan di antara negara-negara\n"
+"Uni Eropa."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_tax_python
@@ -1801,6 +1916,13 @@ msgid ""
 "\"Python Code\" defines the amount of the tax.\n"
 "        "
 msgstr ""
+"\n"
+"Pajak yang didefinisikan sebagai kode python terdiri dari dua snippet kode python yang akan di-execute di local environment yang memiliki data seperti harga unit, produk atau mitra.\n"
+"\n"
+"\"Applicable Code\" didefinisikan bila pajak akan diterapkan.\n"
+"\n"
+"\"Python Code\" mendefinisikan jumlah pajak.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_au_aba
@@ -2008,6 +2130,11 @@ msgid ""
 "Manage automatic transfers between your accounts.\n"
 "    "
 msgstr ""
+"\n"
+"Transfer Otomatis Akun\n"
+"===========================\n"
+"Kelola transfer otomatis di antara akun-akun Anda.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_generic_auto_transfer_demo
@@ -2018,6 +2145,11 @@ msgid ""
 "Demo data for account automatic transfers module\n"
 "    "
 msgstr ""
+"\n"
+"Demo Transfer Otomatis Akun\n"
+"================================\n"
+"Data demo untuk modul transfer otomatis akun\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_us_consolidation_demo
@@ -2026,6 +2158,9 @@ msgid ""
 "Account Consolidation Demo Data\n"
 "==================================\n"
 msgstr ""
+"\n"
+"Data Demo Konsolidasi Akun\n"
+"==================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_accountant
@@ -2037,6 +2172,12 @@ msgid ""
 "\n"
 "It assigns manager and user access rights to the Administrator for the accounting application and only user rights to the Demo user.\n"
 msgstr ""
+"\n"
+"Hak Akses Akuntansi\n"
+"========================\n"
+"Hak akses ini memberikan user Administrator akses ke semua fitur akuntansi seperti item jurnal dan bagan akun.\n"
+"\n"
+"Ini akan menetapkan hak akses manajer dan user ke Administrator untuk aplikasi akuntansi dan hanya hak user ke user Demo.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll_account
@@ -2060,6 +2201,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Data Akuntansi untuk Peraturan Payroll KSA.\n"
+"=======================================================\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ae_hr_payroll_account
@@ -2070,6 +2216,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Data Akuntansi untuk Peraturan Payroll UEA.\n"
+"=======================================================\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_reports
@@ -2105,6 +2256,10 @@ msgid ""
 "=================================\n"
 "    "
 msgstr ""
+"\n"
+"Laporan akuntansi untuk Denmark\n"
+"=================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fi_reports
@@ -2115,6 +2270,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Laporan akuntansi untuk Finlandia\n"
+"================================\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_reports
@@ -2153,6 +2313,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Laporan akuntansi untuk Italia\n"
+"============================\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu_reports
@@ -2176,6 +2341,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Laporan akuntansi untuk Norwegia\n"
+"================================\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sg_reports
@@ -2196,6 +2366,9 @@ msgid ""
 "Add a dynamic report about contracts and employees.\n"
 "    "
 msgstr ""
+"\n"
+"Tambahkan laporan dinamis tentang kontrak dan karyawan.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment_reports
@@ -2204,6 +2377,9 @@ msgid ""
 "Add a dynamic report about recruitment.\n"
 "    "
 msgstr ""
+"\n"
+"Tambahkan laporan dinamis tentang rekrutmen.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_latam_base
@@ -2256,6 +2432,10 @@ msgid ""
 "Configure your own methods with a pricing grid or integrate with carriers for a fully automated shipping process.\n"
 "    "
 msgstr ""
+"\n"
+"Tambahkan pilihan metode pengiriman ke toko eCommerce Anda.\n"
+"Konfigurasikan metode Anda sendiri dengan kisi harga atau integrasikan dengan carrier untuk proses pengiriman yang sepenuhnya otomatis.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_contract
@@ -2272,6 +2452,17 @@ msgid ""
 "You can assign several contracts per employee.\n"
 "    "
 msgstr ""
+"\n"
+"Tambahkan semua informasi pada formulir karyawan untuk mengelola kontrak.\n"
+"=============================================================\n"
+"\n"
+"    * Kontrak\n"
+"    * Tempat Lahir,\n"
+"    * Data Pemeriksaan Medis\n"
+"    * Kendaraan Perusahaan\n"
+"\n"
+"Anda dapat menetapkan beberapa kontrak untuk setiap karyawan.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm
@@ -2282,6 +2473,11 @@ msgid ""
 "\n"
 "This module includes contact phone and mobile numbers validation."
 msgstr ""
+"\n"
+"Berikan formulir website Anda kemampuan untuk membuat lead atau kesempatan di aplikasi CRM.\n"
+"Formulir harus dikustomisasi di dalam *Website Builder* untuk membuat lead.\n"
+"\n"
+"Modul ini termasuk validasi nomor kontak dan mobile."
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_email_template
@@ -2308,6 +2504,8 @@ msgid ""
 "\n"
 "Add relation information between Sale Orders and Purchase Orders if Make to Order (MTO) is activated on one sold product.\n"
 msgstr ""
+"\n"
+"Tambahkan informasi relasi di antara Sale Orders dan Purchase Orders bila Make to Order (MTO) diaktifkan pada satu produk yang dijual.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_project
@@ -10225,7 +10423,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__layout_background__blank
 msgid "Blank"
-msgstr ""
+msgstr "Blank"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_blog
@@ -12922,7 +13120,7 @@ msgstr "Pengarahan"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_tree
 msgid "Disable"
-msgstr ""
+msgstr "Nonaktifkan"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__disable_shrinking
@@ -19299,7 +19497,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_base_module_uninstall
 msgid "Module Uninstall"
-msgstr ""
+msgstr "Module Uninstal"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_module_update
@@ -22633,7 +22831,7 @@ msgstr "Format Kertas"
 #. module: base
 #: model:ir.model,name:base.model_report_paperformat
 msgid "Paper Format Config"
-msgstr ""
+msgstr "Konfigurasi Format Kertas"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.paper_format_action
@@ -24219,7 +24417,7 @@ msgstr "Catatan"
 #: model:ir.model.fields,field_description:base.field_ir_model_data__res_id
 #: model:ir.model.fields,field_description:base.field_ir_translation__res_id
 msgid "Record ID"
-msgstr ""
+msgstr "Record ID"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
@@ -24339,7 +24537,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__related
 msgid "Related Field"
-msgstr ""
+msgstr "Field Terkait"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__relation
@@ -26338,7 +26536,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_customizations_studio
 #: model:ir.module.module,shortdesc:base.module_web_studio
 msgid "Studio"
-msgstr ""
+msgstr "Studio"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_subcontracting
@@ -27934,7 +28132,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_tour
 msgid "Tours"
-msgstr ""
+msgstr "Tur"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__traces_async
