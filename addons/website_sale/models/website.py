@@ -152,7 +152,7 @@ class Website(models.Model):
 
         if show_visible:
             # Only show selectable or currently used pricelist (cart or session)
-            check_pricelist = lambda pl: pl.selectable or pl.id in (current_pl_id, order_pl_id)
+            check_pricelist = lambda pl: pl.selectable or pl.id in (current_pl_id, order_pl_id, partner_pl_id)
         else:
             check_pricelist = lambda _pl: True
 
