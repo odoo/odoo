@@ -22,6 +22,6 @@ class Home(WebHome):
 
     @http.route()
     def web_client(self, s_action=None, **kw):
-        if request.session.uid and not is_user_internal(request.session.uid):
+        if not kw.get('redirect') and request.session.uid and not is_user_internal(request.session.uid):
             return request.redirect_query('/my', query=request.params)
         return super().web_client(s_action, **kw)

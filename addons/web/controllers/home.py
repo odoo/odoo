@@ -3,6 +3,7 @@
 import json
 import logging
 
+from werkzeug.urls import URL, url_encode
 
 import odoo
 import odoo.modules.registry
@@ -39,10 +40,12 @@ class Home(http.Controller):
 
         # Ensure we have both a database and a user
         ensure_db()
+        redirect = kw.get('redirect')
         if not request.session.uid:
-            return request.redirect('/web/login', 303)
-        if kw.get('redirect'):
-            return request.redirect(kw.get('redirect'), 303)
+            redirect = URL('', '', '/web/login', url_encode({'redirect': redirect or None}), '')
+        if redirect:
+            return request.redirect(redirect, 303)
+
         if not security.check_session(request.session, request.env):
             raise http.SessionExpiredException("Session expired")
         if not is_user_internal(request.session.uid):
