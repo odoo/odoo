@@ -273,7 +273,10 @@
 
                         <t groups="account.group_account_user">
                             <block title="Bank &amp; Cash" id="bank_cash">
-                                <setting id="import_bank_statements_csv" title="Once installed, set 'Bank Feeds' to 'File Import' in bank account settings.This adds a button to import from the Accounting dashboard." string="CSV Import" help="Import your bank statements in CSV">
+                                <setting id="import_bank_statements_csv"
+                                         title="Once installed, set 'Bank Feeds' to 'File Import' in bank account settings.This adds a button to import from the Accounting dashboard."
+                                         string="CSV, XLS, and XLSX Import"
+                                         help="Import your bank statements in CSV, XLS, and XLSX">
                                     <field name="module_account_bank_statement_import_csv" widget="upgrade_boolean"/>
                                 </setting>
                                 <setting title="Once installed, set 'Bank Feeds' to 'File Import' in bank account settings.This adds a button to import from the Accounting dashboard." string="QIF Import" help="Import your bank statements in QIF">
