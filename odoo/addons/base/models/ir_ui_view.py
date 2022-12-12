@@ -14,6 +14,8 @@ import time
 import uuid
 import warnings
 
+from itertools import chain
+
 from lxml import etree
 from lxml.etree import LxmlError
 from lxml.builder import E
@@ -1606,28 +1608,7 @@ actual arch.
                     msg = "%s on %s has parameters and cannot be called from a button"
                     self._log_view_warning(msg % (name, name_manager.model._name), node)
             elif type_ == 'action':
-                # logic mimics /web/action/load behaviour
-                action = False
-                try:
-                    action_id = int(name)
-                except ValueError:
-                    model, action_id = self.env['ir.model.data']._xmlid_to_res_model_res_id(name, raise_if_not_found=False)
-                    if not action_id:
-                        msg = _("Invalid xmlid %(xmlid)s for button of type action.", xmlid=name)
-                        self._raise_view_error(msg, node)
-                    if not issubclass(self.pool[model], self.pool['ir.actions.actions']):
-                        msg = _(
-                            "%(xmlid)s is of type %(xmlid_model)s, expected a subclass of ir.actions.actions",
-                            xmlid=name, xmlid_model=model,
-                        )
-                        self._raise_view_error(msg, node)
-                action = self.env['ir.actions.actions'].browse(action_id).exists()
-                if not action:
-                    msg = _(
-                        "Action %(action_reference)s (id: %(action_id)s) does not exist for button of type action.",
-                        action_reference=name, action_id=action_id,
-                    )
-                    self._raise_view_error(msg, node)
+                name_manager.must_exist_action(name, node)
 
             name_manager.has_action(name)
 
@@ -1791,11 +1772,7 @@ actual arch.
 
             elif attr == 'groups':
                 for group in expr.replace('!', '').split(','):
-                    # further improvement: add all groups to name_manager in
-                    # order to batch check them at the end
-                    if not self.env['ir.model.data']._xmlid_to_res_id(group.strip(), raise_if_not_found=False):
-                        msg = "The group %r defined in view does not exist!"
-                        self._log_view_warning(msg % group, node)
+                    name_manager.must_exist_group(group.strip(), node)
 
             elif attr in ('col', 'colspan'):
                 # col check is mainly there for the tag 'group', but previous
@@ -2846,6 +2823,8 @@ class NameManager:
         self.mandatory_fields = collections.defaultdict(dict)  # {field_name: {'groups': 'use}}
         self.mandatory_parent_fields = collections.defaultdict(dict)  # {field_name: {'groups': use}}
         self.mandatory_names = dict()           # {name: use}
+        self.must_exist_actions = {}
+        self.must_exist_groups = {}
         self.parent = parent
         self.children = []
         if self.parent:
@@ -2888,8 +2867,14 @@ class NameManager:
     def must_have_name(self, name, use):
         self.mandatory_names[name] = use
 
+    def must_exist_action(self, action_id, node):
+        self.must_exist_actions[action_id] = node
+
+    def must_exist_group(self, name, node):
+        self.must_exist_groups[name] = node
+
     def _get_node_groups(self, node):
-        return tuple(tuple(n.get('groups').split(',')) for n in node.xpath('ancestor-or-self::*[@groups]'))
+        return tuple(tuple(n.get('groups').split(',')) for n in chain([node], node.iterancestors()) if n.get('groups'))
 
     def check(self, view):
         # context for translations below
@@ -2907,6 +2892,35 @@ class NameManager:
             if name not in self.model._fields and name not in self.field_info:
                 message = _("Field `%(name)s` does not exist", name=name)
                 view._raise_view_error(message)
+
+        for name, node in self.must_exist_actions.items():
+            # logic mimics /web/action/load behaviour
+            action = False
+            try:
+                action_id = int(name)
+            except ValueError:
+                model, action_id = view.env['ir.model.data']._xmlid_to_res_model_res_id(name, raise_if_not_found=False)
+                if not action_id:
+                    msg = _("Invalid xmlid %(xmlid)s for button of type action.", xmlid=name)
+                    view._raise_view_error(msg, node)
+                if not issubclass(view.pool[model], view.pool['ir.actions.actions']):
+                    msg = _(
+                        "%(xmlid)s is of type %(xmlid_model)s, expected a subclass of ir.actions.actions",
+                        xmlid=name, xmlid_model=model,
+                    )
+                    view._raise_view_error(msg, node)
+            action = view.env['ir.actions.actions'].browse(action_id).exists()
+            if not action:
+                msg = _(
+                    "Action %(action_reference)s (id: %(action_id)s) does not exist for button of type action.",
+                    action_reference=name, action_id=action_id,
+                )
+                view._raise_view_error(msg, node)
+
+        for name, node in self.must_exist_groups.items():
+            if not view.env['ir.model.data']._xmlid_to_res_id(name, raise_if_not_found=False):
+                msg = _("The group %(name)r defined in view does not exist!", name=name)
+                view._log_view_warning(msg, node)
 
         for name, groups_uses in self.mandatory_fields.items():
             use = next(iter(groups_uses.values()))

@@ -14,7 +14,7 @@ from psycopg2.extras import Json
 
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import common
-from odoo.tools import mute_logger, view_validation
+from odoo.tools import get_cache_key_counter, mute_logger, view_validation
 from odoo.addons.base.models.ir_ui_view import (
     transfer_field_to_modifiers, transfer_node_to_modifiers, simplify_modifiers,
 )
@@ -314,6 +314,55 @@ class TestViewInheritance(ViewCase):
             # 2: _get_inheriting_views: id, inherit_id, mode, groups
             # 3: _combine: arch_db
             self.view_ids['A'].get_combined_arch()
+
+    def test_view_validate_button_action_query_count(self):
+        _, _, counter = get_cache_key_counter(self.env['ir.model.data']._xmlid_lookup, 'base.action_ui_view')
+        hit, miss = counter.hit, counter.miss
+
+        with self.assertQueryCount(8):
+            base_view = self.assertValid("""
+                <form string="View">
+                    <header>
+                        <button type="action" name="base.action_ui_view"/>
+                        <button type="action" name="base.action_ui_view_custom"/>
+                        <button type="action" name="base.action_ui_view"/>
+                    </header>
+                    <field name="name"/>
+                </form>
+            """)
+        self.assertEqual(counter.hit, hit)
+        self.assertEqual(counter.miss, miss + 2)
+
+        with self.assertQueryCount(9):
+            self.assertValid("""
+                <field name="name" position="replace"/>
+            """, inherit_id=base_view.id)
+        self.assertEqual(counter.hit, hit)
+        self.assertEqual(counter.miss, miss + 4)
+
+    def test_view_validate_attrs_groups_query_count(self):
+        _, _, counter = get_cache_key_counter(self.env['ir.model.data']._xmlid_lookup, 'base.group_system')
+        hit, miss = counter.hit, counter.miss
+
+        with self.assertQueryCount(5):
+            base_view = self.assertValid("""
+                <form string="View">
+                    <field name="name" groups="base.group_system"/>
+                    <field name="priority" groups="base.group_system"/>
+                    <field name="inherit_id" groups="base.group_system"/>
+                </form>
+            """)
+        self.assertEqual(counter.hit, hit)
+        self.assertEqual(counter.miss, miss + 1)
+
+        with self.assertQueryCount(6):
+            self.assertValid("""
+                <field name="name" position="replace">
+                    <field name="key" groups="base.group_system"/>
+                </field>
+            """, inherit_id=base_view.id)
+        self.assertEqual(counter.hit, hit)
+        self.assertEqual(counter.miss, miss + 2)
 
 
 class TestApplyInheritanceSpecs(ViewCase):
