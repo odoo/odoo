@@ -43,7 +43,7 @@ export class MrpTimer extends Component {
                 : this.props.record.data.is_user_working;
 
         onWillStart(async () => {
-            if(this.props.ongoing === undefined && this.props.record.data.state == "progress") {
+            if(this.props.ongoing === undefined && !this.props.record.model.useSampleModel && this.props.record.data.state == "progress") {
                 const additionalDuration = await this.orm.call('mrp.workorder', 'get_working_duration', [this.props.record.resId]);
                 this.state.duration += additionalDuration;
             }
