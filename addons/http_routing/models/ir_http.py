@@ -104,8 +104,8 @@ _UNSLUG_RE = re.compile(r'(?:(\w{1,2}|\w[A-Za-z0-9-_]+?\w)-)?(-?\d+)(?=$|\/|#|\?
 
 
 def unslug(s):
-    """Extract slug and id from a string.
-        Always return un 2-tuple (str|None, int|None)
+    """ Extract slug and id from a string.
+        Always return a 2-tuple (str|None, int|None)
     """
     m = _UNSLUG_RE.match(s)
     if not m:

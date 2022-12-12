@@ -4,6 +4,8 @@
 import werkzeug.exceptions
 import werkzeug.urls
 
+from werkzeug.urls import url_parse
+
 from odoo import api, fields, models
 from odoo.addons.http_routing.models.ir_http import unslug_url
 from odoo.http import request
@@ -139,10 +141,29 @@ class Menu(models.Model):
         return url
 
     def _is_active(self):
+        """ To be considered active, a menu should either:
+
+        - have its URL matching the request's URL and have no children
+        - or have a children menu URL matching the request's URL
+
+        Matching an URL means, either:
+
+        - be equal, eg ``/contact/on-site`` vs ``/contact/on-site``
+        - be equal after unslug, eg ``/shop/1`` and ``/shop/my-super-product-1``
+
+        Note that saving a menu URL with an anchor or a query string is
+        considered a corner case, and the following applies:
+
+        - anchor/fragment are ignored during the comparison (it would be
+          impossible to compare anyway as the client is not sending the anchor
+          to the server as per RFC)
+        - query string parameters should be the same to be considered equal, as
+          those could drasticaly alter a page result
+        """
         if not request:
             return False
 
-        request_url = unslug_url(request.httprequest.path)
+        request_url = url_parse(request.httprequest.url)
 
         if not self.child_id:
             # Don't compare to `url` as it could be shadowed by the linked
@@ -150,13 +171,17 @@ class Menu(models.Model):
             menu_url = self._clean_url()
             if not menu_url:
                 return False
-            menu_url = unslug_url(menu_url)
-            if request_url == menu_url:
+
+            menu_url = url_parse(menu_url)
+            if unslug_url(menu_url.path) == unslug_url(request_url.path) and menu_url.decode_query() == request_url.decode_query():
+                if menu_url.netloc and menu_url.netloc != request_url.netloc:
+                    # correct path but not correct domain
+                    return False
                 return True
         else:
             # Child match (dropdown menu), `self` is just a parent/container,
             # don't check its URL, consider only its children
-            if any(request_url == unslug_url(child.url) for child in self.child_id if child.url):
+            if any(child._is_active() for child in self.child_id):
                 return True
 
         return False
