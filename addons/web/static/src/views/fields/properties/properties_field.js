@@ -221,9 +221,15 @@ export class PropertiesField extends Component {
      * @param {event} event
      * @param {string} propertyName
      */
-    onPropertyEdit(event, propertyName) {
+    async onPropertyEdit(event, propertyName) {
         event.stopPropagation();
         event.preventDefault();
+        if (!await this.checkDefinitionWriteAccess()) {
+            this.notification.add(_lt("You need to be able to edit parent first to configure property fields"), {
+                type: "warning",
+            });
+            return;
+        }
         if (event.target.classList.contains("disabled")) {
             // remove the glitch if we click on the edit button
             // while the popover is already opened
@@ -284,7 +290,13 @@ export class PropertiesField extends Component {
         this.dialogService.add(ConfirmationDialog, dialogProps);
     }
 
-    onPropertyCreate() {
+    async onPropertyCreate() {
+        if (!await this.checkDefinitionWriteAccess()) {
+            this.notification.add(_lt("You need to be able to edit parent first to configure property fields"), {
+                type: "warning",
+            });
+            return;
+        }
         const propertiesDefinitions = this.propertiesList || [];
 
         if (
@@ -310,6 +322,28 @@ export class PropertiesField extends Component {
         });
         this.openLastPropertyDefinition = true;
         this.props.record.update({ [this.props.name]: propertiesDefinitions });
+    }
+
+    /**
+     * Verify that we can write on properties,
+     * if we don't have access for parent
+     */
+    async checkDefinitionWriteAccess() {
+        const definitionRecordId = this.props.record.data[this.definitionRecordField][0];
+        const definitionRecordModel = this.props.record.fields[this.definitionRecordField].relation;
+        try {
+            await this.orm.call(
+                definitionRecordModel,
+                "check_access_rule",
+                [definitionRecordId],
+                {
+                    operation: "write",
+                }
+            );
+        } catch (_e) { // eslint-disable-line no-unused-vars
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -473,6 +507,7 @@ export class PropertiesField extends Component {
             {
                 readonly: this.props.readonly || !this.state.canChangeDefinition,
                 canChangeDefinition: this.state.canChangeDefinition,
+                checkDefinitionWriteAccess: () => this.checkDefinitionWriteAccess(),
                 propertyDefinition: this.propertiesList.find(
                     (property) => property.name === currentName(propertyName)
                 ),
