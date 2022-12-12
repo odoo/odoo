@@ -309,7 +309,7 @@ def odoo_restart(delay):
 def path_file(filename):
     platform_os = platform.system()
     if platform_os == 'Linux':
-        return Path().absolute().parent.joinpath(filename)
+        return Path.home() / filename
     elif platform_os == 'Windows':
         return Path().absolute().parent.joinpath('server/' + filename)
 
