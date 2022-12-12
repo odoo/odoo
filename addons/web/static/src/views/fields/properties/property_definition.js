@@ -399,6 +399,7 @@ PropertyDefinition.components = {
 PropertyDefinition.props = {
     readonly: { type: Boolean, optional: true },
     canChangeDefinition: { type: Boolean, optional: true },
+    checkDefinitionWriteAccess: { type: Function, optional: true },
     propertyDefinition: { optional: true },
     hideKanbanOption: { type: Boolean, optional: true },
     context: { type: Object },
