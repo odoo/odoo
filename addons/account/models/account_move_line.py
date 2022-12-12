@@ -1534,11 +1534,11 @@ class AccountMoveLine(models.Model):
         return data_list
 
     def _search_panel_domain_image(self, field_name, domain, set_count=False, limit=False):
-        if field_name != 'account_root_id' or set_count:
+        query = self._search(domain, limit=1)
+        if not query or field_name != 'account_root_id' or set_count:
             return super()._search_panel_domain_image(field_name, domain, set_count, limit)
 
         # Override in order to not read the complete move line table and use the index instead
-        query = self._search(domain, limit=1)
         query.order = None
         query.add_where('account.id = account_move_line.account_id')
         query_str, query_param = query.select()
