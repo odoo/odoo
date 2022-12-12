@@ -4,14 +4,15 @@
 import base64
 import json
 
+from markupsafe import Markup
 from psycopg2 import IntegrityError
 from werkzeug.exceptions import BadRequest
 
 from odoo import http, SUPERUSER_ID, _
+from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.http import request
 from odoo.tools import plaintext2html
 from odoo.exceptions import ValidationError, UserError
-from odoo.addons.base.models.ir_qweb_fields import nl2br
 
 
 class WebsiteForm(http.Controller):
@@ -234,14 +235,11 @@ class WebsiteForm(http.Controller):
                 if default_field.ttype == 'html' or model_name == 'mail.mail':
                     custom_content = nl2br(custom_content)
                 record.update({default_field.name: custom_content})
-            else:
-                values = {
-                    'body': nl2br(custom_content),
-                    'model': model_name,
-                    'message_type': 'comment',
-                    'res_id': record.id,
-                }
-                request.env['mail.message'].with_user(SUPERUSER_ID).create(values)
+            elif hasattr(record, '_message_log'):
+                record._message_log(
+                    body=custom_content,
+                    message_type='comment',
+                )
 
         return record.id
 
@@ -269,20 +267,15 @@ class WebsiteForm(http.Controller):
             else:
                 orphan_attachment_ids.append(attachment_id.id)
 
-        if model_name != 'mail.mail':
+        if model_name != 'mail.mail' and hasattr(record, '_message_log') and orphan_attachment_ids:
             # If some attachments didn't match a field on the model,
             # we create a mail.message to link them to the record
-            if orphan_attachment_ids:
-                values = {
-                    'body': _('<p>Attached files : </p>'),
-                    'model': model_name,
-                    'message_type': 'comment',
-                    'res_id': id_record,
-                    'attachment_ids': [(6, 0, orphan_attachment_ids)],
-                    'subtype_id': request.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'),
-                }
-                request.env['mail.message'].with_user(SUPERUSER_ID).create(values)
-        else:
+            record._message_log(
+                attachment_ids=[(6, 0, orphan_attachment_ids)],
+                body=Markup(_('<p>Attached files : </p>')),
+                message_type='comment',
+            )
+        elif model_name == 'mail.mail' and orphan_attachment_ids:
             # If the model is mail.mail then we have no other choice but to
             # attach the custom binary field files on the attachment_ids field.
             for attachment_id_id in orphan_attachment_ids:
