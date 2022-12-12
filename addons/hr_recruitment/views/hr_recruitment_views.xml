@@ -108,7 +108,7 @@
                             attrs="{'invisible': [('application_count', '=' , 0)]}">
                         <field name="application_count" widget="statinfo" string="Other applications"/>
                     </button>
-                    <button name="action_makeMeeting" class="oe_stat_button" icon="fa-calendar" type="object" attrs="{'invisible': [('id', '=', False)]}">
+                    <button name="action_makeMeeting" class="oe_stat_button" icon="fa-calendar" type="object">
                          <div class="o_field_widget o_stat_info">
                              <span class="o_stat_value"><field name="meeting_display_text" /></span>
                              <span class="o_stat_text"><field name="meeting_display_date" readonly="1"/></span>

@@ -28,7 +28,7 @@
                             </p>
                         </group>
                     </group>
-                    <field name="alternative_po_ids" attrs="{'readonly': [('id', '=', False)]}" widget="many2many_alt_pos" context="{'quotation_only': True}">
+                    <field name="alternative_po_ids" widget="many2many_alt_pos" context="{'quotation_only': True}">
                         <tree string="Alternative Purchase Order" decoration-muted="state in ['cancel', 'purchase', 'done']" decoration-bf="id == parent.id">
                             <control>
                                 <create string="Link to Existing RfQ"/>

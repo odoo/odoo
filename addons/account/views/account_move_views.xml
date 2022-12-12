@@ -677,14 +677,14 @@
                                     class="oe_stat_button"
                                     icon="fa-bars"
                                     type="object"
-                                    attrs="{'invisible': ['|', '|', ('move_type', '!=', 'entry'), ('id', '=', False), ('payment_id', '=', False)]}"
+                                    attrs="{'invisible': ['|', ('move_type', '!=', 'entry'), ('payment_id', '=', False)]}"
                                     string="1 Payment">
                             </button>
                             <button name="open_reconcile_view"
                                     class="oe_stat_button"
                                     icon="fa-bars"
                                     type="object"
-                                    attrs="{'invisible': ['|', '|', ('move_type', '!=', 'entry'), ('id', '=', False), ('has_reconciled_entries', '=', False)]}"
+                                    attrs="{'invisible': ['|', ('move_type', '!=', 'entry'), ('has_reconciled_entries', '=', False)]}"
                                     string="Reconciled Items">
                             </button>
                             <button name="open_created_caba_entries"

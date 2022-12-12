@@ -19,7 +19,7 @@
         <field name="inherit_id" ref="base.view_users_form"/>
         <field name="arch" type="xml">
             <xpath expr="//page[@name='preferences']" position="after">
-                <page string="Account Security" name="security" attrs="{'invisible': [('id', '=', False)]}">
+                <page string="Account Security" name="security">
                     <field name="totp_enabled" invisible="1"/>
                     <!-- For own user, allow to activate the two-factor Authentication -->
                     <div>
