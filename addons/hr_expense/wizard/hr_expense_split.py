@@ -70,7 +70,7 @@ class HrExpenseSplit(models.TransientModel):
             'name': self.name,
             'product_id': self.product_id.id,
             'total_amount': self.total_amount,
-            'tax_ids': self.tax_ids.ids,
+            'tax_ids': [(6, 0, self.tax_ids.ids)],
             'analytic_distribution': self.analytic_distribution,
             'employee_id': self.employee_id.id,
             'product_uom_id': self.product_id.uom_id.id,
