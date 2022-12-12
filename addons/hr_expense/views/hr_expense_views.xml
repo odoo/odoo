@@ -741,7 +741,7 @@
                      <notebook>
                         <page name="expenses" string="Expense">
                         <field name="is_editable" invisible="1"/>
-                        <field name="expense_line_ids" nolabel="1" widget="many2many" domain="[('state', '=', 'draft'), ('employee_id', '=', employee_id), ('company_id', '=', company_id)]" options="{'reload_on_button': True}" context="{'form_view_ref' : 'hr_expense.hr_expense_view_form_without_header', 'default_company_id': company_id, 'default_employee_id': employee_id}" attrs="{'readonly': [('is_editable', '=', False)]}">
+                        <field name="expense_line_ids" nolabel="1" widget="many2many" domain="[('state', '=', 'draft'), ('employee_id', '=', employee_id), ('company_id', '=', company_id)]" options="{'reload_on_button': True}" context="{'form_view_ref' : 'hr_expense.hr_expense_view_form_without_header', 'default_company_id': company_id, 'default_employee_id': employee_id}" attrs="{'readonly': [('is_editable', '=', False)]}" force_save="1">
                             <tree decoration-danger="is_refused" editable="bottom">
                                 <field name="date" optional="show"/>
                                 <field name="product_id"/>
