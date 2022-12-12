@@ -135,6 +135,8 @@ class Partner(models.Model):
     _name = "res.partner"
     _order = "display_name"
 
+    _check_company_auto = True
+
     def _default_category(self):
         return self.env['res.partner.category'].browse(self._context.get('category_id'))
 
@@ -173,7 +175,8 @@ class Partner(models.Model):
 
     tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
     user_id = fields.Many2one('res.users', string='Salesperson',
-      help='The internal user in charge of this contact.')
+      help='The internal user in charge of this contact.',
+      check_company=True)
     vat = fields.Char(string='Tax ID', index=True, help="The Tax Identification Number. Complete it if the contact is subjected to government taxes. Used in some legal statements.")
     same_vat_partner_id = fields.Many2one('res.partner', string='Partner with same Tax ID', compute='_compute_same_vat_partner_id', store=False)
     bank_ids = fields.One2many('res.partner.bank', 'partner_id', string='Banks')
