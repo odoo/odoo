@@ -38,9 +38,12 @@ const BaseAnimatedHeader = animations.Animation.extend({
         this.$dropdowns = this.$el.find('.dropdown, .dropdown-menu');
         this.$navbarCollapses = this.$el.find('.navbar-collapse');
 
+        let $navbar = this.$('.navbar');
+        let [navbarSize] = _.keys(config.device.SIZES).filter((size) => $navbar.hasClass(`navbar-expand-${size}`.toLowerCase()));
+
         // While scrolling through navbar menus on medium devices, body should not be scrolled with it
         this.$navbarCollapses.on('show.bs.collapse.BaseAnimatedHeader', function () {
-            if (config.device.size_class <= config.device.SIZES.MD) {
+            if (config.device.size_class <= config.device.SIZES[navbarSize]) {
                 $(document.body).addClass('overflow-hidden');
             }
         }).on('hide.bs.collapse.BaseAnimatedHeader', function () {
