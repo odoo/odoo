@@ -3044,6 +3044,10 @@ class AccountMove(models.Model):
         if not reconciled_lines:
             return {}
 
+        self.env['account.partial.reconcile'].flush_model([
+            'credit_amount_currency', 'credit_move_id', 'debit_amount_currency',
+            'debit_move_id', 'exchange_move_id',
+        ])
         query = '''
             SELECT
                 part.id,
@@ -3080,6 +3084,7 @@ class AccountMove(models.Model):
                 exchange_move_ids.add(values['exchange_move_id'])
 
         if exchange_move_ids:
+            self.env['account.move.line'].flush_model(['move_id'])
             query = '''
                 SELECT
                     part.id,
