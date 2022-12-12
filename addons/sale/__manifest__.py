@@ -33,6 +33,7 @@ This module contains all the common features of Sales Management and eCommerce.
 
         'wizard/account_accrued_orders_wizard_views.xml',
         'wizard/payment_link_wizard_views.xml',
+        'wizard/res_config_settings_views.xml',
         'wizard/sale_make_invoice_advance_views.xml',
         'wizard/sale_order_cancel_views.xml',
 
@@ -46,7 +47,6 @@ This module contains all the common features of Sales Management and eCommerce.
         'views/payment_views.xml',
         'views/product_packaging_views.xml',
         'views/product_views.xml',
-        'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
         'views/variant_templates.xml',
         'views/sale_onboarding_views.xml',
