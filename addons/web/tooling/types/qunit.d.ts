@@ -457,7 +457,7 @@ interface Assert {
   ) => void;
   type ModuleOnly = { only: moduleFunc1 & moduleFunc2 };
   
-  declare namespace QUnit {
+  declare namespace QUnitNamespace {
     interface BeginDetails {
       totalTests: number;
     }
@@ -520,7 +520,7 @@ interface Assert {
      *
      * @callback callback Callback to execute.
      */
-    begin(callback: (details: QUnit.BeginDetails) => void | Promise<void>): void;
+    begin(callback: (details: QUnitNamespace.BeginDetails) => void | Promise<void>): void;
   
     /**
      * Configuration for QUnit
@@ -535,7 +535,7 @@ interface Assert {
      *
      * @param callback Callback to execute
      */
-    done(callback: (details: QUnit.DoneDetails) => void | Promise<void>): void;
+    done(callback: (details: QUnitNamespace.DoneDetails) => void | Promise<void>): void;
   
     /**
      * Advanced and extensible data dumping for JavaScript.
@@ -579,7 +579,7 @@ interface Assert {
      *
      * @param callback Callback to execute
      */
-    log(callback: (details: QUnit.LogDetails) => void): void;
+    log(callback: (details: QUnitNamespace.LogDetails) => void): void;
   
     /**
      * Group related tests under a single label.
@@ -627,7 +627,7 @@ interface Assert {
      * @param callback Callback to execute
      */
     moduleDone(
-      callback: (details: QUnit.ModuleDoneDetails) => void | Promise<void>
+      callback: (details: QUnitNamespace.ModuleDoneDetails) => void | Promise<void>
     ): void;
   
     /**
@@ -636,7 +636,7 @@ interface Assert {
      * @param callback Callback to execute
      */
     moduleStart(
-      callback: (details: QUnit.ModuleStartDetails) => void | Promise<void>
+      callback: (details: QUnitNamespace.ModuleStartDetails) => void | Promise<void>
     ): void;
   
     /**
@@ -756,7 +756,7 @@ interface Assert {
      * @param callback Callback to execute
      */
     testStart(
-      callback: (details: QUnit.TestStartDetails) => void | Promise<void>
+      callback: (details: QUnitNamespace.TestStartDetails) => void | Promise<void>
     ): void;
   
     /**
