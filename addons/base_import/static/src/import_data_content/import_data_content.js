@@ -7,6 +7,10 @@ import { ImportDataOptions } from "../import_data_options/import_data_options";
 import { _t } from "@web/core/l10n/translation";
 
 export class ImportDataContent extends Component {
+    setup() {
+        this.searchPlaceholder = _t("Search a field...");
+    }
+
     getGroups(column) {
         const groups = [
             { options: this.makeOptions(column.fields.basic) },

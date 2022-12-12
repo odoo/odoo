@@ -63,6 +63,7 @@
                                     value="column.fieldInfo"
                                     groups="getGroups(column)"
                                     onSelect="fieldInfo => this.props.onFieldChanged(column, fieldInfo)"
+                                    searchPlaceholder="searchPlaceholder"
                                     togglerClass="column.fieldInfo ? 'ps-1' : ''"
                                 >
                                     <t t-if="column.fieldInfo">
