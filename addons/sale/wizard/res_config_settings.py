@@ -1,17 +1,18 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     # Defaults
-    default_invoice_policy = fields.Selection([
-        ('order', 'Invoice what is ordered'),
-        ('delivery', 'Invoice what is delivered')
-        ], 'Invoicing Policy',
+    default_invoice_policy = fields.Selection(
+        selection=[
+            ('order', "Invoice what is ordered"),
+            ('delivery', "Invoice what is delivered")
+        ],
+        string="Invoicing Policy",
         default='order',
         default_model='product.template')
 
@@ -21,7 +22,8 @@ class ResConfigSettings(models.TransientModel):
     group_proforma_sales = fields.Boolean(
         string="Pro-Forma Invoice", implied_group='sale.group_proforma_sales',
         help="Allows you to send pro-forma invoice.")
-    group_warning_sale = fields.Boolean("Sale Order Warnings", implied_group='sale.group_warning_sale')
+    group_warning_sale = fields.Boolean(
+        string="Sale Order Warnings", implied_group='sale.group_warning_sale')
 
     # Config params
     automatic_invoice = fields.Boolean(
@@ -34,38 +36,42 @@ class ResConfigSettings(models.TransientModel):
         config_parameter='sale.automatic_invoice',
     )
     deposit_default_product_id = fields.Many2one(
-        'product.product',
-        'Deposit Product',
-        domain="[('type', '=', 'service')]",
+        comodel_name='product.product',
+        string="Deposit Product",
+        domain=[('type', '=', 'service')],
         config_parameter='sale.default_deposit_product_id',
-        help='Default product used for payment advances')
+        help="Default product used for payment advances")
 
     invoice_mail_template_id = fields.Many2one(
         comodel_name='mail.template',
-        string='Invoice Email Template',
-        domain="[('model', '=', 'account.move')]",
+        string="Invoice Email Template",
+        domain=[('model', '=', 'account.move')],
         config_parameter='sale.default_invoice_email_template',
         help="Email sent to the customer once the invoice is available.",
     )
 
     use_quotation_validity_days = fields.Boolean(
-        "Default Quotation Validity", config_parameter='sale.use_quotation_validity_days')
+        string="Default Quotation Validity", config_parameter='sale.use_quotation_validity_days')
 
     # Company setup
     quotation_validity_days = fields.Integer(
-        related='company_id.quotation_validity_days', string="Default Quotation Validity (Days)", readonly=False)
+        related='company_id.quotation_validity_days',
+        string="Default Quotation Validity (Days)",
+        readonly=False)
     portal_confirmation_sign = fields.Boolean(
-        related='company_id.portal_confirmation_sign', string='Online Signature', readonly=False)
+        related='company_id.portal_confirmation_sign',
+        readonly=False)
     portal_confirmation_pay = fields.Boolean(
-        related='company_id.portal_confirmation_pay', string='Online Payment', readonly=False)
+        related='company_id.portal_confirmation_pay',
+        readonly=False)
 
     # Modules
     module_delivery = fields.Boolean("Delivery Methods")
     module_delivery_bpost = fields.Boolean("bpost Connector")
     module_delivery_dhl = fields.Boolean("DHL Express Connector")
     module_delivery_easypost = fields.Boolean("Easypost Connector")
-    module_delivery_sendcloud = fields.Boolean("Sendcloud Connector")
     module_delivery_fedex = fields.Boolean("FedEx Connector")
+    module_delivery_sendcloud = fields.Boolean("Sendcloud Connector")
     module_delivery_ups = fields.Boolean("UPS Connector")
     module_delivery_usps = fields.Boolean("USPS Connector")
 
@@ -84,9 +90,14 @@ class ResConfigSettings(models.TransientModel):
     @api.onchange('quotation_validity_days')
     def _onchange_quotation_validity_days(self):
         if self.quotation_validity_days <= 0:
-            self.quotation_validity_days = self.env['res.company'].default_get(['quotation_validity_days'])['quotation_validity_days']
+            self.quotation_validity_days = self.env['res.company'].default_get(
+                ['quotation_validity_days']
+            )['quotation_validity_days']
             return {
-                'warning': {'title': "Warning", 'message': "Quotation Validity is required and must be greater than 0."},
+                'warning': {
+                    'title': _("Warning"),
+                    'message': _("Quotation Validity is required and must be greater than 0."),
+                },
             }
 
     #=== CRUD METHODS ===#
