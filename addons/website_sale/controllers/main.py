@@ -4,7 +4,9 @@ from collections import defaultdict
 from itertools import product as cartesian_product
 import json
 import logging
+
 from datetime import datetime
+from markupsafe import Markup
 from werkzeug.exceptions import Forbidden, NotFound
 from werkzeug.urls import url_decode, url_encode, url_parse
 
@@ -113,13 +115,10 @@ class WebsiteSaleForm(WebsiteForm):
             order.write(data['record'])
 
         if data['custom']:
-            values = {
-                'body': nl2br(data['custom']),
-                'model': 'sale.order',
-                'message_type': 'comment',
-                'res_id': order.id,
-            }
-            request.env['mail.message'].with_user(SUPERUSER_ID).create(values)
+            order._message_log(
+                body=Markup('<p>%s</p>') % nl2br(data['custom']),
+                message_type='comment',
+            )
 
         if data['attachments']:
             self.insert_attachment(model_record, order.id, data['attachments'])
