@@ -63,7 +63,6 @@
             'project/static/src/services/**/*',
             'project/static/src/components/**/*',
             'project/static/src/views/**/*',
-            'project/static/src/js/project_activity.js',
             'project/static/src/js/project_control_panel.js',
             'project/static/src/js/project_graph_view.js',
             'project/static/src/js/project_pivot_view.js',

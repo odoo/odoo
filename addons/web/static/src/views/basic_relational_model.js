@@ -8,6 +8,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { escape } from "@web/core/utils/strings";
 import { mapDoActionOptionAPI } from "@web/legacy/backend_utils";
 import { Model } from "@web/views/model";
+import { getRawValue, getValue } from "@web/views/relational_model";
 import { evalDomain } from "@web/views/utils";
 import {
     mapWowlValueToLegacy,
@@ -169,6 +170,17 @@ export class Record extends DataPoint {
 
     get dirtyTranslatableFields() {
         return this.translatableFields.filter((f) => this.dirtyFields.includes(f));
+    }
+
+    get formattedRecord() {
+        const record = Object.create(this, Object.getOwnPropertyDescriptors(this));
+        for (const fieldName in this.activeFields) {
+            record[fieldName] = {
+                value: getValue(this, fieldName),
+                raw_value: getRawValue(this, fieldName),
+            };
+        }
+        return record;
     }
 
     get isInEdition() {

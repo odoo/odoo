@@ -4,7 +4,6 @@ import { ColorList } from "@web/core/colorlist/colorlist";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { registry } from "@web/core/registry";
 import { useTooltip } from "@web/core/tooltip/tooltip_hook";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
@@ -22,8 +21,6 @@ import { KanbanDropdownMenuWrapper } from "./kanban_dropdown_menu_wrapper";
 
 import { Component, onMounted, onWillUpdateProps, useRef } from "@odoo/owl";
 const { COLORS } = ColorList;
-
-const formatters = registry.category("formatters");
 
 // These classes determine whether a click on a record should open it.
 export const CANCEL_GLOBAL_CLICK = ["a", ".dropdown", ".oe_kanban_action"].join(",");
@@ -92,48 +89,6 @@ export function getImageSrcFromRecordInfo(record, model, field, idOrIds, placeho
     }
 }
 
-/**
- * Returns a "raw" version of the field value on a given record.
- *
- * @param {Record} record
- * @param {string} fieldName
- * @returns {any}
- */
-export function getRawValue(record, fieldName) {
-    const field = record.fields[fieldName];
-    const value = record.data[fieldName];
-    switch (field.type) {
-        case "one2many":
-        case "many2many": {
-            return value.count ? value.currentIds : [];
-        }
-        case "many2one": {
-            return (value && value[0]) || false;
-        }
-        case "date":
-        case "datetime": {
-            return value && value.toISO();
-        }
-        default: {
-            return value;
-        }
-    }
-}
-
-/**
- * Returns a formatted version of the field value on a given record.
- *
- * @param {Record} record
- * @param {string} fieldName
- * @returns {string}
- */
-export function getValue(record, fieldName) {
-    const field = record.fields[fieldName];
-    const value = record.data[fieldName];
-    const formatter = formatters.get(field.type, String);
-    return formatter(value, { field, data: record.data });
-}
-
 function isBinSize(value) {
     return /^\d+(\.\d*)? [^0-9]+$/.test(value);
 }
@@ -169,7 +124,7 @@ export class KanbanRecord extends Component {
 
         if (KANBAN_TOOLTIP_ATTRIBUTE in templates) {
             useTooltip("root", {
-                info: this,
+                info: { ...this, record: this.props.record.formattedRecord },
                 template: this.templates[KANBAN_TOOLTIP_ATTRIBUTE],
             });
         }
@@ -189,22 +144,10 @@ export class KanbanRecord extends Component {
      * @param {Object} props
      */
     createRecordAndWidget(props) {
-        const { archInfo, list, record } = props;
+        const { archInfo, list } = props;
         const { activeActions } = archInfo;
 
-        // Record
-        this.record = Object.create(null);
-        for (const fieldName in record.data) {
-            this.record[fieldName] = {
-                get value() {
-                    return getValue(record, fieldName);
-                },
-                get raw_value() {
-                    return getRawValue(record, fieldName);
-                },
-            };
-        }
-
+        this.record = this.props.record.formattedRecord;
         // Widget
         const deletable = activeActions.delete && (!list.groupedBy || !list.groupedBy("m2m"));
         const editable = activeActions.edit;
