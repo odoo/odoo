@@ -1332,30 +1332,41 @@ class PropertiesCase(TransactionCase):
         self.assertEqual(expected_properties, sql_properties)
 
     @mute_logger('odoo.fields')
+    @users('test')
     def test_properties_field_security(self):
         """Check the access right related to the Properties fields."""
-        MultiTag = type(self.env['test_new_api.multi.tag'])
-
-        def _mocked_check_access_rights(operation, raise_exception=True):
+        def _mocked_check_access_rights(records, operation, raise_exception=True):
+            if records.env.su:  # called with SUDO
+                return True
             if raise_exception:
                 raise AccessError('')
             return False
 
+        message = self.message_1.with_user(self.test_user)
+
         # a user read a properties with a many2one to a record he doesn't have access to
         tag = self.env['test_new_api.multi.tag'].create({'name': 'Test Tag'})
-        self.message_1.attributes = [{
+
+        message.attributes = [{
             'name': 'test',
             'type': 'many2one',
             'comodel': 'test_new_api.multi.tag',
             'value': [tag.id, 'Tag'],
             'definition_changed': True,
         }]
-        values = self.message_1.read(['attributes'])[0]['attributes'][0]
+        values = message.read(['attributes'])[0]['attributes'][0]
         self.assertEqual(values['value'], (tag.id, 'Test Tag'))
         self.env.invalidate_all()
-        with patch.object(MultiTag, 'check_access_rights', side_effect=_mocked_check_access_rights):
-            values = self.message_1.read(['attributes'])[0]['attributes'][0]
+        with patch('odoo.addons.test_new_api.models.test_new_api.MultiTag.check_access_rights', _mocked_check_access_rights):
+            values = message.read(['attributes'])[0]['attributes'][0]
         self.assertEqual(values['value'], (tag.id, None))
+
+        # a user read a properties with a many2one to a record
+        # but doesn't have access to its parent
+        self.env.invalidate_all()
+        with patch('odoo.addons.test_new_api.models.test_new_api.Discussion.check_access_rights', _mocked_check_access_rights):
+            values = message.read(['attributes'])[0]['attributes'][0]
+        self.assertEqual(values['value'], (tag.id, 'Test Tag'))
 
     def _get_sql_properties(self, message):
         self.env.flush_all()
