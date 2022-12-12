@@ -5,7 +5,24 @@ import { formatInteger } from "@web/views/fields/formatters";
 
 import { Component, onWillUpdateProps, onWillUnmount, useState } from "@odoo/owl";
 
-export class KanbanAnimatedNumber extends Component {
+export class AnimatedNumber extends Component {
+    static template = "web.AnimatedNumber";
+    static props = {
+        value: Number,
+        duration: Number,
+        animationClass: { type: String, optional: true },
+        currency: { type: [Object, Boolean], optional: true },
+        title: { type: String, optional: true },
+        slots: {
+            type: Object,
+            shape: {
+                prefix: { type: Object, optional: true },
+            },
+            optional: true,
+        },
+    };
+    static enableAnimations = true;
+
     setup() {
         this.formatInteger = formatInteger;
         this.state = useState({ value: this.props.value });
@@ -37,20 +54,3 @@ export class KanbanAnimatedNumber extends Component {
         return this.formatInteger(value, { humanReadable: true, decimals: 0, minDigits: 3 });
     }
 }
-
-KanbanAnimatedNumber.template = "web.KanbanAnimatedNumber";
-KanbanAnimatedNumber.props = {
-    value: Number,
-    duration: Number,
-    animationClass: { type: String, optional: true },
-    currency: { type: [Object, Boolean], optional: true },
-    title: { type: String, optional: true },
-    slots: {
-        type: Object,
-        shape: {
-            prefix: { type: Object, optional: true },
-        },
-        optional: true,
-    },
-};
-KanbanAnimatedNumber.enableAnimations = true;

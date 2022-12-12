@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ColumnProgress" owl="1">
+        <div class="o_column_progress progress bg-300 w-75">
+            <t t-foreach="props.group.progressBars" t-as="progressBar" t-key="progressBar.value">
+                <div t-if="progressBar.count"
+                    role="progressbar"
+                    class="progress-bar o_bar_has_records cursor-pointer"
+                    t-att-class="{ 'progress-bar-animated progress-bar-striped': props.group.progressValue.active === progressBar.value, 'border border-white': !props.group.isFolded and props.group.hasActiveProgressValue }"
+                    t-attf-class="bg-{{ progressBar.color }}"
+                    t-attf-style="width: {{ progressBar.count / (props.group.count or 1) * 100 }}%;"
+                    aria-valuemin="0"
+                    t-att-aria-valuemax="props.group.count"
+                    t-att-aria-valuenow="progressBar.count"
+                    t-attf-data-tooltip="{{ progressBar.count }} {{ progressBar.string }}"
+                    data-tooltip-delay="0"
+                    t-on-click="() => props.group.filterProgressValue(progressBar.value)"
+                />
+            </t>
+        </div>
+        <AnimatedNumber
+            value="props.aggregate.value"
+            title="props.aggregate.title"
+            duration="1000"
+            currency="props.aggregate.currency"
+            animationClass="props.aggregate.value > 999 ? 'o_animated_grow' : 'o_animated_grow_huge'"
+        />
+    </t>
+
+</templates>
