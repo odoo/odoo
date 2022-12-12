@@ -324,7 +324,10 @@
             - 'minor_amount' - The amount to pay in the minor units of its currency.
             - 'currency' - The currency of the transaction, as a `res.currency` record.
             - 'merchant_name' - The merchant name.
-            - 'access_token' - The access token used to authenticate the partner.
+            - 'payment_access_token' - The access token used to authenticate the partner. Since this
+                                       template is loaded in the shopping cart, this parameter is
+                                       called `payment_access_token` to prevent mixing up with the
+                                       `access_token` used for abandoned carts.
             - 'shipping_info_required' - Whether the shipping information is required or not.
             - 'transaction_route' - The route used to create a transaction when the user clicks Pay.
             - 'shipping_address_update_route' - The route where available carriers are computed
@@ -348,12 +351,12 @@
               t-att-data-shipping-address-update-route="shipping_address_update_route"
               t-att-data-express-checkout-route="express_checkout_route"
               t-att-data-landing-route="landing_route">
-            <t t-foreach="providers_sudo" t-as="provider_sudo">
+            <t t-foreach="providers" t-as="provider">
                 <t t-set="express_checkout_form_xml_id"
-                   t-value="provider_sudo.express_checkout_form_view_id.xml_id"/>
+                   t-value="provider.express_checkout_form_view_id.xml_id"/>
                 <t t-if="express_checkout_form_xml_id">
                     <t t-call="{{express_checkout_form_xml_id}}">
-                        <t t-set="provider_sudo" t-value="provider_sudo"/>
+                        <t t-set="provider" t-value="provider"/>
                     </t>
                 </t>
             </t>

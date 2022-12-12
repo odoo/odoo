@@ -112,9 +112,9 @@ class PaymentPortal(portal.CustomerPortal):
         )  # In sudo mode to read the fields of providers and partner (if not logged in)
         if provider_id in providers_sudo.ids:  # Only keep the desired provider if it's suitable
             providers_sudo = providers_sudo.browse(provider_id)
-        payment_tokens = request.env['payment.token'].search(
-            [('provider_id', 'in', providers_sudo.ids), ('partner_id', '=', partner_sudo.id)]
-        ) if logged_in else request.env['payment.token']
+        payment_tokens = request.env['payment.token']._get_available_tokens(
+            providers_sudo.ids, partner_id=partner_sudo.id, logged_in=logged_in
+        )
 
         # Make sure that the partner's company matches the company passed as parameter.
         company_mismatch = not PaymentPortal._can_partner_pay_in_company(partner_sudo, company)
@@ -192,17 +192,12 @@ class PaymentPortal(portal.CustomerPortal):
             force_tokenization=True,
             is_validation=True,
         )
-
-        # Get all partner's tokens for which providers are not disabled.
-        tokens_sudo = request.env['payment.token'].sudo().search([
-            ('partner_id', 'in', [partner_sudo.id, partner_sudo.commercial_partner_id.id]),
-            ('provider_id.state', 'in', ['enabled', 'test']),
-        ])
-
         access_token = payment_utils.generate_access_token(partner_sudo.id, None, None)
         rendering_context = {
             'providers': providers_sudo,
-            'tokens': tokens_sudo,
+            'tokens': request.env['payment.token'].sudo()._get_available_tokens(
+                None, partner_id=partner_sudo.id, is_validation=True, logged_in=True
+            ),  # In sudo mode to read the commercial partner's fields.
             'reference_prefix': payment_utils.singularize_reference_prefix(prefix='V'),
             'partner_id': partner_sudo.id,
             'access_token': access_token,
