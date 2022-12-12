@@ -357,6 +357,13 @@ export class ListController extends Component {
         return list.isGrouped ? list.nbTotalRecords : list.count;
     }
 
+    get defaultExportList() {
+        return this.props.archInfo.columns
+            .filter((col) => col.type === "field")
+            .map((col) => this.props.fields[col.name])
+            .filter((field) => field.exportable !== false);
+    }
+
     get display() {
         if (!this.env.isSmall) {
             return this.props.display;
@@ -416,6 +423,7 @@ export class ListController extends Component {
         const dialogProps = {
             resIds,
             context: this.props.context,
+            defaultExportList: this.defaultExportList,
             download: this.downloadExport.bind(this),
             getExportedFields: this.getExportedFields.bind(this),
             root: this.model.root,
@@ -428,11 +436,7 @@ export class ListController extends Component {
      * @private
      */
     async onDirectExportData() {
-        const fields = this.props.archInfo.columns
-            .filter((col) => col.type === "field")
-            .map((col) => this.props.fields[col.name])
-            .filter((field) => field.exportable !== false);
-        await this.downloadExport(fields, false, "xlsx");
+        await this.downloadExport(this.defaultExportList, false, "xlsx");
     }
     /**
      * Called when clicking on 'Archive' or 'Unarchive' in the sidebar.
