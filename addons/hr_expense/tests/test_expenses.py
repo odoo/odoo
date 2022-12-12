@@ -628,3 +628,117 @@ class TestExpenses(TestExpenseCommon):
                 'amount_paid': formatLang(self.env, payment.amount_total, currency_obj=self.env.company.currency_id),
                 'currency': self.env.company.currency_id
             })
+
+    def test_hr_expense_split(self):
+        """
+        Check Split Expense flow.
+        """
+        expense = self.env['hr.expense'].create({
+            'name': 'Expense To Test Split - Diego, libre dans sa tête',
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_zero_cost.id,
+            'total_amount': 100.00,
+            'tax_ids': [(6, 0, [self.tax_purchase_a.id])],
+            'analytic_distribution': {self.analytic_account_1.id: 100},
+        })
+
+        split_wizard = expense.action_split_wizard()
+        wizard = self.env['hr.expense.split.wizard'].browse(split_wizard['res_id'])
+
+        # Check default hr.expense.split values
+        self.assertRecordValues(wizard.expense_split_line_ids, [
+            {
+                'name': expense.name,
+                'wizard_id': wizard.id,
+                'expense_id': expense.id,
+                'product_id': expense.product_id.id,
+                'tax_ids': expense.tax_ids.ids,
+                'total_amount': expense.total_amount / 2,
+                'amount_tax': 6.52,
+                'employee_id': expense.employee_id.id,
+                'company_id': expense.company_id.id,
+                'currency_id': expense.currency_id.id,
+                'analytic_distribution': expense.analytic_distribution,
+            } for i in range(0, 2)])
+
+        self.assertEqual(wizard.split_possible, True)
+        self.assertEqual(wizard.total_amount, expense.total_amount)
+
+        # Grant Analytic Accounting rights, to be able to modify analytic_distribution from the wizard
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+
+        with Form(wizard) as form:
+            form.expense_split_line_ids.remove(index=0)
+            self.assertEqual(form.split_possible, False)
+
+            # Check removing tax_ids and analytic_distribution
+            with form.expense_split_line_ids.edit(0) as line:
+                line.total_amount = 20
+                line.tax_ids.clear()
+                line.analytic_distribution = {}
+                self.assertEqual(line.total_amount, 20)
+                self.assertEqual(line.amount_tax, 0)
+
+            self.assertEqual(form.split_possible, False)
+
+            # This line should have the same tax_ids and analytic_distribution as original expense
+            with form.expense_split_line_ids.new() as line:
+                line.total_amount = 30
+                self.assertEqual(line.total_amount, 30)
+                self.assertEqual(line.amount_tax, 3.91)
+            self.assertEqual(form.split_possible, False)
+            self.assertEqual(form.total_amount, 50)
+
+            # Check adding tax_ids and setting analytic_distribution
+            with form.expense_split_line_ids.new() as line:
+                line.total_amount = 50
+                line.tax_ids.add(self.tax_purchase_b)
+                line.analytic_distribution = {self.analytic_account_2.id: 100}
+                self.assertEqual(line.total_amount, 50)
+                self.assertAlmostEqual(line.amount_tax, 11.54)
+
+            # Check wizard values
+            self.assertEqual(form.total_amount, 100)
+            self.assertEqual(form.total_amount_original, 100)
+            self.assertAlmostEqual(form.total_amount_taxes, 15.45)
+            self.assertEqual(form.split_possible, True)
+
+        wizard.action_split_expense()
+        # Check that split resulted into expenses with correct values
+        expenses_after_split = self.env['hr.expense'].search(
+            [
+                ('name', '=', expense.name)
+            ]
+        )
+        self.assertRecordValues(expenses_after_split.sorted('total_amount'), [
+            {
+                'name': expense.name,
+                'employee_id': expense.employee_id.id,
+                'product_id': expense.product_id.id,
+                'total_amount': 20.0,
+                'tax_ids': [],
+                'amount_tax': 0,
+                'untaxed_amount': 20,
+                'analytic_distribution': False,
+            },
+            {
+                'name': expense.name,
+                'employee_id': expense.employee_id.id,
+                'product_id': expense.product_id.id,
+                'total_amount': 30,
+                'tax_ids': [self.tax_purchase_a.id],
+                'amount_tax': 3.91,
+                'untaxed_amount': 26.09,
+                'analytic_distribution': {str(self.analytic_account_1.id): 100},
+            },
+            {
+                'name': expense.name,
+                'employee_id': expense.employee_id.id,
+                'product_id': expense.product_id.id,
+                'total_amount': 50,
+                'tax_ids': [self.tax_purchase_a.id, self.tax_purchase_b.id],
+                'amount_tax': 11.54,
+                'untaxed_amount': 38.46,
+                'analytic_distribution': {str(self.analytic_account_2.id): 100},
+            }
+        ])
