@@ -5,6 +5,7 @@ import werkzeug.exceptions
 import werkzeug.urls
 
 from odoo import api, fields, models
+from odoo.addons.http_routing.models.ir_http import unslug_url
 from odoo.http import request
 from odoo.tools.translate import html_translate
 
@@ -123,8 +124,7 @@ class Menu(models.Model):
                 visible = False
             menu.is_visible = visible
 
-    @api.model
-    def clean_url(self):
+    def _clean_url(self):
         # clean the url with heuristic
         if self.page_id:
             url = self.page_id.sudo().url
@@ -137,6 +137,29 @@ class Menu(models.Model):
                 elif not self.url.startswith('http'):
                     url = '/%s' % self.url
         return url
+
+    def _is_active(self):
+        if not request:
+            return False
+
+        request_url = unslug_url(request.httprequest.path)
+
+        if not self.child_id:
+            # Don't compare to `url` as it could be shadowed by the linked
+            # website page's URL
+            menu_url = self._clean_url()
+            if not menu_url:
+                return False
+            menu_url = unslug_url(menu_url)
+            if request_url == menu_url:
+                return True
+        else:
+            # Child match (dropdown menu), `self` is just a parent/container,
+            # don't check its URL, consider only its children
+            if any(request_url == unslug_url(child.url) for child in self.child_id if child.url):
+                return True
+
+        return False
 
     # would be better to take a menu_id as argument
     @api.model
