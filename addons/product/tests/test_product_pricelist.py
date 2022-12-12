@@ -122,7 +122,7 @@ class TestProductPricelist(TransactionCase):
                 'min_quantity': 2,
                 'compute_price': 'formula',
                 'base': 'list_price',
-                'categ_id': self.category_5_id,
+                'categ_id': self.env.ref('product.product_category_1').id,
                 'price_discount': 5
             }), (0, 0, {
                 'name': '30% Discount on all products',
