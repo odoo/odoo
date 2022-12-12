@@ -219,6 +219,7 @@ export class WebsocketWorker {
             if (this.websocket) {
                 this.websocket.close(WEBSOCKET_CLOSE_CODES.CLEAN);
             }
+            this.channelsByClient.forEach((_, key) => this.channelsByClient.set(key, []));
         }
         this.sendToClient(client, "initialized");
     }
