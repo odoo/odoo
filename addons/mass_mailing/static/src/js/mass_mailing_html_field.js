@@ -97,21 +97,25 @@ export class MassMailingHtmlField extends HtmlField {
         }
 
         const $editable = this.wysiwyg.getEditable();
-        const initialHtml = $editable.html();
-        await this.wysiwyg.cleanForSave();
+        this.wysiwyg.odooEditor.observerUnactive('saveModifiedImages');
         await this.wysiwyg.saveModifiedImages(this.$content);
+        this.wysiwyg.odooEditor.observerActive('saveModifiedImages');
+        const $editableClone = $editable.clone(true);
+        $editable.addClass('d-none');
+        $editable.after($editableClone);
+        // There is no need to clean the snippet menu in mass mailing as no
+        // options implement a cleanForSave.
+        await this.wysiwyg.cleanForSave($editableClone[0], { includeSnippetMenu: false });
 
         await super.commitChanges();
 
-        const $editorEnable = $editable.closest('.editor_enable');
+        const $editorEnable = $editableClone.closest('.editor_enable');
         $editorEnable.removeClass('editor_enable');
-        // Prevent history reverts.
-        this.wysiwyg.odooEditor.observerUnactive('toInline');
-        await toInline($editable, this.cssRules, this.wysiwyg.$iframe);
-        this.wysiwyg.odooEditor.observerActive('toInline');
-        const inlineHtml = $editable.html();
+        await toInline($editableClone, this.cssRules, this.wysiwyg.$iframe);
+        const inlineHtml = $editableClone.html();
+        $editableClone.remove();
+        $editable.removeClass('d-none');
         $editorEnable.addClass('editor_enable');
-        this.wysiwyg.odooEditor.resetContent(initialHtml);
 
         const fieldName = this.props.inlineField;
         return this.props.record.update({[fieldName]: this._unWrap(inlineHtml)});

@@ -1016,10 +1016,10 @@ const Wysiwyg = Widget.extend({
     closestElement(...args) {
         return closestElement(...args);
     },
-    async cleanForSave() {
-        this.odooEditor && this.odooEditor.cleanForSave();
+    async cleanForSave(element, { includeSnippetMenu = true } = {}) {
+        this.odooEditor && this.odooEditor.cleanForSave(element);
 
-        if (this.snippetsMenu) {
+        if (this.snippetsMenu && includeSnippetMenu) {
             await this.snippetsMenu.cleanForSave();
         }
     },
