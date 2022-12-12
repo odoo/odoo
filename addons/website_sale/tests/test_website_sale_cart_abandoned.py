@@ -198,11 +198,7 @@ class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
             'list_price': 0.0,
             'name': 'free_product'
         })
-        free_product_product = self.env['product.product'].create({
-            'list_price': 0.0,
-            'name': 'free_product',
-            'product_tmpl_id': free_product_template.id
-        })
+        free_product_product = free_product_template.product_variant_id
         order_line = [[0, 0, {
             'name': 'The Product',
             'product_id': free_product_product.id,
