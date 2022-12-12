@@ -23,7 +23,7 @@ from odoo.exceptions import AccessError, MissingError, ValidationError
 from odoo.addons.portal.controllers.portal import _build_url_w_params
 from odoo.addons.website.controllers import main
 from odoo.addons.website.controllers.form import WebsiteForm
-from odoo.addons.sale.controllers import portal
+from odoo.addons.sale.controllers import portal as sale_portal
 from odoo.osv import expression
 from odoo.tools import lazy
 from odoo.tools.json import scriptsafe as json_scriptsafe
@@ -1424,76 +1424,39 @@ class WebsiteSale(http.Controller):
     # ------------------------------------------------------
 
     def _get_express_shop_payment_values(self, order, **kwargs):
-        logged_in = not request.website.is_public_user()
-        providers_sudo = request.env['payment.provider'].sudo()._get_compatible_providers(
-            order.company_id.id,
-            order.partner_id.id,
-            order.amount_total,
-            currency_id=order.currency_id.id,
-            is_express_checkout=True,
-            sale_order_id=order.id,
-            website_id=request.website.id,
-        )  # In sudo mode to read the fields of providers, order and partner (if not logged in)
-        fees_by_provider = {
-            p_sudo: p_sudo._compute_fees(
-                order.amount_total, order.currency_id, order.partner_id.country_id
-            ) for p_sudo in providers_sudo.filtered('fees_active')
-        }
-        return {
-            # Payment express form values
-            'providers_sudo': providers_sudo,
-            'fees_by_provider': fees_by_provider,
-            'amount': order.amount_total,
+        payment_form_values = sale_portal.CustomerPortal._get_payment_values(
+            self, order, website_id=request.website.id, is_express_checkout=True
+        )
+        payment_form_values.update({
+            'payment_access_token': payment_form_values.pop('access_token'),  # Rename the key.
             'minor_amount': payment_utils.to_minor_currency_units(
-               order.amount_total, order.currency_id
+                order.amount_total, order.currency_id
             ),
             'merchant_name': request.website.name,
-            'currency': order.currency_id,
-            'partner_id': order.partner_id.id if logged_in else -1,
-            'payment_access_token': order._portal_ensure_token(),
             'transaction_route': f'/shop/payment/transaction/{order.id}',
             'express_checkout_route': self._express_checkout_route,
             'landing_route': '/shop/payment/validate',
-        }
+        })
+        if request.website.is_public_user():
+            payment_form_values['partner_id'] = -1
+        return payment_form_values
 
     def _get_shop_payment_values(self, order, **kwargs):
-        logged_in = not request.env.user._is_public()
-        providers_sudo = request.env['payment.provider'].sudo()._get_compatible_providers(
-            order.company_id.id,
-            order.partner_id.id,
-            order.amount_total,
-            currency_id=order.currency_id.id,
-            sale_order_id=order.id,
-            website_id=request.website.id,
-        )  # In sudo mode to read the fields of providers, order and partner (if not logged in)
-        tokens = request.env['payment.token'].search(
-            [('provider_id', 'in', providers_sudo.ids), ('partner_id', '=', order.partner_id.id)]
-        ) if logged_in else request.env['payment.token']
-        fees_by_provider = {
-            p_sudo: p_sudo._compute_fees(
-                order.amount_total, order.currency_id, order.partner_id.country_id
-            ) for p_sudo in providers_sudo.filtered('fees_active')
-        }
-        return {
+        portal_page_values = {
             'website_sale_order': order,
             'errors': [],
             'partner': order.partner_id,
             'order': order,
             'payment_action_id': request.env.ref('payment.action_payment_provider').id,
-            # Payment form common (checkout and manage) values
-            'providers': providers_sudo,
-            'tokens': tokens,
-            'fees_by_provider': fees_by_provider,
-            'show_tokenize_input': PaymentPortal._compute_show_tokenize_input_mapping(
-                providers_sudo, logged_in=logged_in, sale_order_id=order.id
+        }
+        payment_form_values = {
+            **sale_portal.CustomerPortal._get_payment_values(
+                self, order, website_id=request.website.id
             ),
-            'amount': order.amount_total,
-            'currency': order.currency_id,
-            'partner_id': order.partner_id.id,
-            'access_token': order._portal_ensure_token(),
             'transaction_route': f'/shop/payment/transaction/{order.id}',
             'landing_route': '/shop/payment/validate',
         }
+        return {**portal_page_values, **payment_form_values}
 
     @http.route('/shop/payment', type='http', auth='public', website=True, sitemap=False)
     def shop_payment(self, **post):
@@ -1777,7 +1740,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         return tx_sudo._get_processing_values()
 
 
-class CustomerPortal(portal.CustomerPortal):
+class CustomerPortal(sale_portal.CustomerPortal):
     def _sale_reorder_get_line_context(self):
         return {}
 

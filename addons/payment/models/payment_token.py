@@ -89,6 +89,37 @@ class PaymentToken(models.Model):
 
     #=== BUSINESS METHODS ===#
 
+    def _get_available_tokens(
+        self, providers_ids, partner_id=None, is_validation=False, logged_in=False, **kwargs
+    ):
+        """ Return the available tokens linked to the given providers and partner.
+
+        For a module to retrieve the available tokens, it must override this method and add
+        information in the kwargs to define the context of the request.
+
+        :param list providers_ids: The ids of the providers available for the transaction.
+        :param int partner_id: The id of the partner.
+        :param bool is_validation: Whether the transaction is a validation operation.
+        :param bool logged_in: Whether the user is logged in.
+        :param dict kwargs: Locally unused keywords arguments.
+        :return: The available tokens.
+        :rtype: `payment.token`
+        """
+        if partner_id is None or not logged_in:
+            return self.env['payment.token']
+
+        if not is_validation:
+            return self.env['payment.token'].search(
+                [('provider_id', 'in', providers_ids), ('partner_id', '=', partner_id)]
+            )
+        else:
+            # Get all the tokens of the partner and of their commercial partner, regardless of
+            # whether the providers are available.
+            partner = self.env['res.partner'].browse(partner_id)
+            return self.env['payment.token'].search(
+                [('partner_id', 'in', [partner.id, partner.commercial_partner_id.id])]
+            )
+
     def _build_display_name(self, *args, max_length=34, should_pad=True, **kwargs):
         """ Build a token name of the desired maximum length with the format `•••• 1234`.
 
