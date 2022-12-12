@@ -214,14 +214,8 @@ class TestLeadConvert(TestCrmCommon):
             'type': 'opportunity',
             'email_from': 'odoo.com'
         })
-        lead_5 = self.env['crm.lead'].create({
-            'name': 'Opportunity 3',
-            'type': 'opportunity',
-            'email_from': 'myodoo.com'
-        })
 
         self.assertEqual(lead_1 + lead_2, lead_1.duplicate_lead_ids)
-        self.assertEqual(lead_1 + lead_2, lead_2.duplicate_lead_ids)
-        self.assertEqual(lead_3 + lead_4 + lead_5, lead_3.duplicate_lead_ids)
-        self.assertEqual(lead_3 + lead_4 + lead_5, lead_4.duplicate_lead_ids)
-        self.assertEqual(lead_5, lead_5.duplicate_lead_ids)
+        self.assertEqual(lead_2, lead_2.duplicate_lead_ids, 'Using email_normalized: does not found invalid lead_1, not that annoying')
+        self.assertEqual(lead_3, lead_3.duplicate_lead_ids, 'Using email_normalized: does not found invalid lead_4, not that annoying')
+        self.assertEqual(lead_4, lead_4.duplicate_lead_ids, 'Using email_normalized: does not found invalid lead_3, not that annoying')
