@@ -342,165 +342,164 @@ class TestComposerInternals(TestMailComposer):
     def test_mail_composer_author(self):
         """ Test author_id / email_from synchronization, in both comment and mass mail
         modes. """
-        for composition_mode in ['comment', 'mass_mail']:
-            if composition_mode == 'comment':
-                ctx = self._get_web_context(self.test_record, add_web=False)
-            else:
-                ctx = self._get_web_context(self.test_records, add_web=False)
-            composer = self.env['mail.compose.message'].with_context(ctx).create({
-                'body': '<p>Test Body</p>',
-            })
+        for composition_mode, batch in (('comment', False), ('mass_mail', True)):
+            with self.subTest(composition_mode=composition_mode, batch=batch):
+                test_records = self.test_records if batch else self.test_record
+                ctx = self._get_web_context(test_records, add_web=False, composition_mode=composition_mode)
 
-            # default values are current user
-            self.assertEqual(composer.author_id, self.env.user.partner_id)
-            self.assertEqual(composer.email_from, self.env.user.email_formatted)
+                composer = self.env['mail.compose.message'].with_context(ctx).create({
+                    'body': '<p>Test Body</p>',
+                })
 
-            # author values reset email (FIXME: currently not synchronized)
-            composer.write({'author_id': self.partner_1})
-            self.assertEqual(composer.author_id, self.partner_1)
-            self.assertEqual(composer.email_from, self.env.user.email_formatted)
-            # self.assertEqual(composer.email_from, self.partner_1.email_formatted)
+                # default values are current user
+                self.assertEqual(composer.author_id, self.env.user.partner_id)
+                self.assertEqual(composer.email_from, self.env.user.email_formatted)
 
-            # changing template should update its email_from
-            composer.write({'template_id': self.template.id, 'author_id': self.env.user.partner_id})
-            # currently onchange necessary
-            composer._onchange_template_id_wrapper()
-            self.assertEqual(composer.author_id, self.env.user.partner_id,
-                             'MailComposer: should take value given by user')
-            if composition_mode == 'comment':
-                self.assertEqual(composer.email_from, self.test_record.user_id.email_formatted,
-                                 'MailComposer: should take email_from rendered from template')
-            else:
-                self.assertEqual(composer.email_from, self.template.email_from,
-                                 'MailComposer: should take email_from raw from template')
+                # author values reset email (FIXME: currently not synchronized)
+                composer.write({'author_id': self.partner_1})
+                self.assertEqual(composer.author_id, self.partner_1)
+                self.assertEqual(composer.email_from, self.env.user.email_formatted)
+                # self.assertEqual(composer.email_from, self.partner_1.email_formatted)
 
-            # manual values are kept over template values
-            composer.write({'email_from': self.test_from})
-            self.assertEqual(composer.author_id, self.env.user.partner_id)
-            self.assertEqual(composer.email_from, self.test_from)
+                # changing template should update its email_from
+                composer.write({'template_id': self.template.id, 'author_id': self.env.user.partner_id})
+                # currently onchange necessary
+                composer._onchange_template_id_wrapper()
+                self.assertEqual(composer.author_id, self.env.user.partner_id,
+                                 'MailComposer: should take value given by user')
+                if composition_mode == 'comment':
+                    self.assertEqual(composer.email_from, self.test_record.user_id.email_formatted,
+                                     'MailComposer: should take email_from rendered from template')
+                else:
+                    self.assertEqual(composer.email_from, self.template.email_from,
+                                     'MailComposer: should take email_from raw from template')
+
+                # manual values are kept over template values
+                composer.write({'email_from': self.test_from})
+                self.assertEqual(composer.author_id, self.env.user.partner_id)
+                self.assertEqual(composer.email_from, self.test_from)
 
     @users('employee')
     def test_mail_composer_content(self):
         """ Test content management (subject, body, server) in both comment and
         mass mailing mode. Template update is also tested. """
-        for composition_mode in ['comment', 'mass_mail']:
-            if composition_mode == 'comment':
-                ctx = self._get_web_context(self.test_record, add_web=False)
-            else:
-                ctx = self._get_web_context(self.test_records, add_web=False)
+        for composition_mode, batch in (('comment', False), ('mass_mail', True)):
+            with self.subTest(composition_mode=composition_mode, batch=batch):
+                test_records = self.test_records if batch else self.test_record
+                ctx = self._get_web_context(test_records, add_web=False, composition_mode=composition_mode)
 
-            # 1. check without template + template update
-            composer = self.env['mail.compose.message'].with_context(ctx).create({
-                'subject': 'My amazing subject',
-                'body': '<p>Test Body</p>',
-            })
+                # 1. check without template + template update
+                composer = self.env['mail.compose.message'].with_context(ctx).create({
+                    'subject': 'My amazing subject',
+                    'body': '<p>Test Body</p>',
+                })
 
-            # creation values are taken
-            self.assertEqual(composer.subject, 'My amazing subject')
-            self.assertEqual(composer.body, '<p>Test Body</p>')
-            self.assertEqual(composer.mail_server_id.id, False)
-            if composition_mode == 'comment':
-                self.assertEqual(composer.record_name, self.test_record.name)
-            else:
-                self.assertFalse(composer.record_name)
+                # creation values are taken
+                self.assertEqual(composer.subject, 'My amazing subject')
+                self.assertEqual(composer.body, '<p>Test Body</p>')
+                self.assertEqual(composer.mail_server_id.id, False)
+                if composition_mode == 'comment':
+                    self.assertEqual(composer.record_name, self.test_record.name)
+                else:
+                    self.assertFalse(composer.record_name)
 
-            # changing template should update its content
-            composer.write({'template_id': self.template.id})
-            # currently onchange necessary
-            composer._onchange_template_id_wrapper()
+                # changing template should update its content
+                composer.write({'template_id': self.template.id})
+                # currently onchange necessary
+                composer._onchange_template_id_wrapper()
 
-            # values come from template
-            if composition_mode == 'comment':
-                self.assertEqual(composer.subject, 'TemplateSubject %s' % self.test_record.name)
-                self.assertEqual(composer.body, '<p>TemplateBody %s</p>' % self.test_record.name)
-                self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
-                self.assertEqual(composer.record_name, self.test_record.name)
-            else:
-                self.assertEqual(composer.subject, self.template.subject)
-                self.assertEqual(composer.body, self.template.body_html)
-                self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
-                self.assertFalse(composer.record_name)
+                # values come from template
+                if composition_mode == 'comment':
+                    self.assertEqual(composer.subject, 'TemplateSubject %s' % self.test_record.name)
+                    self.assertEqual(composer.body, '<p>TemplateBody %s</p>' % self.test_record.name)
+                    self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
+                    self.assertEqual(composer.record_name, self.test_record.name)
+                else:
+                    self.assertEqual(composer.subject, self.template.subject)
+                    self.assertEqual(composer.body, self.template.body_html)
+                    self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
+                    self.assertFalse(composer.record_name)
 
-            # manual values is kept over template
-            composer.write({'subject': 'Back to my amazing subject'})
-            self.assertEqual(composer.subject, 'Back to my amazing subject')
-
-            # reset template should reset values
-            composer.write({'template_id': False})
-            # currently onchange necessary
-            composer._onchange_template_id_wrapper()
-
-            # values are reset
-            if composition_mode == 'comment':
-                self.assertEqual(composer.subject, 'Re: %s' % self.test_record.name)
-                self.assertFalse(composer.body)
-                # TDE FIXME: server id is kept, not sure why
-                # self.assertFalse(composer.mail_server_id.id)
-                self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
-                self.assertEqual(composer.record_name, self.test_record.name)
-            else:
-                # values are reset TDE FIXME: strange for subject
+                # manual values is kept over template
+                composer.write({'subject': 'Back to my amazing subject'})
                 self.assertEqual(composer.subject, 'Back to my amazing subject')
-                self.assertFalse(composer.body)
-                # TDE FIXME: server id is kept, not sure why
-                # self.assertFalse(composer.mail_server_id.id)
-                self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
-                self.assertFalse(composer.record_name)
 
-            # 2. check with default
-            ctx['default_template_id'] = self.template.id
-            composer = self.env['mail.compose.message'].with_context(ctx).create({
-                'template_id': self.template.id,
-            })
-            # currently onchange necessary
-            composer._onchange_template_id_wrapper()
+                # reset template should reset values
+                composer.write({'template_id': False})
+                # currently onchange necessary
+                composer._onchange_template_id_wrapper()
 
-            # values come from template
-            if composition_mode == 'comment':
-                self.assertEqual(composer.subject, 'TemplateSubject %s' % self.test_record.name)
-                self.assertEqual(composer.body, '<p>TemplateBody %s</p>' % self.test_record.name)
-                self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
-                self.assertEqual(composer.record_name, self.test_record.name)
-            else:
-                self.assertEqual(composer.subject, self.template.subject)
-                self.assertEqual(composer.body, self.template.body_html)
-                self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
-                self.assertFalse(composer.record_name)
+                # values are reset
+                if composition_mode == 'comment':
+                    self.assertEqual(composer.subject, 'Re: %s' % self.test_record.name)
+                    self.assertFalse(composer.body)
+                    # TDE FIXME: server id is kept, not sure why
+                    # self.assertFalse(composer.mail_server_id.id)
+                    self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
+                    self.assertEqual(composer.record_name, self.test_record.name)
+                else:
+                    # values are reset TDE FIXME: strange for subject
+                    self.assertEqual(composer.subject, 'Back to my amazing subject')
+                    self.assertFalse(composer.body)
+                    # TDE FIXME: server id is kept, not sure why
+                    # self.assertFalse(composer.mail_server_id.id)
+                    self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
+                    self.assertFalse(composer.record_name)
 
-            # 3. check at create
-            ctx.pop('default_template_id')
-            composer = self.env['mail.compose.message'].with_context(ctx).create({
-                'template_id': self.template.id,
-            })
-            # currently onchange necessary
-            composer._onchange_template_id_wrapper()
+                # 2. check with default
+                ctx['default_template_id'] = self.template.id
+                composer = self.env['mail.compose.message'].with_context(ctx).create({
+                    'template_id': self.template.id,
+                })
+                # currently onchange necessary
+                composer._onchange_template_id_wrapper()
 
-            # values come from template
-            if composition_mode == 'comment':
-                self.assertEqual(composer.subject, 'TemplateSubject %s' % self.test_record.name)
-                self.assertEqual(composer.body, '<p>TemplateBody %s</p>' % self.test_record.name)
-                self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
-                self.assertEqual(composer.record_name, self.test_record.name)
-            else:
-                self.assertEqual(composer.subject, self.template.subject)
-                self.assertEqual(composer.body, self.template.body_html)
-                self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
-                self.assertFalse(composer.record_name)
+                # values come from template
+                if composition_mode == 'comment':
+                    self.assertEqual(composer.subject, 'TemplateSubject %s' % self.test_record.name)
+                    self.assertEqual(composer.body, '<p>TemplateBody %s</p>' % self.test_record.name)
+                    self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
+                    self.assertEqual(composer.record_name, self.test_record.name)
+                else:
+                    self.assertEqual(composer.subject, self.template.subject)
+                    self.assertEqual(composer.body, self.template.body_html)
+                    self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
+                    self.assertFalse(composer.record_name)
 
-            # 4. template + user input
-            ctx['default_template_id'] = self.template.id
-            composer = self.env['mail.compose.message'].with_context(ctx).create({
-                'subject': 'My amazing subject',
-                'body': '<p>Test Body</p>',
-                'mail_server_id': False,
-                'record_name': 'CustomName',
-            })
+                # 3. check at create
+                ctx.pop('default_template_id')
+                composer = self.env['mail.compose.message'].with_context(ctx).create({
+                    'template_id': self.template.id,
+                })
+                # currently onchange necessary
+                composer._onchange_template_id_wrapper()
 
-            # creation values are taken
-            self.assertEqual(composer.subject, 'My amazing subject')
-            self.assertEqual(composer.body, '<p>Test Body</p>')
-            self.assertEqual(composer.mail_server_id.id, False)
-            self.assertEqual(composer.record_name, 'CustomName')
+                # values come from template
+                if composition_mode == 'comment':
+                    self.assertEqual(composer.subject, 'TemplateSubject %s' % self.test_record.name)
+                    self.assertEqual(composer.body, '<p>TemplateBody %s</p>' % self.test_record.name)
+                    self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
+                    self.assertEqual(composer.record_name, self.test_record.name)
+                else:
+                    self.assertEqual(composer.subject, self.template.subject)
+                    self.assertEqual(composer.body, self.template.body_html)
+                    self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
+                    self.assertFalse(composer.record_name)
+
+                # 4. template + user input
+                ctx['default_template_id'] = self.template.id
+                composer = self.env['mail.compose.message'].with_context(ctx).create({
+                    'subject': 'My amazing subject',
+                    'body': '<p>Test Body</p>',
+                    'mail_server_id': False,
+                    'record_name': 'CustomName',
+                })
+
+                # creation values are taken
+                self.assertEqual(composer.subject, 'My amazing subject')
+                self.assertEqual(composer.body, '<p>Test Body</p>')
+                self.assertEqual(composer.mail_server_id.id, False)
+                self.assertEqual(composer.record_name, 'CustomName')
 
     @users('employee')
     @mute_logger('odoo.models.unlink')
@@ -513,132 +512,132 @@ class TestComposerInternals(TestMailComposer):
             'email_cc': 'test.cc.1@test.example.com, test.cc.2@test.example.com'
         })
 
-        for composition_mode in ['comment', 'mass_mail']:
-            self.assertFalse(
+        for composition_mode, batch in (('comment', False), ('mass_mail', True)):
+            with self.subTest(composition_mode=composition_mode, batch=batch):
+                self.assertFalse(
+                    self.env['res.partner'].search([
+                        ('email_normalized', 'in', ['test.cc.1@test.example.com',
+                                                    'test.cc.2@test.example.com'])
+                    ])
+                )
+
+                test_records = self.test_records if batch else self.test_record
+                ctx = self._get_web_context(test_records, add_web=False, composition_mode=composition_mode)
+
+                # 1. check without template + template update
+                composer = self.env['mail.compose.message'].with_context(ctx).create({
+                    'body': '<p>Test Body</p>',
+                    'partner_ids': base_recipients.ids,
+                    'reply_to': False,
+                    'subject': 'My amazing subject',
+                })
+
+                # creation values are taken
+                self.assertEqual(composer.partner_ids, base_recipients)
+                self.assertFalse(composer.reply_to)
+                self.assertFalse(composer.reply_to_force_new)
+                self.assertEqual(composer.reply_to_mode, 'update')
+
+                # changing template should update its content
+                composer.write({'template_id': self.template.id})
+                # currently onchange necessary
+                composer._onchange_template_id_wrapper()
+                new_partners = self.env['res.partner'].search(
+                    [('email_normalized', 'in', ['test.cc.1@test.example.com',
+                                                 'test.cc.2@test.example.com'])
+                    ]
+                )
+
+                # values come from template
+                if composition_mode == 'comment':
+                    self.assertEqual(len(new_partners), 2)
+                    self.assertEqual(composer.partner_ids, self.partner_1 + new_partners, 'Template took customer_id as set on record')
+                    self.assertEqual(composer.reply_to, 'info@test.example.com', 'Template was rendered')
+                    self.assertFalse(composer.reply_to_force_new)  # should not change in comment mode
+                else:
+                    self.assertEqual(len(new_partners), 0)
+                    self.assertEqual(composer.partner_ids, base_recipients, 'Mass mode: kept original values')
+                    self.assertEqual(composer.reply_to, self.template.reply_to, 'Mass mode: raw template value')
+                    self.assertFalse(composer.reply_to_force_new)  # should probably become True, not supported currently
+
+                # manual values is kept over template
+                composer.write({'partner_ids': [(5, 0), (4, self.partner_admin.id)]})
+                self.assertEqual(composer.partner_ids, self.partner_admin)
+
+                # reset template should reset values
+                composer.write({'template_id': False})
+                # currently onchange necessary
+                composer._onchange_template_id_wrapper()
+
+                # values are kepts, not sure why
+                if composition_mode == 'comment':
+                    self.assertEqual(composer.partner_ids, self.partner_admin, 'Values are kept, not sure why')
+                    self.assertEqual(composer.reply_to, 'info@test.example.com', 'Values are kept')
+                    self.assertFalse(composer.reply_to_force_new)
+                else:
+                    self.assertEqual(composer.partner_ids, self.partner_admin, 'Mass mode: kept current value')
+                    self.assertEqual(composer.reply_to, '{{ ctx.get("custom_reply_to") or "info@test.example.com" }}', 'Mass mode: kept current value')
+                    self.assertFalse(composer.reply_to_force_new)
+
+                # 2. check with default
+                ctx['default_template_id'] = self.template.id
+                composer = self.env['mail.compose.message'].with_context(ctx).create({
+                    'template_id': self.template.id,
+                })
+                # currently onchange necessary
+                composer._onchange_template_id_wrapper()
+
+                # values come from template
+                if composition_mode == 'comment':
+                    self.assertEqual(composer.partner_ids, self.partner_1 + new_partners)
+                else:
+                    self.assertFalse(composer.partner_ids)
+                if composition_mode == 'comment':
+                    self.assertEqual(composer.reply_to, "info@test.example.com")
+                else:
+                    self.assertEqual(composer.reply_to, self.template.reply_to)
+                self.assertFalse(composer.reply_to_force_new)  # note: this should be updated with reply-to
+                self.assertEqual(composer.reply_to_mode, 'update')  # note: this should be updated with reply-to
+
+                # 3. check at create
+                ctx.pop('default_template_id')
+                composer = self.env['mail.compose.message'].with_context(ctx).create({
+                    'template_id': self.template.id,
+                })
+                # currently onchange necessary
+                composer._onchange_template_id_wrapper()
+
+                # values come from template
+                if composition_mode == 'comment':
+                    self.assertEqual(composer.partner_ids, self.partner_1 + new_partners)
+                else:
+                    self.assertFalse(composer.partner_ids)
+                if composition_mode == 'comment':
+                    self.assertEqual(composer.reply_to, "info@test.example.com")
+                else:
+                    self.assertEqual(composer.reply_to, self.template.reply_to)
+                self.assertFalse(composer.reply_to_force_new)
+                self.assertEqual(composer.reply_to_mode, 'update')
+
+                # 4. template + user input
+                ctx['default_template_id'] = self.template.id
+                composer = self.env['mail.compose.message'].with_context(ctx).create({
+                    'body': '<p>Test Body</p>',
+                    'partner_ids': base_recipients.ids,
+                    'subject': 'My amazing subject',
+                    'reply_to': False,
+                })
+
+                # creation values are taken
+                self.assertEqual(composer.partner_ids, base_recipients)
+                self.assertFalse(composer.reply_to)
+                self.assertFalse(composer.reply_to_force_new)
+                self.assertEqual(composer.reply_to_mode, 'update')
+
                 self.env['res.partner'].search([
                     ('email_normalized', 'in', ['test.cc.1@test.example.com',
                                                 'test.cc.2@test.example.com'])
-                ])
-            )
-            if composition_mode == 'comment':
-                ctx = self._get_web_context(self.test_record, add_web=False)
-            else:
-                ctx = self._get_web_context(self.test_records, add_web=False)
-
-            # 1. check without template + template update
-            composer = self.env['mail.compose.message'].with_context(ctx).create({
-                'body': '<p>Test Body</p>',
-                'partner_ids': base_recipients.ids,
-                'reply_to': False,
-                'subject': 'My amazing subject',
-            })
-
-            # creation values are taken
-            self.assertEqual(composer.partner_ids, base_recipients)
-            self.assertFalse(composer.reply_to)
-            self.assertFalse(composer.reply_to_force_new)
-            self.assertEqual(composer.reply_to_mode, 'update')
-
-            # changing template should update its content
-            composer.write({'template_id': self.template.id})
-            # currently onchange necessary
-            composer._onchange_template_id_wrapper()
-            new_partners = self.env['res.partner'].search(
-                [('email_normalized', 'in', ['test.cc.1@test.example.com',
-                                             'test.cc.2@test.example.com'])
-                ]
-            )
-
-            # values come from template
-            if composition_mode == 'comment':
-                self.assertEqual(len(new_partners), 2)
-                self.assertEqual(composer.partner_ids, self.partner_1 + new_partners, 'Template took customer_id as set on record')
-                self.assertEqual(composer.reply_to, 'info@test.example.com', 'Template was rendered')
-                self.assertFalse(composer.reply_to_force_new)  # should not change in comment mode
-            else:
-                self.assertEqual(len(new_partners), 0)
-                self.assertEqual(composer.partner_ids, base_recipients, 'Mass mode: kept original values')
-                self.assertEqual(composer.reply_to, self.template.reply_to, 'Mass mode: raw template value')
-                self.assertFalse(composer.reply_to_force_new)  # should probably become True, not supported currently
-
-            # manual values is kept over template
-            composer.write({'partner_ids': [(5, 0), (4, self.partner_admin.id)]})
-            self.assertEqual(composer.partner_ids, self.partner_admin)
-
-            # reset template should reset values
-            composer.write({'template_id': False})
-            # currently onchange necessary
-            composer._onchange_template_id_wrapper()
-
-            # values are kepts, not sure why
-            if composition_mode == 'comment':
-                self.assertEqual(composer.partner_ids, self.partner_admin, 'Values are kept, not sure why')
-                self.assertEqual(composer.reply_to, 'info@test.example.com', 'Values are kept')
-                self.assertFalse(composer.reply_to_force_new)
-            else:
-                self.assertEqual(composer.partner_ids, self.partner_admin, 'Mass mode: kept current value')
-                self.assertEqual(composer.reply_to, '{{ ctx.get("custom_reply_to") or "info@test.example.com" }}', 'Mass mode: kept current value')
-                self.assertFalse(composer.reply_to_force_new)
-
-            # 2. check with default
-            ctx['default_template_id'] = self.template.id
-            composer = self.env['mail.compose.message'].with_context(ctx).create({
-                'template_id': self.template.id,
-            })
-            # currently onchange necessary
-            composer._onchange_template_id_wrapper()
-
-            # values come from template
-            if composition_mode == 'comment':
-                self.assertEqual(composer.partner_ids, self.partner_1 + new_partners)
-            else:
-                self.assertFalse(composer.partner_ids)
-            if composition_mode == 'comment':
-                self.assertEqual(composer.reply_to, "info@test.example.com")
-            else:
-                self.assertEqual(composer.reply_to, self.template.reply_to)
-            self.assertFalse(composer.reply_to_force_new)  # note: this should be updated with reply-to
-            self.assertEqual(composer.reply_to_mode, 'update')  # note: this should be updated with reply-to
-
-            # 3. check at create
-            ctx.pop('default_template_id')
-            composer = self.env['mail.compose.message'].with_context(ctx).create({
-                'template_id': self.template.id,
-            })
-            # currently onchange necessary
-            composer._onchange_template_id_wrapper()
-
-            # values come from template
-            if composition_mode == 'comment':
-                self.assertEqual(composer.partner_ids, self.partner_1 + new_partners)
-            else:
-                self.assertFalse(composer.partner_ids)
-            if composition_mode == 'comment':
-                self.assertEqual(composer.reply_to, "info@test.example.com")
-            else:
-                self.assertEqual(composer.reply_to, self.template.reply_to)
-            self.assertFalse(composer.reply_to_force_new)
-            self.assertEqual(composer.reply_to_mode, 'update')
-
-            # 4. template + user input
-            ctx['default_template_id'] = self.template.id
-            composer = self.env['mail.compose.message'].with_context(ctx).create({
-                'body': '<p>Test Body</p>',
-                'partner_ids': base_recipients.ids,
-                'subject': 'My amazing subject',
-                'reply_to': False,
-            })
-
-            # creation values are taken
-            self.assertEqual(composer.partner_ids, base_recipients)
-            self.assertFalse(composer.reply_to)
-            self.assertFalse(composer.reply_to_force_new)
-            self.assertEqual(composer.reply_to_mode, 'update')
-
-            self.env['res.partner'].search([
-                ('email_normalized', 'in', ['test.cc.1@test.example.com',
-                                            'test.cc.2@test.example.com'])
-            ]).unlink()
+                ]).unlink()
 
     @users('employee')
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
