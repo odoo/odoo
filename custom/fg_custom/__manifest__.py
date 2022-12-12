@@ -7,7 +7,7 @@
     'description': """
     Pilmico custom addons
         """,
-    'depends': ['product', 'account', 'point_of_sale', 'base'],
+    'depends': ['product', 'account', 'point_of_sale', 'base', 'pos_coupon'],
     'data': [
         'security/groups.xml',
         'views/FgOrderDetails.xml',
