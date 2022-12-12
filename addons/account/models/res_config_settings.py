@@ -105,7 +105,7 @@ class ResConfigSettings(models.TransientModel):
     module_account_sepa_direct_debit = fields.Boolean(string='Use SEPA Direct Debit')
     module_account_bank_statement_import_qif = fields.Boolean("Import .qif files")
     module_account_bank_statement_import_ofx = fields.Boolean("Import in .ofx format")
-    module_account_bank_statement_import_csv = fields.Boolean("Import in .csv format")
+    module_account_bank_statement_import_csv = fields.Boolean("Import in .csv, .xls, and .xlsx format")
     module_account_bank_statement_import_camt = fields.Boolean("Import in CAMT.053 format")
     module_currency_rate_live = fields.Boolean(string="Automatic Currency Rates")
     module_account_intrastat = fields.Boolean(string='Intrastat')
