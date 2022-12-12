@@ -9,7 +9,7 @@ import {
     getFixture,
     patchWithCleanup,
 } from '@web/../tests/helpers/utils';
-import { KanbanAnimatedNumber } from "@web/views/kanban/kanban_animated_number";
+import { AnimatedNumber } from "@web/views/view_components/animated_number";
 
 const serviceRegistry = registry.category("services");
 
@@ -18,7 +18,7 @@ let serverData;
 
 QUnit.module('Crm Kanban Progressbar', {
     beforeEach: function () {
-        patchWithCleanup(KanbanAnimatedNumber, { enableAnimations: false });
+        patchWithCleanup(AnimatedNumber, { enableAnimations: false });
         serverData = {
             models: {
                 'res.users': {
@@ -124,7 +124,7 @@ QUnit.module('Crm Kanban Progressbar', {
                 </kanban>`,
         });
 
-        const reccurringRevenueValues = [...target.querySelectorAll('.o_kanban_counter_side:nth-child(3)')].map((elem) => elem.textContent);
+        const reccurringRevenueValues = [...target.querySelectorAll('.o_animated_number:nth-child(3)')].map((elem) => elem.textContent);
 
         // When no values are given in column it should return 0 and counts value if given.
         assert.deepEqual(reccurringRevenueValues, ["+20", "+0", "+45"],
@@ -157,7 +157,7 @@ QUnit.module('Crm Kanban Progressbar', {
         });
 
         //MRR before state change
-        let reccurringRevenueNoValues = [...target.querySelectorAll('.o_kanban_counter_side:nth-child(3)')].map((elem) => elem.textContent);
+        let reccurringRevenueNoValues = [...target.querySelectorAll('.o_animated_number:nth-child(3)')].map((elem) => elem.textContent);
         assert.deepEqual(reccurringRevenueNoValues, ['+30','+35'],
             "counter should display the sum of recurring_revenue_monthly values");
 
@@ -169,7 +169,7 @@ QUnit.module('Crm Kanban Progressbar', {
         );
 
         //check MRR after drag&drop
-        reccurringRevenueNoValues = [...target.querySelectorAll('.o_kanban_counter_side:nth-child(3)')].map((elem) => elem.textContent);
+        reccurringRevenueNoValues = [...target.querySelectorAll('.o_animated_number:nth-child(3)')].map((elem) => elem.textContent);
         assert.deepEqual(reccurringRevenueNoValues, ['+25', '+40'],
         "counter should display the sum of recurring_revenue_monthly correctly after drag and drop");
 
@@ -177,7 +177,7 @@ QUnit.module('Crm Kanban Progressbar', {
         await click(target.querySelector('.o_kanban_group:nth-child(2) .progress-bar[aria-valuenow="2"]'), null);
 
         //check MRR after applying filter
-        reccurringRevenueNoValues = [...target.querySelectorAll('.o_kanban_counter_side:nth-child(3)')].map((elem) => elem.textContent);
+        reccurringRevenueNoValues = [...target.querySelectorAll('.o_animated_number:nth-child(3)')].map((elem) => elem.textContent);
         assert.deepEqual(reccurringRevenueNoValues, ['+25','+25'],
             "counter should display the sum of recurring_revenue_monthly only of overdue filter in 1st column");
     });
