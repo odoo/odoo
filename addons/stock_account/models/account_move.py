@@ -142,6 +142,8 @@ class AccountMove(models.Model):
                     'debit': balance < 0.0 and -balance or 0.0,
                     'credit': balance > 0.0 and balance or 0.0,
                     'account_id': debit_interim_account.id,
+                    'analytic_account_id': line.analytic_account_id.id,
+                    'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
                     'exclude_from_invoice_tab': True,
                     'is_anglo_saxon_line': True,
                 })
