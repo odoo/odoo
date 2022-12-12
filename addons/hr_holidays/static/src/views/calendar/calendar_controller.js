@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { CalendarController } from '@web/views/calendar/calendar_controller';
 import { FormViewDialog } from '@web/views/view_dialogs/form_view_dialog';
 
@@ -68,16 +69,29 @@ export class TimeOffCalendarController extends CalendarController {
 
     deleteRecord(record) {
         if (!record.can_cancel) {
-            return super.deleteRecord(record);
+            this.displayDialog(ConfirmationDialog, {
+                title: this.env._t("Confirmation"),
+                body: this.env._t("Are you sure you want to delete this record ?"),
+                confirm: async () => {
+                    await this.model.unlinkRecord(record.id);
+                    this.env.timeOffBus.trigger('update_dashboard');
+                },
+                cancel: () => {},
+            });
+        } else {
+            this.leaveCancelWizard(record.id, () => {
+                this.model.load();
+                this.env.timeOffBus.trigger('update_dashboard');
+            });
         }
-
-        this.leaveCancelWizard(record.id, () => {
-            this.model.load();
-            this.env.timeOffBus.trigger('update_dashboard');
-        });
     }
 
     async editRecord(record, context = {}, shouldFetchFormViewId = true) {
+        const onDialogClosed = () => {
+            this.model.load();
+            this.env.timeOffBus.trigger('update_dashboard');
+        };
+
         return new Promise((resolve) => {
             this.displayDialog(
                 TimeOffFormViewDialog, {
@@ -86,12 +100,9 @@ export class TimeOffCalendarController extends CalendarController {
                     context,
                     title: record.title,
                     viewId: this.model.formViewId,
-                    onRecordSaved: () => this.model.load(),
+                    onRecordSaved: onDialogClosed,
                     onRecordDeleted: (record) => this.deleteRecord(record),
-                    onLeaveCancelled: () => {
-                        this.model.load();
-                        this.env.timeOffBus.trigger('update_dashboard');
-                    }
+                    onLeaveCancelled: onDialogClosed,
                 },
                 { onClose: () => resolve() }
             );
