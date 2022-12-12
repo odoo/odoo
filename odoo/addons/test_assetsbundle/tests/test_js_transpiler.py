@@ -14,7 +14,7 @@ class TestJsTranspiler(TransactionCase):
         input_content = """/** @odoo-module alias=test_assetsbundle.Alias **/"""
         result = transpile_javascript("/test_assetsbundle/static/src/alias.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/alias', async function (require) {
+        expected_result = """odoo.define('@test_assetsbundle/alias', [], async function (require) {
 'use strict';
 let __exports = {};
 /** @odoo-module alias=test_assetsbundle.Alias **/
@@ -32,7 +32,7 @@ odoo.define(`test_assetsbundle.Alias`, async function(require) {
         input_content = """/** @odoo-module alias=test_assetsbundle.Alias default=False **/"""
         result = transpile_javascript("/test_assetsbundle/static/src/alias.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/alias', async function (require) {
+        expected_result = """odoo.define('@test_assetsbundle/alias', [], async function (require) {
 'use strict';
 let __exports = {};
 /** @odoo-module alias=test_assetsbundle.Alias default=False **/
@@ -49,7 +49,7 @@ odoo.define(`test_assetsbundle.Alias`, async function(require) {
         input_content = """/** @odoo-module alias=test_assetsbundle.Alias default=0 **/"""
         result = transpile_javascript("/test_assetsbundle/static/src/alias.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/alias', async function (require) {
+        expected_result = """odoo.define('@test_assetsbundle/alias', [], async function (require) {
 'use strict';
 let __exports = {};
 /** @odoo-module alias=test_assetsbundle.Alias default=0 **/
@@ -66,7 +66,7 @@ odoo.define(`test_assetsbundle.Alias`, async function(require) {
         input_content = """/** @odoo-module alias=test_assetsbundle.Alias default=false **/"""
         result = transpile_javascript("/test_assetsbundle/static/src/alias.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/alias', async function (require) {
+        expected_result = """odoo.define('@test_assetsbundle/alias', [], async function (require) {
 'use strict';
 let __exports = {};
 /** @odoo-module alias=test_assetsbundle.Alias default=false **/
@@ -93,7 +93,7 @@ export const Ferrari = class Ferrari extends Car {};
 """
         result = transpile_javascript("/test_assetsbundle/static/src/classes.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/classes', async function (require) {
+        expected_result = """odoo.define('@test_assetsbundle/classes', [], async function (require) {
 'use strict';
 let __exports = {};
 const Nice = __exports[Symbol.for("default")] = class Nice {}
@@ -146,7 +146,7 @@ const aaa = "keep!";
 """
         result = transpile_javascript("/test_assetsbundle/static/src/comments.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/comments', async function (require) {
+        expected_result = """odoo.define('@test_assetsbundle/comments', [], async function (require) {
 'use strict';
 let __exports = {};
 /**
@@ -206,7 +206,7 @@ export default function sayHelloDefault() {
 """
         result = transpile_javascript("/test_assetsbundle/static/src/functions.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/functions', async function (require) {
+        expected_result = """odoo.define('@test_assetsbundle/functions', [], async function (require) {
 'use strict';
 let __exports = {};
 __exports.sayHello = sayHello; function sayHello() {
@@ -268,7 +268,7 @@ import Line16 from "test.Dialog.error";
 """
         result = transpile_javascript("/test_assetsbundle/static/src/import.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/import', async function (require) {
+        expected_result = """odoo.define('@test_assetsbundle/import', ['@test_assetsbundle/Dialog', 'Dialog', '@tests/Dialog', 'test.Dialog', 'test.Dialog2', 'legacy.module', '@new_module/file', '@test.Dialog', 'test/Dialog', 'test.Dialog.error'], async function (require) {
 'use strict';
 let __exports = {};
 /**
@@ -322,7 +322,7 @@ import c from "@tests/dir/index/";
 import d from "@tests";"""
         result = transpile_javascript("/test_assetsbundle/static/src/index.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle', async function (require) {
+        expected_result = """odoo.define('@test_assetsbundle', ['@tests/dir', '@tests'], async function (require) {
 'use strict';
 let __exports = {};
 const a = __exports.a = 5;
@@ -364,7 +364,7 @@ export * from "@tests/Dialog";
 """
         result = transpile_javascript("/test_assetsbundle/static/src/list.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/list', async function (require) {
+        expected_result = """odoo.define('@test_assetsbundle/list', ['@tests/Dialog', '@test_assetsbundle/Dialog'], async function (require) {
 'use strict';
 let __exports = {};
 Object.assign(__exports, {a,  b});
@@ -411,7 +411,7 @@ export default a;
 """
         result = transpile_javascript("/test_assetsbundle/static/src/variables.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/variables', async function (require) {
+        expected_result = """odoo.define('@test_assetsbundle/variables', [], async function (require) {
 'use strict';
 let __exports = {};
 const v = __exports.v = 5;
@@ -436,7 +436,7 @@ return __exports;
 
         result = transpile_javascript("/test_assetsbundle/static/tests/alias.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/../tests/alias', async function (require) {
+        expected_result = """odoo.define('@test_assetsbundle/../tests/alias', [], async function (require) {
 'use strict';
 let __exports = {};
 QUnit.module("test_assetsbundle", function() {QUnit.test("Tests", async function (assert) {{}})});
@@ -451,7 +451,7 @@ return __exports;
 
         result = transpile_javascript("/test_assetsbundle/static/tests/alias.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/../tests/alias', async function (require) {
+        expected_result = """odoo.define('@test_assetsbundle/../tests/alias', [], async function (require) {
 'use strict';
 let __exports = {};
 QUnit.module("test_assetsbundle", function() {QUnit.debug("Tests", async function (assert) {{}})});
@@ -466,10 +466,57 @@ return __exports;
 
         result = transpile_javascript("/test_assetsbundle/static/tests/alias.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/../tests/alias', async function (require) {
+        expected_result = """odoo.define('@test_assetsbundle/../tests/alias', [], async function (require) {
 'use strict';
 let __exports = {};
 let a = 1 + 1;
+return __exports;
+});
+"""
+
+        self.assertEqual(result, expected_result)
+
+    def test_13_require_comment(self):
+        input_content = """
+require("@test/Dialog")
+const dialog = require("@test/Dialog2")
+
+// require("@test/Comment")
+// const comment = require("@test/Comment")
+
+/*require("@test/Comment")*/
+/* const comment = require("@test/Comment") */
+
+/**
+*require("@test/Comment")
+*/
+/**
+* const comment = require("@test/Comment")
+*/
+"""
+
+        result = transpile_javascript("/test_assetsbundle/static/src/alias.js", input_content)
+
+        expected_result = """odoo.define('@test_assetsbundle/alias', ['@test/Dialog', '@test/Dialog2'], async function (require) {
+'use strict';
+let __exports = {};
+
+require("@test/Dialog")
+const dialog = require("@test/Dialog2")
+
+// require("@test/Comment")
+// const comment = require("@test/Comment")
+
+/*require("@test/Comment")*/
+/* const comment = require("@test/Comment") */
+
+/**
+*require("@test/Comment")
+*/
+/**
+* const comment = require("@test/Comment")
+*/
+
 return __exports;
 });
 """
