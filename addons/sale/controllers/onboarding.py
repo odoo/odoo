@@ -1,13 +1,11 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import http
-from odoo.http import request
+from odoo.http import request, route, Controller
 
 
-class OnboardingController(http.Controller):
+class OnboardingController(Controller):
 
-    @http.route('/sales/sale_quotation_onboarding_panel', auth='user', type='json')
+    @route('/sales/sale_quotation_onboarding_panel', auth='user', type='json')
     def sale_quotation_onboarding(self):
         """ Returns the `banner` for the sale onboarding panel.
             It can be empty if the user has closed it or if he doesn't have
@@ -19,8 +17,11 @@ class OnboardingController(http.Controller):
             return {}
 
         return {
-            'html': request.env['ir.qweb']._render('sale.sale_quotation_onboarding_panel', {
-                'company': company,
-                'state': company.get_and_update_sale_quotation_onboarding_state()
-            })
+            'html': request.env['ir.qweb']._render(
+                'sale.sale_quotation_onboarding_panel',
+                {
+                    'company': company,
+                    'state': company._get_and_update_sale_quotation_onboarding_state()
+                }
+            )
         }
