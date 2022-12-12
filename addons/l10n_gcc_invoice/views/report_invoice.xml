@@ -274,17 +274,26 @@
                             <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
                                 <t t-if="line.display_type not in ('line_note', 'line_section')" name="account_invoice_line_accountable">
                                     <td name="account_invoice_line_name">
-                                        <t t-set="translation_name" t-value="line.with_context(lang='ar_001').product_id.name"/>
                                         <t t-if="line.product_id">
-                                            <span t-field="line.product_id.name" t-options="{'widget': 'text'}"/>
-                                            <t t-if="line.product_id.name != translation_name">
+                                            <t t-set="arabic_name" t-value="line.with_context(lang='ar_001').product_id.display_name"/>
+                                            <t t-set="english_name" t-value="line.with_context(lang='en_US').product_id.display_name"/>
+
+                                            <span t-field="line.product_id.display_name"
+                                                t-options="{'widget': 'text'}"/>
+
+                                            <t t-if="arabic_name != english_name">
                                                 <br/>
                                                 <span t-field="line.with_context(lang='ar_001').product_id.name"
-                                                      t-options="{'widget': 'text'}"/>
+                                                    style="text:right"
+                                                    t-options="{'widget': 'text'}"/>
+                                            </t>
+
+                                            <t t-if="line.name != english_name and line.name != arabic_name">
+                                                <br/>
+                                                <span t-field="line.name" t-options="{'widget': 'text'}"/>
                                             </t>
                                         </t>
-                                        <t t-if="line.name and line.name != line.product_id.name and line.name != translation_name">
-                                            <t t-if="line.product_id"><br/></t>
+                                        <t t-else="">
                                             <span t-field="line.name" t-options="{'widget': 'text'}"/>
                                         </t>
                                     </td>
