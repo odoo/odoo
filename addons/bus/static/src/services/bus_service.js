@@ -34,6 +34,10 @@ export const busService = {
             name: 'SharedWorker' in window && !isIosApp() ? 'odoo:websocket_shared_worker' : 'odoo:websocket_worker',
         });
         const connectionInitializedDeferred = new Deferred();
+        worker.addEventListener("error", (e) => {
+            connectionInitializedDeferred.resolve();
+            console.warn("Error while loading 'bus_service' SharedWorker");
+        });
 
         /**
         * Send a message to the worker.
