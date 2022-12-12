@@ -281,7 +281,7 @@ QUnit.module("Fields", (hooks) => {
      */
     QUnit.test("properties: access to parent", async function (assert) {
         async function mockRPC(route, { method, model, kwargs }) {
-            if (method === "check_access_rights") {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
                 return true;
             }
         }
@@ -378,7 +378,7 @@ QUnit.module("Fields", (hooks) => {
      */
     QUnit.test("properties: add a new property", async function (assert) {
         async function mockRPC(route, { method, model, kwargs }) {
-            if (method === "check_access_rights") {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
                 return true;
             }
         }
@@ -435,7 +435,7 @@ QUnit.module("Fields", (hooks) => {
      */
     QUnit.test("properties: selection", async function (assert) {
         async function mockRPC(route, { method, model, kwargs }) {
-            if (method === "check_access_rights") {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
                 return true;
             }
         }
@@ -573,7 +573,7 @@ QUnit.module("Fields", (hooks) => {
      */
     QUnit.test("properties: float and integer", async function (assert) {
         async function mockRPC(route, { method, model, kwargs }) {
-            if (method === "check_access_rights") {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
                 return true;
             }
         }
@@ -642,7 +642,7 @@ QUnit.module("Fields", (hooks) => {
      */
     QUnit.test("properties: move properties", async function (assert) {
         async function mockRPC(route, { method, model, kwargs }) {
-            if (method === "check_access_rights") {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
                 return true;
             }
         }
@@ -717,7 +717,7 @@ QUnit.module("Fields", (hooks) => {
      */
     QUnit.test("properties: tags", async function (assert) {
         async function mockRPC(route, { method, model, kwargs }) {
-            if (method === "check_access_rights") {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
                 return true;
             }
         }
@@ -837,7 +837,7 @@ QUnit.module("Fields", (hooks) => {
      */
     QUnit.test("properties: many2one", async function (assert) {
         async function mockRPC(route, { method, model, args, kwargs }) {
-            if (method === "check_access_rights") {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
                 return true;
             } else if (method === "get_available_models" && model === "ir.model") {
                 return [
@@ -923,7 +923,7 @@ QUnit.module("Fields", (hooks) => {
      */
     QUnit.test("properties: many2many", async function (assert) {
         async function mockRPC(route, { method, model, args, kwargs }) {
-            if (method === "check_access_rights") {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
                 return true;
             } else if (method === "get_available_models" && model === "ir.model") {
                 return [
@@ -1026,7 +1026,7 @@ QUnit.module("Fields", (hooks) => {
      */
     QUnit.test("properties: many2one 'Search more...'", async function (assert) {
         async function mockRPC(route, { method, model }) {
-            if (method === "check_access_rights") {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
                 return true;
             } else if (method === "display_name_for" && model === "ir.model") {
                 return [
@@ -1223,7 +1223,7 @@ QUnit.module("Fields", (hooks) => {
      */
     QUnit.test("properties: name reset", async function (assert) {
         async function mockRPC(route, { method, model, kwargs }) {
-            if (method === "check_access_rights") {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
                 return true;
             } else if (method === "get_available_models" && model === "ir.model") {
                 return [
@@ -1361,7 +1361,7 @@ QUnit.module("Fields", (hooks) => {
      */
     QUnit.test("properties: default value", async function (assert) {
         async function mockRPC(route, { method, model, kwargs }) {
-            if (method === "check_access_rights") {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
                 return true;
             }
         }
@@ -1428,7 +1428,7 @@ QUnit.module("Fields", (hooks) => {
         "properties: form view and falsy domain, properties are not empty",
         async function (assert) {
             async function mockRPC(route, { method, model, kwargs }) {
-                if (method === "check_access_rights") {
+                if (["check_access_rights", "check_access_rule"].includes(method)) {
                     return true;
                 }
             }
@@ -1482,7 +1482,7 @@ QUnit.module("Fields", (hooks) => {
         "properties: form view and falsy domain, properties are empty",
         async function (assert) {
             async function mockRPC(route, { method, model, kwargs }) {
-                if (method === "check_access_rights") {
+                if (["check_access_rights", "check_access_rule"].includes(method)) {
                     return true;
                 }
             }
