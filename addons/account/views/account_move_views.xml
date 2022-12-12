@@ -419,9 +419,10 @@
                     <field name="amount_untaxed_signed" string="Tax Excluded" sum="Total" optional="show"/>
                     <field name="amount_tax_signed" string="Tax" sum="Total" optional="hide"/>
                     <field name="amount_total_signed" string="Total" sum="Total" decoration-bf="1" optional="show"/>
-                    <field name="amount_total_in_currency_signed" string="Total in Currency" groups="base.group_multi_currency"  optional="show"/>
+                    <field name="amount_total_in_currency_signed" string="Total in Currency" optional="show" groups="base.group_multi_currency"/>
+                    <field name="amount_total_in_currency_signed" string="Total in Currency" optional="hide" groups="!base.group_multi_currency"/>
                     <field name="amount_residual_signed" string="Amount Due" sum="Amount Due" optional="hide"/>
-                    <field name="currency_id" groups="base.group_multi_currency" optional="hide"/>
+                    <field name="currency_id" optional="hide"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="to_check" optional="hide" widget="boolean_toggle"/>
                     <field name="payment_state"
