@@ -131,11 +131,10 @@ export class ListArchParser extends XMLParser {
                 );
 
                 const widgetProps = {
-                    ...widgetInfo,
+                    name: widgetInfo.name,
                     // FIXME: this is dumb, we encode it into a weird object so that the widget
                     // can decode it later...
                     node: encodeObjectForTemplate({ attrs: widgetInfo.rawAttrs }).slice(1, -1),
-                    className: node.getAttribute("class"),
                 };
                 columns.push({
                     ...widgetInfo,

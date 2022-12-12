@@ -66,9 +66,8 @@ Widget.parseWidgetNode = function (node) {
         })
     );
     return {
-        options: evaluateExpr(node.getAttribute("options") || "{}"),
         name,
-        rawAttrs: attrs,
+        rawAttrs: { ...attrs, options: node.getAttribute("options") || "{}" },
         WidgetComponent,
     };
 };

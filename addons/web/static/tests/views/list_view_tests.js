@@ -16328,7 +16328,25 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("view widgets are rendered in list view", async function (assert) {
-        class TestWidget extends Component {}
+        assert.expect(18);
+
+        class TestWidget extends Component {
+            setup() {
+                assert.deepEqual(Object.keys(this.props), ["yop", "yip", "record"]);
+                assert.strictEqual(this.props.yop, "hello");
+                assert.strictEqual(this.props.yip, "Yo");
+            }
+        }
+        TestWidget.extractProps = ({ attrs }) => {
+            assert.deepEqual(attrs, {
+                name: "test_widget",
+                options: { yop: "hello" },
+            });
+            return {
+                yop: attrs.options.yop,
+                yip: "Yo",
+            };
+        };
         TestWidget.template = xml`<div class="test_widget" t-esc="props.record.data.bar"/>`;
         registry.category("view_widgets").add("test_widget", TestWidget);
         await makeView({
@@ -16338,7 +16356,7 @@ QUnit.module("Views", (hooks) => {
             arch: `
                 <list>
                     <field name="bar" invisible="1"/>
-                    <widget name="test_widget"/>
+                    <widget name="test_widget" options="{'yop': 'hello'}"/>
                 </list>
             `,
         });
