@@ -25,6 +25,7 @@ registerModel({
          */
         start() {
             this.env.services['bus_service'].addEventListener('notification', this._handleNotifications);
+            this.env.services['bus_service'].start();
         },
         /**
          * @private
