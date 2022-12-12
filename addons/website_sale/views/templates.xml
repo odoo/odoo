@@ -298,7 +298,7 @@
                                     <t t-call="website_sale.products_categories_list"/>
                                 </div>
                                 <div class="products_attributes_filters"/>
-                                <t t-if="opt_wsale_filter_price and (not opt_wsale_attributes)"
+                                <t t-if="opt_wsale_filter_price and opt_wsale_attributes"
                                    t-call="website_sale.filter_products_price"/>
                             </div>
                         </aside>
@@ -841,7 +841,6 @@
                         </div>
                     </t>
                 </form>
-                <t t-if="opt_wsale_filter_price and opt_wsale_attributes" t-call="website_sale.filter_products_price"/>
             </div>
         </xpath>
     </template>
