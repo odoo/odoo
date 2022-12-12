@@ -14,7 +14,7 @@ import { isAllowedDateField } from "@web/views/relational_model";
 import { isNull, isRelational } from "@web/views/utils";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { useBounceButton } from "@web/views/view_hook";
-import { KanbanAnimatedNumber } from "./kanban_animated_number";
+import { ColumnProgress } from "@web/views/view_components/column_progress";
 import { KanbanColumnQuickCreate } from "./kanban_column_quick_create";
 import { KanbanRecord } from "./kanban_record";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
@@ -616,7 +616,7 @@ KanbanRenderer.props = [
 KanbanRenderer.components = {
     Dropdown,
     DropdownItem,
-    KanbanAnimatedNumber,
+    ColumnProgress,
     KanbanColumnQuickCreate,
     KanbanRecord,
     KanbanRecordQuickCreate,

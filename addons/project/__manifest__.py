@@ -111,6 +111,7 @@
             'web/static/src/views/kanban/**/*',
             'web/static/src/views/list/**/*',
             'web/static/src/views/view_button/**/*',
+            'web/static/src/views/view_components/**/*',
             'web/static/src/views/view_dialogs/**/*',
             'web/static/src/views/widgets/**/*',
             'web/static/src/webclient/**/*',

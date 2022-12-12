@@ -69,7 +69,7 @@ function getColorName(value) {
  *  exist
  * @returns {string}
  */
-function getImageSrcFromRecordInfo(record, model, field, idOrIds, placeholder) {
+export function getImageSrcFromRecordInfo(record, model, field, idOrIds, placeholder) {
     const id = (Array.isArray(idOrIds) ? idOrIds[0] : idOrIds) || null;
     const isCurrentRecord =
         record.resModel === model && (record.resId === id || (!record.resId && !id));
@@ -99,7 +99,7 @@ function getImageSrcFromRecordInfo(record, model, field, idOrIds, placeholder) {
  * @param {string} fieldName
  * @returns {any}
  */
-function getRawValue(record, fieldName) {
+export function getRawValue(record, fieldName) {
     const field = record.fields[fieldName];
     const value = record.data[fieldName];
     switch (field.type) {
@@ -127,7 +127,7 @@ function getRawValue(record, fieldName) {
  * @param {string} fieldName
  * @returns {string}
  */
-function getValue(record, fieldName) {
+export function getValue(record, fieldName) {
     const field = record.fields[fieldName];
     const value = record.data[fieldName];
     const formatter = formatters.get(field.type, String);
@@ -149,7 +149,7 @@ function isBinSize(value) {
  * @param {string} innerHTML
  * @returns {boolean} true if no content found or if containing only formatting tags
  */
-function isHtmlEmpty(innerHTML = "") {
+export function isHtmlEmpty(innerHTML = "") {
     const div = Object.assign(document.createElement("div"), { innerHTML });
     return div.innerText.trim() === "";
 }

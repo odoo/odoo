@@ -34,7 +34,7 @@ import { tooltipService } from "@web/core/tooltip/tooltip_service";
 import { nbsp } from "@web/core/utils/strings";
 import { getNextTabableElement } from "@web/core/utils/ui";
 import { session } from "@web/session";
-import { KanbanAnimatedNumber } from "@web/views/kanban/kanban_animated_number";
+import { AnimatedNumber } from "@web/views/view_components/animated_number";
 import { KanbanController } from "@web/views/kanban/kanban_controller";
 import { kanbanView } from "@web/views/kanban/kanban_view";
 import { DynamicRecordList } from "@web/views/relational_model";
@@ -82,19 +82,17 @@ function getCardTexts(groupIndex) {
 }
 
 function getCounters() {
-    return [...target.querySelectorAll(".o_kanban_counter_side")].map(
-        (counter) => counter.innerText
-    );
+    return [...target.querySelectorAll(".o_animated_number")].map((counter) => counter.innerText);
 }
 
 function getProgressBars(columnIndex) {
     const column = getColumn(columnIndex);
-    return [...column.querySelectorAll(".o_kanban_counter_progress .progress-bar")];
+    return [...column.querySelectorAll(".o_column_progress .progress-bar")];
 }
 
 function getTooltips(groupIndex) {
     const root = groupIndex >= 0 ? getColumn(groupIndex) : target;
-    return [...root.querySelectorAll(".o_kanban_counter_progress .progress-bar")]
+    return [...root.querySelectorAll(".o_column_progress .progress-bar")]
         .map((card) => card.dataset.tooltip)
         .filter(Boolean);
 }
@@ -162,7 +160,7 @@ let target;
 
 QUnit.module("Views", (hooks) => {
     hooks.beforeEach(() => {
-        patchWithCleanup(KanbanAnimatedNumber, { enableAnimations: false });
+        patchWithCleanup(AnimatedNumber, { enableAnimations: false });
         serverData = {
             models: {
                 partner: {
@@ -8463,31 +8461,24 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsN(target, ".o_kanban_group", 2);
         assert.deepEqual(getCounters(), ["1", "4"]);
-        assert.containsN(
-            target,
-            ".o_kanban_group:last-child .o_kanban_counter_progress .progress-bar",
-            4
-        );
+        assert.containsN(target, ".o_kanban_group:last-child .o_column_progress .progress-bar", 4);
         assert.containsOnce(
             target,
-            ".o_kanban_group:last-child .o_kanban_counter_progress .progress-bar.bg-200",
+            ".o_kanban_group:last-child .o_column_progress .progress-bar.bg-200",
             "should have false kanban color"
         );
         assert.hasClass(
             target.querySelector(
-                ".o_kanban_group:last-child .o_kanban_counter_progress .progress-bar.bg-200"
+                ".o_kanban_group:last-child .o_column_progress .progress-bar.bg-200"
             ),
             "bg-200"
         );
 
-        await click(
-            target,
-            ".o_kanban_group:last-child .o_kanban_counter_progress .progress-bar.bg-200"
-        );
+        await click(target, ".o_kanban_group:last-child .o_column_progress .progress-bar.bg-200");
 
         assert.hasClass(
             target.querySelector(
-                ".o_kanban_group:last-child .o_kanban_counter_progress .progress-bar.bg-200"
+                ".o_kanban_group:last-child .o_column_progress .progress-bar.bg-200"
             ),
             "progress-bar-animated"
         );
@@ -8529,14 +8520,11 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group", 2);
         assert.deepEqual(getCounters(), ["-4", "51"]);
 
-        await click(
-            target,
-            ".o_kanban_group:last-child .o_kanban_counter_progress .progress-bar.bg-200"
-        );
+        await click(target, ".o_kanban_group:last-child .o_column_progress .progress-bar.bg-200");
 
         assert.hasClass(
             target.querySelector(
-                ".o_kanban_group:last-child .o_kanban_counter_progress .progress-bar.bg-200"
+                ".o_kanban_group:last-child .o_column_progress .progress-bar.bg-200"
             ),
             "progress-bar-animated"
         );
@@ -8690,7 +8678,7 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["bar"],
             });
 
-            await click(target, ".o_kanban_counter_progress .progress-bar.bg-success");
+            await click(target, ".o_column_progress .progress-bar.bg-success");
 
             assert.deepEqual(getCardTexts(), ["5"], "we should have 1 record shown");
 
@@ -11111,7 +11099,7 @@ QUnit.module("Views", (hooks) => {
         // Initial state: 2 columns, the "Yes" column contains 2 records "abc", 1 "def" and 1 "ghi"
         assert.deepEqual(getCounters(), ["1", "4"]);
         assert.containsN(getColumn(1), ".o_kanban_record", 4);
-        assert.containsN(getColumn(1), ".o_kanban_counter_progress .progress-bar", 3);
+        assert.containsN(getColumn(1), ".o_column_progress .progress-bar", 3);
         assert.strictEqual(getProgressBars(1)[0].style.width, "50%"); // abc: 2
         assert.strictEqual(getProgressBars(1)[1].style.width, "25%"); // def: 1
         assert.strictEqual(getProgressBars(1)[2].style.width, "25%"); // ghi: 1
@@ -11121,7 +11109,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.deepEqual(getCounters(), ["1", "2"]);
         assert.containsN(getColumn(1), ".o_kanban_record", 2);
-        assert.containsN(getColumn(1), ".o_kanban_counter_progress .progress-bar", 3);
+        assert.containsN(getColumn(1), ".o_column_progress .progress-bar", 3);
         assert.strictEqual(getProgressBars(1)[0].style.width, "50%"); // abc: 2
         assert.strictEqual(getProgressBars(1)[1].style.width, "25%"); // def: 1
         assert.strictEqual(getProgressBars(1)[2].style.width, "25%"); // ghi: 1
@@ -11133,7 +11121,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.deepEqual(getCounters(), ["1", "1"]);
         assert.containsN(getColumn(1), ".o_kanban_record", 2);
-        assert.containsN(getColumn(1), ".o_kanban_counter_progress .progress-bar", 3);
+        assert.containsN(getColumn(1), ".o_column_progress .progress-bar", 3);
         assert.strictEqual(getProgressBars(1)[0].style.width, "25%"); // abc: 1
         assert.strictEqual(getProgressBars(1)[1].style.width, "50%"); // def: 2
         assert.strictEqual(getProgressBars(1)[2].style.width, "25%"); // ghi: 1
