@@ -659,7 +659,25 @@ interface Assert {
      * @param callback Function to close over assertions
      */
     only(name: string, callback: (assert: Assert) => void | Promise<void>): void;
-  
+
+    /**
+     * Adds a test to exclusively run in debug mode, preventing all other tests from running.
+     *
+     * Use this method to focus your test suite on a specific test. QUnit.debug
+     * will cause any other tests in your suite to be ignored.
+     *
+     * Note, that if more than one QUnit.debug is present only the first instance
+     * will run.
+     *
+     * This is an alternative to filtering tests to run in the HTML reporter. It
+     * is especially useful when you use a console reporter or in a codebase
+     * with a large set of long running tests.
+     *
+     * @param {string} name Title of unit being tested
+     * @param callback Function to close over assertions
+     */
+    debug(name: string, callback: (assert: Assert) => void | Promise<void>): void;
+
     /**
      * DEPRECATED: Report the result of a custom assertion.
      *
