@@ -104,7 +104,7 @@ class TestProductPricelist(ProductCommon):
                     'min_quantity': 2,
                     'compute_price': 'formula',
                     'base': 'list_price',
-                    'categ_id': cls.category_5_id,
+                    'categ_id': cls.product_category.id,
                     'price_discount': 5,
                 }),
                 Command.create({
