@@ -1,12 +1,33 @@
 /*Modifications for the Standard and Boxed document layouts */
 .article.o_report_layout_standard.o_company_1_layout, .article.o_report_layout_boxed.o_company_1_layout {
     > .pt-5 {
+<<<<<<< HEAD
         padding-top: 0 !important;
 		> .address.row {
             width: 117% !important;
             height: 68mm !important;
             margin-top: -4mm !important;
             line-height: 1.1em;
+||||||| parent of 249cb5a1c0b (temp)
+		> .address.row {
+			width: 105% !important;
+    		height: 58mm;
+			margin-left: -11mm;
+			margin-top: -16mm;
+			> div[name="address"] {
+				padding-top: 10mm;
+				> address {
+					height: 30mm !important;
+				}
+			}
+=======
+        padding-top: 0 !important;
+        > .address.row {
+            width: 117% !important;
+            height: 68mm !important;
+            margin-top: -4mm !important;
+            line-height: 1.1em;
+>>>>>>> 249cb5a1c0b (temp)
         }
     }
 }
@@ -24,8 +45,15 @@
 /* Modifications for all layouts */
 div .address.row > div[name="address"] {
     position: relative !important;
+<<<<<<< HEAD
     margin-left: 47.5% !important;
+||||||| parent of 249cb5a1c0b (temp)
+    width: 103mm !important;
+=======
+    margin-left: 48% !important;
+>>>>>>> 249cb5a1c0b (temp)
     background-color: #ffffff;
+<<<<<<< HEAD
     > address {
 		width: 100% !important;
 		position: absolute !important;
@@ -34,6 +62,28 @@ div .address.row > div[name="address"] {
 		padding-top: 3mm;
         height: 33mm;
 		max-height: 33mm;
+||||||| parent of 249cb5a1c0b (temp)
+	line-height: 1.2em;
+    > address {
+		width: 100% !important;
+		position: absolute !important;
+		bottom: 0 !important;
+		padding-left: 3mm;
+		padding-top: 3mm;
+        height: 33mm;
+		max-height: 33mm;
+=======
+    > address, div {
+        > address {
+            width: 100% !important;
+            position: absolute !important;
+            bottom: 0 !important;
+            padding-left: 5mm;
+            padding-top: 3mm;
+            height: 33mm;
+            max-height: 33mm;
+        }
+>>>>>>> 249cb5a1c0b (temp)
     }
 }
 
