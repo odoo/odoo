@@ -14,5 +14,8 @@ This module allows the computation of the 'Vendor Bills', 'Other Costs' and 'Oth
     'license': 'LGPL-3',
     'data': [
         'views/account_analytic_line_views.xml',
+        'views/project_project_views.xml',
+        'views/project_task_views.xml',
+        'views/project_sharing_project_task_views.xml',
     ],
 }
