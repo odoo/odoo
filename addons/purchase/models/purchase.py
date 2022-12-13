@@ -24,6 +24,8 @@ class PurchaseOrder(models.Model):
     _description = "Purchase Order"
     _order = 'priority desc, id desc'
 
+    _check_company_auto = True
+
     @api.depends('order_line.price_total')
     def _amount_all(self):
         for order in self:
