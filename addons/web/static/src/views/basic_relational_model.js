@@ -1111,7 +1111,7 @@ export class RelationalModel extends Model {
 
         this.root = null;
 
-        this.__bm__ = new BasicModel(this, {
+        this.__bm__ = new this.constructor.LegacyModel(this, {
             fields: params.fields || {},
             modelName: params.resModel,
             useSampleModel: false, // FIXME AAB
@@ -1418,4 +1418,5 @@ export class RelationalModel extends Model {
     }
 }
 RelationalModel.services = ["action", "dialog", "notification"];
+RelationalModel.LegacyModel = BasicModel;
 RelationalModel.Record = Record;
