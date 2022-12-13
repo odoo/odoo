@@ -173,14 +173,10 @@ class SaleOrderLine(models.Model):
                 uom=self.product_uom.id
             )
             company = event_ticket.company_id or self.env.company
-            currency = company.currency_id
             pricelist = self.order_id.pricelist_id
             if pricelist.discount_policy == "with_discount":
                 price = event_ticket.price_reduce
             else:
                 price = event_ticket.price
-            return currency._convert(
-                price, self.order_id.currency_id,
-                self.order_id.company_id or self.env.company.id,
-                self.order_id.date_order or fields.Date.today())
+            return self._convert_to_sol_currency(price, company.currency_id)
         return super()._get_display_price()
