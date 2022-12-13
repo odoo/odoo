@@ -55,7 +55,6 @@
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="options">{'always_reload': True}</attribute>
-                <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
                 <attribute name="attrs">{'invisible': [('allow_billable', '=', False)]}</attribute>
             </xpath>
             <xpath expr="//group[@name='group_time_managment']" position="after">
@@ -84,7 +83,6 @@
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="options">{'always_reload': True}</attribute>
-                <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
                 <attribute name="attrs">{'invisible': [('allow_billable', '=', False)]}</attribute>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">

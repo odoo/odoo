@@ -16,8 +16,6 @@
                         string="Sales Order"/>
             </div>
             <xpath expr="//field[@name='partner_id']" position="attributes">
-                <attribute name="options">{'no_open': True, 'no_create': True, 'no_edit': True}</attribute>
-                <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
                 <attribute name="attrs">{'invisible': [('allow_billable', '=', False)]}</attribute>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
