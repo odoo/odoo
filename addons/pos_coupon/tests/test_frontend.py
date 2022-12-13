@@ -343,3 +343,64 @@ class TestUi(TestPointOfSaleHttpCommon):
             "PosCouponTour4",
             login="accountman",
         )
+
+    def test_promotion_program_with_global_discount(self):
+        """
+        - Create a promotion with a discount of 10%
+        - Create a product with no taxes
+        - Enable the global discount feature, and make sure the Discount product
+            has a tax set on it.
+        """
+
+        if not self.env["ir.module.module"].search([("name", "=", "pos_discount"), ("state", "=", "installed")]):
+            self.skipTest("pos_discount module is required for this test")
+
+        self.promo_program = self.env["coupon.program"].create(
+            {
+                "name": "Promo Program",
+                "program_type": "promotion_program",
+                "reward_type": "discount",
+                "discount_type": "percentage",
+                "discount_percentage": 10,
+                "discount_apply_on": "on_order",
+                "promo_code_usage": "no_code_needed",
+            }
+        )
+
+        self.tax01 = self.env["account.tax"].create({
+            "name": "C01 Tax",
+            "amount": "0.00",
+        })
+
+        self.product = self.env["product.product"].create(
+            {
+                "name": "Test Product 1",
+                "type": "product",
+                "list_price": 100,
+                "available_in_pos": True,
+            }
+        )
+
+        self.discount_product = self.env["product.product"].create(
+            {
+                "name": "Discount Product",
+                "type": "service",
+                "list_price": 0,
+                "available_in_pos": True,
+                "taxes_id": [(6, 0, self.tax01.ids)],
+            }
+        )
+
+        with Form(self.main_pos_config) as pos_config:
+            pos_config.use_coupon_programs = True
+            pos_config.promo_program_ids.add(self.promo_program)
+            pos_config.module_pos_discount = True
+            pos_config.discount_product_id = self.discount_product
+
+        self.main_pos_config.open_session_cb()
+
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosCouponTour5",
+            login="accountman",
+        )
