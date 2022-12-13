@@ -117,7 +117,7 @@ class LivechatController(http.Controller):
         return request.env['ir.http']._content_image_get_response(status, headers, image_base64)
 
     @http.route('/im_livechat/get_session', type="json", auth='public', cors="*")
-    def get_session(self, channel_id, anonymous_name, previous_operator_id=None, chatbot_script_id=None, **kwargs):
+    def get_session(self, channel_id, anonymous_name, previous_operator_id=None, chatbot_script_id=None, persisted=True, **kwargs):
         user_id = None
         country_id = None
         # if the user is identifiy (eg: portal user on the frontend), don't use the anonymous name. The user will be added to session.
@@ -145,7 +145,9 @@ class LivechatController(http.Controller):
             previous_operator_id=previous_operator_id,
             chatbot_script=chatbot_script,
             user_id=user_id,
-            country_id=country_id)
+            country_id=country_id,
+            persisted=persisted
+        )
 
     @http.route('/im_livechat/feedback', type='json', auth='public', cors="*")
     def feedback(self, uuid, rate, reason=None, **kwargs):

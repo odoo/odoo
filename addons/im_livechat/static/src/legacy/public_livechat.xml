@@ -76,9 +76,11 @@
             <a href="#" class="o_thread_window_close fa fa-1x fa-arrow-left" aria-label="Close chat window" title="Close chat window"/>
         </span>
         <span class="o_thread_window_title">
-            <t t-esc="title"/>
-            <span t-if="unreadCounter"> (<t t-esc="unreadCounter"/>)</span>
-            <t t-if="thread and thread.hasTypingNotification() and thread.isSomeoneTyping()" t-call="im_livechat.legacy.mail.ThreadTypingIcon"/>
+            <t t-if="thread.getHasOperator()">
+                <t t-esc="title"/>
+                <span t-if="unreadCounter"> (<t t-esc="unreadCounter"/>)</span>
+                <t t-if="thread and thread.hasTypingNotification() and thread.isSomeoneTyping()" t-call="im_livechat.legacy.mail.ThreadTypingIcon"/>
+            </t>
         </span>
         <span t-if="!widget.isMobile()" class="o_thread_window_buttons">
             <a href="#" class="o_thread_window_close fa fa-close"/>
@@ -252,11 +254,16 @@
     -->
     <t t-name="im_livechat.legacy.mail.widget.Thread.Content.ASC">
         <div class="o_mail_thread_content">
-            <t t-if="options.displayLoadMore" t-call="im_livechat.legacy.mail.widget.Thread.LoadMore"/>
-            <t t-call="im_livechat.legacy.mail.widget.Thread.Messages"/>
-            <t t-if="options.displayBottomThreadFreeSpace">
-                <div class="o_thread_bottom_free_space"/>
+            <t t-if="thread.getHasOperator()">
+                <t t-if="options.displayLoadMore" t-call="im_livechat.legacy.mail.widget.Thread.LoadMore"/>
+                <t t-call="im_livechat.legacy.mail.widget.Thread.Messages"/>
+                <t t-if="options.displayBottomThreadFreeSpace">
+                    <div class="o_thread_bottom_free_space"/>
+                </t>
             </t>
+            <div t-else="" class="d-flex justify-content-center align-items-center flex-grow-1">
+                <p class="text-500">No operator available</p>
+            </div>
         </div>
     </t>
 
