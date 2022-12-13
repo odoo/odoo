@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Fiscal Position Templates -->
+
+    <record id="afpt_morocco" model="account.fiscal.position.template">
+		<field name="sequence">1</field>
+        <field name="name">Morocco</field>
+        <field name="chart_template_id" ref="l10nma_chart_template"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="vat_required" eval="True"/>
+        <field name="country_id" ref="base.ma"/>
+    </record>
+    <record id="afpt_morocco_priv" model="account.fiscal.position.template">
+        <field name="sequence">2</field>
+        <field name="name">Morocco Private</field>
+        <field name="chart_template_id" ref="l10nma_chart_template"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ma"/>
+    </record>
+    <record id="afpt_imp_exp" model="account.fiscal.position.template">
+        <field name="sequence">3</field>
+        <field name="name">Import / Export</field>
+        <field name="chart_template_id" ref="l10nma_chart_template"/>
+        <field name="auto_apply" eval="True"/>
+    </record>
+
+    <!-- Account Mapping -->
+
+    <record id="afpat_imp_exp_1" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="account_src_id" ref="l10n_ma_7111"/>
+        <field name="account_dest_id" ref="l10n_ma_7113"/>
+    </record>
+    <record id="afpat_imp_exp_2" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="account_src_id" ref="l10n_ma_71211"/>
+        <field name="account_dest_id" ref="l10n_ma_71221"/>
+    </record>
+    <record id="afpat_imp_exp_3" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="account_src_id" ref="l10n_ma_71212"/>
+        <field name="account_dest_id" ref="l10n_ma_71222"/>
+    </record>
+    <record id="afpat_imp_exp_4" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="account_src_id" ref="l10n_ma_71241"/>
+        <field name="account_dest_id" ref="l10n_ma_71251"/>
+    </record>
+    <record id="afpat_imp_exp_5" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="account_src_id" ref="l10n_ma_71242"/>
+        <field name="account_dest_id" ref="l10n_ma_71252"/>
+    </record>
+    <record id="afpat_imp_exp_6" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="account_src_id" ref="l10n_ma_71243"/>
+        <field name="account_dest_id" ref="l10n_ma_71253"/>
+    </record>
+    <record id="afpat_imp_exp_7" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="account_src_id" ref="l10n_ma_71291"/>
+        <field name="account_dest_id" ref="l10n_ma_71292"/>
+    </record>
+    <record id="afpat_imp_exp_8" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="account_src_id" ref="l10n_ma_71294"/>
+        <field name="account_dest_id" ref="l10n_ma_71295"/>
+    </record>
+
+	<!-- Tax Mapping -->
+
+    <!-- Sales 20% -->
+
+    <record id="afptt_imp_exp_1" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_20_80"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_20_129"/>
+    </record>
+    <record id="afptt_imp_exp_2" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_20_81"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_20_129"/>
+    </record>
+    <record id="afptt_imp_exp_3" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_20_82"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_20_129"/>
+    </record>
+    <record id="afptt_imp_exp_4" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_20_83"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_20_129"/>
+    </record>
+    <record id="afptt_imp_exp_5" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_20_87"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_20_129"/>
+    </record>
+    <record id="afptt_imp_exp_6" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_20_93"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_20_129"/>
+    </record>
+    <record id="afptt_imp_exp_7" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_20_94"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_20_129"/>
+    </record>
+    <record id="afptt_imp_exp_8" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_20_95"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_20_129"/>
+    </record>
+    <record id="afptt_imp_exp_9" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_20_102"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_20_129"/>
+    </record>
+
+    <!-- Sales 14% -->
+
+    <record id="afptt_imp_exp_10" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_14_84"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_14_129"/>
+    </record>
+    <record id="afptt_imp_exp_11" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_14_88"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_14_129"/>
+    </record>
+    <record id="afptt_imp_exp_12" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_14_90"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_14_129"/>
+    </record>
+    <record id="afptt_imp_exp_13" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_14_104"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_14_129"/>
+    </record>
+    <record id="afptt_imp_exp_14" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_14_91"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_14_129"/>
+    </record>
+
+    <!-- Sales 10% -->
+
+    <record id="afptt_imp_exp_15" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_10_76"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_10_129"/>
+    </record>
+    <record id="afptt_imp_exp_16" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_10_77"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_10_129"/>
+    </record>
+    <record id="afptt_imp_exp_17" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_10_78"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_10_129"/>
+    </record>
+    <record id="afptt_imp_exp_18" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_10_79"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_10_129"/>
+    </record>
+    <record id="afptt_imp_exp_19" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_10_85"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_10_129"/>
+    </record>
+    <record id="afptt_imp_exp_20" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_10_86"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_10_129"/>
+    </record>
+    <record id="afptt_imp_exp_21" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_10_89"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_10_129"/>
+    </record>
+    <record id="afptt_imp_exp_22" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_10_92"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_10_129"/>
+    </record>
+    <record id="afptt_imp_exp_23" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_10_96"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_10_129"/>
+    </record>
+    <record id="afptt_imp_exp_24" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_10_97"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_10_129"/>
+    </record>
+    <record id="afptt_imp_exp_25" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_10_98"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_10_129"/>
+    </record>
+    <record id="afptt_imp_exp_26" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_10_99"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_10_129"/>
+    </record>
+    <record id="afptt_imp_exp_27" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_10_100"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_10_129"/>
+    </record>
+    <record id="afptt_imp_exp_28" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_10_101"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_10_129"/>
+    </record>
+    <record id="afptt_imp_exp_29" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_10_103"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_10_129"/>
+    </record>
+    <record id="afptt_imp_exp_30" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_10_105"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_10_129"/>
+    </record>
+    <record id="afptt_imp_exp_31" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_10_108"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_10_129"/>
+    </record>
+    <record id="afptt_imp_exp_32" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_10_109"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_10_129"/>
+    </record>
+    <record id="afptt_imp_exp_33" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_10_112"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_10_129"/>
+    </record>
+    <record id="afptt_imp_exp_34" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_10_118"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_10_129"/>
+    </record>
+
+    <!-- Sales 7% -->
+
+    <record id="afptt_imp_exp_35" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_7_106"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_7_129"/>
+    </record>
+    <record id="afptt_imp_exp_36" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_7_107"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_7_129"/>
+    </record>
+    <record id="afptt_imp_exp_37" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_7_110"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_7_129"/>
+    </record>
+    <record id="afptt_imp_exp_38" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_7_111"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_7_129"/>
+    </record>
+    <record id="afptt_imp_exp_39" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_7_113"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_7_129"/>
+    </record>
+    <record id="afptt_imp_exp_40" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_7_114"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_7_129"/>
+    </record>
+    <record id="afptt_imp_exp_41" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_7_115"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_7_129"/>
+    </record>
+    <record id="afptt_imp_exp_42" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_7_116"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_7_129"/>
+    </record>
+    <record id="afptt_imp_exp_43" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_7_117"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_7_129"/>
+    </record>
+    <record id="afptt_imp_exp_44" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_out_7_119"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_out_7_129"/>
+    </record>
+
+    <!-- Purchase Taxes -->
+
+    <record id="afptt_imp_exp_45" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_in_20_146"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_in_20_145"/>
+    </record>
+    <record id="afptt_imp_exp_45" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_in_14_148"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_in_14_147"/>
+    </record>
+    <record id="afptt_imp_exp_45" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_in_10_150"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_in_10_149"/>
+    </record>
+    <record id="afptt_imp_exp_45" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_in_7_152"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_in_7_151"/>
+    </record>
+    <record id="afptt_imp_exp_45" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ma_vat_in_20_163"/>
+        <field name="tax_dest_id" ref="l10n_ma_vat_in_20_162"/>
+    </record>
+
+</odoo>
