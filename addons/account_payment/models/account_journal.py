@@ -74,6 +74,4 @@ class AccountJournal(models.Model):
                 if vals['mode'] == 'unique' and not available:
                     to_remove.append(payment_method.id)
 
-                journal.write({
-                    'available_payment_method_ids': [Command.unlink(payment_method) for payment_method in to_remove]
-                })
+                journal.available_payment_method_ids = [Command.unlink(payment_method) for payment_method in to_remove]
