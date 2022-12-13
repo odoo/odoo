@@ -26,6 +26,10 @@ class WebsiteEventBoothController(WebsiteEventController):
     def _prepare_booth_registration_partner_values(self, event, kwargs):
         if not kwargs.get('contact_email') and kwargs.get('sponsor_email'):
             kwargs['contact_email'] = kwargs['sponsor_email']
+        if not kwargs.get('contact_name') and kwargs.get('sponsor_name'):
+            kwargs['contact_name'] = kwargs['sponsor_name']
+        if not kwargs.get('contact_phone') and kwargs.get('sponsor_phone'):
+            kwargs['contact_phone'] = kwargs['sponsor_phone']
         return super(WebsiteEventBoothController, self)._prepare_booth_registration_partner_values(event, kwargs)
 
     def _prepare_booth_registration_sponsor_values(self, event, booth_values, kwargs):
