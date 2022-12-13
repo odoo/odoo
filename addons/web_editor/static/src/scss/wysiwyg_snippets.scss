@@ -1513,6 +1513,7 @@ body.editor_enable.editor_has_snippets {
         .o_we_m2m {
             we-list, we-list > div, we-list we-select {
                 margin-top: 0;
+                max-width: 100%;
             }
         }
 
@@ -2540,13 +2541,14 @@ we-button-group.o_grid {
 // Background grid.
 .o_we_background_grid {
     padding: 0 !important;
-}
 
-.o_we_cell {
-    fill: $o-brand-odoo;
-    fill-opacity: .2;
-    stroke: $o-we-border-color;
-    stroke-width: 1px;
+    .o_we_cell {
+        fill: $o-brand-odoo;
+        fill-opacity: .2;
+        stroke: $o-we-border-color;
+        stroke-width: 1px;
+        filter: drop-shadow(-1px -1px 0px rgba(255, 255, 255, 0.6));
+    }
 }
 
 .o_we_drag_helper {

@@ -8,8 +8,8 @@
 # Dylan Kiss, 2022
 # Martin Trigaux, 2022
 # Jinjiu Liu, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # Jolien De Paepe, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1348,6 +1348,14 @@ msgstr ""
 "'%s')."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "A line of this move is using a deprecated account, you cannot post it."
+msgstr ""
+"Een regel van deze boeking gebruikt een verouderde rekening. Je kunt niet "
+"boeken."
+
+#. module: account
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "A payment must always belongs to a bank or cash journal."
@@ -1497,7 +1505,7 @@ msgstr "Grootboekschema sjabloon"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__account_codes_formula
 msgid "Account Codes Formula Shortcut"
-msgstr "Sneltoets formules voor accountcodes"
+msgstr "Sneltoets formules voor rekeningen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__currency_id
@@ -1751,7 +1759,7 @@ msgstr "Rekening op product"
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__account_id
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line_template__account_id
 msgid "Account on which to post the tax amount"
-msgstr "Rekening waarop het belastingbedrag moet worden geboekt"
+msgstr "Rekening waarop het BTW-bedrag moet worden geboekt"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__group_id
@@ -3213,7 +3221,7 @@ msgstr "Grondslag"
 #: model:ir.model.fields,field_description:account.field_account_tax__is_base_affected
 #: model:ir.model.fields,field_description:account.field_account_tax_template__is_base_affected
 msgid "Base Affected by Previous Taxes"
-msgstr "Basis beïnvloed door eerdere belastingen"
+msgstr "Basis beïnvloed door eerdere BTW's"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_base_amount
@@ -3719,6 +3727,12 @@ msgid "Cash Statement"
 msgstr "Kasafschrift"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Cash basis rounding difference"
+msgstr "Kasbasis afrondingsverschil"
+
+#. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Cash basis transition account"
@@ -3882,8 +3896,7 @@ msgid ""
 "associated with this tag in tax report computation."
 msgstr ""
 "Vink dit vakje aan om de absolute waarde van het saldo van de regels die aan"
-" dit label zijn gekoppeld in de berekening van het belastingrapport te "
-"negeren."
+" dit label zijn gekoppeld in de berekening van het BTW-rapport te negeren."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__price_include
@@ -4144,12 +4157,12 @@ msgstr "Rekenmachine"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__compute_all_tax
 msgid "Compute All Tax"
-msgstr "Alle belastingen berekenen"
+msgstr "Alle BTW's berekenen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__compute_all_tax_dirty
 msgid "Compute All Tax Dirty"
-msgstr "Bereken alle belasting vies"
+msgstr "Bereken alle BTW's"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4167,7 +4180,7 @@ msgid ""
 "Computed field, listing the tax grids impacted by this line, and the amount "
 "it applies to each of them."
 msgstr ""
-"Berekend veld met een overzicht van de BTW rubrieken waarop deze regel een "
+"Berekend veld met een overzicht van de BTW-rubrieken waarop deze regel een "
 "invloed heeft en het bedrag dat voor elk van hen van toepassing is."
 
 #. module: account
@@ -5783,7 +5796,7 @@ msgid ""
 "Entry."
 msgstr ""
 "Vooruitbetalingen die op deze rekening zijn geboekt, worden in aanmerking "
-"genomen door de belastingafsluiting."
+"genomen door de BTW-afsluiting."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__draft
@@ -5978,7 +5991,7 @@ msgstr "Wijzigen"
 #: model:ir.model.fields,help:account.field_account_move__tax_totals
 #: model:ir.model.fields,help:account.field_account_payment__tax_totals
 msgid "Edit Tax amounts if you encounter rounding issues."
-msgstr "Bewerk belastingbedragen als je afrondingsproblemen ondervindt."
+msgstr "Bewerk BTW-bedragen als je afrondingsproblemen ondervindt."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__is_email
@@ -6736,7 +6749,7 @@ msgstr "Van label"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__previous_tax_period
 msgid "From previous tax period"
-msgstr "Uit vorig belastingtijdvak"
+msgstr "Uit vorig BTW-tijdvak"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__from_fiscalyear
@@ -6832,7 +6845,7 @@ msgstr "Gegenereerde boekingen"
 #. module: account
 #: model:account.report,name:account.generic_tax_report
 msgid "Generic Tax report"
-msgstr "Algemeen belastingrapport"
+msgstr "Algemeen BTW-rapport"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_hash_integrity
@@ -6888,7 +6901,7 @@ msgstr "Gegroepeerde betalingen"
 #. module: account
 #: model:account.report,name:account.generic_tax_report_account_tax
 msgid "Group by: Account > Tax "
-msgstr "Groepeer op: Rekening > Belasting "
+msgstr "Groepeer op: Rekening > BTW "
 
 #. module: account
 #: model:account.report,name:account.generic_tax_report_tax_account
@@ -9959,7 +9972,7 @@ msgid ""
 "template."
 msgstr ""
 "Alleen 'tax_tags'-expressies kunnen worden gekoppeld aan een regelsjabloon "
-"voor belastingverdeling."
+"voor BTW-verdeling."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__only_tax_exigible
@@ -10810,9 +10823,8 @@ msgid ""
 "Payments are used to register liquidity movements. You can process those "
 "payments by your own means or by using installed facilities."
 msgstr ""
-"Betalingen worden gebruikt om liquiditeitsbewegingen te registreren. Je kunt"
-" deze betalingen zelf of met behulp van geïnstalleerde faciliteiten "
-"verwerken."
+"Betalingen worden gebruikt om geldtransacties te registreren. Je kunt deze "
+"betalingen zelf of met een geïnstalleerde bankkoppelingen verwerken."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__value__percent
@@ -10935,7 +10947,7 @@ msgstr "Gebruik a.j.b. de volgende communicatie bij betaling:"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__plus_report_expression_ids
 msgid "Plus Tax Report Expressions"
-msgstr "Uitdrukkingen voor belastingrapportage"
+msgstr "Uitdrukkingen voor BTW-rapportage"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__default_pos_receivable_account_id
@@ -11023,7 +11035,7 @@ msgstr "Voorafgaand subtotaal"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__account_codes
 msgid "Prefix of Account Codes"
-msgstr "Voorvoegsel van accountcodes"
+msgstr "Voorvoegsel van rekeningen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__bank_account_code_prefix
@@ -12815,7 +12827,7 @@ msgstr "Bankafschriftregel"
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_legal_statements_menu
 msgid "Statement Reports"
-msgstr "Verklaring rapportages"
+msgstr "Rapportages"
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -12975,7 +12987,7 @@ msgstr ""
 #: model:account.report.column,name:account.generic_tax_report_column_tax
 #: model:account.report.column,name:account.generic_tax_report_tax_account_column_tax
 msgid "TAX"
-msgstr "BELASTING"
+msgstr "BTW"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__name
@@ -13039,7 +13051,7 @@ msgstr "BTW"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__property_advance_tax_payment_account_id
 msgid "Tax Advance Account"
-msgstr "Belastingvoorschotrekening"
+msgstr "BTW voorschotrekening"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_audit
@@ -13103,19 +13115,19 @@ msgstr "Exclusief BTW"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_exigibility
 msgid "Tax Exigibility"
-msgstr "Belastingplichtigheid"
+msgstr "BTW-plichtigheid"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Tax Grid"
-msgstr "Belastingrooster"
+msgstr "BTW-rubriek"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Tax Grids"
-msgstr "BTW rubriek"
+msgstr "BTW-rubriek"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_group
@@ -13149,7 +13161,7 @@ msgstr "Prijs inclusief BTW"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_key
 msgid "Tax Key"
-msgstr "Belastingsleutel"
+msgstr "BTW-sleutel"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_lock_date_message
@@ -13184,12 +13196,12 @@ msgstr "BTW naam"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__property_tax_payable_account_id
 msgid "Tax Payable Account"
-msgstr "Belasting te betalen rekening"
+msgstr "BTW te betalen rekening"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__property_tax_receivable_account_id
 msgid "Tax Receivable Account"
-msgstr "Belasting te ontvangen rekening"
+msgstr "BTW te ontvangen rekening"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_repartition_line
@@ -13234,7 +13246,7 @@ msgstr "BTW string"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__tax_tags
 msgid "Tax Tags"
-msgstr "Belastinglabels"
+msgstr "BTW-labels"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_search
@@ -13350,8 +13362,8 @@ msgid ""
 "Tax report expressions whose '+' tag will be assigned to move lines by this "
 "repartition line"
 msgstr ""
-"Uitdrukkingen voor belastingaangiften waarvan het label '+' wordt toegewezen"
-" om regels te verplaatsen door deze herpartitieregel"
+"Uitdrukkingen voor BTW-aangiften waarvan het label '+' wordt toegewezen om "
+"regels te verplaatsen door deze herpartitieregel"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line_template__minus_report_expression_ids
@@ -13359,13 +13371,13 @@ msgid ""
 "Tax report expressions whose '-' tag will be assigned to move lines by this "
 "repartition line"
 msgstr ""
-"Uitdrukkingen voor belastingaangiften waarvan het label '-' wordt toegewezen"
-" aan het verplaatsen van regels door deze herpartitieregel"
+"Uitdrukkingen voor BTW-aangiften waarvan het label '-' wordt toegewezen aan "
+"het verplaatsen van regels door deze herpartitieregel"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__early_pay_discount_computation
 msgid "Tax setting"
-msgstr "Belastinginstelling"
+msgstr "BTW-instelling"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_dest_id
@@ -13447,9 +13459,9 @@ msgid ""
 "tax-related features(hence the ones for which l10n modules need to show tax-"
 "related fields)."
 msgstr ""
-"Technisch veld met de landen waarvoor dit bedrijf belastinggerelateerde "
-"functies gebruikt (vandaar de landen waarvoor l10n-modules "
-"belastinggerelateerde velden moeten weergeven)."
+"Technisch veld met de landen waarvoor dit bedrijf BTW-gerelateerde functies "
+"gebruikt (vandaar de landen waarvoor l10n-modules BTW-gerelateerde velden "
+"moeten weergeven)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__bank_partner_id
@@ -13716,8 +13728,8 @@ msgid ""
 "The cash basis entries created from the taxes on this entry, when "
 "reconciling its lines."
 msgstr ""
-"De kasbasisposten die zijn gemaakt op basis van de belastingen op deze post,"
-" bij het afstemmen van de regels."
+"De kasbasisposten die zijn gemaakt op basis van de BTW op deze post, bij het"
+" afstemmen van de regels."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__chart_template_id
@@ -13782,8 +13794,8 @@ msgstr "Het land waarvoor deze BTW geldt."
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid ""
-"The country set on the the foreign VAT fiscal position must match the one "
-"set on the report."
+"The country set on the foreign VAT fiscal position must match the one set on"
+" the report."
 msgstr ""
 "Het land dat is ingesteld op de buitenlandse BTW-fiscale positie moet "
 "overeenkomen met het land dat op het rapport is ingesteld."
@@ -15439,7 +15451,7 @@ msgstr "Storno-boekhouding gebruiken"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_multi_company__tax_units
 msgid "Use Tax Units"
-msgstr "Belastingeenheden gebruiken"
+msgstr "Fiscale BTW eenheid gebruiken"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__use_active_domain
@@ -16272,8 +16284,8 @@ msgstr ""
 #, python-format
 msgid "You cannot delete a tax line as it would impact the tax report"
 msgstr ""
-"Je kunt een belastingregel niet verwijderen, omdat dit van invloed is op de "
-"belastingaangifte"
+"Je kunt een BTW-regel niet verwijderen, omdat dit van invloed is op de BTW-"
+"aangifte"
 
 #. module: account
 #: code:addons/account/models/account_move_line.py:0
@@ -16444,8 +16456,8 @@ msgid ""
 "You cannot remove/deactivate the accounts \"%s\" which are set on a tax "
 "repartition line."
 msgstr ""
-"Je kunt de rekeningen \"%s\" die op een belastingverdelingsregel zijn "
-"ingesteld niet verwijderen/deactiveren."
+"Je kunt de rekeningen \"%s\" die op een BTW-verdelingsregel zijn ingesteld "
+"niet verwijderen/deactiveren."
 
 #. module: account
 #: code:addons/account/models/account_account.py:0

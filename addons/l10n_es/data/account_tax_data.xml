@@ -30,6 +30,16 @@
         <field name="applicability">taxes</field>
         <field name="country_id" ref="base.es"/>
     </record>
+    <record id="mod_111_11" model="account.account.tag">
+        <field name="name">mod111[11]</field>
+        <field name="applicability">taxes</field>
+        <field name="country_id" ref="base.es"/>
+    </record>
+    <record id="mod_111_12" model="account.account.tag">
+        <field name="name">mod111[12]</field>
+        <field name="applicability">taxes</field>
+        <field name="country_id" ref="base.es"/>
+    </record>
     <record id="mod_115_02" model="account.account.tag">
         <field name="name">mod115[02]</field>
         <field name="applicability">taxes</field>
@@ -2895,6 +2905,74 @@
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_111_06')],
+            }),
+        ]"/>
+    </record>
+    <record id="account_tax_template_p_irpf15e" model="account.tax.template">
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="type_tax_use">purchase</field>
+        <field name="name">Retenciones IRPF 15% en especie</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="-15"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_retenciones_15"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'tag_ids': [ref('mod_111_11')],
+            }),
+
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_4751'),
+                'tag_ids': [ref('mod_111_12')],
+            }),
+
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'tag_ids': [ref('mod_111_11')],
+            }),
+
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_4751'),
+                'tag_ids': [ref('mod_111_12')],
+            }),
+        ]"/>
+    </record>
+    <record id="account_tax_template_p_irpf7e" model="account.tax.template">
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="type_tax_use">purchase</field>
+        <field name="name">Retenciones IRPF 7% en especie</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="-7"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_retenciones_7"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'tag_ids': [ref('mod_111_11')],
+            }),
+
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_4751'),
+                'tag_ids': [ref('mod_111_12')],
+            }),
+
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'tag_ids': [ref('mod_111_11')],
+            }),
+
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_4751'),
+                'tag_ids': [ref('mod_111_12')],
             }),
         ]"/>
     </record>

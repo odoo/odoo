@@ -1120,7 +1120,7 @@ class Website(models.Model):
 
             if 'sitemap' not in rule.endpoint.routing:
                 logger.warning('No Sitemap value provided for controller %s (%s)' %
-                               (rule.endpoint.method, ','.join(rule.endpoint.routing['routes'])))
+                               (rule.endpoint.original_endpoint, ','.join(rule.endpoint.routing['routes'])))
 
             converters = rule._converters or {}
             if query_string and not converters and (query_string not in rule.build({}, append_unknown=False)[1]):

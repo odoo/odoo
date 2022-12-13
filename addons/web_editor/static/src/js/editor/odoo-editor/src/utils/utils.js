@@ -284,16 +284,17 @@ export function getFurthestUneditableParent(node, parentLimit) {
  *
  * @param {Node} node
  * @param {string} [selector=undefined]
- * @param {boolean} [restrictToEditable=false]
  * @returns {HTMLElement}
  */
 export function closestElement(node, selector) {
-    const element = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
-    if (selector && element) {
-        const elementFound = element.closest(selector);
-        return elementFound && elementFound.querySelector('.odoo-editor-editable') ? null : elementFound;
+    let element = node;
+    while (element && element.nodeType !== Node.ELEMENT_NODE) {
+        element = element.parentNode;
     }
-    return selector && element ? element.closest(selector) : element || node;
+    if (element && selector) {
+        element = element.closest(selector);
+    }
+    return element && element.querySelector('.odoo-editor-editable') ? null : element;
 }
 
 /**

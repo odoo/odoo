@@ -2,11 +2,11 @@
 <templates xml:space="preserve">
 
     <t t-name="web.FormStatusIndicator" owl="1">
-        <div class="o_form_status_indicator" t-att-class="{ o_form_status_indicator_new_record: props.model.root.isVirtual }">
+        <div class="o_form_status_indicator ms-md-1" t-att-class="{ o_form_status_indicator_new_record: props.model.root.isVirtual }">
             <div class="o_form_status_indicator_buttons d-flex" t-att-class="{ invisible: !(props.model.root.isVirtual or displayButtons) }">
                 <button
                     type="button"
-                    class="o_form_button_save btn btn-light"
+                    class="o_form_button_save btn btn-light py-0"
                     t-att-disabled="props.isDisabled"
                     data-hotkey="s"
                     t-on-click.stop="save"
@@ -16,7 +16,7 @@
                 </button>
                 <button
                     type="button"
-                    class="o_form_button_cancel btn btn-light"
+                    class="o_form_button_cancel btn btn-light py-0"
                     t-att-disabled="props.isDisabled"
                     data-hotkey="j"
                     t-on-click.stop="discard"
