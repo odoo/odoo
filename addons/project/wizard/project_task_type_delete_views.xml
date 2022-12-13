@@ -8,7 +8,7 @@
                 <field name="tasks_count" invisible="1" />
                 <field name="stages_active" invisible="1" />
                 <div attrs="{'invisible': [('tasks_count', '>', 0)]}">
-                    <p>Are you sure you want to delete those stages ?</p>
+                    <p>Are you sure you want to delete these stages?</p>
                 </div>
                 <div attrs="{'invisible': ['|', ('stages_active', '=', False), ('tasks_count', '=', 0)]}">
                     <p>You cannot delete stages containing tasks. You can either archive them or first delete all of their tasks.</p>
