@@ -309,6 +309,7 @@ class MailMail(models.Model):
             except (ValueError, TypeError):
                 parsed_datetime = False
         if parsed_datetime:
+            parsed_datetime = parsed_datetime.replace(microsecond=0)
             if not parsed_datetime.tzinfo:
                 parsed_datetime = pytz.utc.localize(parsed_datetime)
             else:
