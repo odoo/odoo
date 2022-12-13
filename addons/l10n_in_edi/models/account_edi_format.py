@@ -553,10 +553,6 @@ class AccountEdiFormat(models.Model):
                             line_code = gst
             return {
                 "tax": tax,
-                "base_product_id": invl.product_id,
-                "tax_product_id": invl.product_id,
-                "base_product_uom_id": invl.product_uom_id,
-                "tax_product_uom_id": invl.product_uom_id,
                 "line_code": line_code,
             }
 
