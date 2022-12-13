@@ -28,7 +28,7 @@ class SequenceMixin(models.AbstractModel):
     _sequence_fixed_regex = r'^(?P<prefix1>.*?)(?P<seq>\d{0,9})(?P<suffix>\D*?)$'
 
     sequence_prefix = fields.Char(compute='_compute_split_sequence', store=True)
-    sequence_number = fields.Integer(compute='_compute_split_sequence', store=True)
+    sequence_number = fields.Integer(compute='_compute_split_sequence', store=True, column_type=('int8', 'int8'))
 
     def init(self):
         # Add an index to optimise the query searching for the highest sequence number
@@ -46,6 +46,23 @@ class SequenceMixin(models.AbstractModel):
                     table=sql.Identifier(self._table),
                     field=sql.Identifier(self._sequence_field),
                 ))
+
+    def _auto_init(self):
+        if not self._abstract:
+            self.env.cr.execute("""
+                SELECT 1
+                  FROM information_schema.columns
+                 WHERE table_name=%s
+                   AND data_type='integer'
+                   AND column_name='sequence_number';
+            """, [self._table])
+            if self.env.cr.rowcount:
+                self.env.cr.execute(sql.SQL("""
+                    ALTER TABLE {table} ALTER COLUMN sequence_number TYPE bigint;
+                """).format(
+                     table=sql.Identifier(self._table)
+                ))
+        super()._auto_init()
 
     @api.constrains(lambda self: (self._sequence_field, self._sequence_date_field))
     def _constrains_date_sequence(self):
