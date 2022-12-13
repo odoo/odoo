@@ -130,7 +130,7 @@ const Wysiwyg = Widget.extend({
         this.$editable.data('oe-model', options.recordInfo.res_model);
         this.$editable.data('oe-id', options.recordInfo.res_id);
         document.addEventListener('mousedown', this._onDocumentMousedown, true);
-        this.$editable.on('blur', this._onBlur);
+        this._bindOnBlur();
 
         this.toolbar = new Toolbar(this, this.options.toolbarTemplate);
         await this.toolbar.appendTo(document.createElement('void'));
@@ -2619,6 +2619,9 @@ const Wysiwyg = Widget.extend({
                 firstChild.setAttribute('data-last-history-steps', historyIds);
             }
         }
+    },
+    _bindOnBlur() {
+        this.$editable.on('blur', this._onBlur);
     },
 
 });
