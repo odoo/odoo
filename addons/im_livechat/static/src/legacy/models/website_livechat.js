@@ -37,6 +37,8 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
         this._members = [];
         this._operatorPID = params.data.operator_pid;
         this._uuid = params.data.uuid;
+        this.chatbotScriptId = params.data.chatbot_script_id;
+        this.isTemporary = !params.data.id;
 
         if (params.data.message_unread_counter !== undefined) {
             this._unreadCounter = params.data.message_unread_counter;
@@ -81,6 +83,12 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
         return this._uuid;
     },
     /**
+     * @returns {boolean}
+     */
+    getHasOperator() {
+        return Boolean(this._operatorPID);
+    },
+    /**
      * Increments the unread counter of this livechat by 1 unit.
      *
      * Note: this public method makes sense because the management of messages
@@ -103,6 +111,7 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
      */
     toData: function () {
         return {
+            chatbot_script_id: this.chatbotScriptId,
             folded: this.isFolded(),
             id: this.getID(),
             message_unread_counter: this.getUnreadCounter(),
@@ -134,6 +143,11 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
      * @returns {Promise}
      */
     _notifyMyselfTyping: function (params) {
+        if (this.isTemporary) {
+            // channel is not created yet, it will be when first message is
+            // sent. Until then, do not notify visitor is typing.
+            return;
+        }
         return session.rpc('/im_livechat/notify_typing', {
             uuid: this.getUUID(),
             is_typing: params.typing,

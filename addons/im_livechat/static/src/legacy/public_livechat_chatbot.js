@@ -52,6 +52,13 @@ const QWeb = core.qweb;
     willStart: async function () {
         const superResult = await this._super(...arguments);
 
+        const strCookie = utils.get_cookie('im_livechat_session');
+        const isSessionCookieAvailable = Boolean(strCookie);
+        const cookie = JSON.parse(strCookie|| '{}');
+        if (isSessionCookieAvailable && !cookie.chatbot_script_id) {
+            return;
+        }
+
         this._isChatbot = false;
         this.chatbotState = null;
 
@@ -668,6 +675,13 @@ const QWeb = core.qweb;
     _sendMessage: async function (message) {
         const superArguments = arguments;
         const superMethod = this._super;
+
+        if (this._livechat.isTemporary) {
+            await this._createLivechatChannel();
+            if (!this._livechat.getHasOperator()) {
+                return;
+            }
+        }
 
         if (this._isChatbot && this._chatbotCurrentStep) {
             await this._chatbotPostWelcomeMessages();

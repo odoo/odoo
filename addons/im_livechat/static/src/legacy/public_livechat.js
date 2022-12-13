@@ -72,11 +72,14 @@ var LivechatButton = Widget.extend({
         this._serverURL = serverURL;
     },
     async willStart() {
-        var cookie = utils.get_cookie('im_livechat_session');
-        if (cookie) {
-            var channel = JSON.parse(cookie);
-            this._history = await session.rpc('/mail/chat_history', {uuid: channel.uuid, limit: 100});
+        const strCookie = utils.get_cookie('im_livechat_session');
+        const isSessionCookieAvailable = Boolean(strCookie);
+        const cookie = JSON.parse(strCookie || '{}');
+        if (cookie.id) {
+            this._history = await session.rpc('/mail/chat_history', {uuid: cookie.uuid, limit: 100});
             this._history.reverse().forEach(message => { message.body = utils.Markup(message.body); });
+        } else if (isSessionCookieAvailable) {
+            this._history = [];
         } else {
             const result = await session.rpc('/im_livechat/init', {channel_id: this.options.channel_id});
             if (!result.available_for_me) {
@@ -242,6 +245,41 @@ var LivechatButton = Widget.extend({
             });
         });
     },
+    _createLivechatChannel: async function() {
+        const params = this._prepareGetSessionParameters({ persisted: true });
+        if (this._livechat.chatbotScriptId) {
+            params["chatbot_script_id"] = this._livechat.chatbotScriptId;
+        }
+        const livechatData = await session.rpc(
+            "/im_livechat/get_session",
+            params,
+            { shadow: true },
+        );
+        if (!livechatData || !livechatData.operator_pid) {
+            this._livechat._operatorPID = undefined;
+            utils.set_cookie('im_livechat_session', '', -1); // remove cookie
+            this._chatWindow.render();
+            this._chatWindow.$('.o_composer_text_field').prop('disabled', true)
+        } else {
+            this._livechat =  new WebsiteLivechat({
+                parent: this,
+                data: livechatData,
+            });
+            this._chatWindow._thread = this._livechat;
+            this._updateSessionCookie();
+            this.call('bus_service', 'addChannel', this._livechat.getUUID());
+            this.call('bus_service', 'startPolling');
+        }
+    },
+    _updateSessionCookie() {
+        utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(this._livechat.toData()), true), 60 * 60);
+        utils.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60 * 60);
+        // livechatData.operator_pid contains a tuple (id, name)
+        // we are only interested in the id
+        const operatorPidId = this._livechat.getOperatorPID()[0];
+        const oneWeek = 7 * 24 * 60 * 60;
+        utils.set_cookie('im_livechat_previous_operator_pid', operatorPidId, oneWeek);
+    },
     /**
      * @private
      */
@@ -291,18 +329,11 @@ var LivechatButton = Widget.extend({
                         self._sendWelcomeMessage();
                     }
                     self._renderMessages();
-                    self.call('bus_service', 'addChannel', self._livechat.getUUID());
-                    self.call('bus_service', 'startPolling');
-
-                    utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(self._livechat.toData()), true), 60 * 60);
-                    utils.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60 * 60);
-                    if (livechatData.operator_pid[0]) {
-                        // livechatData.operator_pid contains a tuple (id, name)
-                        // we are only interested in the id
-                        var operatorPidId = livechatData.operator_pid[0];
-                        var oneWeek = 7 * 24 * 60 * 60;
-                        utils.set_cookie('im_livechat_previous_operator_pid', operatorPidId, oneWeek);
+                    if (!self._livechat.isTemporary) {
+                        self.call('bus_service', 'addChannel', self._livechat.getUUID());
+                        self.call('bus_service', 'startPolling');
                     }
+                    self._updateSessionCookie();
                 });
             }
         }).then(function () {
@@ -352,11 +383,13 @@ var LivechatButton = Widget.extend({
     /**
      * @private
      */
-    _prepareGetSessionParameters: function () {
+    _prepareGetSessionParameters: function (params) {
         return {
             channel_id: this.options.channel_id,
             anonymous_name: this.options.default_username,
             previous_operator_id: this._get_previous_operator_id(),
+            persisted: false,
+            ...params,
         };
     },
     /**
@@ -457,7 +490,13 @@ var LivechatButton = Widget.extend({
      * @param {OdooEvent} ev
      * @param {Object} ev.data.messageData
      */
-    _onPostMessageChatWindow: function (ev) {
+    _onPostMessageChatWindow: async function (ev) {
+        if (this._livechat.isTemporary) {
+            await this._createLivechatChannel();
+            if (!this._livechat.getHasOperator()) {
+                return;
+            }
+        }
         ev.stopPropagation();
         var self = this;
         var messageData = ev.data.messageData;
