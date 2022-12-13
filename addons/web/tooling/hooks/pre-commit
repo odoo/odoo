@@ -7,9 +7,7 @@ if [[ $(git branch --show-current) == master* || $(git branch --show-current) ==
         "$tooling_dir/reload.sh"
     elif
         ! cmp -s -- "$tooling_dir/_eslintignore" .eslintignore ||
-        ! cmp -s -- "$tooling_dir/_prettierignore" .prettierignore ||
-        ! cmp -s -- "$tooling_dir/_eslintrc.json" .eslintrc.json ||
-        ! cmp -s -- "$tooling_dir/_prettierrc.json" .prettierrc.json
+        ! cmp -s -- "$tooling_dir/_eslintrc.json" .eslintrc.json
     then
         echo "Some of your eslint/prettier config files are out of date, refreshing them using the refresh script"
         "$tooling_dir/refresh.sh"
