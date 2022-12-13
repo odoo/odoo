@@ -7,6 +7,7 @@ import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { makeTestEnv } from "../helpers/mock_env";
 import {
     click,
+    editInput,
     getFixture,
     makeDeferred,
     mount,
@@ -259,5 +260,69 @@ QUnit.module("Components", (hooks) => {
         assert.containsOnce(target, ".o-autocomplete--dropdown-menu");
         assert.containsOnce(target, ".o-autocomplete--dropdown-item");
         assert.containsOnce(target, ".o-autocomplete--dropdown-item .fa-spin"); // loading
+    });
+
+    QUnit.test("press enter on autocomplete with empty source", async (assert) => {
+        class Parent extends Component {
+            get sources() {
+                return [{ options: [] }];
+            }
+            onSelect() {}
+        }
+        Parent.components = { AutoComplete };
+        Parent.template = xml`<AutoComplete value="''" sources="sources" onSelect="onSelect"/>`;
+
+        await mount(Parent, target, { env });
+        assert.containsOnce(target, ".o-autocomplete--input");
+        assert.strictEqual(target.querySelector(".o-autocomplete--input").value, "");
+        assert.containsNone(target, ".o-autocomplete--dropdown-menu");
+
+        // click inside the input and press "enter", because why not
+        await click(target, ".o-autocomplete--input");
+        await triggerEvent(target, ".o-autocomplete--input", "keydown", { key: "Enter" });
+
+        assert.containsOnce(target, ".o-autocomplete--input");
+        assert.strictEqual(target.querySelector(".o-autocomplete--input").value, "");
+        assert.containsNone(target, ".o-autocomplete--dropdown-menu");
+    });
+
+    QUnit.test("press enter on autocomplete with empty source (2)", async (assert) => {
+        // in this test, the source isn't empty at some point, but becomes empty as the user
+        // updates the input's value.
+        class Parent extends Component {
+            get sources() {
+                const options = (val) => {
+                    if (val.length > 2) {
+                        return [{ label: "test A" }, { label: "test B" }, { label: "test C" }];
+                    }
+                    return [];
+                };
+                return [{ options }];
+            }
+            onSelect() {}
+        }
+        Parent.components = { AutoComplete };
+        Parent.template = xml`<AutoComplete value="''" sources="sources" onSelect="onSelect"/>`;
+
+        await mount(Parent, target, { env });
+        assert.containsOnce(target, ".o-autocomplete--input");
+        assert.strictEqual(target.querySelector(".o-autocomplete--input").value, "");
+
+        // click inside the input and press "enter", because why not
+        await editInput(target, ".o-autocomplete--input", "test");
+        assert.containsOnce(target, ".o-autocomplete--dropdown-menu");
+        assert.containsN(
+            target,
+            ".o-autocomplete--dropdown-menu .o-autocomplete--dropdown-item",
+            3
+        );
+
+        await editInput(target, ".o-autocomplete--input", "t");
+        assert.containsNone(target, ".o-autocomplete--dropdown-menu");
+
+        await triggerEvent(target, ".o-autocomplete--input", "keydown", { key: "Enter" });
+        assert.containsOnce(target, ".o-autocomplete--input");
+        assert.strictEqual(target.querySelector(".o-autocomplete--input").value, "t");
+        assert.containsNone(target, ".o-autocomplete--dropdown-menu");
     });
 });
