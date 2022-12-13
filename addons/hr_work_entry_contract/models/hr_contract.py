@@ -96,9 +96,9 @@ class HrContract(models.Model):
             return interval[2].work_entry_type_id[:1]
         return self._get_default_work_entry_type()
 
-    def _should_keep_leave_interval(self, attendances, interval):
+    def _get_valid_leave_intervals(self, attendances, interval):
         self.ensure_one()
-        return True
+        return [interval]
 
     def _get_contract_work_entries_values(self, date_start, date_stop):
         start_dt = pytz.utc.localize(date_start) if not date_start.tzinfo else date_start
@@ -151,8 +151,9 @@ class HrContract(models.Model):
                     leave_start_dt = max(start, dt0)
                     leave_end_dt = min(end, dt1)
                     leave_interval = (leave_start_dt, leave_end_dt, leave)
-                    if contract._should_keep_leave_interval(attendances, leave_interval):
-                        result[resource.id].append(leave_interval)
+                    leave_interval = contract._get_valid_leave_intervals(attendances, leave_interval)
+                    if leave_interval:
+                        result[resource.id] += leave_interval
             mapped_leaves = {r.id: Intervals(result[r.id]) for r in resources_list}
             leaves = mapped_leaves[resource.id]
 
