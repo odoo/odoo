@@ -23,10 +23,20 @@ class SaleOrderLine(models.Model):
             for line in timesheet_sols:
                 line = line.with_company(line.company_id)
                 product_cost = mapped_sol_timesheet_amount.get(line.id, line.product_id.standard_price)
-                if line.product_id.uom_id != line.company_id.project_time_mode_id and\
-                   line.product_id.uom_id.category_id.id == line.company_id.project_time_mode_id.category_id.id:
+                if (
+                    line.product_id.uom_id != line.company_id.project_time_mode_id
+                    and line.product_id.uom_id.category_id.id == line.company_id.project_time_mode_id.category_id.id
+                ):
                     product_cost = line.company_id.project_time_mode_id._compute_quantity(
                         product_cost,
                         line.product_id.uom_id
                     )
-                line.purchase_price = line._convert_price(product_cost, line.product_id.uom_id)
+
+                # Convert the cost to the line UoM
+                product_cost = line.product_id.uom_id._compute_price(
+                    line.product_id.standard_price,
+                    line.product_uom,
+                )
+
+                line.purchase_price = line._convert_to_sol_currency(
+                    product_cost, line.product_id.cost_currency_id)
