@@ -640,7 +640,18 @@ async function toInline($editable, cssRules, $iframe) {
 async function flattenBackgroundImages(editable) {
     for (const backgroundImage of editable.querySelectorAll('*[style*=background-image]')) {
         if (backgroundImage.parentElement) { // If the image was nested, we removed it already.
-            const canvas = await html2canvas(backgroundImage, { scale: 1 });
+            const iframe = document.createElement('iframe');
+            const style = getComputedStyle(backgroundImage);
+            const clonedBackground = backgroundImage.cloneNode(true);
+            clonedBackground.style.height = style['height'];
+            clonedBackground.style.width = style['width'];
+            iframe.style.height = style['height'];
+            iframe.style.width = style['width'];
+            backgroundImage.after(iframe);
+            iframe.contentDocument.body.append(clonedBackground);
+            iframe.contentDocument.body.style.margin = 0;
+
+            const canvas = await html2canvas(clonedBackground, { scale: 1 });
             const image = document.createElement('img');
             image.setAttribute('src', canvas.toDataURL('png'));
             image.setAttribute('width', canvas.getAttribute('width'));
@@ -648,12 +659,11 @@ async function flattenBackgroundImages(editable) {
             image.style.setProperty('margin', 0);
             image.style.setProperty('display', 'block'); // Ensure no added vertical space.
             // Clean up the original element.
-            for (const child of [...backgroundImage.childNodes]) {
-                child.remove();
-            }
+            backgroundImage.replaceChildren();
             backgroundImage.style.setProperty('padding', 0);
             backgroundImage.style.removeProperty('background-image');
             backgroundImage.prepend(image); // Add the image to the original element.
+            iframe.remove();
         }
     }
 }
