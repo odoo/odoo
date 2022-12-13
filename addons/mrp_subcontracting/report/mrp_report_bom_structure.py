@@ -1,20 +1,21 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, _
+from odoo import api, models, _, fields
 
 class ReportBomStructure(models.AbstractModel):
     _inherit = 'report.mrp.report_bom_structure'
 
     def _get_subcontracting_line(self, bom, seller, level, bom_quantity):
         ratio_uom_seller = seller.product_uom.ratio / bom.product_uom_id.ratio
+        price = seller.currency_id._convert(seller.price, self.env.company.currency_id, (bom.company_id or self.env.company), fields.Date.today())
         return {
             'name': seller.partner_id.display_name,
             'partner_id': seller.partner_id.id,
             'quantity': bom_quantity,
             'uom': bom.product_uom_id.name,
-            'prod_cost': seller.price / ratio_uom_seller * bom_quantity,
-            'bom_cost': seller.price / ratio_uom_seller * bom_quantity,
+            'prod_cost': price / ratio_uom_seller * bom_quantity,
+            'bom_cost': price / ratio_uom_seller * bom_quantity,
             'level': level or 0
         }
 
