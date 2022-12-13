@@ -53,6 +53,7 @@ import {
     getAdjacentNextSiblings,
     rightLeafOnlyNotBlockPath,
     isBlock,
+    isMacOS,
     childNodeIndex,
     getSelectedNodes
 } from './utils/utils.js';
@@ -2556,7 +2557,7 @@ export class OdooEditor extends EventTarget {
         // is a non-empty Unicode character string containing the printable
         // representation of the key. In this case, call `deleteRange` before
         // inserting the printed representation of the character.
-        if (/^.$/u.test(ev.key) && !ev.ctrlKey && !ev.metaKey) {
+        if (/^.$/u.test(ev.key) && !ev.ctrlKey && !ev.metaKey && (isMacOS() || !ev.altKey)) {
             const selection = this.document.getSelection();
             if (selection && !selection.isCollapsed) {
                 this.deleteRange(selection);
