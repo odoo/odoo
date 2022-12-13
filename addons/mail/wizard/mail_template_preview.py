@@ -72,7 +72,7 @@ class MailTemplatePreview(models.TransientModel):
         copy_depends_values = {'lang': self.lang}
         mail_template = self.mail_template_id.with_context(lang=self.lang)
         try:
-            if not self.resource_ref:
+            if not self.resource_ref.id:
                 self._set_mail_attributes()
             else:
                 copy_depends_values['resource_ref'] = '%s,%s' % (self.resource_ref._name, self.resource_ref.id)
