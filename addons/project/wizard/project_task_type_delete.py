@@ -7,7 +7,7 @@ from ast import literal_eval
 
 class ProjectTaskTypeDelete(models.TransientModel):
     _name = 'project.task.type.delete.wizard'
-    _description = 'Project Stage Delete Wizard'
+    _description = 'Project Task Stage Delete Wizard'
 
     project_ids = fields.Many2many('project.project', domain="['|', ('active', '=', False), ('active', '=', True)]", string='Projects', ondelete='cascade')
     stage_ids = fields.Many2many('project.task.type', string='Stages To Delete', ondelete='cascade')

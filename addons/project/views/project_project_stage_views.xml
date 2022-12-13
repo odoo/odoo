@@ -4,7 +4,7 @@
         <field name="name">project.project.stage.view.tree</field>
         <field name="model">project.project.stage</field>
         <field name="arch" type="xml">
-            <tree editable="bottom" sample="1">
+            <tree editable="bottom" sample="1" delete="0">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="mail_template_id" optional="hide" context="{'default_model': 'project.project'}"/>
@@ -31,7 +31,7 @@
         <field name="name">project.project.stage.view.form</field>
         <field name="model">project.project.stage</field>
         <field name="arch" type="xml">
-            <form>
+            <form delete="0">
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <h1><field name="name" placeholder="New"/></h1>
@@ -114,5 +114,14 @@
         <field name="view_mode">form</field>
         <field name="view_id" ref="project_project_stage_view_form"/>
         <field name="act_window_id" ref="project_project_stage_configure"/>
+    </record>
+
+    <record id="unlink_project_stage_action" model="ir.actions.server">
+        <field name="name">Delete</field>
+        <field name="model_id" ref="project.model_project_project_stage"/>
+        <field name="binding_model_id" ref="project.model_project_project_stage"/>
+        <field name="binding_view_types">form,list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.unlink_wizard(stage_view=True)</field>
     </record>
 </odoo>
