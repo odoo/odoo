@@ -699,6 +699,28 @@ class Project(models.Model):
         analytic_accounts_to_delete.unlink()
         return result
 
+    @api.model
+    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+        new_order, item_index, desc = [], -1, False
+        for index, order_item in enumerate((order or self._order).split(',')):
+            order_item = order_item.strip().lower()
+            if order_item.startswith('is_favorite'):
+                item_index = index
+                desc = order_item.endswith('desc')
+            else:
+                new_order.append(order_item)
+        query = super()._search(args, offset, limit, ', '.join(new_order), count, access_rights_uid)
+        if item_index != -1:
+            query_order_list = query.order.split(',')
+            query_order_list.insert(item_index, f"""
+                "project_project"."id" IN (
+                    SELECT project_id
+                    FROM project_favorite_user_rel
+                    WHERE user_id = {self.env.uid}
+                ){" DESC" * desc}""")
+            query.order = ', '.join(query_order_list)
+        return query
+
     def message_subscribe(self, partner_ids=None, subtype_ids=None):
         """
         Subscribe to newly created task but not all existing active task when subscribing to a project.

@@ -687,8 +687,8 @@
             <field name="name">project.project.tree</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
-                <tree decoration-muted="active == False" string="Projects" multi_edit="1" sample="1" default_order="sequence, name, id">
-                    <field name="sequence" widget="handle"/>
+                <tree decoration-muted="active == False" string="Projects" multi_edit="1" sample="1" default_order="is_favorite desc, sequence, name, id">
+                    <field name="sequence" invisible="1"/>
                     <field name="message_needaction" invisible="1"/>
                     <field name="active" invisible="1"/>
                     <field name="is_favorite" string="Favorite" nolabel="1" width="1" widget="boolean_favorite" optional="hide"/>
@@ -705,6 +705,22 @@
                     <field name="stage_id" options="{'no_open': True}" optional="show"/>
                     <button string="View Tasks" name="action_view_tasks" type="object"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="view_project_config" model="ir.ui.view">
+            <field name="name">project.project.tree.config</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <tree position="attributes">
+                    <attribute name="default_order">sequence, name, id</attribute>
+                </tree>
+                <field name="sequence" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                    <attribute name="widget">handle</attribute>
+                </field>
             </field>
         </record>
 
@@ -793,10 +809,11 @@
             <field name="arch" type="xml">
                 <kanban
                     class="oe_background_grey o_kanban_dashboard o_project_kanban o_emphasize_colors"
+                    js_class="project_project_kanban"
                     on_create="project.open_create_project"
                     action="action_view_tasks" type="object"
                     sample="1"
-                    default_order="sequence, name, id"
+                    default_order="is_favorite desc, sequence, name, id"
                 >
                     <field name="display_name"/>
                     <field name="partner_id"/>
@@ -942,6 +959,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//kanban" position="attributes">
                     <attribute name="action"></attribute>
+                    <attribute name="default_order">sequence, name, id</attribute>
                 </xpath>
             </field>
         </record>
@@ -1016,7 +1034,7 @@
             <field name="domain">[]</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_ids" eval="[(5, 0, 0),
-                (0, 0, {'view_mode': 'tree', 'view_id': ref('view_project')}),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('view_project_config')}),
                 (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_project_config_kanban')})]"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="context">{}</field>
@@ -1052,7 +1070,7 @@
             <field name="sequence" eval="10"/>
             <field name="view_mode">tree</field>
             <field name="act_window_id" ref="project.open_view_project_all_config_group_stage"/>
-            <field name="view_id" ref="view_project"/>
+            <field name="view_id" ref="view_project_config"/>
         </record>
         <record id="open_view_project_all_config_group_stage_kanban_action_view" model="ir.actions.act_window.view">
             <field name="sequence" eval="20"/>
@@ -1505,7 +1523,7 @@
                     <field name="name" string="Title" widget="name_with_subtask_count"/>
                     <field name="project_id" widget="project_private_task" optional="show" readonly="1" options="{'no_open': 1}" invisible="context.get('default_project_id')"/>
                     <field name="milestone_id" attrs="{'invisible': [('allow_milestones', '=', False)]}" context="{'default_project_id': project_id}" groups="project.group_project_milestone" optional="hide"/>
-                    <field name="partner_id" optional="hide"/>
+                    <field name="partner_id" optional="hide" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer'}"/>
                     <field name="user_ids" optional="show" widget="many2many_avatar_user" domain="[('share', '=', False), ('active', '=', True)]"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show" invisible="context.get('default_project_id')"/>
                     <field name="date_deadline" optional="hide" widget="remaining_days" attrs="{'invisible': [('is_closed', '=', True)]}"/>
@@ -1663,6 +1681,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//kanban" position="attributes">
                     <attribute name="default_group_by">personal_stage_type_ids</attribute>
+                    <attribute name="examples"/>
                 </xpath>
             </field>
         </record>

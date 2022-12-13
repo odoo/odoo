@@ -2,6 +2,7 @@
 
 from lxml import etree
 
+from odoo.tests import users
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import UserError
 
@@ -156,3 +157,20 @@ class TestProjectBase(TestProjectCommon):
             arch = Task.get_view(self.env.ref('project.view_task_search_form').id)['arch']
             tree = etree.fromstring(arch)
             self.assertEqual(bool(tree.xpath('//filter[@name="message_needaction"]')), filter_visible_expected)
+
+    @users('bastien')
+    def test_search_favorite_order(self):
+        """ Test the search method, ordering by favorite projects.
+        """
+        self.project_goats.favorite_user_ids += self.user_projectmanager
+        self.env.cr.flush()
+
+        Project = self.env['project.project']
+        project_ids = [self.project_pigs.id, self.project_goats.id]
+        domain = [('id', 'in', project_ids)]
+
+        self.assertEqual(Project.search(domain, order='is_favorite desc')[0], self.project_goats)
+        self.assertEqual(Project.search(domain, order='is_favorite')[-1], self.project_goats)
+
+        self.assertTrue(self.project_pigs.id < self.project_goats.id)
+        self.assertEqual(Project.search(domain, order='id').ids, project_ids)
