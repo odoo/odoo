@@ -79,6 +79,22 @@ odoo.define('pos_loyalty.tour.PosCouponTourMethods', function (require) {
                 }
             ];
         }
+        clickDiscountButton() {
+            return [
+                {
+                    content: 'click discount button',
+                    trigger: '.js_discount',
+                },
+            ];
+        }
+        clickConfirmButton() {
+            return [
+                {
+                    content: 'click confirm button',
+                    trigger: '.button.confirm',
+                },
+            ];
+        }
     }
 
     class Check {
