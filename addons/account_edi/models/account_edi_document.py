@@ -174,6 +174,13 @@ class AccountEdiDocument(models.Model):
                         'error': move_result.get('error', False),
                         'blocking_level': move_result.get('blocking_level', DEFAULT_BLOCKING_LEVEL) if 'error' in move_result else False,
                     })
+                    title = _('An error occurred during posting electronic document')
+                    document.move_id.message_post(
+                        title=title,
+                        body=move_result.get('error', False),
+                        messag_type='comment',
+                        subtype_xmlid='mail.mt_note',
+                    )
 
             # Attachments that are not explicitly linked to a business model could be removed because they are not
             # supposed to have any traceability from the user.
@@ -207,6 +214,13 @@ class AccountEdiDocument(models.Model):
                         'error': move_result.get('error', False),
                         'blocking_level': move_result.get('blocking_level', DEFAULT_BLOCKING_LEVEL) if move_result.get('error') else False,
                     })
+                    title = _('An error occurred during cancelling electronic document')
+                    document.move_id.message_post(
+                        title=title,
+                        body=move_result.get('error', False),
+                        messag_type='comment',
+                        subtype_xmlid='mail.mt_note',
+                    )
 
             if invoice_ids_to_cancel:
                 invoices = self.env['account.move'].browse(list(invoice_ids_to_cancel))
