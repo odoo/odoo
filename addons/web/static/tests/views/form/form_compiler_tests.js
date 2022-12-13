@@ -260,6 +260,19 @@ QUnit.module("Form Compiler", (hooks) => {
         assert.areContentEquivalent(compileTemplate(arch), expected);
     });
 
+    QUnit.test("compile invisible containing int as domain", async (assert) => {
+        const arch = /*xml*/ `
+            <form>
+                <field name="display_name" modifiers="{&quot;invisible&quot;: 1}" />
+                <div class="visible3" modifiers="{&quot;invisible&quot;: 0}"/>
+            </form>`;
+
+        const expected = /*xml*/ `
+            <div class="visible3" />
+        `;
+        assert.areContentEquivalent(compileTemplate(arch), expected);
+    });
+
     QUnit.test("properly compile status bar with content", (assert) => {
         const arch = /*xml*/ `
             <form>
@@ -333,6 +346,24 @@ QUnit.module("Form Renderer", (hooks) => {
         });
 
         assert.containsN(target, ".o_form_editable input", 2);
+    });
+
+    QUnit.test("compile form with modifiers and attrs - integer", async (assert) => {
+        serverData.views = {
+            "partner,1,form": /*xml*/ `
+                <form>
+                    <field name="display_name" attrs="{'readonly': 1}"/>
+                </form>`,
+        };
+
+        await makeView({
+            serverData,
+            resModel: "partner",
+            type: "form",
+            resId: 1,
+        });
+
+        assert.containsOnce(target, ".o_readonly_modifier");
     });
 
     QUnit.test("compile notebook with modifiers", async (assert) => {

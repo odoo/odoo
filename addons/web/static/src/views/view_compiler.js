@@ -162,7 +162,7 @@ export function getModifier(el, modifierName) {
     // modifiers' string are evaluated to their boolean or array form
     const modifiers = JSON.parse(el.getAttribute("modifiers") || "{}");
     const mod = modifierName in modifiers ? modifiers[modifierName] : false;
-    return typeof mod !== "boolean" ? mod : !!mod;
+    return Array.isArray(mod) || typeof mod === "string" ? mod : !!mod;
 }
 
 /**
