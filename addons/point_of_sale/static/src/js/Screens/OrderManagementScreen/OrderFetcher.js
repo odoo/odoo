@@ -133,6 +133,7 @@ odoo.define('point_of_sale.OrderFetcher', function (require) {
             const idsNotInCache = ids.filter((id) => !(id in this.cache));
             if (idsNotInCache.length > 0) {
                 const fetchedOrders = await this._fetchOrders(idsNotInCache);
+                await this.comp.env.pos._loadMissingProducts(fetchedOrders);
                 // Cache these fetched orders so that next time, no need to fetch
                 // them again, unless invalidated. See `invalidateCache`.
                 fetchedOrders.forEach((order) => {

@@ -57,3 +57,5 @@ Francisco J. Luna fluna@vauxoo.com https://github.com/frahikLV
 Andrea Arce andrea@vauxoo.com https://github.com/andreaarce
 Francisco Alejandro González Luna aluna@vauxoo.com https://github.com/TheAlekLuna
 Alejandro Garza agarza@vauxoo.com https://github.com/agarzaarvizu
+Ulises Rivadeneyra ulises@vauxoo.com https://github.com/UlisesRivadeneyra
+Alexis Hernandez alexis@vauxoo.com https://github.com/sebasdrk17

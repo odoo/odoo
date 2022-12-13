@@ -428,7 +428,7 @@ exports.PosModel = Backbone.Model.extend({
         model:  'product.product',
         fields: ['display_name', 'lst_price', 'standard_price', 'categ_id', 'pos_categ_id', 'taxes_id',
                  'barcode', 'default_code', 'to_weight', 'uom_id', 'description_sale', 'description',
-                 'product_tmpl_id','tracking', 'write_date', 'available_in_pos', 'attribute_line_ids'],
+                 'product_tmpl_id','tracking', 'write_date', 'available_in_pos', 'attribute_line_ids', 'active'],
         order:  _.map(['sequence','default_code','name'], function (name) { return {name: name}; }),
         domain: function(self){
             var domain = ['&', '&', ['sale_ok','=',true],['available_in_pos','=',true],'|',['company_id','=',self.config.company_id[0]],['company_id','=',false]];
@@ -777,8 +777,9 @@ exports.PosModel = Backbone.Model.extend({
      * Second load all orders belonging to the same config but from other sessions,
      * Only if tho order has orderlines.
      */
-    load_orders: function(){
+    load_orders: async function(){
         var jsons = this.db.get_unpaid_orders();
+        await this._loadMissingProducts(jsons);
         var orders = [];
 
         for (var i = 0; i < jsons.length; i++) {
@@ -810,7 +811,27 @@ exports.PosModel = Backbone.Model.extend({
             this.get('orders').add(orders);
         }
     },
-
+    async _loadMissingProducts(orders) {
+        const missingProductIds = new Set([]);
+        for (const order of orders) {
+            for (const line of order.lines) {
+                const productId = line[2].product_id;
+                if (missingProductIds.has(productId)) continue;
+                if (!this.db.get_product_by_id(productId)) {
+                    missingProductIds.add(productId);
+                }
+            }
+        }
+        const productModel = _.find(this.models, function(model){return model.model === 'product.product';});
+        const fields = productModel.fields;
+        const products = await this.rpc({
+            model: 'product.product',
+            method: 'read',
+            args: [[...missingProductIds], fields],
+            context: Object.assign(this.session.user_context, { display_default_code: false }),
+        });
+        productModel.loaded(this, products);
+    },
     set_start_order: function(){
         var orders = this.get('orders').models;
 
