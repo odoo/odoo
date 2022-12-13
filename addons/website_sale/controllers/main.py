@@ -24,6 +24,7 @@ from odoo.addons.portal.controllers.portal import _build_url_w_params
 from odoo.addons.website.controllers import main
 from odoo.addons.website.controllers.form import WebsiteForm
 from odoo.addons.sale.controllers import portal as sale_portal
+from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools import lazy
 from odoo.tools.json import scriptsafe as json_scriptsafe
@@ -1486,6 +1487,7 @@ class WebsiteSale(http.Controller):
                 'shipping_info_required': not order.only_services,
                 'shipping_address_update_route': self._express_checkout_shipping_route,
             })
+            payment_form_values.update(self._get_accepted_carriers(order))
         return payment_form_values
 
     def _get_shop_payment_values(self, order, **kwargs):
@@ -1505,26 +1507,40 @@ class WebsiteSale(http.Controller):
         }
         values = {**portal_page_values, **payment_form_values}
         if request.website.enabled_delivery:
-            has_storable_products = any(
-                line.product_id.type in ['consu', 'product'] for line in order.order_line
-            )
-            if not order._get_delivery_methods() and has_storable_products:
-                values['errors'].append((
+            values.update(self._get_accepted_carriers(order))
+        return values
+
+    def _get_accepted_carriers(self, order, **kwargs):
+        values = {}
+        has_storable_products = any(
+            line.product_id.type in ['consu', 'product'] for line in order.order_line
+        )
+        if order.carrier_id and not order.delivery_rating_success and has_storable_products:
+            order._remove_delivery_line()
+
+        delivery_carriers = order._get_delivery_methods()
+        accepted_carriers = []
+        for carrier in delivery_carriers:
+            if carrier.delivery_type == 'base_on_rule':
+                try:
+                    carrier._get_price_available(order)
+                    accepted_carriers.append(carrier)
+                except UserError:
+                    continue
+            else:
+                accepted_carriers.append(carrier)
+
+        if has_storable_products:
+            if not accepted_carriers:
+                values['errors'] = [(
                     _('Sorry, we are unable to ship your order'),
                     _('No shipping method is available for your current order and shipping address.'
                     ' Please contact us for more information.')
-                ))
+                )]
+            values['deliveries'] = accepted_carriers
 
-            if has_storable_products:
-                if order.carrier_id and not order.delivery_rating_success:
-                    order._remove_delivery_line()
-                values['deliveries'] = order._get_delivery_methods().sudo()
-
-            values['delivery_has_storable'] = has_storable_products
-            values['delivery_action_id'] = request.env.ref(
-                'delivery.action_delivery_carrier_form'
-            ).id
-
+        values['delivery_has_storable'] = has_storable_products
+        values['delivery_action_id'] = request.env.ref('delivery.action_delivery_carrier_form').id
         return values
 
     @http.route('/shop/payment', type='http', auth='public', website=True, sitemap=False)
