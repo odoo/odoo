@@ -17,6 +17,14 @@ class PaymentProvider(models.Model):
     code = fields.Selection(
         selection_add=[('asiapay', "AsiaPay")], ondelete={'asiapay': 'set default'}
     )
+    asiapay_brand = fields.Selection(
+        string="AsiaPay Brand",
+        help="The brand associated to your AsiaPay account.",
+        selection=[("paydollar", "PayDollar"), ("pesopay", "PesoPay"),
+                    ("siampay", "SiamPay"), ("bimopay", "BimoPay")],
+        default='paydollar',
+        required_if_provider='asiapay',
+    )
     asiapay_merchant_id = fields.Char(
         string="AsiaPay Merchant ID",
         help="The Merchant ID solely used to identify your AsiaPay account.",
@@ -65,10 +73,9 @@ class PaymentProvider(models.Model):
         """
         self.ensure_one()
 
-        if self.state == 'enabled':
-            return 'https://www.paydollar.com/b2c2/eng/payment/payForm.jsp'
-        else:  # 'test'
-            return 'https://test.paydollar.com/b2cDemo/eng/payment/payForm.jsp'
+        environment = 'production' if self.state == 'enabled' else 'staging'
+        api_urls = const.API_URL[environment]
+        return api_urls.get(self.asiapay_brand, api_urls['paydollar'])
 
     def _asiapay_calculate_signature(self, data, incoming=True):
         """ Compute the signature for the provided data according to the AsiaPay documentation.

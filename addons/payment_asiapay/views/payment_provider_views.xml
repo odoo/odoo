@@ -8,6 +8,9 @@
         <field name="arch" type="xml">
             <group name="provider_credentials" position='inside'>
                 <group attrs="{'invisible': [('code', '!=', 'asiapay')]}">
+                    <field name="asiapay_brand"
+                           string="Brand"
+                           attrs="{'required': [('code', '=', 'asiapay'), ('state', '!=', 'disabled')]}"/>
                     <field name="asiapay_merchant_id"
                            string="Merchant ID"
                            attrs="{'required': [('code', '=', 'asiapay'), ('state', '!=', 'disabled')]}"/>
