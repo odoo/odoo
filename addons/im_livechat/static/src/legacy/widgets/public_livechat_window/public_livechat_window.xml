@@ -16,14 +16,19 @@
                     <t t-set="thread" t-value="widget.messaging.publicLivechatGlobal.publicLivechat.widget"/>
                 </t>
             </div>
-            <div class="o_thread_window_content">
-            </div>
-            <div class="o_thread_composer o_chat_mini_composer">
-                <input class="o_composer_text_field o_PublicLivechatWindow_composer" t-att-placeholder="widget.messaging.publicLivechatGlobal.chatWindow.inputPlaceholder"/>
+            <t t-if="widget.messaging.publicLivechatGlobal.publicLivechat.operator">
+                <div class="o_thread_window_content">
+                </div>
+                <div class="o_thread_composer o_chat_mini_composer">
+                    <input class="o_composer_text_field o_PublicLivechatWindow_composer" t-att-placeholder="widget.messaging.publicLivechatGlobal.chatWindow.inputPlaceholder"/>
+                </div>
+            </t>
+            <div t-else="" class="d-flex justify-content-center align-items-center flex-grow-1">
+                <p class="text-500">No operator available</p>
             </div>
         </div>
     </t>
-    
+
     <!--
         @param {im_livechat/legacy/widgets/public_livechat_window/public_livechat_window} widget
     -->
