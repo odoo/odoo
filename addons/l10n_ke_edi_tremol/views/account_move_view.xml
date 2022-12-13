@@ -42,6 +42,17 @@
             </field>
         </record>
 
+        <record id="action_send_invoices_to_device" model="ir.actions.server">
+            <field name="name">Send invoices to fiscal device</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                action = records.l10n_ke_action_cu_post()
+            </field>
+        </record>
+
         <record id="l10n_ke_inherit_account_move_search_view" model="ir.ui.view">
             <field name="name">l10n.ke.inherit.account.move.search</field>
             <field name="model">account.move</field>
