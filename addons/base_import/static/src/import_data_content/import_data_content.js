@@ -7,28 +7,20 @@ import { ImportDataOptions } from "../import_data_options/import_data_options";
 import { _t } from "@web/core/l10n/translation";
 
 export class ImportDataContent extends Component {
-    getOptions(column) {
-        const options = this.makeOptions(column.fields.basic);
-
-        function addOptions(fields, label) {
-            const fieldOptions = this.makeOptions(fields);
-            if (fieldOptions.length > 0) {
-                options.push({ label: _t(label), isGroup: true }, ...fieldOptions);
-            }
-        }
-
-        addOptions.bind(this)(column.fields.suggested, "Suggested Field");
-        addOptions.bind(this)(column.fields.additional, "Additional Field");
-        addOptions.bind(this)(column.fields.relational, "Relation Field");
-
-        return options;
+    getGroups(column) {
+        const groups = [
+            { options: this.makeOptions(column.fields.basic) },
+            { options: this.makeOptions(column.fields.suggested), label: _t("Suggested Fields") },
+            { options: this.makeOptions(column.fields.additional), label: _t("Additional Fields") },
+            { options: this.makeOptions(column.fields.relational), label: _t("Relation Fields") },
+        ];
+        return groups;
     }
 
     makeOptions(fields) {
         return fields.map((field) => ({
             label: field.string,
             value: field,
-            template: "ImportDataContent.dropdownOptionTemplate",
         }));
     }
 

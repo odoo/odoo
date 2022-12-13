@@ -37,6 +37,10 @@ QUnit.module("Web Components", (hooks) => {
         class Parent extends Component {
             setup() {
                 this.state = useState({ value: "World" });
+                this.options = [
+                    { label: "Hello", value: "hello" },
+                    { label: "World", value: "world" },
+                ];
             }
             onSelect(value) {
                 this.state.value = value;
@@ -45,7 +49,7 @@ QUnit.module("Web Components", (hooks) => {
         Parent.components = { SelectMenu };
         Parent.template = xml`
         <SelectMenu
-            options="['Hello', 'World']"
+            options="options"
             value="state.value"
             onSelect.bind="onSelect"
         />
@@ -96,17 +100,21 @@ QUnit.module("Web Components", (hooks) => {
             class Parent extends Component {
                 setup() {
                     this.state = useState({ value: "World" });
+                    this.options = [
+                        { label: "Hello", value: "hello" },
+                        { label: "World", value: "world" },
+                    ];
                 }
 
                 onSelect(value) {
                     assert.step(value);
-                    this.state.value = value;
+                    this.state.value = this.options.find((o) => o.value === value).label;
                 }
             }
             Parent.components = { SelectMenu };
             Parent.template = xml`
             <SelectMenu
-                options="['Hello', 'World']"
+                options="options"
                 value="state.value"
                 onSelect.bind="onSelect"
             />
@@ -118,12 +126,12 @@ QUnit.module("Web Components", (hooks) => {
             await open();
             await click(target.querySelectorAll(".o_select_menu_item_label")[0]);
             assert.strictEqual(getValue(), "Hello");
-            assert.verifySteps(["Hello"]);
+            assert.verifySteps(["hello"]);
 
             await open();
             await click(target.querySelectorAll(".o_select_menu_item_label")[1]);
             assert.strictEqual(getValue(), "World");
-            assert.verifySteps(["World"]);
+            assert.verifySteps(["world"]);
         }
     );
 
@@ -168,6 +176,10 @@ QUnit.module("Web Components", (hooks) => {
             class Parent extends Component {
                 setup() {
                     this.state = useState({ value: "Hello" });
+                    this.options = [
+                        { label: "Hello", value: "hello" },
+                        { label: "World", value: "world" },
+                    ];
                 }
                 onSelect(value) {
                     assert.step("Cleared");
@@ -178,7 +190,7 @@ QUnit.module("Web Components", (hooks) => {
             Parent.components = { SelectMenu };
             Parent.template = xml`
             <SelectMenu
-                options="['World', 'Hello']"
+                options="options"
                 value="state.value"
                 onSelect.bind="this.onSelect"
             />
@@ -195,11 +207,20 @@ QUnit.module("Web Components", (hooks) => {
     );
 
     QUnit.test("Items are sorted based on their label", async (assert) => {
-        class Parent extends Component {}
+        class Parent extends Component {
+            setup() {
+                this.options = [
+                    { label: "Hello", value: "hello" },
+                    { label: "World", value: "world" },
+                    { label: "Foo", value: "foo" },
+                    { label: "Bar", value: "bar" },
+                ];
+            }
+        }
         Parent.components = { SelectMenu };
         Parent.template = xml`
                 <SelectMenu
-                    options="['World', 'Hello', 'Foo', 'Bar']"
+                    options="options"
                 />
             `;
 
@@ -214,11 +235,18 @@ QUnit.module("Web Components", (hooks) => {
     });
 
     QUnit.test("Custom toggler using default slot", async (assert) => {
-        class Parent extends Component {}
+        class Parent extends Component {
+            setup() {
+                this.options = [
+                    { label: "Hello", value: "hello" },
+                    { label: "World", value: "world" },
+                ];
+            }
+        }
         Parent.components = { SelectMenu };
         Parent.template = xml`
                 <SelectMenu
-                    options="['World', 'Hello']"
+                    options="options"
                 >
                     <span class="select_menu_test">Select something</span>
                 </SelectMenu>
@@ -236,11 +264,23 @@ QUnit.module("Web Components", (hooks) => {
     });
 
     QUnit.test("Groups properly added in the select", async (assert) => {
-        class Parent extends Component {}
+        class Parent extends Component {
+            setup() {
+                this.groups = [
+                    {
+                        label: "Group",
+                        options: [
+                            { label: "Hello", value: "hello" },
+                            { label: "World", value: "world" },
+                        ],
+                    },
+                ];
+            }
+        }
         Parent.components = { SelectMenu };
         Parent.template = xml`
                 <SelectMenu
-                    options="[{ label: 'Group', isGroup: true }, { label: 'World' }, { label: 'Hello' }]"
+                    groups="groups"
                 />
             `;
 
@@ -259,14 +299,22 @@ QUnit.module("Web Components", (hooks) => {
     QUnit.test("Items are properly sorted but still in their respective group", async (assert) => {
         class Parent extends Component {
             setup() {
-                this.options = [
-                    { label: "Z" },
-                    { label: "X Group A", isGroup: true },
-                    { label: "B" },
-                    { label: "A" },
-                    { label: "X Group B", isGroup: true },
-                    { label: "C" },
-                    { label: "D" },
+                this.options = [{ label: "Z", value: "z" }];
+                this.groups = [
+                    {
+                        label: "X Group A",
+                        options: [
+                            { label: "B", value: "b" },
+                            { label: "A", value: "a" },
+                        ],
+                    },
+                    {
+                        label: "X Group B",
+                        options: [
+                            { label: "C", value: "c" },
+                            { label: "D", value: "d" },
+                        ],
+                    },
                 ];
             }
         }
@@ -274,6 +322,7 @@ QUnit.module("Web Components", (hooks) => {
         Parent.template = xml`
                 <SelectMenu
                     options="this.options"
+                    groups="this.groups"
                 />
             `;
 

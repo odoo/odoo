@@ -6,7 +6,14 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _lt } from "@web/core/l10n/translation";
 import { useDebounced } from "@web/core/utils/timing";
 import { scrollTo } from "@web/core/utils/scrolling";
-import { fuzzyTest } from "@web/core/utils/search";
+import { fuzzyLookup } from "@web/core/utils/search";
+import { useChildRef } from "../utils/hooks";
+
+export const SCROLL_SETTINGS = {
+    defaultCount: 500,
+    increaseAmount: 300,
+    distanceBeforeReload: 500,
+};
 
 export class SelectMenu extends Component {
     setup() {
@@ -16,23 +23,12 @@ export class SelectMenu extends Component {
             direction: undefined,
         });
 
-        this.dropdownContentRef = useRef("dropdownContentRef");
+        this.menuRef = useChildRef();
         this.inputRef = useRef("inputRef");
         this.debouncedOnInput = useDebounced(
-            () => this.filterOptions(this.inputRef.el.value.trim()),
+            () => this.filterOptions(this.inputRef.el ? this.inputRef.el.value.trim() : ""),
             250
         );
-
-        this.scrollSettings = {
-            defaultCount: 500,
-            increaseAmount: 300,
-            distanceBeforeReload: 500,
-        };
-
-        this.searchSettings = {
-            sort: true,
-            fuzzySearch: false,
-        };
 
         reactive(this.props.options, () => this.debouncedOnInput());
     }
@@ -44,9 +40,11 @@ export class SelectMenu extends Component {
             this.inputRef.el.focus();
         }
 
-        const selectedElement = this.dropdownContentRef.el.querySelector(".o_select_active");
-        if (selectedElement) {
-            scrollTo(selectedElement);
+        if (this.menuRef.el) {
+            const selectedElement = this.menuRef.el.querySelector(".o_select_active");
+            if (selectedElement) {
+                scrollTo(selectedElement);
+            }
         }
     }
 
@@ -82,41 +80,28 @@ export class SelectMenu extends Component {
      * @param {String} searchString
      */
     filterOptions(searchString = "") {
-        let filteredOptions = this.props.options.map((option) => {
-            return typeof option === "string" ? { label: option, value: option } : option;
-        });
+        const groups = [{ options: this.props.options }, ...this.props.groups];
 
-        if (searchString) {
-            filteredOptions = filteredOptions.filter((option) => {
-                return this.matchOption(option, searchString);
-            });
+        this.state.options = [];
 
-            filteredOptions = filteredOptions.filter((option, index) => {
-                return (
-                    !option.isGroup ||
-                    (index < filteredOptions.length - 1 && !filteredOptions[index + 1].isGroup)
-                );
-            });
+        for (const group of groups) {
+            const filteredOptions = searchString
+                ? fuzzyLookup(searchString, group.options, (option) => option.label)
+                : group.options;
+
+            if (filteredOptions.length === 0) {
+                continue;
+            }
+
+            filteredOptions.sort((optionA, optionB) => optionA.label.localeCompare(optionB.label));
+
+            if (group.label) {
+                this.state.options.push({ ...group, isGroup: true });
+            }
+            this.state.options.push(...filteredOptions);
         }
-
-        if (this.searchSettings.sort) {
-            this.sortGroups(filteredOptions);
-        }
-        this.state.options = filteredOptions;
 
         this.sliceDisplayedOptions();
-    }
-
-    matchOption(option, searchString) {
-        if (option.isGroup) {
-            return true;
-        }
-
-        if (this.searchSettings.fuzzySearch) {
-            return fuzzyTest(option.label);
-        } else {
-            return option.label.toUpperCase().includes(searchString.toUpperCase());
-        }
     }
 
     /**
@@ -162,11 +147,11 @@ export class SelectMenu extends Component {
         const el = event.target;
         const hasReachMax = this.state.displayedOptions.length >= this.state.options.length;
         const remainingDistance = el.scrollHeight - el.scrollTop;
-        const distanceToReload = el.clientHeight + this.scrollSettings.distanceBeforeReload;
+        const distanceToReload = el.clientHeight + SCROLL_SETTINGS.distanceBeforeReload;
 
         if (!hasReachMax && remainingDistance < distanceToReload) {
             const displayCount =
-                this.state.displayedOptions.length + this.scrollSettings.increaseAmount;
+                this.state.displayedOptions.length + SCROLL_SETTINGS.increaseAmount;
 
             this.state.displayedOptions = this.state.options.slice(0, displayCount);
         }
@@ -179,15 +164,12 @@ export class SelectMenu extends Component {
      */
     sliceDisplayedOptions() {
         const selectedIndex = this.getSelectedOptionIndex();
-        const defaultCount = this.scrollSettings.defaultCount;
+        const defaultCount = SCROLL_SETTINGS.defaultCount;
 
         if (selectedIndex === -1) {
             this.state.displayedOptions = this.state.options.slice(0, defaultCount);
         } else {
-            const endIndex = Math.max(
-                selectedIndex + this.scrollSettings.increaseAmount,
-                defaultCount
-            );
+            const endIndex = Math.max(selectedIndex + SCROLL_SETTINGS.increaseAmount, defaultCount);
             this.state.displayedOptions = this.state.options.slice(0, endIndex);
         }
     }
@@ -211,24 +193,45 @@ SelectMenu.defaultProps = {
     togglerClass: "",
     onSelect: () => {},
     searchPlaceholder: _lt("Search..."),
+    options: [],
+    groups: [],
 };
 SelectMenu.props = {
     options: {
         type: Array,
+        optional: true,
         element: {
-            type: [Object, String],
-            // shape: {
-            //     value: { type: [String, Number, Object], optional: true },
-            //     label: { type: String, optional: true },
-            //     isGroup: { type: Boolean, optional: true },
-            //     template: { type: String, optional: true },
-            // },
+            type: Object,
+            shape: {
+                value: true,
+                label: { type: String },
+            },
         },
     },
-    value: { optional: true },
+    groups: {
+        type: Array,
+        optional: true,
+        element: {
+            type: Object,
+            shape: {
+                label: { type: String, optional: true },
+                options: {
+                    type: Array,
+                    element: {
+                        type: Object,
+                        shape: {
+                            value: true,
+                            label: { type: String },
+                        },
+                    },
+                },
+            },
+        },
+    },
     class: { type: String, optional: true },
     togglerClass: { type: String, optional: true },
-    onSelect: { type: Function, optional: true },
     searchPlaceholder: { type: String, optional: true },
+    value: { optional: true },
+    onSelect: { type: Function, optional: true },
     slots: { type: Object, optional: true },
 };

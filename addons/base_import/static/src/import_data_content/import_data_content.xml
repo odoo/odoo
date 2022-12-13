@@ -61,7 +61,7 @@
                             <td>
                                 <SelectMenu
                                     value="column.fieldInfo"
-                                    options="getOptions(column)"
+                                    groups="getGroups(column)"
                                     onSelect="fieldInfo => this.props.onFieldChanged(column, fieldInfo)"
                                     togglerClass="column.fieldInfo ? 'ps-1' : ''"
                                 >
@@ -77,6 +77,12 @@
                                         </span>
                                     </t>
                                     <span t-else="" class="text-warning">To import, select a field...</span>
+
+                                    <t t-set-slot="choice" t-slot-scope="choice">
+                                        <div t-att-class="`${choice.value.required ? 'fw-bolder text-decoration-underline' : ''}`">
+                                            <t t-esc="choice.label" />
+                                        </div>
+                                    </t>
                                 </SelectMenu>
                             </td>
                             <td>
@@ -90,12 +96,6 @@
                     </t>
                 </tbody>
             </table>
-        </div>
-    </t>
-
-    <t t-name="ImportDataContent.dropdownOptionTemplate" owl="1">
-        <div t-att-class="`${option.value.required ? 'fw-bolder text-decoration-underline' : ''}`">
-            <t t-esc="option.label" />
         </div>
     </t>
 
