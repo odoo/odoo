@@ -52,7 +52,8 @@ export class SaleOrderLineProductField extends Many2OneField {
         // or if the line cannot be edited (e.g. locked SO)
         return (
             this.props.record.isReadonly(this.props.name)
-            || this.props.record.model.root.isReadonly('order_line')
+            || this.props.record.model.root.isReadonly
+            && this.props.record.model.root.isReadonly('order_line')
         )
     }
     get hasExternalButton() {
