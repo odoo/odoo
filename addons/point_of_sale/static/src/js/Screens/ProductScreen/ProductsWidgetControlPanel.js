@@ -83,7 +83,6 @@ class ProductsWidgetControlPanel extends PosComponent {
                         ["available_in_pos", "=", true],
                         "|",
                         "|",
-                        "|",
                         ["name", "ilike", this.state.searchInput],
                         ["default_code", "ilike", this.state.searchInput],
                         ["barcode", "ilike", this.state.searchInput],
