@@ -54,7 +54,7 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
                 let ProductIds = await this.rpc({
                     model: 'product.product',
                     method: 'search',
-                    args: [['&',['available_in_pos', '=', true], '|','|','|',
+                    args: [['&',['available_in_pos', '=', true], '|','|',
                      ['name', 'ilike', this.searchWordInput.el.value],
                      ['default_code', 'ilike', this.searchWordInput.el.value],
                      ['barcode', 'ilike', this.searchWordInput.el.value]]],
