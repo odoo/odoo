@@ -1,14 +1,12 @@
 /* Modifications for the Light and Boxed document layouts */
 .article.o_report_layout_standard.o_company_1_layout, .article.o_report_layout_boxed.o_company_1_layout {
     > .pt-5 {
+        padding-top: 0 !important;
         > .address.row {
-            width: 100% !important;
-            height: 62mm !important;
+            width: 117% !important;
+            height: 68mm !important;
+            margin-top: -4mm !important;
             line-height: 1.1em;
-            margin-top: -13mm;
-            > div[name="address"] {
-                padding-top: 5mm;
-            }
         }
     }
 }
@@ -16,39 +14,36 @@
 /* Modifications for Clean document layouts */
 .article.o_report_layout_clean.o_company_1_layout {
     > .address.row {
-        width: 100% !important;
-        height: 62mm !important;
+        width: 117% !important;
+        height: 68mm !important;
+        margin-top: -4mm !important;
         line-height: 1.1em;
-        > div[name="address"] {
-            padding-top: 15mm !important;
-        }
     }
 }
 /* Modification for background document layouts */
 .o_company_1_layout.article.o_report_layout_background {
     > .address.row {
-        background-color: #ffffff !important;
-        width: 103% !important;
-        height: 62mm !important;
+        width: 117% !important;
+        height: 68mm !important;
+        margin-top: -4mm !important;
         line-height: 1.1em;
-        > div[name="address"] {
-            padding-top: 8mm !important;
-        }
     }
 }
 
 div .address.row > div[name="address"] {
     position: relative !important;
-    width: 103mm !important;
+    margin-left: 48.5% !important;
     background-color: #ffffff;
-    > address {
-		width: 100% !important;
-		position: absolute !important;
-		bottom: 0 !important;
-		padding-left: 3mm;
-		padding-top: 3mm;
-        height: 33mm;
-		max-height: 33mm;
+    > address, div {
+        > address {
+            width: 100% !important;
+            position: absolute !important;
+            bottom: 0 !important;
+            padding-left: 3mm;
+            padding-top: 3mm;
+            height: 33mm;
+            max-height: 33mm;
+        }
     }
 }
 
