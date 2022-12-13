@@ -402,6 +402,13 @@ Model({
              * display that restart button.
              */
             compute() {
+                const { publicLivechat } = this.messaging.publicLivechatGlobal;
+                if (publicLivechat && !publicLivechat.operator) {
+                    return false;
+                }
+                if (publicLivechat && !publicLivechat.data.chatbot_script_id) {
+                    return false;
+                }
                 return Boolean(
                     !this.currentStep ||
                     (
