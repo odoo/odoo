@@ -17,7 +17,6 @@ import { getRangePosition } from '@web_editor/js/editor/odoo-editor/src/utils/ut
 
 const {
     onWillStart,
-    useEffect,
     useSubEnv,
     onWillUpdateProps,
 } = owl;
@@ -41,15 +40,6 @@ export class MassMailingHtmlField extends HtmlField {
                 this._hideIrrelevantTemplates();
             }
         });
-
-        useEffect(() => {
-            const listener = () => {
-                this._lastClickInIframe = false;
-            };
-            document.addEventListener('mousedown', listener, true);
-
-            return () => document.removeEventListener('mousedown', listener, true);
-        }, () => []);
     }
 
     get wysiwygOptions() {
@@ -172,10 +162,6 @@ export class MassMailingHtmlField extends HtmlField {
         this.wysiwyg.odooEditor.observerFlush();
         this.wysiwyg.odooEditor.historyReset();
         this.wysiwyg.$iframeBody.addClass('o_mass_mailing_iframe');
-
-        this.wysiwyg.odooEditor.document.addEventListener('mousedown', () => {
-            this._lastClickInIframe = true;
-        }, true);
 
         this.onIframeUpdated();
     }
@@ -588,11 +574,6 @@ export class MassMailingHtmlField extends HtmlField {
     }
     async _getWysiwygClass() {
         return getWysiwygClass({moduleName: 'mass_mailing.wysiwyg'});
-    }
-    _onWysiwygBlur() {
-        if (!this._lastClickInIframe) {
-            super._onWysiwygBlur();
-        }
     }
 }
 
