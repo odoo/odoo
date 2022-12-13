@@ -467,7 +467,11 @@ export class SampleServer {
         const measures = [];
         for (const measureSpec of params.fields || Object.keys(fields)) {
             const matches = measureSpec.match(MEASURE_SPEC_REGEX);
-            const { fieldName, aggregateFunction, measure } = (matches && matches.groups) || {};
+            let { fieldName, aggregateFunction, measure } = (matches && matches.groups) || {};
+            if (!aggregateFunction && fieldName in fields && fields[fieldName].group_operator) {
+                aggregateFunction = fields[fieldName].group_operator;
+                measure = fieldName;
+            }
             if (!fieldName && !measure) {
                 continue; // this is for _count measure
             }
