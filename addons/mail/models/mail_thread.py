@@ -2747,25 +2747,12 @@ class MailThread(models.AbstractModel):
         if not partners_data:
             return True
 
+        # group recipients into groups that receive the same global email layout
         model = msg_vals.get('model') if msg_vals else message.model
         model_name = model_description or (self.env['ir.model']._get(model).display_name if model else False) # one query for display name
         recipients_groups_data = self._notify_get_recipients_classify(partners_data, model_name, msg_vals=msg_vals)
-
         if not recipients_groups_data:
             return True
-        force_send = self.env.context.get('mail_notify_force_send', force_send)
-
-        template_values = self._notify_by_email_prepare_rendering_context(
-            message, msg_vals=msg_vals, model_description=model_description,
-            force_email_company=force_email_company,
-            force_email_lang=force_email_lang,
-        ) # 10 queries
-        if subtitles:
-            template_values['subtitles'] = subtitles
-
-        email_layout_xmlid = msg_vals.get('email_layout_xmlid') if msg_vals else message.email_layout_xmlid
-        template_xmlid = email_layout_xmlid if email_layout_xmlid else 'mail.mail_notification_layout'
-        base_mail_values = self._notify_by_email_get_base_mail_values(message, additional_values={'auto_delete': mail_auto_delete})
 
         # Clean the context to get rid of residual default_* keys that could cause issues during
         # the mail.mail creation.
@@ -2775,60 +2762,91 @@ class MailThread(models.AbstractModel):
         # doesn't exist.
         SafeMail = self.env['mail.mail'].sudo().with_context(clean_context(self._context))
         SafeNotification = self.env['mail.notification'].sudo().with_context(clean_context(self._context))
-        emails = self.env['mail.mail'].sudo()
+
+        # prepare values for notification layout
+        template_values = self._notify_by_email_prepare_rendering_context(
+            message, msg_vals=msg_vals, model_description=model_description,
+            force_email_company=force_email_company,
+            force_email_lang=force_email_lang,
+        ) # 10 queries
+        if subtitles:
+            template_values['subtitles'] = subtitles
+        email_layout_xmlid = msg_vals.get('email_layout_xmlid') if msg_vals else message.email_layout_xmlid
+        template_xmlid = email_layout_xmlid if email_layout_xmlid else 'mail.mail_notification_layout'
+
+        # prepare values for mail mail
+        base_mail_values = self._notify_by_email_get_base_mail_values(message, additional_values={'auto_delete': mail_auto_delete})
 
         # loop on groups (customer, portal, user,  ... + model specific like group_sale_salesman)
-        notif_create_values = []
-        recipients_max = 50
+        RECIPIENTS_MAX = 50
+        recipients_ids_all = set()
+        mail_lines_all = []
         for recipients_group_data in recipients_groups_data:
             # generate notification email content
             recipients_ids = recipients_group_data.pop('recipients')
             render_values = {**template_values, **recipients_group_data}
             # {company, is_discussion, lang, message, model_description, record, record_name, signature, subtype, tracking_values, website_url}
             # {actions, button_access, has_button_access, recipients}
+            recipients_ids_all |= set(recipients_ids)
 
-            mail_body = self.env['ir.qweb']._render(template_xmlid, render_values, minimal_qcontext=True, raise_if_not_found=False, lang=template_values['lang'])
+            mail_body = self.env['ir.qweb']._render(
+                template_xmlid,
+                render_values,
+                minimal_qcontext=True,
+                raise_if_not_found=False,
+                lang=template_values['lang']
+            )
             if not mail_body:
                 _logger.warning('QWeb template %s not found or is empty when sending notification emails. Sending without layouting.', template_xmlid)
                 mail_body = message.body
             mail_body = self.env['mail.render.mixin']._replace_local_links(mail_body)
 
             # create email
-            for recipients_ids_chunk in split_every(recipients_max, recipients_ids):
-                mail_values = self._notify_by_email_get_final_mail_values(
+            mail_lines_all += [
+                (
                     recipients_ids_chunk,
-                    base_mail_values,
-                    additional_values={'body_html': mail_body}
+                    self._notify_by_email_get_final_mail_values(
+                        recipients_ids_chunk,
+                        base_mail_values,
+                        additional_values={'body_html': mail_body}
+                    )
+                ) for recipients_ids_chunk in split_every(RECIPIENTS_MAX, recipients_ids)
+            ]
+
+        if resend_existing and recipients_ids_all:
+            existing_notifications = self.env['mail.notification'].sudo().search([
+                ('mail_message_id', '=', message.id),
+                ('notification_type', '=', 'email'),
+                ('res_partner_id', 'in', list(recipients_ids_all))
+            ])
+
+        emails = SafeMail.create([mail_values for _rids, mail_values in mail_lines_all])
+        notification_lines = []
+        for mail, (mail_recipient_ids, _mail_values) in zip(emails, mail_lines_all):
+            if resend_existing:
+                notifs = existing_notifications.filtered(
+                    lambda notif: notif.res_partner_id.id in mail_recipient_ids
                 )
-                new_email = SafeMail.create(mail_values)
-
-                if new_email and recipients_ids_chunk:
-                    tocreate_recipient_ids = list(recipients_ids_chunk)
-                    if resend_existing:
-                        existing_notifications = self.env['mail.notification'].sudo().search([
-                            ('mail_message_id', '=', message.id),
-                            ('notification_type', '=', 'email'),
-                            ('res_partner_id', 'in', tocreate_recipient_ids)
-                        ])
-                        if existing_notifications:
-                            tocreate_recipient_ids = [rid for rid in recipients_ids_chunk if rid not in existing_notifications.mapped('res_partner_id.id')]
-                            existing_notifications.write({
-                                'notification_status': 'ready',
-                                'mail_mail_id': new_email.id,
-                            })
-                    notif_create_values += [{
-                        'author_id': message.author_id.id,
-                        'is_read': True,  # discard Inbox notification
-                        'mail_mail_id': new_email.id,
-                        'mail_message_id': message.id,
+                tocreate_pids = [rid for rid in mail_recipient_ids if rid not in notifs.res_partner_id.ids]
+                if notifs:
+                    notifs.write({
                         'notification_status': 'ready',
-                        'notification_type': 'email',
-                        'res_partner_id': recipient_id,
-                    } for recipient_id in tocreate_recipient_ids]
-                emails += new_email
+                        'mail_mail_id': mail.id,
+                    })
+            else:
+                tocreate_pids = mail_recipient_ids
+            notification_lines += [{
+                'author_id': message.author_id.id,
+                'is_read': True,  # discard Inbox notification
+                'mail_mail_id': mail.id,
+                'mail_message_id': message.id,
+                'notification_status': 'ready',
+                'notification_type': 'email',
+                'res_partner_id': recipient_id,
+            } for recipient_id in tocreate_pids]
 
-        if notif_create_values:
-            SafeNotification.create(notif_create_values)
+        if notification_lines:
+            SafeNotification.create(notification_lines)
 
         # NOTE:
         #   1. for more than 50 followers, use the queue system
@@ -2836,7 +2854,8 @@ class MailThread(models.AbstractModel):
         #      to prevent sending email during a simple update of the database
         #      using the command-line.
         test_mode = getattr(threading.current_thread(), 'testing', False)
-        if force_send and len(emails) < recipients_max and (not self.pool._init or test_mode):
+        force_send = self.env.context.get('mail_notify_force_send', force_send)
+        if force_send and len(emails) < RECIPIENTS_MAX and (not self.pool._init or test_mode):
             # unless asked specifically, send emails after the transaction to
             # avoid side effects due to emails being sent while the transaction fails
             if not test_mode and send_after_commit:
