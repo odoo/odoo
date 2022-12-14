@@ -56,7 +56,6 @@ class TestSqlLint(TransactionCase):
              '--output-format=json',
              f.name,
             ],
-            check=False,
             stdout=PIPE, encoding='utf-8',
             env={
                 **os.environ,
