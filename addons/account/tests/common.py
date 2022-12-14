@@ -390,7 +390,7 @@ class AccountTestInvoicingCommon(TransactionCase):
         for product in (products or []):
             with move_form.invoice_line_ids.new() as line_form:
                 line_form.product_id = product
-                if taxes:
+                if taxes is not None:
                     line_form.tax_ids.clear()
                     for tax in taxes:
                         line_form.tax_ids.add(tax)
@@ -401,7 +401,7 @@ class AccountTestInvoicingCommon(TransactionCase):
                 # We use account_predictive_bills_disable_prediction context key so that
                 # this doesn't trigger prediction in case enterprise (hence account_predictive_bills) is installed
                 line_form.price_unit = amount
-                if taxes:
+                if taxes is not None:
                     line_form.tax_ids.clear()
                     for tax in taxes:
                         line_form.tax_ids.add(tax)
