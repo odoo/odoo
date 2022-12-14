@@ -4104,4 +4104,30 @@ QUnit.module("Views", (hooks) => {
             checkDatasets(assert, graph, ["data"], { data: [SampleServer.MAIN_RECORDSET_SIZE] });
         }
     );
+
+    QUnit.test(
+        "no class 'o_view_sample_data' when real data are presented",
+        async function (assert) {
+            serverData.models.foo.records = [];
+            const graph = await makeView({
+                serverData,
+                type: "graph",
+                resModel: "foo",
+                arch: `
+                    <graph sample="1">
+                        <field name="date"/>
+                    </graph>
+                `,
+            });
+            assert.containsOnce(target, ".o_graph_view .o_view_sample_data");
+            assert.ok(getChart(graph).data.datasets.length);
+            await selectMode(target, "line");
+            assert.containsOnce(target, ".o_graph_view .o_view_sample_data");
+            assert.ok(getChart(graph).data.datasets.length);
+            await toggleMenu(target, "Measures");
+            await toggleMenuItem(target, "Revenue");
+            assert.containsNone(target, ".o_graph_view .o_view_sample_data");
+            assert.notOk(getChart(graph).data.datasets.length);
+        }
+    );
 });
