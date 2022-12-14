@@ -4,19 +4,15 @@
 from __future__ import print_function
 import logging
 import math
-import os
-import os.path
-import subprocess
 import time
-import netifaces as ni
-import traceback
 
-try: 
+try:
+    import escpos
     from .. escpos import *
     from .. escpos.exceptions import *
     from .. escpos.printer import Usb
 except ImportError:
-    escpos = printer = None
+    escpos = Usb = None
 
 from queue import Queue
 from threading import Thread, Lock
@@ -126,9 +122,9 @@ class EscposDriver(Thread):
         printer.cashdraw(5)
 
     def set_status(self, status, message = None):
-        _logger.info(status+' : '+ (message or 'no message'))
+        _logger.info("%s : %s", status, message or 'no message')
         if status == self.status['status']:
-            if message != None and (len(self.status['messages']) == 0 or message != self.status['messages'][-1]):
+            if message is not None and (not self.status['messages'] or message != self.status['messages'][-1]):
                 self.status['messages'].append(message)
         else:
             self.status['status'] = status
@@ -154,7 +150,7 @@ class EscposDriver(Thread):
 
                 printer = self.get_escpos_printer()
 
-                if printer == None:
+                if printer is None:
                     if task != 'status':
                         self.queue.put((timestamp,task,data))
                     error = False
@@ -203,14 +199,14 @@ class EscposDriver(Thread):
             return string != True and bool(string) and string.strip()
 
         def price(amount):
-            return ("{0:."+str(receipt['precision']['price'])+"f}").format(amount)
+            return "{:.{}f}".format(amount, receipt['precision']['price'])
 
         def money(amount):
-            return ("{0:."+str(receipt['precision']['money'])+"f}").format(amount)
+            return "{:.{}f}".format(amount, receipt['precision']['money'])
 
         def quantity(amount):
             if math.floor(amount) != amount:
-                return ("{0:."+str(receipt['precision']['quantity'])+"f}").format(amount)
+                return "{:.{}f}".format(amount, receipt['precision']['quantity'])
             else:
                 return str(amount)
 
