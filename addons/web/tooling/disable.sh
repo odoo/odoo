@@ -2,7 +2,7 @@
 community=$(cd -- "$(dirname "$0")" &> /dev/null && cd ../../.. && pwd)
 
 disableInDir () {
-    cd "$1"
+    cd "$1" || exit
     git config --unset core.hooksPath
     rm .eslintignore
     rm .eslintrc.json
