@@ -41,6 +41,7 @@
         'report/report_deliveryslip.xml',
         'report/mrp_report_views_main.xml',
         'report/mrp_report_bom_structure.xml',
+        'report/mrp_report_mo_overview.xml',
         'report/mrp_production_templates.xml',
         'report/report_stock_reception.xml',
         'report/report_stock_rule.xml',

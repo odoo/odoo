@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <div t-name="mrp.MoOverview" class="o_action" owl="1">
+        <Layout display="{ controlPanel: { 'top-right': false } }">
+            <t t-set-slot="control-panel-bottom-right">
+                <MoOverviewDisplayFilter showOptions="state.showOptions" changeDisplay.bind="onChangeDisplay"/>
+            </t>
+
+            <t t-set-slot="control-panel-bottom-left">
+                <button class="btn btn-primary" t-on-click="onPrint">Print</button>
+                <button class="btn btn-primary" t-on-click="onUnfold">Unfold</button>
+            </t>
+
+            <div class="py-3 py-lg-5 overflow-auto border-bottom bg-view">
+                <div class="container-fluid">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="text-start"/>
+                                <th class="text-center" t-if="showReplenishments">Status</th>
+                                <th t-attf-class="{{ showUom ? 'text-center' : 'text-end' }}" t-attf-colspan="{{ showUom ? 2 : 1 }}">Quantity</th>
+                                <th class="text-end" t-if="showAvailabilities">Free to use / On Hand</th>
+                                <th class="text-end" t-if="showAvailabilities">Reserved</th>
+                                <th class="text-end" t-if="showReceipts">Receipt</th>
+                                <th class="text-end" t-if="showMoCosts">MO Cost</th>
+                                <th class="text-end" t-if="showProductCosts">Product Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <MoOverviewLine data="state.data.summary" showOptions="state.showOptions"/>
+                            <MoOverviewComponentsBlock
+                                components="state.data.components"
+                                operations="state.data.operations"
+                                showOptions="state.showOptions"/>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td class="text-start">Unit Cost</td>
+                                <td t-if="showReplenishments"/>
+                                <td/>
+                                <td t-if="showUom"/>
+                                <td t-if="showAvailabilities"/>
+                                <td t-if="showAvailabilities"/>
+                                <td t-if="showReceipts"/>
+                                <td class="text-end" t-att-class="getColorClass(state.data.extras.unit_mo_cost_decorator)" t-if="showMoCosts" t-out="formatCost(state.data.extras.unit_mo_cost)"/>
+                                <td class="text-end" t-if="showProductCosts" t-out="formatCost(state.data.extras.unit_product_cost)"/>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </Layout>
+    </div>
+
+</templates>
