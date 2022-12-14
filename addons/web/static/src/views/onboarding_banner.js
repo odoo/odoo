@@ -39,7 +39,11 @@ export class OnboardingBanner extends Component {
     }
 
     async loadBanner(bannerRoute) {
-        const response = await this.rpc(bannerRoute, { context: this.user.context });
+        let response = await this.rpc(bannerRoute, { context: this.user.context });
+        if (response.code === 503) {
+            // Sent by Onboarding Controller when rare concurrent `create` transactions occur
+            response = await this.rpc(bannerRoute, { context: this.user.context });
+        }
         if (!response.html) {
             return;
         }

@@ -23,10 +23,13 @@ class OnboardingProgress(models.Model):
     onboarding_id = fields.Many2one(
         'onboarding.onboarding', 'Related onboarding tracked', required=True, ondelete='cascade')
     progress_step_ids = fields.One2many('onboarding.progress.step', 'progress_id', 'Progress Steps Trackers')
-    _sql_constraints = [
-        ('onboarding_company_uniq', 'unique (onboarding_id,company_id)',
-         'There cannot be multiple records of the same onboarding completion for the same company.'),
-    ]
+
+    def init(self):
+        # not in _sql_constraint because COALESCE is not supported for PostgreSQL constraint
+        self.env.cr.execute("""
+            CREATE UNIQUE INDEX IF NOT EXISTS onboarding_progress_onboarding_company_uniq
+            ON onboarding_progress (onboarding_id, COALESCE(company_id, 0))
+        """)
 
     @api.depends('onboarding_id.step_ids', 'progress_step_ids', 'progress_step_ids.step_state')
     def _compute_onboarding_state(self):

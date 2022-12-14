@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from psycopg2 import IntegrityError
+
 from odoo import http
 from odoo.http import request
 
@@ -12,11 +14,17 @@ class OnboardingController(http.Controller):
             return {}
 
         onboarding = request.env['onboarding.onboarding'].search([('route_name', '=', route_name)])
-        if onboarding and not onboarding._search_or_create_progress().is_onboarding_closed:
-            # JS implementation of the onboarding panel expects this data structure
-            return {
-                'html': request.env['ir.qweb']._render(
-                    'onboarding.onboarding_panel', onboarding._prepare_rendering_values())
-            }
+        if onboarding:
+            try:
+                progress = onboarding._search_or_create_progress()
+            except IntegrityError:  # Another worker created the record at the same time
+                return {'code': 503}  # Temporarily unavailable - Invites client to try again
+
+            if not progress.is_onboarding_closed:
+                # JS implementation of the onboarding panel expects this data structure
+                return {
+                    'html': request.env['ir.qweb']._render(
+                        'onboarding.onboarding_panel', onboarding._prepare_rendering_values())
+                }
 
         return {}
