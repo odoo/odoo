@@ -1206,7 +1206,7 @@
                                         <field name="auto_post"
                                                attrs="{'invisible': [('move_type', '!=', 'entry')], 'readonly': [('state','!=','draft')]}"/>
                                         <field name="reversed_entry_id"
-                                               attrs="{'invisible': [('move_type', '!=', 'entry')]}"/>
+                                               attrs="{'invisible': ['|', ('move_type', '!=', 'entry'), ('reversed_entry_id', '=', False)]}"/>
                                         <field name="auto_post_until"
                                                attrs="{'invisible': [('auto_post', 'in', ('no', 'at_date'))],
                                                        'readonly': [('state', '!=', 'draft')]}"/>
