@@ -10,7 +10,7 @@ var nameGreen = "Forest Green";
 // This tour relies on a data created from the python test.
 tour.register('shop_zoom', {
     test: true,
-    url: '/shop?search=' + imageName,
+    url: '/shop?debug=1&search=' + imageName,
 },
 [
     {
