@@ -414,6 +414,12 @@ export class SpreadsheetPivotModel extends PivotModel {
                             group.values[i],
                             group.labels[i]
                         );
+                    } else {
+                        metadataRepository.setDisplayName(
+                            field.relation,
+                            group.values[i],
+                            group.labels[i]
+                        );
                     }
                 }
             }
