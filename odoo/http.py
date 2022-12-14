@@ -1933,6 +1933,8 @@ class Application:
 
     def set_csp(self, response):
         headers = response.headers
+        headers['X-Content-Type-Options'] = 'nosniff'
+
         if 'Content-Security-Policy' in headers:
             return
 
@@ -1941,7 +1943,6 @@ class Application:
             return
 
         headers['Content-Security-Policy'] = "default-src 'none'"
-        headers['X-Content-Type-Options'] = 'nosniff'
 
     def __call__(self, environ, start_response):
         """
