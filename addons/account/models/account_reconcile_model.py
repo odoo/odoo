@@ -300,6 +300,7 @@ class AccountReconcileModel(models.Model):
             if record.payment_tolerance_type == 'percentage':
                 record.payment_tolerance_param = min(100.0, max(0.0, record.payment_tolerance_param))
             else:
+<<<<<<< HEAD
                 record.payment_tolerance_param = max(0.0, record.payment_tolerance_param)
 
     @api.constrains('allow_payment_tolerance', 'payment_tolerance_param', 'payment_tolerance_type')
@@ -321,3 +322,1320 @@ class AccountReconcileModel(models.Model):
             name = _("%s (copy)", name)
         default['name'] = name
         return super(AccountReconcileModel, self).copy(default)
+||||||| parent of 222367d2c50 (temp)
+                balance = line.amount * (1 if residual_balance > 0.0 else -1)
+
+            writeoff_line = {
+                'name': line.label or st_line.payment_ref,
+                'balance': balance,
+                'debit': balance > 0 and balance or 0,
+                'credit': balance < 0 and -balance or 0,
+                'account_id': line.account_id.id,
+                'currency_id': False,
+                'analytic_account_id': line.analytic_account_id.id,
+                'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
+                'reconcile_model_id': self.id,
+                'journal_id': line.journal_id.id,
+                'tax_ids': [],
+            }
+            lines_vals_list.append(writeoff_line)
+
+            residual_balance -= balance
+
+            if line.tax_ids:
+                writeoff_line['tax_ids'] += [(6, None, line.tax_ids.ids)]
+                tax = line.tax_ids
+                # Multiple taxes with force_tax_included results in wrong computation, so we
+                # only allow to set the force_tax_included field if we have one tax selected
+                if line.force_tax_included:
+                    tax = tax[0].with_context(force_price_include=True)
+                tax_vals_list = self._get_taxes_move_lines_dict(tax, writeoff_line)
+                lines_vals_list += tax_vals_list
+                if not line.force_tax_included:
+                    for tax_line in tax_vals_list:
+                        residual_balance -= tax_line['balance']
+
+        return lines_vals_list
+
+    def _prepare_reconciliation(self, st_line, aml_ids=[], partner=None):
+        ''' Prepare the reconciliation of the statement line with some counterpart line but
+        also with some auto-generated write-off lines.
+
+        The complexity of this method comes from the fact the reconciliation will be soft meaning
+        it will be done only if the reconciliation will not trigger an error.
+        For example, the reconciliation will be skipped if we need to create an open balance but we
+        don't have a partner to get the receivable/payable account.
+
+        This method works in two major steps. First, simulate the reconciliation of the account.move.line.
+        Then, add some write-off lines depending the rule's fields.
+
+        :param st_line: An account.bank.statement.line record.
+        :param aml_ids: The ids of some account.move.line to reconcile.
+        :param partner: An optional res.partner record. If not specified, fallback on the statement line's partner.
+        :return: A list of dictionary to be passed to the account.bank.statement.line's 'reconcile' method.
+        '''
+        self.ensure_one()
+        liquidity_lines, suspense_lines, other_lines = st_line._seek_for_lines()
+
+        if st_line.to_check:
+            st_line_residual = -liquidity_lines.balance
+        elif suspense_lines.account_id.reconcile:
+            st_line_residual = sum(suspense_lines.mapped('amount_residual'))
+        else:
+            st_line_residual = sum(suspense_lines.mapped('balance'))
+
+        partner = partner or st_line.partner_id
+
+        has_full_write_off= any(rec_mod_line.amount == 100.0 for rec_mod_line in self.line_ids)
+
+        lines_vals_list = []
+        amls = self.env['account.move.line'].browse(aml_ids)
+        st_line_residual_before = st_line_residual
+        aml_total_residual = 0
+        for aml in amls:
+            aml_total_residual += aml.amount_residual
+
+            if aml.balance * st_line_residual > 0:
+                # Meaning they have the same signs, so they can't be reconciled together
+                assigned_balance = -aml.amount_residual
+            elif has_full_write_off:
+                assigned_balance = -aml.amount_residual
+                st_line_residual -= min(-aml.amount_residual, st_line_residual, key=abs)
+            else:
+                assigned_balance = min(-aml.amount_residual, st_line_residual, key=abs)
+                st_line_residual -= assigned_balance
+
+            lines_vals_list.append({
+                'id': aml.id,
+                'balance': assigned_balance,
+                'currency_id': st_line.move_id.company_id.currency_id.id,
+            })
+
+        write_off_amount = max(aml_total_residual, -st_line_residual_before, key=abs) + st_line_residual_before + st_line_residual
+
+        reconciliation_overview, open_balance_vals = st_line._prepare_reconciliation(lines_vals_list)
+
+        writeoff_vals_list = self._get_write_off_move_lines_dict(st_line, write_off_amount)
+
+        for line_vals in writeoff_vals_list:
+            st_line_residual -= st_line.company_currency_id.round(line_vals['balance'])
+
+        # Check we have enough information to create an open balance.
+        if open_balance_vals and not open_balance_vals.get('account_id'):
+            return []
+
+        return lines_vals_list + writeoff_vals_list
+
+    def _prepare_widget_writeoff_vals(self, st_line_id, write_off_vals):
+        counterpart_vals = st_line_id._prepare_counterpart_move_line_vals({
+                **write_off_vals,
+                'currency_id': st_line_id.company_id.currency_id.id,
+            })
+        return {
+            **counterpart_vals,
+            'balance': counterpart_vals['amount_currency'],
+            'reconcile_model_id': self.id,
+        }
+
+    ####################################################
+    # RECONCILIATION CRITERIA
+    ####################################################
+
+    def _apply_rules(self, st_lines, excluded_ids=None, partner_map=None):
+        ''' Apply criteria to get candidates for all reconciliation models.
+
+        This function is called in enterprise by the reconciliation widget to match
+        the statement lines with the available candidates (using the reconciliation models).
+
+        :param st_lines:        Account.bank.statement.lines recordset.
+        :param excluded_ids:    Account.move.lines to exclude.
+        :param partner_map:     Dict mapping each line with new partner eventually.
+        :return:                A dict mapping each statement line id with:
+            * aml_ids:      A list of account.move.line ids.
+            * model:        An account.reconcile.model record (optional).
+            * status:       'reconciled' if the lines has been already reconciled, 'write_off' if the write-off must be
+                            applied on the statement line.
+        '''
+        # This functions uses SQL to compute its results. We need to flush before doing anything more.
+        for model_name in ('account.bank.statement', 'account.bank.statement.line', 'account.move', 'account.move.line', 'res.company', 'account.journal', 'account.account'):
+            self.env[model_name].flush(self.env[model_name]._fields)
+
+        results = {line.id: {'aml_ids': []} for line in st_lines}
+
+        available_models = self.filtered(lambda m: m.rule_type != 'writeoff_button').sorted()
+        aml_ids_to_exclude = set() # Keep track of already processed amls.
+        reconciled_amls_ids = set() # Keep track of already reconciled amls.
+
+        # First associate with each rec models all the statement lines for which it is applicable
+        lines_with_partner_per_model = defaultdict(lambda: [])
+        for st_line in st_lines:
+
+            # Statement lines created in old versions could have a residual amount of zero. In that case, don't try to
+            # match anything.
+            if not st_line.amount_residual:
+                continue
+
+            mapped_partner = (partner_map and partner_map.get(st_line.id) and self.env['res.partner'].browse(partner_map[st_line.id])) or st_line.partner_id
+
+            for rec_model in available_models:
+                partner = mapped_partner or rec_model._get_partner_from_mapping(st_line)
+
+                if rec_model._is_applicable_for(st_line, partner):
+                    lines_with_partner_per_model[rec_model].append((st_line, partner))
+
+        # Execute only one SQL query for each model (for performance)
+        matched_lines = self.env['account.bank.statement.line']
+        for rec_model in available_models:
+
+            # We filter the lines for this model, in case a previous one has already found something for them
+            filtered_st_lines_with_partner = [x for x in lines_with_partner_per_model[rec_model] if x[0] not in matched_lines]
+
+            if not filtered_st_lines_with_partner:
+                # No unreconciled statement line for this model
+                continue
+
+            all_model_candidates = rec_model._get_candidates(filtered_st_lines_with_partner, excluded_ids)
+
+            for st_line, partner in filtered_st_lines_with_partner:
+                candidates = all_model_candidates[st_line.id]
+                if candidates:
+                    model_rslt, new_reconciled_aml_ids, new_treated_aml_ids = rec_model._get_rule_result(st_line, candidates, aml_ids_to_exclude, reconciled_amls_ids, partner)
+
+                    if model_rslt:
+                        # We inject the selected partner (possibly coming from the rec model)
+                        model_rslt['partner']= partner
+
+                        results[st_line.id] = model_rslt
+                        reconciled_amls_ids |= new_reconciled_aml_ids
+                        aml_ids_to_exclude |= new_treated_aml_ids
+                        matched_lines += st_line
+
+        return results
+
+    def _is_applicable_for(self, st_line, partner):
+        """ Returns true iff this reconciliation model can be used to search for matches
+        for the provided statement line and partner.
+        """
+        self.ensure_one()
+
+        # Filter on journals, amount nature, amount and partners
+        # All the conditions defined in this block are non-match conditions.
+        if ((self.match_journal_ids and st_line.move_id.journal_id not in self.match_journal_ids)
+            or (self.match_nature == 'amount_received' and st_line.amount < 0)
+            or (self.match_nature == 'amount_paid' and st_line.amount > 0)
+            or (self.match_amount == 'lower' and abs(st_line.amount) >= self.match_amount_max)
+            or (self.match_amount == 'greater' and abs(st_line.amount) <= self.match_amount_min)
+            or (self.match_amount == 'between' and (abs(st_line.amount) > self.match_amount_max or abs(st_line.amount) < self.match_amount_min))
+            or (self.match_partner and not partner)
+            or (self.match_partner and self.match_partner_ids and partner not in self.match_partner_ids)
+            or (self.match_partner and self.match_partner_category_ids and partner.category_id not in self.match_partner_category_ids)
+        ):
+            return False
+
+        # Filter on label, note and transaction_type
+        for record, rule_field, record_field in [(st_line, 'label', 'payment_ref'), (st_line.move_id, 'note', 'narration'), (st_line, 'transaction_type', 'transaction_type')]:
+            rule_term = (self['match_' + rule_field + '_param'] or '').lower()
+            record_term = (record[record_field] or '').lower()
+
+            # This defines non-match conditions
+            if ((self['match_' + rule_field] == 'contains' and rule_term not in record_term)
+                or (self['match_' + rule_field] == 'not_contains' and rule_term in record_term)
+                or (self['match_' + rule_field] == 'match_regex' and not re.match(rule_term, record_term))
+            ):
+                return False
+
+        return True
+
+    def _get_candidates(self, st_lines_with_partner, excluded_ids):
+        """ Returns the match candidates for this rule, with respect to the provided parameters.
+
+        :param st_lines_with_partner: A list of tuples (statement_line, partner),
+                                      associating each statement line to treate with
+                                      the corresponding partner, given by the partner map
+        :param excluded_ids: a set containing the ids of the amls to ignore during the search
+                             (because they already been matched by another rule)
+        """
+        self.ensure_one()
+
+        treatment_map = {
+            'invoice_matching': lambda x: x._get_invoice_matching_query(st_lines_with_partner, excluded_ids),
+            'writeoff_suggestion': lambda x: x._get_writeoff_suggestion_query(st_lines_with_partner, excluded_ids),
+        }
+
+        query_generator = treatment_map[self.rule_type]
+        query, params = query_generator(self)
+        self._cr.execute(query, params)
+
+        rslt = defaultdict(lambda: [])
+        for candidate_dict in self._cr.dictfetchall():
+            rslt[candidate_dict['id']].append(candidate_dict)
+
+        return rslt
+
+    def _get_invoice_matching_query(self, st_lines_with_partner, excluded_ids):
+        ''' Returns the query applying the current invoice_matching reconciliation
+        model to the provided statement lines.
+
+        :param st_lines_with_partner: A list of tuples (statement_line, partner),
+                                      associating each statement line to treate with
+                                      the corresponding partner, given by the partner map
+        :param excluded_ids:    Account.move.lines to exclude.
+        :return:                (query, params)
+        '''
+        self.ensure_one()
+        if self.rule_type != 'invoice_matching':
+            raise UserError(_('Programmation Error: Can\'t call _get_invoice_matching_query() for different rules than \'invoice_matching\''))
+
+        unaccent = get_unaccent_wrapper(self._cr)
+
+        # N.B: 'communication_flag' is there to distinguish invoice matching through the number/reference
+        # (higher priority) from invoice matching using the partner (lower priority).
+        query = r'''
+        SELECT
+            st_line.id                          AS id,
+            aml.id                              AS aml_id,
+            aml.currency_id                     AS aml_currency_id,
+            aml.date_maturity                   AS aml_date_maturity,
+            aml.amount_residual                 AS aml_amount_residual,
+            aml.amount_residual_currency        AS aml_amount_residual_currency,
+            ''' + self._get_select_communication_flag() + r''' AS communication_flag,
+            ''' + self._get_select_payment_reference_flag() + r''' AS payment_reference_flag
+        FROM account_bank_statement_line st_line
+        JOIN account_move st_line_move          ON st_line_move.id = st_line.move_id
+        JOIN res_company company                ON company.id = st_line_move.company_id
+        , account_move_line aml
+        LEFT JOIN account_move move             ON move.id = aml.move_id AND move.state = 'posted'
+        LEFT JOIN account_account account       ON account.id = aml.account_id
+        LEFT JOIN res_partner aml_partner       ON aml.partner_id = aml_partner.id
+        LEFT JOIN account_payment payment       ON payment.move_id = move.id
+        WHERE
+            aml.company_id = st_line_move.company_id
+            AND move.state = 'posted'
+            AND account.reconcile IS TRUE
+            AND aml.reconciled IS FALSE
+        '''
+
+        # Add conditions to handle each of the statement lines we want to match
+        st_lines_queries = []
+        for st_line, partner in st_lines_with_partner:
+            # In case we don't have any partner for this line, we try assigning one with the rule mapping
+            if st_line.amount > 0:
+                st_line_subquery = r"aml.balance > 0"
+            else:
+                st_line_subquery = r"aml.balance < 0"
+
+            if self.match_same_currency:
+                st_line_subquery += r" AND COALESCE(aml.currency_id, company.currency_id) = %s" % (st_line.foreign_currency_id.id or st_line.move_id.currency_id.id)
+
+            if partner:
+                st_line_subquery += r" AND aml.partner_id = %s" % partner.id
+            else:
+                st_line_fields_consideration = [
+                    (self.match_text_location_label, 'st_line.payment_ref'),
+                    (self.match_text_location_note, 'st_line_move.narration'),
+                    (self.match_text_location_reference, 'st_line_move.ref'),
+                ]
+
+                no_partner_query = " OR ".join([
+                    r"""
+                        (
+                            substring(REGEXP_REPLACE(""" + sql_field + """, '[^0-9\s]', '', 'g'), '\S(?:.*\S)*') != ''
+                            AND
+                            (
+                                (""" + self._get_select_communication_flag() + """)
+                                OR
+                                (""" + self._get_select_payment_reference_flag() + """)
+                            )
+                        )
+                        OR
+                        (
+                            /* We also match statement lines without partners with amls
+                            whose partner's name's parts (splitting on space) are all present
+                            within the payment_ref, in any order, with any characters between them. */
+
+                            aml_partner.name IS NOT NULL
+                            AND """ + unaccent(sql_field) + r""" ~* ('^' || (
+                                SELECT string_agg(concat('(?=.*\m', chunk[1], '\M)'), '')
+                                  FROM regexp_matches(""" + unaccent("aml_partner.name") + r""", '\w{3,}', 'g') AS chunk
+                            ))
+                        )
+                    """
+                    for consider_field, sql_field in st_line_fields_consideration
+                    if consider_field
+                ])
+
+                if no_partner_query:
+                    st_line_subquery += " AND " + no_partner_query
+
+            st_lines_queries.append(r"st_line.id = %s AND (%s)" % (st_line.id, st_line_subquery))
+
+        query += r" AND (%s) " % " OR ".join(st_lines_queries)
+
+        params = {}
+
+        # If this reconciliation model defines a past_months_limit, we add a condition
+        # to the query to only search on move lines that are younger than this limit.
+        if self.past_months_limit:
+            date_limit = fields.Date.context_today(self) - relativedelta(months=self.past_months_limit)
+            query += "AND aml.date >= %(aml_date_limit)s"
+            params['aml_date_limit'] = date_limit
+
+        # Filter out excluded account.move.line.
+        if excluded_ids:
+            query += 'AND aml.id NOT IN %(excluded_aml_ids)s'
+            params['excluded_aml_ids'] = tuple(excluded_ids)
+
+        if self.matching_order == 'new_first':
+            query += ' ORDER BY aml_date_maturity DESC, aml_id DESC'
+        else:
+            query += ' ORDER BY aml_date_maturity ASC, aml_id ASC'
+
+        return query, params
+
+    def _get_select_communication_flag(self):
+        self.ensure_one()
+        # Determine a matching or not with the statement line communication using the aml.name, move.name or move.ref.
+        st_ref_list = []
+        if self.match_text_location_label:
+            st_ref_list += ['st_line.payment_ref']
+        if self.match_text_location_note:
+            st_ref_list += ['st_line_move.narration']
+        if self.match_text_location_reference:
+            st_ref_list += ['st_line_move.ref']
+
+        st_ref = " || ' ' || ".join(
+            "COALESCE(%s, '')" % st_ref_name
+            for st_ref_name in st_ref_list
+        )
+        if not st_ref:
+            return "FALSE"
+
+        statement_compare = r"""(
+                {move_field} IS NOT NULL AND substring(REGEXP_REPLACE({move_field}, '[^0-9\s]', '', 'g'), '\S(?:.*\S)*') != ''
+                AND (
+                    regexp_split_to_array(substring(REGEXP_REPLACE({move_field}, '[^0-9\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
+                    && regexp_split_to_array(substring(REGEXP_REPLACE({st_ref}, '[^0-9\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
+                )
+            )"""
+        return " OR ".join(
+            statement_compare.format(move_field=field, st_ref=st_ref)
+            for field in ['aml.name', 'move.name', 'move.ref']
+        )
+
+    def _get_select_payment_reference_flag(self):
+        # Determine a matching or not with the statement line communication using the move.payment_reference.
+        st_ref_list = []
+        if self.match_text_location_label:
+            st_ref_list += ['st_line.payment_ref']
+        if self.match_text_location_note:
+            st_ref_list += ['st_line_move.narration']
+        if self.match_text_location_reference:
+            st_ref_list += ['st_line_move.ref']
+        if not st_ref_list:
+            return "FALSE"
+
+        # payment_reference is not used on account.move for payments; ref is used instead
+        return r'''((move.payment_reference IS NOT NULL OR (payment.id IS NOT NULL AND move.ref IS NOT NULL)) AND ({}))'''.format(
+            ' OR '.join(
+                rf"regexp_replace(CASE WHEN payment.id IS NULL THEN move.payment_reference ELSE move.ref END, '\s+', '', 'g') = regexp_replace({st_ref}, '\s+', '', 'g')"
+                for st_ref in st_ref_list
+            )
+        )
+
+    def _get_partner_from_mapping(self, st_line):
+        """Find partner with mapping defined on model.
+
+        For invoice matching rules, matches the statement line against each
+        regex defined in partner mapping, and returns the partner corresponding
+        to the first one matching.
+
+        :param st_line (Model<account.bank.statement.line>):
+            The statement line that needs a partner to be found
+        :return Model<res.partner>:
+            The partner found from the mapping. Can be empty an empty recordset
+            if there was nothing found from the mapping or if the function is
+            not applicable.
+        """
+        self.ensure_one()
+
+        if self.rule_type not in ('invoice_matching', 'writeoff_suggestion'):
+            return self.env['res.partner']
+
+        for partner_mapping in self.partner_mapping_line_ids:
+            match_payment_ref = re.match(partner_mapping.payment_ref_regex, st_line.payment_ref) if partner_mapping.payment_ref_regex else True
+            match_narration = re.match(partner_mapping.narration_regex, st_line.narration or '') if partner_mapping.narration_regex else True
+
+            if match_payment_ref and match_narration:
+                return partner_mapping.partner_id
+        return self.env['res.partner']
+
+    def _get_writeoff_suggestion_query(self, st_lines_with_partner, excluded_ids=None):
+        ''' Returns the query applying the current writeoff_suggestion reconciliation
+        model to the provided statement lines.
+
+        :param st_lines_with_partner: A list of tuples (statement_line, partner),
+                                      associating each statement line to treate with
+                                      the corresponding partner, given by the partner map
+        :param excluded_ids:    Account.move.lines to exclude.
+        :return:                (query, params)
+        '''
+        self.ensure_one()
+
+        if self.rule_type != 'writeoff_suggestion':
+            raise UserError(_("Programmation Error: Can't call _get_writeoff_suggestion_query() for different rules than 'writeoff_suggestion'"))
+
+        query = '''
+            SELECT
+                st_line.id                          AS id
+            FROM account_bank_statement_line st_line
+            WHERE st_line.id IN %(st_line_ids)s
+        '''
+        params = {
+            'st_line_ids': tuple(st_line.id for (st_line, partner) in st_lines_with_partner),
+        }
+
+        return query, params
+
+    def _get_rule_result(self, st_line, candidates, aml_ids_to_exclude, reconciled_amls_ids, partner_map):
+        """ Get the result of a rule from the list of available candidates, depending on the
+        other reconciliations performed by previous rules.
+        """
+        self.ensure_one()
+
+        if self.rule_type == 'invoice_matching':
+            return self._get_invoice_matching_rule_result(st_line, candidates, aml_ids_to_exclude, reconciled_amls_ids, partner_map)
+        elif self.rule_type == 'writeoff_suggestion':
+            return self._get_writeoff_suggestion_rule_result(st_line, partner_map), set(), set()
+        else:
+            return None, set(), set()
+
+    def _get_invoice_matching_rule_result(self, st_line, candidates, aml_ids_to_exclude, reconciled_amls_ids, partner):
+        new_reconciled_aml_ids = set()
+        new_treated_aml_ids = set()
+        candidates, priorities = self._filter_candidates(candidates, aml_ids_to_exclude, reconciled_amls_ids)
+
+        # Special case: the amounts are the same, submit the line directly.
+        st_line_currency = st_line.foreign_currency_id or st_line.currency_id
+        candidate_currencies = set(candidate['aml_currency_id'] or st_line.company_id.currency_id.id for candidate in candidates)
+        if candidate_currencies == {st_line_currency.id}:
+            for candidate in candidates:
+                residual_amount = candidate['aml_currency_id'] and candidate['aml_amount_residual_currency'] or candidate['aml_amount_residual']
+                if st_line_currency.is_zero(residual_amount + st_line.amount_residual):
+                    candidates, priorities = self._filter_candidates([candidate], aml_ids_to_exclude, reconciled_amls_ids)
+                    break
+
+        # We check the amount criteria of the reconciliation model, and select the
+        # candidates if they pass the verification. Candidates from the first priority
+        # level (even already selected) bypass this check, and are selected anyway.
+        disable_bypass = self.env['ir.config_parameter'].sudo().get_param('account.disable_rec_models_bypass')
+        if (not disable_bypass and priorities & {1,2}) or self._check_rule_propositions(st_line, candidates):
+            rslt = {
+                'model': self,
+                'aml_ids': [candidate['aml_id'] for candidate in candidates],
+            }
+            new_treated_aml_ids = set(rslt['aml_ids'])
+
+            # Create write-off lines.
+            lines_vals_list = self._prepare_reconciliation(st_line, aml_ids=rslt['aml_ids'], partner=partner)
+
+            # A write-off must be applied if there are some 'new' lines to propose.
+            write_off_lines_vals = list(filter(lambda x: 'id' not in x, lines_vals_list))
+            if not lines_vals_list or write_off_lines_vals:
+                rslt['status'] = 'write_off'
+                rslt['write_off_vals'] = write_off_lines_vals
+
+            # Process auto-reconciliation. We only do that for the first two priorities, if they are not matched elsewhere.
+            if lines_vals_list and priorities & {1, 3} and self.auto_reconcile:
+                if not st_line.partner_id and partner:
+                    st_line.partner_id = partner
+
+                st_line.reconcile(lines_vals_list)
+                rslt['status'] = 'reconciled'
+                rslt['reconciled_lines'] = st_line.line_ids
+                new_reconciled_aml_ids = new_treated_aml_ids
+        else:
+            rslt = None
+
+        return rslt, new_reconciled_aml_ids, new_treated_aml_ids
+
+    def _check_rule_propositions(self, statement_line, candidates):
+        ''' Check restrictions that can't be handled for each move.line separately.
+        /!\ Only used by models having a type equals to 'invoice_matching'.
+        :param statement_line:  An account.bank.statement.line record.
+        :param candidates:      Fetched account.move.lines from query (dict).
+        :return:                True if the reconciliation propositions are accepted. False otherwise.
+        '''
+        if not self.match_total_amount:
+            return True
+        if not candidates:
+            return False
+
+        reconciliation_overview, open_balance_vals = statement_line._prepare_reconciliation([{
+            'currency_id': aml['aml_currency_id'],
+            'amount_residual': aml['aml_amount_residual'],
+            'amount_residual_currency': aml['aml_amount_residual_currency'],
+        } for aml in candidates])
+
+        # Match total residual amount.
+        line_currency = statement_line.foreign_currency_id or statement_line.currency_id
+        line_residual = statement_line.amount_residual
+        line_residual_after_reconciliation = line_residual
+
+        for reconciliation_vals in reconciliation_overview:
+            line_vals = reconciliation_vals['line_vals']
+            if line_vals['currency_id']:
+                line_residual_after_reconciliation -= line_vals['amount_currency']
+            else:
+                line_residual_after_reconciliation -= line_vals['debit'] - line_vals['credit']
+
+        # Statement line amount is equal to the total residual.
+        if line_currency.is_zero(line_residual_after_reconciliation):
+            return True
+        residual_difference = line_residual - line_residual_after_reconciliation
+        reconciled_percentage = 100 - abs(line_residual_after_reconciliation) / abs(residual_difference) * 100 if (residual_difference != 0) else 0
+        return reconciled_percentage >= self.match_total_amount_param
+
+    def _filter_candidates(self, candidates, aml_ids_to_exclude, reconciled_amls_ids):
+        """ Sorts reconciliation candidates by priority and filters them so that only
+        the most prioritary are kept.
+        """
+        candidates_by_priority = self._sort_reconciliation_candidates_by_priority(candidates, aml_ids_to_exclude, reconciled_amls_ids)
+
+        # This can happen if the candidates were already reconciled at this point
+        if not candidates_by_priority:
+            return [], set()
+
+        max_priority = min(candidates_by_priority.keys())
+
+        filtered_candidates = candidates_by_priority[max_priority]
+        filtered_priorities = {max_priority,}
+
+        if max_priority in (1, 3, 5):
+            # We also keep the already proposed values of the same priority level
+            proposed_priority = max_priority + 1
+            filtered_candidates += candidates_by_priority[proposed_priority]
+            if candidates_by_priority[proposed_priority]:
+                filtered_priorities.add(proposed_priority)
+
+        return filtered_candidates, filtered_priorities
+
+    def _sort_reconciliation_candidates_by_priority(self, candidates, already_proposed_aml_ids, already_reconciled_aml_ids):
+        """ Sorts the provided candidates and returns a mapping of candidates by
+        priority (1 being the highest).
+
+        The priorities are defined as follows:
+
+        1: payment_reference_flag is true,  so the move's payment_reference
+           field matches the statement line's.
+
+        2: Same as 1, but the candidates have already been proposed for a previous statement line
+
+        3: communication_flag is true, so either the move's ref, move's name or
+           aml's name match the statement line's payment reference.
+
+        4: Same as 3, but the candidates have already been proposed for a previous statement line
+
+        5: candidates proposed by the query, but no match with the statement
+           line's payment ref could be found.
+
+        6: Same as 5, but the candidates have already been proposed for a previous statement line
+        """
+        candidates_by_priority = defaultdict(lambda: [])
+
+        for candidate in filter(lambda x: x['aml_id'] not in already_reconciled_aml_ids, candidates):
+
+            if candidate['payment_reference_flag']:
+                priority = 1
+            elif candidate['communication_flag']:
+                priority = 3
+            else:
+                priority = 5
+
+            if candidate['aml_id'] in already_proposed_aml_ids:
+                # So, priorities 2, 4 and 6 are created here
+                priority += 1
+
+            candidates_by_priority[priority].append(candidate)
+
+        return candidates_by_priority
+
+    def _get_writeoff_suggestion_rule_result(self, st_line, partner):
+        # Create write-off lines.
+        lines_vals_list = self._prepare_reconciliation(st_line, partner=partner)
+
+        rslt = {
+            'model': self,
+            'status': 'write_off',
+            'aml_ids': [],
+            'write_off_vals': lines_vals_list,
+        }
+
+        # Process auto-reconciliation.
+        if lines_vals_list and self.auto_reconcile:
+            if not st_line.partner_id and partner:
+                st_line.partner_id = partner
+
+            st_line.reconcile(lines_vals_list)
+            rslt['status'] = 'reconciled'
+            rslt['reconciled_lines'] = st_line.line_ids
+
+        return rslt
+=======
+                balance = line.amount * (1 if residual_balance > 0.0 else -1)
+
+            writeoff_line = {
+                'name': line.label or st_line.payment_ref,
+                'balance': balance,
+                'debit': balance > 0 and balance or 0,
+                'credit': balance < 0 and -balance or 0,
+                'account_id': line.account_id.id,
+                'currency_id': False,
+                'analytic_account_id': line.analytic_account_id.id,
+                'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
+                'reconcile_model_id': self.id,
+                'journal_id': line.journal_id.id,
+                'tax_ids': [],
+            }
+            lines_vals_list.append(writeoff_line)
+
+            residual_balance -= balance
+
+            if line.tax_ids:
+                writeoff_line['tax_ids'] += [(6, None, line.tax_ids.ids)]
+                tax = line.tax_ids
+                # Multiple taxes with force_tax_included results in wrong computation, so we
+                # only allow to set the force_tax_included field if we have one tax selected
+                if line.force_tax_included:
+                    tax = tax[0].with_context(force_price_include=True)
+                tax_vals_list = self._get_taxes_move_lines_dict(tax, writeoff_line)
+                lines_vals_list += tax_vals_list
+                if not line.force_tax_included:
+                    for tax_line in tax_vals_list:
+                        residual_balance -= tax_line['balance']
+
+        return lines_vals_list
+
+    def _prepare_reconciliation(self, st_line, aml_ids=[], partner=None):
+        ''' Prepare the reconciliation of the statement line with some counterpart line but
+        also with some auto-generated write-off lines.
+
+        The complexity of this method comes from the fact the reconciliation will be soft meaning
+        it will be done only if the reconciliation will not trigger an error.
+        For example, the reconciliation will be skipped if we need to create an open balance but we
+        don't have a partner to get the receivable/payable account.
+
+        This method works in two major steps. First, simulate the reconciliation of the account.move.line.
+        Then, add some write-off lines depending the rule's fields.
+
+        :param st_line: An account.bank.statement.line record.
+        :param aml_ids: The ids of some account.move.line to reconcile.
+        :param partner: An optional res.partner record. If not specified, fallback on the statement line's partner.
+        :return: A list of dictionary to be passed to the account.bank.statement.line's 'reconcile' method.
+        '''
+        self.ensure_one()
+        liquidity_lines, suspense_lines, other_lines = st_line._seek_for_lines()
+
+        if st_line.to_check:
+            st_line_residual = -liquidity_lines.balance
+        elif suspense_lines.account_id.reconcile:
+            st_line_residual = sum(suspense_lines.mapped('amount_residual'))
+        else:
+            st_line_residual = sum(suspense_lines.mapped('balance'))
+
+        partner = partner or st_line.partner_id
+
+        has_full_write_off= any(rec_mod_line.amount == 100.0 for rec_mod_line in self.line_ids)
+
+        lines_vals_list = []
+        amls = self.env['account.move.line'].browse(aml_ids)
+        st_line_residual_before = st_line_residual
+        aml_total_residual = 0
+        for aml in amls:
+            aml_total_residual += aml.amount_residual
+
+            if aml.balance * st_line_residual > 0:
+                # Meaning they have the same signs, so they can't be reconciled together
+                assigned_balance = -aml.amount_residual
+            elif has_full_write_off:
+                assigned_balance = -aml.amount_residual
+                st_line_residual -= min(-aml.amount_residual, st_line_residual, key=abs)
+            else:
+                assigned_balance = min(-aml.amount_residual, st_line_residual, key=abs)
+                st_line_residual -= assigned_balance
+
+            lines_vals_list.append({
+                'id': aml.id,
+                'balance': assigned_balance,
+                'currency_id': st_line.move_id.company_id.currency_id.id,
+            })
+
+        write_off_amount = max(aml_total_residual, -st_line_residual_before, key=abs) + st_line_residual_before + st_line_residual
+
+        reconciliation_overview, open_balance_vals = st_line._prepare_reconciliation(lines_vals_list)
+
+        writeoff_vals_list = self._get_write_off_move_lines_dict(st_line, write_off_amount)
+
+        for line_vals in writeoff_vals_list:
+            st_line_residual -= st_line.company_currency_id.round(line_vals['balance'])
+
+        # Check we have enough information to create an open balance.
+        if open_balance_vals and not open_balance_vals.get('account_id'):
+            return []
+
+        return lines_vals_list + writeoff_vals_list
+
+    def _prepare_widget_writeoff_vals(self, st_line_id, write_off_vals):
+        counterpart_vals = st_line_id._prepare_counterpart_move_line_vals({
+                **write_off_vals,
+                'currency_id': st_line_id.company_id.currency_id.id,
+            })
+        return {
+            **counterpart_vals,
+            'balance': counterpart_vals['amount_currency'],
+            'reconcile_model_id': self.id,
+        }
+
+    ####################################################
+    # RECONCILIATION CRITERIA
+    ####################################################
+
+    def _apply_rules(self, st_lines, excluded_ids=None, partner_map=None):
+        ''' Apply criteria to get candidates for all reconciliation models.
+
+        This function is called in enterprise by the reconciliation widget to match
+        the statement lines with the available candidates (using the reconciliation models).
+
+        :param st_lines:        Account.bank.statement.lines recordset.
+        :param excluded_ids:    Account.move.lines to exclude.
+        :param partner_map:     Dict mapping each line with new partner eventually.
+        :return:                A dict mapping each statement line id with:
+            * aml_ids:      A list of account.move.line ids.
+            * model:        An account.reconcile.model record (optional).
+            * status:       'reconciled' if the lines has been already reconciled, 'write_off' if the write-off must be
+                            applied on the statement line.
+        '''
+        # This functions uses SQL to compute its results. We need to flush before doing anything more.
+        for model_name in ('account.bank.statement', 'account.bank.statement.line', 'account.move', 'account.move.line', 'res.company', 'account.journal', 'account.account'):
+            self.env[model_name].flush(self.env[model_name]._fields)
+
+        results = {line.id: {'aml_ids': []} for line in st_lines}
+
+        available_models = self.filtered(lambda m: m.rule_type != 'writeoff_button').sorted()
+        aml_ids_to_exclude = set() # Keep track of already processed amls.
+        reconciled_amls_ids = set() # Keep track of already reconciled amls.
+
+        # First associate with each rec models all the statement lines for which it is applicable
+        lines_with_partner_per_model = defaultdict(lambda: [])
+        for st_line in st_lines:
+
+            # Statement lines created in old versions could have a residual amount of zero. In that case, don't try to
+            # match anything.
+            if not st_line.amount_residual:
+                continue
+
+            mapped_partner = (partner_map and partner_map.get(st_line.id) and self.env['res.partner'].browse(partner_map[st_line.id])) or st_line.partner_id
+
+            for rec_model in available_models:
+                partner = mapped_partner or rec_model._get_partner_from_mapping(st_line)
+
+                if rec_model._is_applicable_for(st_line, partner):
+                    lines_with_partner_per_model[rec_model].append((st_line, partner))
+
+        # Execute only one SQL query for each model (for performance)
+        matched_lines = self.env['account.bank.statement.line']
+        for rec_model in available_models:
+
+            # We filter the lines for this model, in case a previous one has already found something for them
+            filtered_st_lines_with_partner = [x for x in lines_with_partner_per_model[rec_model] if x[0] not in matched_lines]
+
+            if not filtered_st_lines_with_partner:
+                # No unreconciled statement line for this model
+                continue
+
+            all_model_candidates = rec_model._get_candidates(filtered_st_lines_with_partner, excluded_ids)
+
+            for st_line, partner in filtered_st_lines_with_partner:
+                candidates = all_model_candidates[st_line.id]
+                if candidates:
+                    model_rslt, new_reconciled_aml_ids, new_treated_aml_ids = rec_model._get_rule_result(st_line, candidates, aml_ids_to_exclude, reconciled_amls_ids, partner)
+
+                    if model_rslt:
+                        # We inject the selected partner (possibly coming from the rec model)
+                        model_rslt['partner']= partner
+
+                        results[st_line.id] = model_rslt
+                        reconciled_amls_ids |= new_reconciled_aml_ids
+                        aml_ids_to_exclude |= new_treated_aml_ids
+                        matched_lines += st_line
+
+        return results
+
+    def _is_applicable_for(self, st_line, partner):
+        """ Returns true iff this reconciliation model can be used to search for matches
+        for the provided statement line and partner.
+        """
+        self.ensure_one()
+
+        # Filter on journals, amount nature, amount and partners
+        # All the conditions defined in this block are non-match conditions.
+        if ((self.match_journal_ids and st_line.move_id.journal_id not in self.match_journal_ids)
+            or (self.match_nature == 'amount_received' and st_line.amount < 0)
+            or (self.match_nature == 'amount_paid' and st_line.amount > 0)
+            or (self.match_amount == 'lower' and abs(st_line.amount) >= self.match_amount_max)
+            or (self.match_amount == 'greater' and abs(st_line.amount) <= self.match_amount_min)
+            or (self.match_amount == 'between' and (abs(st_line.amount) > self.match_amount_max or abs(st_line.amount) < self.match_amount_min))
+            or (self.match_partner and not partner)
+            or (self.match_partner and self.match_partner_ids and partner not in self.match_partner_ids)
+            or (self.match_partner and self.match_partner_category_ids and not (partner.category_id & self.match_partner_category_ids))
+        ):
+            return False
+
+        # Filter on label, note and transaction_type
+        for record, rule_field, record_field in [(st_line, 'label', 'payment_ref'), (st_line.move_id, 'note', 'narration'), (st_line, 'transaction_type', 'transaction_type')]:
+            rule_term = (self['match_' + rule_field + '_param'] or '').lower()
+            record_term = (record[record_field] or '').lower()
+
+            # This defines non-match conditions
+            if ((self['match_' + rule_field] == 'contains' and rule_term not in record_term)
+                or (self['match_' + rule_field] == 'not_contains' and rule_term in record_term)
+                or (self['match_' + rule_field] == 'match_regex' and not re.match(rule_term, record_term))
+            ):
+                return False
+
+        return True
+
+    def _get_candidates(self, st_lines_with_partner, excluded_ids):
+        """ Returns the match candidates for this rule, with respect to the provided parameters.
+
+        :param st_lines_with_partner: A list of tuples (statement_line, partner),
+                                      associating each statement line to treate with
+                                      the corresponding partner, given by the partner map
+        :param excluded_ids: a set containing the ids of the amls to ignore during the search
+                             (because they already been matched by another rule)
+        """
+        self.ensure_one()
+
+        treatment_map = {
+            'invoice_matching': lambda x: x._get_invoice_matching_query(st_lines_with_partner, excluded_ids),
+            'writeoff_suggestion': lambda x: x._get_writeoff_suggestion_query(st_lines_with_partner, excluded_ids),
+        }
+
+        query_generator = treatment_map[self.rule_type]
+        query, params = query_generator(self)
+        self._cr.execute(query, params)
+
+        rslt = defaultdict(lambda: [])
+        for candidate_dict in self._cr.dictfetchall():
+            rslt[candidate_dict['id']].append(candidate_dict)
+
+        return rslt
+
+    def _get_invoice_matching_query(self, st_lines_with_partner, excluded_ids):
+        ''' Returns the query applying the current invoice_matching reconciliation
+        model to the provided statement lines.
+
+        :param st_lines_with_partner: A list of tuples (statement_line, partner),
+                                      associating each statement line to treate with
+                                      the corresponding partner, given by the partner map
+        :param excluded_ids:    Account.move.lines to exclude.
+        :return:                (query, params)
+        '''
+        self.ensure_one()
+        if self.rule_type != 'invoice_matching':
+            raise UserError(_('Programmation Error: Can\'t call _get_invoice_matching_query() for different rules than \'invoice_matching\''))
+
+        unaccent = get_unaccent_wrapper(self._cr)
+
+        # N.B: 'communication_flag' is there to distinguish invoice matching through the number/reference
+        # (higher priority) from invoice matching using the partner (lower priority).
+        query = r'''
+        SELECT
+            st_line.id                          AS id,
+            aml.id                              AS aml_id,
+            aml.currency_id                     AS aml_currency_id,
+            aml.date_maturity                   AS aml_date_maturity,
+            aml.amount_residual                 AS aml_amount_residual,
+            aml.amount_residual_currency        AS aml_amount_residual_currency,
+            ''' + self._get_select_communication_flag() + r''' AS communication_flag,
+            ''' + self._get_select_payment_reference_flag() + r''' AS payment_reference_flag
+        FROM account_bank_statement_line st_line
+        JOIN account_move st_line_move          ON st_line_move.id = st_line.move_id
+        JOIN res_company company                ON company.id = st_line_move.company_id
+        , account_move_line aml
+        LEFT JOIN account_move move             ON move.id = aml.move_id AND move.state = 'posted'
+        LEFT JOIN account_account account       ON account.id = aml.account_id
+        LEFT JOIN res_partner aml_partner       ON aml.partner_id = aml_partner.id
+        LEFT JOIN account_payment payment       ON payment.move_id = move.id
+        WHERE
+            aml.company_id = st_line_move.company_id
+            AND move.state = 'posted'
+            AND account.reconcile IS TRUE
+            AND aml.reconciled IS FALSE
+        '''
+
+        # Add conditions to handle each of the statement lines we want to match
+        st_lines_queries = []
+        for st_line, partner in st_lines_with_partner:
+            # In case we don't have any partner for this line, we try assigning one with the rule mapping
+            if st_line.amount > 0:
+                st_line_subquery = r"aml.balance > 0"
+            else:
+                st_line_subquery = r"aml.balance < 0"
+
+            if self.match_same_currency:
+                st_line_subquery += r" AND COALESCE(aml.currency_id, company.currency_id) = %s" % (st_line.foreign_currency_id.id or st_line.move_id.currency_id.id)
+
+            if partner:
+                st_line_subquery += r" AND aml.partner_id = %s" % partner.id
+            else:
+                st_line_fields_consideration = [
+                    (self.match_text_location_label, 'st_line.payment_ref'),
+                    (self.match_text_location_note, 'st_line_move.narration'),
+                    (self.match_text_location_reference, 'st_line_move.ref'),
+                ]
+
+                no_partner_query = " OR ".join([
+                    r"""
+                        (
+                            substring(REGEXP_REPLACE(""" + sql_field + """, '[^0-9\s]', '', 'g'), '\S(?:.*\S)*') != ''
+                            AND
+                            (
+                                (""" + self._get_select_communication_flag() + """)
+                                OR
+                                (""" + self._get_select_payment_reference_flag() + """)
+                            )
+                        )
+                        OR
+                        (
+                            /* We also match statement lines without partners with amls
+                            whose partner's name's parts (splitting on space) are all present
+                            within the payment_ref, in any order, with any characters between them. */
+
+                            aml_partner.name IS NOT NULL
+                            AND """ + unaccent(sql_field) + r""" ~* ('^' || (
+                                SELECT string_agg(concat('(?=.*\m', chunk[1], '\M)'), '')
+                                  FROM regexp_matches(""" + unaccent("aml_partner.name") + r""", '\w{3,}', 'g') AS chunk
+                            ))
+                        )
+                    """
+                    for consider_field, sql_field in st_line_fields_consideration
+                    if consider_field
+                ])
+
+                if no_partner_query:
+                    st_line_subquery += " AND " + no_partner_query
+
+            st_lines_queries.append(r"st_line.id = %s AND (%s)" % (st_line.id, st_line_subquery))
+
+        query += r" AND (%s) " % " OR ".join(st_lines_queries)
+
+        params = {}
+
+        # If this reconciliation model defines a past_months_limit, we add a condition
+        # to the query to only search on move lines that are younger than this limit.
+        if self.past_months_limit:
+            date_limit = fields.Date.context_today(self) - relativedelta(months=self.past_months_limit)
+            query += "AND aml.date >= %(aml_date_limit)s"
+            params['aml_date_limit'] = date_limit
+
+        # Filter out excluded account.move.line.
+        if excluded_ids:
+            query += 'AND aml.id NOT IN %(excluded_aml_ids)s'
+            params['excluded_aml_ids'] = tuple(excluded_ids)
+
+        if self.matching_order == 'new_first':
+            query += ' ORDER BY aml_date_maturity DESC, aml_id DESC'
+        else:
+            query += ' ORDER BY aml_date_maturity ASC, aml_id ASC'
+
+        return query, params
+
+    def _get_select_communication_flag(self):
+        self.ensure_one()
+        # Determine a matching or not with the statement line communication using the aml.name, move.name or move.ref.
+        st_ref_list = []
+        if self.match_text_location_label:
+            st_ref_list += ['st_line.payment_ref']
+        if self.match_text_location_note:
+            st_ref_list += ['st_line_move.narration']
+        if self.match_text_location_reference:
+            st_ref_list += ['st_line_move.ref']
+
+        st_ref = " || ' ' || ".join(
+            "COALESCE(%s, '')" % st_ref_name
+            for st_ref_name in st_ref_list
+        )
+        if not st_ref:
+            return "FALSE"
+
+        statement_compare = r"""(
+                {move_field} IS NOT NULL AND substring(REGEXP_REPLACE({move_field}, '[^0-9\s]', '', 'g'), '\S(?:.*\S)*') != ''
+                AND (
+                    regexp_split_to_array(substring(REGEXP_REPLACE({move_field}, '[^0-9\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
+                    && regexp_split_to_array(substring(REGEXP_REPLACE({st_ref}, '[^0-9\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
+                )
+            )"""
+        return " OR ".join(
+            statement_compare.format(move_field=field, st_ref=st_ref)
+            for field in ['aml.name', 'move.name', 'move.ref']
+        )
+
+    def _get_select_payment_reference_flag(self):
+        # Determine a matching or not with the statement line communication using the move.payment_reference.
+        st_ref_list = []
+        if self.match_text_location_label:
+            st_ref_list += ['st_line.payment_ref']
+        if self.match_text_location_note:
+            st_ref_list += ['st_line_move.narration']
+        if self.match_text_location_reference:
+            st_ref_list += ['st_line_move.ref']
+        if not st_ref_list:
+            return "FALSE"
+
+        # payment_reference is not used on account.move for payments; ref is used instead
+        return r'''((move.payment_reference IS NOT NULL OR (payment.id IS NOT NULL AND move.ref IS NOT NULL)) AND ({}))'''.format(
+            ' OR '.join(
+                rf"regexp_replace(CASE WHEN payment.id IS NULL THEN move.payment_reference ELSE move.ref END, '\s+', '', 'g') = regexp_replace({st_ref}, '\s+', '', 'g')"
+                for st_ref in st_ref_list
+            )
+        )
+
+    def _get_partner_from_mapping(self, st_line):
+        """Find partner with mapping defined on model.
+
+        For invoice matching rules, matches the statement line against each
+        regex defined in partner mapping, and returns the partner corresponding
+        to the first one matching.
+
+        :param st_line (Model<account.bank.statement.line>):
+            The statement line that needs a partner to be found
+        :return Model<res.partner>:
+            The partner found from the mapping. Can be empty an empty recordset
+            if there was nothing found from the mapping or if the function is
+            not applicable.
+        """
+        self.ensure_one()
+
+        if self.rule_type not in ('invoice_matching', 'writeoff_suggestion'):
+            return self.env['res.partner']
+
+        for partner_mapping in self.partner_mapping_line_ids:
+            match_payment_ref = re.match(partner_mapping.payment_ref_regex, st_line.payment_ref) if partner_mapping.payment_ref_regex else True
+            match_narration = re.match(partner_mapping.narration_regex, st_line.narration or '') if partner_mapping.narration_regex else True
+
+            if match_payment_ref and match_narration:
+                return partner_mapping.partner_id
+        return self.env['res.partner']
+
+    def _get_writeoff_suggestion_query(self, st_lines_with_partner, excluded_ids=None):
+        ''' Returns the query applying the current writeoff_suggestion reconciliation
+        model to the provided statement lines.
+
+        :param st_lines_with_partner: A list of tuples (statement_line, partner),
+                                      associating each statement line to treate with
+                                      the corresponding partner, given by the partner map
+        :param excluded_ids:    Account.move.lines to exclude.
+        :return:                (query, params)
+        '''
+        self.ensure_one()
+
+        if self.rule_type != 'writeoff_suggestion':
+            raise UserError(_("Programmation Error: Can't call _get_writeoff_suggestion_query() for different rules than 'writeoff_suggestion'"))
+
+        query = '''
+            SELECT
+                st_line.id                          AS id
+            FROM account_bank_statement_line st_line
+            WHERE st_line.id IN %(st_line_ids)s
+        '''
+        params = {
+            'st_line_ids': tuple(st_line.id for (st_line, partner) in st_lines_with_partner),
+        }
+
+        return query, params
+
+    def _get_rule_result(self, st_line, candidates, aml_ids_to_exclude, reconciled_amls_ids, partner_map):
+        """ Get the result of a rule from the list of available candidates, depending on the
+        other reconciliations performed by previous rules.
+        """
+        self.ensure_one()
+
+        if self.rule_type == 'invoice_matching':
+            return self._get_invoice_matching_rule_result(st_line, candidates, aml_ids_to_exclude, reconciled_amls_ids, partner_map)
+        elif self.rule_type == 'writeoff_suggestion':
+            return self._get_writeoff_suggestion_rule_result(st_line, partner_map), set(), set()
+        else:
+            return None, set(), set()
+
+    def _get_invoice_matching_rule_result(self, st_line, candidates, aml_ids_to_exclude, reconciled_amls_ids, partner):
+        new_reconciled_aml_ids = set()
+        new_treated_aml_ids = set()
+        candidates, priorities = self._filter_candidates(candidates, aml_ids_to_exclude, reconciled_amls_ids)
+
+        # Special case: the amounts are the same, submit the line directly.
+        st_line_currency = st_line.foreign_currency_id or st_line.currency_id
+        candidate_currencies = set(candidate['aml_currency_id'] or st_line.company_id.currency_id.id for candidate in candidates)
+        if candidate_currencies == {st_line_currency.id}:
+            for candidate in candidates:
+                residual_amount = candidate['aml_currency_id'] and candidate['aml_amount_residual_currency'] or candidate['aml_amount_residual']
+                if st_line_currency.is_zero(residual_amount + st_line.amount_residual):
+                    candidates, priorities = self._filter_candidates([candidate], aml_ids_to_exclude, reconciled_amls_ids)
+                    break
+
+        # We check the amount criteria of the reconciliation model, and select the
+        # candidates if they pass the verification. Candidates from the first priority
+        # level (even already selected) bypass this check, and are selected anyway.
+        disable_bypass = self.env['ir.config_parameter'].sudo().get_param('account.disable_rec_models_bypass')
+        if (not disable_bypass and priorities & {1,2}) or self._check_rule_propositions(st_line, candidates):
+            rslt = {
+                'model': self,
+                'aml_ids': [candidate['aml_id'] for candidate in candidates],
+            }
+            new_treated_aml_ids = set(rslt['aml_ids'])
+
+            # Create write-off lines.
+            lines_vals_list = self._prepare_reconciliation(st_line, aml_ids=rslt['aml_ids'], partner=partner)
+
+            # A write-off must be applied if there are some 'new' lines to propose.
+            write_off_lines_vals = list(filter(lambda x: 'id' not in x, lines_vals_list))
+            if not lines_vals_list or write_off_lines_vals:
+                rslt['status'] = 'write_off'
+                rslt['write_off_vals'] = write_off_lines_vals
+
+            # Process auto-reconciliation. We only do that for the first two priorities, if they are not matched elsewhere.
+            if lines_vals_list and priorities & {1, 3} and self.auto_reconcile:
+                if not st_line.partner_id and partner:
+                    st_line.partner_id = partner
+
+                st_line.reconcile(lines_vals_list)
+                rslt['status'] = 'reconciled'
+                rslt['reconciled_lines'] = st_line.line_ids
+                new_reconciled_aml_ids = new_treated_aml_ids
+        else:
+            rslt = None
+
+        return rslt, new_reconciled_aml_ids, new_treated_aml_ids
+
+    def _check_rule_propositions(self, statement_line, candidates):
+        ''' Check restrictions that can't be handled for each move.line separately.
+        /!\ Only used by models having a type equals to 'invoice_matching'.
+        :param statement_line:  An account.bank.statement.line record.
+        :param candidates:      Fetched account.move.lines from query (dict).
+        :return:                True if the reconciliation propositions are accepted. False otherwise.
+        '''
+        if not self.match_total_amount:
+            return True
+        if not candidates:
+            return False
+
+        reconciliation_overview, open_balance_vals = statement_line._prepare_reconciliation([{
+            'currency_id': aml['aml_currency_id'],
+            'amount_residual': aml['aml_amount_residual'],
+            'amount_residual_currency': aml['aml_amount_residual_currency'],
+        } for aml in candidates])
+
+        # Match total residual amount.
+        line_currency = statement_line.foreign_currency_id or statement_line.currency_id
+        line_residual = statement_line.amount_residual
+        line_residual_after_reconciliation = line_residual
+
+        for reconciliation_vals in reconciliation_overview:
+            line_vals = reconciliation_vals['line_vals']
+            if line_vals['currency_id']:
+                line_residual_after_reconciliation -= line_vals['amount_currency']
+            else:
+                line_residual_after_reconciliation -= line_vals['debit'] - line_vals['credit']
+
+        # Statement line amount is equal to the total residual.
+        if line_currency.is_zero(line_residual_after_reconciliation):
+            return True
+        residual_difference = line_residual - line_residual_after_reconciliation
+        reconciled_percentage = 100 - abs(line_residual_after_reconciliation) / abs(residual_difference) * 100 if (residual_difference != 0) else 0
+        return reconciled_percentage >= self.match_total_amount_param
+
+    def _filter_candidates(self, candidates, aml_ids_to_exclude, reconciled_amls_ids):
+        """ Sorts reconciliation candidates by priority and filters them so that only
+        the most prioritary are kept.
+        """
+        candidates_by_priority = self._sort_reconciliation_candidates_by_priority(candidates, aml_ids_to_exclude, reconciled_amls_ids)
+
+        # This can happen if the candidates were already reconciled at this point
+        if not candidates_by_priority:
+            return [], set()
+
+        max_priority = min(candidates_by_priority.keys())
+
+        filtered_candidates = candidates_by_priority[max_priority]
+        filtered_priorities = {max_priority,}
+
+        if max_priority in (1, 3, 5):
+            # We also keep the already proposed values of the same priority level
+            proposed_priority = max_priority + 1
+            filtered_candidates += candidates_by_priority[proposed_priority]
+            if candidates_by_priority[proposed_priority]:
+                filtered_priorities.add(proposed_priority)
+
+        return filtered_candidates, filtered_priorities
+
+    def _sort_reconciliation_candidates_by_priority(self, candidates, already_proposed_aml_ids, already_reconciled_aml_ids):
+        """ Sorts the provided candidates and returns a mapping of candidates by
+        priority (1 being the highest).
+
+        The priorities are defined as follows:
+
+        1: payment_reference_flag is true,  so the move's payment_reference
+           field matches the statement line's.
+
+        2: Same as 1, but the candidates have already been proposed for a previous statement line
+
+        3: communication_flag is true, so either the move's ref, move's name or
+           aml's name match the statement line's payment reference.
+
+        4: Same as 3, but the candidates have already been proposed for a previous statement line
+
+        5: candidates proposed by the query, but no match with the statement
+           line's payment ref could be found.
+
+        6: Same as 5, but the candidates have already been proposed for a previous statement line
+        """
+        candidates_by_priority = defaultdict(lambda: [])
+
+        for candidate in filter(lambda x: x['aml_id'] not in already_reconciled_aml_ids, candidates):
+
+            if candidate['payment_reference_flag']:
+                priority = 1
+            elif candidate['communication_flag']:
+                priority = 3
+            else:
+                priority = 5
+
+            if candidate['aml_id'] in already_proposed_aml_ids:
+                # So, priorities 2, 4 and 6 are created here
+                priority += 1
+
+            candidates_by_priority[priority].append(candidate)
+
+        return candidates_by_priority
+
+    def _get_writeoff_suggestion_rule_result(self, st_line, partner):
+        # Create write-off lines.
+        lines_vals_list = self._prepare_reconciliation(st_line, partner=partner)
+
+        rslt = {
+            'model': self,
+            'status': 'write_off',
+            'aml_ids': [],
+            'write_off_vals': lines_vals_list,
+        }
+
+        # Process auto-reconciliation.
+        if lines_vals_list and self.auto_reconcile:
+            if not st_line.partner_id and partner:
+                st_line.partner_id = partner
+
+            st_line.reconcile(lines_vals_list)
+            rslt['status'] = 'reconciled'
+            rslt['reconciled_lines'] = st_line.line_ids
+
+        return rslt
+>>>>>>> 222367d2c50 (temp)
