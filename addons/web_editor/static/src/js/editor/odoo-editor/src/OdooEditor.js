@@ -3957,6 +3957,7 @@ export class OdooEditor extends EventTarget {
                     star.classList.toggle('fa-star-o', true);
                     star.classList.toggle('fa-star', false);
                 };
+                this.historyStep();
             }
         }
 
