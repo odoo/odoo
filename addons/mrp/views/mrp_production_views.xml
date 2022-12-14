@@ -63,15 +63,29 @@
             <field name="arch" type="xml">
                 <form string="Manufacturing Orders">
                 <header>
-                    <field name="confirm_cancel" invisible="1"/>
+		    <field name="confirm_cancel" invisible="1"/>
+		    <field name="confirm_no_consumption" invisible="1"/>
                     <field name="show_lock" invisible="1"/>
-                    <button name="button_mark_done" attrs="{'invisible': ['|', ('state', 'in', ('draft', 'cancel', 'done', 'to_close')), ('qty_producing', '=', 0)]}" string="Validate" type="object" class="oe_highlight"/>
-                    <button name="button_mark_done" attrs="{'invisible': [
+		    <button name="button_mark_done" attrs="{'invisible': ['|', '|', ('state', 'in', ('draft', 'cancel', 'done', 'to_close')), ('qty_producing', '=', 0), ('confirm_no_consumption', '=', False)]}" string="Validate" type="object" class="oe_highlight"
+                            confirm="There are no components to consume. Are you still sure you want to continue?"/>
+                    <button name="button_mark_done" attrs="{'invisible': ['|', '|', ('state', 'in', ('draft', 'cancel', 'done', 'to_close')), ('qty_producing', '=', 0), ('confirm_no_consumption', '=', True)]}" string="Validate" type="object" class="oe_highlight"/>
+		    <button name="button_mark_done" attrs="{'invisible': [
+			'|',
+                        ('confirm_no_consumption', '=', True),    
+			'&amp;',
+                        '|',
+                        ('state', 'not in', ('confirmed', 'progress')),
+                        ('qty_producing', '!=', 0),
+			('state', '!=', 'to_close')]}" string="Mark as Done" type="object" class="oe_highlight"/>
+		    <button name="button_mark_done" attrs="{'invisible': [
+                        '|',
+                        ('confirm_no_consumption', '=', False),
                         '&amp;',
                         '|',
                         ('state', 'not in', ('confirmed', 'progress')),
                         ('qty_producing', '!=', 0),
-                        ('state', '!=', 'to_close')]}" string="Mark as Done" type="object" class="oe_highlight"/>
+                        ('state', '!=', 'to_close')]}" string="Mark as Done" type="object" class="oe_highlight"
+                            confirm="There are no components to consume. Are you still sure you want to continue?"/>
                     <button name="action_confirm" attrs="{'invisible': [('state', '!=', 'draft')]}" string="Confirm" type="object" class="oe_highlight"/>
                     <button name="button_plan" attrs="{'invisible': ['|', '|', ('state', 'not in', ('confirmed', 'progress', 'to_close')), ('workorder_ids', '=', []), ('is_planned', '=', True)]}" type="object" string="Plan" class="oe_highlight"/>
                     <button name="button_unplan" type="object" string="Unplan" attrs="{'invisible': [('is_planned', '=', False)]}"/>
