@@ -5526,4 +5526,29 @@ QUnit.module("Views", (hooks) => {
             );
         }
     );
+
+    QUnit.test(
+        "no class 'o_view_sample_data' when real data are presented",
+        async function (assert) {
+            serverData.models.partner.fields.foo.store = true;
+            serverData.models.partner.records = [];
+            await makeView({
+                type: "pivot",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <pivot sample="1">
+                        <field name="product_id" type="row"/>
+                    </pivot>
+                `,
+            });
+
+            assert.containsOnce(target, ".o_pivot_view .o_view_sample_data");
+            assert.containsOnce(target, ".o_pivot_view table");
+            await toggleMenu(target, "Measures");
+            await toggleMenuItem(target, "Foo");
+            assert.containsNone(target, ".o_pivot_view .o_view_sample_data");
+            assert.containsNone(target, ".o_pivot_view table");
+        }
+    );
 });
