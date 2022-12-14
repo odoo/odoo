@@ -66,17 +66,17 @@
                                     searchPlaceholder="searchPlaceholder"
                                     togglerClass="column.fieldInfo ? 'ps-1' : ''"
                                 >
-                                    <t t-if="column.fieldInfo">
+                                    <div t-if="column.fieldInfo" class="text-start d-flex flex-row flew-nowrap">
                                         <i
                                             class="o_import_field_icon border-end"
-                                            t-att-class="'position-absolute d-inline-block o_import_field_icon_' + column.fieldInfo.type"
+                                            t-att-class="'d-inline-block o_import_field_icon_' + column.fieldInfo.type"
                                             data-tooltip-template="web.FieldTooltip"
                                             t-att-data-tooltip-info="getTooltipDetails(column.fieldInfo)"
                                         ></i>
-                                        <span class="ps-5">
+                                        <span class="ps-2 text-nowrap">
                                             <t t-esc="column.fieldInfo.string" />
                                         </span>
-                                    </t>
+                                    </div>
                                     <span t-else="" class="text-warning">To import, select a field...</span>
 
                                     <t t-set-slot="choice" t-slot-scope="choice">

@@ -2,28 +2,30 @@
 <templates>
 
     <t t-name="web.SelectMenu" owl="1">
-        <Dropdown
-            class="`o_select_menu border w-100 rounded-2 overflow-hidden ${props.class || ''}`"
-            togglerClass="`o_select_menu_toggler d-flex flex-row align-items-center flex-nowrap btn btn-secondary w-100 bg-light ${props.togglerClass || ''}`"
-            menuClass="`o_select_menu_menu pt-0 ${state.direction || ''}`"
-            position="'bottom-fit'"
-            beforeOpen.bind="filterOptions"
-            onOpened.bind="onOpened"
-            onPositioned.bind="onPositioned"
-            onScroll.bind="onScroll"
+        <div
+            t-att-class="`o_select_menu border w-100 rounded-2 overflow-hidden ${props.class || ''}`"
         >
-            <t t-set-slot="toggler">
-                <span class="o_select_menu_toggler_slot text-start">
+            <button 
+                t-ref="togglerRef"
+                t-att-class="`btn o_select_menu_toggler d-flex flex-row align-items-center flex-nowrap btn btn-secondary w-100 bg-light ${this.props.togglerClass || ''}`"
+                t-on-click="() => this.dropdown.toggle()"
+            >
+                <div class="o_select_menu_toggler_slot">
                     <t t-if="!props.slots" t-esc="props.value" />
                     <t t-else="" t-slot="default" />
-                </span>
+                </div>
                 <span t-if="canClear()" t-on-click.stop="() => this.props.onSelect(null)" class="o_select_menu_toggler_clear p-0 m-0">
                     <i class="fa fa-times"></i>
                 </span>
                 <span class="o_select_menu_toggler_caret p-0 m-0">
                     <i class="fa fa-caret-down"></i>
                 </span>
-            </t>
+            </button>
+            <div 
+                t-if="dropdown.isOpen" 
+                t-ref="dropdownRef"
+                t-att-class="`o_select_menu_menu pt-0 ${state.direction || ''}`"
+            >
                 <div class="o_select_menu_input p-2 position-sticky top-0 start-0">
                     <input
                         type="text"
@@ -46,10 +48,10 @@
                     </div>
                     <DropdownItem
                         t-if="!option.isGroup"
-                        onSelected="() => this.props.onSelect(option.value)"
+                        onSelected="() => {this.props.onSelect(option.value); this.dropdown.close();}"
                         class="getItemClass(option)"
                     >
-                        <t t-if="props.slots and props.slots.choice" t-slot="choice" t-props="option"/>
+                        <t t-if="props.slots and props.slots.choice" t-slot="choice" t-props="option" />
                         <t t-else="">
                             <div class="o_select_menu_item_label text-wrap">
                                 <t t-esc="option.label" />
@@ -57,7 +59,8 @@
                         </t>
                     </DropdownItem>
                 </t>
-        </Dropdown>
+            </div>
+        </div>
     </t>
 
 </templates>

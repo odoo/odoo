@@ -8,6 +8,7 @@ import { useDebounced } from "@web/core/utils/timing";
 import { scrollTo } from "@web/core/utils/scrolling";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { useChildRef } from "../utils/hooks";
+import { useDropdown } from "../dropdown/dropdown_hook";
 
 export const SCROLL_SETTINGS = {
     defaultCount: 500,
@@ -31,6 +32,15 @@ export class SelectMenu extends Component {
         );
 
         reactive(this.props.options, () => this.debouncedOnInput());
+
+        this.dropdown = useDropdown({
+            menuRefName: "dropdownRef",
+            togglerRefName: "togglerRef",
+            position: "bottom-fit",
+            beforeOpen: () => this.filterOptions(),
+            onOpened: () => this.onOpened(),
+            onPositioned: ({ direction }) => (this.state.direction = direction),
+        });
     }
 
     onOpened() {
@@ -40,8 +50,8 @@ export class SelectMenu extends Component {
             this.inputRef.el.focus();
         }
 
-        if (this.menuRef.el) {
-            const selectedElement = this.menuRef.el.querySelector(".o_select_active");
+        if (this.dropdown.menuRef.el) {
+            const selectedElement = this.dropdown.menuRef.el.querySelector(".o_select_active");
             if (selectedElement) {
                 scrollTo(selectedElement);
             }
