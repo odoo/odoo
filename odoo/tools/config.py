@@ -340,8 +340,8 @@ class configmanager(object):
                              help="Maximum allowed Real time per cron job. (default: --limit-time-real). "
                                   "Set to 0 for no limit. ",
                              type="int")
-            group.add_option("--limit-request", dest="limit_request", my_default=8192,
-                             help="Maximum number of request to be processed per worker (default 8192).",
+            group.add_option("--limit-request", dest="limit_request", my_default=2**16,
+                             help="Maximum number of request to be processed per worker (default 65536).",
                              type="int")
             parser.add_option_group(group)
 
