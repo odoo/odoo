@@ -29,6 +29,10 @@ class HrEmployeePrivate(models.Model):
     _inherit = ['hr.employee.base', 'mail.thread', 'mail.activity.mixin', 'resource.mixin', 'avatar.mixin']
     _mail_post_access = 'read'
 
+    @api.model
+    def _lang_get(self):
+        return self.env['res.lang'].get_installed()
+
     # resource and user
     # required on the resource, make sure required="True" set in the view
     name = fields.Char(string="Employee Name", related='resource_id.name', store=True, readonly=False, tracking=True)
@@ -38,17 +42,21 @@ class HrEmployeePrivate(models.Model):
     company_id = fields.Many2one('res.company', required=True)
     company_country_id = fields.Many2one('res.country', 'Company Country', related='company_id.country_id', readonly=True)
     company_country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True)
-    # private partner
-    address_home_id = fields.Many2one(
-        'res.partner', 'Address', help='Enter here the private address of the employee, not the one linked to your company.',
-        groups="hr.group_hr_user", tracking=True,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    is_address_home_a_company = fields.Boolean(
-        'The employee address has a company linked',
-        compute='_compute_is_address_home_a_company',
-    )
-    private_email = fields.Char(related='address_home_id.email', string="Private Email", groups="hr.group_hr_user")
-    lang = fields.Selection(related='address_home_id.lang', string="Lang", groups="hr.group_hr_user", readonly=False)
+
+    # private partner info
+    private_street = fields.Char(string="Private Street", groups="hr.group_hr_user")
+    private_street2 = fields.Char(string="Private Street2", groups="hr.group_hr_user")
+    private_city = fields.Char(string="Private City", groups="hr.group_hr_user")
+    private_state_id = fields.Many2one(
+        'res.country.state',
+        string="Private State", groups="hr.group_hr_user",
+        domain="[('country_id', '=?', private_country_id)]")
+    private_zip = fields.Char(string="Private Zip", groups="hr.group_hr_user")
+    private_country_id = fields.Many2one('res.country', string="Private Country", groups="hr.group_hr_user")
+    private_email = fields.Char(string="Private Email", groups="hr.group_hr_user")
+    private_lang = fields.Selection(selection=_lang_get, string="Employee Lang", groups="hr.group_hr_user")
+    private_phone = fields.Char(string="Private Phone", groups="hr.group_hr_user")
+
     country_id = fields.Many2one(
         'res.country', 'Nationality (Country)', groups="hr.group_hr_user", tracking=True)
     gender = fields.Selection([
@@ -75,7 +83,7 @@ class HrEmployeePrivate(models.Model):
     passport_id = fields.Char('Passport No', groups="hr.group_hr_user", tracking=True)
     bank_account_id = fields.Many2one(
         'res.partner.bank', 'Bank Account Number',
-        domain="[('partner_id', '=', address_home_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         groups="hr.group_hr_user",
         tracking=True,
         help='Employee bank account to pay salaries')
@@ -100,7 +108,6 @@ class HrEmployeePrivate(models.Model):
     km_home_work = fields.Integer(string="Home-Work Distance", groups="hr.group_hr_user", tracking=True)
 
     job_id = fields.Many2one(tracking=True)
-    phone = fields.Char(related='address_home_id.phone', related_sudo=False, readonly=False, string="Private Phone", groups="hr.group_hr_user")
     # employee in company
     child_ids = fields.One2many('hr.employee', 'parent_id', string='Direct subordinates')
     category_ids = fields.Many2many(
@@ -354,10 +361,6 @@ class HrEmployeePrivate(models.Model):
         return employees
 
     def write(self, vals):
-        if 'address_home_id' in vals:
-            account_id = vals.get('bank_account_id') or self.bank_account_id.id
-            if account_id:
-                self.env['res.partner.bank'].browse(account_id).partner_id = vals['address_home_id']
         if vals.get('user_id'):
             # Update the profile pictures with user, except if provided 
             vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id']),
@@ -385,16 +388,13 @@ class HrEmployeePrivate(models.Model):
         return []
 
     def toggle_active(self):
-        res = super(HrEmployeePrivate, self).toggle_active()
+        res = super().toggle_active()
         unarchived_employees = self.filtered(lambda employee: employee.active)
         unarchived_employees.write({
             'departure_reason_id': False,
             'departure_description': False,
             'departure_date': False
         })
-        archived_addresses = unarchived_employees.mapped('address_home_id').filtered(lambda addr: not addr.active)
-        archived_addresses.toggle_active()
-
         archived_employees = self.filtered(lambda e: not e.active)
         if archived_employees:
             # Empty links to this employees (example: manager, coach, time off responsible, ...)
@@ -435,21 +435,11 @@ class HrEmployeePrivate(models.Model):
         for employee in self:
             employee.barcode = '041'+"".join(choice(digits) for i in range(9))
 
-    @api.depends('address_home_id', 'user_partner_id')
+    @api.depends('user_partner_id')
     def _compute_related_contacts(self):
         super()._compute_related_contacts()
         for employee in self:
-            employee.related_contact_ids |= employee.address_home_id | employee.user_partner_id
-
-    @api.depends('address_home_id.parent_id')
-    def _compute_is_address_home_a_company(self):
-        """Checks that chosen address (res.partner) is not linked to a company.
-        """
-        for employee in self:
-            try:
-                employee.is_address_home_a_company = employee.address_home_id.parent_id.id is not False
-            except AccessError:
-                employee.is_address_home_a_company = False
+            employee.related_contact_ids |= employee.user_partner_id
 
     def _get_tz(self):
         # Finds the first valid timezone in his tz, his work hours tz,

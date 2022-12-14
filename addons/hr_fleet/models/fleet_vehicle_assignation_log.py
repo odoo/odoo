@@ -7,16 +7,8 @@ from odoo import api, fields, models
 class FleetVehicleAssignationLog(models.Model):
     _inherit = 'fleet.vehicle.assignation.log'
 
-    driver_employee_id = fields.Many2one('hr.employee', string='Driver (Employee)', compute='_compute_driver_employee_id', store=True, readonly=False)
+    driver_employee_id = fields.Many2one('hr.employee', string='Driver (Employee)')
     attachment_number = fields.Integer('Number of Attachments', compute='_compute_attachment_number')
-
-    @api.depends('driver_id')
-    def _compute_driver_employee_id(self):
-        employees = self.env['hr.employee'].search([('address_home_id', 'in', self.driver_id.ids)])
-
-        for log in self:
-            employee = employees.filtered(lambda e: e.address_home_id.id == log.driver_id.id)
-            log.driver_employee_id = employee and employee[0] or False
 
     def _compute_attachment_number(self):
         attachment_data = self.env['ir.attachment']._read_group([

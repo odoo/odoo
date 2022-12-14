@@ -36,7 +36,6 @@
         'views/res_config_settings_views.xml',
         'views/mail_channel_views.xml',
         'views/res_users.xml',
-        'views/res_partner_views.xml',
         'data/hr_data.xml',
     ],
     'demo': [

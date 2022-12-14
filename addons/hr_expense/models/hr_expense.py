@@ -579,9 +579,9 @@ class HrExpense(models.Model):
                 or journal.company_id.account_journal_payment_credit_account_id
             )
         else:
-            if not self.employee_id.sudo().address_home_id:
-                raise UserError(_("No Home Address found for the employee %s, please configure one.") % (self.employee_id.name))
-            partner = self.employee_id.sudo().address_home_id.with_company(self.company_id)
+            if not self.employee_id.user_id.partner_id:
+                raise UserError(_("No partner found for the employee %s, please configure one.") % (self.employee_id.name))
+            partner = self.employee_id.user_id.partner_id.with_company(self.company_id)
             account_dest = partner.property_account_payable_id or partner.parent_id.property_account_payable_id
         return account_dest.id
 
@@ -598,7 +598,7 @@ class HrExpense(models.Model):
                 ).id,
                 'move_type': 'in_receipt',
                 'company_id': sheet.company_id.id,
-                'partner_id': sheet.employee_id.sudo().address_home_id.commercial_partner_id.id,
+                'partner_id': sheet.employee_id.user_id.partner_id.commercial_partner_id.id,
                 'date': sheet.accounting_date or fields.Date.context_today(sheet),
                 'invoice_date': sheet.accounting_date or fields.Date.context_today(sheet),
                 'ref': sheet.name,
@@ -616,7 +616,7 @@ class HrExpense(models.Model):
                         'product_uom_id': expense.product_uom_id.id,
                         'analytic_distribution': expense.analytic_distribution,
                         'expense_id': expense.id,
-                        'partner_id': expense.employee_id.sudo().address_home_id.commercial_partner_id.id,
+                        'partner_id': expense.employee_id.user_id.partner_id.commercial_partner_id.id,
                         'tax_ids': [(6, 0, expense.tax_ids.ids)],
                         'currency_id': expense.currency_id.id,
                     })
@@ -958,7 +958,7 @@ class HrExpenseSheet(models.Model):
     @api.depends('employee_id', 'employee_id.department_id')
     def _compute_from_employee_id(self):
         for sheet in self:
-            sheet.address_id = sheet.employee_id.sudo().address_home_id
+            sheet.address_id = sheet.employee_id.user_id.partner_id.commercial_partner_id.id
             sheet.department_id = sheet.employee_id.department_id
             sheet.user_id = sheet.employee_id.expense_manager_id or sheet.employee_id.parent_id.user_id
 

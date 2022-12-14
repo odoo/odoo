@@ -86,7 +86,7 @@ class TestSelfAccessProfile(TestHrCommon):
             'user_id': james.id,
         })
         view = self.env.ref('hr.res_users_view_form_profile')
-        available_actions = james.get_views([(view.id, 'form')], {'toolbar': True})['views']['form']['toolbar']['action']
+        available_actions = james.get_views([(view.id, 'form')], {'toolbar': True})['views']['form']['toolbar'].get('action', [])
         change_password_action = self.env.ref("base.change_password_wizard_action")
 
         self.assertFalse(any(x['id'] == change_password_action.id for x in available_actions))
@@ -99,7 +99,7 @@ class TestSelfAccessProfile(TestHrCommon):
             'user_id': john.id,
         })
         view = self.env.ref('hr.res_users_view_form_profile')
-        available_actions = john.get_views([(view.id, 'form')], {'toolbar': True})['views']['form']['toolbar']['action']
+        available_actions = john.get_views([(view.id, 'form')], {'toolbar': True})['views']['form']['toolbar'].get('action', [])
         self.assertTrue(any(x['id'] == change_password_action.id for x in available_actions))
 
 
@@ -112,13 +112,12 @@ class TestSelfAccessRights(TestHrCommon):
         cls.richard_emp = cls.env['hr.employee'].create({
             'name': 'Richard',
             'user_id': cls.richard.id,
-            'address_home_id': cls.env['res.partner'].create({'name': 'Richard', 'phone': '21454', 'type': 'private'}).id,
+            'private_phone': '21454',
         })
         cls.hubert = new_test_user(cls.env, login='hub', groups='base.group_user', name='Simple employee', email='hub@example.com')
         cls.hubert_emp = cls.env['hr.employee'].create({
             'name': 'Hubert',
             'user_id': cls.hubert.id,
-            'address_home_id': cls.env['res.partner'].create({'name': 'Hubert', 'type': 'private'}).id,
         })
 
         cls.protected_fields_emp = OrderedDict([(k, v) for k, v in cls.env['hr.employee']._fields.items() if v.groups == 'hr.group_hr_user'])

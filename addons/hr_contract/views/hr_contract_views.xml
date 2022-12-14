@@ -14,7 +14,7 @@
                                readonly="1"/>
                     </xpath>
                     <xpath expr="//field[@name='bank_account_id']" position="replace">
-                        <field name="bank_account_id" context="{'display_partner':True}" attrs="{'invisible' : [('address_home_id', '=', False)]}"/>
+                        <field name="bank_account_id" context="{'display_partner':True}"/>
                     </xpath>
                     <xpath expr="//field[@name='resource_calendar_id']" position="replace">
                         <field name="calendar_mismatch" invisible="1"/>

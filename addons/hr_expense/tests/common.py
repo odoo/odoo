@@ -35,7 +35,6 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
         cls.expense_employee = cls.env['hr.employee'].create({
             'name': 'expense_employee',
             'user_id': cls.expense_user_employee.id,
-            'address_home_id': cls.expense_user_employee.partner_id.id,
             'address_id': cls.expense_user_employee.partner_id.id,
         })
 

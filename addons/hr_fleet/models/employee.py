@@ -48,30 +48,11 @@ class Employee(models.Model):
         for employee in self:
             employee.employee_cars_count = cars_count.get(employee.id, 0)
 
-    @api.constrains('address_home_id')
-    def _check_address_home_id(self):
-        no_address = self.filtered(lambda r: not r.address_home_id)
-        car_ids = self.env['fleet.vehicle'].sudo().search([
-            ('driver_employee_id', 'in', no_address.ids),
-        ])
-        # Prevent from removing employee address when linked to a car
-        if car_ids:
-            raise ValidationError(_('Cannot remove address from employees with linked cars.'))
-
-
     def write(self, vals):
         res = super().write(vals)
-        #Update car partner when it is changed on the employee
-        if 'address_home_id' in vals:
-            car_ids = self.env['fleet.vehicle'].sudo().search([
-                ('driver_employee_id', 'in', self.ids),
-                ('driver_id', 'in', self.mapped('address_home_id').ids),
-            ])
-            if car_ids:
-                car_ids.write({'driver_id': vals['address_home_id']})
         if 'mobility_card' in vals:
             #NOTE: keeping it as a search on driver_id but we might be able to use driver_employee_id in the future
-            vehicles = self.env['fleet.vehicle'].search([('driver_id', 'in', (self.user_id.partner_id | self.sudo().address_home_id).ids)])
+            vehicles = self.env['fleet.vehicle'].search([('driver_id', '=', self.user_id.partner_id.id)])
             vehicles._compute_mobility_card()
         return res
 
