@@ -1374,7 +1374,7 @@ actual arch.
 
     def _modifiers_from_model(self, node):
         modifier_names = ['invisible']
-        if node.tag in ('kanban', 'tree', 'form'):
+        if node.tag in ('data', 'kanban', 'tree', 'form'):
             modifier_names += ['readonly', 'required']
         return modifier_names
 
