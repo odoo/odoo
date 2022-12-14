@@ -1164,12 +1164,14 @@ class ChromeBrowser:
         delay = 0.1
         tries = 0
         failure_info = None
+        message = None
         while timeout > 0:
             try:
                 os.kill(self.chrome_pid, 0)
             except ProcessLookupError:
                 message = 'Chrome crashed at startup'
                 break
+            res = None
             try:
                 r = requests.get(url, timeout=3)
                 if r.ok:
