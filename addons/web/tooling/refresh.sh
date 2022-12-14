@@ -8,7 +8,7 @@ if [[ $testRealPath == "" ]]; then
 fi
 
 refreshInDir () {
-    cd $1
+    cd "$1"
     cp "$tooling/_eslintignore" .eslintignore
     cp "$tooling/_eslintrc.json" .eslintrc.json
     cp "$tooling/_jsconfig.json" jsconfig.json
@@ -20,7 +20,7 @@ read -p "Refresh tooling in enterprise ? [y, n]" doEnterprise
 if [[ $doEnterprise != "n" ]]; then
     read -p "What is the relative path from community to enterprise ? (../enterprise)" pathToEnterprise
     pathToEnterprise=${pathToEnterprise:-../enterprise}
-    pathToEnterprise=$(realpath $community/$pathToEnterprise)
+    pathToEnterprise=$(realpath "$community/$pathToEnterprise")
 fi
 
 refreshInDir "$community"
