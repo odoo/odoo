@@ -160,6 +160,7 @@ odoo.define("pos_gift_card.GiftCardPopup", function (require) {
         quantity: 1,
         merge: false,
         gift_card_id: giftCard.id,
+        extras: { price_manually_set: true },
       });
 
       this.cancel();
