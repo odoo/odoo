@@ -537,7 +537,7 @@ class AccountReconcileModel(models.Model):
             or (self.match_amount == 'between' and (abs(st_line.amount) > self.match_amount_max or abs(st_line.amount) < self.match_amount_min))
             or (self.match_partner and not partner)
             or (self.match_partner and self.match_partner_ids and partner not in self.match_partner_ids)
-            or (self.match_partner and self.match_partner_category_ids and partner.category_id not in self.match_partner_category_ids)
+            or (self.match_partner and self.match_partner_category_ids and not (partner.category_id & self.match_partner_category_ids))
         ):
             return False
 
