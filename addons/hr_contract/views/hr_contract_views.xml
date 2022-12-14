@@ -74,6 +74,60 @@
                             </div>
                         </button>
                     </div>
+<<<<<<< HEAD
+||||||| parent of f01b56d6483 (temp)
+                    <xpath expr="//page[@name='hr_settings']//field[@name='employee_type']" position="after">
+                        <field name="first_contract_date"
+                               attrs="{'invisible' : ['|', ('employee_type', 'not in', ['employee', 'student']), ('first_contract_date', '=', False)]}"
+                               readonly="1"/>
+                    </xpath>
+                    <xpath expr="//field[@name='bank_account_id']" position="replace">
+                        <field name="bank_account_id" context="{'display_partner':True}" attrs="{'invisible' : [('address_home_id', '=', False)]}"/>
+                    </xpath>
+                    <xpath expr="//field[@name='resource_calendar_id']" position="replace">
+                        <field name="calendar_mismatch" invisible="1"/>
+                        <label for="resource_calendar_id"/>
+                        <div>
+                            <field name="resource_calendar_id" required="1" nolabel="1"/>
+                            <span attrs="{'invisible': [('calendar_mismatch', '=', False)]}"
+                                class="fa fa-exclamation-triangle text-danger o_calendar_warning ms-3"
+                                data-tooltip-template="hr_contract.CalendarMismatch"
+                                data-tooltip-info='{
+                                        "text":"Calendar Mismatch : The employee&apos;s calendar does not match this contract&apos;s calendar. This could lead to unexpected behaviors."
+                                    }'>
+                            </span>
+                        </div>
+                    </xpath>
+                    <field name="job_id" position="before">
+                        <field name="contract_id" groups="hr_contract.group_hr_contract_manager"/>
+                    </field>
+=======
+                    <xpath expr="//page[@name='hr_settings']//field[@name='employee_type']" position="after">
+                        <field name="first_contract_date"
+                               attrs="{'invisible' : ['|', ('employee_type', 'not in', ['employee', 'student']), ('first_contract_date', '=', False)]}"
+                               readonly="1"/>
+                    </xpath>
+                    <xpath expr="//field[@name='bank_account_id']" position="replace">
+                        <field name="bank_account_id" context="{'display_partner':True}" attrs="{'invisible' : [('address_home_id', '=', False)]}"/>
+                    </xpath>
+                    <xpath expr="//field[@name='resource_calendar_id']" position="replace">
+                        <field name="calendar_mismatch" invisible="1"/>
+                        <label for="resource_calendar_id"/>
+                        <div>
+                            <field name="resource_calendar_id" required="1" nolabel="1"/>
+                            <span attrs="{'invisible': [('calendar_mismatch', '=', False)]}"
+                                class="fa fa-exclamation-triangle text-danger o_calendar_warning ms-3"
+                                data-tooltip-template="hr_contract.CalendarMismatch"
+                                data-tooltip-info='{
+                                        "text":"Calendar Mismatch : The employee&apos;s calendar does not match this contract&apos;s calendar. This could lead to unexpected behaviors."
+                                    }'>
+                            </span>
+                        </div>
+                    </xpath>
+                    <field name="job_id" position="before">
+                        <field name="contract_id" groups="hr_contract.group_hr_contract_manager" readonly="1"/>
+                    </field>
+>>>>>>> f01b56d6483 (temp)
                 </data>
             </field>
         </record>
