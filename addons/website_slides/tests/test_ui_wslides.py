@@ -19,7 +19,7 @@ class TestUICommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         img_path = get_module_resource('website_slides', 'static', 'src', 'img', 'slide_demo_gardening_1.jpg')
         img_content = base64.b64encode(open(img_path, "rb").read())
 
-        self.env['slide.channel'].create({
+        self.channel = self.env['slide.channel'].create({
             'name': 'Basics of Gardening - Test',
             'user_id': self.env.ref('base.user_admin').id,
             'enroll': 'public',
@@ -149,6 +149,23 @@ class TestUi(TestUICommon):
             '/slides',
             'odoo.__DEBUG__.services["web_tour.tour"].run("full_screen_web_editor")',
             'odoo.__DEBUG__.services["web_tour.tour"].tours.full_screen_web_editor.ready',
+            login=user_demo.login)
+
+    def test_course_reviews_elearning_officer(self):
+        user_demo = self.user_demo
+        user_demo.write({
+            'groups_id': [(6, 0, (self.env.ref('base.group_user') | self.env.ref('website_slides.group_website_slides_officer')).ids)]
+        })
+
+        # The user must be a course member before being able to post a log note.
+        self.channel._action_add_members(user_demo.partner_id)
+        self.channel.with_user(user_demo).message_post(
+            body='Log note', subtype_xmlid='mail.mt_note', message_type='comment')
+
+        self.browser_js(
+            '/slides',
+            'odoo.__DEBUG__.services["web_tour.tour"].run("course_reviews")',
+            'odoo.__DEBUG__.services["web_tour.tour"].tours.course_reviews.ready',
             login=user_demo.login)
 
 
