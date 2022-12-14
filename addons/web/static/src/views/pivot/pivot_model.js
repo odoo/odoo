@@ -754,6 +754,7 @@ export class PivotModel extends Model {
             metaData.activeMeasures.push(fieldName);
             let config = { metaData, data: this.data };
             await this._loadData(config);
+            this.useSampleModel = false;
         }
         this.nextActiveMeasures = null;
         this.notify();
