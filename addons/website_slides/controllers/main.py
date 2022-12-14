@@ -484,12 +484,13 @@ class WebsiteSlides(WebsiteProfile):
             'enable_slide_upload': 'enable_slide_upload' in kw,
         }
         if not request.env.user._is_public():
+            subtype_comment_id = request.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
             last_message = request.env['mail.message'].search([
                 ('model', '=', channel._name),
                 ('res_id', '=', channel.id),
                 ('author_id', '=', request.env.user.partner_id.id),
                 ('message_type', '=', 'comment'),
-                ('is_internal', '=', False)
+                ('subtype_id', '=', subtype_comment_id)
             ], order='write_date DESC', limit=1)
             if last_message:
                 last_message_values = last_message.read(['body', 'rating_value', 'attachment_ids'])[0]
