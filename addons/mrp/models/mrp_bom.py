@@ -82,6 +82,13 @@ class MrpBom(models.Model):
     allow_operation_dependencies = fields.Boolean('Operation Dependencies',
         help="Create operation level dependencies that will influence both planning and the status of work orders upon MO confirmation. If this feature is ticked, and nothing is specified, Odoo will assume that all operations can be started simultaneously."
     )
+    produce_delay = fields.Float(
+        'Manufacturing Lead Time', default=0.0,
+        help="Average lead time in days to manufacture this product. In the case of multi-level BOM, the manufacturing lead times of the components will be added. In case the product is subcontracted, this can be used to determine the date at which components should be sent to the subcontractor.")
+    days_to_prepare_mo = fields.Float(
+        string="Days to prepare Manufacturing Order", default=0.0,
+        help="Create and confirm Manufacturing Orders these many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
+             "Note that this does not affect the MO scheduled date, which still respects the just-in-time mechanism.")
 
     _sql_constraints = [
         ('qty_positive', 'check (product_qty > 0)', 'The quantity to produce must be positive!'),
@@ -214,6 +221,14 @@ class MrpBom(models.Model):
 
     def name_get(self):
         return [(bom.id, '%s%s' % (bom.code and '%s: ' % bom.code or '', bom.product_tmpl_id.display_name)) for bom in self]
+
+    def action_compute_bom_days(self):
+        company_id = self.env.context.get('default_company_id', self.env.company.id)
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_id)], limit=1)
+        for bom in self:
+            bom_data = self.env['report.mrp.report_bom_structure'].with_context(minimized=True)._get_bom_data(bom, warehouse, bom.product_id, ignore_stock=True)
+            availability_delay = bom_data.get('resupply_avail_delay')
+            bom.days_to_prepare_mo = availability_delay - bom_data.get('lead_time', 0) if availability_delay else 0
 
     @api.constrains('product_tmpl_id', 'product_id', 'type')
     def check_kit_has_not_orderpoint(self):

@@ -113,7 +113,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.subcontractor_partner1.property_stock_subcontractor = partner_subcontract_location.id
         # Add a manufacturing lead time to check that the resupply delivery is correctly planned 2 days
         # before the subcontracting receipt
-        self.finished.produce_delay = 2
+        self.bom.produce_delay = 2
 
         # Create a receipt picking from the subcontractor
         picking_form = Form(self.env['stock.picking'])
@@ -140,7 +140,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         # The picking should be a delivery order
         self.assertEqual(picking.picking_type_id, wh.subcontracting_resupply_type_id)
         # The date planned should be correct
-        self.assertEqual(picking_receipt.scheduled_date, picking.scheduled_date + relativedelta(days=self.finished.produce_delay))
+        self.assertEqual(picking_receipt.scheduled_date, picking.scheduled_date + relativedelta(days=mo.bom_id.produce_delay))
 
         self.assertEqual(mo.picking_type_id, wh.subcontracting_type_id)
         self.assertFalse(mo.picking_type_id.active)
