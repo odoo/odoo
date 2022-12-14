@@ -8,7 +8,7 @@ if [[ $testRealPath == "" ]]; then
 fi
 
 enableInDir () {
-    cd $1
+    cd "$1"
     hooksPath="$(realpath --relative-to=. "$tooling/hooks")"
     git config core.hooksPath "$hooksPath"
     cp "$tooling/_eslintignore" .eslintignore
@@ -30,7 +30,7 @@ if [[ $willingToInstallToolingInEnterprise != "n" ]]
 then
     read -p "What is the relative path from community to enterprise ? (../enterprise)" pathToEnterprise
     pathToEnterprise=${pathToEnterprise:-../enterprise}
-    pathToEnterprise=$(realpath $community/$pathToEnterprise)
+    pathToEnterprise=$(realpath "$community/$pathToEnterprise")
 fi
 
 enableInDir "$community"
