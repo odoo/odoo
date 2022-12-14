@@ -2,6 +2,12 @@
 <odoo>
     <data>
         <!-- Manufacturing Order -->
+        <record id="action_report_mo_overview" model="ir.actions.client">
+            <field name="name">MO Overview</field>
+            <field name="tag">mrp_mo_overview</field>
+            <field name="context" eval="{'model': 'report.mrp.report_mo_overview'}" />
+        </record>
+
         <record id="mrp_production_tree_view" model="ir.ui.view">
             <field name="name">mrp.production.tree</field>
             <field name="model">mrp.production</field>
@@ -181,6 +187,7 @@
                         </button>
                         <button name="%(stock.action_stock_report)d" icon="fa-arrow-up" class="oe_stat_button" string="Traceability" type="action" states="done" groups="stock.group_production_lot"/>
                         <button name="%(action_mrp_production_moves)d" type="action" string="Product Moves" class="oe_stat_button" icon="fa-exchange" attrs="{'invisible': [('state', 'not in', ('progress', 'done'))]}"/>
+                        <button name="%(action_report_mo_overview)d" type="action" class="oe_stat_button" icon="fa-bars" string="Overview"/>
                     </div>
                     <div class="oe_title">
                         <label class="o_form_label" for="name" string="MO Reference"/>
