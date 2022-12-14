@@ -16,7 +16,7 @@ from odoo import api, fields, models, SUPERUSER_ID, tools
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.addons.resource.models.resource import float_to_time, HOURS_PER_DAY
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tools import float_compare
+from odoo.tools import float_compare, format_date
 from odoo.tools.float_utils import float_round
 from odoo.tools.translate import _
 from odoo.osv import expression
@@ -654,6 +654,7 @@ class HolidaysRequest(models.Model):
                     target = leave.category_id.name
                 else:
                     target = leave.employee_id.name
+                display_date = format_date(self.env, leave.date_from)
                 if leave.leave_type_request_unit == 'hour':
                     if self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
                         res.append((
@@ -662,7 +663,7 @@ class HolidaysRequest(models.Model):
                                 person=target,
                                 leave_type=leave.holiday_status_id.name,
                                 duration=leave.number_of_hours_display,
-                                date=fields.Date.to_string(leave.date_from),
+                                date=display_date,
                             )
                         ))
                     else:
@@ -672,13 +673,12 @@ class HolidaysRequest(models.Model):
                                 person=target,
                                 leave_type=leave.holiday_status_id.name,
                                 duration=leave.number_of_hours_display,
-                                date=fields.Date.to_string(leave.date_from),
+                                date=display_date,
                             )
                         ))
                 else:
-                    display_date = fields.Date.to_string(leave.date_from)
                     if leave.number_of_days > 1:
-                        display_date += ' ⇨ %s' % fields.Date.to_string(leave.date_to)
+                        display_date += ' ⇨ %s' % format_date(self.env, leave.date_to)
                     if self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
                         res.append((
                             leave.id,
