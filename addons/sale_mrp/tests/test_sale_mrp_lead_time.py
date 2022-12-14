@@ -20,7 +20,6 @@ class TestSaleMrpLeadTime(TestStockCommon):
             # `type` is invisible in the view,
             # and it's a compute field based on `detailed_type` which is the field visible in the view
             p1.detailed_type = 'product'
-            p1.produce_delay = 5.0
             p1.sale_delay = 5.0
             p1.route_ids.clear()
             p1.route_ids.add(cls.warehouse_1.manufacture_pull_id.route_id)
@@ -36,6 +35,7 @@ class TestSaleMrpLeadTime(TestStockCommon):
         with Form(cls.env['mrp.bom']) as bom:
             bom.product_tmpl_id = cls.product_1.product_tmpl_id
             bom.product_qty = 2
+            bom.produce_delay = 5.0
             with bom.bom_line_ids.new() as line:
                 line.product_id = cls.product_2
                 line.product_qty = 4
@@ -80,7 +80,7 @@ class TestSaleMrpLeadTime(TestStockCommon):
         )
 
         # Check schedule date and deadline of manufacturing order
-        mo_scheduled = out_date - timedelta(days=self.product_1.produce_delay) - timedelta(days=company.manufacturing_lead)
+        mo_scheduled = out_date - timedelta(days=manufacturing_order.bom_id.produce_delay) - timedelta(days=company.manufacturing_lead)
         self.assertAlmostEqual(
             fields.Datetime.from_string(manufacturing_order.date_planned_start), mo_scheduled,
             delta=timedelta(seconds=1),
@@ -154,7 +154,7 @@ class TestSaleMrpLeadTime(TestStockCommon):
         )
 
         # Check schedule date and deadline date of manufacturing order
-        mo_scheduled = out_date - timedelta(days=self.product_1.produce_delay) - timedelta(days=self.warehouse_1.delivery_route_id.rule_ids[0].delay) - timedelta(days=self.env.ref('base.main_company').manufacturing_lead)
+        mo_scheduled = out_date - timedelta(days=manufacturing_order.bom_id.produce_delay) - timedelta(days=self.warehouse_1.delivery_route_id.rule_ids[0].delay) - timedelta(days=self.env.ref('base.main_company').manufacturing_lead)
         self.assertAlmostEqual(
             fields.Datetime.from_string(manufacturing_order.date_planned_start), mo_scheduled,
             delta=timedelta(seconds=1),

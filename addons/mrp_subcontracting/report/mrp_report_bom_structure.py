@@ -79,7 +79,7 @@ class ReportBomStructure(models.AbstractModel):
                     'route_detail': supplier.display_name,
                     'lead_time': supplier.delay + rules_delay,
                     'supplier_delay': supplier.delay + rules_delay,
-                    'manufacture_delay': product.produce_delay,
+                    'manufacture_delay': bom.produce_delay,
                     'supplier': supplier,
                 }
 

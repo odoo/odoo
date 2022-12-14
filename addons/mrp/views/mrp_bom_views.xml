@@ -141,6 +141,17 @@
                                 </group>
                                 <group>
                                     <field name="picking_type_id" attrs="{'invisible': [('type','=','phantom')]}" string="Operation" groups="stock.group_adv_location"/>
+                                    <label for="produce_delay" string="Manuf. Lead Time"/>
+                                    <div>
+                                        <field name="produce_delay" class="oe_inline"/> days
+                                    </div>
+                                    <label for="days_to_prepare_mo"/>
+                                    <div>
+                                        <field name="days_to_prepare_mo" class="oe_inline"/> days
+                                        <button name="action_compute_bom_days" string="Compute" type="object"
+                                                help="Compute the days required to resupply all components from BoM, by either buying or manufacturing the components and/or subassemblies."
+                                                class="oe_link pt-0"/>
+                                    </div>
                                 </group>
                             </group>
                         </page>

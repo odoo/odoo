@@ -683,7 +683,7 @@ class MrpProduction(models.Model):
         for production in self:
             if not production.date_planned_start or production.is_planned:
                 continue
-            days_delay = production.product_id.produce_delay
+            days_delay = production.bom_id.produce_delay
             date_planned_finished = production.date_planned_start + relativedelta(days=days_delay)
             if date_planned_finished == production.date_planned_start:
                 date_planned_finished = date_planned_finished + relativedelta(hours=1)
@@ -950,7 +950,7 @@ class MrpProduction(models.Model):
         }
 
     def _get_date_planned_finished(self):
-        date_planned_finished = self.date_planned_start + relativedelta(days=self.product_id.produce_delay)
+        date_planned_finished = self.date_planned_start + relativedelta(days=self.bom_id.produce_delay)
         if date_planned_finished == self.date_planned_start:
             date_planned_finished = date_planned_finished + relativedelta(hours=1)
         return date_planned_finished

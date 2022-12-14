@@ -117,8 +117,8 @@ class StockRule(models.Model):
         return self.env['mrp.bom']._bom_find(product_id, picking_type=self.picking_type_id, bom_type='normal', company_id=company_id.id)[product_id]
 
     def _prepare_mo_vals(self, product_id, product_qty, product_uom, location_dest_id, name, origin, company_id, values, bom):
-        date_planned = self._get_date_planned(product_id, company_id, values)
-        date_deadline = values.get('date_deadline') or date_planned + relativedelta(days=product_id.produce_delay)
+        date_planned = self._get_date_planned(bom, values)
+        date_deadline = values.get('date_deadline') or date_planned + relativedelta(days=bom.produce_delay)
         mo_values = {
             'origin': origin,
             'product_id': product_id.id,
@@ -150,9 +150,9 @@ class StockRule(models.Model):
             })
         return mo_values
 
-    def _get_date_planned(self, product_id, company_id, values):
+    def _get_date_planned(self, bom_id, values):
         format_date_planned = fields.Datetime.from_string(values['date_planned'])
-        date_planned = format_date_planned - relativedelta(days=product_id.produce_delay)
+        date_planned = format_date_planned - relativedelta(days=bom_id.produce_delay)
         if date_planned == format_date_planned:
             date_planned = date_planned - relativedelta(hours=1)
         return date_planned
@@ -167,7 +167,8 @@ class StockRule(models.Model):
         if not manufacture_rule:
             return delay, delay_description
         manufacture_rule.ensure_one()
-        manufacture_delay = product.produce_delay
+        bom = (product.variant_bom_ids or product.bom_ids)[:1]
+        manufacture_delay = bom.produce_delay
         delay += manufacture_delay
         if not bypass_delay_description:
             delay_description.append((_('Manufacturing Lead Time'), _('+ %d day(s)', manufacture_delay)))
@@ -175,7 +176,7 @@ class StockRule(models.Model):
         delay += security_delay
         if not bypass_delay_description:
             delay_description.append((_('Manufacture Security Lead Time'), _('+ %d day(s)', security_delay)))
-        days_to_order = values.get('days_to_order', product.product_tmpl_id.days_to_prepare_mo)
+        days_to_order = values.get('days_to_order', bom.days_to_prepare_mo)
         if not bypass_delay_description:
             delay_description.append((_('Days to Supply Components'), _('+ %d day(s)', days_to_order)))
         return delay + days_to_order, delay_description

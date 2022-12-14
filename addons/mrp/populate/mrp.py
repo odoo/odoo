@@ -21,15 +21,6 @@ class ResCompany(models.Model):
         ]
 
 
-class ProductProduct(models.Model):
-    _inherit = 'product.product'
-
-    def _populate_factories(self):
-        return super()._populate_factories() + [
-            ('produce_delay', populate.randint(1, 4)),
-        ]
-
-
 class Warehouse(models.Model):
     _inherit = 'stock.warehouse'
 
@@ -75,6 +66,7 @@ class MrpBom(models.Model):
             ('sequence', populate.randint(1, 1000)),
             ('code', populate.constant("R{counter}")),
             ('ready_to_produce', populate.randomize(['all_available', 'asap'])),
+            ('produce_delay', populate.randint(1, 4)),
         ]
 
 

@@ -65,7 +65,8 @@ class StockWarehouseOrderpoint(models.Model):
         res = super()._compute_days_to_order()
         for orderpoint in self:
             if 'manufacture' in orderpoint.rule_ids.mapped('action'):
-                orderpoint.days_to_order = orderpoint.product_id.days_to_prepare_mo
+                boms = (orderpoint.product_id.variant_bom_ids or orderpoint.product_id.bom_ids)
+                orderpoint.days_to_order = boms and boms[0].days_to_prepare_mo or 0
         return res
 
     def _quantity_in_progress(self):
