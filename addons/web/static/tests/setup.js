@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import core, { _t } from "web.core";
+import { bus, _t } from "web.core";
 import session from "web.session";
 import { assets, templates } from "@web/core/assets";
 import { browser, makeRAMLocalStorage } from "@web/core/browser/browser";
@@ -213,9 +213,9 @@ function patchBodyAddEventListener() {
 function patchLegacyCoreBus() {
     // patch core.bus.on to automatically remove listners bound on the legacy bus
     // during a test (e.g. during the deployment of a service)
-    const originalOn = core.bus.on.bind(core.bus);
-    const originalOff = core.bus.off.bind(core.bus);
-    patchWithCleanup(core.bus, {
+    const originalOn = bus.on.bind(bus);
+    const originalOff = bus.off.bind(bus);
+    patchWithCleanup(bus, {
         on() {
             originalOn(...arguments);
             registerCleanup(() => {

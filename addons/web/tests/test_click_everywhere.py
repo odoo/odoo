@@ -14,7 +14,7 @@ class TestMenusAdmin(odoo.tests.HttpCase):
         for app_id in menus['root']['children']:
             with self.subTest(app=menus[app_id]['name']):
                 _logger.runbot('Testing %s', menus[app_id]['name'])
-                self.browser_js("/web", "odoo.__DEBUG__.services['web.clickEverywhere']('%s');" % menus[app_id]['xmlid'], "odoo.isReady === true", login="admin", timeout=600)
+                self.browser_js("/web", "odoo.__DEBUG__.services['@web/webclient/clickbot/clickbot_loader']('%s');" % menus[app_id]['xmlid'], "odoo.isReady === true", login="admin", timeout=600)
                 self.terminate_browser()
 
 
@@ -27,17 +27,17 @@ class TestMenusDemo(odoo.tests.HttpCase):
         for app_id in menus['root']['children']:
             with self.subTest(app=menus[app_id]['name']):
                 _logger.runbot('Testing %s', menus[app_id]['name'])
-                self.browser_js("/web", "odoo.__DEBUG__.services['web.clickEverywhere']('%s');" % menus[app_id]['xmlid'], "odoo.isReady === true", login="demo", timeout=600)
+                self.browser_js("/web", "odoo.__DEBUG__.services['@web/webclient/clickbot/clickbot_loader']('%s');" % menus[app_id]['xmlid'], "odoo.isReady === true", login="demo", timeout=600)
                 self.terminate_browser()
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestMenusAdminLight(odoo.tests.HttpCase):
     allow_end_on_form = True
     def test_01_click_apps_menus_as_admin(self):
-        self.browser_js("/web", "odoo.__DEBUG__.services['web.clickEverywhere'](undefined, true);", "odoo.isReady === true", login="admin", timeout=120)
+        self.browser_js("/web", "odoo.__DEBUG__.services['@web/webclient/clickbot/clickbot_loader'](undefined, true);", "odoo.isReady === true", login="admin", timeout=120)
 
 @odoo.tests.tagged('post_install', '-at_install',)
 class TestMenusDemoLight(odoo.tests.HttpCase):
     allow_end_on_form = True
     def test_01_click_apps_menus_as_demo(self):
-        self.browser_js("/web", "odoo.__DEBUG__.services['web.clickEverywhere'](undefined, true);", "odoo.isReady === true", login="demo", timeout=120)
+        self.browser_js("/web", "odoo.__DEBUG__.services['@web/webclient/clickbot/clickbot_loader'](undefined, true);", "odoo.isReady === true", login="demo", timeout=120)

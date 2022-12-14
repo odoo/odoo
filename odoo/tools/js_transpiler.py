@@ -32,8 +32,6 @@ def transpile_javascript(url, content):
     steps = [
         convert_legacy_default_import,
         convert_basic_import,
-        convert_default_and_named_import,
-        convert_default_and_star_import,
         convert_default_import,
         convert_star_import,
         convert_unnamed_relative_import,
@@ -173,35 +171,6 @@ def convert_export_class(content):
     return EXPORT_CLASS_RE.sub(repl, content)
 
 
-EXPORT_FCT_DEFAULT_RE = re.compile(r"""
-    ^
-    (?P<space>\s*)                          # space and empty line
-    export\s+default\s+                     # export default
-    (?P<type>(async\s+)?function)\s+        # async function or function
-    (?P<identifier>\w+)                     # name of the function
-    """, re.MULTILINE | re.VERBOSE)
-
-
-def convert_export_function_default(content):
-    """
-    Transpile functions that are being exported as default value.
-
-    .. code-block:: javascript
-
-        // before
-        export default function name
-        // after
-        __exports[Symbol.for("default")] = name; function name
-
-        // before
-        export default async function name
-        // after
-        __exports[Symbol.for("default")] = name; async function name
-
-    """
-    repl = r"""\g<space>__exports[Symbol.for("default")] = \g<identifier>; \g<type> \g<identifier>"""
-    return EXPORT_FCT_DEFAULT_RE.sub(repl, content)
-
 EXPORT_CLASS_DEFAULT_RE = re.compile(r"""
     ^
     (?P<space>\s*)                          # space and empty line
@@ -250,32 +219,6 @@ def convert_variable_export(content):
     """
     repl = r"\g<space>\g<type> \g<identifier> = __exports.\g<identifier>"
     return EXPORT_VAR_RE.sub(repl, content)
-
-
-EXPORT_DEFAULT_VAR_RE = re.compile(r"""
-    ^
-    (?P<space>\s*)              # space and empty line
-    export\s+default\s+         # export default
-    (?P<type>let|const|var)\s+  # let or const or var
-    (?P<identifier>\w+)\s*      # variable name
-    """, re.MULTILINE | re.VERBOSE)
-
-
-def convert_variable_export_default(content):
-    """
-    Transpile the variables that are exported as default values.
-
-    .. code-block:: javascript
-
-        // before
-        export default let name
-        // after
-        let name = __exports[Symbol.for("default")]
-
-    """
-    repl = r"""\g<space>\g<type> \g<identifier> = __exports[Symbol.for("default")]"""
-    return EXPORT_DEFAULT_VAR_RE.sub(repl, content)
-
 
 EXPORT_OBJECT_RE = re.compile(r"""
     ^
@@ -388,9 +331,9 @@ def convert_default_export(content):
         // after
         __exports[Symbol.for("default")] =
     """
-    new_content = convert_export_function_default(content)
-    new_content = convert_export_class_default(new_content)
-    new_content = convert_variable_export_default(new_content)
+    new_content = convert_export_class_default(content)
+    # new_content = convert_export_function_default(content)
+    # new_content = convert_variable_export_default(new_content)
     repl = r"""\g<space>__exports[Symbol.for("default")] ="""
     return EXPORT_DEFAULT_RE.sub(repl, new_content)
 
@@ -474,44 +417,6 @@ def convert_default_import(content):
     return IMPORT_DEFAULT.sub(repl, content)
 
 
-IS_PATH_LEGACY_RE = re.compile(r"""(?P<quote>["'`])([^@\."'`][^"'`]*)(?P=quote)""")
-
-IMPORT_DEFAULT_AND_NAMED_RE = re.compile(r"""
-    ^
-    (?P<space>\s*)                                  # space and empty line
-    import\s+                                       # import
-    (?P<default_export>\w+)\s*,\s*                  # default variable name,
-    (?P<named_exports>{(\s*\w+\s*,?\s*)+})\s*       # { a, b, c as x, ... }
-    from\s*                                         # from
-    (?P<path>(?P<quote>["'`])([^"'`]+)(?P=quote))   # "file path" ("some/path")
-    """, re.MULTILINE | re.VERBOSE)
-
-
-def convert_default_and_named_import(content):
-    """
-    Transpile default and named import on one line.
-
-    .. code-block:: javascript
-
-        // before
-        import something, { a } from "some/path";
-        import somethingElse, { b } from "legacy.module";
-        // after
-        const { [Symbol.for("default")]: something, a } = require("some/path");
-        const somethingElse = require("legacy.module");
-        const { b } = somethingElse;
-    """
-    def repl(matchobj):
-        is_legacy = IS_PATH_LEGACY_RE.match(matchobj['path'])
-        new_object = matchobj["named_exports"].replace(" as ", ": ")
-        if is_legacy:
-            return f"""{matchobj['space']}const {matchobj['default_export']} = require({matchobj['path']});
-{matchobj['space']}const {new_object} = {matchobj['default_export']}"""
-        new_object = f"""{{ [Symbol.for("default")]: {matchobj['default_export']},{new_object[1:]}"""
-        return f"{matchobj['space']}const {new_object} = require({matchobj['path']})"
-    return IMPORT_DEFAULT_AND_NAMED_RE.sub(repl, content)
-
-
 RELATIVE_REQUIRE_RE = re.compile(r"""
     require\((?P<quote>["'`])([^@"'`]+)(?P=quote)\)  # require("some/path")
     """, re.VERBOSE)
@@ -566,34 +471,6 @@ def convert_star_import(content):
     """
     repl = r"\g<space>const \g<identifier> = require(\g<path>)"
     return IMPORT_STAR.sub(repl, content)
-
-
-IMPORT_DEFAULT_AND_STAR = re.compile(r"""
-    ^(?P<space>\s*)                 # indentation
-    import\s+                       # import
-    (?P<default_export>\w+)\s*,\s*  # default export name,
-    \*\s+as\s+                      # * as
-    (?P<named_exports_alias>\w+)    # alias
-    \s*from\s*                      # from
-    (?P<path>[^;\n]+)               # path
-""", re.MULTILINE | re.VERBOSE)
-
-
-def convert_default_and_star_import(content):
-    """
-    Transpile import star.
-
-    .. code-block:: javascript
-
-        // before
-        import something, * as name from "some/path";
-        // after
-        const name = require("some/path");
-        const something = name[Symbol.for("default")];
-    """
-    repl = r"""\g<space>const \g<named_exports_alias> = require(\g<path>);
-\g<space>const \g<default_export> = \g<named_exports_alias>[Symbol.for("default")]"""
-    return IMPORT_DEFAULT_AND_STAR.sub(repl, content)
 
 
 IMPORT_UNNAMED_RELATIVE_RE = re.compile(r"""

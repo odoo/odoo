@@ -200,9 +200,6 @@ export async function sayAsyncHello() {
 }
 
 
-export default function sayHelloDefault() {
-  console.log("Hello Default");
-}
 """
         result = transpile_javascript("/test_assetsbundle/static/src/functions.js", input_content)
 
@@ -219,11 +216,6 @@ __exports.sayHelloWorld = sayHelloWorld; function sayHelloWorld() {
 
 __exports.sayAsyncHello = sayAsyncHello; async function sayAsyncHello() {
   console.log("Hello Async");
-}
-
-
-__exports[Symbol.for("default")] = sayHelloDefault; function sayHelloDefault() {
-  console.log("Hello Default");
 }
 
 return __exports;
@@ -249,12 +241,6 @@ import Line9  from "test.Dialog";
 import  { Line10, Notification }  from 'test.Dialog2';
 
 import * as Line11 from "test.Dialog";
-import Default1, { Named1 } from "legacy.module";
-import Default1, { Named1 } from "@new_module/file";
-import Default1, {
-    Named1,
-} from "@new_module/file";
-import Default2, * as Star1 from "test.Dialog";
 import "test.Dialog";
 
 import Line12  from "@test.Dialog"; //HELLO
@@ -287,14 +273,6 @@ const Line9 = require("test.Dialog");
 const { Line10, Notification } = require('test.Dialog2');
 
 const Line11 = require("test.Dialog");
-const Default1 = require("legacy.module");
-const { Named1 } = Default1;
-const { [Symbol.for("default")]: Default1, Named1 } = require("@new_module/file");
-const { [Symbol.for("default")]: Default1,
-    Named1,
-} = require("@new_module/file");
-const Star1 = require("test.Dialog");
-const Default2 = Star1[Symbol.for("default")];
 require("test.Dialog");
 
 const Line12 = require("@test.Dialog")[Symbol.for("default")]; //HELLO
