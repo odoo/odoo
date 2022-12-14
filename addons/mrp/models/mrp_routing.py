@@ -39,7 +39,7 @@ class MrpRoutingWorkcenter(models.Model):
         help="Time in minutes:"
         "- In manual mode, time used"
         "- In automatic mode, supposed first time when there aren't any work orders yet")
-    time_cycle = fields.Float('Duration', compute="_compute_time_cycle")
+    time_cycle = fields.Float('Duration', compute="_compute_time_cycle", store=True, group_operator="sum")
     workorder_count = fields.Integer("# Work Orders", compute="_compute_workorder_count")
     workorder_ids = fields.One2many('mrp.workorder', 'operation_id', string="Work Orders")
     possible_bom_product_template_attribute_value_ids = fields.Many2many(related='bom_id.possible_product_template_attribute_value_ids')
