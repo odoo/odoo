@@ -837,6 +837,18 @@ class ProductTemplate(models.Model):
 
     def write(self, vals):
         self._sanitize_vals(vals)
+        if 'company_id' in vals and vals['company_id']:
+            products_changing_company = self.filtered(lambda product: product.company_id.id != vals['company_id'])
+            if products_changing_company:
+                # Forbid changing a product's company when quant(s) exist in another company.
+                quant = self.env['stock.quant'].sudo().search([
+                    ('product_id', 'in', products_changing_company.product_variant_ids.ids),
+                    ('company_id', '!=', vals['company_id']),
+                    ('quantity', '!=', 0),
+                ], order=None, limit=1)
+                if quant:
+                    raise UserError(_("This product's company cannot be changed as long as there are quantities of it belonging to another company."))
+
         if 'uom_id' in vals:
             new_uom = self.env['uom.uom'].browse(vals['uom_id'])
             updated = self.filtered(lambda template: template.uom_id != new_uom)
