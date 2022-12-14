@@ -148,6 +148,19 @@ class PadCommon(models.AbstractModel):
                 path = self[k].split('/p/')[1]
                 myPad.setHtmlFallbackText(path, self[field.pad_content_field])
 
+    def _set_field_to_pad(self, vals):
+        _logger.warning("The method `_set_field_to_pad()` is deprecated. Please use the method `_update_pad_from_field` instead.")
+        # Update the pad if the `pad_content_field` is modified
+        for k, field in self._fields.items():
+            if hasattr(field, 'pad_content_field') and vals.get(field.pad_content_field) and self[k]:
+                pad = {
+                    "server": self.env['ir.config_parameter'].sudo().get_param('pad.pad_server'),
+                    "key": self.env['ir.config_parameter'].sudo().get_param('pad.pad_key'),
+                }
+                myPad = EtherpadLiteClient(pad['key'], (pad['server'] or '') + '/api')
+                path = self[k].split('/p/')[1]
+                myPad.setHtmlFallbackText(path, vals[field.pad_content_field])
+
     def _set_pad_to_field(self, vals):
         # Update the `pad_content_field` if the pad is modified
         for k, v in list(vals.items()):
