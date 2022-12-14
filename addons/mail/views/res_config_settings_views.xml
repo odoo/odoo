@@ -42,7 +42,10 @@
                                 <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to set up the feature.</div>
                             </div>
                         </setting>
-                        <setting string="Use an Outlook Server" help="Send and receive emails through your Outlook account." documentation="https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app" attrs="{'invisible': [('external_email_server_default', '=', False)]}">
+                        <setting id="email-outlook-setting" string="Use an Outlook Server"
+                                 help="Send and receive emails through your Outlook account."
+                                 documentation="https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app"
+                                 attrs="{'invisible': [('external_email_server_default', '=', False)]}">
                             <field name="module_microsoft_outlook"/>
                             <div class="content-group" id="msg_module_microsoft_outlook"
                                 attrs="{'invisible': [('module_microsoft_outlook','=',False)]}">
