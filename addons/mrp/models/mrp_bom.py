@@ -82,6 +82,8 @@ class MrpBom(models.Model):
     allow_operation_dependencies = fields.Boolean('Operation Dependencies',
         help="Create operation level dependencies that will influence both planning and the status of work orders upon MO confirmation. If this feature is ticked, and nothing is specified, Odoo will assume that all operations can be started simultaneously."
     )
+    produce_delay = fields.Float(related='product_tmpl_id.produce_delay')
+    days_to_prepare_mo = fields.Float(related='product_tmpl_id.days_to_prepare_mo')
 
     _sql_constraints = [
         ('qty_positive', 'check (product_qty > 0)', 'The quantity to produce must be positive!'),

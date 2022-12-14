@@ -140,6 +140,8 @@
                                 </group>
                                 <group>
                                     <field name="picking_type_id" attrs="{'invisible': [('type','=','phantom')]}" string="Operation" groups="stock.group_adv_location"/>
+                                    <field name="produce_delay" attrs="{'invisible': [('type','=','phantom')]}"/>
+                                    <field name="days_to_prepare_mo" attrs="{'invisible': [('type','=','phantom')]}"/>
                                 </group>
                             </group>
                         </page>
