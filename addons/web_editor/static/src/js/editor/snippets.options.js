@@ -6991,7 +6991,12 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
                 shapeToSelect = possibleShapes.find((shape, i) => {
                     return possibleShapes[i - 1] === previousShape;
                 });
-            } else {
+            }
+            // If there is no previous sibling, if the previous sibling had the
+            // last shape selected or if the previous shape could not be found
+            // in the possible shapes, default to the first shape. ([0] being no
+            // shapes selected.)
+            if (!shapeToSelect) {
                 shapeToSelect = possibleShapes[1];
             }
             this.trigger_up('snippet_edition_request', {exec: () => {
