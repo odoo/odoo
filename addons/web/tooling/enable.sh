@@ -8,7 +8,7 @@ if [[ $testRealPath == "" ]]; then
 fi
 
 enableInDir () {
-    cd "$1"
+    cd "$1" || exit
     hooksPath="$(realpath --relative-to=. "$tooling/hooks")"
     git config core.hooksPath "$hooksPath"
     cp "$tooling/_eslintignore" .eslintignore
