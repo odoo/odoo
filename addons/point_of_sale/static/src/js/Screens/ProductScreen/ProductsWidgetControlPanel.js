@@ -16,9 +16,6 @@ class ProductsWidgetControlPanel extends PosComponent {
 
         onMounted(() => {
             this.env.posbus.on("search-product-from-info-popup", this, this.searchProductFromInfo);
-            if (!this.env.pos.config.limited_products_loading) {
-                this.env.pos.isEveryProductLoaded = true;
-            }
         });
 
         onWillUnmount(() => {
@@ -48,20 +45,15 @@ class ProductsWidgetControlPanel extends PosComponent {
         if (!this.state.searchInput) {
             return;
         }
-        if (!this.env.pos.isEveryProductLoaded) {
-            const result = await this.loadProductFromDB();
-            this.showNotification(
-                _.str.sprintf(
-                    this.env._t('%s product(s) found for "%s".'),
-                    result.length,
-                    this.state.searchInput
-                ),
-                3000
-            );
-            if (!result.length) {
-                this._clearSearch();
-            }
-        }
+        const result = await this.loadProductFromDB();
+        this.showNotification(
+            _.str.sprintf(
+                this.env._t('%s product(s) found for "%s".'),
+                result.length,
+                this.state.searchInput
+            ),
+            3000
+        );
     }
     searchProductFromInfo(productName) {
         this.state.searchInput = productName;
@@ -90,9 +82,6 @@ class ProductsWidgetControlPanel extends PosComponent {
             context: this.env.session.user_context,
         });
         if (ProductIds.length) {
-            if (!this.env.pos.isEveryProductLoaded) {
-                await this.env.pos.updateIsEveryProductLoaded();
-            }
             await this.env.pos._addProducts(ProductIds, false);
         }
         this.trigger("update-product-list");
