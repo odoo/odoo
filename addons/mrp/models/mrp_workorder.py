@@ -563,46 +563,39 @@ class MrpWorkorder(models.Model):
     @api.model
     def gantt_unavailability(self, start_date, end_date, scale, group_bys=None, rows=None):
         """Get unavailabilities data to display in the Gantt view."""
-
-        # recursively traverse rows and apply func to innermost rows
-        # (the non-grouped ones/leaves showing unavailabilities)
-        def traverse(rows, func):
-            for row in rows:
-                if 'groupedBy' not in row or len(row.get('groupedBy')) == 1:
-                    func(row)
-                traverse(row.get('rows'), func)
-
         workcenter_ids = set()
 
-        # detect_workcenters used in a row
-        # either by using workcenter 'resId' or by scanning records used in
-        def detect_workcenters(row):
-            row_workcenter_ids = set()
-            if 'groupedBy' in row and row.get('groupedBy')[0] == 'workcenter_id':
-                row_workcenter_ids.add(row.get('resId'))
-            else:
-                for record in row.get('records'):
-                    row_workcenter_ids.add(record['workcenter_id'][0])
-            row['workcenter_ids'] = row_workcenter_ids
-            workcenter_ids.update(row_workcenter_ids)
+        def traverse_inplace(func, row, **kargs):
+            res = func(row, **kargs)
+            if res:
+                kargs.update(res)
+            for row in row.get('rows'):
+                traverse_inplace(func, row, **kargs)
 
-        traverse(rows, detect_workcenters)
+        def search_workcenter_ids(row):
+            if row.get('groupedBy') and row.get('groupedBy')[0] == 'workcenter_id' and row.get('resId'):
+                workcenter_ids.add(row.get('resId'))
 
+        for row in rows:
+            traverse_inplace(search_workcenter_ids, row)
+        start_datetime = fields.Datetime.to_datetime(start_date)
+        end_datetime = fields.Datetime.to_datetime(end_date)
         workcenters = self.env['mrp.workcenter'].browse(workcenter_ids)
-        start_datetime = fields.Datetime.from_string(start_date)
-        end_datetime = fields.Datetime.from_string(end_date)
-        unavailabilities = workcenters._get_unavailability_intervals(start_datetime, end_datetime)
+        unavailability_mapping = workcenters._get_unavailability_intervals(start_datetime, end_datetime)
 
-        # add unavailability data
-        # (do not remove intervals smaller than a cell anymore as we are summing workorder times by column=time)
-        def add_unavailabilities(row):
-            row_unavailabilities = set()
-            for workcenter_id in row['workcenter_ids']:
-                row_unavailabilities.update(unavailabilities[workcenter_id])
-            row['unavailabilities'] = [{'start': interval[0], 'stop': interval[1]} for interval in list(sorted(row_unavailabilities))]
+        # Only notable interval (more than one case) is send to the front-end (avoid sending useless information)
+        cell_dt = (scale in ['day', 'week'] and timedelta(hours=1)) or (scale == 'month' and timedelta(days=1)) or timedelta(days=28)
 
-        traverse(rows, add_unavailabilities)
+        def add_unavailability(row, workcenter_id=None):
+            if row.get('groupedBy') and row.get('groupedBy')[0] == 'workcenter_id' and row.get('resId'):
+                workcenter_id = row.get('resId')
+            if workcenter_id:
+                notable_intervals = filter(lambda interval: interval[1] - interval[0] >= cell_dt, unavailability_mapping[workcenter_id])
+                row['unavailabilities'] = [{'start': interval[0], 'stop': interval[1]} for interval in notable_intervals]
+                return {'workcenter_id': workcenter_id}
 
+        for row in rows:
+            traverse_inplace(add_unavailability, row)
         return rows
 
     def button_start(self):
