@@ -43,7 +43,7 @@ class StockForecasted extends Component{
             if (actionModel.length && actionModel[0].model) {
                 this.resModel = actionModel[0].model
             }
-        } else if (this.props.action._originalAction) {
+        } else if (!this.resModel && this.props.action._originalAction) {
             const originalContextAction = JSON.parse(this.props.action._originalAction).context;
             if (originalContextAction) {
                 this.resModel = originalContextAction.active_model
