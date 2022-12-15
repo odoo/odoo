@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from . import models
-from odoo import api, SUPERUSER_ID
 
 
-def _l10n_es_edi_post_init(cr, registry):
-    env = api.Environment(cr, SUPERUSER_ID, {})
+def _l10n_es_edi_post_init(env):
     companies = env['res.company'].search([('partner_id.country_id.code', '=', 'ES')])
 
     all_chart_templates = companies.chart_template_id

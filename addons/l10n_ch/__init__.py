@@ -5,8 +5,6 @@ from . import models
 from . import report
 from . import wizard
 
-from odoo import api, SUPERUSER_ID
-
 
 def load_translations(env):
     env.ref('l10n_ch.l10nch_chart_template').process_coa_translations()
@@ -25,7 +23,6 @@ def init_settings(env):
         res_config_id.execute()
 
 
-def post_init(cr, registry):
-    env = api.Environment(cr, SUPERUSER_ID, {})
+def post_init(env):
     load_translations(env)
     init_settings(env)

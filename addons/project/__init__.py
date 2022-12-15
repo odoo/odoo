@@ -7,8 +7,6 @@ from . import report
 from . import wizard
 from . import populate
 
-from odoo import api, SUPERUSER_ID
-
 
 def _check_exists_collaborators_for_project_sharing(env):
     """ Check if it exists at least a collaborator in a shared project
@@ -21,6 +19,5 @@ def _check_exists_collaborators_for_project_sharing(env):
         env['project.collaborator']._toggle_project_sharing_portal_rules(True)
 
 
-def _project_post_init(cr, registry):
-    env = api.Environment(cr, SUPERUSER_ID, {})
+def _project_post_init(env):
     _check_exists_collaborators_for_project_sharing(env)
