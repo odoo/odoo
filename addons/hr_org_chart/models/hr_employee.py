@@ -9,6 +9,7 @@ class Employee(models.Model):
 
     subordinate_ids = fields.One2many('hr.employee', string='Subordinates', compute='_compute_subordinates', help="Direct and indirect subordinates",
                                       compute_sudo=True)
+    is_subordinate = fields.Boolean(compute="_compute_is_subordinate", search="_search_is_subordinate")
 
 
 class HrEmployeePublic(models.Model):
@@ -16,3 +17,4 @@ class HrEmployeePublic(models.Model):
 
     subordinate_ids = fields.One2many('hr.employee.public', string='Subordinates', compute='_compute_subordinates', help="Direct and indirect subordinates",
                                       compute_sudo=True)
+    is_subordinate = fields.Boolean(compute="_compute_is_subordinate", search="_search_is_subordinate")
