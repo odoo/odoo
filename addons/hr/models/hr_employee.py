@@ -298,7 +298,7 @@ class HrEmployeePrivate(models.Model):
 
     def _sync_user(self, user, employee_has_image=False):
         vals = dict(
-            work_email=user.email,
+            work_contact_id=user.partner_id.id,
             user_id=user.id,
         )
         if not employee_has_image:

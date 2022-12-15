@@ -3235,8 +3235,17 @@ class BaseModel(metaclass=MetaModel):
                 cr.execute(query_str, params + [sub_ids])
                 result += cr.fetchall()
         else:
-            self.check_access_rule('read')
-            result = [(id_,) for id_ in self.ids]
+            try:
+                self.check_access_rule('read')
+            except MissingError:
+                # Method _read() should never raise a MissingError, but method
+                # check_access_rule() can, because it must read fields on self.
+                # So we restrict 'self' to existing records (to avoid an extra
+                # exists() at the end of the method).
+                self = self.exists()
+                self.check_access_rule('read')
+
+            result = [(id_,) for id_ in self._ids]
 
         fetched = self.browse()
         if result:

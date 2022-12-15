@@ -82,6 +82,9 @@ def transfer_node_to_modifiers(node, modifiers):
     attrs = node.attrib.pop('attrs', None)
     if attrs:
         modifiers.update(ast.literal_eval(attrs.strip()))
+        for a in ('invisible', 'readonly', 'required'):
+            if a in modifiers and isinstance(modifiers[a], int):
+                modifiers[a] = bool(modifiers[a])
 
     states = node.attrib.pop('states', None)
     if states:
