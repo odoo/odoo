@@ -50,6 +50,13 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
                                    'dayofweek': '0',
                                }),
                                (0, 0, {
+                                   'name': 'monday lunch',
+                                   'hour_from': 12,
+                                   'hour_to': 13,
+                                   'day_period': 'lunch',
+                                   'dayofweek': '0',
+                               }),
+                               (0, 0, {
                                    'name': 'monday afternoon',
                                    'hour_from': 13,
                                    'hour_to': 17,
@@ -92,6 +99,13 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
                                    'hour_from': 10.25,
                                    'hour_to': 12.25,
                                    'day_period': 'morning',
+                                   'dayofweek': '0',
+                               }),
+                               (0, 0, {
+                                   'name': 'monday lunch',
+                                   'hour_from': 12.25,
+                                   'hour_to': 13,
+                                   'day_period': 'lunch',
                                    'dayofweek': '0',
                                }),
                                (0, 0, {

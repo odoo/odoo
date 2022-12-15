@@ -297,6 +297,13 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 }))
                 attendances.append((0, 0, {
                     'name': '%s_%d' % ('40 Hours', index),
+                    'hour_from': 12,
+                    'hour_to': 13,
+                    'dayofweek': str(index),
+                    'day_period': 'lunch'
+                }))
+                attendances.append((0, 0, {
+                    'name': '%s_%d' % ('40 Hours', index),
                     'hour_from': 13,
                     'hour_to': 17,
                     'dayofweek': str(index),
