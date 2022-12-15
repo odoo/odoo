@@ -3,8 +3,6 @@
 
 from . import models
 
-from odoo import api, SUPERUSER_ID
-
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -42,6 +40,5 @@ def load_taxes(env):
                 _logger.error("Can't load TCS and TDS account so account is not set in taxes of company: %s(%s).", company.name, company.id)
 
 
-def l10n_in_post_init(cr, registry):
-    env = api.Environment(cr, SUPERUSER_ID, {})
+def l10n_in_post_init(env):
     load_taxes(env)

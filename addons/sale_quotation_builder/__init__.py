@@ -4,7 +4,7 @@
 from . import controllers
 from . import models
 
-def _pre_init_sale_quotation_builder(cr):
+def _pre_init_sale_quotation_builder(env):
     """ Allow installing sale_quotation_builder in databases
     with large sale.order / sale.order.line tables.
 
@@ -14,19 +14,19 @@ def _pre_init_sale_quotation_builder(cr):
     By avoiding the computation of those fields,
     we reduce the installation time noticeably
     """
-    cr.execute("""
+    env.cr.execute("""
         ALTER TABLE "sale_order"
         ADD COLUMN "website_description" text
     """)
-    cr.execute("""
+    env.cr.execute("""
         ALTER TABLE "sale_order_line"
         ADD COLUMN "website_description" text
     """)
-    cr.execute("""
+    env.cr.execute("""
         ALTER TABLE "sale_order_template_line"
         ADD COLUMN "website_description" text
     """)
-    cr.execute("""
+    env.cr.execute("""
         ALTER TABLE "sale_order_template_option"
         ADD COLUMN "website_description" text
     """)

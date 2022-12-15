@@ -3,11 +3,9 @@
 
 from . import models
 from . import report
-from odoo import api, SUPERUSER_ID
 
 
-def _setup_inalterability(cr, registry):
-    env = api.Environment(cr, SUPERUSER_ID, {})
+def _setup_inalterability(env):
     # enable ping for this module
     env['publisher_warranty.contract'].update_notification(cron_mode=True)
 

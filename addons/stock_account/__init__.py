@@ -5,12 +5,11 @@ from . import models
 from . import report
 from . import wizard
 
-from odoo import api, SUPERUSER_ID, _, tools
+from odoo import _
 
-def _configure_journals(cr, registry):
+
+def _configure_journals(env):
     """Setting journal and property field (if needed)"""
-
-    env = api.Environment(cr, SUPERUSER_ID, {})
 
     # if we already have a coa installed, create journal and set property field
     company_ids = env['res.company'].search([('chart_template_id', '!=', False)])
