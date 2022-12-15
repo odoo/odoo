@@ -10,7 +10,6 @@ import subprocess
 from distutils.version import LooseVersion
 import os
 from os.path import join
-import sys
 
 from odoo.tests.common import TransactionCase
 from odoo import tools
@@ -52,7 +51,7 @@ class TestPyLint(TransactionCase):
         if pylint is None:
             self._skip_test('please install pylint')
         required_pylint_version = LooseVersion('1.6.4')
-        if sys.version_info >= (3, 6):
+        if self._python_version >= (3, 6):
             required_pylint_version = LooseVersion('1.7.0')
         if LooseVersion(getattr(pylint, '__version__', '0.0.1')) < required_pylint_version:
             self._skip_test('please upgrade pylint to >= %s' % required_pylint_version)

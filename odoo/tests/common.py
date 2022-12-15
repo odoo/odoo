@@ -243,8 +243,9 @@ class OdooSuite(unittest.suite.TestSuite):
 
 
 class TreeCase(unittest.TestCase):
+    _python_version = sys.version_info
 
-    if sys.version_info < (3, 8):
+    if _python_version < (3, 8):
         # Partial backport of bpo-24412, merged in CPython 3.8
         _class_cleanups = []
 
