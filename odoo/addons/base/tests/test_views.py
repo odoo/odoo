@@ -1743,7 +1743,7 @@ class TestViews(ViewCase):
                 node = etree.fromstring(what) if isinstance(what, str) else what
                 transfer_node_to_modifiers(node, modifiers)
             simplify_modifiers(modifiers)
-            assert modifiers == expected, "%s != %s" % (modifiers, expected)
+            assert str(modifiers) == str(expected), "%s != %s" % (modifiers, expected)
 
         _test_modifiers('<field name="a"/>', {})
         _test_modifiers('<field name="a" invisible="1"/>', {"invisible": True})
@@ -1752,6 +1752,14 @@ class TestViews(ViewCase):
         _test_modifiers('<field name="a" invisible="0"/>', {})
         _test_modifiers('<field name="a" readonly="0"/>', {})
         _test_modifiers('<field name="a" required="0"/>', {})
+        _test_modifiers(
+            """<field name="a" attrs="{'readonly': 1}"/>""",
+            {"readonly": True},
+        )
+        _test_modifiers(
+            """<field name="a" attrs="{'readonly': 0}"/>""",
+            {},
+        )
         # TODO: Order is not guaranteed
         _test_modifiers(
             '<field name="a" invisible="1" required="1"/>',
