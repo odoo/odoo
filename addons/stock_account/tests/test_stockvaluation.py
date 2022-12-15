@@ -2087,7 +2087,7 @@ class TestStockValuation(SavepointCase):
         move5.move_line_ids.qty_done = 30.0
         move5._action_done()
 
-        self.assertEqual(move5.stock_valuation_layer_ids.value, -477.5)
+        self.assertEqual(move5.stock_valuation_layer_ids.value, -477.56)
 
         # Receives 10 units but assign them to an owner, the valuation should not be impacted.
         move6 = self.env['stock.move'].create({
@@ -2121,7 +2121,7 @@ class TestStockValuation(SavepointCase):
         move7.move_line_ids.qty_done = 50.0
         move7._action_done()
 
-        self.assertEqual(move7.stock_valuation_layer_ids.value, -796.0)
+        self.assertEqual(move7.stock_valuation_layer_ids.value, -795.94)
         self.assertAlmostEqual(self.product1.quantity_svl, 0.0)
         self.assertAlmostEqual(self.product1.value_svl, 0.0)
 
