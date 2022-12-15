@@ -424,16 +424,16 @@ async function activateCropper(image, aspectRatio, dataset) {
  * @param {string} [attachmentSrc=''] specifies the URL of the corresponding
  * attachment if it can't be found in the 'src' attribute.
  */
-async function loadImageInfo(img, rpc, attachmentSrc = '') {
+async function loadImageInfo(img, rpc, attachmentSrc = '', resField) {
     const src = attachmentSrc || img.getAttribute('src');
     // If there is a marked originalSrc, the data is already loaded.
     if (img.dataset.originalSrc || !src) {
         return;
     }
 
-    const {original} = await rpc({
+    const {description, original} = await rpc({
         route: '/web_editor/get_image_info',
-        params: {src: src.split(/[?#]/)[0]},
+        params: {src: src.split(/[?#]/)[0], res_field: resField},
     });
     // Check that url is local.
     const isLocal = original && new URL(original.image_src, window.location.origin).origin === window.location.origin;
@@ -441,6 +441,15 @@ async function loadImageInfo(img, rpc, attachmentSrc = '') {
         img.dataset.originalId = original.id;
         img.dataset.originalSrc = original.image_src;
         img.dataset.mimetype = original.mimetype;
+        // Add the correct data attributes thanks to the information stored in
+        // the 'description' field of the attachment.
+        if (description) {
+            const imgOptions = description.match(/shapeColors|shape|glFilter|resizeWidth|quality/g);
+            const imgOptionsValues = description.match(/(?<=shapeColors:)[^\s]+|(?<=shape:)[^\s]+|(?<=glFilter:)[^\s]+|(?<=resizeWidth:)[^\s]+|(?<=quality:)[^\s]+/g);
+            for (const index in imgOptions) {
+                img.dataset[imgOptions[index]] = imgOptionsValues[index];
+            }
+        }
     }
 }
 

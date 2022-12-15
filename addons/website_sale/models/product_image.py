@@ -69,3 +69,22 @@ class ProductImage(models.Model):
                 normal_vals.append(vals)
 
         return super().create(normal_vals) + super(ProductImage, context_without_template).create(variant_vals_list)
+
+    # Override
+    def set_attachment(self, attachment_copied, attachment, res_field=None):
+        checksum = attachment.checksum
+        original_attachment = self.env['ir.attachment'].search([('checksum', '=', checksum)], limit=1)
+        if original_attachment.res_id == 0:
+            # When a 'product.image' has just been added, the
+            # 'original_attachment' has its 'res_model' set to 'ir.ui.view' and
+            # its 'res_id' set to 0. Indeed, when a 'product.image' is added by
+            # the media dialog, there is no indication of what will be the
+            # 'res_id' as it does not exist yet. This is where the
+            # 'original_attachment' information are updated.
+            original_attachment.res_id = attachment.res_id
+            original_attachment.res_model = attachment.res_model
+            attachment_copied.original_id = original_attachment.id
+            attachment.original_id = original_attachment.id
+            attachment.description = attachment_copied.description
+        else:
+            super().set_attachment(attachment_copied, attachment, res_field)

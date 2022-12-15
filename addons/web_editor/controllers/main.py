@@ -297,7 +297,7 @@ class Web_Editor(http.Controller):
         return removal_blocked_by
 
     @http.route('/web_editor/get_image_info', type='json', auth='user', website=True)
-    def get_image_info(self, src=''):
+    def get_image_info(self, src='', res_field=False):
         """This route is used to determine the original of an attachment so that
         it can be used as a base to modify it again (crop/optimization/filters).
         """
@@ -312,6 +312,8 @@ class Web_Editor(http.Controller):
                 )
                 if record._name == 'ir.attachment':
                     attachment = record
+                else:
+                    attachment = record.get_attachment(res_field)
         if not attachment:
             # Find attachment by url. There can be multiple matches because of default
             # snippet images referencing the same image in /static/, so we limit to 1
@@ -325,6 +327,7 @@ class Web_Editor(http.Controller):
                 'original': False,
             }
         return {
+            'description': attachment.read(['description'])[0].get('description'),
             'attachment': attachment.read(['id'])[0],
             'original': (attachment.original_id or attachment).read(['id', 'image_src', 'mimetype'])[0],
         }
@@ -534,7 +537,7 @@ class Web_Editor(http.Controller):
         return files_data_by_bundle
 
     @http.route('/web_editor/modify_image/<model("ir.attachment"):attachment>', type="json", auth="user", website=True)
-    def modify_image(self, attachment, res_model=None, res_id=None, name=None, data=None, original_id=None, mimetype=None):
+    def modify_image(self, attachment, res_model=None, res_id=None, name=None, data=None, original_id=None, mimetype=None, description=None, res_field=None):
         """
         Creates a modified copy of an attachment and returns its image_src to be
         inserted into the DOM.
@@ -545,6 +548,7 @@ class Web_Editor(http.Controller):
             'type': 'binary',
             'res_model': res_model or 'ir.ui.view',
             'mimetype': mimetype or attachment.mimetype,
+            'description': description
         }
         if fields['res_model'] == 'ir.ui.view':
             fields['res_id'] = 0
@@ -552,23 +556,26 @@ class Web_Editor(http.Controller):
             fields['res_id'] = res_id
         if name:
             fields['name'] = name
-        attachment = attachment.copy(fields)
-        if attachment.url:
+        attachment_copied = attachment.copy(fields)
+        if attachment_copied.url:
             # Don't keep url if modifying static attachment because static images
             # are only served from disk and don't fallback to attachments.
-            if re.match(r'^/\w+/static/', attachment.url):
-                attachment.url = None
+            if re.match(r'^/\w+/static/', attachment_copied.url):
+                attachment_copied.url = None
             # Uniquify url by adding a path segment with the id before the name.
             # This allows us to keep the unsplash url format so it still reacts
             # to the unsplash beacon.
             else:
-                url_fragments = attachment.url.split('/')
-                url_fragments.insert(-1, str(attachment.id))
-                attachment.url = '/'.join(url_fragments)
-        if attachment.public:
-            return attachment.image_src
-        attachment.generate_access_token()
-        return '%s?access_token=%s' % (attachment.image_src, attachment.access_token)
+                url_fragments = attachment_copied.url.split('/')
+                url_fragments.insert(-1, str(attachment_copied.id))
+                attachment_copied.url = '/'.join(url_fragments)
+        # Update the description of the basic attachment.
+        record = request.env[res_model].browse(res_id)
+        record.set_attachment(attachment_copied, attachment, res_field)
+        if attachment_copied.public:
+            return attachment_copied.image_src
+        attachment_copied.generate_access_token()
+        return '%s?access_token=%s' % (attachment_copied.image_src, attachment_copied.access_token)
 
     def _get_shape_svg(self, module, *segments):
         shape_path = get_resource_path(module, 'static', *segments)

@@ -3574,6 +3574,28 @@ class BaseModel(metaclass=MetaModel):
         dom = self.env['ir.rule']._compute_domain(self._name, operation)
         return self.sudo().filtered_domain(dom or [])
 
+    # Recover the attachment bind to a field of a record.
+    def get_attachment(self, res_field=None):
+        return self.env['ir.attachment'].sudo().search(
+            domain=[('res_model', '=', self._name),
+                    ('res_id', '=', self.id),
+                    ('res_field', '=', res_field)
+                    ],
+            limit=1)
+
+    # Modify the basic attachment bind to a field of a record.
+    def set_attachment(self, attachment_copied, attachment, res_field=None):
+        attachment_with_field = self.get_attachment(res_field)
+        if attachment_with_field:
+            attachment_with_field.description = attachment_copied.description
+            attachment_with_field.original_id = attachment_copied.original_id
+        else:
+            # For example; creation of a product and add a 'product.template'
+            # image for the first time.
+            attachment_with_field = attachment_copied.copy()
+            attachment_with_field.res_field = res_field
+            attachment_with_field.name = res_field
+
     def unlink(self):
         """ unlink()
 

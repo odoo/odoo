@@ -725,3 +725,51 @@ class ProductProduct(models.Model):
     def _get_contextual_price(self):
         self.ensure_one()
         return self.product_tmpl_id._get_contextual_price(self)
+
+    # Override
+    def get_attachment(self, res_field=None):
+        res_field_variant = 'image_variant_' + re.search(r'\d+', res_field)[0]
+        # The product has multiple variants with dedicated images, the
+        # attachment should be the one of the variant.
+        if (self[res_field_variant]):
+            return self.env['ir.attachment'].sudo().search(
+                domain=[('res_model', '=', 'product.product'),
+                        ('res_id', '=', self.id),
+                        ('res_field', '=', res_field_variant)
+                        ],
+                limit=1)
+        # The product has only one variant, or multiples variants but no images
+        # associated to them so the attachment should be the one of the
+        # associated template.
+        else:
+            return self.env['ir.attachment'].sudo().search(
+                domain=[('res_model', '=', 'product.template'),
+                        ('res_id', '=', self.product_tmpl_id.id),
+                        ('res_field', '=', res_field)
+                        ],
+                limit=1)
+
+    # Override
+    def set_attachment(self, attachment_copied, attachment, res_field=None):
+        res_field_variant = 'image_variant_' + re.search(r'\d+', res_field)[0]
+        attachment_with_field = self.get_attachment(res_field)
+        if not attachment_with_field:
+            # For example: creation of a product and add of a 'product.product'
+            # image for the first time.
+            attachment_with_field = attachment_copied.copy()
+            attachment_with_field.res_model = 'product.template'
+            attachment_with_field.res_id = self.product_tmpl_id.id
+            attachment_with_field.res_field = res_field
+            attachment_with_field.name = res_field
+        if (self.product_tmpl_id.product_variant_count > 1 and not self[res_field_variant]):
+            # Product with multiple variants but no dedicated images for them.
+            # Because we want to modify the image of this product variant, an
+            # attachment with its 'res_field' set to 'image_variant_1920' needs
+            # to be created first.
+            attachment_with_field = attachment_with_field.copy()
+            attachment_with_field.name = res_field_variant
+            attachment_with_field.res_model = 'product.product'
+            attachment_with_field.res_id = self.id
+            attachment_with_field.res_field = res_field_variant
+        attachment_with_field.description = attachment_copied.description
+        attachment_with_field.original_id = attachment_copied.original_id
