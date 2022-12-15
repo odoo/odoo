@@ -55,7 +55,7 @@ class PaymentLinkWizard(models.TransientModel):
             acq = doc.xpath("//field[@name='acquirer_id']")[0]
             acq.attrib['name'] = 'payment_acquirer_selection'
             acq.attrib['widget'] = 'selection'
-            acq.attrib['string'] = _('Force Payment Acquirer')
+            acq.attrib['string'] = _('Payment Acquirer Selected')
             del acq.attrib['options']
             del acq.attrib['placeholder']
 
@@ -94,7 +94,7 @@ class PaymentLinkWizard(models.TransientModel):
         compute='_compute_has_multiple_acquirers',
     )
     payment_acquirer_selection = fields.Selection(
-        string="Payment acquirer selected",
+        string="Payment Acquirer Selected",
         selection='_selection_payment_acquirer_selection',
         default='all',
         compute='_compute_payment_acquirer_selection',
