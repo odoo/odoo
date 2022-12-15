@@ -205,8 +205,10 @@ class ProductProduct(models.Model):
         fifo_vals = self._run_fifo(abs(quantity), company)
         vals['remaining_qty'] = fifo_vals.get('remaining_qty')
         # In case of AVCO, fix rounding issue of standard price when needed.
-        if self.product_tmpl_id.cost_method == 'average':
-            rounding_error = currency.round(self.standard_price * self.quantity_svl - self.value_svl)
+        if self.product_tmpl_id.cost_method == 'average' and not float_is_zero(self.quantity_svl, precision_rounding=self.uom_id.rounding):
+            rounding_error = currency.round(
+                (self.standard_price * self.quantity_svl - self.value_svl) * abs(quantity / self.quantity_svl)
+            )
             if rounding_error:
                 # If it is bigger than the (smallest number of the currency * quantity) / 2,
                 # then it isn't a rounding error but a stock valuation error, we shouldn't fix it under the hood ...
