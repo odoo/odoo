@@ -9761,6 +9761,72 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("display tooltip for fields that don't have a label", async function (assert) {
+        patchWithCleanup(odoo, { debug: true });
+
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+            clearTimeout: () => {},
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="foo"/>
+                            <field name="display_name" nolabel="1"/>
+                        </group>
+                    </sheet>
+                </form>`,
+        });
+
+        await mouseEnter(target.querySelector("[name='foo']"));
+        await nextTick();
+
+        assert.containsNone(target, ".o-tooltip--technical", "no tooltip shoud be displayed");
+
+        await mouseEnter(target.querySelector("[name='display_name']"));
+        await nextTick();
+
+        assert.containsOnce(
+            target,
+            '.o-tooltip--technical > li[data-item="field"]',
+            "'field' should be present in the tooltip"
+        );
+        assert.strictEqual(
+            target.querySelector('.o-tooltip--technical > li[data-item="field"]').lastChild
+                .textContent,
+            "display_name",
+            "'field' should be correctly displayed"
+        );
+        assert.containsOnce(
+            target,
+            '.o-tooltip--technical > li[data-item="type"]',
+            "'type' should be present in the tooltip"
+        );
+        assert.strictEqual(
+            target.querySelector('.o-tooltip--technical > li[data-item="type"]').lastChild
+                .textContent,
+            "char",
+            "'type' should be correctly displayed"
+        );
+        assert.containsOnce(
+            target,
+            '.o-tooltip--technical > li[data-item="object"]',
+            "'model' should be present in the tooltip"
+        );
+        assert.strictEqual(
+            target.querySelector('.o-tooltip--technical > li[data-item="object"]').lastChild
+                .textContent,
+            "partner",
+            "'model' should be correctly displayed"
+        );
+    });
+
     QUnit.test("display tooltips for buttons (debug = true)", async function (assert) {
         patchWithCleanup(odoo, {
             debug: true,

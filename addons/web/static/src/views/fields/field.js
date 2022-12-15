@@ -80,6 +80,9 @@ export class Field extends Component {
             const fieldType = this.props.record.fields[this.props.name].type;
             this.FieldComponent = getFieldClassFromRegistry(fieldType, this.props.type);
         }
+        if (typeof this.props.showTooltip == "undefined") {
+            this.props.showTooltip = this.props.fieldInfo.noLabel;
+        }
     }
 
     get classNames() {
@@ -188,6 +191,7 @@ export class Field extends Component {
             const tooltip = getTooltipInfo({
                 field: this.props.record.fields[this.props.name],
                 fieldInfo: this.props.fieldInfo,
+                resModel: this.props.record.resModel,
             });
             if (Boolean(odoo.debug) || (tooltip && JSON.parse(tooltip).field.help)) {
                 return tooltip;
