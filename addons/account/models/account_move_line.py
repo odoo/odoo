@@ -918,14 +918,16 @@ class AccountMoveLine(models.Model):
     def _compute_all_tax(self):
         for line in self:
             sign = line.move_id.direction_sign
+            if line.display_type == 'tax':
+                line.compute_all_tax = {}
+                line.compute_all_tax_dirty = False
+                continue
             if line.display_type == 'product' and line.move_id.is_invoice(True):
                 amount_currency = sign * line.price_unit * (1 - line.discount / 100)
-                amount = sign * line.price_unit / line.currency_rate * (1 - line.discount / 100)
                 handle_price_include = True
                 quantity = line.quantity
             else:
                 amount_currency = line.amount_currency
-                amount = line.balance
                 handle_price_include = False
                 quantity = 1
             compute_all_currency = line.tax_ids.compute_all(
