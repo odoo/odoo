@@ -17,9 +17,9 @@ import json
 import re
 import warnings
 
-#forbidden fields
-INTEGRITY_HASH_MOVE_FIELDS = ('date', 'journal_id', 'company_id')
-INTEGRITY_HASH_LINE_FIELDS = ('debit', 'credit', 'account_id', 'partner_id')
+# forbidden fields
+INTEGRITY_HASH_MOVE_FIELDS = ('name', 'date', 'journal_id', 'company_id')
+INTEGRITY_HASH_LINE_FIELDS = ('name', 'debit', 'credit', 'account_id', 'partner_id')
 
 
 def calc_check_digits(number):
@@ -2040,7 +2040,7 @@ class AccountMove(models.Model):
 
     def write(self, vals):
         for move in self:
-            if (move.restrict_mode_hash_table and move.state == "posted" and set(vals).intersection(INTEGRITY_HASH_MOVE_FIELDS)):
+            if move.restrict_mode_hash_table and move.inalterable_hash and set(vals).intersection(INTEGRITY_HASH_MOVE_FIELDS):
                 raise UserError(_("You cannot edit the following fields due to restrict mode being activated on the journal: %s.") % ', '.join(INTEGRITY_HASH_MOVE_FIELDS))
             if (move.restrict_mode_hash_table and move.inalterable_hash and 'inalterable_hash' in vals) or (move.secure_sequence_number and 'secure_sequence_number' in vals):
                 raise UserError(_('You cannot overwrite the values ensuring the inalterability of the accounting.'))
@@ -2075,13 +2075,6 @@ class AccountMove(models.Model):
         if 'date' in vals or 'state' in vals:
             self._check_fiscalyear_lock_date()
             self.mapped('line_ids')._check_tax_lock_date()
-
-        if ('state' in vals and vals.get('state') == 'posted'):
-            for move in self.filtered(lambda m: m.restrict_mode_hash_table and not(m.secure_sequence_number or m.inalterable_hash)).sorted(lambda m: (m.date, m.ref or '', m.id)):
-                new_number = move.journal_id.secure_sequence_id.next_by_id()
-                vals_hashing = {'secure_sequence_number': new_number,
-                                'inalterable_hash': move._get_new_hash(new_number)}
-                res |= super(AccountMove, move).write(vals_hashing)
 
         # Ensure the move is still well balanced.
         if 'line_ids' in vals:
@@ -2734,6 +2727,12 @@ class AccountMove(models.Model):
                     to_write['line_ids'].append((1, line.id, {'name': to_write['payment_reference']}))
                 move.write(to_write)
 
+        for move in to_post\
+                .filtered(lambda mv: mv.restrict_mode_hash_table and not (mv.secure_sequence_number or mv.inalterable_hash))\
+                .sorted(lambda mv: (mv.date, mv.ref or '', mv.id)):
+            new_number = move.journal_id.secure_sequence_id.next_by_id()
+            move.write({'secure_sequence_number': new_number, 'inalterable_hash': move._get_new_hash(new_number)})
+
         for move in to_post:
             if move.is_sale_document() \
                     and move.journal_id.sale_activity_type_id \
@@ -2836,7 +2835,7 @@ class AccountMove(models.Model):
                 raise UserError(_('You cannot reset to draft an exchange difference journal entry.'))
             if move.tax_cash_basis_rec_id:
                 raise UserError(_('You cannot reset to draft a tax cash basis journal entry.'))
-            if move.restrict_mode_hash_table and move.state == 'posted' and move.id not in excluded_move_ids:
+            if move.restrict_mode_hash_table and move.inalterable_hash and move.id not in excluded_move_ids:
                 raise UserError(_('You cannot modify a posted entry of this journal because it is in strict mode.'))
             # We remove all the analytics entries for this journal
             move.mapped('line_ids.analytic_line_ids').unlink()
@@ -2845,6 +2844,16 @@ class AccountMove(models.Model):
         self.write({'state': 'draft', 'is_move_sent': False})
 
     def button_cancel(self):
+        AccountMoveLine = self.env['account.move.line']
+        excluded_move_ids = []
+
+        if self._context.get('suspense_moves_mode'):
+            excluded_move_ids = AccountMoveLine.search(AccountMoveLine._get_suspense_moves_domain() + [('move_id', 'in', self.ids)]).mapped('move_id').ids
+
+        for move in self:
+            if move.restrict_mode_hash_table and move.inalterable_hash and move.id not in excluded_move_ids:
+                raise UserError(_('You cannot modify a posted entry of this journal because it is in strict mode.'))
+
         self.write({'auto_post': False, 'state': 'cancel'})
 
     def action_invoice_sent(self):
@@ -4192,7 +4201,7 @@ class AccountMoveLine(models.Model):
 
         for line in self:
             if line.parent_state == 'posted':
-                if line.move_id.restrict_mode_hash_table and set(vals).intersection(INTEGRITY_HASH_LINE_FIELDS):
+                if line.move_id.restrict_mode_hash_table and line.move_id.inalterable_hash and set(vals).intersection(INTEGRITY_HASH_LINE_FIELDS):
                     raise UserError(_("You cannot edit the following fields due to restrict mode being activated on the journal: %s.") % ', '.join(INTEGRITY_HASH_LINE_FIELDS))
                 if any(key in vals for key in ('tax_ids', 'tax_line_id')):
                     raise UserError(_('You cannot modify the taxes related to a posted journal item, you should reset the journal entry to draft to do so.'))
