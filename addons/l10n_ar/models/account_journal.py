@@ -9,7 +9,8 @@ class AccountJournal(models.Model):
     _inherit = "account.journal"
 
     l10n_ar_afip_pos_system = fields.Selection(
-        selection='_get_l10n_ar_afip_pos_types_selection', string='AFIP POS System')
+        selection='_get_l10n_ar_afip_pos_types_selection', string='AFIP POS System',
+        compute='_compute_l10n_ar_afip_pos_system', store=True, readonly=False)
     l10n_ar_afip_pos_number = fields.Integer(
         'AFIP POS Number', help='This is the point of sale number assigned by AFIP in order to generate invoices')
     company_partner = fields.Many2one('res.partner', related='company_id.partner_id')
@@ -17,6 +18,18 @@ class AccountJournal(models.Model):
         'res.partner', 'AFIP POS Address', help='This is the address used for invoice reports of this POS',
         domain="['|', ('id', '=', company_partner), '&', ('id', 'child_of', company_partner), ('type', '!=', 'contact')]"
     )
+    l10n_ar_is_pos = fields.Boolean(
+        compute="_compute_l10n_ar_is_pos", store=True, readonly=False, string="Is AFIP POS?")
+
+    @api.depends('country_code', 'type', 'l10n_latam_use_documents')
+    def _compute_l10n_ar_is_pos(self):
+        for journal in self:
+            journal.l10n_ar_is_pos = journal.country_code == 'AR' and journal.type == 'sale' and journal.l10n_latam_use_documents
+
+    @api.depends('l10n_ar_is_pos')
+    def _compute_l10n_ar_afip_pos_system(self):
+        for journal in self:
+            journal.l10n_ar_afip_pos_system = journal.l10n_ar_is_pos and journal.l10n_ar_afip_pos_system
 
     def _get_l10n_ar_afip_pos_types_selection(self):
         """ Return the list of values of the selection field. """
@@ -65,18 +78,16 @@ class AccountJournal(models.Model):
             msg = _('Can not create chart of account until you configure your company AFIP Responsibility and VAT.')
             raise RedirectWarning(msg, action.id, _('Go to Companies'))
 
-        letters = letters_data['issued' if self.type == 'sale' else 'received'][
+        letters = letters_data['issued' if self.l10n_ar_is_pos else 'received'][
             self.company_id.l10n_ar_afip_responsibility_type_id.code]
         if counterpart_partner:
-            counterpart_letters = letters_data['issued' if self.type == 'purchase' else 'received'].get(
+            counterpart_letters = letters_data['issued' if not self.l10n_ar_is_pos else 'received'].get(
                 counterpart_partner.l10n_ar_afip_responsibility_type_id.code, [])
             letters = list(set(letters) & set(counterpart_letters))
         return letters
 
-    def _get_journal_codes(self):
+    def _get_journal_codes_domain(self):
         self.ensure_one()
-        if self.type != 'sale':
-            return []
         return self._get_codes_per_journal_type(self.l10n_ar_afip_pos_system)
 
     @api.model
@@ -87,20 +98,32 @@ class AccountJournal(models.Model):
         receipt_m_code = ['54']
         receipt_codes = ['4', '9', '15']
         expo_codes = ['19', '20', '21']
-        if afip_pos_system == 'II_IM':
+        codes_issuer_is_supplier = [
+            '23', '24', '25', '26', '27', '28', '33', '43', '45', '46', '48', '58', '60', '61', '150', '151', '157',
+            '158', '161', '162', '164', '166', '167', '171', '172', '180', '182', '186', '188', '332']
+        codes = []
+        if (self.type == 'sale' and not self.l10n_ar_is_pos) or (self.type == 'purchase' and afip_pos_system in ['II_IM', 'RLI_RLM']):
+            codes = codes_issuer_is_supplier
+        elif self.type == 'purchase' and afip_pos_system == 'RAW_MAW':
+            # electronic invoices (wsfev1) (intersection between available docs on ws and codes_issuer_is_supplier)
+            codes = ['60', '61']
+        elif self.type == 'purchase':
+            return [('code', 'not in', codes_issuer_is_supplier)]
+        elif afip_pos_system == 'II_IM':
             # pre-printed invoice
-            return usual_codes + receipt_codes + expo_codes + invoice_m_code + receipt_m_code
+            codes = usual_codes + receipt_codes + expo_codes + invoice_m_code + receipt_m_code
         elif afip_pos_system in ['RAW_MAW', 'RLI_RLM']:
             # electronic/online invoice
-            return usual_codes + receipt_codes + invoice_m_code + receipt_m_code + mipyme_codes
+            codes = usual_codes + receipt_codes + invoice_m_code + receipt_m_code + mipyme_codes
         elif afip_pos_system in ['CPERCEL', 'CPEWS']:
             # invoice with detail
-            return usual_codes + invoice_m_code
+            codes = usual_codes + invoice_m_code
         elif afip_pos_system in ['BFERCEL', 'BFEWS']:
             # Bonds invoice
-            return usual_codes + mipyme_codes
+            codes = usual_codes + mipyme_codes
         elif afip_pos_system in ['FEERCEL', 'FEEWS', 'FEERCELP']:
-            return expo_codes
+            codes = expo_codes
+        return [('code', 'in', codes)]
 
     @api.constrains('type', 'l10n_ar_afip_pos_system', 'l10n_ar_afip_pos_number', 'l10n_latam_use_documents')
     def _check_afip_configurations(self):
@@ -112,16 +135,22 @@ class AccountJournal(models.Model):
                 _("You can not change the journal's configuration if it already has validated invoices") + ' ('
                 + ', '.join(invoices.mapped('journal_id').mapped('name')) + ')')
 
+    @api.constrains('l10n_ar_afip_pos_system')
+    def _check_afip_pos_system(self):
+        journals = self.filtered(
+            lambda j: j.l10n_ar_is_pos and j.type == 'purchase' and
+            j.l10n_ar_afip_pos_system not in ['II_IM', 'RLI_RLM', 'RAW_MAW'])
+        if journals:
+            raise ValidationError("\n".join([_(
+                "The pos system %s can not be used on a purchase journal (id %s)"
+                ) % (x.l10n_ar_afip_pos_system, x.id) for x in journals]))
+
     @api.constrains('l10n_ar_afip_pos_number')
     def _check_afip_pos_number(self):
-        to_review = self.filtered(
-            lambda x: x.type == 'sale' and x.l10n_latam_use_documents and
-            x.company_id.account_fiscal_country_id.code == "AR")
-
-        if to_review.filtered(lambda x: x.l10n_ar_afip_pos_number == 0):
+        if self.filtered(lambda j: j.l10n_ar_is_pos and j.l10n_ar_afip_pos_number == 0):
             raise ValidationError(_('Please define an AFIP POS number'))
 
-        if to_review.filtered(lambda x: x.l10n_ar_afip_pos_number > 99999):
+        if self.filtered(lambda j: j.l10n_ar_is_pos and j.l10n_ar_afip_pos_number > 99999):
             raise ValidationError(_('Please define a valid AFIP POS number (5 digits max)'))
 
     @api.onchange('l10n_ar_afip_pos_number', 'type')
