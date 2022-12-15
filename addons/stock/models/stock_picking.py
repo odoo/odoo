@@ -257,6 +257,8 @@ class Picking(models.Model):
     _description = "Transfer"
     _order = "priority desc, scheduled_date asc, id desc"
 
+    _check_company_auto = True
+
     name = fields.Char(
         'Reference', default='/',
         copy=False, index=True, readonly=True)
@@ -352,7 +354,8 @@ class Picking(models.Model):
         'res.users', 'Responsible', tracking=True,
         domain=lambda self: [('groups_id', 'in', self.env.ref('stock.group_stock_user').id)],
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-        default=lambda self: self.env.user)
+        default=lambda self: self.env.user
+        check_company=True)
     move_line_ids = fields.One2many('stock.move.line', 'picking_id', 'Operations')
     move_line_ids_without_package = fields.One2many('stock.move.line', 'picking_id', 'Operations without package', domain=['|',('package_level_id', '=', False), ('picking_type_entire_packs', '=', False)])
     move_line_nosuggest_ids = fields.One2many(
