@@ -49,6 +49,13 @@ options.registry.SnippetPopup = options.Class.extend({
      */
     onBuilt: function () {
         this._assignUniqueID();
+        // Fix in stable to convert the data-focus bootstrap option from version 4.0 to
+        // 5.1 (renamed to data-bs-focus).
+        const popup = this.$target.closest('.s_popup_middle');
+        if (popup && popup.attr('data-focus')) {
+            popup.attr('data-bs-focus', popup.attr('data-focus'));
+            popup[0].removeAttribute('data-focus');
+        }
     },
     /**
      * @override
