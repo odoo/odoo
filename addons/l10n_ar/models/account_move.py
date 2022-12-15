@@ -34,6 +34,13 @@ class AccountMove(models.Model):
     l10n_ar_afip_service_start = fields.Date(string='AFIP Service Start Date', readonly=True, states={'draft': [('readonly', False)]})
     l10n_ar_afip_service_end = fields.Date(string='AFIP Service End Date', readonly=True, states={'draft': [('readonly', False)]})
 
+    def _is_manual_document_number(self):
+        res = super()._is_manual_document_number()
+        # when issuer is supplier de numbering works opposite (supplier numerate invoices, customer encode bill)
+        if self.journal_id._l10n_ar_journal_issuer_is_supplier():
+            return not res
+        return res
+
     @api.constrains('move_type', 'journal_id')
     def _check_moves_use_documents(self):
         """ Do not let to create not invoices entries in journals that use documents """
@@ -99,10 +106,8 @@ class AccountMove(models.Model):
         if self.journal_id.company_id.account_fiscal_country_id.code == "AR":
             letters = self.journal_id._get_journal_letter(counterpart_partner=self.partner_id.commercial_partner_id)
             domain += ['|', ('l10n_ar_letter', '=', False), ('l10n_ar_letter', 'in', letters)]
-            codes = self.journal_id._get_journal_codes()
-            if codes:
-                domain.append(('code', 'in', codes))
-            if self.move_type == 'in_refund':
+            domain += self.journal_id._get_journal_codes_domain()
+            if self.move_type in ['out_refund', 'in_refund']:
                 domain = ['|', ('code', 'in', self._get_l10n_ar_codes_used_for_inv_and_ref())] + domain
         return domain
 
@@ -209,7 +214,7 @@ class AccountMove(models.Model):
         super()._inverse_l10n_latam_document_number()
 
         to_review = self.filtered(lambda x: (
-            x.journal_id.type == 'sale'
+            x.journal_id.l10n_ar_is_pos
             and x.l10n_latam_document_type_id
             and x.l10n_latam_document_number
             and (x.l10n_latam_manual_document_number or not x.highest_name)
@@ -308,7 +313,7 @@ class AccountMove(models.Model):
         # Report vat 0%
         vat_base_0 = sum(self.invoice_line_ids.filtered(lambda x: x.tax_ids.filtered(lambda y: y.tax_group_id.l10n_ar_vat_afip_code == '3')).mapped('price_subtotal'))
         if vat_base_0:
-            res += [{'Id': '3', 'BaseImp': vat_base_0, 'Importe': 0.0}]
+            res += [{'Id': '3', 'BaseImp': sign * vat_base_0, 'Importe': 0.0}]
 
         return res if res else []
 
