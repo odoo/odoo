@@ -9,7 +9,6 @@ from . import report
 from . import populate
 from . import tools
 
-from odoo import api, SUPERUSER_ID
 
 SYSCOHADA_LIST = ['BJ', 'BF', 'CM', 'CF', 'KM', 'CG', 'CI', 'GA', 'GN', 'GW', 'GQ', 'ML', 'NE', 'CD', 'SN', 'TD', 'TG']
 
@@ -59,7 +58,6 @@ def _auto_install_l10n(env):
         if module_ids:
             module_ids.sudo().button_install()
 
-def _account_post_init(cr, registry):
-    env = api.Environment(cr, SUPERUSER_ID, {})
+def _account_post_init(env):
     _auto_install_l10n(env)
     _set_fiscal_country(env)

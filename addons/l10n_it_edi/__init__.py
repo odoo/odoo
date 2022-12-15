@@ -4,8 +4,6 @@
 from . import models
 from . import tools
 
-from odoo import api, SUPERUSER_ID
-
 
 def _l10n_it_edi_update_export_tax(env):
     chart_template = env.ref('l10n_it.l10n_it_chart_template_generic', raise_if_not_found=False)
@@ -20,6 +18,5 @@ def _l10n_it_edi_update_export_tax(env):
                 })
 
 
-def _l10n_it_edi_post_init(cr, registry):
-    env = api.Environment(cr, SUPERUSER_ID, {})
+def _l10n_it_edi_post_init(env):
     _l10n_it_edi_update_export_tax(env)

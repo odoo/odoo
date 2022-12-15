@@ -188,7 +188,7 @@ def load_module_graph(env, graph, status=None, perform_checks=True,
             py_module = sys.modules['odoo.addons.%s' % (module_name,)]
             pre_init = package.info.get('pre_init_hook')
             if pre_init:
-                getattr(py_module, pre_init)(env.cr)
+                getattr(py_module, pre_init)(env)
 
         model_names = registry.load(env.cr, package)
 
@@ -241,7 +241,7 @@ def load_module_graph(env, graph, status=None, perform_checks=True,
             if new_install:
                 post_init = package.info.get('post_init_hook')
                 if post_init:
-                    getattr(py_module, post_init)(env.cr, registry)
+                    getattr(py_module, post_init)(env)
 
             if mode == 'update':
                 # validate the views that have not been checked yet
@@ -530,7 +530,7 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
                     uninstall_hook = pkg.info.get('uninstall_hook')
                     if uninstall_hook:
                         py_module = sys.modules['odoo.addons.%s' % (pkg.name,)]
-                        getattr(py_module, uninstall_hook)(cr, registry)
+                        getattr(py_module, uninstall_hook)(env)
 
                 Module = env['ir.module.module']
                 Module.browse(modules_to_remove.values()).module_uninstall()
