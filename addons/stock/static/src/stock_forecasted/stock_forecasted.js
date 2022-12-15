@@ -44,8 +44,9 @@ class StockForecasted extends Component{
                 this.resModel = actionModel[0].model
             }
         } else if (this.props.action._originalAction) {
-            const originalContextAction = JSON.parse(this.props.action._originalAction).context;
-            if (originalContextAction) {
+            let originalContextAction = JSON.parse(this.props.action._originalAction).context;
+            originalContextAction = typeof originalContextAction === "string" ? JSON.parse(originalContextAction) : originalContextAction ;
+            if (originalContextAction && Object.keys(originalContextAction).length !== 0) {
                 this.resModel = originalContextAction.active_model
             }
         }
