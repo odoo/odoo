@@ -92,6 +92,7 @@ class User(models.Model):
                 self.env.cr.commit()
             except Exception as e:
                 _logger.exception("[%s] Calendar Synchro - Exception : %s !", user, exception_to_unicode(e))
+<<<<<<< HEAD
                 self.env.cr.rollback()
 
     def stop_google_synchronization(self):
@@ -105,3 +106,7 @@ class User(models.Model):
         self.google_synchronization_stopped = False
         self.env['calendar.recurrence']._restart_google_sync()
         self.env['calendar.event']._restart_google_sync()
+||||||| parent of 3708258abd7 (temp)
+=======
+                self.env.cr.rollback()
+>>>>>>> 3708258abd7 (temp)
