@@ -63,7 +63,7 @@ def _boundaries(intervals, opening, closing):
             yield (start, opening, recs)
             yield (stop, closing, recs)
 
-
+# YTI TODO LAST SPLIT FILES PLIIIIZ
 class Intervals(object):
     """ Collection of ordered disjoint intervals with some associated records.
         Each interval is a triple ``(start, stop, records)``, where ``records``
@@ -183,14 +183,19 @@ class ResourceCalendar(models.Model):
             else:
                 res['attendance_ids'] = [
                     (0, 0, {'name': _('Monday Morning'), 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': _('Monday Lunch'), 'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
                     (0, 0, {'name': _('Monday Afternoon'), 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
                     (0, 0, {'name': _('Tuesday Morning'), 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': _('Tuesday Lunch'), 'dayofweek': '1', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
                     (0, 0, {'name': _('Tuesday Afternoon'), 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
                     (0, 0, {'name': _('Wednesday Morning'), 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': _('Wednesday Lunch'), 'dayofweek': '2', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
                     (0, 0, {'name': _('Wednesday Afternoon'), 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
                     (0, 0, {'name': _('Thursday Morning'), 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': _('Thursday Lunch'), 'dayofweek': '3', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
                     (0, 0, {'name': _('Thursday Afternoon'), 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
                     (0, 0, {'name': _('Friday Morning'), 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': _('Friday Lunch'), 'dayofweek': '4', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
                     (0, 0, {'name': _('Friday Afternoon'), 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
                 ]
         return res
@@ -280,12 +285,15 @@ class ResourceCalendar(models.Model):
 
     def _get_global_attendances(self):
         return self.attendance_ids.filtered(lambda attendance:
-            not attendance.date_from and not attendance.date_to
+            attendance.day_period != 'lunch'
+            and not attendance.date_from and not attendance.date_to
             and not attendance.resource_id and not attendance.display_type)
 
     def _get_hours_per_day(self, attendances):
         if not attendances:
             return 0
+
+        attendances = attendances.filtered(lambda a: a.day_period != 'lunch')
 
         hour_count = 0.0
         for attendance in attendances:
@@ -400,6 +408,7 @@ class ResourceCalendar(models.Model):
             ('calendar_id', '=', self.id),
             ('resource_id', 'in', resource_ids),
             ('display_type', '=', False),
+            ('day_period', '!=', 'lunch'),
         ]])
 
         attendances = self.env['resource.calendar.attendance'].search(domain)
@@ -826,7 +835,7 @@ class ResourceCalendar(models.Model):
         if not self.attendance_ids:
             return 0
         mapped_data = defaultdict(lambda: 0)
-        for attendance in self.attendance_ids.filtered(lambda a: (not a.date_from or not a.date_to) or (a.date_from <= end.date() and a.date_to >= start.date())):
+        for attendance in self.attendance_ids.filtered(lambda a: a.day_period != 'lunch' and ((not a.date_from or not a.date_to) or (a.date_from <= end.date() and a.date_to >= start.date()))):
             mapped_data[(attendance.week_type, attendance.dayofweek)] += attendance.hour_to - attendance.hour_from
         return max(mapped_data.values())
 
@@ -853,7 +862,10 @@ class ResourceCalendarAttendance(models.Model):
              "A specific value of 24:00 is interpreted as 23:59:59.999999.")
     hour_to = fields.Float(string='Work to', required=True)
     calendar_id = fields.Many2one("resource.calendar", string="Resource's Calendar", required=True, ondelete='cascade')
-    day_period = fields.Selection([('morning', 'Morning'), ('afternoon', 'Afternoon')], required=True, default='morning')
+    day_period = fields.Selection([
+        ('morning', 'Morning'),
+        ('lunch', 'Lunch'),
+        ('afternoon', 'Afternoon')], required=True, default='morning')
     resource_id = fields.Many2one('resource.resource', 'Resource')
     week_type = fields.Selection([
         ('1', 'Second'),
