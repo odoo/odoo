@@ -323,6 +323,8 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         // Use `data-src` instead of `src` when the SRC is an URL that would
         // make a call to the server.
         const getImageContainerHTML = (src, isModified) => {
+            const srcAttr = `${src.startsWith("/web") ? 'data-src="' : 'src="'}${src}"`;
+            const tmpAttr = `data-oe-tmp-embedded="| aspectRatio:0/0 width:50 height:50 scaleX:1 scaleY:1 classes:o_we_image_cropped |"`;
             return `
                 <p>
                     <img
@@ -335,7 +337,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
                         data-scale-x="1"
                         data-scale-y="1"
                         data-aspect-ratio="0/0"
-                        ${src.startsWith("/web") ? 'data-src="' : 'src="'}${src}"
+                        ${isModified ? srcAttr + ' ' + tmpAttr : tmpAttr + ' ' + srcAttr}
                     >
                     <br>
                 </p>
@@ -380,7 +382,10 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
                     assert.equal(args.res_model, 'partner');
                     assert.equal(args.res_id, 1);
                     await modifyImagePromise;
-                    return newImageSrc;
+                    return {
+                        "original_id": imageRecord.id,
+                        "new_attachment_src": newImageSrc,
+                    };
                 } else {
                     // Fail the test if too many modify_image are called.
                     assert.ok(modifyImageCount === 0, "The image should only have been modified once during this test");

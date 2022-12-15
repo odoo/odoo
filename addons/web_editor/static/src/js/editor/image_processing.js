@@ -2,10 +2,8 @@
 
 import { pick } from "@web/core/utils/objects";
 import {getAffineApproximation, getProjective} from "@web_editor/js/editor/perspective_utils";
+import weUtils from "@web_editor/js/common/utils";
 
-// Fields returned by cropperjs 'getData' method, also need to be passed when
-// initializing the cropper to reuse the previous crop.
-export const cropperDataFields = ['x', 'y', 'width', 'height', 'rotate', 'scaleX', 'scaleY'];
 const modifierFields = [
     'filter',
     'quality',
@@ -423,7 +421,7 @@ export async function activateCropper(image, aspectRatio, dataset) {
         dragMode: 'move',
         autoCropArea: 1.0,
         aspectRatio: aspectRatio,
-        data: Object.fromEntries(Object.entries(pick(dataset, ...cropperDataFields))
+        data: Object.fromEntries(Object.entries(pick(dataset, ...weUtils.CROPPER_DATA_FIELDS))
             .map(([key, value]) => [key, parseFloat(value)])),
         // Can't use 0 because it's falsy and cropperjs will then use its defaults (200x100)
         minContainerWidth: 1,
@@ -432,15 +430,19 @@ export async function activateCropper(image, aspectRatio, dataset) {
     return new Promise(resolve => image.addEventListener('ready', resolve, {once: true}));
 }
 /**
- * Marks an <img> with its attachment data (originalId, originalSrc, mimetype)
+ * Marks an <img> with its attachment data; originalId, originalSrc, mimetype,
+ * mimetypeBeforeConversion and the data of a previous modification of the image
+ * (shape, filter, quality, etc...).
  *
  * @param {HTMLImageElement} img the image whose attachment data should be found
  * @param {Function} rpc a function that can be used to make the RPC. Typically
  *   this would be passed as 'this._rpc.bind(this)' from widgets.
  * @param {string} [attachmentSrc=''] specifies the URL of the corresponding
  * attachment if it can't be found in the 'src' attribute.
+ * @param {string} resField the field name of the image if it is linked to a
+ * model.
  */
-export async function loadImageInfo(img, rpc, attachmentSrc = '') {
+export async function loadImageInfo(img, rpc, attachmentSrc = "", resField = "") {
     const src = attachmentSrc || img.getAttribute('src');
     // If there is a marked originalSrc, the data is already loaded.
     // If the image does not have the "mimetypeBeforeConversion" attribute, it
@@ -459,7 +461,10 @@ export async function loadImageInfo(img, rpc, attachmentSrc = '') {
     } catch {
         relativeSrc = src;
     }
-    const {original} = await rpc('/web_editor/get_image_info', {src: relativeSrc.split(/[?#]/)[0]});
+    const {description, attachment, original} = await rpc(
+        '/web_editor/get_image_info',
+        {src: relativeSrc.split(/[?#]/)[0], res_field: resField}
+    );
     // If src was an absolute "external" URL, we consider unlikely that its
     // relative part matches something from the DB and even if it does, nothing
     // bad happens, besides using this random image as the original when using
@@ -474,7 +479,41 @@ export async function loadImageInfo(img, rpc, attachmentSrc = '') {
         }
         img.dataset.originalId = original.id;
         img.dataset.originalSrc = original.image_src;
+        img.dataset.mimetype = attachment.mimetype;
         img.dataset.mimetypeBeforeConversion = original.mimetype;
+        // Add the correct data attributes and classes related to previous
+        // modification of the image (shape, filter, quality, etc...).
+        if (description) {
+            let optionRegex = "";
+            let optionValueRegex = "";
+            for (const imgAttribute of weUtils.IMAGE_ATTRIBUTES_STORED_IN_ATTACHMENT) {
+                // Create the regex to extract the options and their values
+                // from "description".
+                if (!optionRegex) {
+                    optionRegex = `\\s${imgAttribute}`;
+                    optionValueRegex = `${imgAttribute}:([^\\s]+)`;
+                } else {
+                    optionRegex = optionRegex.concat(`|\\s${imgAttribute}`);
+                    optionValueRegex = optionValueRegex.concat(`|${imgAttribute}:([^\\s]+)`);
+                }
+            }
+            const imgOptions = description.match(new RegExp(optionRegex, "g"));
+            const imgOptionsValues = description.match(new RegExp(optionValueRegex, "g"));
+            for (const index in imgOptions) {
+                // Add the data attributes to the image.
+                imgOptions[index] = imgOptions[index].replace(" ", "");
+                img.dataset[imgOptions[index]] = imgOptionsValues[index].replace(`${imgOptions[index]}:`, "");
+            }
+            let classesToAdd = description.match(/classes:([^\s]+)/g);
+            if (classesToAdd) {
+                // Add the classes to the image.
+                classesToAdd = classesToAdd[0].replace("classes:", "")
+                                              .split(",");
+                for (const classToAdd of classesToAdd) {
+                    img.classList.add(classToAdd);
+                }
+            }
+        }
     }
 }
 
@@ -537,11 +576,10 @@ export function getDataURLBinarySize(dataURL) {
     return dataURL.split(',')[1].length / 4 * 3;
 }
 
-export const removeOnImageChangeAttrs = [...cropperDataFields, ...modifierFields, 'aspectRatio'];
+export const removeOnImageChangeAttrs = [...weUtils.CROPPER_DATA_FIELDS, ...modifierFields, 'aspectRatio'];
 
 export default {
     applyModifications,
-    cropperDataFields,
     activateCropper,
     loadImageInfo,
     loadImage,

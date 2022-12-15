@@ -809,3 +809,22 @@ class ProductProduct(models.Model):
         if lst_price:
             return (lst_price - self._get_contextual_price()) / lst_price
         return 0.0
+
+    def _get_attachment(self, res_field):
+        # OVERRIDE
+        res_field_variant = 'image_variant_' + re.search(r'\d+', res_field)[0]
+        if (self[res_field_variant]):
+            # The product has multiple variants with dedicated images, the
+            # attachment should be the one of the variant.
+            return super()._get_attachment(res_field_variant)
+        else:
+            # The product has only one variant, or multiples variants but no images
+            # associated to them so the attachment should be the one of the
+            # associated template.
+            return self.env['ir.attachment'].search(
+                domain=[
+                    ('res_model', '=', 'product.template'),
+                    ('res_id', '=', self.product_tmpl_id.id),
+                    ('res_field', '=', res_field),
+                ],
+                limit=1)

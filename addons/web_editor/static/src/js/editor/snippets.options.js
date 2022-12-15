@@ -5867,7 +5867,8 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      */
     async _loadImageInfo(attachmentSrc = '') {
         const img = this._getImg();
-        await loadImageInfo(img, this.rpc, attachmentSrc);
+        const editableEl = this.$target[0].closest("[data-oe-field]");
+        await loadImageInfo(img, this.rpc, attachmentSrc, editableEl.dataset.oeField);
         if (!img.dataset.originalId) {
             this.originalId = null;
             this.originalSrc = null;

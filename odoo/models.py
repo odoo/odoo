@@ -6903,6 +6903,43 @@ class BaseModel(metaclass=MetaModel):
             records_batches.append(self.create(create_values))
         return self.concat(*records_batches)
 
+    def _get_attachment(self, res_field):
+        """ Return the attachment linked to a field if any.
+
+        :param res_field: the name of the field to which the attachment is
+            linked.
+        """
+        return self.env['ir.attachment'].search(
+            domain=[
+                ('res_model', '=', self._name),
+                ('res_id', '=', self.id),
+                ('res_field', '=', res_field),
+            ],
+            limit=1)
+
+    def _update_attachment_metadata(self, original_id, description_transformed_img, res_field):
+        """ Update the description of the attachment linked to an image field.
+
+        :param original_id: the id of the attachment linked to the original
+            image.
+        :param description_transformed_img: the new data related to the
+            attributes and classes of a transformed image. It has to be of the
+            form "| dataX:valueX dataY:valueY ... classes:A,B,... |"
+        :param res_field: the name of the field to which the attachment is
+            linked.
+        """
+        attachment = self._get_attachment(res_field)
+        if attachment.description:
+            # Clean the attachment description of the old
+            # description_transformed_img.
+            attachment.description = re.sub(r'\|\s.*\s\|', '', attachment.description)
+            if attachment.description:
+                # If there is still text on the description field, it needs to
+                # be kept.
+                description_transformed_img = description_transformed_img + attachment.description
+        attachment.description = description_transformed_img
+        attachment.original_id = original_id
+
 
 collections.abc.Set.register(BaseModel)
 # not exactly true as BaseModel doesn't have index or count

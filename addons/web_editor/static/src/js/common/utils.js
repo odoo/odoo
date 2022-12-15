@@ -90,6 +90,16 @@ const BACKGROUND_IMAGE_ATTRIBUTES = new Set([
     "mimetypeBeforeConversion",
 ]);
 
+// Fields returned by cropperjs 'getData' method.
+const CROPPER_DATA_FIELDS = ["width", "height", "rotate", "scaleX", "scaleY", "x", "y",
+];
+const IMAGE_ATTRIBUTES_STORED_IN_ATTACHMENT = [
+    "shapeColors", "shapeFlip", "shapeRotate", "shape", "glFilter", "quality", "resizeWidth",
+    "aspectRatio", "originalMimetype", ...CROPPER_DATA_FIELDS,
+];
+const CLASSES_STORED_IN_ATTACHMENT = [
+    "o_we_image_cropped",
+];
 /**
  * Computes the number of "px" needed to make a "rem" unit. Subsequent calls
  * returns the cached computed value.
@@ -464,11 +474,14 @@ function _shouldEditableMediaBeEditable(mediaEl) {
 }
 
 export default {
+    CLASSES_STORED_IN_ATTACHMENT: CLASSES_STORED_IN_ATTACHMENT,
     COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES: COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES,
+    CROPPER_DATA_FIELDS: CROPPER_DATA_FIELDS,
     CSS_SHORTHANDS: CSS_SHORTHANDS,
     CSS_UNITS_CONVERSION: CSS_UNITS_CONVERSION,
     DEFAULT_PALETTE: DEFAULT_PALETTE,
     EDITOR_COLOR_CSS_VARIABLES: EDITOR_COLOR_CSS_VARIABLES,
+    IMAGE_ATTRIBUTES_STORED_IN_ATTACHMENT: IMAGE_ATTRIBUTES_STORED_IN_ATTACHMENT,
     computePxByRem: _computePxByRem,
     convertValueToUnit: _convertValueToUnit,
     convertNumericToUnit: _convertNumericToUnit,

@@ -3320,7 +3320,43 @@ export class Wysiwyg extends Component {
                 }
             }
         }
-        const newAttachmentSrc = await this._serviceRpc(
+        // Collect the data attributes and classes related to the transformation
+        // of the image (e.g shape, filter, width, quality, cropper, ...) and
+        // store it in the `oeTmpEmbedded` data attribute. Those information
+        // will be stored in the "description" field of the attachment linked to
+        // the image.
+        let description = "";
+        for (const imgAttribute of weUtils.IMAGE_ATTRIBUTES_STORED_IN_ATTACHMENT) {
+            if (el.dataset[imgAttribute]) {
+                description = description.concat(`${imgAttribute}:${el.dataset[imgAttribute]} `);
+            }
+        }
+        let classesToSave = "";
+        for (const classAttribute of weUtils.CLASSES_STORED_IN_ATTACHMENT) {
+            if (el.classList.contains(classAttribute)) {
+                if (!classesToSave) {
+                    classesToSave = `classes:${classAttribute}`;
+                } else {
+                    classesToSave = classesToSave.concat(`,${classAttribute}`);
+                }
+            }
+        }
+        description = description.concat(`${classesToSave}`);
+        if (description) {
+            // Stored the description inside "| " and " |". Those chains of
+            // characters are only used as marker to spot the wanted description
+            // data more easily inside the "description" field of the
+            // attachment.
+            description = "| ".concat(description).concat(" |");
+        }
+        // At this stage, we know that the image has been modified. If
+        // description is empty, the "oe-tmp-embedded" data attribute should
+        // still be added as it could mean that the user removed all the options
+        // (shape, filter, etc...) previously set on the image. Thanks to the
+        // empty "oe-tmp-embedded", the data related options will be removed
+        // from the "description" field of the attachment linked to the image.
+        el.dataset.oeTmpEmbedded = description;
+        const {"original_id": newOriginalId, "new_attachment_src": newAttachmentSrc} = await this._serviceRpc(
             `/web_editor/modify_image/${encodeURIComponent(el.dataset.originalId)}`,
             {
                 res_model: resModel,
@@ -3332,6 +3368,11 @@ export class Wysiwyg extends Component {
             },
         );
         el.classList.remove('o_modified_image_to_save');
+        if (newOriginalId !== el.dataset.originalId) {
+            // A new original attachment has been created by
+            // "/web_editor/modify_image/".
+            el.dataset.originalId = newOriginalId;
+        }
         if (isBackground) {
             const parts = weUtils.backgroundImageCssToParts($(el).css('background-image'));
             parts.url = `url('${newAttachmentSrc}')`;

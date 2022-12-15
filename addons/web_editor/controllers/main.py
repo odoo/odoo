@@ -272,9 +272,11 @@ class Web_Editor(http.Controller):
         return removal_blocked_by
 
     @http.route('/web_editor/get_image_info', type='json', auth='user', website=True)
-    def get_image_info(self, src=''):
-        """This route is used to determine the original of an attachment so that
-        it can be used as a base to modify it again (crop/optimization/filters).
+    def get_image_info(self, src='', res_field=False):
+        """This route is used to determine the attachment, the original of this
+        attachment and the data related to the modification of an image (stored
+        in the description field of the attachment) so that it can be used as a
+        base to modify it again (e.g. crop/optimization/filters).
         """
         attachment = None
         if src.startswith('/web/image'):
@@ -287,6 +289,8 @@ class Web_Editor(http.Controller):
                 )
                 if record._name == 'ir.attachment':
                     attachment = record
+                else:
+                    attachment = record._get_attachment(res_field)
         if not attachment:
             # Find attachment by url. There can be multiple matches because of default
             # snippet images referencing the same image in /static/, so we limit to 1
@@ -296,11 +300,13 @@ class Web_Editor(http.Controller):
             ], limit=1)
         if not attachment:
             return {
+                'description': False,
                 'attachment': False,
                 'original': False,
             }
         return {
-            'attachment': attachment.read(['id'])[0],
+            'description': attachment.read(['description'])[0].get('description'),
+            'attachment': attachment.read(['id', 'mimetype'])[0],
             'original': (attachment.original_id or attachment).read(['id', 'image_src', 'mimetype'])[0],
         }
 
@@ -511,9 +517,20 @@ class Web_Editor(http.Controller):
     @http.route('/web_editor/modify_image/<model("ir.attachment"):attachment>', type="json", auth="user", website=True)
     def modify_image(self, attachment, res_model=None, res_id=None, name=None, data=None, mimetype=None, alt_data=None):
         """
-        Creates a modified copy of an attachment and returns its image_src to be
-        inserted into the DOM.
+        Creates a modified copy of an attachment.
+
+        return: - The image_src of the new attachment to be inserted into the
+                DOM.
+                - The id of the original attachment (potentially created here if
+                the image comes from the backend).
         """
+        if attachment.res_field:
+            # An original attachment has to be created first. We are in a
+            # situation where the image that we want to modify comes from the
+            # backend.
+            attachment = attachment.copy()
+            attachment.res_field = ""
+        original_id = attachment.id
         fields = {
             'original_id': attachment.id,
             'datas': data,
@@ -564,9 +581,15 @@ class Web_Editor(http.Controller):
                 url_fragments.insert(-1, str(attachment.id))
                 attachment.url = '/'.join(url_fragments)
         if attachment.public:
-            return attachment.image_src
+            return {
+                'original_id': original_id,
+                'new_attachment_src': attachment.image_src,
+            }
         attachment.generate_access_token()
-        return '%s?access_token=%s' % (attachment.image_src, attachment.access_token)
+        return {
+            'original_id': original_id,
+            'new_attachment_src': '%s?access_token=%s' % (attachment.image_src, attachment.access_token),
+        }
 
     def _get_shape_svg(self, module, *segments):
         shape_path = opj(module, 'static', *segments)

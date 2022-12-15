@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import {applyModifications, cropperDataFields, activateCropper, loadImage, loadImageInfo} from "@web_editor/js/editor/image_processing";
+import {applyModifications, activateCropper, loadImage, loadImageInfo} from "@web_editor/js/editor/image_processing";
+import weUtils from "@web_editor/js/common/utils";
 import { _t } from "@web/core/l10n/translation";
 import {
     Component,
@@ -182,7 +183,7 @@ export class ImageCrop extends Component {
         // Mark the media for later creation of cropped attachment
         this.media.classList.add('o_modified_image_to_save');
 
-        [...cropperDataFields, 'aspectRatio'].forEach(attr => {
+        [...weUtils.CROPPER_DATA_FIELDS, 'aspectRatio'].forEach(attr => {
             delete this.media.dataset[attr];
             const value = this._getAttributeValue(attr);
             if (value) {
@@ -201,7 +202,7 @@ export class ImageCrop extends Component {
      * @private
      */
     _getAttributeValue(attr) {
-        if (cropperDataFields.includes(attr)) {
+        if (weUtils.CROPPER_DATA_FIELDS.includes(attr)) {
             return this.$cropperImage.cropper('getData')[attr];
         }
         return this[attr];

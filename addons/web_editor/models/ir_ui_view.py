@@ -41,7 +41,14 @@ class IrUiView(models.Model):
 
         model = 'ir.qweb.field.' + el.get('data-oe-type')
         converter = self.env[model] if model in self.env else self.env['ir.qweb.field']
-
+        update_el = el.find('.//*[@data-oe-tmp-embedded]')
+        if update_el is not None:
+            data_tmp_embedded = update_el.get('data-oe-tmp-embedded')
+        for el_to_clean in el.xpath('//*[@data-oe-tmp-embedded]'):
+            # Clean the temporary attribute. It is important to do it before the
+            # "write" operation in order to not save inside field of type "Html"
+            # for example.
+            del el_to_clean.attrib['data-oe-tmp-embedded']
         try:
             value = converter.from_html(Model, Model._fields[field], el)
         except ValueError:
@@ -53,6 +60,10 @@ class IrUiView(models.Model):
                 Model.browse(int(el.get('data-oe-id'))).with_context(lang=self.get_default_lang_code()).write({field: value})
             else:
                 Model.browse(int(el.get('data-oe-id'))).write({field: value})
+            if update_el is not None:
+                # Update the attachment linked to the field with the information
+                # stored in 'data-oe-tmp-embedded'.
+                Model.browse(int(el.get('data-oe-id')))._update_attachment_metadata(int(update_el.get('data-original-id')), data_tmp_embedded, field)
 
     def save_oe_structure(self, el):
         self.ensure_one()
@@ -180,6 +191,11 @@ class IrUiView(models.Model):
 
             # transform embedded field back to t-field
             el.getparent().replace(el, self.to_field_ref(el))
+
+        for el_to_clean in arch_section.xpath('//*[@data-oe-tmp-embedded]'):
+            # clean the temporary attribute needed if the value was an embedded
+            # field before saving the view section.
+            del el_to_clean.attrib['data-oe-tmp-embedded']
 
         for el in self.extract_oe_structures(arch_section):
             if self.save_oe_structure(el):
