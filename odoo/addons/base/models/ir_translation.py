@@ -5,8 +5,10 @@ import itertools
 import json
 import logging
 import operator
+import re
 from collections import defaultdict
 from difflib import get_close_matches
+from lxml import etree
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -437,6 +439,17 @@ class IrTranslation(models.Model):
 
             for translation in translations_to_match:
                 matches = get_close_matches(translation.src, terms, 1, 0.9)
+                if matches and matches[0].strip().startswith('<') and matches[0].strip().endswith('>'):
+                    try:
+                        # lxml requires one single root element
+                        src_tree = etree.fromstring('<p>%s</p>' % translation.src, etree.XMLParser(recover=True))
+                        src_text = re.sub('\\s+', ' ', ' '.join(src_tree.itertext())).strip()
+                        match_tree = etree.fromstring('<p>%s</p>' % matches[0], etree.XMLParser(recover=True))
+                        match_text = re.sub('\\s+', ' ', ' '.join(match_tree.itertext())).strip()
+                        if not get_close_matches(src_text, [match_text], 1, 0.9):
+                            matches = []
+                    except Exception:  # Was not XML
+                        pass
                 src = matches[0] if matches else None
                 if not src:
                     outdated += translation
