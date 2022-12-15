@@ -53,8 +53,7 @@ import {
     rightLeafOnlyNotBlockPath,
     isBlock,
     isMacOS,
-    childNodeIndex,
-    getSelectedNodes
+    setCursorEnd,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -3164,6 +3163,144 @@ export class OdooEditor extends EventTarget {
         }
         return Promise.all(promises).then(html => html.join(''));
     }
+    _getPasteURLCommands(url, text, historyStepIndex, options) {
+        const execCommandAtStepIndex = (callback) => {
+            this._historyRevertUntil(historyStepIndex);
+            this.historyStep(true);
+            this._historyStepsStates.set(peek(this._historySteps).id, 'consumed');
+            
+            callback();
+            
+            this.historyStep(true);
+        };
+        const insertNodeAtCurrentSelection = (node) => {
+            const sel = this.document.getSelection();
+            if (!sel.isCollapsed) {
+                this.deleteRange(sel);
+            }
+            if (sel.rangeCount) {
+                sel.getRangeAt(0).insertNode(node);
+                sel.collapseToEnd();
+            }
+        }
+        const isTextAtEndOfLine = (textNode) => {
+            const path = rightLeafOnlyNotBlockPath(textNode);
+            for (const node of path) {
+                if (node.nodeName === 'BR') {
+                    return true;
+                }
+                if (node.nodeType === Node.TEXT_NODE &&
+                    node.textContent.length &&
+                    node.textContent !== '\u200B') {
+                    return false;
+                }
+            }
+            return true;
+        }
+        const commands = [
+            {
+                groupName: 'paste',
+                title: this.options._t('Paste as text'),
+                description: this.options._t('Simple text paste.'),
+                fontawesome: 'fa-font',
+                shouldPreValidate: () => false,
+                callback: () => {
+                    if (options.selectionIsInsideALink)
+                        return;
+                    execCommandAtStepIndex(() => {
+                        const textNode = document.createTextNode(text);
+                        insertNodeAtCurrentSelection(textNode);
+                        if (isTextAtEndOfLine(textNode)) {
+                            // Add a non-breaking space
+                            insertNodeAtCurrentSelection(document.createTextNode('\u00A0'));
+                        }
+                    })
+                },
+            }
+        ];
+        // A url cannot be transformed inside an existing link.
+        if (!options.selectionIsInsideALink) {
+            commands.unshift(
+                {
+                    groupName: 'paste',
+                    title: this.options._t('Paste as URL'),
+                    description: this.options._t('Create an URL.'),
+                    fontawesome: 'fa-link',
+                    shouldPreValidate: () => false,
+                    callback: () => {
+                        execCommandAtStepIndex(() => {
+                            const link = document.createElement('A');
+                            link.setAttribute('href', url);
+                            for (const [param, value] of Object.entries(this.options.defaultLinkAttributes)) {
+                                link.setAttribute(param, `${value}`);
+                            }
+                            link.innerText = text;
+                            insertNodeAtCurrentSelection(link);
+                        })
+                    },
+                },
+            )
+        }
+        // An image can be embedded inside an existing link.
+        if (options.isImageUrl) {
+            return [
+                {
+                    groupName: this.options._t('Embed'),
+                    title: this.options._t('Embed Image'),
+                    description: this.options._t('Embed the image in the document.'),
+                    fontawesome: 'fa-image',
+                    shouldPreValidate: () => false,
+                    callback: () => {
+                        execCommandAtStepIndex(() => {
+                            const img = document.createElement('IMG');
+                            img.setAttribute('src', url);
+                            insertNodeAtCurrentSelection(img);
+                        });
+                    },
+                },
+                ...commands
+            ]
+        }
+        // A video cannot be embedded inside an existing link.
+        if (!options.selectionIsInsideALink && options.youtubeUrl) {
+            const youtubeUrl = options.youtubeUrl;
+            return [
+                {
+                    groupName: this.options._t('Embed'),
+                    title: this.options._t('Embed Youtube Video'),
+                    description: this.options._t('Embed the youtube video in the document.'),
+                    fontawesome: 'fa-youtube-play',
+                    shouldPreValidate: () => false,
+                    callback: () => {
+                        execCommandAtStepIndex(() => {
+                            let videoElement;
+                            if (this.options.getYoutubeVideoElement) {
+                                videoElement = this.options.getYoutubeVideoElement(youtubeUrl[0]);
+                            } else {
+                                videoElement = document.createElement('iframe');
+                                videoElement.setAttribute('width', '560');
+                                videoElement.setAttribute('height', '315');
+                                videoElement.setAttribute(
+                                    'src',
+                                    `https://www.youtube.com/embed/${youtubeUrl[1]}`,
+                                );
+                                videoElement.setAttribute('title', 'YouTube video player');
+                                videoElement.setAttribute('frameborder', '0');
+                                videoElement.setAttribute(
+                                    'allow',
+                                    'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
+                                );
+                                videoElement.setAttribute('allowfullscreen', '1');
+                            }
+                            insertNodeAtCurrentSelection(videoElement);
+                        });
+                    },
+                },
+                ...commands
+            ]
+        }
+        return commands;
+    }
     /**
      * Handle safe pasting of html or plain text into the editor.
      */
@@ -3172,175 +3309,87 @@ export class OdooEditor extends EventTarget {
         const sel = this.document.getSelection();
         const files = getImageFiles(ev.clipboardData);
         const targetSupportsHtmlContent = isHtmlContentSupported(sel.anchorNode);
-        const clipboardHtml = ev.clipboardData.getData('text/html');
         if (files.length && targetSupportsHtmlContent) {
             this.addImagesFiles(files).then(html => this.execCommand('insertHTML', this._prepareClipboardData(html)));
-        } else if (clipboardHtml && targetSupportsHtmlContent) {
+            return;
+        }
+        const clipboardHtml = ev.clipboardData.getData('text/html');
+        if (clipboardHtml && targetSupportsHtmlContent) {
             this.execCommand('insertHTML', this._prepareClipboardData(clipboardHtml));
-        } else {
-            const text = ev.clipboardData.getData('text/plain');
-            const splitAroundUrl = text.split(URL_REGEX);
-            const linkAttributes = this.options.defaultLinkAttributes || {};
-            const selectionIsInsideALink = !!closestElement(sel.anchorNode, 'a');
-
-            this.historyPauseSteps("_onPaste");
-            for (let i = 0; i < splitAroundUrl.length; i++) {
-                const url = /^https?:\/\//gi.test(splitAroundUrl[i])
-                    ? splitAroundUrl[i]
-                    : 'https://' + splitAroundUrl[i];
-                const youtubeUrl = YOUTUBE_URL_GET_VIDEO_ID.exec(url);
-                const urlFileExtention = url.split('.').pop();
-                const isImageUrl = ['jpg', 'jpeg', 'png', 'gif'].includes(urlFileExtention.toLowerCase());
-                // Even indexes will always be plain text, and odd indexes will always be URL.
-                // only allow images emebed inside an existing link. No other url or video embed.
-                if (i % 2 && (isImageUrl || !selectionIsInsideALink)) {
-                    const baseEmbedCommand = [
-                        {
-                            groupName: 'paste',
-                            title: this.options._t('Paste as URL'),
-                            description: this.options._t('Create an URL.'),
-                            fontawesome: 'fa-link',
-                            callback: () => {
-                                this.historyUndo();
-                                const link = document.createElement('A');
-                                link.setAttribute('href', url);
-                                for (const attribute in linkAttributes) {
-                                    link.setAttribute(attribute, linkAttributes[attribute]);
-                                }
-                                link.innerText = splitAroundUrl[i];
-                                const sel = this.document.getSelection();
-                                if (!sel.isCollapsed) {
-                                    this.deleteRange(sel);
-                                }
-                                if (sel.rangeCount) {
-                                    sel.getRangeAt(0).insertNode(link);
-                                    sel.collapseToEnd();
-                                }
-                            },
-                        },
-                        {
-                            groupName: 'paste',
-                            title: this.options._t('Paste as text'),
-                            description: this.options._t('Simple text paste.'),
-                            fontawesome: 'fa-font',
-                            callback: () => {},
-                        },
-                    ];
-
-                    const execCommandAtStepIndex = (index, callback) => {
-                        this._historyRevertUntil(index);
-                        this.historyStep(true);
-                        this._historyStepsStates.set(peek(this._historySteps).id, 'consumed');
-
-                        callback();
-
-                        this.historyStep(true);
-                    };
-
-                    if (isImageUrl) {
-                        const stepIndexBeforeInsert = this._historySteps.length - 1;
-                        this.execCommand('insertText', splitAroundUrl[i]);
-                        this.commandBar.open({
-                            commands: [
-                                {
-                                    groupName: this.options._t('Embed'),
-                                    title: this.options._t('Embed Image'),
-                                    description: this.options._t('Embed the image in the document.'),
-                                    fontawesome: 'fa-image',
-                                    shouldPreValidate: () => false,
-                                    callback: () => {
-                                        execCommandAtStepIndex(stepIndexBeforeInsert, () => {
-                                            const img = document.createElement('IMG');
-                                            img.setAttribute('src', url);
-                                            const sel = this.document.getSelection();
-                                            if (!sel.isCollapsed) {
-                                                this.deleteRange(sel);
-                                            }
-                                            if (sel.rangeCount) {
-                                                sel.getRangeAt(0).insertNode(img);
-                                                sel.collapseToEnd();
-                                            }
-                                        });
-                                    },
-                                },
-                            ].concat(baseEmbedCommand),
-                        });
-                    } else if (this.options.allowCommandVideo && youtubeUrl) {
-                        const stepIndexBeforeInsert = this._historySteps.length - 1;
-                        this.execCommand('insertText', splitAroundUrl[i]);
-                        this.commandBar.open({
-                            commands: [
-                                {
-                                    groupName: this.options._t('Embed'),
-                                    title: this.options._t('Embed Youtube Video'),
-                                    description: this.options._t('Embed the youtube video in the document.'),
-                                    fontawesome: 'fa-youtube-play',
-                                    shouldPreValidate: () => false,
-                                    callback: () => {
-                                        execCommandAtStepIndex(stepIndexBeforeInsert, () => {
-                                            let videoElement;
-                                            if (this.options.getYoutubeVideoElement) {
-                                                videoElement = this.options.getYoutubeVideoElement(youtubeUrl[0]);
-                                            } else {
-                                                videoElement = document.createElement('iframe');
-                                                videoElement.setAttribute('width', '560');
-                                                videoElement.setAttribute('height', '315');
-                                                videoElement.setAttribute(
-                                                    'src',
-                                                    `https://www.youtube.com/embed/${youtubeUrl[1]}`,
-                                                );
-                                                videoElement.setAttribute('title', 'YouTube video player');
-                                                videoElement.setAttribute('frameborder', '0');
-                                                videoElement.setAttribute(
-                                                    'allow',
-                                                    'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
-                                                );
-                                                videoElement.setAttribute('allowfullscreen', '1');
-                                            }
-                                            const sel = this.document.getSelection();
-                                            if (!sel.isCollapsed) {
-                                                this.deleteRange(sel);
-                                            }
-                                            if (sel.rangeCount) {
-                                                sel.getRangeAt(0).insertNode(videoElement);
-                                                sel.collapseToEnd();
-                                            }
-                                        });
-                                    },
-                                },
-                            ].concat(baseEmbedCommand),
-                        });
-                    } else {
-                        const link = document.createElement('A');
-                        link.setAttribute('href', url);
-                        for (const attribute in linkAttributes) {
-                            link.setAttribute(attribute, linkAttributes[attribute]);
-                        }
-                        link.innerText = splitAroundUrl[i];
-                        const sel = this.document.getSelection();
-                        if (!sel.isCollapsed) {
-                            this.deleteRange(sel);
-                        }
-                        if (sel.rangeCount) {
-                            sel.getRangeAt(0).insertNode(link);
-                            sel.collapseToEnd();
-                        }
-                    }
-                } else if (splitAroundUrl[i] !== '') {
-                    const textFragments = splitAroundUrl[i].split(/\r?\n/);
-                    let textIndex = 1;
-                    for (const textFragment of textFragments) {
-                        this.execCommand('insertText', textFragment);
-                        if (textIndex < textFragments.length) {
-                            this._applyCommand('oShiftEnter');
-                        }
-                        textIndex++;
-                    }
-                }
+            return;
+        }
+        const getUrl = text =>
+            /^https?:\/\//i.test(text) ? text : 'https://' + text;
+        const insertLink = (url, label) => {
+            this._recordHistorySelection(true);
+            const link = document.createElement('A');
+            link.setAttribute('href', url);
+            for (const [param, value] of Object.entries(this.options.defaultLinkAttributes)) {
+                link.setAttribute(param, `${value}`);
             }
-            this.historyUnpauseSteps("_onPaste");
+            link.innerText = label;
+            if (!sel.isCollapsed) {
+                this.deleteRange(sel);
+            }
+            if (sel.rangeCount) {
+                sel.getRangeAt(0).insertNode(link);
+                sel.collapseToEnd();
+            }
             this.historyStep();
         }
+        const text = ev.clipboardData.getData('text/plain');
+        const splitAroundUrl = text.split(URL_REGEX);
+        const selectionIsInsideALink = !!closestElement(sel.anchorNode, 'a');
+
+        if (splitAroundUrl.length === 3 && splitAroundUrl[0] === '' && splitAroundUrl[2] === '') {
+            // Text is a single URL.
+            const url = getUrl(text);
+            const youtubeUrl = this.options.allowCommandVideo && YOUTUBE_URL_GET_VIDEO_ID.exec(url);
+            const urlFileExtention = url.split('.').pop();
+            const isImageUrl = ['jpg', 'jpeg', 'png', 'gif'].includes(urlFileExtention.toLowerCase());
+
+            if (!isImageUrl && !youtubeUrl && !selectionIsInsideALink) {
+                insertLink(url, text);
+                return;
+            }
+            const stepIndexBeforeInsert = this._historySteps.length - 1;
+            const insertedNodes = this._applyCommand('insertText', text);
+            const commands = this._getPasteURLCommands(url, text, stepIndexBeforeInsert,
+                { youtubeUrl, isImageUrl, selectionIsInsideALink });
+            if (commands.length === 1) {
+                // Only "Paste as text" with selection inside a link is
+                // available. Text is already inserted.
+                return;
+            }
+            // Command 'insertText' loses cursor position when inside
+            // isolated link, preventing powebox to open
+            if (selectionIsInsideALink && this._fixLinkMutatedElements) {
+                setCursorEnd(peek(insertedNodes));
+            }
+            // Open powerbox with suitable commands.
+            return this.commandBar.open({ commands });
+        }
+
+        this.historyPauseSteps();
+        for (let i = 0; i < splitAroundUrl.length; i++) {
+            // Even indexes will always be plain text, and odd indexes will always be URL.
+            if (i % 2 && !selectionIsInsideALink) {
+                const url = getUrl(splitAroundUrl[i]);
+                insertLink(url, splitAroundUrl[i]);
+            } else if (splitAroundUrl[i] !== '') {
+                const textFragments = splitAroundUrl[i].split(/\r?\n/);
+                let textIndex = 1;
+                for (const textFragment of textFragments) {
+                    this._applyCommand('insertText', textFragment);
+                    if (textIndex < textFragments.length) {
+                        this._applyCommand('oShiftEnter');
+                    }
+                    textIndex++;
+                }
+            }
+        }
+        this.historyUnpauseSteps();
+        this.historyStep();
     }
     _onDragStart(ev) {
         if (ev.target.nodeName === 'IMG') {
