@@ -4,7 +4,6 @@
 import difflib
 import logging
 import re
-import sys
 from contextlib import contextmanager
 from unittest import TestCase
 from unittest.mock import patch
@@ -312,7 +311,7 @@ Traceback (most recent call last):
     self.fail(msg % (login, count, expected, funcname, filename, linenum))
 AssertionError: Query count more than expected for user __system__: 1 > 0 in test_assertQueryCount at base/tests/test_test_suite.py:$line
 ''')
-        if sys.version_info < (3, 10, 0):
+        if self._python_version < (3, 10, 0):
             message = message.replace("with self.assertQueryCount(system=0):", "self.env.cr.execute('SELECT 1')")
 
         self.expected_logs = [
