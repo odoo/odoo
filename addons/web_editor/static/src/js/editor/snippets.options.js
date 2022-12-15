@@ -6616,6 +6616,17 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
     /**
      * @override
      */
+    onBuilt() {
+        this._patchShape(this.$target[0]);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
     updateUI() {
         if (this.rerender) {
             this.rerender = false;
@@ -6989,6 +7000,22 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         return _.pick(colors, defaultKeys);
     },
     /**
+     * @todo remove me in master, needed to patch errors on set-up shapes in
+     * themes.
+     *
+     * @param {HTMLElement} el
+     * @returns {Object}
+     */
+    _patchShape(el) {
+        const shapeData = this._getShapeData(el);
+        // Wrong shape data for s_picture in kea theme
+        if (shapeData.shape === 'web_editor/Origins/Wavy_03') {
+            shapeData.shape = 'web_editor/Wavy/03';
+            el.dataset.oeShapeData = JSON.stringify(shapeData);
+        }
+        return shapeData;
+    },
+    /**
      * Toggles whether there is a shape or not, to be called from bg toggler.
      *
      * @private
@@ -7003,7 +7030,8 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             const possibleShapes = shapeWidget.getMethodsParams('shape').possibleValues;
             let shapeToSelect;
             if (previousSibling) {
-                const previousShape = this._getShapeData(previousSibling).shape;
+                const shapeData = this._patchShape(previousSibling);
+                const previousShape = shapeData.shape;
                 shapeToSelect = possibleShapes.find((shape, i) => {
                     return possibleShapes[i - 1] === previousShape;
                 });
