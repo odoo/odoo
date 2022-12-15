@@ -131,16 +131,16 @@
                             <page name="personal_information" string="Private Information" groups="hr.group_hr_user">
                                 <group>
                                     <group string="Private Contact">
-                                        <field name="address_home_id"
-                                            context="{
-                                                'show_address': 1,
-                                                'default_type': 'private',
-                                                'form_view_ref': 'base.res_partner_view_form_private'}"
-                                            options='{"always_reload": True, "highlight_first_line": True}'/>
-                                        <field name="private_email" string="Email"/>
-                                        <field name="phone" class="o_force_ltr" string="Phone" readonly="True"/>
-                                        <field name="bank_account_id" context="{'default_partner_id': address_home_id}"/>
-                                        <field name="lang" string="Language"/>
+                                        <field name="private_street"/>
+                                        <field name="private_street2"/>
+                                        <field name="private_city"/>
+                                        <field name="private_state_id"/>
+                                        <field name="private_zip"/>
+                                        <field name="private_country_id"/>
+                                        <field name="private_email"/>
+                                        <field name="private_lang"/>
+                                        <field name="private_phone"/>
+                                        <field name="bank_account_id"/>
                                         <label for="km_home_work"/>
                                         <div class="o_row" name="div_km_home_work">
                                             <field name="km_home_work" class="o_hr_narrow_field"/>
