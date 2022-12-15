@@ -3041,6 +3041,10 @@ export class OdooEditor extends EventTarget {
         ) {
             this.setContenteditableLink(link);
         }
+        if (ev.target.querySelector('.o_not_editable') || closestElement(ev.target, '.o_not_editable')) {
+            ev.preventDefault();
+            this.document.getSelection().removeAllRanges();
+        }
         // Ignore any changes that might have happened before this point.
         this.observer.takeRecords();
 
