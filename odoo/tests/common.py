@@ -326,7 +326,9 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
     """ Subclass of TestCase for Odoo-specific code. This class is abstract and
     expects self.registry, self.cr and self.uid to be initialized by subclasses.
     """
-    if sys.version_info < (3, 8):
+
+    _python_version = sys.version_info
+    if _python_version < (3, 8):
         # Partial backport of bpo-24412, merged in CPython 3.8
         _class_cleanups = []
 
