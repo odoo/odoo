@@ -28,6 +28,14 @@ export class CallParticipantVideo extends Component {
         return this.props.record;
     }
 
+    /**
+     * Determine if video should be mirrored for user's own card when video is on
+     * @returns {boolean}
+     */
+     get isVideoMirrored() {
+        return this.callParticipantVideoView.callParticipantCardOwner.channelMember.isMemberOfCurrentUser
+            && this.callParticipantVideoView.callParticipantCardOwner.rtcSession.isCameraOn;
+    }
 }
 
 Object.assign(CallParticipantVideo, {
