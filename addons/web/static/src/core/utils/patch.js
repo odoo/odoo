@@ -32,6 +32,9 @@ const patchMap = new WeakMap();
  * @param {{pure?: boolean}} [options]
  */
 export function patch(obj, patchName, patchValue, options = {}) {
+    if (typeof patchName !== "string") {
+        throw new Error("Incorrect use of patch: second argument should be the patchName");
+    }
     const pure = Boolean(options.pure);
     if (!patchMap.has(obj)) {
         patchMap.set(obj, {
@@ -58,7 +61,7 @@ export function patch(obj, patchName, patchValue, options = {}) {
         } while (!prevDesc && proto);
 
         let newDesc = Object.getOwnPropertyDescriptor(patchValue, k);
-        if (!objDesc.original.hasOwnProperty(k)) {
+        if (!Object.hasOwnProperty.call(objDesc.original, k)) {
             objDesc.original[k] = Object.getOwnPropertyDescriptor(obj, k);
         }
 
