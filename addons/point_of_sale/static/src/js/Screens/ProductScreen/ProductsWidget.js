@@ -61,8 +61,7 @@ class ProductsWidget extends PosComponent {
     get shouldShowButton() {
         return (
             this.productsToDisplay.length === 0 &&
-            this.searchWord &&
-            !this.env.pos.isEveryProductLoaded
+            this.searchWord
         );
     }
     _switchCategory(event) {
