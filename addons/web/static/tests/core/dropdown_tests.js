@@ -593,7 +593,7 @@ QUnit.module("Components", ({ beforeEach }) => {
     });
 
     QUnit.test("siblings dropdowns: toggler focused on mouseenter", async (assert) => {
-        class Parent extends Component { }
+        class Parent extends Component {}
         Parent.template = xml`
         <div>
             <Dropdown class="'one'" />
@@ -730,7 +730,19 @@ QUnit.module("Components", ({ beforeEach }) => {
         assert.hasClass(menu, "o-dropdown--menu");
 
         const select = menu.querySelector("select");
-        const ev = new KeyboardEvent("keydown", {
+        let ev = new KeyboardEvent("keydown", {
+            bubbles: true,
+            // Define the ArrowDown key with standard API (for hotkey_service)
+            key: "ArrowDown",
+            code: "ArrowDown",
+            // Define the ArrowDown key with deprecated API (for bootstrap)
+            keyCode: 40,
+            which: 40,
+        });
+        select.dispatchEvent(ev);
+        await nextTick();
+
+        ev = new KeyboardEvent("keydown", {
             bubbles: true,
             // Define the ESC key with standard API (for hotkey_service)
             key: "Escape",
