@@ -2342,7 +2342,7 @@ options.registry.anchor = options.Class.extend({
      * @returns {string}
      */
     _text2Anchor: function (text) {
-        return encodeURIComponent(text.trim().replace(/\s+/g, '-'));
+        return text.trim().replace(/\W/g, "");
     },
 });
 
