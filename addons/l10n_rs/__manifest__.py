@@ -27,5 +27,6 @@
         "views/report_invoice.xml",
     ],
     "demo": ["demo/demo_company.xml"],
+    'post_init_hook': 'load_translations',
     "license": "LGPL-3",
 }
