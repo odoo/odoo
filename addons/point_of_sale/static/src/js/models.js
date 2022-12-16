@@ -1656,7 +1656,7 @@ export class Orderline extends PosModel {
             var packlotline = pack_lot_lines[i][2];
             var pack_lot_line = Packlotline.create(
                 {},
-                { json: _.extend(packlotline, { order_line: this }) }
+                { json: _.extend({...packlotline}, { order_line: this }) }
             );
             this.pack_lot_lines.add(pack_lot_line);
         }
