@@ -1023,8 +1023,7 @@ class AccountEdiFormat(models.Model):
         return to_return
 
     def _post_fattura_pa(self, invoice):
-        # OVERRIDE
-        if not invoice.l10n_it_edi_transaction:
+        if not invoice[0].l10n_it_edi_transaction:
             return self._l10n_it_post_invoices_step_1(invoice)
         else:
             return self._l10n_it_post_invoices_step_2(invoice)
