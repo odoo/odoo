@@ -35,10 +35,10 @@ import {
     startPos,
     nodeSize,
     allowsParagraphRelatedElements,
-    isEmptyBlock,
     isUnbreakable,
     makeContentsInline,
     formatSelection,
+    getDeepestPosition,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/g;
@@ -78,10 +78,16 @@ function insert(editor, data, isText = true) {
        fakeEl.replaceChildren(...fakeEl.firstChild.childNodes);
     }
 
+    startNode = startNode || editor.document.getSelection().anchorNode;
+
     // In case the html inserted is all contained in a single root <p> or <li>
     // tag, we take the all content of the <p> or <li> and avoid inserting the
-    // <p> or <li>.
-    if (fakeEl.childElementCount === 1 && (fakeEl.firstChild.nodeName === 'P' || fakeEl.firstChild.nodeName === 'LI')) {
+    // <p> or <li>. The same is true for a <pre> inside a <pre>.
+    if (fakeEl.childElementCount === 1 && (
+        fakeEl.firstChild.nodeName === 'P' ||
+        fakeEl.firstChild.nodeName === 'LI' ||
+        fakeEl.firstChild.nodeName === 'PRE' && closestElement(startNode, 'pre')
+    )) {
         const p = fakeEl.firstElementChild;
         fakeEl.replaceChildren(...p.childNodes);
     } else if (fakeEl.childElementCount > 1) {
@@ -97,7 +103,6 @@ function insert(editor, data, isText = true) {
         }
     }
 
-    startNode = startNode || editor.document.getSelection().anchorNode;
     if (startNode.nodeType === Node.ELEMENT_NODE) {
         if (selection.anchorOffset === 0) {
             const textNode = editor.document.createTextNode('');
@@ -167,9 +172,6 @@ function insert(editor, data, isText = true) {
                 if (offset) {
                     const [left, right] = splitElement(currentNode.parentElement, offset);
                     currentNode = insertBefore ? right : left;
-                    if (isEmptyBlock(right)) {
-                        right.remove();
-                    }
                 } else {
                     currentNode = currentNode.parentElement;
                 }
