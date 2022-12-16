@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.account.tax.update</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@id='default_taxes']//div[hasclass('content-group')]" position="inside">
+                    <div class="mt8" groups="account.group_account_manager">
+                        <button name="%(account_tax_update.action_view_account_tax_update)d" string="Update taxes" type="action" class="oe_link" icon="fa-refresh"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

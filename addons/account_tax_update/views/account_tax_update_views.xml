@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_tax_update" model="ir.ui.view">
+            <field name="name">Update taxes</field>
+            <field name="model">account.tax.update</field>
+            <field name="arch" type="xml">
+                <form string="Update taxes from local modules">
+                    <div class="alert alert-warning text-center mb-0 no_print" role="alert">
+                        <span>
+                            To get the latest updates, make sure your localization module is up-to-date. <br/>
+                            This action will create new taxes or update existing ones, but not the ones manually created.
+                        </span>
+                    </div>
+                    <footer>
+                        <button name="update_taxes" string="Update" type="object" class="btn-primary"/>
+                        <button special="cancel" string="Cancel" class="btn-secondary"/>
+                    </footer>
+                </form>
+           </field>
+        </record>
+
+        <record id="action_view_account_tax_update" model="ir.actions.act_window">
+            <field name="name">Update taxes</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.tax.update</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>
