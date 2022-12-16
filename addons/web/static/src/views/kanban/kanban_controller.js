@@ -132,6 +132,7 @@ KanbanController.props = {
     forceGlobalClick: { type: Boolean, optional: true },
     onSelectionChanged: { type: Function, optional: true },
     showButtons: { type: Boolean, optional: true },
+    Compiler: { type: Function, optional: true }, // optional in stable for backward compatibility
     Model: Function,
     Renderer: Function,
     buttonTemplate: String,
