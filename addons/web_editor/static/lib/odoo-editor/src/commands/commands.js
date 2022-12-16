@@ -190,7 +190,11 @@ function insert(editor, data, isText = true) {
     currentNode = lastChildNode || currentNode;
     selection.removeAllRanges();
     const newRange = new Range();
-    const lastPosition = rightPos(currentNode);
+    let lastPosition = rightPos(currentNode);
+    if (lastPosition[0] === editor.editable) {
+        // Correct the position if it happens to be in the editable root.
+        lastPosition = getDeepestPosition(...lastPosition);
+    }
     newRange.setStart(lastPosition[0], lastPosition[1]);
     newRange.setEnd(lastPosition[0], lastPosition[1]);
     selection.addRange(newRange);
