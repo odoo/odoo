@@ -62,7 +62,7 @@
         </xpath>
     </template>
 
-    <template id="l10n_in_einvoice_report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+    <template id="l10n_in_einvoice_report_invoice_document_inherit" inherit_id="l10n_in.l10n_in_report_invoice_document_inherit">
         <xpath expr="//div[@id='informations']" position="inside">
             <t t-set="l10n_in_einvoice_json" t-value="o._get_l10n_in_edi_response_json()"/>
             <div class="col-auto col-3 mw-100 mb-2" t-if="l10n_in_einvoice_json" name="ack_no">

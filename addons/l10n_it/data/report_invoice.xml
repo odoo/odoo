@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
         <xpath expr="//p[@name='note']" position="replace">
             <p name="note">
                 <t t-if="o.move_type == 'out_invoice' and o.fiscal_position_id.note">
@@ -10,6 +10,21 @@
                     <span/>
                 </t>
             </p>
+        </xpath>
+    </template>
+
+    <!-- FIXME: Temp fix to allow fetching invoice_documemt in Studio Reports with localisation -->
+    <template id="report_invoice_inherit_l10n_it" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-if="o._get_name_invoice_report() == 'l10n_it.report_invoice_document'"
+                t-call="l10n_it.report_invoice_document" t-lang="lang"/>
+        </xpath>
+    </template>
+
+    <template id="report_invoice_with_payments_inherit_l10n_it" inherit_id="account.report_invoice_with_payments">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-if="o._get_name_invoice_report() == 'l10n_it.report_invoice_document'"
+                t-call="l10n_it.report_invoice_document" t-lang="lang"/>
         </xpath>
     </template>
 </odoo>

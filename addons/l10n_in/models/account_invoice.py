@@ -93,3 +93,9 @@ class AccountMove(models.Model):
         # TO OVERRIDE
         self.ensure_one()
         return False
+
+    def _get_name_invoice_report(self):
+        self.ensure_one()
+        if self.company_id.account_fiscal_country_id.code == 'IN':
+            return 'l10n_in.l10n_in_report_invoice_document_inherit'
+        return super()._get_name_invoice_report()

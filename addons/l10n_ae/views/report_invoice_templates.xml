@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
         <xpath expr="//div[@name='payment_term']" position="after">
             <p t-if="o.company_id.country_id.code == 'AE' and o.partner_id.country_id.code != 'AE' and o.env.ref('l10n_ae.gcc_countries_group') in o.partner_id.country_id.country_group_ids">
                 Supply between <b>United Arab Emirates</b> and
@@ -58,6 +58,21 @@
                        t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/>
                 </div>
             </div>
+        </xpath>
+    </template>
+
+    <!-- FIXME: Temp fix to allow fetching invoice_documemt in Studio Reports with localisation -->
+    <template id="report_invoice_inherit_l10n_ae" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-if="o._get_name_invoice_report() == 'l10n_ae.report_invoice_document'"
+                t-call="l10n_ae.report_invoice_document" t-lang="lang"/>
+        </xpath>
+    </template>
+
+    <template id="report_invoice_with_payments_inherit_l10n_ae" inherit_id="account.report_invoice_with_payments">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-if="o._get_name_invoice_report() == 'l10n_ae.report_invoice_document'"
+                t-call="l10n_ae.report_invoice_document" t-lang="lang"/>
         </xpath>
     </template>
 </odoo>

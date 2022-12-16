@@ -1,5 +1,5 @@
 <odoo>
-    <template id="l10n_ca_report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+    <template id="l10n_ca_report_invoice_document_inherit" inherit_id="account.report_invoice_document" primary="True">
         <xpath expr="//div[hasclass('row')]//div[@name='address_not_same_as_shipping']//t[@t-set='address']" position="inside">
             <div>PST: <span t-field="o.partner_id.l10n_ca_pst"/></div>
         </xpath>
@@ -8,6 +8,21 @@
         </xpath>
         <xpath expr="//div[hasclass('row')]//div[@name='no_shipping']//t[@t-set='address']" position="inside">
             <div>PST: <span t-field="o.partner_id.l10n_ca_pst"/></div>
+        </xpath>
+    </template>
+
+    <!-- FIXME: Temp fix to allow fetching invoice_documemt in Studio Reports with localisation -->
+    <template id="report_invoice_inherit_l10n_ca" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-if="o._get_name_invoice_report() == 'l10n_ca.l10n_ca_report_invoice_document_inherit'"
+                t-call="l10n_ca.l10n_ca_report_invoice_document_inherit" t-lang="lang"/>
+        </xpath>
+    </template>
+
+    <template id="report_invoice_with_payments_inherit_l10n_ca" inherit_id="account.report_invoice_with_payments">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-if="o._get_name_invoice_report() == 'l10n_ca.l10n_ca_report_invoice_document_inherit'"
+                t-call="l10n_ca.l10n_ca_report_invoice_document_inherit" t-lang="lang"/>
         </xpath>
     </template>
 </odoo>
