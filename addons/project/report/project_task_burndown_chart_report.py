@@ -32,7 +32,7 @@ def remove_domain_leaf(domain, fields_to_remove):
             # Special case to avoid OR ('|') that can never resolve to true
             if leaf == OR_OPERATOR \
                     and len(elements[index + 1]) == 3 and len(elements[index + 2]) == 3 \
-                    and elements[index + 1][0] in fields_to_remove and elements[index + 1][0] in fields_to_remove:
+                    and elements[index + 1][0] in fields_to_remove and elements[index + 2][0] in fields_to_remove:
                 new_domain.append(TRUE_LEAF)
                 return 3
             new_domain.append(leaf)
