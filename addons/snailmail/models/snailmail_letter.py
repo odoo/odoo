@@ -270,7 +270,7 @@ class SnailmailLetter(models.Model):
                     letter.write({
                         'info_msg': 'The attachment could not be generated.',
                         'state': 'error',
-                        'error_code': 'ATTACHMENT_ERROR'
+                        'error_code': 'UNKNOWN_ERROR'
                     })
                     continue
                 if letter.company_id.external_report_layout_id == self.env.ref('l10n_de.external_layout_din5008', False):
@@ -435,7 +435,7 @@ class SnailmailLetter(models.Model):
             ('state', '=', 'pending'),
             '&',
             ('state', '=', 'error'),
-            ('error_code', 'in', ['TRIAL_ERROR', 'CREDIT_ERROR', 'ATTACHMENT_ERROR', 'MISSING_REQUIRED_FIELDS'])
+            ('error_code', 'in', ['TRIAL_ERROR', 'CREDIT_ERROR', 'MISSING_REQUIRED_FIELDS'])
         ])
         for letter in letters_send:
             letter._snailmail_print()
