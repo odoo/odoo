@@ -1604,7 +1604,7 @@ class AccountMove(models.Model):
     def _compute_display_qr_code(self):
         for record in self:
             record.display_qr_code = (
-                record.move_type in ('out_invoice', 'out_receipt')
+                record.move_type in ('out_invoice', 'out_receipt', 'in_invoice', 'in_receipt')
                 and record.company_id.qr_code
             )
 
