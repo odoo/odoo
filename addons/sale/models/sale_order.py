@@ -309,11 +309,6 @@ class SaleOrder(models.Model):
 
     @api.depends('company_id')
     def _compute_validity_date(self):
-        enabled_feature = bool(self.env['ir.config_parameter'].sudo().get_param('sale.use_quotation_validity_days'))
-        if not enabled_feature:
-            self.validity_date = False
-            return
-
         today = fields.Date.context_today(self)
         for order in self:
             days = order.company_id.quotation_validity_days
