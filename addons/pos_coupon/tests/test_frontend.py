@@ -324,11 +324,12 @@ class TestUi(TestPointOfSaleHttpCommon):
         # to be able to use them in the frontend tour.
         self.env["coupon.generate.wizard"].with_context(
             {"active_id": self.free_coupon_program.id}
-        ).create({"nbr_coupons": 1}).generate_coupon()
+        ).create({"nbr_coupons": 2}).generate_coupon()
         (
-            coupon1,
+            coupon1, coupon2,
         ) = self.free_coupon_program.coupon_ids
         coupon1.write({"code": "abcda"})
+        coupon2.write({"code": "abcdb"})
 
 
         with Form(self.main_pos_config) as pos_config:
@@ -341,6 +342,11 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
             "PosCouponTour4",
+            login="accountman",
+        )
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosCouponTour4.1",
             login="accountman",
         )
 

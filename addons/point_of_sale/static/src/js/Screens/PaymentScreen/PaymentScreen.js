@@ -30,6 +30,13 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             this.error = false;
         }
 
+        mounted() {
+            this.env.pos.on('change:selectedClient', this.render, this);
+        }
+        willUnmount() {
+            this.env.pos.off('change:selectedClient', null, this);
+        }
+
         showMaxValueError() {
             this.showPopup('ErrorPopup', {
                 title: this.env._t('Maximum value reached'),
