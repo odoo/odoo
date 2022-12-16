@@ -1515,6 +1515,15 @@ export function getOuid(node, optimize = false) {
     return node && node.oid;
 }
 /**
+ * Returns true if the provided node can suport html content.
+ *
+ * @param {Node} node
+ * @returns {boolean}
+ */
+export function isHtmlContentSupported(node) {
+    return !closestElement(node, '[data-oe-model]:not([data-oe-field="arch"]),[data-oe-translation-id]', true);
+}
+/**
  * Returns whether the given node is a element that could be considered to be
  * removed by itself = self closing tags.
  *
