@@ -449,7 +449,8 @@ class MailComposer(models.TransientModel):
 
             results[res_id] = mail_values
 
-        results = self._process_state(results)
+        if mass_mail_mode:
+            results = self._process_state(results)
         return results
 
     def _process_recipient_values(self, mail_values_dict):
