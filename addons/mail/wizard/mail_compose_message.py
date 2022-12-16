@@ -178,6 +178,14 @@ class MailComposer(models.TransientModel):
         for composer in self:
             composer.render_model = composer.model
 
+    def _compute_can_edit_body(self):
+        """Can edit the body if we are not in "mass_mail" mode because the template is
+        rendered before it's modified.
+        """
+        non_mass_mail = self.filtered(lambda m: m.composition_mode != 'mass_mail')
+        non_mass_mail.can_edit_body = True
+        super(MailComposer, self - non_mass_mail)._compute_can_edit_body()
+
     # Onchanges
 
     @api.onchange('template_id')
@@ -187,13 +195,94 @@ class MailComposer(models.TransientModel):
         for fname, value in values.items():
             setattr(self, fname, value)
 
-    def _compute_can_edit_body(self):
-        """Can edit the body if we are not in "mass_mail" mode because the template is
-        rendered before it's modified.
+    def _onchange_template_id(self, template_id, composition_mode, model, res_id):
+        """ Perform the onchange.
+
+          * mass_mailing: we cannot render, so return the template values
+          * normal mode: return rendered values
+            -> for x2many field, this onchange return command instead of ids
         """
-        non_mass_mail = self.filtered(lambda m: m.composition_mode != 'mass_mail')
-        non_mass_mail.can_edit_body = True
-        super(MailComposer, self - non_mass_mail)._compute_can_edit_body()
+        if template_id and composition_mode == 'mass_mail':
+            template = self.env['mail.template'].browse(template_id)
+            values = dict(
+                (field, template[field])
+                for field in ('body_html',
+                              'email_from',
+                              'mail_server_id',
+                              'reply_to',
+                              'subject',
+                             )
+                if template[field]
+            )
+            if template.attachment_ids:
+                values['attachment_ids'] = [att.id for att in template.attachment_ids]
+            if template.mail_server_id:
+                values['mail_server_id'] = template.mail_server_id.id
+        elif template_id:
+            values = self._generate_email_for_composer(
+                template_id, [res_id],
+                ('attachment_ids',
+                 'body_html',
+                 'email_cc',
+                 'email_from',
+                 'email_to',
+                 'mail_server_id',
+                 'partner_to',
+                 'reply_to',
+                 'report_template',
+                 'subject',
+                )
+            )[res_id]
+            # transform attachments into attachment_ids; not attached to the document because this will
+            # be done further in the posting process, allowing to clean database if email not send
+            attachment_ids = []
+            Attachment = self.env['ir.attachment']
+            for attach_fname, attach_datas in values.pop('attachments', []):
+                data_attach = {
+                    'name': attach_fname,
+                    'datas': attach_datas,
+                    'res_model': 'mail.compose.message',
+                    'res_id': 0,
+                    'type': 'binary',  # override default_type from context, possibly meant for another model!
+                }
+                attachment_ids.append(Attachment.create(data_attach).id)
+            if values.get('attachment_ids', []) or attachment_ids:
+                values['attachment_ids'] = [Command.set(values.get('attachment_ids', []) + attachment_ids)]
+        else:
+            default_values = self.with_context(
+                default_composition_mode=composition_mode,
+                default_model=model,
+                default_res_id=res_id
+            ).default_get(['attachment_ids',
+                           'body',
+                           'composition_mode',
+                           'email_from',
+                           'mail_server_id',
+                           'model',
+                           'parent_id',
+                           'partner_ids',
+                           'reply_to',
+                           'res_id',
+                           'subject',
+                          ])
+            values = dict(
+                (key, default_values[key])
+                for key in ('attachment_ids',
+                            'body',
+                            'email_from',
+                            'mail_server_id',
+                            'partner_ids',
+                            'reply_to',
+                            'subject',
+                           ) if key in default_values)
+
+        if values.get('body_html'):
+            values['body'] = values.pop('body_html')
+
+        # This onchange should return command instead of ids for x2many field.
+        values = self._convert_to_write(values)
+
+        return {'value': values}
 
     @api.model
     def get_record_data(self, values):
@@ -460,46 +549,6 @@ class MailComposer(models.TransientModel):
             results = self._process_state(results)
         return results
 
-    def _process_recipient_values(self, mail_values_dict):
-        # Preprocess res.partners to batch-fetch from db if recipient_ids is present
-        # it means they are partners (the only object to fill get_default_recipient this way)
-        recipient_pids = [
-            recipient_command[1]
-            for mail_values in mail_values_dict.values()
-            # recipient_ids is a list of x2m command tuples at this point
-            for recipient_command in mail_values.get('recipient_ids') or []
-            if recipient_command[1]
-        ]
-        recipient_emails = {
-            p.id: p.email
-            for p in self.env['res.partner'].browse(set(recipient_pids))
-        } if recipient_pids else {}
-
-        recipients_info = {}
-        for record_id, mail_values in mail_values_dict.items():
-            mail_to = []
-            if mail_values.get('email_to'):
-                mail_to += email_re.findall(mail_values['email_to'])
-                # if unrecognized email in email_to -> keep it as used for further processing
-                if not mail_to:
-                    mail_to.append(mail_values['email_to'])
-            # add email from recipients (res.partner)
-            mail_to += [
-                recipient_emails[recipient_command[1]]
-                for recipient_command in mail_values.get('recipient_ids') or []
-                if recipient_command[1]
-            ]
-            mail_to = list(set(mail_to))
-            recipients_info[record_id] = {
-                'mail_to': mail_to,
-                'mail_to_normalized': [
-                    tools.email_normalize(mail)
-                    for mail in mail_to
-                    if tools.email_normalize(mail)
-                ]
-            }
-        return recipients_info
-
     def _process_state(self, mail_values_dict):
         recipients_info = self._process_recipient_values(mail_values_dict)
         blacklist_ids = self._get_blacklist_record_ids(mail_values_dict)
@@ -543,112 +592,6 @@ class MailComposer(models.TransientModel):
                 done_emails.append(mail_to)
 
         return mail_values_dict
-
-    def _get_blacklist_record_ids(self, mail_values_dict):
-        blacklisted_rec_ids = set()
-        if self.composition_mode == 'mass_mail' and issubclass(type(self.env[self.model]), self.pool['mail.thread.blacklist']):
-            self.env['mail.blacklist'].flush_model(['email', 'active'])
-            self._cr.execute("SELECT email FROM mail_blacklist WHERE active=true")
-            blacklist = {x[0] for x in self._cr.fetchall()}
-            if blacklist:
-                targets = self.env[self.model].browse(mail_values_dict.keys()).read(['email_normalized'])
-                # First extract email from recipient before comparing with blacklist
-                blacklisted_rec_ids.update(target['id'] for target in targets
-                                           if target['email_normalized'] in blacklist)
-        return blacklisted_rec_ids
-
-    def _get_done_emails(self, mail_values_dict):
-        return []
-
-    def _get_optout_emails(self, mail_values_dict):
-        return []
-
-    def _onchange_template_id(self, template_id, composition_mode, model, res_id):
-        """ - mass_mailing: we cannot render, so return the template values
-            - normal mode: return rendered values
-            /!\ for x2many field, this onchange return command instead of ids
-        """
-        if template_id and composition_mode == 'mass_mail':
-            template = self.env['mail.template'].browse(template_id)
-            values = dict(
-                (field, template[field])
-                for field in ('body_html',
-                              'email_from',
-                              'mail_server_id',
-                              'reply_to',
-                              'subject',
-                             )
-                if template[field]
-            )
-            if template.attachment_ids:
-                values['attachment_ids'] = [att.id for att in template.attachment_ids]
-            if template.mail_server_id:
-                values['mail_server_id'] = template.mail_server_id.id
-        elif template_id:
-            values = self._generate_email_for_composer(
-                template_id, [res_id],
-                ('attachment_ids',
-                 'body_html',
-                 'email_cc',
-                 'email_from',
-                 'email_to',
-                 'mail_server_id',
-                 'partner_to',
-                 'reply_to',
-                 'report_template',
-                 'subject',
-                )
-            )[res_id]
-            # transform attachments into attachment_ids; not attached to the document because this will
-            # be done further in the posting process, allowing to clean database if email not send
-            attachment_ids = []
-            Attachment = self.env['ir.attachment']
-            for attach_fname, attach_datas in values.pop('attachments', []):
-                data_attach = {
-                    'name': attach_fname,
-                    'datas': attach_datas,
-                    'res_model': 'mail.compose.message',
-                    'res_id': 0,
-                    'type': 'binary',  # override default_type from context, possibly meant for another model!
-                }
-                attachment_ids.append(Attachment.create(data_attach).id)
-            if values.get('attachment_ids', []) or attachment_ids:
-                values['attachment_ids'] = [Command.set(values.get('attachment_ids', []) + attachment_ids)]
-        else:
-            default_values = self.with_context(
-                default_composition_mode=composition_mode,
-                default_model=model,
-                default_res_id=res_id
-            ).default_get(['attachment_ids',
-                           'body',
-                           'composition_mode',
-                           'email_from',
-                           'mail_server_id',
-                           'model',
-                           'parent_id',
-                           'partner_ids',
-                           'reply_to',
-                           'res_id',
-                           'subject',
-                          ])
-            values = dict(
-                (key, default_values[key])
-                for key in ('attachment_ids',
-                            'body',
-                            'email_from',
-                            'mail_server_id',
-                            'partner_ids',
-                            'reply_to',
-                            'subject',
-                           ) if key in default_values)
-
-        if values.get('body_html'):
-            values['body'] = values.pop('body_html')
-
-        # This onchange should return command instead of ids for x2many field.
-        values = self._convert_to_write(values)
-
-        return {'value': values}
 
     def _render_message(self, res_ids):
         """Generate template-based values of wizard, for the document records given
@@ -741,3 +684,66 @@ class MailComposer(models.TransientModel):
             values[res_id] = res_id_values
 
         return values
+
+    # ----------------------------------------------------------------------
+    # EMAIL MANAGEMENT
+    # ---------------------------------------------------------------------
+
+    def _get_blacklist_record_ids(self, mail_values_dict):
+        blacklisted_rec_ids = set()
+        if self.composition_mode == 'mass_mail' and issubclass(type(self.env[self.model]), self.pool['mail.thread.blacklist']):
+            self.env['mail.blacklist'].flush_model(['email', 'active'])
+            self._cr.execute("SELECT email FROM mail_blacklist WHERE active=true")
+            blacklist = {x[0] for x in self._cr.fetchall()}
+            if blacklist:
+                targets = self.env[self.model].browse(mail_values_dict.keys()).read(['email_normalized'])
+                # First extract email from recipient before comparing with blacklist
+                blacklisted_rec_ids.update(target['id'] for target in targets
+                                           if target['email_normalized'] in blacklist)
+        return blacklisted_rec_ids
+
+    def _get_done_emails(self, mail_values_dict):
+        return []
+
+    def _get_optout_emails(self, mail_values_dict):
+        return []
+
+    def _process_recipient_values(self, mail_values_dict):
+        # Preprocess res.partners to batch-fetch from db if recipient_ids is present
+        # it means they are partners (the only object to fill get_default_recipient this way)
+        recipient_pids = [
+            recipient_command[1]
+            for mail_values in mail_values_dict.values()
+            # recipient_ids is a list of x2m command tuples at this point
+            for recipient_command in mail_values.get('recipient_ids') or []
+            if recipient_command[1]
+        ]
+        recipient_emails = {
+            p.id: p.email
+            for p in self.env['res.partner'].browse(set(recipient_pids))
+        } if recipient_pids else {}
+
+        recipients_info = {}
+        for record_id, mail_values in mail_values_dict.items():
+            mail_to = []
+            if mail_values.get('email_to'):
+                mail_to += email_re.findall(mail_values['email_to'])
+                # if unrecognized email in email_to -> keep it as used for further processing
+                if not mail_to:
+                    mail_to.append(mail_values['email_to'])
+            # add email from recipients (res.partner)
+            mail_to += [
+                recipient_emails[recipient_command[1]]
+                for recipient_command in mail_values.get('recipient_ids') or []
+                if recipient_command[1]
+            ]
+            mail_to = list(set(mail_to))
+            recipients_info[record_id] = {
+                'mail_to': mail_to,
+                'mail_to_normalized': [
+                    tools.email_normalize(mail)
+                    for mail in mail_to
+                    if tools.email_normalize(mail)
+                ]
+            }
+        return recipients_info
