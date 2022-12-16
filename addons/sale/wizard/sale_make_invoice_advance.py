@@ -99,16 +99,12 @@ class SaleAdvancePaymentInv(models.TransientModel):
             if wizard.count == 1:
                 wizard.company_id = wizard.sale_order_ids.company_id
 
-    @api.depends('company_id')  # 'dumb' depends to trigger the computation
+    @api.depends('company_id')
     def _compute_product_id(self):
         self.product_id = False
-        dp_product_id = int(self.env['ir.config_parameter'].sudo().get_param(
-            'sale.default_deposit_product_id'))
-        if not dp_product_id:
-            return
         for wizard in self:
             if wizard.count == 1:
-                wizard.product_id = dp_product_id
+                wizard.product_id = wizard.company_id.sale_down_payment_product_id
 
     #=== ONCHANGE METHODS ===#
 
@@ -166,11 +162,10 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
             # Create deposit product if necessary
             if not self.product_id:
-                self.product_id = self.env['product.product'].create(
+                self.company_id.sale_down_payment_product_id = self.env['product.product'].create(
                     self._prepare_down_payment_product_values()
                 )
-                self.env['ir.config_parameter'].sudo().set_param(
-                    'sale.default_deposit_product_id', self.product_id.id)
+                self._compute_product_id()
 
             # Create down payment section if necessary
             if not any(line.display_type and line.is_downpayment for line in order.order_line):
@@ -200,7 +195,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             'name': _('Down payment'),
             'type': 'service',
             'invoice_policy': 'order',
-            'company_id': False,
+            'company_id': self.company_id.id,
             'property_account_income_id': self.deposit_account_id.id,
             'taxes_id': [Command.set(self.deposit_taxes_id.ids)],
         }
