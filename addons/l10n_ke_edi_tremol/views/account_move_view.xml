@@ -11,14 +11,14 @@
                     <button name="l10n_ke_action_cu_post" type="object"
                             class="oe_highlight"
                             groups="account.group_account_manager"
-                            string="Send Invoice To Device"
+                            string="Send To Fiscal Device"
                             attrs="{'invisible': ['|', '|', '|', ('country_code', '!=', 'KE'), ('l10n_ke_cu_qrcode', '!=', False), ('state', '!=', 'posted'), ('move_type', 'not in', ['out_invoice', 'out_refund'])]}"/>
                 </xpath>
                 <xpath expr="//group[@id='header_right_group']" position="inside">
                     <field name="l10n_ke_cu_invoice_number" attrs="{'invisible': [('country_code', '!=', 'KE')]}" readonly="1"/>
                 </xpath>
                 <notebook position="inside">
-                    <page string="Tremol GO3 Control Unit" attrs="{'invisible': [('country_code', '!=', 'KE')]}">
+                    <page string="Tremol GO3 Fiscal Device" attrs="{'invisible': [('country_code', '!=', 'KE')]}">
                         <group>
                             <group>
                                 <field name="l10n_ke_cu_qrcode" widget="url" readonly="1"/>
@@ -43,7 +43,7 @@
         </record>
 
         <record id="action_send_invoices_to_device" model="ir.actions.server">
-            <field name="name">Send invoices to fiscal device</field>
+            <field name="name">Send to fiscal device</field>
             <field name="model_id" ref="account.model_account_move"/>
             <field name="binding_model_id" ref="account.model_account_move"/>
             <field name="binding_view_types">list</field>
