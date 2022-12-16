@@ -1,9 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 from urllib.parse import urlparse
 from unittest.mock import patch
 
 import odoo
+from odoo.tests.common import get_db_name
 from odoo.tools import mute_logger
 from .test_common import TestHttpBase
 
@@ -91,3 +93,29 @@ class TestHttpSession(TestHttpBase):
         self.assertFalse(session['db'])
         self.assertEqual(res.status_code, 303)
         self.assertEqual(urlparse(res.headers['Location']).path, '/web/database/selector')
+
+    def test_session4_web_authenticate_multidb(self):
+        self.db_list = [get_db_name(), 'another_database']
+
+        payload = json.dumps({
+            'jsonrpc': '2.0',
+            'id': None,
+            'method': 'call',
+            'params': {
+                'db': get_db_name(),
+                'login': 'admin',
+                'password': 'admin',
+            }
+        })
+
+        res = self.multidb_url_open(
+            '/web/session/authenticate', data=payload, headers={
+                'Content-Type': 'application/json',
+            }
+        )
+        res.raise_for_status()
+        self.assertEqual(res.status_code, 200)
+
+        res = self.multidb_url_open('/test_http/greeting-user')
+        res.raise_for_status()
+        self.assertEqual(res.status_code, 200, "Should not be redirected to /web/login")

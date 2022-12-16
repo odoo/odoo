@@ -13,6 +13,7 @@ import './commands/align.js';
 import { sanitize } from './utils/sanitize.js';
 import { serializeNode, unserializeNode, serializeSelection } from './utils/serialize.js';
 import {
+    isMacOS,
     closestBlock,
     commonParentGet,
     containsUnremovable,
@@ -236,6 +237,7 @@ export class OdooEditor extends EventTarget {
                 _t: string => string,
                 allowCommandVideo: true,
                 renderingClasses: [],
+                allowInlineAtRoot: false,
             },
             options,
         );
@@ -3323,7 +3325,7 @@ export class OdooEditor extends EventTarget {
         // is a non-empty Unicode character string containing the printable
         // representation of the key. In this case, call `deleteRange` before
         // inserting the printed representation of the character.
-        if (/^.$/u.test(ev.key) && !ev.ctrlKey && !ev.metaKey) {
+        if (/^.$/u.test(ev.key) && !ev.ctrlKey && !ev.metaKey && (isMacOS() || !ev.altKey)) {
             const selection = this.document.getSelection();
             if (selection && !selection.isCollapsed) {
                 this.deleteRange(selection);
@@ -3601,7 +3603,7 @@ export class OdooEditor extends EventTarget {
         const orphanInlineChildNodes = [...element.childNodes].find(
             (n) => !isBlock(n) && (n.nodeType === Node.ELEMENT_NODE || n.textContent.trim() !== "")
         );
-        if (orphanInlineChildNodes) {
+        if (orphanInlineChildNodes && !this.options.allowInlineAtRoot) {
             const childNodes = [...element.childNodes];
             const tempEl = document.createElement('temp-container');
             let currentP = document.createElement('p');
@@ -3957,6 +3959,7 @@ export class OdooEditor extends EventTarget {
                     star.classList.toggle('fa-star-o', true);
                     star.classList.toggle('fa-star', false);
                 };
+                this.historyStep();
             }
         }
 

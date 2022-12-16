@@ -40,6 +40,14 @@ class Session(http.Controller):
         registry = odoo.modules.registry.Registry(db)
         with registry.cursor() as cr:
             env = odoo.api.Environment(cr, request.session.uid, request.session.context)
+            if not request.db and not request.session.is_explicit:
+                # request._save_session would not update the session_token
+                # as it lacks an environment, rotating the session myself
+                http.root.session_store.rotate(request.session, env)
+                request.future_response.set_cookie(
+                    'session_id', request.session.sid,
+                    max_age=http.SESSION_LIFETIME, httponly=True
+                )
             return env['ir.http'].session_info()
 
     @http.route('/web/session/get_lang_list', type='json', auth="none")

@@ -4,8 +4,7 @@ import { parseDate, parseDateTime } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
-import { escapeRegExp, nbsp } from "@web/core/utils/strings";
-import { session } from "@web/session";
+import { escapeRegExp } from "@web/core/utils/strings";
 
 // -----------------------------------------------------------------------------
 // Helpers
@@ -38,16 +37,23 @@ function evaluateMathematicalExpression(expr, context = {}) {
  * @returns {number}
  */
 function parseNumber(value, options = {}) {
-    // a number can have the thousand separator multiple times. ex: 1,000,000.00
-    value = value.replaceAll(new RegExp(escapeRegExp(options.thousandsSep), "g") || ",", "");
-    // a number only have one decimal separator
-    value = value.replace(new RegExp(escapeRegExp(options.decimalPoint), "g") || ".", ".");
-
     if (value.startsWith("=")) {
         value = evaluateMathematicalExpression(value.substring(1));
         if (options.truncate) {
             value = Math.trunc(value);
         }
+    } else {
+        // A whitespace thousands separator is equivalent to any whitespace character.
+        // E.g. "1  000 000" should be parsed as 1000000 even if the
+        // thousands separator is nbsp.
+        const thousandsSepRegex = options.thousandsSep.match(/\s+/)
+            ? /\s+/g
+            : new RegExp(escapeRegExp(options.thousandsSep), "g") || ",";
+
+        // a number can have the thousand separator multiple times. ex: 1,000,000.00
+        value = value.replaceAll(thousandsSepRegex, "");
+        // a number only have one decimal separator
+        value = value.replace(new RegExp(escapeRegExp(options.decimalPoint), "g") || ".", ".");
     }
 
     return Number(value);
@@ -153,43 +159,21 @@ export function parsePercentage(value) {
 
 /**
  * Try to extract a monetary value from a string. The localization is considered in the process.
- * The monetary value can have the formats sym$&nbsp;float, float$&nbsp;sym or float
- * where $&nbsp; is a non breaking space and sym is a currency symbol.
- * If a symbol is found it must correspond to the default currency symbol or to the
- * symbol of the currency whose id is passed in options.
+ * This is a very lenient function such that it just strips non-numeric characters at the
+ * beginning and end of the string, and then tries to parse the remaining string as a float.
  *
  * @param {string} value
- * @param {Object} [options={}]
- * @param {number} [options.currencyId]
- * @returns {number} float
+ * @returns {number}
  */
-export function parseMonetary(value, options = {}) {
-    // TODO GES help ?
-    // const values = value.split("&nbsp;");
-    const values = value.split(nbsp);
-    if (values.length === 1) {
-        return parseFloat(value);
+export function parseMonetary(value) {
+    value = value.trim();
+    const regex = new RegExp(`^[^\\d\\-+=]*(?<strToParse>.*?)[^\\d]*$`);
+    const match = value.match(regex);
+    if (!match) {
+        throw new InvalidNumberError(`"${value}" is not a valid number.`);
     }
-    let currency = session.currencies[options.currencyId];
-    if (!currency) {
-        if (Object.keys(session.currencies).length !== 0) {
-            // BS
-            currency = session.currencies[Object.keys(session.currencies)[0]];
-        } else {
-            throw new InvalidNumberError(
-                `"${value}" is either an invalid number or is using an unconfigured currency symbol`
-            );
-        }
-    }
-    const symbolIndex = values.findIndex((v) => v === currency.symbol);
-    if (symbolIndex === -1) {
-        throw new InvalidNumberError(`"${value}" doesn't have the expected currency symbol`);
-    }
-    values.splice(symbolIndex, 1);
-    if (values.length !== 1) {
-        throw new InvalidNumberError(`"${value}" is not a valid number`);
-    }
-    return parseFloat(values[0]);
+    value = match.groups.strToParse;
+    return parseFloat(value);
 }
 
 registry

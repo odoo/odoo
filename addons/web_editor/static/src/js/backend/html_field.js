@@ -113,8 +113,8 @@ export class HtmlField extends Component {
             }
 
             const newRecordInfo = {
-                res_model: this.props.record.resModel,
-                res_id: this.props.record.resId,
+                res_model: newProps.record.resModel,
+                res_id: newProps.record.resId,
             };
             if (!_.isEqual(this._lastRecordInfo, newRecordInfo)) {
                 this.currentEditingValue = undefined;

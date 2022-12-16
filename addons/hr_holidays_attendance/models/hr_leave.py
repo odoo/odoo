@@ -100,3 +100,8 @@ class HRLeave(models.Model):
                     employee_dates[leave.employee_id].add(self.env['hr.attendance']._get_day_start_and_day(leave.employee_id, leave.date_from + timedelta(days=d)))
         if employee_dates:
             self.env['hr.attendance']._update_overtime(employee_dates)
+
+    def unlink(self):
+        # TODO master change to ondelete
+        self.sudo().overtime_id.unlink()
+        return super().unlink()
