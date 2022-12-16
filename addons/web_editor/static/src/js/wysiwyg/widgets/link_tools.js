@@ -427,6 +427,15 @@ const LinkTools = Link.extend({
             this.options.wysiwyg.odooEditor.historyStep();
         }
     },
+    /**
+     * @override
+     */
+    __onURLInput() {
+        this._super(...arguments);
+        this.options.wysiwyg.odooEditor.historyPauseSteps('_onURLInput');
+        this._adaptPreview();
+        this.options.wysiwyg.odooEditor.historyUnpauseSteps('_onURLInput');
+    },
 });
 
 return LinkTools;
