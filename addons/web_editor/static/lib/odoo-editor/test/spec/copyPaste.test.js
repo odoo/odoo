@@ -1181,7 +1181,7 @@ describe('Copy and paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<ul><li>abc</li><li>def</li><li>ghi</li></ul>');
                     },
-                    contentAfter: '<p>12</p><ul><li>abc</li><li>def</li><li>ghi</li></ul>[]<p>34</p>',
+                    contentAfter: '<p>12</p><ul><li>abc</li><li>def</li><li>ghi</li></ul><p>[]34</p>',
                 });
             });
             it('should paste the text of an li into another li', async () => {
