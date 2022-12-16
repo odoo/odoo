@@ -213,7 +213,7 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
             <field name="arch" type="xml">
-                <header position="inside">
+                <xpath expr="//header/button" position="before">
                     <button string="Update Quantity" type="object"
                         groups="stock.group_stock_manager"
                         name="action_update_quantity_on_hand"
@@ -223,7 +223,7 @@
                         context="{'default_product_id': id}"
                         groups="stock.group_stock_user"
                         attrs="{'invisible': [('type', 'not in', ['consu', 'product'])]}"/>
-                </header>
+                </xpath>
                 <div name="button_box" position="inside">
                     <button string="Putaway Rules" type="object"
                         name="action_view_related_putaway_rules"
@@ -241,7 +241,7 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <data>
-                    <header position="inside">
+                    <xpath expr="//header/button" position="before">
                         <button string="Update Quantity" type="object"
                             groups="stock.group_stock_manager"
                             name="action_update_quantity_on_hand"
@@ -251,7 +251,7 @@
                             context="{'default_product_id': id}"
                             groups="stock.group_stock_user"
                             attrs="{'invisible': [('type', 'not in', ['consu', 'product'])]}"/>
-                    </header>
+                    </xpath>
                     <div name="button_box" position="inside">
                         <t groups="stock.group_stock_user">
                             <field name="tracking" invisible="1"/>
@@ -349,7 +349,7 @@
             <field name="priority" eval="15"/>
             <field name="arch" type="xml">
                 <data>
-                    <header position="inside" >
+                    <xpath expr="//header/button" position="before">
                         <button string="Update Quantity" type="object"
                             groups="stock.group_stock_manager"
                             name="action_update_quantity_on_hand"
@@ -359,7 +359,7 @@
                             context="{'default_product_tmpl_id': id}"
                             groups="stock.group_stock_user"
                             attrs="{'invisible': [('type', 'not in', ['consu', 'product'])]}"/>
-                    </header>
+                    </xpath>
                     <div name="button_box" position="inside">
                         <t groups="stock.group_stock_user">
                             <field name="tracking" invisible="1"/>

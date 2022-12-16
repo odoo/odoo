@@ -314,9 +314,11 @@ class ProductTemplate(models.Model):
     def _get_volume_uom_name_from_ir_config_parameter(self):
         return self._get_volume_uom_id_from_ir_config_parameter().display_name
 
+    @api.depends('type')
     def _compute_weight_uom_name(self):
         self.weight_uom_name = self._get_weight_uom_name_from_ir_config_parameter()
 
+    @api.depends('type')
     def _compute_volume_uom_name(self):
         self.volume_uom_name = self._get_volume_uom_name_from_ir_config_parameter()
 
