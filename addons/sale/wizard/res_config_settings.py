@@ -36,11 +36,10 @@ class ResConfigSettings(models.TransientModel):
         config_parameter='sale.automatic_invoice',
     )
     deposit_default_product_id = fields.Many2one(
-        comodel_name='product.product',
-        string="Deposit Product",
-        domain=[('type', '=', 'service')],
-        config_parameter='sale.default_deposit_product_id',
-        help="Default product used for payment advances")
+        related='company_id.sale_down_payment_product_id',
+        readonly=False,
+        # previously config_parameter='sale.default_deposit_product_id',
+    )
 
     invoice_mail_template_id = fields.Many2one(
         comodel_name='mail.template',

@@ -163,8 +163,7 @@ class TestSaleToInvoice(TestSaleCommon):
         self.sale_order.action_confirm()
         tax_downpayment = self.company_data['default_tax_sale'].copy({'price_include': True})
         # Let's do an invoice for a deposit of 100
-        product_id = self.env['ir.config_parameter'].sudo().get_param('sale.default_deposit_product_id')
-        product_id = self.env['product.product'].browse(int(product_id)).exists()
+        product_id = self.env.company.sale_down_payment_product_id
         product_id.taxes_id = tax_downpayment.ids
         payment = self.env['sale.advance.payment.inv'].with_context(self.context).create({
             'advance_payment_method': 'percentage',
