@@ -8,9 +8,6 @@ weWidgets.LinkTools.include({
     xmlDependencies: (weWidgets.LinkTools.prototype.xmlDependencies || []).concat(
         ['/website/static/src/xml/website.editor.xml']
     ),
-    events: _.extend({}, weWidgets.LinkTools.prototype.events || {}, {
-        'input input[name="url"]': '_onURLInput',
-    }),
     custom_events: _.extend({}, weWidgets.LinkTools.prototype.custom_events || {}, {
         website_url_chosen: '_onAutocompleteClose',
     }),
