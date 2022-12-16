@@ -50,10 +50,6 @@ class MailComposer(models.TransientModel):
                 - active_ids: record IDs
                 - default_model or active_model
         """
-        # backward compatibility of context before addition of
-        # email_layout_xmlid field: to remove in 15.1+
-        if self._context.get('custom_layout') and 'default_email_layout_xmlid' not in self._context:
-            self = self.with_context(default_email_layout_xmlid=self._context['custom_layout'])
         # support subtype xmlid, like ``message_post``, when easier than using ``ref``
         if self.env.context.get('default_subtype_xmlid'):
             self = self.with_context(
@@ -75,16 +71,16 @@ class MailComposer(models.TransientModel):
                 result['author_id'] = author_id
 
         if 'model' in fields and 'model' not in result:
-            result['model'] = self._context.get('active_model')
+            result['model'] = self.env.context.get('active_model')
         if 'res_id' in fields and 'res_id' not in result:
-            result['res_id'] = self._context.get('active_id')
+            result['res_id'] = self.env.context.get('active_id')
         if 'reply_to_mode' in fields and 'reply_to_mode' not in result and result.get('model'):
             # doesn't support threading
             if result['model'] not in self.env or not hasattr(self.env[result['model']], 'message_post'):
                 result['reply_to_mode'] = 'new'
 
-        if 'active_domain' in self._context:  # not context.get() because we want to keep global [] domains
-            result['active_domain'] = '%s' % self._context.get('active_domain')
+        if 'active_domain' in self.env.context:  # not context.get() because we want to keep global [] domains
+            result['active_domain'] = '%r' % self.env.context.get('active_domain')
         if result.get('composition_mode') == 'comment' and (set(fields) & set(['model', 'res_id', 'partner_ids', 'record_name', 'subject'])):
             result.update(self.get_record_data(result))
 
@@ -367,8 +363,8 @@ class MailComposer(models.TransientModel):
             # wizard works in batch mode: [res_id] or active_ids or active_domain
             if mass_mode and wizard.use_active_domain and wizard.model:
                 res_ids = self.env[wizard.model].search(ast.literal_eval(wizard.active_domain)).ids
-            elif mass_mode and wizard.model and self._context.get('active_ids'):
-                res_ids = self._context['active_ids']
+            elif mass_mode and wizard.model and self.env.context.get('active_ids'):
+                res_ids = self.env.context['active_ids']
             else:
                 res_ids = [wizard.res_id]
 
@@ -460,7 +456,7 @@ class MailComposer(models.TransientModel):
             # generate the saved template
             record.write({'template_id': template.id})
             record._onchange_template_id_wrapper()
-            return _reopen(self, record.id, record.model, context=self._context)
+            return _reopen(self, record.id, record.model, context=self.env.context)
 
     # ------------------------------------------------------------
     # RENDERING / VALUES GENERATION
@@ -580,7 +576,7 @@ class MailComposer(models.TransientModel):
             values.update(
                 email_add_signature=not bool(self.template_id) and self.email_add_signature,
                 email_layout_xmlid=self.email_layout_xmlid,
-                mail_auto_delete=self.template_id.auto_delete if self.template_id else self.env.context.get('mail_auto_delete', True),
+                mail_auto_delete=self.template_id.auto_delete if self.template_id else True,
                 model_description=model_description,
             )
         return values
