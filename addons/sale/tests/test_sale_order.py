@@ -277,7 +277,6 @@ class TestSaleOrder(SaleCommon):
         self.assertTrue(sale_order.note.startswith("<p>Terms &amp; Conditions: "))
 
     def test_validity_days(self):
-        self.env['ir.config_parameter'].sudo().set_param('sale.use_quotation_validity_days', True)
         self.env.company.quotation_validity_days = 5
         with freeze_time("2020-05-02"):
             sale_order = self._create_sale_order()
