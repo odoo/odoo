@@ -20,7 +20,6 @@ import {
     isBlock,
     isColorGradient,
     isContentTextNode,
-    isEmptyBlock,
     isSelectionFormat,
     isShrunkBlock,
     isVisible,
@@ -46,6 +45,7 @@ import {
     getRowIndex,
     parseHTML,
     formatSelection,
+    getDeepestPosition,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/g;
@@ -175,10 +175,16 @@ export const editorCommands = {
             container.replaceChildren(...container.firstChild.childNodes);
         }
 
+        startNode = startNode || editor.document.getSelection().anchorNode;
+
         // In case the html inserted is all contained in a single root <p> or <li>
         // tag, we take the all content of the <p> or <li> and avoid inserting the
-        // <p> or <li>.
-        if (container.childElementCount === 1 && (container.firstChild.nodeName === 'P' || container.firstChild.nodeName === 'LI')) {
+        // <p> or <li>. The same is true for a <pre> inside a <pre>.
+        if (container.childElementCount === 1 && (
+            container.firstChild.nodeName === 'P' ||
+            container.firstChild.nodeName === 'LI' ||
+            container.firstChild.nodeName === 'PRE' && closestElement(startNode, 'pre')
+        )) {
             const p = container.firstElementChild;
             container.replaceChildren(...p.childNodes);
         } else if (container.childElementCount > 1) {
@@ -194,7 +200,6 @@ export const editorCommands = {
             }
         }
 
-        startNode = startNode || editor.document.getSelection().anchorNode;
         if (startNode.nodeType === Node.ELEMENT_NODE) {
             if (selection.anchorOffset === 0) {
                 const textNode = editor.document.createTextNode('');
@@ -268,9 +273,6 @@ export const editorCommands = {
                     if (offset) {
                         const [left, right] = splitElement(currentNode.parentElement, offset);
                         currentNode = insertBefore ? right : left;
-                        if (isEmptyBlock(right)) {
-                            right.remove();
-                        }
                     } else {
                         currentNode = currentNode.parentElement;
                     }
