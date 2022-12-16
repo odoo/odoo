@@ -17,7 +17,7 @@ const Link = Widget.extend({
     events: {
         'input': '_onAnyChange',
         'change': '_onAnyChange',
-        'input input[name="url"]': '_onURLInput',
+        'input input[name="url"]': '__onURLInput',
         'change input[name="url"]': '_onURLInputChange',
     },
 
@@ -486,6 +486,23 @@ const Link = Widget.extend({
         }
     },
     /**
+     * @todo Adapt in master: in stable _onURLInput was both used as an event
+     * handler responding to url input events + a private method called at the
+     * widget lifecycle start. Originally both points were to update the link
+     * tools/dialog UI. It was later wanted to actually update the DOM... but
+     * should only be done in event handler part.
+     *
+     * This allows to differentiate the event handler part. In master, we should
+     * take the opportunity to also update the `_updatePreview` concept which
+     * updates the "preview" of the original link dialog but actually updates
+     * the real DOM for the "new" link tools.
+     *
+     * @private
+     */
+    __onURLInput: function () {
+        this._onURLInput(...arguments);
+    },
+    /**
      * @private
      */
     _onURLInput: function () {
@@ -495,10 +512,10 @@ const Link = Widget.extend({
         let isLink = value.indexOf('@') < 0;
         this.$('input[name="is_new_window"]').closest('.row').toggleClass('d-none', !isLink);
         this.$('.o_strip_domain').toggleClass('d-none', value.indexOf(window.location.origin) !== 0);
-        this.options.wysiwyg && this.options.wysiwyg.odooEditor.historyPauseSteps('_onURLInput');
-        this._adaptPreview();
-        this.options.wysiwyg && this.options.wysiwyg.odooEditor.historyUnpauseSteps('_onURLInput');
     },
+    /**
+     * @private
+     */
     _onURLInputChange: function () {
         this._adaptPreview();
         this._savedURLInputOnDestroy = false;

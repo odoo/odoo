@@ -160,6 +160,7 @@ const _DialogLinkWidget = Link.extend({
     _onURLInput: function () {
         this._super(...arguments);
         this.$('#o_link_dialog_url_input').closest('.o_url_input').removeClass('o_has_error').find('.form-control, .form-select').removeClass('is-invalid');
+        this._adaptPreview();
     },
 });
 
