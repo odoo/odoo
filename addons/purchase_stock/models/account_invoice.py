@@ -53,21 +53,20 @@ class AccountMove(models.Model):
                 debit_pdiff_account = move.fiscal_position_id.map_account(debit_pdiff_account)
                 if not debit_pdiff_account:
                     continue
+                # Retrieve stock valuation moves.
+                valuation_stock_moves = self.env['stock.move'].search([
+                    ('purchase_line_id', '=', line.purchase_line_id.id),
+                    ('state', '=', 'done'),
+                    ('product_qty', '!=', 0.0),
+                ])
+                if move.move_type == 'in_refund':
+                    valuation_stock_moves = valuation_stock_moves.filtered(lambda stock_move: stock_move._is_out())
+                else:
+                    valuation_stock_moves = valuation_stock_moves.filtered(lambda stock_move: stock_move._is_in())
 
                 if line.product_id.cost_method != 'standard' and line.purchase_line_id:
                     po_currency = line.purchase_line_id.currency_id
                     po_company = line.purchase_line_id.company_id
-
-                    # Retrieve stock valuation moves.
-                    valuation_stock_moves = self.env['stock.move'].search([
-                        ('purchase_line_id', '=', line.purchase_line_id.id),
-                        ('state', '=', 'done'),
-                        ('product_qty', '!=', 0.0),
-                    ])
-                    if move.move_type == 'in_refund':
-                        valuation_stock_moves = valuation_stock_moves.filtered(lambda stock_move: stock_move._is_out())
-                    else:
-                        valuation_stock_moves = valuation_stock_moves.filtered(lambda stock_move: stock_move._is_in())
 
                     if valuation_stock_moves:
                         valuation_price_unit_total, valuation_total_qty = valuation_stock_moves._get_valuation_price_and_qty(line, move.currency_id)
@@ -91,9 +90,10 @@ class AccountMove(models.Model):
                 else:
                     # Valuation_price unit is always expressed in invoice currency, so that it can always be computed with the good rate
                     price_unit = line.product_id.uom_id._compute_price(line.product_id.standard_price, line.product_uom_id)
+                    valuation_date = valuation_stock_moves and max(valuation_stock_moves.mapped('date')) or move.date
                     valuation_price_unit = line.company_currency_id._convert(
                         price_unit, move.currency_id,
-                        move.company_id, fields.Date.today(), round=False
+                        move.company_id, valuation_date, round=False
                     )
 
 
