@@ -60,6 +60,7 @@
                 <field name="uom_id" groups="uom.group_uom" />
                 <field name="currency_id" invisible="1" />
                 <field name="value" sum="Total Value"/>
+                <field name="description" optional="hide"/>
                 <groupby name="product_id">
                     <field name="cost_method" invisible="1"/>
                     <field name="quantity_svl" invisible="1"/>
