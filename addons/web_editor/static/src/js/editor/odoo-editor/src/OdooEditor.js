@@ -34,6 +34,7 @@ import {
     toggleClass,
     closestElement,
     isVisible,
+    isHtmlContentSupported,
     rgbToHex,
     isFontAwesome,
     getInSelection,
@@ -4129,7 +4130,8 @@ export class OdooEditor extends EventTarget {
         const files = getImageFiles(ev.clipboardData);
         const odooEditorHtml = ev.clipboardData.getData('text/odoo-editor');
         const clipboardHtml = ev.clipboardData.getData('text/html');
-        if (odooEditorHtml) {
+        const targetSupportsHtmlContent = isHtmlContentSupported(sel.anchorNode);
+        if (odooEditorHtml && targetSupportsHtmlContent) {
             const fragment = parseHTML(odooEditorHtml);
 
             // DOMPurify.sanitize remove an attribute that contains a ">" for
@@ -4148,9 +4150,9 @@ export class OdooEditor extends EventTarget {
             if (fragment.hasChildNodes()) {
                 this.execCommand('insert', fragment);
             }
-        } else if (files.length) {
+        } else if (files.length && targetSupportsHtmlContent) {
             this.addImagesFiles(files).then(html => this.execCommand('insert', this._prepareClipboardData(html)));
-        } else if (clipboardHtml) {
+        } else if (clipboardHtml && targetSupportsHtmlContent) {
             this.execCommand('insert', this._prepareClipboardData(clipboardHtml));
         } else {
             const text = ev.clipboardData.getData('text/plain');
@@ -4329,7 +4331,9 @@ export class OdooEditor extends EventTarget {
      */
     _onDrop(ev) {
         ev.preventDefault();
-
+        if (!isHtmlContentSupported(ev.target)) {
+            return;
+        }
         const sel = this.document.getSelection();
         let isInEditor = false;
         let ancestor = sel.anchorNode;
