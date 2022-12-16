@@ -3373,10 +3373,6 @@ class AccountMove(models.Model):
             'views': [(False, 'form')],
             'res_model': res_model,
             'res_id': res_id,
-            'context': {
-                'create': False,
-                'delete': False,
-            },
             'target': 'current',
         }
 
