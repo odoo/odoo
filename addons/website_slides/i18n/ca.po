@@ -25,8 +25,8 @@
 # Arnau Ros, 2022
 # Cristian Cruz, 2022
 # Josep Anton Belchi, 2022
-# Farouk Jabiri, 2022
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2022
+# Farouk Jabiri, 2022
 # 
 msgid ""
 msgstr ""
@@ -34,7 +34,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2022\n"
+"Last-Translator: Farouk Jabiri, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,12 +45,12 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree_report
 msgid "# Attendees"
-msgstr ""
+msgstr "# Assistents"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree_report
 msgid "# Completed"
-msgstr ""
+msgstr "# Completada"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__completed_slides_count
@@ -60,27 +60,27 @@ msgstr "# Diapositives completades"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_partner_view_tree
 msgid "# Likes"
-msgstr ""
+msgstr "# M'agrada"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_tree_report
 msgid "# Questions"
-msgstr ""
+msgstr "# Preguntes"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_partner_view_tree
 msgid "# Quizz Attempts"
-msgstr ""
+msgstr "# Intents del qüestionari"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_partner_view_tree
 msgid "# Total Attempts"
-msgstr ""
+msgstr "# Intents totals"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__total_views
 msgid "# Total Views"
-msgstr ""
+msgstr "# Visualitzacions totals"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed__count_views
@@ -92,7 +92,7 @@ msgstr "# Visualitzacions"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__embed_count
 msgid "# of Embeds"
-msgstr ""
+msgstr "# de incrustacions"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__public_views
@@ -266,6 +266,25 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Hola<br/><br/>\n"
+"                        <t t-out=\"user.name or ''\">Mitchell Admin</t> us ha compartit el document <strong t-out=\"object.name or ''\"></strong>!\n"
+"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"object.websiteurl\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('baseurl') }}/web/image/slide.channel/{{ object.id }}/image256\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"object.websiteurl\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px;                                 text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                                Visualitza el document <strong t-out=\"object.name or ''\"></strong></a>\n"
+"                        </div>\n"
+"                        <t t-if=\"user.signature\">\n"
+"                            <br/>\n"
+"                            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"                        </t>\n"
+"                    </p>\n"
+"                </div>"
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_shared
@@ -290,6 +309,24 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Hola<br/><br/>\n"
+"                        <t t-out=\"user.name or ''\">Mitchell Admin</t> va compartir el document <t t-out=\"object.slidecategory or ''\"></t> <strong t-out=\"object.name or ''\">Trees</strong> amb tu!\n"
+"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"(object.websiteshareurl + '?fullscreen=1') if ctx.get('fullscreen') else object.websiteshareurl\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('baseurl') }}/web/image/slide.slide/{{ object.id }}/image1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"(object.websiteshareurl + '?fullscreen=1') if ctx.get('fullscreen') else object.websiteshareurl\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">Visualitza <strong t-out=\"object.name or ''\">Arbres</strong></a>\n"
+"                        </div>\n"
+"                        <t t-if=\"user.signature\">\n"
+"                            <br/>\n"
+"                            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"                        </t>\n"
+"                    </p>\n"
+"                </div>"
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -318,11 +355,33 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Hola<br/><br/>\n"
+"                        Hi ha una cosa nova en el curs <strong t-out=\"object.channelid.name or ''\">Trees, Wood and Gardens</strong> que segueixes:<br/><br/>\n"
+"                        <center><strong t-out=\"object.name or ''\">Trees</strong></center>\n"
+"                        <t t-if=\"object.image1024\">\n"
+"                            <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                                <a t-att-href=\"object.websiteshareurl\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('baseurl') }}/web/image/slide.slide/{{ object.id }}/image1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        </t>\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"object.websiteshareurl\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">Visualitza el contingut</a>\n"
+"                        </div>\n"
+"                        Gaudiu d'aquest contingut exclusiu!\n"
+"                        <t t-if=\"user.signature\">\n"
+"                            <br/>\n"
+"                            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"                        </t>\n"
+"                    </p>\n"
+"                </div>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
 msgid "<i class=\"fa fa-arrow-right me-1\"/>All Courses"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right me-1\"/>Tots els cursos"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -335,17 +394,19 @@ msgid ""
 "<i class=\"fa fa-bars\"/><span class=\"d-none d-md-inline-block "
 "ms-1\">Lessons</span>"
 msgstr ""
+"<i class=\"fa fa-bars\"/><span class=\"d-none d-md-inline-block "
+"ms-1\">Lliçons</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
 msgid "<i class=\"fa fa-check me-1\"/>Completed"
-msgstr ""
+msgstr "<i class=\"fa fa-check me-1\"/>completat"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 msgid "<i class=\"fa fa-check\"/> Completed"
-msgstr ""
+msgstr "<i class=\"fa fa-check\"/> completat"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -353,21 +414,24 @@ msgid ""
 "<i class=\"fa fa-chevron-left me-2\"/> <span class=\"d-none d-sm-inline-"
 "block\">Prev</span>"
 msgstr ""
+"<i class=\"fa fa-chevron-left me-2\"/> <span class=\"d-none d-sm-inline-"
+"block\">Prev</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "<i class=\"fa fa-circle-o-notch fa-spin me-2\"/><b>Loading...</b>"
 msgstr ""
+"<i class=\"fa fa-circle-o-notch fa-spin me-2\"/><b>S'està carregant...</b>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_embed
 msgid "<i class=\"fa fa-clipboard\"/> Copy Embed Code"
-msgstr ""
+msgstr "<i class=\"fa fa-clipboard\"/> Copia el codi incrustat"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_share_link
 msgid "<i class=\"fa fa-clipboard\"/> Copy Link"
-msgstr ""
+msgstr "<i class=\"fa fa-clipboard\"/> Copia l'enllaç"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
@@ -375,11 +439,13 @@ msgid ""
 "<i class=\"fa fa-clock-o me-2\" aria-label=\"Duration\" role=\"img\" "
 "title=\"Duration\"/>"
 msgstr ""
+"<i class=\"fa fa-clock-o me-2\" aria-label=\"Duration\" role=\"img\" "
+"title=\"Duration\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "<i class=\"fa fa-cloud-upload me-1\"/>Add Content"
-msgstr ""
+msgstr "<i class=\"fa fa-cloud-upload me-1\"/>Afegeix contingut"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -392,6 +458,8 @@ msgid ""
 "<i class=\"fa fa-desktop me-2\"/>\n"
 "                <span class=\"d-none d-sm-inline-block\">Fullscreen</span>"
 msgstr ""
+"<i class=\"fa fa-desktop me-2\"/>\n"
+"                <span class=\"d-none d-sm-inline-block\">Pantalla completa</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
@@ -401,7 +469,7 @@ msgstr "<i class=\"fa fa-envelope\"/> Enviar correu"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "<i class=\"fa fa-eraser me-1\"/>Clear filters"
-msgstr ""
+msgstr "<i class=\"fa fa-eraser me-1\"/>Neteja els filtres"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
@@ -420,7 +488,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
 msgid "<i class=\"fa fa-eye me-2\" aria-label=\"Views\" role=\"img\" title=\"Views\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-eye me-2\" aria-label=\"Views\" role=\"img\" title=\"Views\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
@@ -428,6 +496,8 @@ msgid ""
 "<i class=\"fa fa-file-code-o me-2\" aria-label=\"article\" role=\"img\" "
 "title=\"Article\"/>"
 msgstr ""
+"<i class=\"fa fa-file-code-o me-2\" aria-label=\"article\" role=\"img\" "
+"title=\"Article\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
@@ -435,6 +505,8 @@ msgid ""
 "<i class=\"fa fa-file-image-o me-2\" aria-label=\"Infographic\" role=\"img\""
 " title=\"Infographic\"/>"
 msgstr ""
+"<i class=\"fa fa-file-image-o me-2\" aria-label=\"Infographic\" role=\"img\""
+" title=\"Infographic\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
@@ -442,6 +514,8 @@ msgid ""
 "<i class=\"fa fa-file-pdf-o me-2\" aria-label=\"Document\" role=\"img\" "
 "title=\"Document\"/>"
 msgstr ""
+"<i class=\"fa fa-file-pdf-o me-2\" aria-label=\"Document\" role=\"img\" "
+"title=\"Document\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
@@ -449,11 +523,13 @@ msgid ""
 "<i class=\"fa fa-file-video-o me-2\" aria-label=\"Video\" role=\"img\" "
 "title=\"Video\"/>"
 msgstr ""
+"<i class=\"fa fa-file-video-o me-2\" aria-label=\"Video\" role=\"img\" "
+"title=\"Video\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
 msgid "<i class=\"fa fa-flag me-2\" aria-label=\"Quiz\" role=\"img\" title=\"Quiz\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-flag me-2\" aria-label=\"Quiz\" role=\"img\" title=\"Quiz\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training_category
@@ -463,27 +539,27 @@ msgstr "<i class=\"fa fa-flag text-warning\"/> Questionari"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen_sidebar_category
 msgid "<i class=\"fa fa-flag-checkered text-warning me-2\"/>Quiz"
-msgstr ""
+msgstr "<i class=\"fa fa-flag-checkered text-warning me-2\"/>Qüestionari"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
 msgid "<i class=\"fa fa-folder-o me-1\"/><span>Add Section</span>"
-msgstr ""
+msgstr "<i class=\"fa fa-folder-o me-1\"/><span>Afegeix una secció</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "<i class=\"fa fa-folder-o me-1\"/>Add a section"
-msgstr ""
+msgstr "<i class=\"fa fa-folder-o me-1\"/>Afegeix una secció"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_pages_kanban_view
 msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "<i class=\"fa fa-graduation-cap me-1\"/>All courses"
-msgstr ""
+msgstr "<i class=\"fa fa-graduation-cap me-1\"/>Tots els cursos"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -501,6 +577,8 @@ msgid ""
 "<i class=\"fa fa-home\"/><span class=\"d-none d-md-inline-block ms-1\">Back "
 "to course</span>"
 msgstr ""
+"<i class=\"fa fa-home\"/><span class=\"d-none d-md-inline-block ms-1\">Torna"
+" al curs</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
@@ -508,11 +586,13 @@ msgid ""
 "<i class=\"fa fa-plus me-1\"/> <span class=\"d-none d-md-inline-block\">Add "
 "Content</span>"
 msgstr ""
+"<i class=\"fa fa-plus me-1\"/> <span class=\"d-none d-md-inline-"
+"block\">Afegeix contingut</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
 msgid "<i class=\"fa fa-plus me-1\"/><span>Add Content</span>"
-msgstr ""
+msgstr "<i class=\"fa fa-plus me-1\"/><span>Afegeix contingut</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_content_quiz_add_buttons
@@ -520,6 +600,8 @@ msgid ""
 "<i class=\"fa fa-plus me-2\"/>\n"
 "            <span>Add Question</span>"
 msgstr ""
+"<i class=\"fa fa-plus me-2\"/>\n"
+"            <span>Afegeix la pregunta</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_content_quiz_add_buttons
@@ -527,6 +609,8 @@ msgid ""
 "<i class=\"fa fa-plus me-2\"/>\n"
 "            <span>Add Quiz</span>"
 msgstr ""
+"<i class=\"fa fa-plus me-2\"/>\n"
+"            <span>Afegeix un qüestionari</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
@@ -534,6 +618,8 @@ msgid ""
 "<i class=\"fa fa-question me-2\" aria-label=\"Number of Questions\" "
 "role=\"img\" title=\"Number of Questions\"/>"
 msgstr ""
+"<i class=\"fa fa-question me-2\" aria-label=\"Number of Questions\" "
+"role=\"img\" title=\"Number of Questions\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -541,6 +627,8 @@ msgid ""
 "<i class=\"fa fa-share-alt me-2\"/>\n"
 "                <span class=\"d-none d-sm-inline-block\">Share</span>"
 msgstr ""
+"<i class=\"fa fa-share-alt me-2\"/>\n"
+"                <span class=\"d-none d-sm-inline-block\">Comparteix</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -548,6 +636,8 @@ msgid ""
 "<i class=\"fa fa-share-alt\" aria-label=\"Share\" title=\"Share\"/>\n"
 "                                            Share"
 msgstr ""
+"<i class=\"fa fa-share-alt\" aria-label=\"Share\" title=\"Share\"/>\n"
+"                                            Comparteix"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
@@ -555,6 +645,8 @@ msgid ""
 "<i class=\"fa fa-share-alt\"/>\n"
 "                        <span class=\"d-none d-md-inline-block ms-2\">Share</span>"
 msgstr ""
+"<i class=\"fa fa-share-alt\"/>\n"
+"                        <span class=\"d-none d-md-inline-block ms-2\">Comparteix</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
@@ -567,6 +659,8 @@ msgid ""
 "<i class=\"fa fa-sign-out\"/><span class=\"d-none d-md-inline-block "
 "ms-1\">Exit Fullscreen</span>"
 msgstr ""
+"<i class=\"fa fa-sign-out\"/><span class=\"d-none d-md-inline-block "
+"ms-1\">Surt de la pantalla completa</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
@@ -574,6 +668,8 @@ msgid ""
 "<i class=\"fa fa-tag me-2 text-muted\"/>\n"
 "                      My Courses"
 msgstr ""
+"<i class=\"fa fa-tag me-2 text-muted\"/>\n"
+"                      Els meus cursos"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
@@ -582,6 +678,9 @@ msgid ""
 "                        Request already sent\n"
 "                    </small>"
 msgstr ""
+"<small class=\"text-success\">\n"
+"                        La petició ja s'ha enviat\n"
+"                    </small>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_main
@@ -589,6 +688,8 @@ msgid ""
 "<small><span class=\"badge rounded-pill text-bg-success fw-normal\"><i "
 "class=\"fa fa-check\"/> Completed</span></small>"
 msgstr ""
+"<small><span class=\"badge rounded-pill text-bg-success fw-normal\"><i "
+"class=\"fa fa-check\"/> Completat</span></small>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
@@ -597,6 +698,9 @@ msgid ""
 "                            <i class=\"fa fa-fw fa-flag\"/> 10 xp\n"
 "                        </span>"
 msgstr ""
+"<span class=\"badge fw-bold px-2 py-1 m-1 text-bg-warning\">\n"
+"                            <i class=\"fa fa-fw fa-flag\"/> 10 xp\n"
+"                        </span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_card
@@ -604,6 +708,8 @@ msgid ""
 "<span class=\"badge rounded-pill text-bg-success pull-right py-1 px-2\"><i "
 "class=\"fa fa-check\"/> Completed</span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-success pull-right py-1 px-2\"><i "
+"class=\"fa fa-check\"/> completat</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
@@ -611,6 +717,8 @@ msgid ""
 "<span class=\"badge text-bg-info badge-arrow-right fw-normal px-2 py-1 "
 "m-1\">New</span>"
 msgstr ""
+"<span class=\"badge text-bg-info badge-arrow-right fw-normal px-2 py-1 "
+"m-1\">Nou</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
@@ -618,6 +726,8 @@ msgid ""
 "<span class=\"badge text-bg-light badge-hide border fw-normal px-2 py-1 "
 "m-1\">Add Quiz</span>"
 msgstr ""
+"<span class=\"badge text-bg-light badge-hide border fw-normal px-2 py-1 "
+"m-1\">Afegeix un qüestionari</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
@@ -625,12 +735,16 @@ msgid ""
 "<span class=\"badge text-bg-success fw-normal px-2 py-1 "
 "m-1\"><span>Preview</span></span>"
 msgstr ""
+"<span class=\"badge text-bg-success fw-normal px-2 py-1 "
+"m-1\"><span>Previsualització</span></span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
 msgid ""
 "<span class=\"badge text-bg-success fw-normal px-2 py-1 m-1\">Preview</span>"
 msgstr ""
+"<span class=\"badge text-bg-success fw-normal px-2 py-1 "
+"m-1\">Previsualització</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
@@ -639,6 +753,9 @@ msgid ""
 "                Join this Course\n"
 "            </span>"
 msgstr ""
+"<span class=\"cta-title text_small_caps\">\n"
+"                 Uneix-te a aquest curs\n"
+"            </span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -646,6 +763,8 @@ msgid ""
 "<span class=\"d-none d-sm-inline-block\">Next</span> <i class=\"fa fa-"
 "chevron-right ms-2\"/>"
 msgstr ""
+"<span class=\"d-none d-sm-inline-block\">Següent</span> <i class=\"fa fa-"
+"chevron-right ms-2\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
@@ -659,17 +778,17 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_profile_small
 msgid "<span class=\"fw-bold text-muted me-2\">Current rank:</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold text-muted me-2\">Rànquing actual:</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_main
 msgid "<span class=\"fw-normal\">Last update:</span>"
-msgstr ""
+msgstr "<span class=\"fw-normal\">Última actualització:</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_embed
 msgid "<span class=\"input-group-text\">Start at Page</span>"
-msgstr ""
+msgstr "<span class=\"input-group-text\">Inicia a la pàgina</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
@@ -688,7 +807,7 @@ msgstr "<span class=\"o_stat_text\">Cursos</span>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "<span class=\"o_stat_text\">Embed Views</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Visualitzacions incrustades</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_card_information_arrow
@@ -712,16 +831,19 @@ msgid ""
 "                            Additional Resources\n"
 "                        </span>"
 msgstr ""
+"<span class=\"text-muted fw-bold me-3\">\n"
+"                            Recursos addicionals\n"
+"                        </span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "<span class=\"text-muted fw-bold me-3\">External sources</span>"
-msgstr ""
+msgstr "<span class=\"text-muted fw-bold me-3\">fonts externes</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "<span class=\"text-muted fw-bold me-3\">Rating</span>"
-msgstr ""
+msgstr "<span class=\"text-muted fw-bold me-3\">Valoració</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
@@ -741,7 +863,7 @@ msgstr "<span class=\"text-muted\">Parts de l'informática</span>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 msgid "<span class=\"text-muted\">Published Contents</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Continguts publicats</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -751,6 +873,10 @@ msgid ""
 "                                        <span id=\"next\" class=\"mx-1 mx-sm-2\" title=\"Next slide\" aria-label=\"Next slide\" role=\"button\"><i class=\"fa fa-arrow-circle-right\"/></span>\n"
 "                                        <span id=\"last\" class=\"mx-1 mx-sm-2\" title=\"Last slide\" aria-label=\"Last slide\" role=\"button\"><i class=\"fa fa-step-forward\"/></span>"
 msgstr ""
+"<span id=\"first\" class=\"me-1 me-sm-2\" title=\"First slide\" aria-label=\"First slide\" role=\"button\"><i class=\"fa fa-step-backward\"/></span>\n"
+"                                        <span id=\"previous\" class=\"mx-1 mx-sm-2\" title=\"Previous slide\" aria-label=\"Previous slide\" role=\"button\"><i class=\"fa fa-arrow-circle-left\"/></span>\n"
+"                                        <span id=\"next\" class=\"mx-1 mx-sm-2\" title=\"Next slide\" aria-label=\"Next slide\" role=\"button\"><i class=\"fa fa-arrow-circle-right\"/></span>\n"
+"                                        <span id=\"last\" class=\"mx-1 mx-sm-2\" title=\"Last slide\" aria-label=\"Last slide\" role=\"button\"><i class=\"fa fa-step-forward\"/></span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -759,6 +885,9 @@ msgid ""
 "                                            <i class=\"fa fa-arrows-alt\"/>\n"
 "                                        </span>"
 msgstr ""
+"<span id=\"fullscreen\" class=\"ms-1 ms-sm-2\" title=\"View fullscreen\" aria-label=\"Fullscreen\" role=\"button\">\n"
+"                                            <i class=\"fa fa-arrows-alt\"/>\n"
+"                                        </span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -770,6 +899,12 @@ msgid ""
 "                                            <i class=\"fa fa-search-plus\"/>\n"
 "                                        </span>"
 msgstr ""
+"<span id=\"zoomout\" class=\"d-none d-sm-inline ms-2 me-2\" title=\"Zoom out\" aria-label=\"Zoom out\" role=\"button\">\n"
+"                                            <i class=\"fa fa-search-minus\"/>\n"
+"                                        </span>\n"
+"                                        <span id=\"zoomin\" class=\"d-none d-sm-inline\" title=\"Zoom in\" aria-label=\"Zoom in\" role=\"button\">\n"
+"                                            <i class=\"fa fa-search-plus\"/>\n"
+"                                        </span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
@@ -811,6 +946,7 @@ msgstr "<span>Preguntar la pregunta correcte</span>"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "<span>Content only accessible to course members.</span>"
 msgstr ""
+"<span>El contingut només és accessible per als membres del curs.</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
@@ -841,23 +977,23 @@ msgstr "<span>XP</span>"
 #: model_terms:ir.actions.act_window,help:website_slides.slide_channel_action_overview
 #: model_terms:ir.actions.act_window,help:website_slides.slide_channel_action_report
 msgid "<strong>Create a course</strong>"
-msgstr ""
+msgstr "<strong>Crea un curs</strong>"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_slide_partner_action_from_slide
 msgid "<strong>No Attendee Yet!</strong>"
-msgstr ""
+msgstr "<strong>Encara no hi ha assistents!</strong>"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_channel_partner_action
 #: model_terms:ir.actions.act_window,help:website_slides.slide_channel_partner_action_report
 msgid "<strong>No Attendees Yet!</strong>"
-msgstr ""
+msgstr "<strong>Encara no hi ha assistents!</strong>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "<strong>Sharing is caring!</strong> Email(s) sent."
-msgstr ""
+msgstr "<strong>Compartir és important!</strong> Correus electrònics enviats."
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_2_1
@@ -898,22 +1034,22 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_channel_partner_channel_partner_uniq
 msgid "A partner membership to a channel must be unique!"
-msgstr ""
+msgstr "La pertinença d'un soci a un canal ha de ser única!"
 
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_slide_partner_slide_partner_uniq
 msgid "A partner membership to a slide must be unique!"
-msgstr ""
+msgstr "La pertinença d'un soci a una diapositiva ha de ser única!"
 
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_slide_resource_check_file_type
 msgid "A resource of type file cannot contain a link."
-msgstr ""
+msgstr "Un recurs del tipus de fitxer no pot contenir un enllaç."
 
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_slide_resource_check_url
 msgid "A resource of type url must contain a link."
-msgstr ""
+msgstr "Un recurs del tipus URL ha de contenir un enllaç."
 
 #. module: website_slides
 #: model:slide.answer,text_value:website_slides.slide_slide_demo_0_4_question_1_0
@@ -923,7 +1059,7 @@ msgstr "Una pala"
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_slide_exclusion_html_content_and_url
 msgid "A slide is either filled with a url or HTML content. Not both."
-msgstr ""
+msgstr "Una diapositiva s'omple amb un URL o contingut HTML. No tots dos."
 
 #. module: website_slides
 #: model:slide.answer,text_value:website_slides.slide_slide_demo_0_4_question_1_1
@@ -1008,12 +1144,12 @@ msgstr "Permisos d'accés"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_partner_view_tree
 msgid "Accessed on"
-msgstr ""
+msgstr "Accedit el"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.snippet_options
 msgid "Achievements"
-msgstr ""
+msgstr "Assoliments"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_needaction
@@ -1123,7 +1259,7 @@ msgstr "Afegir contactes existents..."
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Add your content here..."
-msgstr ""
+msgstr "Afegiu el vostre contingut aquí..."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_resource_ids
@@ -1184,6 +1320,8 @@ msgid ""
 "Allow Attendees to like and comment your content and to submit reviews on "
 "your course."
 msgstr ""
+"Permet que als assistents els agradi i comenti el contingut i els envii "
+"comentaris al curs."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_resource_downloadable
@@ -1203,7 +1341,7 @@ msgstr "Permetre classificació"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Allow Reviews"
-msgstr ""
+msgstr "Permet revisions"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__allow_comment
@@ -1279,7 +1417,7 @@ msgstr "Arxivar"
 #: code:addons/website_slides/static/src/js/slides_slide_archive.js:0
 #, python-format
 msgid "Archive Content"
-msgstr ""
+msgstr "Arxiva el contingut"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_search
@@ -1294,7 +1432,7 @@ msgstr "Arxivat"
 #: code:addons/website_slides/static/src/xml/slide_management.xml:0
 #, python-format
 msgid "Are you sure you want to archive this content ?"
-msgstr ""
+msgstr "Segur que voleu arxivar aquest contingut?"
 
 #. module: website_slides
 #. openerp-web
@@ -1392,7 +1530,7 @@ msgstr "Valoració mitjana"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree_report
 msgid "Average Review"
-msgstr ""
+msgstr "Revisió mitjana"
 
 #. module: website_slides
 #. openerp-web
@@ -1407,7 +1545,7 @@ msgstr "Enrere"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_background_image_url
 msgid "Background image URL"
-msgstr ""
+msgstr "URL de la imatge de fons"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_achievements_small
@@ -1444,17 +1582,17 @@ msgstr "Pot Comentar"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__can_edit_body
 msgid "Can Edit Body"
-msgstr "Pot Editar el Cos"
+msgstr "Pot editar el cos del email"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__can_self_mark_completed
 msgid "Can Mark Completed"
-msgstr ""
+msgstr "Pot marcar com a completat"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__can_self_mark_uncompleted
 msgid "Can Mark Uncompleted"
-msgstr ""
+msgstr "Pot marcar com a no completat"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_publish
@@ -1484,7 +1622,7 @@ msgstr "Pot votar"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_sidebar_done_button
 #, python-format
 msgid "Can not be marked as done"
-msgstr ""
+msgstr "No es pot marcar com a fet"
 
 #. module: website_slides
 #. openerp-web
@@ -1492,7 +1630,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_sidebar_done_button
 #, python-format
 msgid "Can not be marked as not done"
-msgstr ""
+msgstr "No es pot marcar com a no fet"
 
 #. module: website_slides
 #. openerp-web
@@ -1581,12 +1719,12 @@ msgstr "Membre del canal"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__share_channel_template_id
 msgid "Channel Share Template"
-msgstr ""
+msgstr "Plantilla de compartició de canals"
 
 #. module: website_slides
 #: model:mail.template,name:website_slides.mail_template_channel_shared
 msgid "Channel Shared"
-msgstr ""
+msgstr "Canal compartit"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__channel_type
@@ -1655,7 +1793,7 @@ msgstr "Tria un <b>fitxer</b> del teu equip."
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Choose a PDF"
-msgstr ""
+msgstr "Trieu un PDF"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_form_add
@@ -1667,12 +1805,12 @@ msgstr "Trieu una disposició"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Choose an Image"
-msgstr ""
+msgstr "Trieu una imatge"
 
 #. module: website_slides
 #: model:slide.channel,name:website_slides.slide_channel_demo_3_furn0
 msgid "Choose your wood !"
-msgstr "Tria el teu fusta!"
+msgstr "Tria la teva fusta !"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
@@ -1698,6 +1836,8 @@ msgid ""
 "Click on the \"Edit\" button in the top corner of the screen to edit your "
 "slide content."
 msgstr ""
+"Feu clic al botó «Modificar» de la cantonada superior de la pantalla per a "
+"editar el contingut de la diapositiva."
 
 #. module: website_slides
 #. openerp-web
@@ -1742,11 +1882,13 @@ msgstr "Colorit"
 #: model_terms:ir.actions.act_window,help:website_slides.rating_rating_action_slide_channel
 msgid "Come back later to check the feedbacks given by your Attendees."
 msgstr ""
+"Torneu més tard per comprovar els comentaris donats pels vostres assistents."
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_question_action_report
 msgid "Come back later to oversee how well your Attendees are doing."
 msgstr ""
+"Torna més tard per supervisar com de bé estan fent els teus assistents."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__comment
@@ -1756,7 +1898,7 @@ msgstr "Comentari"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Commenting is not enabled on this course."
-msgstr ""
+msgstr "Els comentaris no estan habilitats en aquest curs."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -1780,6 +1922,8 @@ msgid ""
 "Common tasks for a computer scientist is asking the right questions and "
 "answering questions..."
 msgstr ""
+"Tasques comunes per a un informàtic és fer les preguntes correctes i "
+"respondre preguntes..."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -1845,7 +1989,7 @@ msgstr "Finalització"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__completed_template_id
 msgid "Completion Notification"
-msgstr ""
+msgstr "Notificació de compleció"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
@@ -1870,7 +2014,7 @@ msgstr "Configuració"
 #. module: website_slides
 #: model:mail.template,subject:website_slides.mail_template_channel_completed
 msgid "Congratulations! You completed {{ object.channel_id.name }}"
-msgstr ""
+msgstr "Felicitats! Heu completat {{ object.channelid.name }}"
 
 #. module: website_slides
 #. openerp-web
@@ -1995,6 +2139,8 @@ msgid ""
 "Content are the lessons that compose a course\n"
 "                    <br>and can be of different types (presentations, documents, videos, ...)."
 msgstr ""
+"El contingut són les lliçons que componen un curs\n"
+"                    <br>i pot ser de diferents tipus (presentacions, documents, vídeos...)."
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.slide_slide_action
@@ -2055,6 +2201,8 @@ msgid ""
 "Could not find your video. Please check if your link is correct and if the "
 "video can be accessed."
 msgstr ""
+"No s'ha pogut trobar el vídeo. Comproveu si l'enllaç és correcte i si es pot"
+" accedir al vídeo."
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_channel
@@ -2094,7 +2242,7 @@ msgstr "Nom del curs"
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.action_slide_channel_pages_list
 msgid "Course Pages"
-msgstr ""
+msgstr "Pàgines del curs"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_view_form
@@ -2128,7 +2276,7 @@ msgstr "Títol del curs"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree
 msgid "Course Type"
-msgstr ""
+msgstr "Tipus de curs"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__karma_gen_channel_finish
@@ -2179,27 +2327,29 @@ msgstr "Cursos"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.snippet_options
 msgid "Courses Page"
-msgstr ""
+msgstr "Pàgina de cursos"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__cover_properties
 msgid "Cover Properties"
-msgstr "Propietats de la portada"
+msgstr "Propietats de la coberta"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.action_slide_tag
 msgid "Create a Content Tag"
-msgstr ""
+msgstr "Crea una etiqueta de contingut"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_channel_tag_group_action
 msgid "Create a Course Group"
-msgstr ""
+msgstr "Crea un grup de cursos"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Create a community and let Attendees answer each others' questions."
 msgstr ""
+"Creeu una comunitat i deixeu que els assistents responguin les preguntes "
+"dels altres."
 
 #. module: website_slides
 #. openerp-web
@@ -2255,11 +2405,13 @@ msgstr "Data de creació"
 #: model:ir.model.fields,help:website_slides.field_slide_slide__html_content
 msgid "Custom HTML content for slides of category 'Article'."
 msgstr ""
+"Contingut HTML personalitzat per a les diapositives de la categoria "
+"«Article»."
 
 #. module: website_slides
 #: model:slide.channel,name:website_slides.slide_channel_demo_6_furn3
 msgid "DIY Furniture"
-msgstr "Mobles de bricolatge"
+msgstr "Mobles DIY"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_searchbar_input_snippet_options
@@ -2280,12 +2432,13 @@ msgstr "Defineix la visibilitat del repte mitjançant els menús"
 #: model:ir.model.fields,help:website_slides.field_slide_channel__enroll
 #: model:ir.model.fields,help:website_slides.field_slide_channel_partner__channel_enroll
 msgid "Defines how people can enroll to your Course."
-msgstr ""
+msgstr "Defineix com la gent pot inscriure's al vostre curs."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__promote_strategy
 msgid "Defines the content that will be promoted on the course home page"
 msgstr ""
+"Defineix el contingut que es promocionarà a la pàgina d'inici del curs"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__publish_template_id
@@ -2293,6 +2446,8 @@ msgid ""
 "Defines the email your Attendees will receive each time you upload new "
 "content."
 msgstr ""
+"Defineix el correu electrònic que rebran els assistents cada vegada que "
+"pugeu contingut nou."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__completed_template_id
@@ -2300,12 +2455,14 @@ msgid ""
 "Defines the email your Attendees will receive once they reach the end of "
 "your course."
 msgstr ""
+"Defineix el correu electrònic que rebran els assistents un cop arribin al "
+"final del curs."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__visibility
 #: model:ir.model.fields,help:website_slides.field_slide_channel_partner__channel_visibility
 msgid "Defines who can access your courses and their content."
-msgstr ""
+msgstr "Defineix qui pot accedir als vostres cursos i el seu contingut."
 
 #. module: website_slides
 #. openerp-web
@@ -2368,7 +2525,7 @@ msgstr "Descobreix més"
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Dislike"
-msgstr ""
+msgstr "Desagrada"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__dislikes
@@ -2452,7 +2609,7 @@ msgstr "Document"
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__doc
 msgid "Document (Word, Google Doc, ...)"
-msgstr ""
+msgstr "Document (Word, Google Doc, ...)"
 
 #. module: website_slides
 #. openerp-web
@@ -2460,14 +2617,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__document_google_url
 #, python-format
 msgid "Document Link"
-msgstr ""
+msgstr "Enllaç al document"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Document Source"
-msgstr ""
+msgstr "Origen del document"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__channel_type__documentation
@@ -2546,12 +2703,12 @@ msgstr "Durada"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Earn more Karma to leave a comment."
-msgstr ""
+msgstr "Aneu més Karma per a deixar un comentari."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 msgid "Edit"
-msgstr "Edita"
+msgstr "Modificar"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
@@ -2561,22 +2718,22 @@ msgstr "Editar el backend"
 #. module: website_slides
 #: model:mail.template,name:website_slides.mail_template_channel_completed
 msgid "Elearning: Completed Course"
-msgstr ""
+msgstr "Elearning: Curs completat"
 
 #. module: website_slides
 #: model:mail.template,name:website_slides.mail_template_slide_channel_invite
 msgid "Elearning: Course Invite"
-msgstr ""
+msgstr "Elearning: Invitació al curs"
 
 #. module: website_slides
 #: model:mail.template,name:website_slides.slide_template_shared
 msgid "Elearning: Course Share"
-msgstr ""
+msgstr "Elearning: Curs compartit"
 
 #. module: website_slides
 #: model:mail.template,name:website_slides.slide_template_published
 msgid "Elearning: New Course Content Notification"
-msgstr ""
+msgstr "Elearning: Notificació de contingut del curs nou"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__partner_email
@@ -2587,7 +2744,7 @@ msgstr "Correu electrònic"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__share_channel_template_id
 msgid "Email template used when sharing a channel"
-msgstr ""
+msgstr "Plantilla de correu electrònic utilitzada en compartir un canal"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__share_slide_template_id
@@ -2600,7 +2757,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
 #, python-format
 msgid "Email(s) sent."
-msgstr ""
+msgstr "S'han enviat els correus electrònics."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__embed_code
@@ -2611,12 +2768,12 @@ msgstr "Codi insertat"
 #: model:ir.actions.act_window,name:website_slides.slide_embed_action
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_embed_view_tree
 msgid "Embed Views"
-msgstr ""
+msgstr "Incrusta vistes"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_embed
 msgid "Embed in another Website"
-msgstr ""
+msgstr "Incrusta en un altre lloc web"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_embed
@@ -2675,12 +2832,14 @@ msgstr "Introduïu la vostra <b>Pregunta</b>. Sigues clar i concís."
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Estimated Completion Time"
-msgstr ""
+msgstr "Temps estimat de compleció"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Evaluate the knowledge of your Attendees and certify their skills."
 msgstr ""
+"Avalua els coneixements dels vostres assistents i certifica les seves "
+"habilitats."
 
 #. module: website_slides
 #: model:slide.tag,name:website_slides.slide_tag_demo_exercises
@@ -2690,22 +2849,22 @@ msgstr "exercicis"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__embed_code_external
 msgid "External Embed Code"
-msgstr ""
+msgstr "Codi extern incrustat"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__embed_ids
 msgid "External Slide Embeds"
-msgstr ""
+msgstr "Incrustacions de diapositives externes"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__url
 msgid "External URL"
-msgstr ""
+msgstr "URL externa"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_embed_view_tree
 msgid "External Website"
-msgstr ""
+msgstr "Lloc web extern"
 
 #. module: website_slides
 #. openerp-web
@@ -2713,12 +2872,12 @@ msgstr ""
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
 msgid "Failed to install \"%s\"."
-msgstr ""
+msgstr "No s'ha pogut instal·lar «%s»."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__promote_strategy
 msgid "Featured Content"
-msgstr ""
+msgstr "Contingut destacat"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__binary_content
@@ -2742,7 +2901,7 @@ msgstr "L'arxiu és massa gran. L'arxiu no pot excedir els 25MB"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "Filter &amp; order"
-msgstr ""
+msgstr "Filtre i ordre"
 
 #. module: website_slides
 #. openerp-web
@@ -2750,16 +2909,17 @@ msgstr ""
 #, python-format
 msgid "Finally you can click here to enjoy your content in fullscreen"
 msgstr ""
+"Finalment podeu fer clic aquí per gaudir del contingut a pantalla completa"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Finish Course"
-msgstr ""
+msgstr "Finalitza el curs"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "First Try"
-msgstr ""
+msgstr "Primer intent"
 
 #. module: website_slides
 #. openerp-web
@@ -2769,34 +2929,36 @@ msgid ""
 "First, create your lesson, then edit it with the website builder. You'll be "
 "able to drop building blocks on your page and edit them."
 msgstr ""
+"Primer, creeu la lliçó i després editeu-la amb el constructor del lloc web. "
+"Podreu deixar anar blocs de construcció a la pàgina i editar-los."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid "First, let's add a <b>Document</b>. It has to be a .pdf file."
-msgstr ""
+msgstr "Primer, afegirem un document <b></b>. Ha de ser un fitxer .pdf."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "First, upload the file on your Google Drive account."
-msgstr ""
+msgstr "Primer, carregueu el fitxer al vostre compte de Google Drive."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "First, upload your videos on Vimeo and mark them as"
-msgstr ""
+msgstr "Primer, carregueu els vostres vídeos al Vimeo i marqueu-los com a"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "First, upload your videos on YouTube and mark them as"
-msgstr ""
+msgstr "Primer, carregueu els vostres vídeos a YouTube i marqueu-los com a"
 
 #. module: website_slides
 #: code:addons/website_slides/models/res_partner.py:0
@@ -2804,7 +2966,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
 #, python-format
 msgid "Followed Courses"
-msgstr ""
+msgstr "Cursos seguits"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_follower_ids
@@ -2827,12 +2989,13 @@ msgstr "Icona Font Awesome p.e. fa-tasks"
 #: model:slide.slide,name:website_slides.slide_slide_demo_4_0
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_4_0
 msgid "Foreword"
-msgstr ""
+msgstr "Prefaci"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_4_0
 msgid "Foreword for this documentation: how to use it, main attention points"
 msgstr ""
+"Prefaci per a aquesta documentació: com usar-la, punts d'atenció principals"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__module_website_slides_forum
@@ -2842,12 +3005,12 @@ msgstr "Fòrum"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Fourth Try & More"
-msgstr ""
+msgstr "Quart intent més"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_5_2
 msgid "From a piece of wood to a fully functional furniture, step by step."
-msgstr ""
+msgstr "D'un tros de fusta a un moble completament funcional, pas a pas."
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:0
@@ -2857,22 +3020,22 @@ msgstr ""
 #, python-format
 msgid ""
 "From here you'll be able to monitor attendees and to track their progress."
-msgstr ""
+msgstr "Des d'aquí podreu controlar els assistents i seguir el seu progrés."
 
 #. module: website_slides
 #: model:slide.channel.tag,name:website_slides.slide_channel_tag_role_furniture
 msgid "Furniture Designer"
-msgstr ""
+msgstr "Dissenyador de mobles"
 
 #. module: website_slides
 #: model:slide.channel,name:website_slides.slide_channel_demo_4_furn1
 msgid "Furniture Technical Specifications"
-msgstr ""
+msgstr "Especificacions tècniques de mobiliari"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_4_12
 msgid "GLork"
-msgstr ""
+msgstr "GLork"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_gamification_challenge
@@ -2882,18 +3045,18 @@ msgstr "Repte de gamificació"
 #. module: website_slides
 #: model:slide.channel.tag,name:website_slides.slide_channel_tag_role_gardener
 msgid "Gardener"
-msgstr ""
+msgstr "Jardiner"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_0_0
 msgid "Gardening: The Know-How"
-msgstr ""
+msgstr "Jardineria: El Know-How"
 
 #. module: website_slides
 #: model:gamification.challenge,name:website_slides.badge_data_certification_challenge
 #: model_terms:gamification.badge,description:website_slides.badge_data_certification
 msgid "Get a certification"
-msgstr ""
+msgstr "Obtenir una certificació"
 
 #. module: website_slides
 #: model:gamification.badge,name:website_slides.badge_data_register
@@ -2907,14 +3070,14 @@ msgstr "Comenceu"
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid "Give your course a helpful <b>Description</b>."
-msgstr ""
+msgstr "Doneu al vostre curs una descripció útil <b>Description</b>."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid "Give your course an engaging <b>Title</b>."
-msgstr ""
+msgstr "Doneu al vostre curs un <b>Títol</b>atractiu."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__website_slide_google_app_key
@@ -2935,12 +3098,12 @@ msgstr "Clau de l'API de Google Drive"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__google_drive_id
 msgid "Google Drive ID of the external URL"
-msgstr ""
+msgstr "ID de Google Drive de l'URL extern"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__google_drive_video
 msgid "Google Drive Video"
-msgstr ""
+msgstr "Google Drive Video"
 
 #. module: website_slides
 #. openerp-web
@@ -2952,7 +3115,7 @@ msgstr "Permís per crear"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_graph
 msgid "Graph of Contents"
-msgstr ""
+msgstr "Gràfic de continguts"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag__group_id
@@ -2980,7 +3143,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag__group_sequence
 msgid "Group sequence"
-msgstr ""
+msgstr "Seqüència de grup"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__html_content
@@ -2990,12 +3153,12 @@ msgstr "Contingut HTML"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_5_1
 msgid "Hand on !"
-msgstr ""
+msgstr "Mà en marxa!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_search
 msgid "Has Menu Entry"
-msgstr ""
+msgstr "Té entrada de menú"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__has_message
@@ -3007,7 +3170,7 @@ msgstr "Té un missatge"
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_0_3
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_1_6
 msgid "Here is How to get the Sweetest Strawberries you ever tasted!"
-msgstr ""
+msgstr "Aquí teniu com aconseguir els més dolços maduixes que mai heu tastat!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
@@ -3017,12 +3180,13 @@ msgstr "Inici"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_0_1
 msgid "Home Gardening"
-msgstr ""
+msgstr "Jardí domèstic"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_5_2
 msgid "How To Build a HIGH QUALITY Dining Table with LIMITED TOOLS"
 msgstr ""
+"Com construir una taula de menjador d'alta qualitat amb eines limitades"
 
 #. module: website_slides
 #. openerp-web
@@ -3030,66 +3194,66 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "How do I add new content?"
-msgstr ""
+msgstr "Com puc afegir contingut nou?"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_0_3
 msgid "How to Grow and Harvest The Best Strawberries | Basics"
-msgstr ""
+msgstr "Com fer créixer i collir els millors maduixes i conceptes bàsics"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_6
 msgid ""
 "How to Grow and Harvest The Best Strawberries | Gardening Tips and Tricks"
-msgstr ""
+msgstr "Com fer créixer i collir les millors maduixes i trucs de jardineria"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "How to create a Lesson as an Article?"
-msgstr ""
+msgstr "Com crear una lliçó com a article?"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_5_1
 msgid "How to find quality wood"
-msgstr ""
+msgstr "Com trobar fusta de qualitat"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_3
 msgid "How to plant a potted tree"
-msgstr ""
+msgstr "Com plantar un arbre tacat"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "How to upload your PowerPoint Presentations or Word Documents?"
-msgstr ""
+msgstr "Com pujar les presentacions de PowerPoint o Documents de Word?"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "How to upload your videos ?"
-msgstr ""
+msgstr "Com pujar els vostres vídeos?"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "How to use Google Drive?"
-msgstr ""
+msgstr "Com utilitzar Google Drive?"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_2_2
 msgid "How to wall decorating by tree planting in hanging plastic bottles."
-msgstr ""
+msgstr "Com decorar la paret plantant arbres en ampolles de plàstic penjant."
 
 #. module: website_slides
 #: model:slide.tag,name:website_slides.slide_tag_demo_howto
 msgid "HowTo"
-msgstr ""
+msgstr "Com es fa"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__id
@@ -3139,6 +3303,8 @@ msgid ""
 "If you are looking for technical specifications, have a look at this "
 "documentation."
 msgstr ""
+"Si esteu buscant especificacions tècniques, doneu un cop d'ull a aquesta "
+"documentació."
 
 #. module: website_slides
 #. openerp-web
@@ -3148,6 +3314,9 @@ msgid ""
 "If you want to be sure that attendees have understood and memorized the "
 "content, you can add a Quiz on the lesson. Click on <b>Add Quiz</b>."
 msgstr ""
+"Si voleu estar segur que els assistents han entès i memoritzat el contingut,"
+" podeu afegir un qüestionari a la lliçó. Feu clic a <b>Afegeix el "
+"qüestionari</b>."
 
 #. module: website_slides
 #. openerp-web
@@ -3157,6 +3326,8 @@ msgid ""
 "If you want to use other types of files, you may want to use an external "
 "source (Google Drive) instead."
 msgstr ""
+"Si voleu utilitzar altres tipus de fitxers, és possible que vulgueu "
+"utilitzar una font externa (Google Drive)."
 
 #. module: website_slides
 #. openerp-web
@@ -3196,7 +3367,7 @@ msgstr "Imatge 512"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_binary_content
 msgid "Image Content"
-msgstr ""
+msgstr "Contingut de la imatge"
 
 #. module: website_slides
 #. openerp-web
@@ -3204,41 +3375,41 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_google_url
 #, python-format
 msgid "Image Link"
-msgstr ""
+msgstr "Enllaç a la imatge"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Image Source"
-msgstr ""
+msgstr "Origen de la imatge"
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_1_4_question_0_1
 #: model:slide.answer,comment:website_slides.slide_slide_demo_2_0_question_0_0
 #: model:slide.answer,comment:website_slides.slide_slide_demo_2_0_question_1_0
 msgid "Incorrect !"
-msgstr ""
+msgstr "Incorrecte!"
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_0_4_question_0_1
 msgid "Incorrect ! A strawberry is not a vegetable."
-msgstr ""
+msgstr "Incorrecte! Una maduixa no és una verdura."
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_0_4_question_0_2
 msgid "Incorrect ! A table is a piece of furniture."
-msgstr ""
+msgstr "Incorrecte! Una taula és un moble."
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_0_4_question_1_1
 msgid "Incorrect ! Good luck digging a hole with a spoon..."
-msgstr ""
+msgstr "Incorrecte! Bona sort excavant un forat amb una cullera..."
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_1_4_question_1_2
 msgid "Incorrect ! Seriously ?"
-msgstr ""
+msgstr "Incorrecte! De debò?"
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_5_3_question_0_1
@@ -3248,12 +3419,12 @@ msgstr "Incorrecte! Millor que ho penseu dos cops..."
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_1_4_question_1_1
 msgid "Incorrect ! You really should read it."
-msgstr ""
+msgstr "Incorrecte! Hauries de llegir-la."
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_2_0_question_1_2
 msgid "Incorrect ! of course not ..."
-msgstr ""
+msgstr "Incorrecte! Per descomptat que no..."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_infographic
@@ -3272,34 +3443,34 @@ msgstr "Instal·lar "
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Install the"
-msgstr ""
+msgstr "Instal·la el"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
 msgid "Installing \"%s\"."
-msgstr ""
+msgstr "S'està instal·lant «%s»."
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_1_0
 msgid "Interesting Facts"
-msgstr ""
+msgstr "Fets interessants"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_1
 msgid "Interesting Tree Facts"
-msgstr ""
+msgstr "Fets d'arbre interessants"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_0_1
 msgid "Interesting information about home gardening. Keep it close !"
-msgstr ""
+msgstr "Informació interessant sobre la jardineria. Manteniu-lo a prop!"
 
 #. module: website_slides
 #: model:slide.channel.tag,name:website_slides.slide_channel_tag_level_intermediate
 msgid "Intermediate"
-msgstr ""
+msgstr "Intermedi"
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:0
@@ -3328,7 +3499,7 @@ msgstr "Invitar"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__completed
 msgid "Is Completed"
-msgstr ""
+msgstr "S'ha completat"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__is_mail_template_editor
@@ -3350,7 +3521,7 @@ msgstr "És membre"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__is_new_slide
 msgid "Is New Slide"
-msgstr ""
+msgstr "És una diapositiva nova"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__is_published
@@ -3362,12 +3533,12 @@ msgstr "Està publicat"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__is_category
 msgid "Is a category"
-msgstr ""
+msgstr "És una categoria"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__is_correct
 msgid "Is correct answer"
-msgstr ""
+msgstr "És la resposta correcta"
 
 #. module: website_slides
 #. openerp-web
@@ -3377,7 +3548,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "It should look similar to"
-msgstr ""
+msgstr "Hauria de ser similar a"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_1_3
@@ -3385,13 +3556,15 @@ msgid ""
 "Jim and Todd plant a potted tree for a customer of Knecht's Nurseries and "
 "Landscaping. Narrated by Leif Knecht, owner."
 msgstr ""
+"Jim i Todd planten un arbre per a un client de les infermeries de Knecht i "
+"Landscaping. Narrat per Leif Knecht, propietari."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
 #, python-format
 msgid "Join & Submit"
-msgstr ""
+msgstr "Uneix-te a l'enviament"
 
 #. module: website_slides
 #. openerp-web
@@ -3399,7 +3572,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
 #, python-format
 msgid "Join the Course"
-msgstr ""
+msgstr "Uneix-te al curs"
 
 #. module: website_slides
 #. openerp-web
@@ -3407,6 +3580,7 @@ msgstr ""
 #, python-format
 msgid "Join the course to take the quiz and verify your answers!"
 msgstr ""
+"Uniu-vos al curs per fer el qüestionari i verificar les vostres respostes!"
 
 #. module: website_slides
 #. openerp-web
@@ -3414,22 +3588,22 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.join_course_link
 #, python-format
 msgid "Join this Course"
-msgstr ""
+msgstr "Uneix-te a aquest curs"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_1_2
 msgid "Just some basics Energy Efficiency Facts."
-msgstr ""
+msgstr "Només alguns fonaments d'eficiència energètica."
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_1_1
 msgid "Just some basics Interesting Tree Facts."
-msgstr ""
+msgstr "Només alguns fets bàsics d'arbre interessant."
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_1_0
 msgid "Just some basics Tree Infographic."
-msgstr ""
+msgstr "Només alguns elements bàsics de l'arbre Infogràfic."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -3440,23 +3614,25 @@ msgstr "Karma"
 #: model:ir.model.fields,help:website_slides.field_slide_channel__karma_slide_comment
 msgid "Karma needed to add a comment on a slide of this course"
 msgstr ""
+"Cal que el Karma afegeixi un comentari a una diapositiva d'aquest curs"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__karma_review
 msgid "Karma needed to add a review on the course"
-msgstr ""
+msgstr "El Karma necessita afegir una revisió al curs"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__karma_slide_vote
 msgid "Karma needed to like/dislike a slide of this course."
 msgstr ""
+"El Karma necessitava agradar/desagradar una diapositiva d'aquest curs."
 
 #. module: website_slides
 #: model:gamification.badge,name:website_slides.badge_data_profile
 #: model:gamification.challenge.line,name:website_slides.badge_data_profile_challenge_line_0
 #: model:gamification.goal.definition,name:website_slides.badge_data_profile_goal
 msgid "Know yourself"
-msgstr ""
+msgstr "Coneix-te"
 
 #. module: website_slides
 #: model_terms:slide.channel,description:website_slides.slide_channel_demo_3_furn0
@@ -3465,6 +3641,8 @@ msgid ""
 "Knowing which kind of wood to use depending on your application is important. In this course you\n"
 "will learn the basics of wood characteristics."
 msgstr ""
+"Conèixer quin tipus de fusta utilitzar depenent de la vostra aplicació és important. En aquest curs\n"
+"aprendrem els fonaments de les característiques de la fusta."
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_2_3
@@ -3472,6 +3650,8 @@ msgid ""
 "Knowing wood characteristics is a requirement in order to know which kind of"
 " wood to use in a given situation."
 msgstr ""
+"Conèixer les característiques de la fusta és un requisit per saber quin "
+"tipus de fusta utilitzar en una situació donada."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__lang
@@ -3481,7 +3661,7 @@ msgstr "Idioma"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
 msgid "Last Action On"
-msgstr ""
+msgstr "Última acció activada"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer____last_update
@@ -3540,7 +3720,7 @@ msgstr "Última actualització el"
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__promote_strategy__latest
 msgid "Latest Created"
-msgstr ""
+msgstr "Última creació"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.toggle_latest_achievements
@@ -3560,17 +3740,19 @@ msgid ""
 "Learn how to take care of your favorite trees. Learn when to plant, how to "
 "manage potted trees, ..."
 msgstr ""
+"Apreneu a cuidar dels vostres arbres preferits. Apreneu quan plantar, com "
+"gestionar els arbres en testa..."
 
 #. module: website_slides
 #: model_terms:slide.channel,description:website_slides.slide_channel_demo_0_gard_0
 #: model_terms:slide.channel,description_short:website_slides.slide_channel_demo_0_gard_0
 msgid "Learn the basics of gardening !"
-msgstr ""
+msgstr "Apreneu els fonaments de la jardineria!"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_5_1
 msgid "Learn to identify quality wood in order to create solid furnitures."
-msgstr ""
+msgstr "Aprendre a identificar fusta de qualitat per crear mobles sòlids."
 
 #. module: website_slides
 #. openerp-web
@@ -3578,34 +3760,34 @@ msgstr ""
 #: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
 #, python-format
 msgid "Leave the course"
-msgstr ""
+msgstr "Surt del curs"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Lesson"
-msgstr ""
+msgstr "Lliçó"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Lesson Nav"
-msgstr ""
+msgstr "Nav de la lliçó"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__karma_gen_slide_vote
 msgid "Lesson voted"
-msgstr ""
+msgstr "Lliçó votada"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 msgid "Lessons"
-msgstr ""
+msgstr "Lliçons"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_quiz_finish.js:0
 #, python-format
 msgid "Level up!"
-msgstr ""
+msgstr "Aixeca't!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
@@ -3633,24 +3815,26 @@ msgstr "Enllaç"
 msgid ""
 "Link of the document (we currently only support Google Drive as source)"
 msgstr ""
+"Enllaç del document (actualment només admetem Google Drive com a origen)"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__image_google_url
 msgid "Link of the image (we currently only support Google Drive as source)"
 msgstr ""
+"Enllaç de la imatge (actualment només admetem Google Drive com a origen)"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__video_url
 msgid ""
 "Link of the video (we support YouTube, Google Drive and Vimeo as sources)"
-msgstr ""
+msgstr "Enllaç del vídeo (admetem YouTube, Google Drive i Vimeo com a fonts)"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Loading content..."
-msgstr ""
+msgstr "S'està carregant el contingut..."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__template_id
@@ -3671,7 +3855,7 @@ msgstr "Adjunt principal"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_2_0
 msgid "Main Trees Categories"
-msgstr ""
+msgstr "Categories dels arbres principals"
 
 #. module: website_slides
 #: model:res.groups,name:website_slides.group_website_slides_manager
@@ -3689,7 +3873,7 @@ msgstr "Marcar fet"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 #, python-format
 msgid "Mark To Do"
-msgstr ""
+msgstr "Marca per fer"
 
 #. module: website_slides
 #. openerp-web
@@ -3705,14 +3889,14 @@ msgstr "Marcar com fet"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_sidebar_done_button
 #, python-format
 msgid "Mark as not done"
-msgstr ""
+msgstr "Marca com a no fet"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid "Mark the correct answer by checking the <b>correct</b> mark."
-msgstr ""
+msgstr "Marca la resposta correcta comprovant la marca <b>correcta</b>."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__partner_ids
@@ -3723,29 +3907,31 @@ msgstr "Membres"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__channel_partner_ids
 msgid "Members Information"
-msgstr ""
+msgstr "Informació dels membres"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__visibility__members
 msgid "Members Only"
-msgstr ""
+msgstr "Només membres"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Members Views"
-msgstr ""
+msgstr "Vistes de membres"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__enroll_group_ids
 msgid ""
 "Members of those groups are automatically added as members of the channel."
 msgstr ""
+"Els membres d'aquests grups s'afegeixen automàticament com a membres del "
+"canal."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_tree
 msgid "Menu Entry"
-msgstr ""
+msgstr "Entrada del menú"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_error
@@ -3756,7 +3942,7 @@ msgstr "Error d'entrega del missatge"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__enroll_msg
 msgid "Message explaining the enroll process"
-msgstr ""
+msgstr "Missatge explicant el procés d'inscripció"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_ids
@@ -3767,12 +3953,12 @@ msgstr "Missatges"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_1_1
 msgid "Methods"
-msgstr ""
+msgstr "Mètodes"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_0_2
 msgid "Mighty Carrots"
-msgstr ""
+msgstr "Carrots poderosos"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_2_1
@@ -3780,6 +3966,8 @@ msgid ""
 "Mighty forest just don't appear in a few weeks. Learn how time made our "
 "forests mighty and mysterious."
 msgstr ""
+"El bosc no apareix d'aquí a unes setmanes. Apreneu com el temps va fer els "
+"nostres boscos poderosos i misteriosos."
 
 #. module: website_slides
 #. openerp-web
@@ -3792,7 +3980,7 @@ msgstr "Minuts"
 #: code:addons/website_slides/controllers/main.py:0
 #, python-format
 msgid "Missing \"Tag Group\" for creating a new \"Tag\"."
-msgstr ""
+msgstr "Falta «Tag Group» per a crear una nova «Tag»."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
@@ -3821,7 +4009,7 @@ msgstr "Més valorat"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "Most popular courses"
-msgstr ""
+msgstr "Cursos més populars"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__my_activity_date_deadline
@@ -3831,17 +4019,17 @@ msgstr "Venciment de l'activitat"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "My Content"
-msgstr ""
+msgstr "El meu contingut"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "My Courses"
-msgstr ""
+msgstr "Els meus cursos"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "My courses"
-msgstr ""
+msgstr "Els meus cursos"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__name
@@ -3866,17 +4054,17 @@ msgstr "Nou"
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
 msgid "New Certification"
-msgstr ""
+msgstr "Certificació nova"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__publish_template_id
 msgid "New Content Notification"
-msgstr ""
+msgstr "Notificació de contingut nou"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.snippet_options
 msgid "New Content Ribbon"
-msgstr ""
+msgstr "Cinta de contingut nova"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.slide_channel_action_add
@@ -3887,7 +4075,7 @@ msgstr "Nou curs"
 #: model:mail.template,subject:website_slides.slide_template_published
 msgid ""
 "New {{ object.slide_category }} published on {{ object.channel_id.name }}"
-msgstr ""
+msgstr "{{ object.slidecategory }} nou publicat a {{ object.channelid.name }}"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -3897,7 +4085,7 @@ msgstr "El més nou"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "Newest courses"
-msgstr ""
+msgstr "Cursos més nous"
 
 #. module: website_slides
 #. openerp-web
@@ -3947,13 +4135,13 @@ msgstr "No"
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "No Attendee has completed this course yet!"
-msgstr ""
+msgstr "Encara no hi ha cap assistent que hagi completat aquest curs!"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "No Attendees Yet!"
-msgstr ""
+msgstr "Encara no hi ha assistents!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
@@ -3964,37 +4152,37 @@ msgstr "Encara no s'ha creat cap curs."
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "No Notification"
-msgstr ""
+msgstr "Sense notificació"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_question_action_report
 msgid "No Quiz data yet!"
-msgstr ""
+msgstr "Encara no hi ha dades del qüestionari!"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.rating_rating_action_slide_channel
 msgid "No Reviews yet!"
-msgstr ""
+msgstr "Encara no hi ha ressenyes!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
 msgid "No completed courses yet!"
-msgstr ""
+msgstr "Encara no hi ha cursos completats!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "No content was found using your search"
-msgstr ""
+msgstr "No s'ha trobat cap contingut mitjançant la cerca"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "No course was found matching your search"
-msgstr ""
+msgstr "No s'ha trobat cap curs que coincideixi amb la cerca"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "No course was found matching your search."
-msgstr ""
+msgstr "No s'ha trobat cap curs que coincideixi amb la cerca."
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_slide_action_report
@@ -4004,12 +4192,12 @@ msgstr "Encara no hi han dades!"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
 msgid "No followed courses yet!"
-msgstr ""
+msgstr "Encara no hi ha cursos seguits!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.toggle_leaderboard
 msgid "No leaderboard currently :("
-msgstr ""
+msgstr "Actualment no hi ha cap marcador :("
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_documentation
@@ -4029,13 +4217,13 @@ msgstr "Cap"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_pages_kanban_view
 msgid "Not Published"
-msgstr ""
+msgstr "No publicat"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid "Not enough karma to comment"
-msgstr ""
+msgstr "No hi ha prou karma per comentar"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:0
@@ -4059,12 +4247,12 @@ msgstr "Nombre d'accions"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__nbr_article
 msgid "Number of Articles"
-msgstr ""
+msgstr "Nombre d'articles"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__total_slides
 msgid "Number of Contents"
-msgstr ""
+msgstr "Nombre de continguts"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__nbr_document
@@ -4074,13 +4262,13 @@ msgstr "Nombre de Documents"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__nbr_infographic
 msgid "Number of Images"
-msgstr ""
+msgstr "Nombre d'imatges"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_quiz
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__nbr_quiz
 msgid "Number of Quizs"
-msgstr ""
+msgstr "Nombre de qüestionaris"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__nbr_video
@@ -4113,7 +4301,7 @@ msgstr "Nombre de missatges amb error d'entrega"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__questions_count
 msgid "Numbers of Questions"
-msgstr ""
+msgstr "Nombre de preguntes"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
@@ -4137,38 +4325,38 @@ msgstr "Responsable"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "On Google Drive"
-msgstr ""
+msgstr "Al Google Drive"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__enroll__invite
 msgid "On Invitation"
-msgstr ""
+msgstr "En la invitació"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "On Vimeo"
-msgstr ""
+msgstr "Sobre Vimeo"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "On YouTube"
-msgstr ""
+msgstr "Al YouTube"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid "Once you're done, don't forget to <b>Publish</b> your course."
-msgstr ""
+msgstr "Un cop hàgiu acabat, no oblideu <b>Publicar</b> el vostre curs."
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__visibility__public
 msgid "Open To All"
-msgstr ""
+msgstr "Obre a tot"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_invite__lang
@@ -4196,12 +4384,12 @@ msgstr "PDF"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__document_binary_content
 msgid "PDF Content"
-msgstr ""
+msgstr "Contingut PDF"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Paid Courses"
-msgstr ""
+msgstr "Cursos de pagament"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__partner_id
@@ -4212,7 +4400,7 @@ msgstr "Empresa"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__partner_has_new_content
 msgid "Partner Has New Content"
-msgstr ""
+msgstr "El soci té un contingut nou"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_pivot
@@ -4237,6 +4425,9 @@ msgid ""
 "Please <a href=\"/web/login?redirect=%s\">login</a> or <a "
 "href=\"/web/signup?redirect=%s\">create an account</a> to join this course"
 msgstr ""
+"Si us plau, <a href=\"/web/login?redirect=%s\">inici de sessió</a> o <a "
+"href=\"/web/signup?redirect=%s\">creï un compte</a> per unir-se a aquest "
+"curs"
 
 #. module: website_slides
 #. openerp-web
@@ -4247,6 +4438,9 @@ msgid ""
 "href=\"/web/signup?redirect=%s\">create an account</a> to vote for this "
 "lesson"
 msgstr ""
+"Si us plau <a href=\"/web/login?redirect=%s\">login</a> o <a "
+"href=\"/web/signup?redirect=%s\">create an account</a> to vote for this "
+"lesson"
 
 #. module: website_slides
 #. openerp-web
@@ -4254,6 +4448,8 @@ msgstr ""
 #, python-format
 msgid "Please <a href=\"/web/login?redirect=%s\">login</a> to join this course"
 msgstr ""
+"Si us plau <a href=\"/web/login?redirect=%s\">inicieu sessió</a> per unir-"
+"vos a aquest curs"
 
 #. module: website_slides
 #. openerp-web
@@ -4262,18 +4458,20 @@ msgstr ""
 msgid ""
 "Please <a href=\"/web/login?redirect=%s\">login</a> to vote for this lesson"
 msgstr ""
+"Si us plau <a href=\"/web/login?redirect=%s\">inicieu la sessió</a> per "
+"votar aquesta lliçó"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid "Please enter a valid Vimeo video link"
-msgstr ""
+msgstr "Introduïu un enllaç de vídeo Vimeo vàlid"
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:0
 #, python-format
 msgid "Please enter valid Google Drive Link"
-msgstr ""
+msgstr "Introduïu un enllaç vàlid de Google Drive"
 
 #. module: website_slides
 #. openerp-web
@@ -4284,7 +4482,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 #, python-format
 msgid "Please enter valid email(s)"
-msgstr ""
+msgstr "Introduïu correus electrònics vàlids"
 
 #. module: website_slides
 #. openerp-web
@@ -4302,14 +4500,14 @@ msgstr "Seleccioneu al menys un destinatari."
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Points Rewards"
-msgstr ""
+msgstr "Punts cap enrere"
 
 #. module: website_slides
 #: model:gamification.badge,name:website_slides.badge_data_course
 #: model:gamification.challenge.line,name:website_slides.badge_data_course_challenge_line_0
 #: model:gamification.goal.definition,name:website_slides.badge_data_course_goal
 msgid "Power User"
-msgstr ""
+msgstr "Usuari d'energia"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
@@ -4355,7 +4553,7 @@ msgstr "Progrés"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__promoted_slide_id
 msgid "Promoted Slide"
-msgstr ""
+msgstr "Diapositiva promocionada"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__enroll__public
@@ -4365,12 +4563,12 @@ msgstr "Públic"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Public Views"
-msgstr ""
+msgstr "Vistes públiques"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_searchbar_input_snippet_options
 msgid "Publication Date"
-msgstr ""
+msgstr "Data de publicació"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__date_published
@@ -4388,7 +4586,7 @@ msgstr "Publicat"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Published Contents"
-msgstr ""
+msgstr "Contingut publicat"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -4403,6 +4601,8 @@ msgid ""
 "Publishing is restricted to the responsible of training courses or members "
 "of the publisher group for documentation courses"
 msgstr ""
+"La publicació es limita al responsable dels cursos de formació o als membres"
+" del grup editor dels cursos de documentació"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__question_id
@@ -4414,13 +4614,15 @@ msgstr "Qüestió"
 #: code:addons/website_slides/models/slide_question.py:0
 #, python-format
 msgid "Question \"%s\" must have 1 correct answer"
-msgstr ""
+msgstr "La pregunta «%s» ha de tenir 1 resposta correcta"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_question.py:0
 #, python-format
 msgid "Question \"%s\" must have 1 correct answer and at least 1 incorrect answer"
 msgstr ""
+"La pregunta «%s» ha de tenir 1 resposta correcta i almenys 1 resposta "
+"incorrecta"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_question__question
@@ -4443,19 +4645,19 @@ msgstr "Preguntes"
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 #, python-format
 msgid "Quiz"
-msgstr ""
+msgstr "Qüestionari"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Quiz Demo Data"
-msgstr ""
+msgstr "Dades de prova del qüestionari"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__quiz_attempts_count
 msgid "Quiz attempts count"
-msgstr ""
+msgstr "Comptador d'intents del qüestionari"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.slide_question_action_report
@@ -4464,7 +4666,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_question_view_tree
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_question_view_tree_report
 msgid "Quizzes"
-msgstr ""
+msgstr "Qüestionaris"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_ids
@@ -4474,12 +4676,12 @@ msgstr "Valoració"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_avg_stars
 msgid "Rating Average (Stars)"
-msgstr ""
+msgstr "Mitjana de valoració (estrelles)"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_avg_text
 msgid "Rating Avg Text"
-msgstr ""
+msgstr "Mitjana de valoració del text"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_last_feedback
@@ -4504,7 +4706,7 @@ msgstr "Valoració satisfacció"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_last_text
 msgid "Rating Text"
-msgstr ""
+msgstr "Text de valoració"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_count
@@ -4515,7 +4717,7 @@ msgstr "Comptador de valoracions"
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "Rating of %s"
-msgstr ""
+msgstr "Valoració de %s"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_form_slides
@@ -4526,12 +4728,12 @@ msgstr "Valoracions"
 #: model:gamification.challenge,name:website_slides.badge_data_karma_challenge
 #: model_terms:gamification.badge,description:website_slides.badge_data_karma
 msgid "Reach 2000 XP"
-msgstr ""
+msgstr "Arribar a 2000 XP"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "Reach new heights"
-msgstr ""
+msgstr "Aconsegueix noves alçades"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__partner_ids
@@ -4543,13 +4745,13 @@ msgstr "Destinataris"
 #: code:addons/website_slides/static/src/components/activity/activity.xml:0
 #, python-format
 msgid "Refuse Access"
-msgstr ""
+msgstr "Refusa l'accés"
 
 #. module: website_slides
 #: model:gamification.challenge,name:website_slides.badge_data_register_challenge
 #: model_terms:gamification.badge,description:website_slides.badge_data_register
 msgid "Register to the platform"
-msgstr ""
+msgstr "Registra a la plataforma"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_documentation
@@ -4566,14 +4768,14 @@ msgstr "Eliminar"
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
 msgid "Remove the answer comment"
-msgstr ""
+msgstr "Elimina el comentari de la resposta"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
 msgid "Remove this answer"
-msgstr ""
+msgstr "Elimina aquesta resposta"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__render_model
@@ -4590,14 +4792,14 @@ msgstr "Informes"
 #: code:addons/website_slides/static/src/js/slides_course_enroll_email.js:0
 #, python-format
 msgid "Request Access."
-msgstr ""
+msgstr "Sol·licita accés."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_enroll_email.js:0
 #, python-format
 msgid "Request sent !"
-msgstr ""
+msgstr "Sol·licitud enviada!"
 
 #. module: website_slides
 #. openerp-web
@@ -4620,6 +4822,8 @@ msgstr "Recurs"
 msgid ""
 "Resource %(resource_name)s is a link and should not contain a data file"
 msgstr ""
+"El recurs %(resource_name)s és un enllaç i no hauria de contenir un fitxer "
+"de dades"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_resource__resource_type
@@ -4644,7 +4848,7 @@ msgstr "Usuari responsable"
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "Responsible already contacted."
-msgstr ""
+msgstr "Ja s'ha contactat amb el responsable."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__website_id
@@ -4660,7 +4864,7 @@ msgstr "Restringir les publicacions en aquest portal web."
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__source_type__external
 #, python-format
 msgid "Retrieve from Google Drive"
-msgstr ""
+msgstr "Recupera de Google Drive"
 
 #. module: website_slides
 #. openerp-web
@@ -4672,17 +4876,17 @@ msgstr "Reintentar"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.private_profile
 msgid "Return to the course."
-msgstr ""
+msgstr "Torna al curs."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Review Course"
-msgstr ""
+msgstr "Revisa el curs"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_tree_slide_channel
 msgid "Review Date"
-msgstr ""
+msgstr "Data de la revisió"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.rating_rating_action_slide_channel
@@ -4693,7 +4897,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Reviews"
-msgstr ""
+msgstr "Ressenyes"
 
 #. module: website_slides
 #. openerp-web
@@ -4705,22 +4909,22 @@ msgstr "Revisions (%d)"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__quiz_fourth_attempt_reward
 msgid "Reward: every attempt after the third try"
-msgstr ""
+msgstr "Reenvia: cada intent després del tercer intent"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__quiz_first_attempt_reward
 msgid "Reward: first attempt"
-msgstr ""
+msgstr "Reenvia: primer intent"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__quiz_second_attempt_reward
 msgid "Reward: second attempt"
-msgstr ""
+msgstr "Reenvia: segon intent"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__quiz_third_attempt_reward
 msgid "Reward: third attempt"
-msgstr ""
+msgstr "Reenvia: tercer intent"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -4744,6 +4948,8 @@ msgstr "Error de lliurament SMS"
 msgid ""
 "Same as 'Embed Code' but used to embed the content on an external website."
 msgstr ""
+"Igual que el \"Codi d'origen\", però utilitzat per a incloure el contingut "
+"en un lloc web extern."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
@@ -4766,7 +4972,7 @@ msgstr "Desa"
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
 msgid "Save & Publish"
-msgstr ""
+msgstr "Desa la publicació"
 
 #. module: website_slides
 #. openerp-web
@@ -4774,6 +4980,8 @@ msgstr ""
 #, python-format
 msgid "Save your presentations or documents as PDF files and upload them."
 msgstr ""
+"Deseu les vostres presentacions o documents com a fitxers PDF i els "
+"carregueu."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_tree_slide_channel
@@ -4788,7 +4996,7 @@ msgstr "Cercar"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Search Contents"
-msgstr ""
+msgstr "Cerca contingut"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
@@ -4800,12 +5008,12 @@ msgstr "Cerca cursos"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "Search in content"
-msgstr ""
+msgstr "Cerca al contingut"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Second Try"
-msgstr ""
+msgstr "Segon intent"
 
 #. module: website_slides
 #. openerp-web
@@ -4839,36 +5047,38 @@ msgstr "Token de Seguretat"
 #: code:addons/website_slides/models/res_users.py:0
 #, python-format
 msgid "See our eLearning"
-msgstr ""
+msgstr "Vegeu el nostre elearning"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid "Select <b>Course</b> to create it and manage it."
-msgstr ""
+msgstr "Seleccioneu <b>Curs</b> per crear-lo i gestionar-lo."
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__promote_strategy__specific
 msgid "Select Manually"
-msgstr ""
+msgstr "Selecciona manualment"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
 msgid "Select the correct answer below :"
-msgstr ""
+msgstr "Seleccioneu la resposta correcta a sota:"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Sell access to your courses on your website and track revenues."
 msgstr ""
+"Veneu l'accés als vostres cursos al vostre lloc web i feu un seguiment dels "
+"ingressos."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__module_website_sale_slides
 msgid "Sell on eCommerce"
-msgstr ""
+msgstr "Venda en eCommerce"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
@@ -4885,22 +5095,22 @@ msgstr "Enviar correu"
 #. module: website_slides
 #: model:mail.template,description:website_slides.mail_template_channel_completed
 msgid "Sent to attendees once they've completed the course"
-msgstr ""
+msgstr "Enviat als assistents un cop hagin completat el curs"
 
 #. module: website_slides
 #: model:mail.template,description:website_slides.slide_template_published
 msgid "Sent to attendees when new course is published"
-msgstr ""
+msgstr "Enviat als assistents quan es publiqui un nou curs"
 
 #. module: website_slides
 #: model:mail.template,description:website_slides.mail_template_slide_channel_invite
 msgid "Sent to attendees when they are added to a course"
-msgstr ""
+msgstr "Enviat als assistents quan s'afegeixen a un curs"
 
 #. module: website_slides
 #: model:mail.template,description:website_slides.slide_template_shared
 msgid "Sent when attendees share the course by email"
-msgstr ""
+msgstr "Enviat quan els assistents comparteixen el curs per correu electrònic"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__seo_name
@@ -4932,7 +5142,7 @@ msgstr "Compartir"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 msgid "Share Channel"
-msgstr ""
+msgstr "Comparteix el canal"
 
 #. module: website_slides
 #. openerp-web
@@ -4953,17 +5163,17 @@ msgstr "Compartir plantilla"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_share_modal_header
 #, python-format
 msgid "Share This Content"
-msgstr ""
+msgstr "Comparteix aquest contingut"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 msgid "Share This Course"
-msgstr ""
+msgstr "Comparteix aquest curs"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_share_url
 msgid "Share URL"
-msgstr ""
+msgstr "Comparteix l'URL"
 
 #. module: website_slides
 #. openerp-web
@@ -4971,7 +5181,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 #, python-format
 msgid "Share by Email"
-msgstr ""
+msgstr "Comparteix per correu electrònic"
 
 #. module: website_slides
 #. openerp-web
@@ -4998,7 +5208,7 @@ msgstr "Compartir a LinkedIn"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_share_social
 #, python-format
 msgid "Share on Pinterest"
-msgstr ""
+msgstr "Comparteix amb el Pinterest"
 
 #. module: website_slides
 #. openerp-web
@@ -5006,7 +5216,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_share_modal_body
 #, python-format
 msgid "Share on Social Media"
-msgstr ""
+msgstr "Comparteix a les xarxes socials"
 
 #. module: website_slides
 #. openerp-web
@@ -5024,36 +5234,36 @@ msgstr "Compartir a Twitter"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_share_social
 #, python-format
 msgid "Share on Whatsapp"
-msgstr ""
+msgstr "Comparteix amb Whatsapp"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
 #, python-format
 msgid "Sharing is caring!"
-msgstr ""
+msgstr "Compartir és important!"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__sheet
 msgid "Sheet (Excel, Google Sheet, ...)"
-msgstr ""
+msgstr "Full (Excel, Google Sheet, ...)"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__description_short
 msgid "Short Description"
-msgstr ""
+msgstr "Descripció breu"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_0_4
 msgid "Show your newly mastered knowledge !"
-msgstr ""
+msgstr "Mostra el teu coneixement recentment dominat!"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "Sign Up !"
-msgstr ""
+msgstr "Registreu-vos!"
 
 #. module: website_slides
 #. openerp-web
@@ -5061,13 +5271,14 @@ msgstr ""
 #, python-format
 msgid "Sign in and join the course to verify your answers!"
 msgstr ""
+"Inicieu la sessió i uniu-vos al curs per verificar les vostres respostes!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid ""
 "Skill up and have an impact! Your business career starts here.<br/>Time to "
 "start a course."
-msgstr ""
+msgstr "Acabeu i impacteu! La teva carrera empresarial comença aquí."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_resource__slide_id
@@ -5082,7 +5293,7 @@ msgstr "Diapositiva / Partner decorada m2m"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_answer
 msgid "Slide Question's Answer"
-msgstr ""
+msgstr "Desplaça la resposta de la pregunta"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_tag
@@ -5092,17 +5303,17 @@ msgstr "Etiqueta de presentacions"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_type
 msgid "Slide Type"
-msgstr ""
+msgstr "Tipus de diapositiva"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__slide_partner_ids
 msgid "Slide User Data"
-msgstr ""
+msgstr "Diapositiva de dades d'usuari"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__channel_id
 msgid "Slide channel"
-msgstr ""
+msgstr "Canal de diapositives"
 
 #. module: website_slides
 #. openerp-web
@@ -5119,6 +5330,8 @@ msgid ""
 "Slide with questions must be marked as done when submitting all good answers"
 " "
 msgstr ""
+"La diapositiva amb preguntes s'ha de marcar com a fet en enviar totes les "
+"respostes bones"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_slide
@@ -5128,18 +5341,18 @@ msgstr "Diapositives"
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__slides
 msgid "Slides (PowerPoint, Google Slides, ...)"
-msgstr ""
+msgstr "Diapositives (PowerPoint, Google Slides, ...)"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__slide_ids
 msgid "Slides and categories"
-msgstr ""
+msgstr "Diapositives i categories"
 
 #. module: website_slides
 #: model_terms:slide.channel,description:website_slides.slide_channel_demo_6_furn3
 #: model_terms:slide.channel,description_short:website_slides.slide_channel_demo_6_furn3
 msgid "So much amazing certification."
-msgstr ""
+msgstr "Una certificació increïble."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -5149,17 +5362,17 @@ msgstr "Ordenar per"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__source_type
 msgid "Source Type"
-msgstr ""
+msgstr "Tipus d'origen"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
 msgid "Start Course"
-msgstr ""
+msgstr "Curs d'inici"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
 msgid "Start Course Channel"
-msgstr ""
+msgstr "Inicia el canal del curs"
 
 #. module: website_slides
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_1_4
@@ -5171,7 +5384,7 @@ msgstr "Comença amb el client – troba el que vol i dona-li"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "Start your online course today!"
-msgstr ""
+msgstr "Inicia el teu curs en línia avui!"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__activity_state
@@ -5211,17 +5424,17 @@ msgstr "Informació del subscriptor"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__user_membership_id
 msgid "Subscriber information for the current logged in user"
-msgstr ""
+msgstr "Informació del subscriptor per a l'usuari que ha iniciat la sessió"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__partner_ids
 msgid "Subscribers"
-msgstr ""
+msgstr "Subscriptors"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_partner_ids
 msgid "Subscribers information"
-msgstr ""
+msgstr "Informació dels subscriptors"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__slide_type
@@ -5229,6 +5442,8 @@ msgid ""
 "Subtype of the slide category, allows more precision on the actual file type"
 " / source type."
 msgstr ""
+"Subtipus de la categoria de diapositiva, permet més precisió sobre el tipus "
+"de fitxer / tipus de font real."
 
 #. module: website_slides
 #. openerp-web
@@ -5240,7 +5455,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "Succeed and gain karma"
-msgstr ""
+msgstr "S'ha aconseguit i guanyat el karma"
 
 #. module: website_slides
 #. openerp-web
@@ -5256,14 +5471,14 @@ msgstr "Etiqueta"
 #: code:addons/website_slides/static/src/xml/website_slides_channel_tag.xml:0
 #, python-format
 msgid "Tag Group"
-msgstr ""
+msgstr "Grup d'etiquetes"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_tag_add.js:0
 #, python-format
 msgid "Tag Group (required for new tags)"
-msgstr ""
+msgstr "Grup d'etiquetes (necessari per a etiquetes noves)"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
@@ -5277,6 +5492,9 @@ msgid ""
 "kanban or front-end, to distinguish internal tags from public categorization"
 " tags"
 msgstr ""
+"Color de l'etiqueta utilitzat tant al dorsal com al lloc web. Sense color "
+"significa no mostrar-se en kanban o frontal, per a distingir etiquetes "
+"internes d'etiquetes de categorització pública"
 
 #. module: website_slides
 #. openerp-web
@@ -5301,7 +5519,7 @@ msgstr "Etiquetes..."
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Take Quiz"
-msgstr ""
+msgstr "Agafeu el qüestionari"
 
 #. module: website_slides
 #: model:slide.channel,name:website_slides.slide_channel_demo_1_gard1
@@ -5311,7 +5529,7 @@ msgstr "Cuidar dels arbres"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_4_1
 msgid "Technical Drawings"
-msgstr ""
+msgstr "Dibuixos tècnics"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_4_10
@@ -5322,25 +5540,25 @@ msgstr "Dibuix tècnic"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_5_2
 msgid "Test Yourself"
-msgstr ""
+msgstr "Proveu-vos"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_0_4
 msgid "Test your knowledge"
-msgstr ""
+msgstr "Proveu els vostres coneixements"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_5_3
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_5_3
 msgid "Test your knowledge !"
-msgstr ""
+msgstr "Proveu els vostres coneixements!"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Test your students with small Quizzes"
-msgstr ""
+msgstr "Proveu els vostres estudiants amb qüestionaris petits"
 
 #. module: website_slides
 #. openerp-web
@@ -5351,6 +5569,9 @@ msgid ""
 "document. You can change this number if your attendees will need more time "
 "to assimilate the content."
 msgstr ""
+"La duració <b></b> de la lliçó es basa en el nombre de pàgines del document."
+" Podeu canviar aquest número si els assistents necessitaran més temps per "
+"assimilar el contingut."
 
 #. module: website_slides
 #. openerp-web
@@ -5361,6 +5582,9 @@ msgid ""
 "you want.</br>A <b>Preview</b> of your file is available on the right side "
 "of the screen."
 msgstr ""
+"El <b>Títol</b> de la lliçó s'ha completat automàticament, però el podeu "
+"canviar si voleu. Hi ha disponible una vista prèvia <b></b> del fitxer a la "
+"part dreta de la pantalla."
 
 #. module: website_slides
 #. openerp-web
@@ -5371,6 +5595,8 @@ msgid ""
 "The Google Drive link can be obtained by using the 'share' button in the "
 "Google interface."
 msgstr ""
+"L'enllaç Google Drive es pot obtenir utilitzant el botó 'compartir' de la "
+"interfície de Google."
 
 #. module: website_slides
 #. openerp-web
@@ -5380,6 +5606,8 @@ msgid ""
 "The Google Drive link to use here can be obtained by clicking the \"Share\" "
 "button in the Google interface."
 msgstr ""
+"L'enllaç Google Drive que s'utilitzarà aquí es pot obtenir fent clic al botó"
+" \"Compartir\" a la interfície de Google."
 
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_channel_partner_check_completion
@@ -5387,6 +5615,8 @@ msgid ""
 "The completion of a channel is a percentage and should be between 0% and "
 "100."
 msgstr ""
+"La finalització d'un canal és un percentatge i hauria d'estar entre 0% i "
+"100."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__is_preview
@@ -5394,11 +5624,13 @@ msgid ""
 "The course is accessible by anyone : the users don't need to join the "
 "channel to access the content of the course."
 msgstr ""
+"Qualsevol persona pot accedir al curs: els usuaris no necessiten entrar al "
+"canal per accedir al contingut del curs."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__description_short
 msgid "The description that is displayed on the course card"
-msgstr ""
+msgstr "La descripció que es mostra a la targeta del curs"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__description
@@ -5406,6 +5638,8 @@ msgid ""
 "The description that is displayed on top of the course page, just below the "
 "title"
 msgstr ""
+"La descripció que es mostra a la part superior de la pàgina del curs, just a"
+" sota del títol"
 
 #. module: website_slides
 #: code:addons/website_slides/wizard/slide_channel_invite.py:0
@@ -5414,6 +5648,9 @@ msgid ""
 "The following recipients have no user account: %s. You should create user "
 "accounts for them or allow external sign up in configuration."
 msgstr ""
+"Els destinataris següents no tenen compte d'usuari: %s. Hauríeu de crear "
+"comptes d'usuari per a ells o permetre la inscripció externa a la "
+"configuració."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__website_url
@@ -5426,11 +5663,12 @@ msgstr "URL completa per accedir al document a través del lloc web."
 #: model:ir.model.fields,help:website_slides.field_slide_slide__can_self_mark_completed
 msgid "The slide can be marked as completed even without opening it"
 msgstr ""
+"La diapositiva es pot marcar com a completada fins i tot sense obrir-la"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__can_self_mark_uncompleted
 msgid "The slide can be marked as not completed and the progression"
-msgstr ""
+msgstr "La diapositiva es pot marcar com a no completada i la progressió"
 
 #. module: website_slides
 #. openerp-web
@@ -5440,11 +5678,13 @@ msgid ""
 "The video link to input here can be obtained by using the 'share' button in "
 "the Vimeo interface."
 msgstr ""
+"L'enllaç de vídeo a l'entrada aquí es pot obtenir utilitzant el botó "
+"'compartir' a la interfície Vimeo."
 
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_slide_partner_check_vote
 msgid "The vote must be 1, 0 or -1."
-msgstr ""
+msgstr "La votació ha de ser 1, 0 o -1."
 
 #. module: website_slides
 #. openerp-web
@@ -5452,11 +5692,13 @@ msgstr ""
 #, python-format
 msgid "Then, go into the file permissions and set it as \"Anyone with the link\"."
 msgstr ""
+"Després, aneu als permisos del fitxer i establiu-lo com a «Qualsevol persona"
+" amb l'enllaç»."
 
 #. module: website_slides
 #: model:slide.tag,name:website_slides.slide_tag_demo_theory
 msgid "Theory"
-msgstr ""
+msgstr "Teoria"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -5469,13 +5711,15 @@ msgid ""
 "There are no comments for now. Earn more Karma to be the first to leave a "
 "comment."
 msgstr ""
+"De moment no hi ha comentaris. Aneu més Karma per ser el primer a deixar un "
+"comentari."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
 #, python-format
 msgid "There was an error validating this quiz."
-msgstr ""
+msgstr "S'ha produït un error en validar aquest qüestionari."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed__url
@@ -5485,58 +5729,59 @@ msgstr "URL de pàgines web de tercers"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Third Try"
-msgstr ""
+msgstr "Tercer intent"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_answer__comment
 msgid "This comment will be displayed to the user if they select this answer"
 msgstr ""
+"Aquest comentari es mostrarà a l'usuari si selecciona aquesta resposta"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "This course is private."
-msgstr ""
+msgstr "Aquest curs és privat."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
 msgid "This is the correct answer"
-msgstr ""
+msgstr "Aquesta és la resposta correcta"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
 msgid "This is the correct answer, congratulations"
-msgstr ""
+msgstr "Aquesta és la resposta correcta, felicitats"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
 #, python-format
 msgid "This quiz is already done. Retaking it is not possible."
-msgstr ""
+msgstr "Aquest qüestionari ja està fet. Reprendre-ho no és possible."
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:0
 #, python-format
 msgid "This slide can not be marked as completed."
-msgstr ""
+msgstr "Aquesta diapositiva no es pot marcar com a completada."
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:0
 #, python-format
 msgid "This slide can not be marked as uncompleted."
-msgstr ""
+msgstr "Aquesta diapositiva no es pot marcar com a incompleta."
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:0
 #, python-format
 msgid "This video already exists in this channel on the following content: %s"
-msgstr ""
+msgstr "Aquest vídeo ja existeix en aquest canal en el contingut següent: %s"
 
 #. module: website_slides
 #. openerp-web
@@ -5546,6 +5791,8 @@ msgid ""
 "Through Google Drive, we support most common types of documents.\n"
 "                                        Including regular documents (Google Doc, .docx), Sheets (Google Sheet, .xlsx), PowerPoints, ..."
 msgstr ""
+"A través de Google Drive, admetem els tipus més comuns de documents.\n"
+"                                        Incloent documents regulars (Google Doc, .docx), fulls (Google Sheet, .xlsx), PowerPoints, ..."
 
 #. module: website_slides
 #. openerp-web
@@ -5571,12 +5818,12 @@ msgstr "Eines"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_5_0
 msgid "Tools and Methods"
-msgstr ""
+msgstr "Eines i mètodes"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_5_0
 msgid "Tools you will need to complete this course."
-msgstr ""
+msgstr "Les eines que necessitareu per completar aquest curs."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_tree
@@ -5586,12 +5833,12 @@ msgstr "Total"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree_report
 msgid "Total Attendees"
-msgstr ""
+msgstr "Total d'assistents"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree_report
 msgid "Total Completed"
-msgstr ""
+msgstr "Total completat"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree_report
@@ -5602,18 +5849,18 @@ msgstr "Durada total"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_tree_report
 msgid "Total Questions"
-msgstr ""
+msgstr "Total de preguntes"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__total_slides
 msgid "Total Slides"
-msgstr ""
+msgstr "Diapositives totals"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_tree_report
 msgid "Total Views"
-msgstr ""
+msgstr "Visualitzacions totals"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__channel_type__training
@@ -5623,12 +5870,12 @@ msgstr "Formació"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_0
 msgid "Tree Infographic"
-msgstr ""
+msgstr "Infografia de l'arbre"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_2_2
 msgid "Tree planting in hanging bottles on wall"
-msgstr ""
+msgstr "Plantació d'arbres en ampolles penjades a la paret"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_2_0
@@ -5638,7 +5885,7 @@ msgstr "Arbres"
 #. module: website_slides
 #: model:slide.channel,name:website_slides.slide_channel_demo_2_gard2
 msgid "Trees, Wood and Gardens"
-msgstr ""
+msgstr "Arbres, fusta i jardins"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -5654,7 +5901,7 @@ msgstr "Tipus d'activitat d'excepció registrada."
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__url
 msgid "URL of the Google Drive file or URL of the YouTube video"
-msgstr ""
+msgstr "URL del fitxer Google Drive o URL del vídeo de YouTube"
 
 #. module: website_slides
 #: code:addons/website_slides/wizard/slide_channel_invite.py:0
@@ -5675,13 +5922,13 @@ msgstr "Sense categoria"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_5_0
 msgid "Unforgettable Tools"
-msgstr ""
+msgstr "Eines inoblidables"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_embed.py:0
 #, python-format
 msgid "Unknown Website"
-msgstr ""
+msgstr "Lloc web desconegut"
 
 #. module: website_slides
 #. openerp-web
@@ -5696,7 +5943,7 @@ msgstr "Error desconegut"
 #: code:addons/website_slides/static/src/js/slides_course_enroll_email.js:0
 #, python-format
 msgid "Unknown error, try again."
-msgstr ""
+msgstr "Error desconegut, torneu-ho a provar."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_card
@@ -5716,6 +5963,7 @@ msgstr "Actualitza"
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Update all your Attendees at once through mass mailings."
 msgstr ""
+"Actualitzeu tots els vostres assistents alhora a través de mailings massius."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -5735,7 +5983,7 @@ msgstr "Carregar grups"
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__source_type__local_file
 #, python-format
 msgid "Upload from Device"
-msgstr ""
+msgstr "Puja des del dispositiu"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__user_id
@@ -5747,22 +5995,23 @@ msgstr "Carregat per"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Uploading document ..."
-msgstr ""
+msgstr "S'està pujant el document..."
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.action_slide_tag
 msgid "Use Content Tags to classify your Content."
-msgstr ""
+msgstr "Utilitzeu les etiquetes de contingut per classificar el contingut."
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_channel_tag_group_action
 msgid "Use Course Groups to classify and organize your Courses."
 msgstr ""
+"Utilitzeu grups de cursos per classificar i organitzar els vostres cursos."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__tag_ids
 msgid "Used to categorize and filter displayed channels/courses"
-msgstr ""
+msgstr "Utilitzat per categoritzar i filtrar els canals/cursos mostrats"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__color
@@ -5777,7 +6026,7 @@ msgstr "Usuari"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__user_vote
 msgid "User vote"
-msgstr ""
+msgstr "Vot d'usuari"
 
 #. module: website_slides
 #. openerp-web
@@ -5793,22 +6042,22 @@ msgstr "Vídeo"
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__video_url
 #, python-format
 msgid "Video Link"
-msgstr ""
+msgstr "Enllaç de vídeo"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__video_source_type
 msgid "Video Source"
-msgstr ""
+msgstr "Origen del vídeo"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__vimeo_id
 msgid "Video Vimeo ID"
-msgstr ""
+msgstr "ID del vídeo Vimeo"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__youtube_id
 msgid "Video YouTube ID"
-msgstr ""
+msgstr "ID del vídeo i YouTube"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_video
@@ -5831,7 +6080,7 @@ msgstr "Mostra-ho tot"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 msgid "View course"
-msgstr ""
+msgstr "Visualitza el curs"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
@@ -5842,7 +6091,7 @@ msgstr "Vistes"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_card
 msgid "Views •"
-msgstr ""
+msgstr "Vistes s"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__video_source_type__vimeo
@@ -5852,7 +6101,7 @@ msgstr "Vimeo"
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__vimeo_video
 msgid "Vimeo Video"
-msgstr ""
+msgstr "Vídeo Vimeo"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__visibility
@@ -5889,7 +6138,7 @@ msgstr "Vots"
 #: code:addons/website_slides/static/src/js/slides_slide_like.js:0
 #, python-format
 msgid "Votes and comments are disabled for this course"
-msgstr ""
+msgstr "Els vots i els comentaris estan desactivats per a aquest curs"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
@@ -5900,12 +6149,12 @@ msgstr "En espera de ser validat"
 #: code:addons/website_slides/controllers/main.py:0
 #, python-format
 msgid "Want to test and certify your students?"
-msgstr ""
+msgstr "Voleu provar i certificar els vostres estudiants?"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_3_1
 msgid "Watching the master(s) at work"
-msgstr ""
+msgstr "Veure el/s mestre/s a la feina"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_1_4
@@ -5913,6 +6162,8 @@ msgid ""
 "We had a little chat with Harry Potted, sure he had interesting things to "
 "say !"
 msgstr ""
+"Vam tenir una petita xerrada amb en Harry Potted, segur que tenia coses "
+"interessants de dir!"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_website
@@ -5926,7 +6177,7 @@ msgstr "Lloc web"
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__gamification_challenge__challenge_category__slides
 msgid "Website / Slides"
-msgstr ""
+msgstr "Lloc web / Diapositives"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_message_ids
@@ -5979,6 +6230,8 @@ msgid ""
 "Welcome on your course's home page. It's still empty for now. Click on "
 "\"<b>New</b>\" to write your first course."
 msgstr ""
+"Benvingut a la pàgina d'inici del vostre curs. Encara està buit de moment. "
+"Feu clic a \"<b>New</b>\" per escriure el vostre primer curs."
 
 #. module: website_slides
 #. openerp-web
@@ -5986,17 +6239,17 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "What does"
-msgstr ""
+msgstr "Què fa"
 
 #. module: website_slides
 #: model:slide.question,question:website_slides.slide_slide_demo_0_4_question_0
 msgid "What is a strawberry ?"
-msgstr ""
+msgstr "Què és una maduixa?"
 
 #. module: website_slides
 #: model:slide.question,question:website_slides.slide_slide_demo_0_4_question_1
 msgid "What is the best tool to dig a hole for your plants ?"
-msgstr ""
+msgstr "Quina és la millor eina per cavar un forat per a les vostres plantes?"
 
 #. module: website_slides
 #. openerp-web
@@ -6004,19 +6257,19 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "What types of documents do we support?"
-msgstr ""
+msgstr "Quin tipus de documents secundem?"
 
 #. module: website_slides
 #: model:slide.answer,text_value:website_slides.slide_slide_demo_1_4_question_1_2
 msgid "What was the question again ?"
-msgstr ""
+msgstr "Quina era la pregunta?"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "When using local files, we only support PDF files."
-msgstr ""
+msgstr "Quan s'utilitzen fitxers locals, només s'admeten fitxers PDF."
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_4_1
@@ -6024,6 +6277,8 @@ msgid ""
 "Which wood type is best for my solid wood furniture? That's the question we "
 "help you answer in this video !"
 msgstr ""
+"Quin tipus de fusta és millor per als meus mobles sòlids de fusta? Aquesta "
+"és la pregunta que us ajudem a respondre en aquest vídeo!"
 
 #. module: website_slides
 #. openerp-web
@@ -6033,6 +6288,8 @@ msgid ""
 "With Quizzes you can keep your students focused and motivated by answering "
 "some questions and gaining some karma points"
 msgstr ""
+"Amb Qüestionaris podeu mantenir els vostres estudiants enfocats i motivats "
+"responent algunes preguntes i obtenint alguns punts del karma"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_2_1
@@ -6042,22 +6299,22 @@ msgstr "Fusta"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_3_1
 msgid "Wood Bending With Steam Box"
-msgstr ""
+msgstr "Wood Bending with Steam Box"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_2_3
 msgid "Wood Characteristics"
-msgstr ""
+msgstr "Característiques de la fusta"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_4_1
 msgid "Wood Types"
-msgstr ""
+msgstr "Tipus de fusta"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_3_0
 msgid "Working with Wood"
-msgstr ""
+msgstr "Treballar amb Wood"
 
 #. module: website_slides
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_1_4
@@ -6067,6 +6324,9 @@ msgid ""
 "Write one or two paragraphs describing your product or services. <br>To be "
 "successful your content needs to be useful to your readers."
 msgstr ""
+"Escriviu un o dos paràgrafs que descriguin el vostre producte o serveis. "
+"<br>Per tenir èxit el vostre contingut ha de ser útil per als vostres "
+"lectors."
 
 #. module: website_slides
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_1_4
@@ -6077,6 +6337,9 @@ msgid ""
 "feature.<br> To be successful your content needs to be useful to your "
 "readers."
 msgstr ""
+"Escriviu un o dos paràgrafs que descriguin el vostre producte, serveis o una"
+" característica específica. Per a tenir èxit, el vostre contingut ha de ser "
+"útil per als vostres lectors."
 
 #. module: website_slides
 #. openerp-web
@@ -6109,11 +6372,13 @@ msgid ""
 "You can add <b>comments</b> on answers. This will be visible with the "
 "results if the user select this answer."
 msgstr ""
+"Podeu afegir <b>comentaris</b> a les respostes. Això serà visible amb els "
+"resultats si l'usuari selecciona aquesta resposta."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "You can add questions to this quiz in the 'Quiz' tab."
-msgstr ""
+msgstr "Podeu afegir preguntes a aquest qüestionari a la pestanya «Quiz»."
 
 #. module: website_slides
 #. openerp-web
@@ -6124,6 +6389,8 @@ msgid ""
 "You can either upload a file from your computer or insert a Google Drive "
 "link."
 msgstr ""
+"Podeu pujar un fitxer des del vostre ordinador o inserir un enllaç al Google"
+" Drive."
 
 #. module: website_slides
 #. openerp-web
@@ -6136,13 +6403,15 @@ msgstr "No es poden carregar fitxers protegits amb contrasenya"
 #: code:addons/website_slides/controllers/main.py:0
 #, python-format
 msgid "You cannot add tags to this course."
-msgstr ""
+msgstr "No podeu afegir etiquetes a aquest curs."
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid "You cannot mark a slide as completed if you are not among its members."
 msgstr ""
+"No podeu marcar una diapositiva com a completada si no esteu entre els seus "
+"membres."
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
@@ -6150,12 +6419,16 @@ msgstr ""
 msgid ""
 "You cannot mark a slide as uncompleted if you are not among its members."
 msgstr ""
+"No podeu marcar una diapositiva com a incompleta si no sou entre els seus "
+"membres."
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid "You cannot mark a slide as viewed if you are not among its members."
 msgstr ""
+"No podeu marcar una diapositiva com a visualitzada si no esteu entre els "
+"seus membres."
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
@@ -6163,6 +6436,8 @@ msgstr ""
 msgid ""
 "You cannot mark a slide quiz as completed if you are not among its members."
 msgstr ""
+"No podeu marcar un qüestionari de diapositiva com a completat si no esteu "
+"entre els seus membres."
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
@@ -6171,88 +6446,90 @@ msgid ""
 "You cannot mark a slide quiz as not completed if you are not among its "
 "members."
 msgstr ""
+"No podeu marcar un qüestionari de diapositiva com a no completat si no esteu"
+" entre els seus membres."
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:0
 #, python-format
 msgid "You cannot upload on this channel."
-msgstr ""
+msgstr "No podeu pujar en aquest canal."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "You did it!"
-msgstr ""
+msgstr "Ho has fet!"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_slide_like.js:0
 #, python-format
 msgid "You don't have access to this lesson"
-msgstr ""
+msgstr "No teniu accés a aquesta lliçó"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_slide_like.js:0
 #, python-format
 msgid "You don't have enough karma to vote"
-msgstr ""
+msgstr "No teniu prou karma per votar"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "You gained"
-msgstr ""
+msgstr "Heu guanyat"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_join.js:0
 #, python-format
 msgid "You have already joined this channel"
-msgstr ""
+msgstr "Ja us heu unit a aquest canal"
 
 #. module: website_slides
 #: model:mail.template,subject:website_slides.mail_template_slide_channel_invite
 msgid "You have been invited to join {{ object.channel_id.name }}"
-msgstr ""
+msgstr "Heu estat convidat a unir-vos a {{ object.channelid.name }}"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "You have to sign in before"
-msgstr ""
+msgstr "Heu d'iniciar la sessió abans"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "You may now participate in our eLearning."
-msgstr ""
+msgstr "Ara podràs participar en el nostre Elearning."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
 #, python-format
 msgid "You must be logged to submit the quiz."
-msgstr ""
+msgstr "Heu d'estar registrat per enviar el qüestionari."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_slide_like.js:0
 #, python-format
 msgid "You must be member of this course to vote"
-msgstr ""
+msgstr "Heu de ser membre d'aquest curs per votar"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_main
 msgid "You need to join this course to access \""
-msgstr ""
+msgstr "Heu d'unir-vos a aquest curs per accedir a \""
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_0_2
 msgid "You won't believe those facts about carrots."
-msgstr ""
+msgstr "No creuràs aquests fets sobre les pastanagues."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
@@ -6277,12 +6554,12 @@ msgstr "El vostre"
 #. module: website_slides
 #: model:slide.channel.tag.group,name:website_slides.slide_channel_tag_group_level
 msgid "Your Level"
-msgstr ""
+msgstr "El vostre nivell"
 
 #. module: website_slides
 #: model:slide.channel.tag.group,name:website_slides.slide_channel_tag_group_role
 msgid "Your Role"
-msgstr ""
+msgstr "El teu rol"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_channel_action_overview
@@ -6291,6 +6568,8 @@ msgid ""
 "Your eLearning platform starts here!<br>\n"
 "                    Upload content, set up rewards, manage attendees..."
 msgstr ""
+"La vostra plataforma d'eLearning comença aquí!<br>\n"
+"                    Puja contingut, configura recompenses, gestiona els assistents..."
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
@@ -6299,6 +6578,8 @@ msgid ""
 "Your file could not be found on Google Drive, please check the link and/or "
 "privacy settings"
 msgstr ""
+"No s'ha pogut trobar el vostre fitxer a Google Drive, si us plau, comproveu "
+"l'enllaç i/o la configuració de privadesa"
 
 #. module: website_slides
 #. openerp-web
@@ -6309,6 +6590,9 @@ msgid ""
 "Click on <b>Add Content</b> to upload a document, create an article or link "
 "a video."
 msgstr ""
+"S'ha creat la primera secció, ara és el moment d'afegir lliçons al vostre "
+"curs. Feu clic a <b>Afegeix contingut</b> per pujar un document, crear un "
+"article o enllaçar un vídeo."
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
@@ -6317,6 +6601,8 @@ msgid ""
 "Your video could not be found on Vimeo, please check the link and/or privacy"
 " settings"
 msgstr ""
+"No s'ha pogut trobar el vostre vídeo al Vimeo, si us plau, comproveu "
+"l'enllaç i/o la configuració de privacitat"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
@@ -6326,24 +6612,26 @@ msgid ""
 "Your video could not be found on YouTube, please check the link and/or "
 "privacy settings"
 msgstr ""
+"No s'ha pogut trobar el vostre vídeo a YouTube, si us plau, comproveu "
+"l'enllaç i/o la configuració de privacitat"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.achievement_card
 msgid "achieved"
-msgstr ""
+msgstr "aconseguit"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "and join this Community"
-msgstr ""
+msgstr "i unir-se a aquesta comunitat"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "app."
-msgstr ""
+msgstr "app."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
@@ -6356,7 +6644,7 @@ msgstr "fil d'Ariadna"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 #, python-format
 msgid "by email."
-msgstr ""
+msgstr "per correu electrònic."
 
 #. module: website_slides
 #. openerp-web
@@ -6365,55 +6653,55 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 #, python-format
 msgid "e.g \"https://drive.google.com/file/...\""
-msgstr ""
+msgstr "p. ex. \"https://drive.google.com/file/...\""
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "e.g \"https://www.youtube.com/watch?v=ebBez6bcSEc\""
-msgstr ""
+msgstr "p. ex. \"https://www.youtube.com/watch?v=ebBez6bcSEc\""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "e.g \"www.youtube.com/watch?v=ebBez6bcSEc\""
-msgstr ""
+msgstr "p. ex. \"www.youtube.com/watch?v=ebBez6bcSEc\""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_tag_tree
 msgid "e.g 'HowTo'"
-msgstr ""
+msgstr "p. ex. 'HowTo'"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "e.g. \"15\""
-msgstr ""
+msgstr "p. ex. \"15\""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "e.g. \"Computer Science for kids\""
-msgstr ""
+msgstr "p. ex. \"Científica computacional per a nens\""
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_management.xml:0
 #, python-format
 msgid "e.g. \"Introduction\""
-msgstr ""
+msgstr "p. ex. \"Introducció\""
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
 msgid "e.g. \"Which animal cannot fly?\""
-msgstr ""
+msgstr "Per exemple, \"Quin animal no pot volar?\""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_form_add
 msgid "e.g. Computer Science for kids"
-msgstr ""
+msgstr "P. ex. Informàtica per a infants"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -6421,21 +6709,24 @@ msgid ""
 "e.g. In this video, we'll give you the keys on how Odoo can help you to grow"
 " your business. At the end, we'll propose you a quiz to test your knowledge."
 msgstr ""
+"Per exemple, en aquest vídeo, us donarem les claus de com l'Odoo us pot "
+"ajudar a fer créixer el vostre negoci. Al final, et proposarem un "
+"qüestionari per provar el teu coneixement."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "e.g. Setting up your computer"
-msgstr ""
+msgstr "P. ex., configurar l'ordinador"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_question_view_form
 msgid "e.g. What powers a computer ?"
-msgstr ""
+msgstr "Per exemple, què pot funcionar amb un ordinador?"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
 msgid "e.g. Your Level"
-msgstr ""
+msgstr "P. ex. El vostre nivell"
 
 #. module: website_slides
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_root
@@ -6447,33 +6738,33 @@ msgstr "eLearning"
 #: model:ir.model.fields,field_description:website_slides.field_res_partner__slide_channel_ids
 #: model:ir.model.fields,field_description:website_slides.field_res_users__slide_channel_ids
 msgid "eLearning Courses"
-msgstr ""
+msgstr "Cursos d'elearning"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 msgid "eLearning Overview"
-msgstr ""
+msgstr "Vista general d'elearning"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "for 'Private' videos and similar to"
-msgstr ""
+msgstr "per a vídeos «Privats» i similars a"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "for public ones."
-msgstr ""
+msgstr "pels públics."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
 #, python-format
 msgid "friend1@email.com, friend2@email.com"
-msgstr ""
+msgstr "friend1@email.com, friend2@email.com"
 
 #. module: website_slides
 #. openerp-web
@@ -6482,21 +6773,21 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "https://drive.google.com/file/d/ABC/view?usp=sharing"
-msgstr ""
+msgstr "https://drive.google.com/file/d/ABC/view?usp=sharing"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "https://vimeo.com/558907333/30da9ff3d8"
-msgstr ""
+msgstr "https://vimeo.com/558907333/30da9ff3d8"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "https://vimeo.com/558907555"
-msgstr ""
+msgstr "https://vimeo.com/558907555"
 
 #. module: website_slides
 #. openerp-web
@@ -6514,6 +6805,8 @@ msgid ""
 "mean? The Vimeo \"Private\" privacy setting means it is a video which can be viewed only by the users with the link to it.\n"
 "                                    Your video will never come up in the search results nor on your channel."
 msgstr ""
+"Vols dir? La configuració de privacitat \"Privada\" de Vimeo significa que és un vídeo que només poden veure els usuaris amb l'enllaç.\n"
+"                                    El vostre vídeo mai apareixerà als resultats de cerca ni al canal."
 
 #. module: website_slides
 #. openerp-web
@@ -6524,13 +6817,16 @@ msgid ""
 " by the users with the link to it. Your video will never come up in the "
 "search results nor on your channel."
 msgstr ""
+"Vol dir? YouTube \"sense llistar\" significa que és un vídeo que només poden"
+" veure els usuaris amb l'enllaç. El vostre vídeo mai apareixerà als "
+"resultats de cerca ni al canal."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
 #, python-format
 msgid "or Leave the course"
-msgstr ""
+msgstr "o surt del curs"
 
 #. module: website_slides
 #. openerp-web
@@ -6543,29 +6839,29 @@ msgstr "inicieu la sessió"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_card
 msgid "steps"
-msgstr ""
+msgstr "passos"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.join_course_link
 msgid "to access resources"
-msgstr ""
+msgstr "per accedir als recursos"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "to be the first to leave a comment."
-msgstr ""
+msgstr "ser el primer a deixar un comentari."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
 msgid "to contact responsible."
-msgstr ""
+msgstr "per contactar amb el responsable."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "to enroll."
-msgstr ""
+msgstr "inscriure's."
 
 #. module: website_slides
 #. openerp-web
@@ -6573,7 +6869,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 #, python-format
 msgid "to share this"
-msgstr ""
+msgstr "per compartir-ho"
 
 #. module: website_slides
 #. openerp-web
@@ -6581,7 +6877,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "unlisted"
-msgstr ""
+msgstr "sense llistar"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
@@ -6593,19 +6889,19 @@ msgstr "xp"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "your-friend@domain.com, your-friend2@domain.com"
-msgstr ""
+msgstr "your-friend@domain.com, your-friend2@domain.com"
 
 #. module: website_slides
 #: model:mail.template,subject:website_slides.mail_template_channel_shared
 msgid "{{ user.name }} shared a Course"
-msgstr ""
+msgstr "{{ user.name }} ha compartit un curs"
 
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_shared
 msgid "{{ user.name }} shared a {{ object.slide_category }} with you!"
-msgstr ""
+msgstr "{{ user.name }} us ha compartit {{ object.slidecategory }}!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 msgid "└<span class=\"ms-1\">Uncategorized</span>"
-msgstr ""
+msgstr "<span class=\"ms-1\">Sense categoria</span>"

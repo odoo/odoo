@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# keecome <7017511@qq.com>, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
@@ -217,12 +216,12 @@ msgid ""
 "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
-"手动：通过 Odoo 之外的任何方式付款或获得付款。\n"
-"付款提供商：每个付款提供商都有自己的付款方式。由于合作伙伴在在线购买或订阅时保存的支付令牌，请求在卡上/向卡进行交易。\n"
+"手动：通过 Odoo 之外的任何方式支付或获得支付。\n"
+"支付提供商：每个支付提供商都有自己的支付方式。由于合作伙伴在在线购买或订阅时保存的支付令牌，请求在卡上/向卡进行交易。\n"
 "支票：通过支票支付账单并从 Odoo 打印。\n"
 "批量存款：一次收集多张客户支票，生成并提交批量存入您的银行。模块 account_batch_payment 是必需的。\n"
-"SEPA Credit Transfer：通过向您的银行提交 SEPA Credit Transfer 文件，在 SEPA 区域付款。模块 account_sepa 是必需的。\n"
-"SEPA 直接借记：由于您的合作伙伴授予您的授权，您可以在 SEPA 区域获得付款。模块 account_sepa 是必需的。\n"
+"SEPA Credit Transfer：通过向您的银行提交 SEPA Credit Transfer 文件，在 SEPA 区域支付。模块 account_sepa 是必需的。\n"
+"SEPA 直接借记：由于您的合作伙伴授予您的授权，您可以在 SEPA 区域获得支付。模块 account_sepa 是必需的。\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -253,12 +252,12 @@ msgstr "无"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_partner__property_payment_method_id
 #: model:ir.model.fields,field_description:account_check_printing.field_res_users__property_payment_method_id
 msgid "Payment Method"
-msgstr "付款方式"
+msgstr "支付方式"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment_method
 msgid "Payment Methods"
-msgstr "付款方式"
+msgstr "支付方式"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment
@@ -271,7 +270,7 @@ msgstr "支付"
 msgid ""
 "Payments to print as a checks must have 'Check' selected as payment method "
 "and not have already been reconciled"
-msgstr "以支票方式付款要必须选择'支票'并且未被核对"
+msgstr "以支票方式支付要必须选择'支票'并且未被核对"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -285,7 +284,7 @@ msgstr "请输入您要打印的第一张预先打印的支票的号码。"
 #: model:ir.model.fields,field_description:account_check_printing.field_account_move__preferred_payment_method_id
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__preferred_payment_method_id
 msgid "Preferred Payment Method"
-msgstr "首选付款方式"
+msgstr "首选支付方式"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_partner__property_payment_method_id
@@ -294,7 +293,7 @@ msgid ""
 "Preferred payment method when paying this vendor. This is used to filter "
 "vendor bills by preferred payment method to register payments in mass. Use "
 "cases: create bank files for batch wires, check runs."
-msgstr "向此供应商付款时的首选付款方式。这用于按首选付款方式筛选供应商帐单，以批量登记付款。用例：为批处理线创建银行文件，检查运行情况。"
+msgstr "向此供应商支付时的首选支付方式。这用于按首选支付方式筛选供应商帐单，以批量登记支付。用例：为批处理线创建银行文件，检查运行情况。"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -328,7 +327,7 @@ msgstr "打印预印制支票"
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment_register
 msgid "Register Payment"
-msgstr "登记付款"
+msgstr "登记支付"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right

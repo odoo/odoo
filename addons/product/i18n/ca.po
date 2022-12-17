@@ -8,18 +8,20 @@
 # Mohamed Sallam, 2022
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2022
 # marcescu, 2022
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2022
 # RGB Consulting <odoo@rgbconsulting.com>, 2022
 # Harcogourmet, 2022
-# jabelchi, 2022
+# Josep Anton Belchi, 2022
 # Quim - eccit <quim@eccit.com>, 2022
 # Arnau Ros, 2022
-# José Cabrera Lozano <jose.cabrera@edukative.es>, 2022
-# Martin Trigaux, 2022
 # eriiikgt, 2022
 # Carles Antoli <carlesantoli@hotmail.com>, 2022
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
 # Jonatan Gk, 2022
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2022
+# Ivan Espinola, 2022
+# Farouk Jabiri, 2022
+# José Cabrera Lozano <jose.cabrera@edukative.es>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -27,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:25+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Jonatan Gk, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -96,7 +98,7 @@ msgstr "'Productor- %s' % (object.name)"
 #: code:addons/product/models/product_product.py:0
 #, python-format
 msgid "- Barcode \"%s\" already assigned to product(s): %s"
-msgstr ""
+msgstr "- El codi de barres «%s» ja està assignat al(s) producte(s): %s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -235,7 +237,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_packaging_barcode_uniq
 msgid "A barcode can only be assigned to one packaging."
-msgstr ""
+msgstr "Un codi de barres només es pot assignar a un embalatge."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__description_sale
@@ -246,14 +248,14 @@ msgid ""
 "Customer Invoice/Credit Note"
 msgstr ""
 "Una descripció del producte que es vol comunicar als seus clients. Aquesta "
-"descripció serà copiada a cada comanda de venda, albarà de sortida i factura"
+"descripció serà copiada a cada comanda de venda, comanda d'entrega i factura"
 " de client."
 
 #. module: product
 #: code:addons/product/models/product_product.py:0
 #, python-format
 msgid "A packaging already uses the barcode"
-msgstr ""
+msgstr "Un embalatge ja utilitza el codi de barres"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -261,12 +263,14 @@ msgid ""
 "A price is a set of sales prices or rules to compute the price of sales order lines based on products, product categories, dates and ordered quantities.\n"
 "            This is the perfect tool to handle several pricings, seasonal discounts, etc."
 msgstr ""
+"Un preu és un conjunt de preus de venda o regles per calcular el preu de les línies de comandes de vendes basades en productes, categories de productes, dates i quantitats ordenades.\n"
+"            Aquesta és l'eina perfecta per gestionar diversos preus, descomptes estacionals, etc."
 
 #. module: product
 #: code:addons/product/models/product_packaging.py:0
 #, python-format
 msgid "A product already uses the barcode"
-msgstr ""
+msgstr "Un producte ja utilitza el codi de barres"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__detailed_type
@@ -307,7 +311,7 @@ msgstr "Actiu"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 msgid "Active Products"
-msgstr ""
+msgstr "Productes actius"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_ids
@@ -343,7 +347,7 @@ msgstr "Afegeix una quantitat"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__additional_product_tag_ids
 msgid "Additional Product Tag"
-msgstr ""
+msgstr "Etiqueta de producte addicional"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_sale_pricelist
@@ -359,12 +363,12 @@ msgstr "Regles avançades de preu (dis counts, fórmules)"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__all_product_tag_ids
 msgid "All Product Tag"
-msgstr ""
+msgstr "Etiqueta de tot producte"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__product_ids
 msgid "All Product Variants using this Tag"
-msgstr ""
+msgstr "Totes les variants de producte que utilitzen aquesta etiqueta"
 
 #. module: product
 #: code:addons/product/models/product_pricelist_item.py:0
@@ -522,6 +526,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Codis de barres ja assignats:\n"
+"\n"
+"%s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__base
@@ -556,7 +563,7 @@ msgstr "Negre"
 #: model:product.product,name:product.product_product_10
 #: model:product.template,name:product.product_product_10_product_template
 msgid "Cabinet with Doors"
-msgstr "A l'habitació amb porta"
+msgstr "Gabinet amb portes"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_1024_be_zoomed
@@ -643,7 +650,7 @@ msgstr "Combinació índexs"
 #. module: product
 #: model:ir.model,name:product.model_res_company
 msgid "Companies"
-msgstr "Companyies"
+msgstr "Empreses"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__company_id
@@ -757,13 +764,13 @@ msgstr "Quantitat continguda"
 #: model:product.product,name:product.product_product_13
 #: model:product.template,name:product.product_product_13_product_template
 msgid "Corner Desk Left Sit"
-msgstr "Assetlla de cantonada a l' esquerra seu"
+msgstr "Escriptori de cantonada Left Sit"
 
 #. module: product
 #: model:product.product,name:product.product_product_5
 #: model:product.template,name:product.product_product_5_product_template
 msgid "Corner Desk Right Sit"
-msgstr "Sigueu a la cantonada desk cap a la dreta"
+msgstr "Escriptori de cantonada Right Sit"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__standard_price
@@ -882,7 +889,7 @@ msgstr "Referència de client"
 #: model:product.product,name:product.product_product_4d
 #: model:product.template,name:product.product_product_4_product_template
 msgid "Customizable Desk"
-msgstr "Desk personalitzable"
+msgstr "Escriptori personalitzable"
 
 #. module: product
 #: model:product.product,uom_name:product.expense_hotel
@@ -924,7 +931,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
 msgid "Define a new tag"
-msgstr ""
+msgstr "Defineix una etiqueta nova"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
@@ -951,19 +958,19 @@ msgstr "Descripció"
 #: model:product.product,name:product.product_product_3
 #: model:product.template,name:product.product_product_3_product_template
 msgid "Desk Combination"
-msgstr "Combinació desk"
+msgstr "Combinació d'escriptori"
 
 #. module: product
 #: model:product.product,name:product.product_product_22
 #: model:product.template,name:product.product_product_22_product_template
 msgid "Desk Stand with Screen"
-msgstr "Enrere en moviment amb pantalla"
+msgstr "Suport de sobretaula amb pantalla"
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_3
 #: model:product.template,description_sale:product.product_product_3_product_template
 msgid "Desk combination, black-brown: chair + desk + drawer."
-msgstr "Combinació de Dessk, negre-bong: cadira + escriptori + calaix."
+msgstr "Combinació d'escriptori, negre-marró: cadira + escriptori + calaix."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__sequence
@@ -1494,19 +1501,19 @@ msgstr "És valor personalitzat"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__0
 msgid "Kilograms"
-msgstr "Kilogramsunit synonyms for matching user input"
+msgstr "Quilograms"
 
 #. module: product
 #: model:product.product,name:product.product_product_6
 #: model:product.template,name:product.product_product_6_product_template
 msgid "Large Cabinet"
-msgstr "Gran govern"
+msgstr "Gabinet llarg"
 
 #. module: product
 #: model:product.product,name:product.product_product_8
 #: model:product.template,name:product.product_product_8_product_template
 msgid "Large Desk"
-msgstr "Dessk gran"
+msgstr "Escriptori gran"
 
 #. module: product
 #: model:product.product,name:product.consu_delivery_02
@@ -1644,12 +1651,12 @@ msgstr ""
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
 msgid "Manage Product Packaging"
-msgstr "Administrar l'empaquetatge del producte"
+msgstr "Gestionar l'empaquetatge del producte"
 
 #. module: product
 #: model:res.groups,name:product.group_product_variant
 msgid "Manage Product Variants"
-msgstr "Gestioneu variants de productes"
+msgstr "Gestionar variants de productes"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -1758,6 +1765,8 @@ msgid ""
 "No product to print, if the product is archived please unarchive it before "
 "printing its label."
 msgstr ""
+"No hi ha cap producte a imprimir, si el producte s'arxiva, desarxiveu-lo "
+"abans d'imprimir la seva etiqueta."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
@@ -1939,8 +1948,8 @@ msgid ""
 "Press a button and watch your desk glide effortlessly from sitting to "
 "standing height in seconds."
 msgstr ""
-"Premeu un botó i mireu el vostre escriptori planant-se sense esforç de seure"
-" a alçada en segons."
+"Premi un botó i vegi com el seu escriptori es llisca sense esforç de la "
+"posició asseguda a la dempeus en qüestió de segons."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price
@@ -2196,13 +2205,13 @@ msgstr "Embalatge de productes"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__product_product_ids
 msgid "Product Product"
-msgstr ""
+msgstr "Producte producte"
 
 #. module: product
 #: model:ir.model,name:product.model_product_tag
 #: model_terms:ir.ui.view,arch_db:product.product_tag_form_view
 msgid "Product Tag"
-msgstr ""
+msgstr "Etiqueta de producte"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_tag_action
@@ -2241,7 +2250,7 @@ msgstr "Valor d' atribut de plantilla de producte"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Product Template Tags"
-msgstr ""
+msgstr "Etiquetes de plantilla de producte"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__product_tmpl_ids
@@ -2345,7 +2354,7 @@ msgstr "Productes: %(category)s"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_loyalty
 msgid "Promotions, Coupons, Gift Card & Loyalty Program"
-msgstr ""
+msgstr "Promocions, cupons, programa de lleialtat de la targeta de regal"
 
 #. module: product
 #: model:product.pricelist,name:product.list0
@@ -2658,6 +2667,7 @@ msgstr "Etiquetes"
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
 msgid "Tags are used to search product for a given theme."
 msgstr ""
+"Les etiquetes s'utilitzen per a cercar un producte per a un tema donat."
 
 #. module: product
 #: code:addons/product/models/product_product.py:0
@@ -2790,7 +2800,7 @@ msgid ""
 " Variants' button to set the extra attribute prices."
 msgstr ""
 "El preu de venda s' ha gestionat de la plantilla de producte. Cliqueu al "
-"botó 'ConfigureVarits' per establir els preus de l' atribut extra."
+"botó 'Configure Variants' per establir els preus de l' atribut extra."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -3218,8 +3228,8 @@ msgid ""
 "We pay special attention to detail, which is why our desks are of a superior"
 " quality."
 msgstr ""
-"Paguem atenció especial als detalls, per això els nostres pupitres són d'una"
-" qualitat superior."
+"Prestem especial atenció als detalls, per això els nostres escriptoris són "
+"de qualitat superior."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight
@@ -3272,7 +3282,7 @@ msgid ""
 "new sales quotation."
 msgstr ""
 "Podeu assignar llistes de preu als vostres clients o seleccionar- ne una "
-"quan creeu una nova citació de vendes."
+"quan creeu un nou pressupost de vendes."
 
 #. module: product
 #: code:addons/product/models/product_pricelist_item.py:0
@@ -3436,7 +3446,7 @@ msgstr ""
 "Has de definir un producte per tot el que venguis o compres.\n"
 "                Si es tracta d'un producte esorables, d'un servei o bé d'un servei.\n"
 "                El formulari de producte conté informació per simplificar el procés de venda:\n"
-"                preu, notes a les cites, dades comptables, mètodes d'adquisició, etc."
+"                preu, notes als pressupostos, dades comptables, mètodes d'adquisició, etc."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
@@ -3449,7 +3459,7 @@ msgstr ""
 "Has de definir un producte per tot el que vens, si és un producte físic,\n"
 "                un estafador o un servei que ofereix als clients.\n"
 "                El formulari de producte conté informació per simplificar el procés de venda:\n"
-"                preu, notes a les cites, dades comptables, mètodes d'adquisició, etc."
+"                preu, notes als pressupostos, dades comptables, mètodes d'adquisició, etc."
 
 #. module: product
 #: code:addons/product/wizard/product_label_layout.py:0

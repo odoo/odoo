@@ -14,14 +14,16 @@
 # eriiikgt, 2022
 # oscaryuu, 2022
 # Jonatan Gk, 2022
-# Carles Antoli <carlesantoli@hotmail.com>, 2022
 # CristianCruzParra, 2022
-# marcescu, 2022
+# Carles Antoli <carlesantoli@hotmail.com>, 2022
 # Quim - eccit <quim@eccit.com>, 2022
+# marcescu, 2022
 # Martin Trigaux, 2022
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
 # Cristian Cruz, 2022
 # Josep Anton Belchi, 2022
+# Ivan Espinola, 2022
+# Farouk Jabiri, 2022
 # 
 msgid ""
 msgstr ""
@@ -29,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Josep Anton Belchi, 2022\n"
+"Last-Translator: Farouk Jabiri, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -214,7 +216,7 @@ msgid ""
 "                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('duplicate_lead_count', '&gt;', 1)]}\">Similar Lead</span>"
 msgstr ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('duplicate_lead_count', '&lt;', 2)]}\">Oportunitats similars</span>\n"
-"                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('duplicate_lead_count', '&gt;', 1)]}\">Oportunitat similar</span>"
+"                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('duplicate_lead_count', '&gt;', 1)]}\">Iniciatives similar</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_form
@@ -262,12 +264,12 @@ msgstr "<span class=\"oe_inline\"> / </span>"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "<span>Expected Revenues:</span>"
-msgstr ""
+msgstr "<span>ingressos esperats:</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "<span>Merged the Lead/Opportunity</span>"
-msgstr ""
+msgstr "<span>ha fusionat el títol/oportunitat</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -286,7 +288,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "<span>into this one.</span>"
-msgstr ""
+msgstr "<span>en aquest.</span>"
 
 #. module: crm
 #: model:mail.template,body_html:crm.mail_template_demo_crm_lead
@@ -362,6 +364,75 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 24px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"background-color: white; padding: 0; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">El vostre títol/oportunitat</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">Interès en els vostres productes</span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: 48px;\" t-att-alt=\"object.company_id.name\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <div>\n"
+"                            Hola <t t-out=\"object.partner_id and object.partner_id.name or ''\">Deco Addict</t>,<br/><br/>\n"
+"                            Benvingut a <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>.\n"
+"                            És genial conèixer-te! Ara que estàs a bord, descobriràs què <t t-out=\"object.companyid.name or ''\">ha d'oferir la meva empresa (San Francisco). Em dic Marc Demo <t t-out=\"object.user_id.name or ''\"></t> i t'ajudaré a treure el màxim profit d'Odoo. Podríem planificar una demostració ràpida aviat?<br/>\n"
+"                            Sentiu-vos lliures d'arribar en qualsevol moment!<br/><br/>\n"
+"                            Millor,<br/>\n"
+"                            <t t-if=\"object.userid\">\n"
+"                                <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
+"                                <br/>Correu electrònic: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
+"                                <br/>Telèfon: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+"                            </t>\n"
+"                            <t t-else=\"\">\n"
+"                                <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>\n"
+"                            </t>\n"
+"                        </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px; padding: 0 8px 0 8px; font-size:11px;\">\n"
+"            <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\"/>\n"
+"            <b t-out=\"object.companyid.name or ''\">My Company (San Francisco)</b><br/>\n"
+"            <div style=\"color: #999999;\">\n"
+"                <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                <t t-if=\"object.company_id.email\">\n"
+"                    com <a t-attf-href=\"'mailto:%s' % {{ object.company_id.email }}\" style=\"text-decoration:none; color: #999999;\" t-out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                </t>\n"
+"                <t t-if=\"object.company_id.website\">\n"
+"                    com <a t-attf-href=\"'%s' % {{ object.company_id.website }}\" style=\"text-decoration:none; color: #999999;\" t-out=\"object.company_id.website or ''\">http://www.example.com</a>\n"
+"                </t>\n"
+"            </div>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    Funciona amb <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=dbamp;utm_medium=email\" style=\"color: #875A7B;\">Odoo</a>\n"
+"</td></tr>\n"
+"</table>"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_defaults
@@ -508,7 +579,7 @@ msgstr "Adreça"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Address:"
-msgstr ""
+msgstr "Adreça:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_id
@@ -571,6 +642,8 @@ msgid ""
 "As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>\n"
 "                                        To work with the CRM, you should <a name=\"%d\" type=\"action\" tabindex=\"-1\">join a team.</a>"
 msgstr ""
+"Com que sou membre de cap Equip de vendes, se us mostra el Pipeline del primer equip <b>per defecte.</b>\n"
+"                                        Per treballar amb el CRM, hauríeu d'unir-vos <a name=\"%d\" type=\"action\" tabindex=\"-1\">a un equip.</a>"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -579,16 +652,18 @@ msgid ""
 "As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>\n"
 "                                        To work with the CRM, you should join a team."
 msgstr ""
+"Com que sou membre de cap Equip de vendes, se us mostra el Pipeline del primer equip <b>per defecte.</b>\n"
+"                                        Per treballar amb el CRM, has d'unir-te a un equip."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Assign Documentation"
-msgstr ""
+msgstr "Assigna la documentació"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Assign Leads"
-msgstr ""
+msgstr "Assigna els títols"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.merge_opportunity_form
@@ -598,7 +673,7 @@ msgstr "Assignar oportunitats a "
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Assign salespersons into multiple Sales Teams."
-msgstr ""
+msgstr "Assigna venedors a diversos equips de vendes."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -747,7 +822,7 @@ msgstr "Esdeveniment del calendari"
 #. module: crm
 #: model:mail.activity.type,name:crm.mail_activity_demo_call_demo
 msgid "Call for Demo"
-msgstr "Trucada per a demostració"
+msgstr "Trucada per a prova"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__campaign_id
@@ -760,7 +835,7 @@ msgstr "Campanya"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Campaign:"
-msgstr ""
+msgstr "Campanya:"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
@@ -819,6 +894,8 @@ msgid ""
 "Click on the breadcrumb to go back to your Pipeline. Odoo will save all "
 "modifications as you navigate."
 msgstr ""
+"Feu clic a la ruta de navegació per a tornar al vostre Pipeline. Odoo desarà"
+" totes les modificacions mentre navegueu."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__date_closed
@@ -840,7 +917,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_lost__lost_feedback
 msgid "Closing Note"
-msgstr ""
+msgstr "Nota de tancament"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__color
@@ -865,12 +942,12 @@ msgstr "Nom d'empresa"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Company Name:"
-msgstr ""
+msgstr "Nom de l'empresa:"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Company:"
-msgstr ""
+msgstr "Empresa:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__date
@@ -903,12 +980,12 @@ msgstr "Confirmar"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "Congrats, best of luck catching such big fish! :)"
-msgstr ""
+msgstr "Felicitats, bona sort capturant peixos tan grans! :)"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
 msgid "Consider leads created as of the:"
-msgstr ""
+msgstr "Considera les iniciatives creades a partir de:"
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
@@ -918,7 +995,7 @@ msgstr "Contacte"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Contact Details:"
-msgstr ""
+msgstr "Detalls del contacte:"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -933,7 +1010,7 @@ msgstr "Nom del contacte"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Contact:"
-msgstr ""
+msgstr "Contacte:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__name
@@ -1127,7 +1204,7 @@ msgstr "Creat el"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Created on:"
-msgstr ""
+msgstr "Creat el:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__lead_create_date
@@ -1232,7 +1309,7 @@ msgstr "Descripció"
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "Did you know emails sent to"
-msgstr ""
+msgstr "Sabíeu que s'han enviat correus electrònics a"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -1318,6 +1395,8 @@ msgstr "Domini "
 #, python-format
 msgid "Drag your opportunity to <b>Won</b> when you get the deal. Congrats !"
 msgstr ""
+"Arrossega la teva oportunitat a <b>Won</b> quan obtinguis el tracte. "
+"Felicitats!"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -1334,11 +1413,13 @@ msgstr "P. ex. mensual"
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_forecast
 msgid "Easily set expected closing dates and overview your revenue streams."
 msgstr ""
+"Estableix fàcilment les dates de tancament esperades i mostra els vostres "
+"fluxos d'ingressos."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid "Edit"
-msgstr "Edita"
+msgstr "Modificar"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_from
@@ -1367,7 +1448,7 @@ msgstr "cc de correu electrònic"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Email cc:"
-msgstr ""
+msgstr "Correu electrònic cc:"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -1407,6 +1488,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Enrich your leads with company data based on their email addresses"
 msgstr ""
+"Enriquiu les vostres dades d'empresa en funció de les seves adreces de "
+"correu electrònic"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__requirements
@@ -1437,7 +1520,7 @@ msgstr "Tancament previst"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Expected Closing:"
-msgstr ""
+msgstr "Tancament esperat:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue_monthly
@@ -1666,6 +1749,8 @@ msgid ""
 "If checked, forces salesman to be updated on updated opportunities even if "
 "already set."
 msgstr ""
+"Si està marcada, força el venedor a actualitzar-se en oportunitats "
+"actualitzades encara que ja estigui establert."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction
@@ -1796,7 +1881,7 @@ msgstr "És seguidor"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_partner_visible
 msgid "Is Partner Visible"
-msgstr ""
+msgstr "És un soci visible"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__is_won
@@ -1816,7 +1901,7 @@ msgstr "Lloc de treball"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Job Position:"
-msgstr ""
+msgstr "Posició del treball:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__kanban_state
@@ -1831,12 +1916,12 @@ msgstr "Kpi Crm Lead Created Value"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_opportunities_won_value
 msgid "Kpi Crm Opportunities Won Value"
-msgstr ""
+msgstr "Valor de les Oportunitats Crm del Kpi"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lang_active_count
 msgid "Lang Active Count"
-msgstr ""
+msgstr "Comptador actiu de Lang"
 
 #. module: crm
 #: model:crm.lead.scoring.frequency.field,name:crm.frequency_field_lang_id
@@ -1847,7 +1932,7 @@ msgstr "Idioma"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Language:"
-msgstr ""
+msgstr "Idioma:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_action_last
@@ -1857,7 +1942,7 @@ msgstr "Última acció"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Last Action:"
-msgstr ""
+msgstr "Última acció:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report____last_update
@@ -1955,12 +2040,12 @@ msgstr "Generació d'iniciatives"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Lead Mining"
-msgstr ""
+msgstr "Mineria principal"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_properties_definition
 msgid "Lead Properties"
-msgstr ""
+msgstr "Propietats de la portada"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_scoring_frequency
@@ -1975,12 +2060,12 @@ msgstr "Camps de freqüència de puntuació de clients potencials"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_fields_str
 msgid "Lead Scoring Frequency Fields in String"
-msgstr ""
+msgstr "Camps de freqüència de puntuació principal a la cadena"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_start_date
 msgid "Lead Scoring Starting Date"
-msgstr ""
+msgstr "Data inicial de la puntuació principal"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_start_date_str
@@ -1990,7 +2075,7 @@ msgstr "Data d'inici de la puntuació de clients potencials a la cadena"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_month_count
 msgid "Lead assigned to this member those last 30 days"
-msgstr ""
+msgstr "Lead assignat a aquest membre els darrers 30 dies"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -2038,7 +2123,7 @@ msgstr "Iniciatives"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__lead_month_count
 msgid "Leads (30 days)"
-msgstr "Oportunitats (30 dies)"
+msgstr "Iniciatives (30 dies)"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_report_crm_lead_salesteam
@@ -2063,12 +2148,12 @@ msgstr ""
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "Leads Assigned"
-msgstr ""
+msgstr "Iniciatives assignades"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason__leads_count
 msgid "Leads Count"
-msgstr ""
+msgstr "Comptador d'iniciatives"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_calendar_view_leads
@@ -2096,6 +2181,8 @@ msgid ""
 "Leads team allocation should be done for at least 0.2 or maximum 30 work "
 "days, not %.2f."
 msgstr ""
+"L'assignació de l'equip de líders s'ha de fer durant almenys 0,2 o un màxim "
+"de 30 dies laborables, no %.2f."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2179,6 +2266,8 @@ msgid ""
 "Looks like nothing is planned. :(<br><br><i>Tip : Schedule activities to "
 "keep track of everything you have to do!</i>"
 msgstr ""
+"Sembla que no hi ha res planejat. :(<br><br><i>Consell: Programa les "
+"activitats per a fer un seguiment de tot el que heu de fer!</i>"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -2195,7 +2284,7 @@ msgstr "Perdut"
 #: code:addons/crm/wizard/crm_lead_lost.py:0
 #, python-format
 msgid "Lost Comment"
-msgstr ""
+msgstr "Comentari perdut"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_scoring_frequency__lost_count
@@ -2216,7 +2305,7 @@ msgstr "Motiu de la pèrdua"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Lost Reason:"
-msgstr ""
+msgstr "Motiu perdut:"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lost_reason_action
@@ -2251,6 +2340,9 @@ msgid ""
 "action button. Automatic configures a cron running repeatedly assignment in "
 "all teams."
 msgstr ""
+"L'assignació manual permet activar l'assignació des de la vista de formulari"
+" de l'equip utilitzant un botó d'acció. Configura automàticament un cron que"
+" s'executa repetidament en tots els equips."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_action__manual
@@ -2276,7 +2368,7 @@ msgstr "Màrqueting"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Marketing:"
-msgstr ""
+msgstr "Màrqueting:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__medium_id
@@ -2285,18 +2377,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Medium"
-msgstr "Mitja"
+msgstr "Mitjà"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Medium:"
-msgstr ""
+msgstr "Mitjana:"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s"
-msgstr ""
+msgstr "Reunió programada a '%s'<br> Assumpte: %s<br> Durada: %s"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.act_crm_opportunity_calendar_event_new
@@ -2311,6 +2403,8 @@ msgid ""
 "Member assignment domain for user %(user)s and team %(team)s is incorrectly "
 "formatted"
 msgstr ""
+"El domini d'assignació de membres per a l'usuari %(user)s i l'equip %(team)s"
+" té un format incorrecte"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_merge_opportunities
@@ -2374,7 +2468,7 @@ msgstr "Mensualment"
 #: model:ir.model.fields,help:crm.field_crm_team__assignment_max
 msgid "Monthly average leads capacity for all salesmen belonging to the team"
 msgstr ""
-"Mitjana mensual de capacitat de tots els venedors que pertanyen a l'equip"
+"Mitjana mensual d'iniciatives de tots els venedors que pertanyen a l'equip"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__is_membership_multi
@@ -2510,6 +2604,9 @@ msgid ""
 "No allocated leads to any team or salesperson. Check your Sales Teams and "
 "Salespersons configuration as well as unassigned leads."
 msgstr ""
+"Cap assignat condueix a cap equip o venedor. Comproveu la configuració dels "
+"vostres equips de vendes i persones, així com els clients potencials sense "
+"assignar."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
@@ -2530,6 +2627,8 @@ msgid ""
 "No lead assigned to salespersons because no unassigned lead matches their "
 "domains."
 msgstr ""
+"No s'ha assignat cap avantatge als venedors perquè cap avantatge sense "
+"assignar coincideix amb els seus dominis."
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -2538,6 +2637,8 @@ msgid ""
 "No new lead allocated to %(team_name)s team because no unassigned lead "
 "matches its domain."
 msgstr ""
+"No s'ha assignat cap avantatge nou a l'equip de %(team_name)s perquè cap "
+"líder sense assignar coincideix amb el seu domini."
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -2545,6 +2646,8 @@ msgstr ""
 msgid ""
 "No new lead allocated to the teams because no lead match their domains."
 msgstr ""
+"No s'ha assignat cap avantatge nou als equips perquè cap avantatge "
+"coincideix amb els seus dominis."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__kanban_state__grey
@@ -2579,7 +2682,7 @@ msgstr "Notes"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Notes:"
-msgstr ""
+msgstr "Notes:"
 
 #. module: crm
 #. openerp-web
@@ -2610,7 +2713,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__lead_all_assigned_month_count
 msgid "Number of leads and opportunities assigned this last month."
-msgstr "Nombre d'oportunitats i oportunitats assignades aquest últim mes."
+msgstr "Nombre d'iniciatives i iniciatives assignades aquest últim mes."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter
@@ -2639,6 +2742,10 @@ msgid ""
 "manually, but if you let Odoo do the job the score is updated while the "
 "opportunity moves forward in your sales cycle."
 msgstr ""
+"El motor d'intel·ligència artificial d'Odoo prediu l'èxit de cada "
+"oportunitat basant-se en la teva història. Sempre podeu actualitzar la taxa "
+"d'èxit manualment, però si deixeu que l'Odoo faci la feina, la puntuació "
+"s'actualitzarà mentre l'oportunitat avança en el vostre cicle de vendes."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_view_kanban_dashboard
@@ -2688,6 +2795,11 @@ msgid ""
 "mainly used by the sales manager in order to do the periodic review with the"
 " channels of the sales pipeline."
 msgstr ""
+"L'anàlisi d'oportunitats us dóna un accés immediat a les vostres "
+"oportunitats amb informació com els ingressos esperats, el cost planificat, "
+"terminis incomplits o el nombre d'interaccions per oportunitat. Aquest "
+"informe és utilitzat principalment pel gestor de vendes per a fer la revisió"
+" periòdica amb els canals del gasoducte de vendes."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_graph_forecast
@@ -2805,7 +2917,7 @@ msgstr "Oportunitats endarrerides"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_overdue_amount
 msgid "Overdue Opportunities Revenues"
-msgstr ""
+msgstr "Ingressos d'oportunitats endarrerits"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_view_kanban_dashboard
@@ -2846,7 +2958,7 @@ msgstr "El correu electrònic del soci s'actualitzarà"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_phone_update
 msgid "Partner Phone will Update"
-msgstr ""
+msgstr "S'actualitzarà el telèfon soci"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_is_blacklisted
@@ -2893,7 +3005,7 @@ msgstr "Flux"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_report_action_team
 msgid "Pipeline Activities"
-msgstr ""
+msgstr "Activitats del conducte"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_report_crm_opportunity_salesteam
@@ -2927,7 +3039,7 @@ msgstr "Camps per favor"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_pls_update__pls_start_date
 msgid "Pls Start Date"
-msgstr ""
+msgstr "Data d'inici del Pls"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_contact
@@ -2937,8 +3049,8 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
-"Política per enviar un missatge en el document utilitzant la passarel·la del correu.\n"
-"-Tots: Tothom pot enviar\n"
+"Política per publicar un missatge en el document utilitzant la passarel·la del correu.\n"
+"-Tots: Tothom pot publicar\n"
 "-Empreses: Només les empreses autenticades\n"
 "-Seguidors: Només els seguidors del document relacionat o els membres dels canals següents\n"
 
@@ -2963,6 +3075,7 @@ msgstr "Etiquetes de camp de puntuació predictiva de clients potencials"
 #: model:ir.cron,name:crm.website_crm_score_cron
 msgid "Predictive Lead Scoring: Recompute Automated Probabilities"
 msgstr ""
+"Puntuació prèvia prèvia: torna a calcular les probabilitats automatitzades"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__priority
@@ -2972,7 +3085,7 @@ msgstr "Prioritat"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Priority:"
-msgstr ""
+msgstr "Prioritat:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__probability
@@ -2988,7 +3101,7 @@ msgstr "Probabilitat (%)"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Probability:"
-msgstr ""
+msgstr "Probabilitat:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lead_properties
@@ -3014,7 +3127,7 @@ msgstr "Ingressos prorratejats"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_tree_forecast
 msgid "Prorated Revenues"
-msgstr ""
+msgstr "Ingressos valorats"
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead2
@@ -3028,6 +3141,8 @@ msgstr "Qualificat"
 #, python-format
 msgid "Ready to boost your sales? Let's have a look at your <b>Pipeline</b>."
 msgstr ""
+"A punt per augmentar les vostres vendes? Anem a veure el teu oleoducte "
+"<b></b>."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_force_thread_id
@@ -3054,7 +3169,7 @@ msgstr "Ingressos recurrents"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__group_use_recurring_revenues
 msgid "Recurring Revenues"
-msgstr ""
+msgstr "Ingressos recurrents"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__referred
@@ -3064,7 +3179,7 @@ msgstr "Referenciat per"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Referred By:"
-msgstr ""
+msgstr "Referit per:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__action
@@ -3167,7 +3282,7 @@ msgstr "Configuració d'equip de vendes"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Sales Team:"
-msgstr ""
+msgstr "Equip de vendes:"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_team_config
@@ -3190,7 +3305,7 @@ msgstr "Comercial"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Salesperson:"
-msgstr ""
+msgstr "Venedor:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__user_ids
@@ -3206,6 +3321,7 @@ msgstr "Número Sanitat"
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_my_activities
 msgid "Schedule activities to keep track of everything you have to do."
 msgstr ""
+"Planifica les activitats per a fer un seguiment de tot el que heu de fer."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3241,6 +3357,8 @@ msgid ""
 "Set Recurring Plans on Opportunities to display the contracts' renewal "
 "periodicity<br>(e.g: Monthly, Yearly)."
 msgstr ""
+"Estableix els Plans Recurrents sobre Oportunitats per mostrar la "
+"periodicitat de renovació dels contractes<br>(p. ex.: Mensual, Anual)."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_stage_action
@@ -3280,12 +3398,12 @@ msgstr "Mostrar només iniciatives"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Show only leads"
-msgstr ""
+msgstr "Mostra només les iniciatives"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Show only opportunities"
-msgstr ""
+msgstr "Mostra només les oportunitats"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -3301,7 +3419,7 @@ msgstr "Saltar autosignatura"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Snooze 7d"
-msgstr ""
+msgstr "Posposa 7d"
 
 #. module: crm
 #: model:crm.lead.scoring.frequency.field,name:crm.frequency_field_source_id
@@ -3315,7 +3433,7 @@ msgstr "Font"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Source:"
-msgstr ""
+msgstr "Origen:"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__team_id
@@ -3362,7 +3480,7 @@ msgstr "Canvi de fase"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Stage:"
-msgstr ""
+msgstr "Segell:"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_stage_action
@@ -3384,7 +3502,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action_team
 msgid "Start scheduling activities on your opportunities"
-msgstr ""
+msgstr "Comenceu a programar activitats sobre les vostres oportunitats"
 
 #. module: crm
 #: model:crm.lead.scoring.frequency.field,name:crm.frequency_field_state_id
@@ -3475,6 +3593,8 @@ msgid ""
 "The contacts below have been added as followers of this lead\n"
 "                        because they have been contacted less than 30 days ago on"
 msgstr ""
+"Els contactes següents s'han afegit com a seguidors d'aquesta pista\n"
+"                        perquè s'han contactat fa menys de 30 dies"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id
@@ -3483,7 +3603,7 @@ msgid ""
 "automatically create new leads assigned to the channel."
 msgstr ""
 "La direcció d'email associat amb aquest canal. Els nous email rebuts crearan"
-" automàticament una nova guia per al canal."
+" automàticament una nova iniciativa per al canal."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_model_id
@@ -3541,7 +3661,7 @@ msgstr "La probabilitat de tancar hauria d'estar entre 0% i 100%!"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "The success rate is computed based on"
-msgstr ""
+msgstr "La taxa d'èxit es calcula en funció de"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
@@ -3549,11 +3669,13 @@ msgid ""
 "The success rate is computed based on the stage, but you can add more fields"
 " in the statistical analysis."
 msgstr ""
+"La taxa d'èxit es calcula en funció de l'etapa, però podeu afegir més camps "
+"en l'anàlisi estadística."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action_lead
 msgid "This analysis shows you how many leads have been created per month."
-msgstr ""
+msgstr "Aquesta anàlisi mostra quantes iniciatives s'han creat al mes."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -3576,6 +3698,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "This can be used to compute statistical probability to close a lead"
 msgstr ""
+"Això es pot utilitzar per calcular la probabilitat estadística per tancar un"
+" plom"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -3643,7 +3767,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "This will assign leads to all members. Do you want to proceed?"
-msgstr ""
+msgstr "Això assignarà les iniciatives a tots els membres. Voleu continuar?"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_0
@@ -3655,7 +3779,7 @@ msgstr "Consell: Convertir emails entrants en oportunitats"
 #: model:digest.tip,name:crm.digest_tip_crm_1
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_1
 msgid "Tip: Did you know Odoo has built-in lead mining?"
-msgstr ""
+msgstr "Consell: Sabíeu que l'Odoo té mines de plom integrades?"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_4
@@ -3667,13 +3791,13 @@ msgstr "Consell: no perdis temps gravant les dades dels clients"
 #: model:digest.tip,name:crm.digest_tip_crm_3
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_3
 msgid "Tip: Manage your pipeline"
-msgstr ""
+msgstr "Consell: Gestionar la canonada"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_2
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_2
 msgid "Tip: Opportunity win rate is predicted with AI"
-msgstr ""
+msgstr "Consell: La taxa de guany de l'oportunitat es prediu amb IA"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_5
@@ -3694,6 +3818,8 @@ msgid ""
 "To prevent data loss, Leads and Opportunities can only be merged by groups "
 "of %(max_length)s."
 msgstr ""
+"Per evitar la pèrdua d'iniciatives, els títols i les oportunitats només es "
+"poden fusionar amb grups de %(max_length)s."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3802,6 +3928,8 @@ msgid ""
 "Use Lost Reasons to report on why opportunities are lost (e.g.\"Undercut by "
 "competitors\")."
 msgstr ""
+"Utilitzeu Raons perdudes per informar sobre per què es perden oportunitats "
+"(p. ex.Undercut by competitors\")."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner_mass__action__each_exist_or_create
@@ -3816,7 +3944,7 @@ msgid ""
 "                    a contact form filled in your website, or a file of unqualified\n"
 "                    prospects you import, etc."
 msgstr ""
-"Utilitzi les iniciatives si necessita un pas de qualificació abans de crear una oportunitat o un client. Pot ser una targeta de visita que va rebre, un formulari de contacte emplenat al seu lloc web, o un arxiu de prospectes sense qualificar importat.\n"
+"Utilitzi les iniciatives si necessita un pas de qualificació abans de crear una oportunitat o un client. Pot ser una targeta de visita que va rebre, un formulari de contacte emplenat al seu lloc web, o un arxiu d'usuaris sense qualificar importat.\n"
 "\n"
 "        "
 
@@ -3831,10 +3959,10 @@ msgid ""
 msgstr ""
 "Utilitzeu clients potencials si necessiteu un pas de qualificació abans de "
 "crear una oportunitat o un client. Pot ser una targeta de visita que heu "
-"rebut, un formulari de contacte emplenat al vostre lloc web o un fitxer de "
-"clients potencials no qualificats que importeu, etc. Un cop qualificat, el "
-"client es pot convertir en una oportunitat de negoci i/o un nou client a la "
-"vostra llibreta d'adreces. ."
+"rebut, un formulari de contacte emplenat al vostre lloc web o un fitxer "
+"d'usuaris potencials no qualificats que importeu, etc. Un cop qualificat, el"
+" client es pot convertir en una oportunitat de negoci i/o un nou client a la"
+" vostra llibreta d'adreces. ."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
@@ -3859,6 +3987,8 @@ msgid ""
 "Use the top left Create button, or configure an email alias to test the "
 "email gateway."
 msgstr ""
+"Utilitzeu el botó Crea a la part superior esquerra, o configureu un àlies de"
+" correu electrònic per a provar la passarel·la de correu electrònic."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
@@ -3929,7 +4059,7 @@ msgstr "Lloc web del contacte"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Website:"
-msgstr ""
+msgstr "Lloc web:"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_interval_type__weeks
@@ -3944,7 +4074,7 @@ msgstr "Demostració de prova"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 msgid "What went wrong ?"
-msgstr ""
+msgstr "Què ha anat malament?"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0 model:crm.stage,name:crm.stage_lead4
@@ -3990,12 +4120,13 @@ msgstr "Sí"
 #, python-format
 msgid "You can make your opportunity advance through your pipeline from here."
 msgstr ""
+"Pots fer avançar la teva oportunitat a través del teu gasoducte des d'aquí."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "You don't have the access needed to run this cron."
-msgstr ""
+msgstr "No teniu l'accés necessari per executar aquest cron."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -4054,12 +4185,12 @@ msgstr "per exemple https://www.odoo.com"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "for the leads created as of the"
-msgstr "per a les pistes creades a partir de"
+msgstr "per a les iniciatives creades a partir de"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "generate opportunities in your pipeline?<br>"
-msgstr ""
+msgstr "generar oportunitats en la vostra canonada?<br>"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__team_count

@@ -7,6 +7,7 @@
 # CristianCruzParra, 2022
 # Eugeni Chafer <eugeni@chafer.cat>, 2022
 # César López Ramírez <cesar.lopez@coopdevs.org>, 2022
+# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2022
 # Susanna Pujol, 2022
 # Lluís Dalmau <lluis.dalmau@guifi.net>, 2022
 # Jesus Ramoneda <chusamo@gmail.com>, 2022
@@ -20,17 +21,17 @@
 # Anh Thao PHAM <pta@odoo.com>, 2022
 # M Palau <mpalau@tda.ad>, 2022
 # Carles Antoli <carlesantoli@hotmail.com>, 2022
-# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2022
 # marcescu, 2022
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
 # Quim - eccit <quim@eccit.com>, 2022
-# Jonatan Gk, 2022
-# Harcogourmet, 2022
 # Martin Trigaux, 2022
-# Josep Anton Belchi, 2022
-# ericrolo, 2022
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2022
 # Guspy12, 2022
+# Farouk Jabiri, 2022
+# Jonatan Gk, 2022
+# Josep Anton Belchi, 2022
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2022
+# ericrolo, 2022
+# Harcogourmet, 2022
 # 
 msgid ""
 msgstr ""
@@ -38,7 +39,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Guspy12, 2022\n"
+"Last-Translator: Harcogourmet, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,6 +57,11 @@ msgid ""
 "The total of debits equals %s and the total of credits equals %s.\n"
 "You might want to specify a default account on journal \"%s\" to automatically balance each move."
 msgstr ""
+"\n"
+"\n"
+"El moviment (%s) no és equilibrat.\n"
+"El total de dèbits és igual a %s i el total de crèdits és igual a %s.\n"
+"És possible que vulgueu especificar un compte predeterminat al diari «%s» per a equilibrar automàticament cada moviment."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -101,7 +107,7 @@ msgstr "# Factures conciliades"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
 msgid "# Reconciled Statement Lines"
-msgstr ""
+msgstr "# Línies d'extractes reconciliades"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
@@ -203,7 +209,7 @@ msgstr "%s no és un camp emmagatzemat"
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "%s.copy"
-msgstr ""
+msgstr "%s.còpia"
 
 #. module: account
 #: code:addons/account/models/account_report.py:0
@@ -215,7 +221,7 @@ msgstr "(còpia)"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "(included)."
-msgstr ""
+msgstr "(inclosa)."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -235,11 +241,15 @@ msgid ""
 ",\n"
 "                                the due date(s) and amount(s) will be:"
 msgstr ""
+",\n"
+"                                les dates de venciment i els imports seran:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "- A default Customer Invoice / Vendor Bill date will be suggested."
 msgstr ""
+"- Se suggerirà una data predeterminada de factura de client / factura de "
+"proveïdor."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -247,11 +257,14 @@ msgid ""
 "- A new field « Total (tax inc.) » to speed up and control the encoding by "
 "automating line creation with the right account &amp; tax."
 msgstr ""
+"- Un camp nou « Total (tax inc.) » per a accelerar i controlar la "
+"codificació automatitzant la creació de línies amb el compte correcte i "
+"l'impost."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "- The document's sequence becomes editable on all documents."
-msgstr ""
+msgstr "- La seqüència del document es pot editar en tots els documents."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -301,7 +314,7 @@ msgstr "2 mesos"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30days_early_discount
 msgid "2/7 Net 30"
-msgstr ""
+msgstr "2/7 Xarxa 30"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_21days
@@ -316,7 +329,7 @@ msgstr "30 dies"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30_days_end_month_the_10
 msgid "30 days End of Month on the 10th"
-msgstr ""
+msgstr "30 dies Final del mes el 10"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance
@@ -336,7 +349,7 @@ msgstr "45 dies"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "<b>Early Payment Discount applied.</b>"
-msgstr ""
+msgstr "S'ha aplicat el descompte de pagament anticipat <b>.</b>"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -373,6 +386,37 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Benvolgut\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Aquí tens la teva\n"
+"        <t t-if=\"object.name\">\n"
+"            factura rectificativa <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            factura rectificativa\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (amb referència: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        d'un total de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        de <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br/><br/>\n"
+"        No dubteu a contactar amb nosaltres si teniu cap pregunta.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -419,6 +463,47 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Benvolgut\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Aquí tens la teva\n"
+"        <t t-if=\"object.name\">\n"
+"            factura <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            factura\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (amb referència: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        d'un total de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        de <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"            Aquesta factura ja està pagada.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"           Si us plau, faci el pagament al més aviat possible.\n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br/><br/>\n"
+"                Utilitzeu la següent comunicació per al pagament: <span style=\"font-weight:bold;\" t-out=\"object.payment_reference or ''\">INV/2021/05/0005</span>.\n"
+"            </t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        No dubteu a contactar amb nosaltres si teniu cap pregunta.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -440,6 +525,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Benvolgut <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/><br/>\n"
+"        Gràcies pel pagament.\n"
+"        Aquí teniu el rebut del mateix <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> d'un total\n"
+"        de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span> from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br/><br/>\n"
+"        No dubteu a contactar amb nosaltres si teniu cap pregunta.\n"
+"        <br/><br/>\n"
+"        Salutacions cordials,\n"
+"        <t t-if=\"not is_html_empty(user.signature)\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -449,7 +550,7 @@ msgstr "<em>Esborrany de la factura</em>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
 msgid "<i class=\"fa fa-arrow-right me-1\"/>Back to settings"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right me-1\"/>Torna a la configuració"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -491,6 +592,8 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/>\n"
 "                            Gaps in the sequence"
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"                            Espais en la seqüència"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -536,6 +639,8 @@ msgid ""
 "<span attrs=\"{'invisible': ['|', '|', ('state', '!=', 'draft'), ('name', "
 "'!=', '/'), ('quick_edit_mode', '=', True)]}\">Draft</span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', '|', ('state', '!=', 'draft'), ('name', "
+"'!=', '/'), ('quickeditmode', '=', True)]}\">Esborrany</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -580,6 +685,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('reconciled_statement_lines_count','&gt;', 1)]}\">Statement line</span>\n"
 "                                <span attrs=\"{'invisible': [('reconciled_statement_lines_count','&lt;=', 1)]}\">Statement lines</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('reconciledstatementlinescount','gt;', 1)]}\">Statement line</span>\n"
+"                                <span attrs=\"{'invisible': [('reconciledstatementlinescount','lt;=', 1)]}\">línies d'extractes</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -588,6 +695,9 @@ msgid ""
 "clock-o\" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span "
 "class=\"d-none d-md-inline\"> Waiting for Payment</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-info\"><i class=\"fa fa-fw fa-"
+"clock-o\" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span "
+"class=\"d-none d-md-inline\"> Esperant el pagament</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -596,6 +706,9 @@ msgid ""
 "check\" aria-label=\"Paid\" title=\"Paid\" role=\"img\"/><span "
 "class=\"d-none d-md-inline\"> Paid</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-success\"><i class=\"fa fa-fw fa-"
+"check\" aria-label=\"Paid\" title=\"Paid\" role=\"img\"/><span "
+"class=\"d-none d-md-inline\"> Pagat</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -604,6 +717,9 @@ msgid ""
 "check\" aria-label=\"Reversed\" title=\"Reversed\" role=\"img\"/><span "
 "class=\"d-none d-md-inline\"> Reversed</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-success\"><i class=\"fa fa-fw fa-"
+"check\" aria-label=\"Reversed\" title=\"Reversed\" role=\"img\"/><span "
+"class=\"d-none d-md-inline\"> Invertit</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -612,6 +728,9 @@ msgid ""
 "remove\" aria-label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/><span "
 "class=\"d-none d-md-inline\"> Cancelled</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-warning\"><i class=\"fa fa-fw fa-"
+"remove\" aria-label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/><span "
+"class=\"d-none d-md-inline\"> Cancel·lat</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -651,6 +770,9 @@ msgid ""
 "                                dated\n"
 "                                <span class=\"mx-1\"/>"
 msgstr ""
+"<span class=\"mx-1\"/>\n"
+"                                datada\n"
+"                                <span class=\"mx-1\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -711,6 +833,8 @@ msgid ""
 "<span class=\"o_form_label\">Cash Discount Tax Reduction</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" role=\"img\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Reducció d'impostos de descompte de caixa</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" role=\"img\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -762,7 +886,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Post Exchange difference entries in:</span>"
 msgstr ""
-"<span class=\"o_form_label\">Entrades de diferències de postcanvi a:</span>"
+"<span class=\"o_form_label\">Publica les entrades  de la diferència de canvi"
+" a:</span>a:</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -821,6 +946,9 @@ msgid ""
 "groups=\"base.group_multi_currency\" attrs=\"{'invisible': [('move_type', "
 "'=', 'entry')]}\"> in </span>"
 msgstr ""
+"<span class=\"oe_inline o_form_label mx-3\" "
+"groups=\"base.group_multi_currency\" attrs=\"{'invisible': [('move_type', "
+"'=', 'entry')]}\"> in </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
@@ -829,6 +957,9 @@ msgid ""
 "                                    Leave empty to create a new journal for this bank account, or select a journal to link it with the bank account.\n"
 "                                </span>"
 msgstr ""
+"<span class=\"text-muted\" colspan=\"2\">\n"
+"                                    Deixeu-ho buit per a crear un diari nou per a aquest compte bancari, o seleccioneu un diari per a enllaçar-lo amb el compte bancari.\n"
+"                                </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1083,7 +1214,7 @@ msgstr "<strong>Import vençut</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Credit Note Date:</strong>"
-msgstr ""
+msgstr "<strong>Data de la nota de crèdit:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1180,6 +1311,9 @@ msgid ""
 "                journals. This feature provides an easy way to follow up cash\n"
 "                payments on a daily basis."
 msgstr ""
+"Un registre de caixa us permet gestionar entrades de caixa en efectiu\n"
+"                revistes. Aquesta característica proporciona una manera fàcil de fer un seguiment de l'efectiu\n"
+"                pagaments diaris."
 
 #. module: account
 #: code:addons/account/models/res_partner_bank.py:0
@@ -1194,6 +1328,9 @@ msgid ""
 "                occurring over a given period of time on a bank account. You\n"
 "                should receive this periodically from your bank."
 msgstr ""
+"Un extracte bancari és un resum de totes les transaccions financeres\n"
+"                Es produeix durant un període de temps determinat en un compte bancari. Tu\n"
+"                Hauria de rebre això periòdicament del banc."
 
 #. module: account
 #: code:addons/account/models/partner.py:0
@@ -1228,13 +1365,15 @@ msgstr ""
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "A line cannot have both children and a groupby value (line '%s')."
-msgstr ""
+msgstr "Una línia no pot tenir fills i un valor de grup per (línia «%s»)."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "A line of this move is using a deprecated account, you cannot post it."
 msgstr ""
+"Una línia d'aquest moviment utilitza un compte obsolet, no podeu publicar-"
+"lo."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -1264,7 +1403,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_reconcile_model_name_unique
 msgid "A reconciliation model already bears this name."
-msgstr ""
+msgstr "Un model de reconciliació ja porta aquest nom."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_report_line_code_uniq
@@ -1344,7 +1483,7 @@ msgstr "Advertència d'accés"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__normal
 msgid "According to each type of account"
-msgstr ""
+msgstr "Segons cada tipus de compte"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -1385,7 +1524,7 @@ msgstr "Plantilla de quadre de comptes"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__account_codes_formula
 msgid "Account Codes Formula Shortcut"
-msgstr ""
+msgstr "Drecera de fórmula dels codis de comptes"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__currency_id
@@ -1481,7 +1620,7 @@ msgstr "Número de compte"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_onboarding_create_invoice_state_flag
 msgid "Account Onboarding Create Invoice State Flag"
-msgstr ""
+msgstr "Compte onboarding Crea un estat de factura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_payable_id
@@ -1503,7 +1642,7 @@ msgstr "Compte a cobrar"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_account_reconcile
 msgid "Account Reconcile"
-msgstr ""
+msgstr "Concilia el compte"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -1602,12 +1741,16 @@ msgid ""
 "Account for the difference amount after the expense discount has been "
 "granted"
 msgstr ""
+"Compte per a l'import de la diferència després que s'hagi concedit el "
+"descompte de despeses"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
 msgid ""
 "Account for the difference amount after the income discount has been granted"
 msgstr ""
+"Compte per a l'import de la diferència després que s'hagi concedit el "
+"descompte d'ingressos"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_search
@@ -1625,7 +1768,9 @@ msgstr "Grups de comptes"
 msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
-msgstr "Nom del titular del compte"
+msgstr ""
+"Nom del titular del compte, en el cas que sigui diferent del nom del company"
+" vinculat al compte."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_src_id
@@ -1636,7 +1781,7 @@ msgstr "Compte de producte"
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__account_id
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line_template__account_id
 msgid "Account on which to post the tax amount"
-msgstr "Compte on s'ha de registrar l'import de l'impost"
+msgstr "Compte on s'ha de publicar l'import de l'impost"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__group_id
@@ -1682,14 +1827,12 @@ msgstr "Compte a transferir a."
 #. module: account
 #: model:ir.model,name:account.model_account_tour_upload_bill
 msgid "Account tour upload bill"
-msgstr "Factura de càrrega del recorregut del compte"
+msgstr "Recorregut de la càrrega d'una factura"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tour_upload_bill_email_confirm
 msgid "Account tour upload bill email confirm"
-msgstr ""
-"Correu electrònic de confirmació de la factura de càrrega del recorregut del"
-" compte"
+msgstr "Recorregut de la càrrega d'una factura per email"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__revenue_accrual_account_id
@@ -1728,6 +1871,8 @@ msgid ""
 "Account: Post draft entries with auto_post enabled and accounting date up to"
 " today"
 msgstr ""
+"Compte: Publica les entrades de l'esborrany amb l'entrada automàtica "
+"activada i data comptable fins avui"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -1743,7 +1888,7 @@ msgstr "Comptabilitat"
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_journal_dashboard_kanban
 msgid "Accounting Dashboard"
-msgstr "Quadre de comandament de comptabilitat"
+msgstr "Tauler de Comptabilitat"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -1765,7 +1910,7 @@ msgstr "Assentaments comptabilitat"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Accounting Firms mode"
-msgstr ""
+msgstr "Mode Firms comptables"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -1787,27 +1932,29 @@ msgstr "Informe financer"
 #. module: account
 #: model:ir.model,name:account.model_account_report_column
 msgid "Accounting Report Column"
-msgstr ""
+msgstr "Columna de l'informe de comptabilitat"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_expression
 msgid "Accounting Report Expression"
-msgstr ""
+msgstr "Expressió de l'informe comptable"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_external_value
 msgid "Accounting Report External Value"
-msgstr ""
+msgstr "Valor extern de l'informe comptable"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_line
 msgid "Accounting Report Line"
-msgstr ""
+msgstr "Línia d'informe de comptabilitat"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Accounting firm mode will change invoice/bill encoding:"
 msgstr ""
+"El mode de signatura de comptabilitat canviarà la codificació de la "
+"factura/bill:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -1838,7 +1985,7 @@ msgstr "Cartografia comptable de la posició fiscal"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__account_prefix
 msgid "Accounts Prefix"
-msgstr ""
+msgstr "Prefix dels comptes"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__account_id
@@ -2121,6 +2268,8 @@ msgid ""
 "Additional tags that will be assigned by this repartition line for use in "
 "domains"
 msgstr ""
+"Etiquetes addicionals que seran assignades per aquesta línia de repartició "
+"per al seu ús en dominis"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -2135,6 +2284,9 @@ msgid ""
 "cancelling {percent:.2f}%% of {amount}</li><li>%(link0)s postponing it to "
 "{new_date}</li></ul>"
 msgstr ""
+"S'han creat entrades d'ajust per a aquesta factura:<ul><li>%(link1)s "
+"cancel·lant {percent:.2f}%% de {amount}</li><li>%(link0)s posposant-lo a "
+"{newdate}</li></ul>"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -2143,6 +2295,8 @@ msgid ""
 "Adjusting Entry for {link}: {percent:.2f}% of {amount} recognized on "
 "{new_date}"
 msgstr ""
+"S'està ajustant l'entrada per a {link}: {percent:.2f}% de {amount} reconegut"
+" el {newdate}"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -2150,6 +2304,8 @@ msgstr ""
 msgid ""
 "Adjusting Entry {link}: {percent:.2f}% of {amount} recognized from {date}"
 msgstr ""
+"S'està ajustant l'entrada {link}: {percent:.2f}% de {amount} reconegut des "
+"de {date}"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_advance_tax_payment_account_id
@@ -2187,12 +2343,12 @@ msgstr "Després"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__aggregation
 msgid "Aggregate Other Formulas"
-msgstr ""
+msgstr "Agrega altres fórmules"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__aggregation_formula
 msgid "Aggregation Formula Shortcut"
-msgstr ""
+msgstr "Drecera de fórmula d'agregació"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_name
@@ -2295,7 +2451,7 @@ msgstr "Sempre"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__early_pay_discount_computation__mixed
 msgid "Always (upon invoice)"
-msgstr ""
+msgstr "Sempre (actualitza la factura)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__always_tax_exigible
@@ -2479,7 +2635,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "An error has occurred."
-msgstr ""
+msgstr "S'ha produït un error."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -2532,7 +2688,7 @@ msgstr "Models de distribució analític"
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_distribution_stored_char
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__analytic_distribution_stored_char
 msgid "Analytic Distribution Stored Char"
-msgstr ""
+msgstr "Caràcter emmagatzemat de la distribució analítica"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_analytic
@@ -2580,6 +2736,8 @@ msgstr "Analitics"
 msgid ""
 "Any journal item on a payable account must have a due date and vice versa."
 msgstr ""
+"Qualsevol element del diari en un compte pagable ha de tenir una data de "
+"venciment i viceversa."
 
 #. module: account
 #: code:addons/account/models/account_move_line.py:0
@@ -2588,6 +2746,8 @@ msgid ""
 "Any journal item on a receivable account must have a due date and vice "
 "versa."
 msgstr ""
+"Qualsevol element del diari en un compte cobrable ha de tenir una data de "
+"venciment i viceversa."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__applicability
@@ -2688,7 +2848,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__to_beginning_of_fiscalyear
 msgid "At the beginning of the fiscal year"
-msgstr ""
+msgstr "Al començament de l'any fiscal"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__to_beginning_of_period
@@ -2732,7 +2892,7 @@ msgstr "Adjunts"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__auditable
 msgid "Auditable"
-msgstr ""
+msgstr "Auditable"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__8
@@ -2780,14 +2940,14 @@ msgstr "Pagaments Generats Automàticament"
 #: model:ir.model.fields,field_description:account.field_account_move__auto_post
 #: model:ir.model.fields,field_description:account.field_account_payment__auto_post
 msgid "Auto-post"
-msgstr ""
+msgstr "Publica automàticament"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_until
 #: model:ir.model.fields,field_description:account.field_account_move__auto_post_until
 #: model:ir.model.fields,field_description:account.field_account_payment__auto_post_until
 msgid "Auto-post until"
-msgstr ""
+msgstr "Publica automàticament fins"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__auto_reconcile
@@ -2918,19 +3078,19 @@ msgstr "Compte comptable"
 #: code:addons/account/models/res_partner_bank.py:0
 #, python-format
 msgid "Bank Account %s created"
-msgstr ""
+msgstr "Compte bancari %s creat"
 
 #. module: account
 #: code:addons/account/models/res_partner_bank.py:0
 #, python-format
 msgid "Bank Account %s updated"
-msgstr ""
+msgstr "Compte bancari %s actualitzat"
 
 #. module: account
 #: code:addons/account/models/res_partner_bank.py:0
 #, python-format
 msgid "Bank Account %s with number %s deleted"
-msgstr ""
+msgstr "Compte bancari %s amb número %s eliminat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__account_number
@@ -3021,7 +3181,7 @@ msgstr "Compte transitori bancari"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Bank Transaction"
-msgstr ""
+msgstr "Transacció bancària"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -3231,7 +3391,7 @@ msgstr "Factures a pagar "
 #: model:ir.model.fields,field_description:account.field_account_report_column__blank_if_zero
 #: model:ir.model.fields,field_description:account.field_account_report_expression__blank_if_zero
 msgid "Blank if Zero"
-msgstr ""
+msgstr "En blanc si és zero"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
@@ -3270,6 +3430,9 @@ msgid ""
 "By default, we always unfold the lines that can be. If this is checked, the "
 "line won't be unfolded by default, and a folding button will be displayed."
 msgstr ""
+"Per defecte, sempre despleguem les línies que poden ser. Si està marcada, la"
+" línia no es desplegarà de manera predeterminada i es mostrarà un botó de "
+"plegat."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__active
@@ -3331,12 +3494,12 @@ msgstr "CUST"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__can_edit_body
 msgid "Can Edit Body"
-msgstr "Pot Editar el Cos"
+msgstr "Pot editar el cos del email"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__can_edit_wizard
 msgid "Can Edit Wizard"
-msgstr "Es Pot Editar l'Assistent"
+msgstr "Pot editar l'assistent"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__can_group_payments
@@ -3387,12 +3550,13 @@ msgstr "Factura cancel·lada"
 #, python-format
 msgid "Cannot create a purchase document in a non purchase journal"
 msgstr ""
+"No es pot crear un document de compra en un diari que no sigui de compra"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Cannot create a sale document in a non sale journal"
-msgstr ""
+msgstr "No es pot crear un document de venda en un diari no de venda"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -3426,17 +3590,19 @@ msgstr ""
 msgid ""
 "Cannot get aggregation details from a line not using 'aggregation' engine"
 msgstr ""
+"No es poden obtenir els detalls de l'agregació des d'una línia que no "
+"utilitza el motor «agregació»"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__carryover_target
 msgid "Carry Over To"
-msgstr ""
+msgstr "Passa a"
 
 #. module: account
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "Carryover lines for: %s"
-msgstr ""
+msgstr "Línies de cobertura per a: %s"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -3519,40 +3685,40 @@ msgstr "Pèrdua de Diferència en Efectiu"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Cash Discount Gain"
-msgstr ""
+msgstr "Guany de descompte de caixa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
 msgid "Cash Discount Gain account"
-msgstr ""
+msgstr "Compte de guany de descompte de caixa"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Cash Discount Loss"
-msgstr ""
+msgstr "Pèrdua del descompte de caixa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
 msgid "Cash Discount Loss account"
-msgstr ""
+msgstr "Compte de pèrdua de descompte de caixa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__early_pay_discount_computation
 msgid "Cash Discount Tax Reduction"
-msgstr ""
+msgstr "Reducció d'impostos de descompte de caixa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_early_pay_discount_gain_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_early_pay_discount_gain_account_id
 msgid "Cash Discount Write-Off Gain Account"
-msgstr ""
+msgstr "Compte de descompte de caixa d'escriptura de guany"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_early_pay_discount_loss_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_early_pay_discount_loss_account_id
 msgid "Cash Discount Write-Off Loss Account"
-msgstr ""
+msgstr "Compte de descompte de caixa d'escriptura i pèrdua de caixa"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
@@ -3587,7 +3753,7 @@ msgstr "Declaració en Efectiu"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Cash basis rounding difference"
-msgstr ""
+msgstr "Diferència d'arrodoniment de la base de caixa"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -3706,7 +3872,7 @@ msgstr "Pla comptable"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__availability_condition__coa
 msgid "Chart of Accounts Matches"
-msgstr ""
+msgstr "Diagrama de coincidències de comptes"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_list
@@ -3743,6 +3909,8 @@ msgid ""
 "Check this box if you don't want to share the same sequence on payments and "
 "bank transactions posted on this journal"
 msgstr ""
+"Activeu aquesta casella si no voleu compartir la mateixa seqüència en "
+"pagaments i transaccions bancàries publicades en aquest diari"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__tax_negate
@@ -3779,7 +3947,7 @@ msgstr "Xecs"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__children_ids
 msgid "Child Lines"
-msgstr ""
+msgstr "Línies filles"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__children_tax_ids
@@ -3883,6 +4051,9 @@ msgid ""
 "Comma-separated list of fields from account.move.line (Journal Item). When "
 "set, this line will generate sublines grouped by those keys."
 msgstr ""
+"Llista separada per comes de camps de account.move.line (Element de la "
+"font). Quan s'estableix, aquesta línia generarà sublínies agrupades per "
+"aquestes claus."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__commercial_partner_id
@@ -3904,7 +4075,7 @@ msgstr "Tipus de comunicació"
 #. module: account
 #: model:ir.model,name:account.model_res_company
 msgid "Companies"
-msgstr "Companyies"
+msgstr "Empreses"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__ref_company_ids
@@ -4006,17 +4177,17 @@ msgstr "Mode de composició"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__engine
 msgid "Computation Engine"
-msgstr ""
+msgstr "Motor de computació"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__compute_all_tax
 msgid "Compute All Tax"
-msgstr ""
+msgstr "Calcula tots els impostos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__compute_all_tax_dirty
 msgid "Compute All Tax Dirty"
-msgstr ""
+msgstr "Calcula tots els impostos bruts"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4143,7 +4314,7 @@ msgstr "Dades danyades a l'entrada del diari amb identificador %s."
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__cogs
 msgid "Cost of Goods Sold"
-msgstr ""
+msgstr "Cost dels béns venuts"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense_direct_cost
@@ -4166,6 +4337,8 @@ msgstr ""
 #, python-format
 msgid "Could not determine carryover target automatically for expression %s."
 msgstr ""
+"No s'ha pogut determinar automàticament la destinació de la transferència "
+"per a l'expressió %s."
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -4182,7 +4355,7 @@ msgstr ""
 #: code:addons/account/static/src/components/bills_upload/bills_upload.js:0
 #, python-format
 msgid "Could not upload files"
-msgstr ""
+msgstr "No s'han pogut pujar els fitxers"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -4226,7 +4399,7 @@ msgstr "Grup de paisos "
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__availability_condition__country
 msgid "Country Matches"
-msgstr ""
+msgstr "Concordances de països"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__country_id
@@ -4591,7 +4764,7 @@ msgstr "Moneda de la Nota de Crèdit"
 #. module: account
 #: model:mail.template,name:account.email_template_edi_credit_note
 msgid "Credit Note: Sending"
-msgstr ""
+msgstr "Nota de crèdit: S'està enviant"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_out_refund_type
@@ -4710,7 +4883,7 @@ msgstr "Moneda de l'element del diari de dèbit."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__currency_rate
 msgid "Currency rate from company currency to document currency."
-msgstr ""
+msgstr "Taxa monetària de la moneda de l'empresa a la divisa del document."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_current
@@ -4748,12 +4921,12 @@ msgstr "Cust. Pagaments"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__custom_audit_action_id
 msgid "Custom Audit Action"
-msgstr ""
+msgstr "Acció d'auditoria personalitzada"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__custom
 msgid "Custom Python Function"
-msgstr ""
+msgstr "Funció Python personalitzada"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__partner_type__customer
@@ -4801,7 +4974,7 @@ msgstr "Factures de client"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__out_and_in_invoices
 msgid "Customer Invoices and Vendor Bills"
-msgstr ""
+msgstr "Factures de client i factures de proveïdor"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -4974,17 +5147,17 @@ msgstr "Mode de data"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_date_range
 msgid "Date Range"
-msgstr ""
+msgstr "Interval de dates"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__date_scope
 msgid "Date Scope"
-msgstr ""
+msgstr "Àmbit de data"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__example_date
 msgid "Date example"
-msgstr ""
+msgstr "Exemple de data"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__opening_date
@@ -5022,12 +5195,12 @@ msgstr "Dies"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__days_after
 msgid "Days after End of month"
-msgstr ""
+msgstr "Dies després del final del mes"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__days_after
 msgid "Days to add after the end of the month"
-msgstr ""
+msgstr "Dies a afegir després del final del mes"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -5072,7 +5245,7 @@ msgstr "Seqüència de Notes de crèdit Dedicada"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__payment_sequence
 msgid "Dedicated Payment Sequence"
-msgstr ""
+msgstr "Seqüència de pagament dedicada"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_id
@@ -5254,22 +5427,22 @@ msgstr "Adreça d'enviament de la factura actual."
 #. module: account
 #: model:account.account.tag,name:account.demo_ceo_wages_account
 msgid "Demo CEO Wages Account"
-msgstr ""
+msgstr "Compte del CEO de Demo"
 
 #. module: account
 #: model:account.account.tag,name:account.demo_capital_account
 msgid "Demo Capital Account"
-msgstr ""
+msgstr "Compte de Demo Capital"
 
 #. module: account
 #: model:account.account.tag,name:account.demo_sale_of_land_account
 msgid "Demo Sale of Land Account"
-msgstr ""
+msgstr "Demo Sale of Land Account"
 
 #. module: account
 #: model:account.account.tag,name:account.demo_stock_account
 msgid "Demo Stock Account"
-msgstr ""
+msgstr "Compte d'estoc de demostració"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__deprecated
@@ -5357,20 +5530,22 @@ msgstr "Digerir"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Digitization"
-msgstr ""
+msgstr "Digitació"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Digitize your PDF or scanned documents with OCR and Artificial Intelligence"
 msgstr ""
+"Digiteu el PDF o els documents escanejats amb OCR i intel·ligència "
+"artificial"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__direction_sign
 #: model:ir.model.fields,field_description:account.field_account_move__direction_sign
 #: model:ir.model.fields,field_description:account.field_account_payment__direction_sign
 msgid "Direction Sign"
-msgstr ""
+msgstr "Senyal de direcció"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_multi_company__disabled
@@ -5414,19 +5589,19 @@ msgstr "Import del descompte"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__discount_balance
 msgid "Discount Balance"
-msgstr ""
+msgstr "Saldo de descompte"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__discount_date
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Discount Date"
-msgstr ""
+msgstr "Data del descompte"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__discount_days
 msgid "Discount Days"
-msgstr ""
+msgstr "Dies de descompte"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__discount_percentage
@@ -5436,7 +5611,7 @@ msgstr "Descompte en %"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__discount_amount_currency
 msgid "Discount amount in Currency"
-msgstr ""
+msgstr "Import del descompte en la divisa"
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0
@@ -5444,6 +5619,8 @@ msgstr ""
 msgid ""
 "Discount percentages on the Payment Terms lines must be between 0 and 100."
 msgstr ""
+"Els percentatges de descompte a les línies de condicions de pagament han "
+"d'estar entre 0 i 100."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__display_amount
@@ -5557,7 +5734,7 @@ msgstr "Mostra el botó de previsualització"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__display_on_invoice
 msgid "Display terms on invoice"
-msgstr ""
+msgstr "Mostra els termes de la factura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_repartition_line_ids
@@ -5598,12 +5775,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_invoice_extract
 msgid "Document Digitization"
-msgstr ""
+msgstr "Digitació del document"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__document_type
 msgid "Document Type"
-msgstr ""
+msgstr "Tipus de document"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5618,7 +5795,7 @@ msgstr "Domini "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__domain_formula
 msgid "Domain Formula Shortcut"
-msgstr ""
+msgstr "Drecera de fórmula del domini"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5677,7 +5854,7 @@ msgstr "Factura abonament esborrany"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_show_draft
 msgid "Draft Entries"
-msgstr ""
+msgstr "Entrades d'esborrany"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -5763,14 +5940,14 @@ msgstr "Duplicar"
 #: model:ir.model.fields,field_description:account.field_res_partner__duplicated_bank_account_partners_count
 #: model:ir.model.fields,field_description:account.field_res_users__duplicated_bank_account_partners_count
 msgid "Duplicated Bank Account Partners Count"
-msgstr ""
+msgstr "Comptador de socis de comptes bancaris duplicats"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__duplicated_ref_ids
 #: model:ir.model.fields,field_description:account.field_account_move__duplicated_ref_ids
 #: model:ir.model.fields,field_description:account.field_account_payment__duplicated_ref_ids
 msgid "Duplicated Ref"
-msgstr ""
+msgstr "Ref duplicat"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -5779,6 +5956,8 @@ msgid ""
 "Duplicated vendor reference detected. You probably encoded twice the same "
 "vendor bill/credit note."
 msgstr ""
+"S'ha detectat una referència duplicada del proveïdor. Probablement heu "
+"codificat dues vegades la mateixa nota de factura/crèdit del proveïdor."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
@@ -5808,7 +5987,7 @@ msgstr "Canvi"
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__epd
 #, python-format
 msgid "Early Payment Discount"
-msgstr ""
+msgstr "Descompte de pagament anticipat"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -5816,23 +5995,23 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Early Payment Discount (%s)"
-msgstr ""
+msgstr "Descompte de pagament anticipat (%s)"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Early Payment Discount (Exchange Difference)"
-msgstr ""
+msgstr "Descompte de pagament anticipat (diferència d'intercanvi)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__early_payment_discount_mode
 msgid "Early Payment Discount Mode"
-msgstr ""
+msgstr "Mode de descompte de pagament anticipat"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__discount_percentage
 msgid "Early Payment Discount granted for this line"
-msgstr ""
+msgstr "Descompte de pagament anticipat concedit per aquesta línia"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
@@ -5866,7 +6045,7 @@ msgstr "Àlies de correu electrònic"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__email_layout_xmlid
 msgid "Email Notification Layout"
-msgstr ""
+msgstr "Disposició de notificacions per correu electrònic"
 
 #. module: account
 #: model:ir.model,name:account.model_mail_thread
@@ -5890,7 +6069,7 @@ msgstr "Correu electrònic per defecte"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Empty"
-msgstr ""
+msgstr "Buit"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_use_credit_limit
@@ -5901,7 +6080,7 @@ msgstr "Habilita l'ús de límit de crèdit als partners."
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_hierarchy__by_default
 msgid "Enabled by Default"
-msgstr ""
+msgstr "Activat per defecte"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__end_date
@@ -5916,7 +6095,7 @@ msgstr "Fi del mes següent"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__end_month
 msgid "End of month"
-msgstr ""
+msgstr "Final del mes"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_end_real
@@ -5980,17 +6159,17 @@ msgstr "Entrades: %(account)s"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__epd_dirty
 msgid "Epd Dirty"
-msgstr ""
+msgstr "Epd brut"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__epd_key
 msgid "Epd Key"
-msgstr ""
+msgstr "Clau Epd"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__epd_needed
 msgid "Epd Needed"
-msgstr ""
+msgstr "Cal un Epd"
 
 #. module: account
 #. openerp-web
@@ -6011,6 +6190,8 @@ msgid ""
 "Error when reading the original PDF for: %r.\n"
 "Please make sure the file is valid."
 msgstr ""
+"Error en llegir el PDF original per a: %r.\n"
+"Assegureu-vos que el fitxer és vàlid."
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -6036,22 +6217,22 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "Example"
-msgstr ""
+msgstr "Exemple"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__example_amount
 msgid "Example Amount"
-msgstr ""
+msgstr "Import d'exemple"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__example_invalid
 msgid "Example Invalid"
-msgstr ""
+msgstr "Exemple no vàlid"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__example_preview
 msgid "Example Preview"
-msgstr ""
+msgstr "Previsualització d'exemple"
 
 #. module: account
 #. openerp-web
@@ -6122,12 +6303,12 @@ msgstr "Despeses"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__expression_label
 msgid "Expression Label"
-msgstr ""
+msgstr "Etiqueta d'expressió"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__expression_ids
 msgid "Expressions"
-msgstr ""
+msgstr "Expressions"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__reference
@@ -6137,7 +6318,7 @@ msgstr "Referència externa"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__external
 msgid "External Value"
-msgstr ""
+msgstr "Valor extern"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FAS
@@ -6198,7 +6379,7 @@ msgstr "Estats federals"
 #: model:ir.model.fields,field_description:account.field_account_report_column__figure_type
 #: model:ir.model.fields,field_description:account.field_account_report_expression__figure_type
 msgid "Figure Type"
-msgstr ""
+msgstr "Tipus de figura"
 
 #. module: account
 #. openerp-web
@@ -6210,7 +6391,7 @@ msgstr "Ompliu els detalls de la línia."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_fiscal_position
 msgid "Filter Multivat"
-msgstr ""
+msgstr "Filtre Multivat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__general_account_id
@@ -6221,12 +6402,12 @@ msgstr "Compte financer"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix
 msgid "Financial Accounts Prefix"
-msgstr ""
+msgstr "Prefix dels comptes financers"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__journal_id
 msgid "Financial Journal"
-msgstr ""
+msgstr "Diari financer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__tag_ids
@@ -6236,7 +6417,7 @@ msgstr "Etiquetes Financeres"
 #. module: account
 #: model:account.account.tag,name:account.account_tag_financing
 msgid "Financing Activities"
-msgstr ""
+msgstr "Activitats de finançament"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__payment_ref_regex
@@ -6266,7 +6447,7 @@ msgstr "Primer Hash"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__first_line_index
 msgid "First Line Index"
-msgstr ""
+msgstr "Primer índex de línia"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__first_name
@@ -6283,7 +6464,7 @@ msgstr "Primera factura enviada!"
 #: model:ir.model.fields,field_description:account.field_account_move__auto_post_origin_id
 #: model:ir.model.fields,field_description:account.field_account_payment__auto_post_origin_id
 msgid "First recurring entry"
-msgstr ""
+msgstr "Primera entrada periòdica"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_fiscal_country_id
@@ -6472,6 +6653,8 @@ msgid ""
 "For any invoice of\n"
 "                                <span class=\"mx-1\"/>"
 msgstr ""
+"Per a qualsevol factura de\n"
+"                                <span class=\"mx-1\"/>"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__value_amount
@@ -6483,11 +6666,13 @@ msgstr "Per el percentatge, introduïu un rati entre 0 i 100."
 #, python-format
 msgid "For this entry to be automatically posted, it required a bill date."
 msgstr ""
+"Perquè aquesta entrada es publiqui automàticament, cal una data de "
+"facturació."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_non_accountable_fields_null
 msgid "Forbidden balance or account on non-accountable line"
-msgstr ""
+msgstr "Saldo prohibit o compte en una línia no comptable"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__force_post
@@ -6506,6 +6691,9 @@ msgid ""
 "Forces all journal items in this account to have a specific currency (i.e. "
 "bank journals). If no currency is set, entries can use any currency."
 msgstr ""
+"Força que tots els elements de diari d'aquest compte tinguin una moneda "
+"específica (és a dir, diaris bancaris). Si no s'estableix cap moneda, les "
+"entrades poden utilitzar qualsevol divisa."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template__currency_id
@@ -6554,6 +6742,11 @@ msgid ""
 "allowed as value in case the carryover destination requires more complex "
 "logic."
 msgstr ""
+"Fórmula en el formulari linecode.expressionlabel. Permet establir l'objectiu"
+" de la portada per a aquesta expressió (en una expressió etiquetada "
+"carryover*), en cas que sigui diferent de la línia pare. També es permet "
+"\"personal\" com a valor en cas que la destinació de la transferència "
+"requereixi una lògica més complexa."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__email_from
@@ -6564,22 +6757,22 @@ msgstr "Des de"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Non Trade Receivable accounts"
-msgstr ""
+msgstr "De comptes no comercials"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From P&L accounts"
-msgstr ""
+msgstr "De comptes PL"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Trade Payable accounts"
-msgstr ""
+msgstr "De comptes comercials pagables"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Trade Receivable accounts"
-msgstr ""
+msgstr "Des dels comptes comptables"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line__amount_type__regex
@@ -6590,17 +6783,17 @@ msgstr "De l'etiqueta"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__previous_tax_period
 msgid "From previous tax period"
-msgstr ""
+msgstr "Des del període anterior"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__from_fiscalyear
 msgid "From the start of the fiscal year"
-msgstr ""
+msgstr "Des de l'inici de l'any fiscal"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__from_beginning
 msgid "From the very start"
-msgstr ""
+msgstr "Des del principi"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_invoice_report_all_supp
@@ -6686,7 +6879,7 @@ msgstr "Genera Assentaments"
 #. module: account
 #: model:account.report,name:account.generic_tax_report
 msgid "Generic Tax report"
-msgstr ""
+msgstr "Informe d'impost genèric"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_hash_integrity
@@ -6742,12 +6935,12 @@ msgstr "Pagaments en Grup"
 #. module: account
 #: model:account.report,name:account.generic_tax_report_account_tax
 msgid "Group by: Account > Tax "
-msgstr ""
+msgstr "Agrupa per: Compte > Impostos"
 
 #. module: account
 #: model:account.report,name:account.generic_tax_report_tax_account
 msgid "Group by: Tax > Account "
-msgstr ""
+msgstr "Agrupa per: Impostos > Compte"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__amount_type__group
@@ -6768,11 +6961,13 @@ msgid ""
 "Groupby feature isn't supported by aggregation engine. Please remove the "
 "groupby value on '%s'"
 msgstr ""
+"El motor d'agregació no permet la funció Groupby. Suprimiu el valor de grup "
+"per a «%s»"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_growth_comparison
 msgid "Growth Comparison"
-msgstr ""
+msgstr "Comparació del creixement"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
@@ -6831,7 +7026,7 @@ msgstr "PDF de resultats d'integritat hash"
 #: model:ir.model.fields,field_description:account.field_account_move__hide_post_button
 #: model:ir.model.fields,field_description:account.field_account_payment__hide_post_button
 msgid "Hide Post Button"
-msgstr ""
+msgstr "Amaga el botó d'entrada"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__hide_tax_exigibility
@@ -6841,12 +7036,12 @@ msgstr "Amaga Utilitza l'opció de Base en Efectiu"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__hide_writeoff_section
 msgid "Hide Writeoff Section"
-msgstr ""
+msgstr "Amaga la secció d'escriptura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__hide_if_zero
 msgid "Hide if Zero"
-msgstr ""
+msgstr "Amaga si és zero"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__highest_name
@@ -7046,11 +7241,15 @@ msgid ""
 "If set, the payment deadlines and respective due amounts will be detailed on"
 " invoices."
 msgstr ""
+"Si s'estableix, els terminis de pagament i els imports deguts respectius es "
+"detallaran a les factures."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "If set, this account is used to automatically balance entries."
 msgstr ""
+"Si s'estableix, aquest compte s'utilitzarà per a equilibrar automàticament "
+"les entrades."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__non_trade
@@ -7058,6 +7257,8 @@ msgid ""
 "If set, this account will belong to Non Trade Receivable/Payable in reports and filters.\n"
 "If not, this account will belong to Trade Receivable/Payable in reports and filters."
 msgstr ""
+"Si s'estableix, aquest compte pertanyerà a No Comercial Receptible/Payable en informes i filtres.\n"
+"Si no, aquest compte pertanyerà a Trade Receivable/Payable en informes i filtres."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__preceding_subtotal
@@ -7171,13 +7372,13 @@ msgstr "Importar arxius .qif"
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "Import Template for Chart of Accounts"
-msgstr ""
+msgstr "Importa una plantilla per al diagrama de comptes"
 
 #. module: account
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Import Template for Journal Items"
-msgstr ""
+msgstr "Importa una plantilla per als elements del diari"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_import_csv
@@ -7440,6 +7641,8 @@ msgstr ""
 msgid ""
 "Intermediary account used when moving money from a liqity account to another"
 msgstr ""
+"Compte intermediari utilitzat en moure diners d'un compte de liqity a un "
+"altre"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__internal_group
@@ -7488,18 +7691,24 @@ msgid ""
 "Internal field to shorten expression_ids creation for the account_codes "
 "engine"
 msgstr ""
+"Camp intern per a escurçar la creació dels «expressionids» per al motor de "
+"codis de compte"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__aggregation_formula
 msgid ""
 "Internal field to shorten expression_ids creation for the aggregation engine"
 msgstr ""
+"Camp intern per a escurçar la creació dels expressionids per al motor "
+"d'agregació"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__domain_formula
 msgid ""
 "Internal field to shorten expression_ids creation for the domain engine"
 msgstr ""
+"Camp intern per a escurçar la creació dels expressionids per al motor de "
+"domini"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_incoterm_id
@@ -7544,7 +7753,7 @@ msgstr "Inverteix les etiquetes"
 #. module: account
 #: model:account.account.tag,name:account.account_tag_investing
 msgid "Investing & Extraordinary Activities"
-msgstr ""
+msgstr "Invertir activitats extraordinàries"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -7679,7 +7888,7 @@ msgstr "Impost de factura"
 #: model:ir.model.fields,field_description:account.field_account_move__tax_totals
 #: model:ir.model.fields,field_description:account.field_account_payment__tax_totals
 msgid "Invoice Totals"
-msgstr ""
+msgstr "Totals de factures"
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -7752,7 +7961,7 @@ msgstr "Data de factura"
 #. module: account
 #: model:mail.template,name:account.email_template_edi_invoice
 msgid "Invoice: Sending"
-msgstr ""
+msgstr "Factura: S'està enviant"
 
 #. module: account
 #: model:mail.template,report_name:account.email_template_edi_invoice
@@ -7867,7 +8076,7 @@ msgstr "Es troba entre"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_complete
 msgid "Is Complete"
-msgstr ""
+msgstr "S'ha completat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__is_mail_template_editor
@@ -7897,7 +8106,7 @@ msgstr "És més gran que"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__green_on_positive
 msgid "Is Growth Good when Positive"
-msgstr ""
+msgstr "És bon creixement quan és positiu"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_expression__blank_if_zero
@@ -7905,6 +8114,8 @@ msgid ""
 "When checked, 0 values will not show when displaying this expression's "
 "value."
 msgstr ""
+"Quan està marcada, 0 valors no es mostraran quan es mostri el valor "
+"d'aquesta expressió."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__lower
@@ -7943,25 +8154,25 @@ msgstr "Està Reconciliat"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_refund
 msgid "Is Refund"
-msgstr ""
+msgstr "És un reemborsament"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_same_currency
 msgid "Is Same Currency"
-msgstr ""
+msgstr "És la mateixa moneda"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_storno
 #: model:ir.model.fields,field_description:account.field_account_move__is_storno
 #: model:ir.model.fields,field_description:account.field_account_payment__is_storno
 msgid "Is Storno"
-msgstr ""
+msgstr "És Storno"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_valid
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_valid
 msgid "Is Valid"
-msgstr ""
+msgstr "És vàlid"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_name
@@ -8028,7 +8239,7 @@ msgstr "Moneda de la revista"
 #: model_terms:ir.ui.view,arch_db:account.view_move_tree
 #, python-format
 msgid "Journal Entries"
-msgstr "Assentaments comptables"
+msgstr "Seients de diari"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -8577,6 +8788,8 @@ msgid ""
 "Last date at which the discounted amount must be paid in order for the Early"
 " Payment Discount to be granted"
 msgstr ""
+"Última data en què s'ha de pagar l'import de descompte per tal de concedir "
+"el descompte de pagament anticipat"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__last_time_entries_checked
@@ -8715,7 +8928,7 @@ msgstr "Llista de tots els impostos que han ser instal·lats per l'assistent"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__load_more_limit
 msgid "Load More Limit"
-msgstr ""
+msgstr "Carrega més límit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -8728,7 +8941,7 @@ msgstr "Bloqueja les entrades publicades amb hash"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__is_log
 msgid "Log as Internal Note"
-msgstr ""
+msgstr "Registra com a nota interna"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -8771,7 +8984,7 @@ msgstr "Varis"
 #: model:ir.model.fields,field_description:account.field_account_move__made_sequence_hole
 #: model:ir.model.fields,field_description:account.field_account_payment__made_sequence_hole
 msgid "Made Sequence Hole"
-msgstr ""
+msgstr "Forat de la seqüència feta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mail_activity_type_id
@@ -8795,7 +9008,7 @@ msgstr "Adjunt principal"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__commercial_partner_id
 msgid "Main Partner"
-msgstr ""
+msgstr "Socis principals"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__currency_id
@@ -8848,6 +9061,10 @@ msgid ""
 "Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
+"Manual: Es paga per qualsevol mètode fora d'Odoo.\n"
+"Proveïdors de pagament: Cada proveïdor de pagament té el seu propi mètode de pagament. Sol·licita una transacció en/a una targeta gràcies a un testimoni de pagament desat pel company quan es compra o es subscriu en línia.\n"
+"Dipòsit per lots: Recolliu diverses comprovacions de client alhora generant i enviant un dipòsit per lots al vostre banc. El mòdul de pagament de comptes és necessari.\n"
+"Dèbit directe SEPA: Es paga a la zona SEPA gràcies a un mandat que el vostre soci us haurà concedit. El mòdul account_sepa és necessari.\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__outbound_payment_method_line_ids
@@ -8871,6 +9088,12 @@ msgid ""
 "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
+"Manual: Paga o rep un pagament per qualsevol mètode fora d'Odoo.\n"
+"Proveïdors de pagament: Cada proveïdor de pagament té el seu propi mètode de pagament. Sol·licita una transacció en/a una targeta gràcies a un testimoni de pagament desat pel company quan es compra o es subscriu en línia.\n"
+"Comprovació: Paga factures per xec i imprimeix des d'Odoo.\n"
+"Dipòsit per lots: Recolliu diverses comprovacions de client alhora generant i enviant un dipòsit per lots al vostre banc. El mòdul de pagament de comptes és necessari.\n"
+"Transferència de crèdit SEPA: Paga a la zona SEPA enviant un fitxer de transferència de crèdit SEPA al banc. El mòdul accountsepa és necessari.\n"
+"Dèbit directe SEPA: Es paga a la zona SEPA gràcies a un mandat que el vostre soci us haurà concedit. El mòdul account_sepa és necessari.\n"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__3
@@ -8940,7 +9163,7 @@ msgstr "Conciliació d'apunts comptables"
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Matched Transactions"
-msgstr ""
+msgstr "Operacions coincidents"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__full_reconcile_id
@@ -9052,7 +9275,7 @@ msgstr "Mètode"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__minus_report_expression_ids
 msgid "Minus Report Expressions"
-msgstr ""
+msgstr "Expressions d'informe menys"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_journal_misc
@@ -9085,7 +9308,7 @@ msgstr "Falten monedes estrangeres en parcials amb identificadors: %s"
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_accountable_required_fields
 msgid "Missing required account on accountable line."
-msgstr ""
+msgstr "Manca el compte requerit a la línia de compte."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__model_id
@@ -9156,7 +9379,7 @@ msgstr "Tipus de moviment"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_multi_company
 msgid "Multi-Company"
-msgstr ""
+msgstr "Multicompania"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__direction_sign
@@ -9166,6 +9389,8 @@ msgid ""
 "Multiplicator depending on the document type, to convert a price into a "
 "balance"
 msgstr ""
+"Multiplicador depenent del tipus de document, per a convertir un preu en un "
+"saldo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__my_activity_date_deadline
@@ -9214,7 +9439,7 @@ msgstr "Nom"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__name_searchable
 msgid "Name Searchable"
-msgstr ""
+msgstr "Nom cercable"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9227,14 +9452,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__needed_terms
 #: model:ir.model.fields,field_description:account.field_account_payment__needed_terms
 msgid "Needed Terms"
-msgstr ""
+msgstr "Termes necessaris"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms_dirty
 #: model:ir.model.fields,field_description:account.field_account_move__needed_terms_dirty
 #: model:ir.model.fields,field_description:account.field_account_payment__needed_terms_dirty
 msgid "Needed Terms Dirty"
-msgstr ""
+msgstr "Termes necessaris"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__tax_negate
@@ -9332,7 +9557,7 @@ msgstr "Sense seguiment"
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__none
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__figure_type__none
 msgid "No Formatting"
-msgstr ""
+msgstr "Sense format"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__no-message
@@ -9411,17 +9636,17 @@ msgstr "Núm. de dígits a utilitzar per a codi de compte"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__non_trade
 msgid "Non Trade"
-msgstr ""
+msgstr "No comercial"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Non Trade Payable"
-msgstr ""
+msgstr "Pagable no comercial"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Non Trade Receivable"
-msgstr ""
+msgstr "No percebible"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_non_current
@@ -9513,6 +9738,8 @@ msgid ""
 "Note that the easiest way to create a vendor credit note is to do it "
 "directly from the vendor bill."
 msgstr ""
+"Tingueu en compte que la manera més fàcil de crear una nota de crèdit del "
+"proveïdor és fer-ho directament des de la factura del proveïdor."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__note
@@ -9573,7 +9800,7 @@ msgstr "Nombre d'accions"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__discount_days
 msgid "Number of days before the early payment proposition expires"
-msgstr ""
+msgstr "Nombre de dies abans que venci la proposta de pagament anticipada"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__number_entries
@@ -9649,7 +9876,7 @@ msgstr "Odoo"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__domain
 msgid "Odoo Domain"
-msgstr ""
+msgstr "Domini Odoo"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -9688,7 +9915,7 @@ msgstr "Full de sortida"
 #. module: account
 #: model:account.account.tag,name:account.demo_office_furniture_account
 msgid "Office Furniture"
-msgstr ""
+msgstr "Mobiliari de l'oficina"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__old_first
@@ -9699,7 +9926,7 @@ msgstr "Primer el més antic"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__early_pay_discount_computation__included
 msgid "On early payment"
-msgstr ""
+msgstr "En el pagament anticipat"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
@@ -9722,7 +9949,7 @@ msgid ""
 "this later in the <b>Customers</b> menu."
 msgstr ""
 "Un cop tot estigui preparat, estàs bé per continuar. Podreu editar-ho més "
-"endavant al menú<b>Clients</b>."
+"endavant al menú <b>Clients</b>."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9730,9 +9957,9 @@ msgid ""
 "Once installed, set 'Bank Feeds' to 'File Import' in bank account "
 "settings.This adds a button to import from the Accounting dashboard."
 msgstr ""
-"Una vegada instal· lat, establiu les fonts \"Bank \" a l' arranjament del "
-"fitxer d' importació \" en comptes de banc. Això afegeix un botó per "
-"importar des del tauler de comptes."
+"Una vegada instal·lat, configureu els «Fonts bancaris» a «Importació de "
+"fitxers» als paràmetres del compte bancari. Això afegeix un botó per a "
+"importar des del quadre comptable."
 
 #. module: account
 #. openerp-web
@@ -9745,18 +9972,21 @@ msgstr "Una vegada estigui a punt la teva factura, premeu CONFRIRM."
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "One or more Bank Accounts set on this partner are also used by other"
 msgstr ""
+"Un o més comptes bancaris establerts en aquest soci també són utilitzats per"
+" altres"
 
 #. module: account
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "One or more lines require a 100% analytic distribution."
-msgstr ""
+msgstr "Una o més línies requereixen una distribució analítica del 100%."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "One or more selected lines already belong to a complete statement."
 msgstr ""
+"Una o més línies seleccionades ja pertanyen a una declaració completa."
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -9765,21 +9995,23 @@ msgid ""
 "Only 'tax_tags' expressions can be linked to a tax repartition line "
 "template."
 msgstr ""
+"Només les expressions «taxtags» es poden enllaçar a una plantilla de línia "
+"de distribució d'impostos."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__only_tax_exigible
 msgid "Only Tax Exigible Lines"
-msgstr ""
+msgstr "Només les línies d'impostos exigibles"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_category_ids
 msgid "Matching categories"
-msgstr ""
+msgstr "Categories coincidents"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_ids
 msgid "Matching partners"
-msgstr ""
+msgstr "Coincidència de socis"
 
 #. module: account
 #: code:addons/account/models/account_report.py:0
@@ -9788,6 +10020,8 @@ msgid ""
 "Only a report without a root report of its own can be selected as root "
 "report."
 msgstr ""
+"Només es pot seleccionar un informe sense un informe arrel propi com a "
+"informe arrel."
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -9808,6 +10042,7 @@ msgid ""
 "Only one payment will be created by partner (bank), instead of one per "
 "billy."
 msgstr ""
+"Només un pagament serà creat pel soci (banc), en comptes d'un per factura."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__period_lock_date
@@ -9836,7 +10071,7 @@ msgstr "Oberts"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Open list"
-msgstr ""
+msgstr "Obre la llista"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_balance
@@ -9895,7 +10130,7 @@ msgstr "Saldo inicial"
 #. module: account
 #: model:account.account.tag,name:account.account_tag_operating
 msgid "Operating Activities"
-msgstr ""
+msgstr "Activitats operatives"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -9959,12 +10194,12 @@ msgstr "Orígen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__carryover_origin_expression_label
 msgid "Origin Expression Label"
-msgstr ""
+msgstr "Etiqueta d'expressió de l'origen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__carryover_origin_report_line_id
 msgid "Origin Line"
-msgstr ""
+msgstr "Línia origen"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_account_original_vendor_bill
@@ -10141,7 +10376,7 @@ msgstr "Factures vençudes, passada la data de venciment"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "P&L Accounts"
-msgstr ""
+msgstr "Comptes PL"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10218,7 +10453,7 @@ msgstr "Ruta arrel"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__report_id
 msgid "Parent Report"
-msgstr ""
+msgstr "Informe pare"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -10315,7 +10550,7 @@ msgstr "Mapatge de companys per als models de reconciliació"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner
 msgid "Partner is Set"
-msgstr ""
+msgstr "El soci està establert"
 
 #. module: account
 #: code:addons/account/models/partner.py:0
@@ -10464,14 +10699,14 @@ msgstr "Estat de pagament"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__payment_term
 msgid "Payment Term"
-msgstr ""
+msgstr "Terme de pagament"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_term_details
 #: model:ir.model.fields,field_description:account.field_account_move__payment_term_details
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_term_details
 msgid "Payment Term Details"
-msgstr ""
+msgstr "Detalls del període de pagament"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_payment_term_form
@@ -10549,11 +10784,13 @@ msgstr "Termini de pagament: 30 dies"
 #: model_terms:account.payment.term,note:account.account_payment_term_30days_early_discount
 msgid "Payment terms: 30 Days, 2% Early Payment Discount under 7 days"
 msgstr ""
+"Condicions de pagament: 30 dies, 2% de descompte de pagament anticipat per "
+"sota de 7 dies"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_30_days_end_month_the_10
 msgid "Payment terms: 30 days End of Month on the 10th"
-msgstr ""
+msgstr "Condicions de pagament: 30 dies de finalització del mes el dia 10"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_advance
@@ -10583,7 +10820,7 @@ msgstr "Termini de pagament:  pagament immediat"
 #. module: account
 #: model:mail.template,name:account.mail_template_data_payment_receipt
 msgid "Payment: Payment Receipt"
-msgstr ""
+msgstr "Pagament: rebut de pagament"
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -10673,13 +10910,13 @@ msgstr "Període"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_period_comparison
 msgid "Period Comparison"
-msgstr ""
+msgstr "Comparació del període"
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "Please create new accounts from the Chart of Accounts menu."
-msgstr ""
+msgstr "Creeu comptes nous des del menú Gràfic de comptes."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -10697,7 +10934,7 @@ msgstr "Si us plau, primer definiu un país fiscal per a l'empresa %s."
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Please install Accounting for this feature"
-msgstr ""
+msgstr "Instal·leu la comptabilitat per a aquesta característica"
 
 #. module: account
 #: code:addons/account/models/company.py:0
@@ -10733,7 +10970,7 @@ msgstr "Si us plau utilitzeu la següent comunicació per al vostre pagament:"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__plus_report_expression_ids
 msgid "Plus Tax Report Expressions"
-msgstr ""
+msgstr "Expressions d'informes d'impostos addicionals"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__default_pos_receivable_account_id
@@ -10750,32 +10987,32 @@ msgstr "URL del portal d'accés"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Post"
-msgstr "Validar"
+msgstr "Publicar"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Post All Entries"
-msgstr "Validar totes les entrades"
+msgstr "Comptabilitzar tots els assentaments"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "Post Difference In"
-msgstr "Publicar diferencia en"
+msgstr "Comptabilitzar diferència en"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Post Journal Entries"
-msgstr "Validar assentaments"
+msgstr "Comptabilitzar assentaments"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_account_confirm_payments
 msgid "Post Payments"
-msgstr "Publicar Pagaments"
+msgstr "Publicar els pagaments"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_validate_account_move
 msgid "Post entries"
-msgstr "Validar assentaments"
+msgstr "Comptabilitzar assentaments"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__posted
@@ -10784,7 +11021,7 @@ msgstr "Validar assentaments"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Posted"
-msgstr "Validat"
+msgstr "Publicat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__posted_before
@@ -10821,7 +11058,7 @@ msgstr "Subtotal"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__account_codes
 msgid "Prefix of Account Codes"
-msgstr ""
+msgstr "Prefix dels codis de comptes"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__bank_account_code_prefix
@@ -10855,6 +11092,8 @@ msgid ""
 "Prefix that defines which accounts from the financial accounting this "
 "applicability should apply on."
 msgstr ""
+"Prefix que defineix quins comptes de la comptabilitat financera ha d'aplicar"
+" aquesta aplicabilitat."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_distribution_model__account_prefix
@@ -10862,6 +11101,8 @@ msgid ""
 "Prefix that defines which accounts from the financial accounting this model "
 "should apply on."
 msgstr ""
+"Prefix que defineix en quins comptes de la comptabilitat financera s'ha "
+"d'aplicar aquest model."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_prepayments
@@ -11048,7 +11289,7 @@ msgstr "Importar QIF"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__qr_code
 msgid "QR Code URL"
-msgstr ""
+msgstr "URL del codi QR"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11081,13 +11322,13 @@ msgstr "Trimestral"
 #: model:ir.model.fields,field_description:account.field_account_move__quick_edit_mode
 #: model:ir.model.fields,field_description:account.field_account_payment__quick_edit_mode
 msgid "Quick Edit Mode"
-msgstr ""
+msgstr "Mode d'edició ràpid"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__quick_edit_mode
 #: model:ir.model.fields,field_description:account.field_res_config_settings__quick_edit_mode
 msgid "Quick encoding"
-msgstr ""
+msgstr "Codificació ràpida"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
@@ -11206,12 +11447,12 @@ msgstr "Tipus de factura inversa"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reconciled Items"
-msgstr ""
+msgstr "Elements reconciliats"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
 msgid "Reconciled Statement Lines"
-msgstr ""
+msgstr "Línies d'extractes reconciliades"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconcile_model_id
@@ -11412,7 +11653,7 @@ msgstr "Acció d'informe"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Report Dates"
-msgstr ""
+msgstr "Dates de l'informe"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__report_line_id
@@ -11422,7 +11663,7 @@ msgstr "Línia de l'informe"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__report_line_name
 msgid "Report Line Name"
-msgstr ""
+msgstr "Nom de la línia de l'informe"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_report_folder
@@ -11489,7 +11730,7 @@ msgstr "Import residual"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Residual in Currency"
-msgstr ""
+msgstr "Residual en moneda"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_user_id
@@ -11634,7 +11875,7 @@ msgstr "Root"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__root_report_id
 msgid "Root Report"
-msgstr ""
+msgstr "Informe arrel"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__tax_calculation_rounding_method__round_globally
@@ -11696,7 +11937,7 @@ msgstr "Regles pel model de reconciliació"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__running_balance
 msgid "Running Balance"
-msgstr ""
+msgstr "Saldo en execució"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_sepa
@@ -11851,7 +12092,7 @@ msgstr "Cerca extractes bancaris"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__search_bar
 msgid "Search Bar"
-msgstr ""
+msgstr "Barra de cerca"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
@@ -11970,6 +12211,10 @@ msgid ""
 "analytic default (e.g. create new customer invoice or Sales order if we "
 "select this product, it will automatically take this as an analytic account)"
 msgstr ""
+"Seleccioneu una categoria de producte que utilitzarà el compte analític "
+"especificat en el valor predeterminat analític (p. ex. crear una nova "
+"factura de client o comanda de vendes si seleccioneu aquest producte, "
+"automàticament el tindrà com a compte analític)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_distribution_model__product_id
@@ -11978,6 +12223,9 @@ msgid ""
 "create new customer invoice or Sales order if we select this product, it "
 "will automatically take this as an analytic account)"
 msgstr ""
+"Seleccioneu un producte per al qual s'utilitzarà la distribució analítica "
+"(p. ex. crear una nova factura de client o comanda de vendes si seleccioneu "
+"aquest producte, el tindrà automàticament com a compte analític)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12136,16 +12384,18 @@ msgid ""
 "Sent manually to customer when clicking on 'Send receipt by email' in "
 "payment action"
 msgstr ""
+"Enviat manualment al client en fer clic a «Envia el rebut per correu "
+"electrònic» en l'acció de pagament"
 
 #. module: account
 #: model:mail.template,description:account.email_template_edi_credit_note
 msgid "Sent to customers with the credit note in attachment"
-msgstr ""
+msgstr "Enviat a clients amb la nota de crèdit a l'adjunt"
 
 #. module: account
 #: model:mail.template,description:account.email_template_edi_invoice
 msgid "Sent to customers with their invoices in attachment"
-msgstr ""
+msgstr "Enviat a clients amb les seves factures a l'adjunt"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__9
@@ -12276,6 +12526,8 @@ msgid ""
 "Setting this field will turn the line into a link, executing the action when"
 " clicked."
 msgstr ""
+"En establir aquest camp es convertirà la línia en un enllaç, s'executarà "
+"l'acció quan es faci clic."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_config
@@ -12335,7 +12587,7 @@ msgstr "Mostra separador decimal"
 #: model:ir.model.fields,field_description:account.field_account_move__show_discount_details
 #: model:ir.model.fields,field_description:account.field_account_payment__show_discount_details
 msgid "Show Discount Details"
-msgstr ""
+msgstr "Mostra els detalls del descompte"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__show_force_tax_included
@@ -12365,7 +12617,7 @@ msgstr "Mostra el compte de banc de parella"
 #: model:ir.model.fields,field_description:account.field_account_move__show_payment_term_details
 #: model:ir.model.fields,field_description:account.field_account_payment__show_payment_term_details
 msgid "Show Payment Term Details"
-msgstr ""
+msgstr "Mostra els detalls de les condicions de pagament"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_reset_to_draft_button
@@ -12467,7 +12719,7 @@ msgstr "Algun cop anomenat BIC o Swift."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__sortable
 msgid "Sortable"
-msgstr ""
+msgstr "Ordenable"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__source_currency_id
@@ -12509,6 +12761,8 @@ msgid ""
 "Specify whether this entry is posted automatically on its accounting date, "
 "and any similar recurring invoices."
 msgstr ""
+"Especifiqueu si aquesta entrada es publica automàticament en la seva data de"
+" comptabilitat i qualsevol factura recurrent similar."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__strategy
@@ -12598,7 +12852,7 @@ msgstr "Línia d'extracte"
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_legal_statements_menu
 msgid "Statement Reports"
-msgstr ""
+msgstr "Informes de declaració"
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -12623,7 +12877,7 @@ msgstr "Extractes"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_statement_line_ids
 msgid "Statements lines matched to this payment"
-msgstr ""
+msgstr "Línies de declaracions que coincideixen amb aquest pagament"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -12689,7 +12943,7 @@ msgstr "Comptabilitat amb partides negatives"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__strict_range
 msgid "Strictly on the given dates"
-msgstr ""
+msgstr "Estrictament en les dates donades"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__string_to_hash
@@ -12701,7 +12955,7 @@ msgstr "Cadena a resum"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__subformula
 msgid "Subformula"
-msgstr ""
+msgstr "Subfórmula"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__subject
@@ -12750,7 +13004,7 @@ msgstr "Canviar a reemborsament/factura rectificativa"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__end_month
 msgid "Switch to end of the month after having added months or days"
-msgstr ""
+msgstr "Canvia al final del mes després d'haver afegit mesos o dies"
 
 #. module: account
 #: model:account.report.column,name:account.generic_tax_report_account_tax_column_tax
@@ -12793,17 +13047,17 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__target_report_expression_id
 msgid "Target Expression"
-msgstr ""
+msgstr "Expressió de destinació"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__target_report_expression_label
 msgid "Target Expression Label"
-msgstr ""
+msgstr "Etiqueta d'expressió de destinació"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__target_report_line_id
 msgid "Target Line"
-msgstr ""
+msgstr "Línia de destinació"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax
@@ -12821,7 +13075,7 @@ msgstr "Impost"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__property_advance_tax_payment_account_id
 msgid "Tax Advance Account"
-msgstr ""
+msgstr "Compte de progrés d'impostos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_audit
@@ -12890,7 +13144,7 @@ msgstr "Exigibilitat dels impostos"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Tax Grid"
-msgstr ""
+msgstr "Graella d'impostos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids
@@ -12932,7 +13186,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_key
 msgid "Tax Key"
-msgstr ""
+msgstr "Clau d'impost"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_lock_date_message
@@ -12967,12 +13221,12 @@ msgstr "Nom de l'impost"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__property_tax_payable_account_id
 msgid "Tax Payable Account"
-msgstr ""
+msgstr "Compte de pagament d'impostos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__property_tax_receivable_account_id
 msgid "Tax Receivable Account"
-msgstr ""
+msgstr "Compte cobrable d'impostos"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_repartition_line
@@ -13017,7 +13271,7 @@ msgstr "Cadena d' impostos"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__tax_tags
 msgid "Tax Tags"
-msgstr ""
+msgstr "Etiquetes d'impostos"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_search
@@ -13133,6 +13387,8 @@ msgid ""
 "Tax report expressions whose '+' tag will be assigned to move lines by this "
 "repartition line"
 msgstr ""
+"Informe d'impostos de les expressions l'etiqueta «+» de les quals "
+"s'assignarà per a moure línies per aquesta línia de repartició"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line_template__minus_report_expression_ids
@@ -13140,11 +13396,13 @@ msgid ""
 "Tax report expressions whose '-' tag will be assigned to move lines by this "
 "repartition line"
 msgstr ""
+"Informe d'impostos de les expressions l'etiqueta «-» de les quals "
+"s'assignarà per a moure línies per aquesta línia de repartició"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__early_pay_discount_computation
 msgid "Tax setting"
-msgstr ""
+msgstr "Configuració dels impostos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_dest_id
@@ -13283,7 +13541,7 @@ msgstr "Plantilla pels impostos"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__term_key
 msgid "Term Key"
-msgstr ""
+msgstr "Clau del terme"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__line_ids
@@ -13370,19 +13628,23 @@ msgid ""
 "The Journal Entry sequence is not conform to the current format. Only the "
 "Accountant can change it."
 msgstr ""
+"La seqüència d'entrada del diari no s'ajusta al format actual. Només el "
+"comptable pot canviar-ho."
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid "The Months and Days of the Payment Terms lines must be positive."
 msgstr ""
+"Els mesos i dies de les línies de condicions de pagament han de ser "
+"positius."
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 #, python-format
 msgid "The Payment Term must have one Balance line."
-msgstr ""
+msgstr "El termini de pagament ha de tenir una línia de saldo."
 
 #. module: account
 #: code:addons/account/models/account_move_line.py:0
@@ -13395,7 +13657,7 @@ msgstr "El compte %s (%s) està obsolet."
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "The account code can only contain alphanumeric characters and dots."
-msgstr ""
+msgstr "El codi del compte només pot contenir caràcters alfanumèrics i punts."
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -13563,6 +13825,8 @@ msgid ""
 "The country set on the foreign VAT fiscal position must match the one set on"
 " the report."
 msgstr ""
+"El país establert en la posició fiscal de l'IVA estranger ha d'ajustar-se al"
+" que s'estableix en l'informe."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template__country_id
@@ -13615,6 +13879,9 @@ msgid ""
 "The current total is %s but the expected total is %s. In order to post the "
 "invoice/bill, you can adjust its lines or the expected Total (tax inc.)."
 msgstr ""
+"El total actual és %s però el total esperat és %s. Per tal de publicar la "
+"factura/mil·li, podeu ajustar les seves línies o el total esperat (inc. "
+"d'impostos)."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13623,6 +13890,9 @@ msgid ""
 "The date is being set prior to the %(lock_type)s lock date %(lock_date)s. "
 "The Journal Entry will be accounted on %(accounting_date)s upon posting."
 msgstr ""
+"La data s'estableix abans de la data de bloqueig %(lock_type)s "
+"%(lock_date)s. L'entrada del diari es tindrà en compte el "
+"%(accounting_date)s en publicar."
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -13643,6 +13913,8 @@ msgstr "La data seleccionada està protegida per una data de bloqueig"
 #, python-format
 msgid "The discount days of the Payment Terms lines must be positive."
 msgstr ""
+"Els dies de descompte de les línies de condicions de pagament han de ser "
+"positius."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_origin
@@ -13674,7 +13946,7 @@ msgstr ""
 #: code:addons/account/controllers/portal.py:0
 #, python-format
 msgid "The field %s must be filled."
-msgstr ""
+msgstr "Cal omplir el camp %s."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13756,7 +14028,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_external_value__foreign_vat_fiscal_position_id
 msgid "The foreign fiscal position for which this external value is made."
-msgstr ""
+msgstr "La posició fiscal estrangera per a la qual es fa aquest valor extern."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -13786,7 +14058,7 @@ msgstr "La factura ja conté línies, no s' ha actualitzat de l' adjunt."
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "The invoice having been sent, the button has changed priority."
-msgstr ""
+msgstr "Després d'enviar la factura, el botó ha canviat de prioritat."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13828,7 +14100,7 @@ msgstr ""
 #: code:addons/account/models/account_analytic_line.py:0
 #, python-format
 msgid "The journal item is not linked to the correct financial account"
-msgstr ""
+msgstr "L'element del diari no està enllaçat al compte financer correcte"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
@@ -13869,7 +14141,7 @@ msgstr ""
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "The next step is payment registration."
-msgstr ""
+msgstr "El següent pas és el registre de pagaments."
 
 #. module: account
 #: code:addons/account/models/account_move_line.py:0
@@ -13914,7 +14186,7 @@ msgstr ""
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid "The partner cannot be deleted because it is used in Accounting"
-msgstr ""
+msgstr "El company no es pot suprimir perquè s'utilitza en la comptabilitat"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__has_unreconciled_entries
@@ -13963,6 +14235,8 @@ msgid ""
 "The recipient bank account linked to this invoice is archived.\n"
 "So you cannot confirm the invoice."
 msgstr ""
+"El compte bancari del destinatari enllaçat a aquesta factura s'arxiva.\n"
+"Per tant, no podeu confirmar la factura."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_category_ids
@@ -14070,7 +14344,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "The recurrence will end on"
-msgstr ""
+msgstr "La recurrència finalitzarà el"
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -14091,7 +14365,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report__root_report_id
 msgid "The report this report is a variant of."
-msgstr ""
+msgstr "L'informe d'aquest informe és una variant."
 
 #. module: account
 #: code:addons/account/controllers/terms.py:0
@@ -14209,6 +14483,8 @@ msgid ""
 "The sequences of this journal are different for Payments and non-Payments "
 "but you selected some of both types."
 msgstr ""
+"Les seqüències d'aquest diari són diferents per a Pagaments i no Pagaments, "
+"però heu seleccionat alguns dels dos tipus."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
@@ -14280,7 +14556,7 @@ msgstr "La regla innovadora usada per a operacions surantesName"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__document_type
 msgid "The type of documnet on which the repartition line should be applied"
-msgstr ""
+msgstr "El tipus de documnet en el qual s'ha d'aplicar la línia de repartició"
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -14296,7 +14572,7 @@ msgstr ""
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "The values for the created account need to be verified."
-msgstr ""
+msgstr "Cal verificar els valors del compte creat."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_currency__display_rounding_warning
@@ -14304,6 +14580,8 @@ msgid ""
 "The warning informs a rounding factor change might be dangerous on "
 "res.currency's form view."
 msgstr ""
+"L'avís informa que un canvi de factor d'arrodoniment podria ser perillós en "
+"la vista de formulari de res.currency."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -14489,6 +14767,10 @@ msgid ""
 "'filter_domain'.See '_search_name' and '_parse_name_search' for why this is "
 "not possible with 'filter_domain'."
 msgstr ""
+"Aquest camp fictici ens permet utilitzar un altre mètode de cerca al camp "
+"«nom».Això permet més llibertat sobre com cercar el «nom» en comparació amb "
+"el «domini del filtre».Vegeu 'searchname' i 'parsenamesearch' per què això "
+"no és possible amb 'filterdomain'."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14517,7 +14799,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This entry has been duplicated from %s%s"
-msgstr ""
+msgstr "Aquesta entrada s'ha duplicat de %s%s"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -14549,6 +14831,8 @@ msgid ""
 "This is the default credit limit that will be used on partners that do not "
 "have a specific limit on them."
 msgstr ""
+"Aquest és el límit de crèdit per defecte que s'utilitzarà en socis que no "
+"tenen un límit específic."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -14570,6 +14854,8 @@ msgstr "Aquest diari no està en mode estricte."
 msgid ""
 "This line and its children will be hidden when all of their columns are 0."
 msgstr ""
+"Aquesta línia i els seus fills s'ocultaran quan totes les seves columnes "
+"siguin 0."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__to_check
@@ -14661,6 +14947,8 @@ msgid ""
 "This reconciliation model can't be used in the manual reconciliation widget "
 "because its configuration is not adapted"
 msgstr ""
+"Aquest model de conciliació no es pot utilitzar en el giny de conciliació "
+"manual perquè la seva configuració no està adaptada"
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -14672,7 +14960,7 @@ msgstr "Aquest model de reconciliació no ha creat cap entrada fins ara"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This recurring entry originated from %s"
-msgstr ""
+msgstr "Aquesta entrada periòdica es va originar a partir de %s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__auto_post_until
@@ -14680,6 +14968,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_payment__auto_post_until
 msgid "This recurring move will be posted up to and including this date."
 msgstr ""
+"Aquest moviment periòdic es publicarà fins a aquesta data i s'inclourà."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
@@ -14772,7 +15061,7 @@ msgstr "Total"
 #: model:ir.model.fields,field_description:account.field_account_move__quick_edit_total_amount
 #: model:ir.model.fields,field_description:account.field_account_payment__quick_edit_total_amount
 msgid "Total (Tax inc.)"
-msgstr ""
+msgstr "Total (inc. d'ax)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__total_amount
@@ -14828,7 +15117,7 @@ msgstr "Total residual"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Total Residual in Currency"
-msgstr ""
+msgstr "Residual total en moneda"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_total_signed
@@ -14928,6 +15217,8 @@ msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
 "Total Receivable amount exceeding a limit."
 msgstr ""
+"Activador d'alertes en crear factures i comandes de vendes per a socis amb "
+"un import total percebible que excedeix el límit."
 
 #. module: account
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
@@ -15010,7 +15301,7 @@ msgstr "Desplegar tot"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__code
 msgid "Unique identifier for this line."
-msgstr ""
+msgstr "Identificador únic per a aquesta línia."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_unit
@@ -15088,7 +15379,7 @@ msgstr "Assentaments no conciliats"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Unreconciled Transactions"
-msgstr ""
+msgstr "Operacions no conciliades"
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -15158,7 +15449,7 @@ msgstr "Utilitzar base d'efectiu"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_multi_company__selector
 msgid "Use Company Selector"
-msgstr ""
+msgstr "Usa el selector d'empresa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_sepa_direct_debit
@@ -15179,7 +15470,7 @@ msgstr "Utilitzar comptabilitat amb partides negatives"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_multi_company__tax_units
 msgid "Use Tax Units"
-msgstr ""
+msgstr "Utilitza les unitats d'impostos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__use_active_domain
@@ -15230,6 +15521,8 @@ msgid ""
 "Use this field to encode the total amount of the invoice.\n"
 "Odoo will automatically create one invoice line with default values to match it."
 msgstr ""
+"Utilitzeu aquest camp per a codificar l'import total de la factura.\n"
+"Odoo crearà automàticament una línia de factura amb valors predeterminats per a fer-la coincidir."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__used
@@ -15292,6 +15585,8 @@ msgid ""
 "Utility field to express whether the journal item is subject to storno "
 "accounting"
 msgstr ""
+"Camp d'utilitat per a expressar si l'element del diari està subjecte a la "
+"comptabilitat storno"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
@@ -15553,11 +15848,13 @@ msgid ""
 "When an internal transfer is posted, a paired payment is created. They are "
 "cross referenced through this field"
 msgstr ""
+"Quan es publica una transferència interna, es crea un pagament aparellat. Es"
+" fan referències creuades a través d'aquest camp"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__blank_if_zero
 msgid "When checked, 0 values will not show in this column."
-msgstr ""
+msgstr "Si està marcada, no es mostraran 0 valors en aquesta columna."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__print_on_new_page
@@ -15565,6 +15862,8 @@ msgid ""
 "When checked this line and everything after it will be printed on a new "
 "page."
 msgstr ""
+"Quan està marcada, aquesta línia i tot el que hi hagi després s'imprimiran "
+"en una pàgina nova."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
@@ -15587,7 +15886,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "When will the tax be reduced when offering a cash discount"
-msgstr ""
+msgstr "Quan es reduirà l'impost quan s'ofereixi un descompte en efectiu"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__show_on_dashboard
@@ -15722,6 +16021,7 @@ msgstr ""
 #, python-format
 msgid "You can only print the original document for vendor bills."
 msgstr ""
+"Només podeu imprimir el document original per a les factures del proveïdor."
 
 #. module: account
 #: code:addons/account/models/account_move_line.py:0
@@ -15846,6 +16146,7 @@ msgstr ""
 #, python-format
 msgid "You can't mix fixed amount with early payment percentage"
 msgstr ""
+"No podeu barrejar l'import fix amb el percentatge de pagament anticipat"
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -15864,6 +16165,8 @@ msgid ""
 "You can't provide a foreign currency without specifying an amount in 'Amount"
 " in Currency' field."
 msgstr ""
+"No podeu proporcionar una moneda estrangera sense especificar una quantitat "
+"en el camp «Importa en moneda»."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement_line.py:0
@@ -15941,6 +16244,8 @@ msgid ""
 "You cannot change the type of an account set as Bank Account on a journal to"
 " Receivable or Payable."
 msgstr ""
+"No podeu canviar el tipus d'un compte establert com a compte bancari en un "
+"diari a Receptable o Payable."
 
 #. module: account
 #: code:addons/account/models/partner.py:0
@@ -15989,12 +16294,15 @@ msgid ""
 "You cannot delete a payable/receivable line as it would not be consistent "
 "with the payment terms"
 msgstr ""
+"No podeu suprimir una línia de pagament/receptible perquè no seria coherent "
+"amb els termes de pagament"
 
 #. module: account
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You cannot delete a tax line as it would impact the tax report"
 msgstr ""
+"No podeu suprimir una línia d'impostos perquè afectaria l'informe d'impostos"
 
 #. module: account
 #: code:addons/account/models/account_move_line.py:0
@@ -16052,7 +16360,7 @@ msgid ""
 "You cannot edit the journal of an account move if it already has a sequence "
 "number assigned."
 msgstr ""
-"No podeu editar el diari d' un moviment de compte si ja té un número de "
+"No podeu editar el diari d'un moviment comptable si ja té un número de "
 "seqüència assignat."
 
 #. module: account
@@ -16255,7 +16563,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot validate a document with an inactive currency: %s"
-msgstr ""
+msgstr "No podeu validar un document amb una moneda inactiva: %s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -16397,7 +16705,7 @@ msgstr "assigna a la factura"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "auto-posting enabled. Next accounting date:"
-msgstr ""
+msgstr "enviament automàtic activat. Pròxima data comptable:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -16511,7 +16819,7 @@ msgstr "aquí"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "if paid before"
-msgstr ""
+msgstr "si es paga abans"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__payment_tolerance_type__fixed_amount
@@ -16683,25 +16991,25 @@ msgstr "amb un pdf d'una factura com adjunt."
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "{label}: Adjusting Entry of {date}"
-msgstr ""
+msgstr "{label}: S'està ajustant l'entrada de {date}"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "{label}: Adjusting Entry of {new_date}"
-msgstr ""
+msgstr "{label}: S'està ajustant l'entrada de {newdate}"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "{percent:0.2f}% recognized on {new_date}"
-msgstr ""
+msgstr "{percent:0.2f}% reconegut el {new_date}"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "{percent:0.2f}% to recognize on {new_date}"
-msgstr ""
+msgstr "{percent:0.2f}% a reconèixer el {new_date}"
 
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
