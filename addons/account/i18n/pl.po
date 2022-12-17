@@ -14,7 +14,6 @@
 # Jaroslaw Kaczmarski, 2022
 # Monika Motyczyńska <m.monia@op.pl>, 2022
 # Grzegorz Michrowski <grzegorz.michrowski@openglobe.pl>, 2022
-# Jan Dziurz <jan.dziurzynski@openglobe.pl>, 2022
 # Jakobus Buntownikus <buntownix@gmail.com>, 2022
 # Mariusz, 2022
 # Dawid Prus, 2022
@@ -33,7 +32,6 @@
 # Paweł Michoń <michon.pawel@wp.pl>, 2022
 # zieloo <zieloo@gmail.com>, 2022
 # Piotr Strębski <strebski@gmail.com>, 2022
-# Rafał Kozak <rafal.kozak@openglobe.pl>, 2022
 # Ludwik Trammer <ludwik@gmail.com>, 2022
 # Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2022
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2022
@@ -41,10 +39,12 @@
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2022
 # Dariusz Żbikowski <darek@krokus.com.pl>, 2022
 # Martin Trigaux, 2022
-# Łukasz Grzenkowicz <lukasz.grzenkowicz@gmail.com>, 2022
 # Paweł Wodyński <pw@myodoo.pl>, 2022
-# Maksym <ms@myodoo.pl>, 2022
 # Cezary Drożak, 2022
+# Łukasz Grzenkowicz <lukasz.grzenkowicz@gmail.com>, 2022
+# Maksym <ms@myodoo.pl>, 2022
+# Jan Dziurz <jan.dziurzynski@openglobe.pl>, 2022
+# Rafał Kozak <rafal.kozak@openglobe.pl>, 2022
 # 
 msgid ""
 msgstr ""
@@ -52,7 +52,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Cezary Drożak, 2022\n"
+"Last-Translator: Rafał Kozak <rafal.kozak@openglobe.pl>, 2022\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -471,6 +471,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Drogi/a <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/><br/>\n"
+"        Dziękujemy za wpłatę.\n"
+"        Oto potwierdzenie płatności <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> na kwotę\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span> od <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br/><br/>\n"
+"        W razie pytań, prosimy o kontakt.\n"
+"        <br/><br/>\n"
+"        Z wyrazami szacunku,\n"
+"        <t t-if=\"not is_html_empty(user.signature)\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -1037,7 +1053,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
 msgid "<span>This is a preview of your Terms &amp; Conditions.</span>"
-msgstr ""
+msgstr "<span>To jest podgląd twoich Warunków.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview

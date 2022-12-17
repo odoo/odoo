@@ -14,7 +14,6 @@
 # Paulius Sladkevičius <paulius@versada.eu>, 2022
 # Sigitasvia <sigitas@vialaurea.lt>, 2022
 # Arunas Vaitekunas <vaitekunas@gmail.com>, 2022
-# Donatas F <osourcem@gmail.com>, 2022
 # Donatas <donatasvaliulis16@gmail.com>, 2022
 # Rolandas <info@paninfo.lt>, 2022
 # Rolandas <panauto1@gmail.com>, 2022
@@ -35,6 +34,7 @@
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2022
 # Jonas Zinkevicius <jozi@odoo.com>, 2022
 # Linas Versada <linaskrisiukenas@gmail.com>, 2022
+# Donatas F <osourcem@gmail.com>, 2022
 # Mantas Kriaučiūnas Baltix <mantas@akl.lt>, 2022
 # 
 msgid ""
@@ -1177,6 +1177,12 @@ msgstr ""
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "A line cannot have both children and a groupby value (line '%s')."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "A line of this move is using a deprecated account, you cannot post it."
 msgstr ""
 
 #. module: account
@@ -3494,6 +3500,12 @@ msgstr "Grynųjų pinigų apvalinimai"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Cash Statement"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Cash basis rounding difference"
 msgstr ""
 
 #. module: account
@@ -13269,8 +13281,8 @@ msgstr ""
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid ""
-"The country set on the the foreign VAT fiscal position must match the one "
-"set on the report."
+"The country set on the foreign VAT fiscal position must match the one set on"
+" the report."
 msgstr ""
 
 #. module: account

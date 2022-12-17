@@ -3,11 +3,11 @@
 # 	* mrp
 # 
 # Translators:
-# Martin Trigaux, 2022
 # 陕西_jack, 2022
 # Tony Peng <umingpeng@gmail.com>, 2022
-# Raymond Yu <cl_yu@hotmail.com>, 2022
 # digitalliuzg8888, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2022
+# Martin Trigaux, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
@@ -1071,7 +1071,7 @@ msgstr "副产品"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Can't find any production location."
-msgstr "找不到任何制造位置 。"
+msgstr "找不到任何生产位置 。"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1569,7 +1569,7 @@ msgstr "当前的已生产数量"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__product_description_variants
 msgid "Custom Description"
-msgstr "风俗说明"
+msgstr "自定义说明"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__db_datas
@@ -2931,7 +2931,7 @@ msgstr "制造参考"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_orderpoint__manufacturing_visibility_days
 msgid "Manufacturing Visibility Days"
-msgstr "制造可见性日"
+msgstr "制造可见性天数"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_action
@@ -3207,6 +3207,14 @@ msgstr "请注意，已归档的工作中心：'%s'仍然与活动的BOM相联�
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
 msgid "Note that components"
 msgstr "备注那些部件"
+
+#. module: mrp
+#: code:addons/mrp/models/product.py:0 code:addons/mrp/models/product.py:0
+#, python-format
+msgid ""
+"Note that product(s): '%s' is/are still linked to active Bill of Materials, "
+"which means that the product can still be used on it/them."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_needaction_counter
@@ -3506,25 +3514,25 @@ msgstr "最近一月效能"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Pick Components"
-msgstr "捡取组件"
+msgstr "拣取组件"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Pick components and then manufacture"
-msgstr "捡取组件并制造"
+msgstr "拣取组件并制造"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_warehouse__manufacture_steps__pbm
 msgid "Pick components and then manufacture (2 steps)"
-msgstr "选择组件然后制造（2个步骤）"
+msgstr "拣取组件然后制造（2个步骤）"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:0
 #: model:ir.model.fields.selection,name:mrp.selection__stock_warehouse__manufacture_steps__pbm_sam
 #, python-format
 msgid "Pick components, manufacture and then store products (3 steps)"
-msgstr "捡取组件制造，然后储存产品 (3 步)"
+msgstr "拣取组件制造，然后储存产品 (3 步)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_mto_pull_id
@@ -4629,7 +4637,7 @@ msgstr "制造后库存作业类型"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__sam_rule_id
 msgid "Stock After Manufacturing Rule"
-msgstr "制造规则后的库存"
+msgstr "制造后库存规则"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_assign_serial
@@ -4674,7 +4682,7 @@ msgstr "库存规则"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__sam_loc_id
 msgid "Stock after Manufacturing Location"
-msgstr "制造地点后的库存"
+msgstr "制造后库存位置"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_stock_report_stock_rule
@@ -4685,7 +4693,7 @@ msgstr "库存规则报告"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Store Finished Product"
-msgstr "生产入库单"
+msgstr "存储完工产品"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__store_fname
@@ -5358,7 +5366,7 @@ msgstr "计量单位是库存控制的量度单位"
 #: model:product.template,uom_name:mrp.product_product_wood_ply_product_template
 #: model:product.template,uom_name:mrp.product_product_wood_wear_product_template
 msgid "Units"
-msgstr "件"
+msgstr "单位"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
