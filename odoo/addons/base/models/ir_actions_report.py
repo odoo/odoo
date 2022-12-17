@@ -693,7 +693,7 @@ class IrActionsReport(models.Model):
 
             html = self.with_context(**additional_context)._render_qweb_html(report_ref, res_ids_wo_stream, data=data)[0]
 
-            bodies, html_ids, header, footer, specific_paperformat_args = self._prepare_html(html, report_model=report_sudo.model)
+            bodies, html_ids, header, footer, specific_paperformat_args = self.with_context(**additional_context)._prepare_html(html, report_model=report_sudo.model)
 
             if report_sudo.attachment and set(res_ids_wo_stream) != set(html_ids):
                 raise UserError(_(
