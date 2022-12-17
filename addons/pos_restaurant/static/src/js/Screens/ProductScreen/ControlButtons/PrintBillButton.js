@@ -15,6 +15,8 @@ class PrintBillButton extends PosComponent {
         return order.get_orderlines().length === 0;
     }
     onClick() {
+        const order = this.env.pos.get_order();
+        order.initialize_validation_date();
         this.showTempScreen("BillScreen");
     }
 }
