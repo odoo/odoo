@@ -22,13 +22,13 @@
 # Jonathan Spier, 2021
 # MichaelHadar, 2021
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2022
-# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
 # Netta Waizer, 2022
 # hed shefer <hed@laylinetech.com>, 2022
 # Sagi Ahiel, 2022
 # Roy Sayag, 2022
 # NoaFarkash, 2022
 # Ha Ketem <haketem@gmail.com>, 2022
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -36,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Ha Ketem <haketem@gmail.com>, 2022\n"
+"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -168,7 +168,7 @@ msgstr "'תעודת משלוח - %s - %s' % (object.partner_id.name or '', objec
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_location_barcode
 msgid "'Location - %s' % object.name"
-msgstr "'איתור - %s' % object.name"
+msgstr "'מיקום- %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_lot_label
@@ -290,7 +290,7 @@ msgstr "<br>נוצר צורך ב  <b>%s</b> וכלל יופעל כדי למלא 
 msgid ""
 "<br>If the products are not available in <b>%s</b>, a rule will be triggered"
 " to bring products in this location."
-msgstr "<br>אם המוצרים זמינים ב <b>%s</b>, יופעל כלל שמביא מוצרים באיתור זה."
+msgstr "<br>אם המוצרים זמינים ב <b>%s</b>, יופעל כלל שמביא מוצרים למיקום זה."
 
 #. module: stock
 #: model:mail.template,body_html:stock.mail_template_data_delivery_confirmation
@@ -593,7 +593,7 @@ msgstr "<strong>מקור</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Location</strong>"
-msgstr "<strong>איתור</strong>"
+msgstr "<strong>מיקום</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -688,7 +688,7 @@ msgstr "<strong>יעד</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
 msgid "<strong>Tracked product(s):</strong>"
-msgstr "<strong>מוצרים במעקב:</strong>"
+msgstr "<strong>מוצר(ים) במעקב:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
@@ -789,7 +789,7 @@ msgstr "הוסף אצווה/מספר סידורי"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_location_form
 msgid "Add a new location"
-msgstr "הוסף איתור חדש"
+msgstr "הוסף מיקום חדש"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_routes_form
@@ -814,7 +814,7 @@ msgid ""
 " You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
 "הוסף והתאם אישית פעולות מסלול כדי לעבד תנועות מוצרים במחסנים שלך, למשל: פרוק> בצע בקרת איכות> מלאי עבור מוצרים נכנסים, לקט> ארוז> משלוח עבור מוצרים יוצאים.\n"
-"ניתן גם להגדיר את אסטרטגיות הפיזור באיתורי אחסון כדי לשלוח מוצרים נכנסים לתתי איתורים מסוימים (למשל, ארגזים ספציפיים, מדפים)."
+"ניתן גם להגדיר את אסטרטגיות הפיזור באיזורי האחסון כדי לשלוח מוצרים נכנסים לתתי איזורים מסוימים (למשל, ארגזים ספציפיים, מדפים)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -826,7 +826,7 @@ msgid ""
 "specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
 "הוסף והתאם אישית פעולות מסלול כדי לעבד תנועות מוצרים במחסנים שלך, למשל: פרוק> בצע בקרת איכות> מלאי עבור מוצרים נכנסים, לקט> ארוז> משלוח עבור מוצרים יוצאים.\n"
-"ניתן גם להגדיר את אסטרטגיות הפיזור באיתורי אחסון כדי לשלוח מוצרים נכנסים לתתי איתורים מסוימים (למשל, ארגזים ספציפיים, מדפים)."
+"ניתן גם להגדיר את אסטרטגיות הפיזור במקומי אחסון כדי לשלוח מוצרים נכנסים לתתי איזורים מסוימים (למשל, ארגזים ספציפיים, מדפים)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -914,7 +914,7 @@ msgstr "אפשר מוצרים מעורבים"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_location_ids
 msgid "Allowed Location"
-msgstr "איתור מותר"
+msgstr "מיקום מורשה"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1237,7 +1237,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_location__active
 msgid ""
 "By unchecking the active field, you may hide a location without deleting it."
-msgstr "על ידי ביטול הסימון בשדה פעיל, תוכל להסתיר איתור מבלי למחוק אותו."
+msgstr "על ידי ביטול הסימון בשדה פעיל, תוכל להסתיר מיקום מבלי למחוק אותו."
 
 #. module: stock
 #: model:product.product,name:stock.product_cable_management_box
@@ -1254,7 +1254,7 @@ msgstr "תצוגת לוח שנה"
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Can't find any customer or supplier location."
-msgstr "לא ניתן למצוא איתור לקוח או ספק."
+msgstr "לא ניתן למצוא מיקום לקוח או ספק."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -1417,7 +1417,7 @@ msgstr "בדוק את קיום פעולת האריזה בליקוט"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__return_location
 msgid "Check this box to allow using this location as a return location."
-msgstr "סמן תיבה זו כדי לאפשר שימוש באיתור זה כאיתור החזרה."
+msgstr "סמן תיבה זו כדי לאפשר שימוש במיקום זה כמיקום החזרה."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__scrap_location
@@ -1442,7 +1442,7 @@ msgstr "בחר תאריך כדי לקבל את המלאי בתאריך זה"
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Choose destination location"
-msgstr "בחר איתור יעד"
+msgstr "בחר מיקום יעד"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_label_layout
@@ -1703,7 +1703,7 @@ msgstr "כמות שנספרה"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Counterpart Locations"
-msgstr "איתורים מקבילים"
+msgstr "מיקומים מקבילים"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -1897,11 +1897,11 @@ msgid ""
 "stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
-"כמות נוכחית של מוצרים.\n"
-"בהקשר של איתור מלאי יחיד, זה כולל סחורות המאוחסנות באיתור זה, או בכל אחד מתתי האיתורים שלו.\n"
-"בהקשר של מחסן יחיד, זה כולל מלאי מאוחסן באיתור מלאי של מחסן זה, או כל אחד מתתי האיתורים שלו.\n"
-"מאוחסנים באיתור המלאי של המחסן של חנות זו, או כל אחד מתתי האיתורים שלו.\n"
-"אחרת, זה כולל סחורות המאוחסנות בכל איתור מלאי עם סיווג 'פנימי'."
+"כמות מוצרים נוכחית.\n"
+"בהקשר עם מיקום מלאי יחיד, זה כולל סחורות המאוחסנות במיקום זה, או כל אחד מהילדים שלו.\n"
+"בהקשר של מחסן יחיד, זה כולל סחורות המאוחסנות במיקום המלאי של מחסן זה, או כל אחד מהילדים שלו.\n"
+"מאוחסן במיקום המלאי של המחסן של חנות זו, או כל אחד מילדיה.\n"
+"אחרת, זה כולל מוצרים המאוחסנים בכל מיקום מלאי עם סוג 'פנימי'."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__picking_quantity__custom
@@ -1925,12 +1925,12 @@ msgstr "זמן אספקה ממוצע"
 #: model:ir.model.fields,field_description:stock.field_res_users__property_stock_customer
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__customer
 msgid "Customer Location"
-msgstr "איתור לקוח"
+msgstr "מיקום לקוח"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Customer Locations"
-msgstr "איתורי לקוח"
+msgstr "מיקומי לקוח"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -1940,7 +1940,7 @@ msgstr "מלאי מחזורי"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
-msgstr "DHL Expressחיבור ל"
+msgstr "DHL Express-חיבור ל"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
@@ -2055,12 +2055,12 @@ msgstr "דצמבר"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__default_location_dest_id
 msgid "Default Destination Location"
-msgstr "איתור יעד ברירת מחדל"
+msgstr "מיקום יעד ברירת מחדל"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__default_location_src_id
 msgid "Default Source Location"
-msgstr "איתור מקור ברירת מחדל"
+msgstr "ברירת מחדל של מיקום מוצא "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__reception_steps
@@ -2115,9 +2115,9 @@ msgid ""
 "            the stock operations like the manufacturing orders\n"
 "            consumptions, inventories, etc."
 msgstr ""
-"הגדר את האיתורים שלך כך שישקפו את מבנה המחסן \n"
-"והארגון. Odoo מסוגל לנהל איתורים פיזיים\n"
-"(מחסנים, מדפים וכו'), איתורי לקוחות/ספקים\n"
+"הגדר את המיקומים שלך כך שישקפו את מבנה המחסן \n"
+"והארגון. Odoo מסוגל לנהל מיקומים פיזיים\n"
+"(מחסנים, מדפים וכו), מיקומי לקוחות/ספקים\n"
 "וגם מיקומים וירטואליים שמקבילים לפעולות המלאי \n"
 "כמו הוראות ייצור\n"
 ",צריכה, מלאים וכו'."
@@ -2331,12 +2331,12 @@ msgstr "כתובת היעד "
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #, python-format
 msgid "Destination Location"
-msgstr "איתור יעד"
+msgstr "מיקום יעד"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Destination Location:"
-msgstr "איתור יעד:"
+msgstr "מיקום יעד:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__move_dest_ids
@@ -2359,7 +2359,7 @@ msgstr "יעד חבילה :"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__location_dest_id
 msgid "Destination location"
-msgstr "איתור יעד"
+msgstr "מיקום יעד"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__route_ids
@@ -2698,7 +2698,7 @@ msgstr "חיבור ל FedEx"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__filtered_location
 msgid "Filtered Location"
-msgstr "איתור מסונן"
+msgstr "מיקום מסונן"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -2910,7 +2910,7 @@ msgstr "מהספק"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__complete_name
 msgid "Full Location Name"
-msgstr "שם איתור מלא"
+msgstr "שם המיקום"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -3210,7 +3210,7 @@ msgid ""
 "numbers."
 msgstr ""
 "אם מסומנת תיבת סימון זו, Odoo ימלא אוטומטית מראש את הפעולות המפורטות "
-"במוצרים, באיתורים ובאצוות/ מספרים הסידוריים המתאימים."
+"במוצרים, במיקומים ובאצוות/ מספרים הסידוריים המתאימים."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__print_label
@@ -3372,7 +3372,7 @@ msgstr "קלט"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_input_stock_loc_id
 msgid "Input Location"
-msgstr "איתור קליטה"
+msgstr "מיקום קליטה"
 
 #. module: stock
 #: code:addons/stock/models/res_company.py:0
@@ -3389,13 +3389,13 @@ msgstr "פנימי"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__internal
 msgid "Internal Location"
-msgstr "איתור פנימי"
+msgstr "מיקום פנימי"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Internal Locations"
-msgstr "איתורים פנימיים"
+msgstr "מיקומים פנימיים"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__ref
@@ -3417,7 +3417,7 @@ msgstr "העברות פנימיות"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__internal_transit_location_id
 msgid "Internal Transit Location"
-msgstr "איתור מעבר פנימי"
+msgstr "מיקום מעבר פנימי"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__int_type_id
@@ -3521,12 +3521,12 @@ msgstr "תדירות מלאי (בימים)"
 #: model:ir.model.fields,field_description:stock.field_product_product__property_stock_inventory
 #: model:ir.model.fields,field_description:stock.field_product_template__property_stock_inventory
 msgid "Inventory Location"
-msgstr "איתור מלאי"
+msgstr "מקומות המלאי"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
 msgid "Inventory Locations"
-msgstr "איתורי מלאי"
+msgstr "מקומות המלאי"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__inventory
@@ -3947,7 +3947,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_location__company_id
 #: model:ir.model.fields,help:stock.field_stock_quant__company_id
 msgid "Let this field empty if this location is shared between companies"
-msgstr "השאר שדה זה ריק אם איתור זה משותף בין חברות"
+msgstr "השאר שדה זה ריק אם מיקום זה משותף בין חברות"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
@@ -3979,42 +3979,42 @@ msgstr "תצוגת רשימה של פעולות"
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Location"
-msgstr "איתור"
+msgstr "מיקום"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_location_barcode
 msgid "Location Barcode"
-msgstr "איתור ברקוד"
+msgstr "ברקוד מיקום "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__name
 msgid "Location Name"
-msgstr "שם האיתור"
+msgstr "שם המיקום"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__lot_stock_id
 msgid "Location Stock"
-msgstr "איתור מלאי"
+msgstr "מיקום מלאי"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__usage
 msgid "Location Type"
-msgstr "סוג האיתור"
+msgstr "סוג המיקום"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_dest_id
 msgid "Location where the system will stock the finished products."
-msgstr "איתור בו המערכת תאחסן מוצרים גמורים."
+msgstr "מיקום בו המערכת תאחסן מוצרים גמורים."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
 msgid "Location: Store to"
-msgstr "איתור: אחסן ב-"
+msgstr "מיקום: אחסן ב-"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
 msgid "Location: When arrives to"
-msgstr "איתור: כאשר מגיע ל"
+msgstr "מיקום: כאשר מגיע ל"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_form
@@ -4162,7 +4162,7 @@ msgstr "נהל  מספרים סידוריים / אצוות "
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
 msgid "Manage Multiple Stock Locations"
-msgstr "נהל איתורי מלאי מרובים"
+msgstr "נהל מיקומי מלאי מרובים"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_warehouses
@@ -4607,7 +4607,7 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "No source location defined on stock rule: %s!"
-msgstr "לא הוגדר איתור מקור על כלל המלאי: %s!"
+msgstr "לא הוגדר מיקום מוצא על כלל המלאי: %s!"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_action
@@ -4920,7 +4920,7 @@ msgstr "מקור תנועת החזרה"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__original_location_id
 msgid "Original Location"
-msgstr "איתור מקורי"
+msgstr "מיקום מקורי"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__move_orig_ids
@@ -4985,7 +4985,7 @@ msgstr "פלט"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_output_stock_loc_id
 msgid "Output Location"
-msgstr "איתור משלוח"
+msgstr "מיקום משלוח"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.stock_picking_type_menu
@@ -5183,7 +5183,7 @@ msgstr "אריזות"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_pack_stock_loc_id
 msgid "Packing Location"
-msgstr "איתור אריזה"
+msgstr "מיקום אריזה"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -5201,7 +5201,7 @@ msgstr "פרמטרים"
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__parent_location_id
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Parent Location"
-msgstr "איתור אב"
+msgstr "מיקום אב"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__parent_path
@@ -5638,7 +5638,7 @@ msgstr "ייצור"
 #: model:ir.model.fields,field_description:stock.field_product_product__property_stock_production
 #: model:ir.model.fields,field_description:stock.field_product_template__property_stock_production
 msgid "Production Location"
-msgstr "איתור הייצור"
+msgstr "מיקום הייצור"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
@@ -5792,7 +5792,7 @@ msgstr "בקרת איכות"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_qc_stock_loc_id
 msgid "Quality Control Location"
-msgstr "איתור בקרת איכות"
+msgstr "נקודות בקרת איכות"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_quality_control_worksheet
@@ -6108,7 +6108,7 @@ msgstr "מזהה:"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_kandan
 msgid "Register lots, packs, location"
-msgstr "רשום אצווה, חבילות, איתור"
+msgstr "רשום אצווה, חבילות, מיקום "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__stock_move_ids
@@ -6258,7 +6258,7 @@ msgstr "הזמנות"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 msgid "Reserve"
-msgstr ""
+msgstr "שמירה"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_category__packaging_reserve_method__full
@@ -6350,7 +6350,7 @@ msgstr "החזר"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__location_id
 msgid "Return Location"
-msgstr "איתור החזרה"
+msgstr "מיקום החזרה"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
@@ -6602,8 +6602,8 @@ msgid ""
 "Scrapping a product will remove it from your stock. The product will\n"
 "                end up in a scrap location that can be used for reporting purpose."
 msgstr ""
-"פסילת מוצר תוציא אותו מהמלאי שלך. המוצר יהיה\n"
-"באיתור פסילה ויכול לשמש עבור דוחות."
+"גריטה של מוצר תסיר אותו מהמלאי שלך. המוצר יהיה\n"
+"להסתיים במיקום גרוטאות שניתן להשתמש בו למטרת דיווח."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -6812,7 +6812,7 @@ msgid ""
 "Sets a location if you produce at a fixed location. This can be a partner "
 "location if you subcontract the manufacturing operations."
 msgstr ""
-"מגדיר איתור אם אתה מייצר באיתור קבוע. זה יכול להיות איתור של ספק אם קבלן "
+"מגדיר מיקום אם אתה מייצר במיקום קבוע. זה יכול להיות מיקום של ספק אם קבלן "
 "משנה מבצע את פעולות הייצור."
 
 #. module: stock
@@ -7047,12 +7047,12 @@ msgstr "מסמך מקור"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #, python-format
 msgid "Source Location"
-msgstr "איתור מקור"
+msgstr "מיקום מוצא"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Source Location:"
-msgstr "איתור מקור:"
+msgstr "מיקום מוצא:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__package_id
@@ -7118,12 +7118,12 @@ msgstr "שיוך מספרים סידוריים למלאי"
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 #: model_terms:ir.ui.view,arch_db:stock.view_location_tree2
 msgid "Stock Location"
-msgstr "איתור מלאי"
+msgstr "מיקום מלאי"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Stock Locations"
-msgstr "איתורי מלאי"
+msgstr "מיקום מלאי"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move
@@ -7323,7 +7323,7 @@ msgstr "קטגוריות תכולת אחסון"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_multi_locations
 msgid "Storage Locations"
-msgstr "איתורי אחסון"
+msgstr "מיקום מלאי"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_multi_locations
@@ -7373,9 +7373,9 @@ msgid ""
 "Trigger Another Rule: the system will try to find a stock rule to bring the products in the source location. The available stock will be ignored.\n"
 "Take From Stock, if Unavailable, Trigger Another Rule: the products will be taken from the available stock of the source location.If there is no stock available, the system will try to find a  rule to bring the products in the source location."
 msgstr ""
-"קח מהמלאי: המוצרים יילקחו מהמלאי הזמין של איתור המקור.\n"
-"הפעל כלל אחר: המערכת תנסה למצוא כלל מלאי בכדי להביא את המוצרים לאיתור המקור. היא תתעלם מהמלאי הזמין.\n"
-"קח מהמלאי, אם לא זמין, הפעל כלל אחר: המוצרים יילקחו מהמלאי הזמין של איתור המקור.אם אין מלאי זמין, המערכת תנסה למצוא כלל שמביא את המוצרים לאיתור המקור."
+"קח מהמלאי: המוצרים יילקחו מהמלאי הזמין של מיקום  המוצא.\n"
+"הפעל כלל אחר: המערכת תנסה למצוא כלל מלאי בכדי להביא את המוצרים למיקום המוצא. היא תתעלם מהמלאי הזמין.\n"
+"קח מהמלאי, אם לא זמין, הפעל כלל אחר: המוצרים יילקחו מהמלאי הזמין של מיקום  המוצא.אם אין מלאי זמין, המערכת תנסה למצוא כלל שמביא את המוצרים למיקום  המוצא."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_allocation
@@ -7508,7 +7508,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
 msgid "The barcode for a location must be unique per company !"
-msgstr "הברקוד עבור איתור חייב להיות ייחודי לכל חברה!"
+msgstr "הברקוד עבור מיקום חייב להיות ייחודי לכל חברה!"
 
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
@@ -7675,14 +7675,14 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_res_users__property_stock_customer
 msgid ""
 "The stock location used as destination when sending goods to this contact."
-msgstr "איתור המלאי משמש כיעד בעת שליחת סחורה לאיש קשר זה."
+msgstr "מיקום המלאי משמש כיעד בעת שליחת סחורה לאיש קשר זה."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner__property_stock_supplier
 #: model:ir.model.fields,help:stock.field_res_users__property_stock_supplier
 msgid ""
 "The stock location used as source when receiving goods from this contact."
-msgstr "איתור המלאי משמש כמקור בעת קבלת סחורה מאיש קשר זה."
+msgstr "מיקום המלאי משמש כמקור בעת קבלת סחורה מאיש קשר זה."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__picking_id
@@ -7791,7 +7791,7 @@ msgstr ""
 #, python-format
 msgid ""
 "This location's usage cannot be changed to view as it contains products."
-msgstr "השימוש באיתור זה אינו ניתן לשינוי כתצוגה מכיוון שהוא מכיל מוצרים."
+msgstr "השימוש במיקום זה אינו ניתן לשינוי כתצוגה מכיוון שהוא מכיל מוצרים."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -8032,7 +8032,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Track product location in your warehouse"
-msgstr "עקוב אחר איתור המוצר במחסן שלך"
+msgstr "עקוב אחר מיקום המוצר במחסן שלך"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -8126,12 +8126,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__transit
 msgid "Transit Location"
-msgstr "איתור מעבר"
+msgstr "מיקום מעבר"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Transit Locations"
-msgstr "איתורי מעבר"
+msgstr "מיקום מעבר"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__trigger
@@ -8428,12 +8428,12 @@ msgstr "ספק"
 #: model:ir.model.fields,field_description:stock.field_res_users__property_stock_supplier
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__supplier
 msgid "Vendor Location"
-msgstr "איתור ספק "
+msgstr "מיקום ספק "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Vendor Locations"
-msgstr "איתורי ספק "
+msgstr "מיקומי ספק "
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__view
@@ -8449,7 +8449,7 @@ msgstr "צפה בתרשים"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__view_location_id
 msgid "View Location"
-msgstr "איתור תצוגה"
+msgstr "תצוגה של מיקום"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8539,7 +8539,7 @@ msgstr "מחסן הפצה "
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Warehouse view location"
-msgstr "איתור תצוגת מחסן"
+msgstr "מיקום תצוגת מחסן"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -8897,7 +8897,7 @@ msgstr ""
 #, python-format
 msgid "You cannot archive the location %s as it is used by your warehouse %s"
 msgstr ""
-"אינך יכול להעביר לארכיון את האיתור %s מכיוון שהוא בשימוש ע\"י המחסן שלך %s"
+"אינך יכול להעביר לארכיון את המיקום %s מכיוון שהוא בשימוש ע\"י המחסן שלך %s"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -9101,7 +9101,7 @@ msgstr "אתה יכול להחזיר רק ליקוט אחד בכל פעם."
 msgid ""
 "You need to activate storage locations to be able to do internal operation "
 "types."
-msgstr "עליך להפעיל איתורי אחסון בכדי להיות מסוגל לבצע פעולות פנימיות."
+msgstr "עליך להפעיל מיקומי אחסון בכדי להיות מסוגל לבצע פעולות פנימיות."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -9148,7 +9148,7 @@ msgstr ""
 #: code:addons/stock/models/stock_location.py:0
 #, python-format
 msgid "You still have some product in locations %s"
-msgstr "עדיין יש לך מוצר באיתורים %s"
+msgstr "עדיין יש לך מוצר במיקומים %s"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish
@@ -9258,7 +9258,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
 msgid "from location"
-msgstr "מהאיתור"
+msgstr "מהמיקום "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view

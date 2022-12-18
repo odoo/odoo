@@ -5,9 +5,10 @@
 # Translators:
 # Martin Trigaux, 2021
 # fanha99 <fanha99@hotmail.com>, 2021
-# thanhnguyen.icsc <thanhnguyen.icsc@gmail.com>, 2021
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2021
 # Duy BQ <duybq86@gmail.com>, 2021
 # Dung Nguyen Thi <dungnt@trobz.com>, 2021
+# Thi Huong Nguyen, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 14:47+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Dung Nguyen Thi <dungnt@trobz.com>, 2021\n"
+"Last-Translator: Thi Huong Nguyen, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +27,7 @@ msgstr ""
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__alpha
 msgid "Alpha-Numeric Name"
-msgstr ""
+msgstr "Tên chứa Chữ và Số"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__gs1_separator_fnc1
@@ -35,11 +36,14 @@ msgid ""
 " ASCII 29 char). The separator must not match the begin/end of any related "
 "rules pattern."
 msgstr ""
+"Dấu phân cách biểu thức chính quy thay thế cho FNC1 (theo mặc định, nếu "
+"không được đặt, đó là <GS>  ASCII 29 char). Dấu tách không được khớp với "
+"phần đầu/cuối của bất kỳ mẫu quy tắc liên quan nào."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__associated_uom_id
 msgid "Associated Uom"
-msgstr ""
+msgstr "Đơn vị tính Liên kết"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model,name:barcodes_gs1_nomenclature.model_barcode_nomenclature
@@ -84,17 +88,17 @@ msgstr "Ngày hết hạn"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__gs1_separator_fnc1
 msgid "FNC1 Separator"
-msgstr ""
+msgstr "Ký tự phân tách FNC1"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
 msgid "GS1 Content Type"
-msgstr ""
+msgstr "Loại Nội dung GS1"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__encoding__gs1-128
 msgid "GS1-128"
-msgstr ""
+msgstr "GS1-128"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_decimal_usage
@@ -107,20 +111,20 @@ msgstr ""
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "Invalid barcode: can't be formated as date"
-msgstr ""
+msgstr "Mã vạch không hợp lệ: không thể định dạng thành ngày"
 
 #. module: barcodes_gs1_nomenclature
 #. openerp-web
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "Invalid barcode: the check digit is incorrect"
-msgstr ""
+msgstr "Mã vạch không hợp lệ: chữ số kiểm tra không chính xác"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__is_gs1_nomenclature
 msgid "Is GS1 Nomenclature"
-msgstr ""
+msgstr "Là Phép đặt tên GS1"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__location
@@ -140,7 +144,7 @@ msgstr "Đo kiểm"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__identifier
 msgid "Numeric Identifier"
-msgstr ""
+msgstr "Ký hiệu nhận dạng dạng số"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__package
@@ -167,6 +171,7 @@ msgstr "Số lượng"
 #, python-format
 msgid "The FNC1 Separator Alternative is not a valid Regex: "
 msgstr ""
+"FNC1 Separator Alternative không phải là một biểu thức chính quy hợp lệ:"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
@@ -177,12 +182,17 @@ msgid ""
 "UoM;        * Numeric Identifier: fixed length barcode following a specific "
 "encoding;        * Alpha-Numeric Name: variable length barcode."
 msgstr ""
+"Loại nội dung GS1 xác định loại dữ liệu mà quy tắc sẽ xử lý mã vạch thành:"
+"       * Ngày: mã vạch sẽ được chuyển đổi thành ngày giờ của Odoo;         *"
+" Đơn vị tính: giá trị của mã vạch liên quan đến một đơn vị tính cụ thể;"
+"         * Mã định danh dạng số: mã vạch có độ dài cố định theo một cách mã "
+"hóa cụ thể;       * Tên chứa chữ và số: mã vạch có độ dài không cố định."
 
 #. module: barcodes_gs1_nomenclature
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0
 #, python-format
 msgid "The rule pattern \"%s\" is not a valid Regex: "
-msgstr ""
+msgstr "Mẫu quy tắc \"%s\" không phải là một biểu thức chính quy hợp lệ: "
 
 #. module: barcodes_gs1_nomenclature
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0
@@ -192,6 +202,9 @@ msgid ""
 "\t- A first one for the Application Identifier (usually 2 to 4 digits);\n"
 "\t- A second one to catch the value."
 msgstr ""
+"Mẫu quy tắc \"%s\" không hợp lệ, cần hai nhóm:\n"
+"\t- Nhóm đầu tiên dành cho Ký tự định danh Ứng dụng (thường là 2 đến 4 chữ số);\n"
+"\t- Nhóm thứ hai để ghi nhận giá trị."
 
 #. module: barcodes_gs1_nomenclature
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
@@ -201,6 +214,9 @@ msgid ""
 "If this rule uses decimal, check it can't get sometime else than a digit as last char for the Application Identifier.\n"
 "Check also the possible matched values can only be digits, otherwise the value can't be casted as a measure."
 msgstr ""
+"Đã xảy ra lỗi với mẫu quy tắc mã vạch \"%s\".\n"
+"Nếu quy tắc này sử dụng số thập phân, hãy đảm bảo rằng ký tự cuối cùng của Mã định danh Ứng dụng phải là một chữ số.\n"
+"Ngoài ra, hãy đảm bảo các giá trị có thể khớp phải là chữ số, nếu không, giá trị không thể được sử dụng làm đơn vị tính."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
@@ -209,6 +225,8 @@ msgid ""
 "This Nomenclature use the GS1 specification, only GS1-128 encoding rules is "
 "accepted is this kind of nomenclature."
 msgstr ""
+"Phép đặt tên này sử dụng quy định kỹ thuật GS1, chỉ các quy tắc mã hóa "
+"GS1-128 được chấp nhận là loại phép đặt tên này."
 
 #. module: barcodes_gs1_nomenclature
 #. openerp-web
@@ -216,13 +234,14 @@ msgstr ""
 #, python-format
 msgid "This barcode can't be parsed by any barcode rules."
 msgstr ""
+"Không thể phân tích cú pháp mã vạch này theo bất kỳ quy tắc mã vạch nào."
 
 #. module: barcodes_gs1_nomenclature
 #. openerp-web
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "This barcode can't be partially or fully parsed."
-msgstr ""
+msgstr "Không thể phân tích cú pháp một phần hoặc toàn bộ mã vạch này."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__encoding

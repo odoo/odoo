@@ -22,11 +22,11 @@
 # Martin Trigaux, 2021
 # shaked <shaked@laylinetech.com>, 2021
 # Netta Waizer, 2022
-# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
 # MichaelHadar, 2022
 # Sagi Ahiel, 2022
 # NoaFarkash, 2022
 # Roy Sayag, 2022
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
 # Ha Ketem <haketem@gmail.com>, 2022
 # 
 msgid ""
@@ -1132,7 +1132,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__location_src_id
 msgid "Components Location"
-msgstr "איתור רכיבים"
+msgstr "מיקום הרכיבים"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__priority
@@ -1401,11 +1401,11 @@ msgid ""
 "stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
-"כמות נוכחית של מוצרים.\n"
-"בהקשר של איתור מלאי יחיד, זה כולל סחורות המאוחסנות באיתור זה, או בכל אחד מתתי האיתורים שלו.\n"
-"בהקשר של מחסן יחיד, זה כולל מלאי מאוחסן באיתור מלאי של מחסן זה, או כל אחד מתתי האיתורים שלו.\n"
-"מאוחסנים באיתור המלאי של המחסן של חנות זו, או כל אחד מתתי האיתורים שלו.\n"
-"אחרת, זה כולל סחורות המאוחסנות בכל איתור מלאי עם סיווג 'פנימי'."
+"כמות מוצרים נוכחית.\n"
+"בהקשר עם מיקום מלאי יחיד, זה כולל סחורות המאוחסנות במיקום זה, או כל אחד מהילדים שלו.\n"
+"בהקשר של מחסן יחיד, זה כולל סחורות המאוחסנות במיקום המלאי של מחסן זה, או כל אחד מהילדים שלו.\n"
+"מאוחסן במיקום המלאי של המחסן של חנות זו, או כל אחד מילדיה.\n"
+"אחרת, זה כולל מוצרים המאוחסנים בכל מיקום מלאי עם סוג 'פנימי'."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_producing
@@ -1539,7 +1539,7 @@ msgstr "תיאור תחנת העבודה..."
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__location_dest_id
 msgid "Destination Location"
-msgstr "איתור יעד"
+msgstr "מיקום יעד"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__unbuild_id
@@ -1838,7 +1838,7 @@ msgstr "מוצרים מוגמרים"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__location_dest_id
 msgid "Finished Products Location"
-msgstr "איתור מוצרים מוגמרים"
+msgstr "מיקום המוצרים המוגמרים"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__consumption
@@ -2121,7 +2121,7 @@ msgstr "רוחב תמונה"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
 msgid "Image is a link"
-msgstr ""
+msgstr "התמונה היא קישור"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_immediate_production
@@ -2414,7 +2414,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__location_id
 msgid "Location"
-msgstr "איתור"
+msgstr "מיקום"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__location_id
@@ -2424,12 +2424,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__location_src_id
 msgid "Location where the system will look for components."
-msgstr "איתור שבו המערכת תחפש רכיבים."
+msgstr "המיקום שבו המערכת תחפש רכיבים."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__location_dest_id
 msgid "Location where the system will stock the finished products."
-msgstr "איתור בו המערכת תאחסן מוצרים גמורים."
+msgstr "מיקום בו המערכת תאחסן מוצרים גמורים."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__location_dest_id
@@ -3560,7 +3560,7 @@ msgstr "מידע ייצור"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__production_location_id
 msgid "Production Location"
-msgstr "איתור הייצור"
+msgstr "מיקום הייצור"
 
 #. module: mrp
 #: model:ir.actions.report,name:mrp.action_report_production_order
@@ -3797,7 +3797,7 @@ msgstr "דו\"חות"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_report_product_product_replenishment
 msgid "Reserve"
-msgstr ""
+msgstr "שמירה"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -4139,7 +4139,7 @@ msgstr "מקור"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__location_id
 msgid "Source Location"
-msgstr "איתור מקור"
+msgstr "מקום המוצא"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__costs_hour
@@ -4256,7 +4256,7 @@ msgstr "כלל מלאי "
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__sam_loc_id
 msgid "Stock after Manufacturing Location"
-msgstr "מלאי לאחר איתור הייצור"
+msgstr "מלאי לאחר מיקום הייצור"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_stock_report_stock_rule
@@ -5575,7 +5575,7 @@ msgid ""
 "<i>apply</i> Odoo will produce all the finished products and consume all "
 "components."
 msgstr ""
-"עדיין לא נרשמו כמויות שיוצרו, בלחיצה על החל Odoo תייצר את כל המוצרים "
+"עדיין לא נרשמו כמויות שיוצרו, בלחיצה על \"התחל\" Odoo תייצר את כל המוצרים "
 "המוגמרים ותצרוך את כל הרכיבים."
 
 #. module: mrp
@@ -5681,7 +5681,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_warn_insufficient_qty_unbuild_form_view
 msgid "from location"
-msgstr "מהאיתור"
+msgstr "מהמיקום"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
