@@ -2071,6 +2071,11 @@ msgid ""
 "                Sheet and the Profit and Loss report use the category\n"
 "                (profit/loss or balance sheet)."
 msgstr ""
+"סוג חשבון מגדיר איך החשבון משמש\n"
+"                עבור כל יומן. שיטת ההעברה של סוג חשבון מגדירה\n"
+"                את התהליך לסגירת דוח שנתי. דוחות כמו מאזן\n"
+"                בוחן ודוח רווח-הפסד משתמשים בקטגוריה\n"
+"                (רווח/הפסד או מאזן בוחן)."
 
 #. module: account
 #: code:addons/account/models/account_analytic_default.py:0
@@ -11505,13 +11510,13 @@ msgstr "שדה טכני המציין אם התשלום הושווה עם שור�
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__is_reconciled
 msgid "Technical field indicating if the payment is already reconciled."
-msgstr ""
+msgstr "שדה טכני המציין אם התשלום עבר התאמה."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__is_reconciled
 msgid ""
 "Technical field indicating if the statement line is already reconciled."
-msgstr ""
+msgstr "שדה טכני המציין אם התשלום עבר התאמה."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__show_decimal_separator
@@ -11525,7 +11530,7 @@ msgstr ""
 msgid ""
 "Technical field to display a warning message in case starting balance is "
 "different than previous ending balance"
-msgstr ""
+msgstr "שדה טכני להציג אזהרה אם יתרת הפתיחה שונה מיתרת הסיום הקודמת"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__bank_partner_id
@@ -11591,7 +11596,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move__user_id
 #: model:ir.model.fields,help:account.field_account_payment__user_id
 msgid "Technical field used to fit the generic behavior in mail templates."
-msgstr ""
+msgstr "שדה טכני לקביעת ההתנהגות הרגילה בתבניות מייל."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_filter_type_domain
@@ -11799,6 +11804,8 @@ msgid ""
 "accounts: liquidity type is for cash or bank accounts, payable/receivable is"
 " for vendor/customer accounts."
 msgstr ""
+"הסוג \"פהימי\" משמש לתכונות זמינות בסוגי חשבונות שונים: סוג תזרימי זה בשביל "
+"חשבונות מזומן או בנק, סוג לתשלום/תקבול משמש לחשבונות ספק/לקוח."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -11861,6 +11868,8 @@ msgid ""
 "The account is already in use in a 'sale' or 'purchase' journal. This means "
 "that the account's type couldn't be 'receivable' or 'payable'."
 msgstr ""
+"החשבון הזה כבר בשימש עבור יומן פעולות 'קניה' או 'רכש'. כלומר סוג החשבון לא "
+"יכול להיות 'לתשלום' או 'לתקבול'."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -11972,7 +11981,7 @@ msgstr "תבנית התרשים עבור הארגון (אם יש)"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The chosen QR-code type is not eligible for this invoice."
-msgstr ""
+msgstr "קוד ה-QR שנבחר לא מתאים לחשבונית הזו."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_bnk_stmt_check
@@ -12114,7 +12123,7 @@ msgstr "הפקודות הבאות יווצרו"
 msgid ""
 "The following error prevented '%s' QR-code to be generated though it was "
 "detected as eligible: "
-msgstr ""
+msgstr "השגיאה הבאה '%s' מנעה יצירת קוד QR, למרות שיש הרשאה לעשות זאת:"
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_send.py:0
@@ -12391,6 +12400,14 @@ msgid "The payment's currency."
 msgstr "מטבע התשלום."
 
 #. module: account
+#: code:addons/account/models/product.py:0
+#, python-format
+msgid ""
+"The product \"%s\" is used in invoices. You cannot change its Unit of "
+"Measure."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -12423,6 +12440,10 @@ msgid ""
 "        * Amount Paid: Only applied when paying an amount.\n"
 "        * Amount Paid/Received: Applied in both cases."
 msgstr ""
+"מודל ההתאמות יפעל רק לעסקאות מהסוגים הבאים:\n"
+"        * סכום שהתקבל: רק ייושם כשמתקבל סכום.\n"
+"        * סכום שולם: רק ייושם כשמשלמים סכום.\n"
+"        * סכום ששולם/התקבל: ייושם בשני המקרים."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner
@@ -12449,6 +12470,10 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
+"מודל ההתאמה יפעל רק כשתהיה תגית:\n"
+"        * מכיל: על התגיד להכיל ביטוי זה (לא משנה אם באותיות קטנות/גדולות)\n"
+"        * לא כולל: ההיפך מ\"מכיל\".\n"
+"        * תואם ביטוי רגיל: הגדירו נוסחא משלכם."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_note
@@ -12459,6 +12484,10 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
+"מודל ההתאמה יפעל רק כשההערה:\n"
+"* מכילה: על התגיד להכיל ביטוי זה (לא משנה אם באותיות קטנות/גדולות)\n"
+"* לא כולל: ההיפך מ\"מכיל\".\n"
+"* תואם ביטוי רגיל: הגדירו נוסחא משלכם."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_transaction_type
@@ -12469,6 +12498,10 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
+"מודל ההתאמה יפעל רק כשסוג העסקה:\n"
+"* מכיל: על התגיד להכיל ביטוי זה (לא משנה אם באותיות קטנות/גדולות)\n"
+"* לא כולל: ההיפך מ\"מכיל\".\n"
+"* תואם ביטוי רגיל: הגדירו נוסחא משלכם."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_journal_ids
@@ -12522,13 +12555,13 @@ msgstr ""
 msgid ""
 "The sequence field is used to define order in which the tax lines are "
 "applied."
-msgstr ""
+msgstr "שדה הרצף מגדיר את הסדר בו שורות המס מיושמות."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The sequence format has changed."
-msgstr ""
+msgstr "פורמט הרצף השתנה."
 
 #. module: account
 #: code:addons/account/models/sequence_mixin.py:0
@@ -13176,6 +13209,8 @@ msgid ""
 "printing it. If left blank, the first available and usable method will be "
 "used."
 msgstr ""
+"סוג קוד ה-QR שיווצר לתשלום החשבונית הזו, כשתודפס. אם ריק, ייבחר סוג הקוד "
+"הפנוי והתקין הראשון."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__activity_exception_decoration
@@ -14489,6 +14524,8 @@ msgid ""
 " Sales operations should go to 'sale' journals, and purchase operations to "
 "'purchase' ones."
 msgstr ""
+"ליומן הנבחר מסוג שאינו מתאים לסוג החשבוניות. פעולות מכירהצריכות ללכת ליומני "
+"'מכירה', ופעולות רכש ליומני 'רכש'."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form

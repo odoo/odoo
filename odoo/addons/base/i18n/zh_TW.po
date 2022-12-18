@@ -8,7 +8,7 @@
 # sejun huang <sejun.huang@gmail.com>, 2020
 # zhengwei wu <wzw15199@gmail.com>, 2020
 # Mandy Choy <mnc@odoo.com>, 2021
-# dott.dev <dev@dottdot.com>, 2021
+# dott.dev <dottdot.dev@gmail.com>, 2021
 # Shigurefox <tom.liang@omniwaresoft.com.tw>, 2021
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
 # Benson <Benson.Dr@Gmail.com>, 2022
@@ -27816,8 +27816,8 @@ msgstr "模組`%s`現在可能不能使用，請稍後再試。"
 #. module: base
 #: code:addons/base/models/ir_module.py:0
 #, python-format
-msgid "The `base` module cannot be uninstalled"
-msgstr "`base` 模組不能卸載"
+msgid "Those modules cannot be uninstalled: %s"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -31341,3 +31341,9 @@ msgstr "是"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "奧蘭群島"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore must be active."
+msgstr ""

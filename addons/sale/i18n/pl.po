@@ -26,7 +26,6 @@
 # Maciej Wichowski <maciej.wichowski@openglobe.pl>, 2020
 # Monika Grzelak <m.e.grzelak@gmail.com>, 2020
 # Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2020
-# Paweł Wodyński <pw@myodoo.pl>, 2020
 # Maja Stawicka <mjstwck@wp.pl>, 2020
 # Piotr Strębski <strebski@gmail.com>, 2021
 # DanielDemedziuk <daniel.demedziuk@gmail.com>, 2021
@@ -34,6 +33,7 @@
 # Rafał Kozak <rafal.kozak@openglobe.pl>, 2021
 # Maksym <ms@myodoo.pl>, 2022
 # Jacek Michalski <michalski.jck@gmail.com>, 2022
+# Paweł Wodyński <pw@myodoo.pl>, 2022
 # Łukasz Grzenkowicz <lukasz.grzenkowicz@gmail.com>, 2022
 # 
 msgid ""
@@ -103,7 +103,7 @@ msgstr "&amp;nbsp;<span>na</span>&amp;nbsp;"
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_pro_forma_invoice
 msgid "'PRO-FORMA - %s' % (object.name)"
-msgstr ""
+msgstr "'PRO-FORMA - %s' % (object.name)"
 
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_saleorder
@@ -111,6 +111,8 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
+"(object.state in ('draft', 'sent') and 'Oferta - %s' % (object.name)) or "
+"'Zamówienie - %s' % (object.name)"
 
 #. module: sale
 #: model:product.product,description_sale:sale.product_product_4e
@@ -1185,6 +1187,8 @@ msgid ""
 "Check this box if you send quotations to your customers rather than "
 "confirming orders straight away."
 msgstr ""
+"Zaznacz to pole, jeśli wysyłasz klientom oferty zamiast od razu potwierdzać "
+"zamówienia."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
@@ -2483,7 +2487,7 @@ msgstr "Marże"
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_sent
 msgid "Mark Quotation as Sent"
-msgstr ""
+msgstr "Oznacz ofertę jako wysłaną"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
@@ -2717,6 +2721,8 @@ msgid ""
 "Once the quotation is confirmed, it becomes a sales order.<br> You will be "
 "able to create an invoice and collect the payment."
 msgstr ""
+"Po potwierdzeniu oferty staje się ona zamówieniem sprzedaży. <br>Będziesz "
+"mógł wystawić fakturę i przyjąć płatność."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_pay
@@ -3219,7 +3225,7 @@ msgstr "Oferta wysłana"
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
 msgid "Quotation Validity is required and must be greater than 0."
-msgstr ""
+msgstr "Ważność oferty jest wymagana i musi być większa niż 0."
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
@@ -3237,7 +3243,7 @@ msgstr "Oferta wysłana"
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Quotation viewed by customer %s"
-msgstr ""
+msgstr "Oferta wyświetlona przez klienta %s"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotations
@@ -3308,7 +3314,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Reject This Quotation"
-msgstr ""
+msgstr "Odrzuć tą ofertę"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_report
@@ -4354,7 +4360,7 @@ msgstr "Jednostki miary"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr ""
+msgstr "Kategorie jednostek miary"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
@@ -4439,7 +4445,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "View Quotation"
-msgstr ""
+msgstr "Zobacz ofertę"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4505,6 +4511,8 @@ msgid ""
 "You can not delete a sent quotation or a confirmed sales order. You must "
 "first cancel it."
 msgstr ""
+"Nie możesz usunąć wysłanej oferty lub potwierdzonego zamówienia sprzedaży. "
+"Najpierw musisz je anulować."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
