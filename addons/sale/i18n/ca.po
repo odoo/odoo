@@ -21,6 +21,7 @@
 # eriiikgt, 2022
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2022
 # Guspy12, 2022
+# Ivan Espinola, 2022
 # 
 msgid ""
 msgstr ""
@@ -28,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-02 08:12+0000\n"
 "PO-Revision-Date: 2016-08-05 13:09+0000\n"
-"Last-Translator: Guspy12, 2022\n"
+"Last-Translator: Ivan Espinola, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -96,6 +97,8 @@ msgid ""
 "<b>Congratulations</b>, your first quotation is sent!<br>Check your email to"
 " validate the quote."
 msgstr ""
+"<b>Enhorabona</b>, s'envia la primera cita!<br>Comproveu el vostre correu "
+"electrònic per validar la cita."
 
 #. module: sale
 #. openerp-web
@@ -326,6 +329,35 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"docname\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
+"        Hola.\n"
+"        <br/><br/>\n"
+"        El vostre\n"
+"        <t t-if=\"ctx.get('proforma')\">\n"
+"            Factura proforma <t t-out=\"docname or ''\">citació</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"            <t t-if=\"object.origin\">\n"
+"                (amb referència: <t t-out=\"object.origin or ''\"/> )\n"
+"            </t>\n"
+"            Hi ha disponible un import de <span style=\"font-weight: bold;\" t-out=\"formatamount(object.amounttotal, object.pricelistid.currencyid) or ''\">$ 10.00</span>.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"docname or ''\">cita</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"/>\n"
+"            <t t-if=\"object.origin\">\n"
+"                (amb referència: <t t-out=\"object.origin or ''\">S00052</t>)\n"
+"            </t>\n"
+"            L'import en <span style=\"font-weight: bold;\" t-out=\"formatamount(object.amounttotal, object.pricelistid.currencyid) or ''\">$ 10.00</span> està llest per a la revisió.\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        No dubteu a contactar amb nosaltres si teniu cap pregunta.\n"
+"        <t t-if=\"not ishtmlempty(object.userid.signature)\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.userid.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -455,6 +487,8 @@ msgid ""
 "<span class=\"o_stat_text\">Customer</span>\n"
 "                            <span class=\"o_stat_text\">Preview</span>"
 msgstr ""
+"<span class=\"ostattext\">Client</span>\n"
+"                            <span class=\"ostattext\">Previsualització</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -528,6 +562,9 @@ msgid ""
 "                            Shipping Address:\n"
 "                        </strong>"
 msgstr ""
+"<strong class=\"d-block mb-1\">\n"
+"                            Adreça d'enviament:\n"
+"                        </strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -647,13 +684,13 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Pay Quotation"
-msgstr ""
+msgstr "Accepta la cotització de pagament"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Sign Quotation"
-msgstr ""
+msgstr "Accepta la citació del signe"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -788,6 +825,8 @@ msgid ""
 "An order is to upsell when delivered quantities are above initially\n"
 "            ordered quantities, and the invoicing policy is based on ordered quantities."
 msgstr ""
+"Una ordre és revendre quan les quantitats lliurades estan per sobre inicialment\n"
+"            Quantitats ordenades, i la política de facturació es basa en quantitats ordenades."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__analytic_account_id
@@ -840,6 +879,8 @@ msgid ""
 "As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
 "            to sell extra hours when all ordered hours have been consumed."
 msgstr ""
+"Per exemple, si vens hores de servei prepagades, Odoo et recomana\n"
+"            vendre hores extres quan s'hagin consumit totes les hores ordenades."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -1093,7 +1134,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__country_code
 msgid "Country code"
-msgstr ""
+msgstr "Codi de país"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_loyalty
@@ -1370,7 +1411,7 @@ msgstr "Mètodes lliurament"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered
 msgid "Delivery Quantity"
-msgstr ""
+msgstr "Quantitat de lliurament"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
@@ -1488,7 +1529,7 @@ msgstr "Dipòsits"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down payment"
-msgstr ""
+msgstr "Pagament de baixada"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
@@ -1562,6 +1603,7 @@ msgstr "Assistent de composició de correu electrònic"
 #: model:ir.model.fields,help:sale.field_res_config_settings__invoice_mail_template_id
 msgid "Email sent to the customer once the invoice is available."
 msgstr ""
+"Correu electrònic enviat al client un cop la factura estigui disponible."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__confirmation_mail_template_id
@@ -1748,7 +1790,7 @@ msgstr "Agrupar per"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
 msgid "Has Fiscal Position Changed"
-msgstr ""
+msgstr "Ha canviat la posició fiscal"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
@@ -2008,7 +2050,7 @@ msgstr "Objectiu de la facturació"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing and Payments"
-msgstr ""
+msgstr "Invocació i pagaments"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -2535,7 +2577,7 @@ msgstr "Data ordre"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Order Date:"
-msgstr ""
+msgstr "Data de la comanda:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
@@ -2738,7 +2780,7 @@ msgstr "Preu reduït sense IVA"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxinc
 msgid "Price Reduce Tax incl"
-msgstr ""
+msgstr "Inclús de l'impost de reducció de preus"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__pricelist_id
@@ -2749,7 +2791,7 @@ msgstr "Tarifa"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__pricelist_item_id
 msgid "Pricelist Item"
-msgstr ""
+msgstr "Element de la llista de preus"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_pricelist_main
@@ -2776,7 +2818,7 @@ msgstr "Factura proforma"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Pro-Forma Invoice #"
-msgstr ""
+msgstr "Factura Pro-Forma #"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
@@ -2847,12 +2889,15 @@ msgstr "Variants de producte"
 #, python-format
 msgid "Product prices have been recomputed according to pricelist %s."
 msgstr ""
+"Els preus del producte s'han tornat a calcular segons la llista de preus %s."
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Product taxes have been recomputed according to fiscal position %s."
 msgstr ""
+"Els impostos sobre els productes s'han tornat a calcular d'acord amb la "
+"posició fiscal %s."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3049,7 +3094,7 @@ msgstr "Recalcular tots els preus sobre la base d'aquesta llista de preus"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all taxes based on this fiscal position"
-msgstr ""
+msgstr "Recalcula tots els impostos en funció d'aquesta posició fiscal"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -3061,6 +3106,8 @@ msgstr "Referència"
 #: model:ir.model.fields,help:sale.field_sale_order__origin
 msgid "Reference of the document that generated this sales order request"
 msgstr ""
+"Referència del document que ha generat aquesta sol·licitud de comanda de "
+"vendes"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_payment_register
@@ -3533,7 +3580,7 @@ msgstr "Mostra marges en comandes"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Sign & Pay Quotation"
-msgstr ""
+msgstr "Signa la cotització de pagament"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4103,6 +4150,8 @@ msgstr ""
 msgid ""
 "This will update all taxes based on the currently selected fiscal position."
 msgstr ""
+"Això actualitzarà tots els impostos en funció de la posició fiscal "
+"seleccionada."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4439,6 +4488,8 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "            or check every order and invoice them one by one."
 msgstr ""
+"Podeu seleccionar totes les comandes i facturar-les per lots,<br>\n"
+"            o comproveu cada comanda i facturant-les una per una."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_acquirer__so_reference_type
@@ -4458,6 +4509,8 @@ msgid ""
 "You cannot change the product's type because it is already used in sales "
 "orders."
 msgstr ""
+"No podeu canviar el tipus del producte perquè ja s'utilitza en comandes de "
+"venda."
 
 #. module: sale
 #: code:addons/sale/models/sale_order_line.py:0

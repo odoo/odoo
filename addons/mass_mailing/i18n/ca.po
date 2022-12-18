@@ -22,6 +22,7 @@
 # eriiikgt, 2022
 # Josep Anton Belchi, 2022
 # Farouk Jabiri, 2022
+# Ivan Espinola, 2022
 # 
 msgid ""
 msgstr ""
@@ -29,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-19 13:57+0000\n"
 "PO-Revision-Date: 2016-08-05 13:06+0000\n"
-"Last-Translator: Farouk Jabiri, 2022\n"
+"Last-Translator: Ivan Espinola, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,7 +42,7 @@ msgstr ""
 #: code:addons/mass_mailing/wizard/mailing_contact_import.py:0
 #, python-format
 msgid " %i duplicates have been ignored."
-msgstr ""
+msgstr "S'han ignorat %i duplicats."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
@@ -50,6 +51,9 @@ msgid ""
 "\"Rick Sanchez\" <rick_sanchez@example.com>\n"
 "victor_hugo@example.com"
 msgstr ""
+"\"Damien Roberts\" <d.roberts@example.com>\n"
+"\"Rick Sanchez\" <ricksanchez@example.com>\n"
+"victorhugo@example.com"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_comparisons
@@ -80,7 +84,7 @@ msgstr "%Click (Total)"
 #: code:addons/mass_mailing/wizard/mailing_contact_import.py:0
 #, python-format
 msgid "%i Contacts have been imported."
-msgstr ""
+msgstr "S'han importat %i contactes."
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mailing_list.py:0
@@ -123,7 +127,7 @@ msgstr "21 Jul"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__mass_mailing_reports
 msgid "24H Stat Mailing Reports"
-msgstr ""
+msgstr "Informes de correu d'estat 24H"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mailing.py:0
@@ -488,7 +492,7 @@ msgstr "<span name=\"sent\">correus s'han enviat.</span>"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.digest_mail_main
 msgid "<span style=\"color: #8f8f8f;\">Turn off Mailing Reports</span>"
-msgstr ""
+msgstr "<span style=\"color: #8f8f8f;\">Desactiva els informes de correu</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
@@ -508,7 +512,7 @@ msgstr "<span>Contactes</span>"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "<span>Design</span>"
-msgstr ""
+msgstr "<span>Disseny</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
@@ -518,7 +522,7 @@ msgstr "<span>Destinataris de correu vàlids</span>"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
 msgid "<span>​</span>"
-msgstr ""
+msgstr "<span></span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_comparisons
@@ -726,7 +730,7 @@ msgstr "Afegeix contactes a la llista de correu"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Add Mailing Contacts"
-msgstr ""
+msgstr "Afegeix contactes de mailing"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_contact_to_list_action
@@ -756,7 +760,7 @@ msgstr "Afegeix a la llista"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Add to Templates"
-msgstr ""
+msgstr "Afegeix a les plantilles"
 
 #. module: mass_mailing
 #. openerp-web
@@ -1088,6 +1092,8 @@ msgid ""
 "Bounce happens when a mailing cannot be delivered (fake address, server "
 "issues, ...). Check each record to see what went wrong."
 msgstr ""
+"El retorn ocorre quan no es pot lliurar un correu (adreça falsa, problemes "
+"del servidor, ...). Comproveu cada registre per veure què ha anat malament."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__bounced
@@ -1220,11 +1226,15 @@ msgstr "Conversa"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Check how well your mailing is doing a day after it has been sent"
 msgstr ""
+"Comproveu com de bé està funcionant el vostre mailing un dia després "
+"d'haver-lo enviat"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_res_config_settings__mass_mailing_reports
 msgid "Check how well your mailing is doing a day after it has been sent."
 msgstr ""
+"Comproveu com de bé està funcionant el vostre mailing un dia després "
+"d'haver-lo enviat."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_product_list
@@ -1267,6 +1277,7 @@ msgstr "Escolliu les subscripcions de correu"
 #, python-format
 msgid "Click on the ⭐ next to the subject to save this mailing as a"
 msgstr ""
+"Feu clic a la  the al costat de l'assumpte per a desar aquest mailing com a"
 
 #. module: mass_mailing
 #. openerp-web
@@ -1274,6 +1285,8 @@ msgstr ""
 #, python-format
 msgid "Click on this button to add this mailing to your templates."
 msgstr ""
+"Feu clic en aquest botó per a afegir aquest mailing a les vostres "
+"plantilles."
 
 #. module: mass_mailing
 #. openerp-web
@@ -1351,6 +1364,8 @@ msgstr "Torna"
 msgid ""
 "Come back once your mailing has been sent to track who opened your mailing."
 msgstr ""
+"Torna un cop s'hagi enviat el teu mailing al seguiment de qui va obrir el "
+"teu mailing."
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_res_company
@@ -1416,7 +1431,7 @@ msgstr "Nom del contacte"
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact_import__contact_list
 msgid "Contact list that will be imported, one contact per line"
-msgstr ""
+msgstr "Llista de contactes que s'importaran, un contacte per línia"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_call_to_action
@@ -1660,7 +1675,7 @@ msgstr "Demostració de signatura"
 #: code:addons/mass_mailing/static/src/js/snippets.editor.js:0
 #, python-format
 msgid "Design Options"
-msgstr ""
+msgstr "Opcions de disseny"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_mailing_action_mail
@@ -1673,13 +1688,13 @@ msgstr ""
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "Design added to the %s Templates!"
-msgstr ""
+msgstr "Disseny afegit a les plantilles %s!"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "Design removed from the %s Templates!"
-msgstr ""
+msgstr "S'ha suprimit el disseny de les plantilles %s!"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list_merge__dest_list_id
@@ -1930,23 +1945,23 @@ msgstr "Favorit"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__favorite_date
 msgid "Favorite Date"
-msgstr ""
+msgstr "Data preferida"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mailing_filter_id
 msgid "Favorite Filter"
-msgstr ""
+msgstr "Filtre preferit"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_filter_action
 #: model:ir.ui.menu,name:mass_mailing.mailing_filter_menu_action
 msgid "Favorite Filters"
-msgstr ""
+msgstr "Filtres preferits"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mailing_filter_domain
 msgid "Favorite filter domain"
-msgstr ""
+msgstr "Domini del filtre preferit"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_three_columns
@@ -1992,7 +2007,7 @@ msgstr "Nom del filtre"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_search
 msgid "Filters saved by me"
-msgstr ""
+msgstr "Filtres desats per mi"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__copyvalue
@@ -2228,6 +2243,8 @@ msgid ""
 "If set, a mass mailing will be created so that you can track its results in "
 "the Email Marketing app."
 msgstr ""
+"Si s'estableix, es crearà un mailing massiu perquè pugueu fer un seguiment "
+"dels seus resultats a l'aplicació de màrqueting de correu electrònic."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__is_blacklisted
@@ -2269,18 +2286,18 @@ msgstr "Importa"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
 #, python-format
 msgid "Import Mailing Contacts"
-msgstr ""
+msgstr "Importa els contactes de mailing"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mailing_contact.py:0
 #, python-format
 msgid "Import Template for Mailing List Contacts"
-msgstr ""
+msgstr "Importa una plantilla per als contactes de la llista de correu"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
 msgid "Import contacts in"
-msgstr ""
+msgstr "Importa contactes a"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__state__in_queue
@@ -2338,7 +2355,7 @@ msgstr "És seguidor"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__is_mailing_campaign_activated
 msgid "Is Mailing Campaign Activated"
-msgstr ""
+msgstr "S'ha activat la campanya de mailing"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
@@ -2465,6 +2482,9 @@ msgid ""
 "Link Trackers will measure how many times each link is clicked as well as "
 "the proportion of %s who clicked at least once in your mailing."
 msgstr ""
+"Els rastrejadors d'enllaços mesuraran quantes vegades es fa clic a cada "
+"enllaç, així com la proporció de %s que han fet clic almenys una vegada en "
+"el vostre correu."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.social_links
@@ -2484,7 +2504,7 @@ msgstr "Clic als enllaços"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_import__mailing_list_ids
 msgid "Lists"
-msgstr ""
+msgstr "Llistes"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__mail_mail_id
@@ -2585,7 +2605,7 @@ msgstr "Contacte de correu"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_contact_import
 msgid "Mailing Contact Import"
-msgstr ""
+msgstr "Importació de contactes de mailing"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_model__is_mailing_enabled
@@ -2595,12 +2615,12 @@ msgstr "S' ha habilitat la correu"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_filter
 msgid "Mailing Favorite Filters"
-msgstr ""
+msgstr "Filtres preferits del mailing"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_search
 msgid "Mailing Filters"
-msgstr ""
+msgstr "Filtres de mailing"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_list
@@ -2650,7 +2670,7 @@ msgstr "Llistes de correu"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_report_deactivated
 msgid "Mailing Reports Turned Off"
-msgstr ""
+msgstr "Informes de correu desactivats"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_report_deactivated
@@ -2658,6 +2678,8 @@ msgid ""
 "Mailing Reports have been turned off for all users. <br/>\n"
 "                                If needed, they can be turned back on from the"
 msgstr ""
+"S'han desactivat els informes de correu per a tots els usuaris. <br/>\n"
+"                                Si cal, es poden tornar a activar des de"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_trace
@@ -2711,7 +2733,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_tree
 msgid "Mailing filters"
-msgstr ""
+msgstr "Filtres de mailing"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_create_mass_mailings_from_campaign
@@ -2747,7 +2769,7 @@ msgstr "Gestiona les campanyes de correu massiu"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Manage mass mailing campaigns"
-msgstr ""
+msgstr "Gestiona les campanyes de correu massiu"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__utm_campaign__ab_testing_winner_selection__manual
@@ -2957,7 +2979,7 @@ msgstr "La meva empresa"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_search
 msgid "My Filters"
-msgstr ""
+msgstr "Els meus filtres"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
@@ -2985,7 +3007,7 @@ msgstr "Nou nom de llista de correu"
 #: code:addons/mass_mailing/wizard/mailing_contact_import.py:0
 #, python-format
 msgid "New contacts imported"
-msgstr ""
+msgstr "S'han importat contactes nous"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_calendar_event_id
@@ -3011,31 +3033,31 @@ msgstr "Tipus de la següent activitat"
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "No %s address bounced yet!"
-msgstr ""
+msgstr "Encara no s'ha rebut cap adreça %s!"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "No %s clicked your mailing yet!"
-msgstr ""
+msgstr "Encara no s'ha fet clic a %s al vostre correu!"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "No %s opened your mailing yet!"
-msgstr ""
+msgstr "No hi ha %s que hagi obert el vostre correu!"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "No %s received your mailing yet!"
-msgstr ""
+msgstr "No %s ha rebut el vostre mailing encara!"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "No %s replied to your mailing yet!"
-msgstr ""
+msgstr "Cap %s ha respost encara al vostre mailing!"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/wizard/mailing_contact_import.py:0
@@ -3044,6 +3066,8 @@ msgid ""
 "No contacts were imported. All email addresses are already in the mailing "
 "list."
 msgstr ""
+"No s'ha importat cap contacte. Totes les adreces de correu electrònic ja es "
+"troben a la llista de correu."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_comparisons
@@ -3083,7 +3107,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_filter_action
 msgid "No saved filter yet!"
-msgstr ""
+msgstr "Encara no hi ha cap filtre desat!"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_comparisons
@@ -3100,7 +3124,7 @@ msgstr "Encara no s' ha escollit cap plantilla."
 #: code:addons/mass_mailing/wizard/mailing_contact_import.py:0
 #, python-format
 msgid "No valid email address found."
-msgstr ""
+msgstr "No s'ha trobat cap adreça electrònica vàlida."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
@@ -3356,14 +3380,14 @@ msgstr "Expressió de marcador"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Plain Text"
-msgstr ""
+msgstr "Text net"
 
 #. module: mass_mailing
 #. openerp-web
 #: code:addons/mass_mailing/static/src/js/mailing_filter_widget.js:0
 #, python-format
 msgid "Please provide a name for the filter"
-msgstr ""
+msgstr "Introduïu un nom per al filtre"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_media_list
@@ -3393,7 +3417,7 @@ msgstr "Primari"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
 msgid "Primary Buttons"
-msgstr ""
+msgstr "Botons primaris"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_highlight
@@ -3502,7 +3526,7 @@ msgstr "Regular"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Reload a favorite filter"
-msgstr ""
+msgstr "Torna a carregar un filtre preferit"
 
 #. module: mass_mailing
 #. openerp-web
@@ -3517,7 +3541,7 @@ msgstr "Eliminar de favorits"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #, python-format
 msgid "Remove from Templates"
-msgstr ""
+msgstr "Elimina de les plantilles"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__render_model
@@ -3644,7 +3668,7 @@ msgstr "Assistent de correu mostra"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_filter__create_uid
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_tree
 msgid "Saved by"
-msgstr ""
+msgstr "Desat per"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__schedule_type
@@ -3734,7 +3758,7 @@ msgstr "secundària@ item Spelling dictionary"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
 msgid "Secondary Buttons"
-msgstr ""
+msgstr "Botons secundaris"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_grid
@@ -3744,7 +3768,7 @@ msgstr "Seleccioneu i suprimiu blocs per eliminar característiques."
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
 msgid "Select mailing lists"
-msgstr ""
+msgstr "Seleccioneu les llistes de correu"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -3793,7 +3817,7 @@ msgstr "Envia des de"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_compose_form_mass_mailing
 msgid "Send Mass Mailing"
-msgstr ""
+msgstr "Enviar correu massiu"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
@@ -3807,6 +3831,8 @@ msgid ""
 "Send a report to the mailing responsible one day after the mailing has been "
 "sent."
 msgstr ""
+"Envia un informe al responsable del mailing un dia després d'enviar el "
+"mailing."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
@@ -3881,7 +3907,7 @@ msgstr "Enviat a # {record. sent_ data. valor}"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
 msgid "Separators"
-msgstr ""
+msgstr "Separadors"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_mass_mailing_configuration
@@ -3893,12 +3919,12 @@ msgstr "Configuració"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_report_deactivated
 msgid "Settings Menu."
-msgstr ""
+msgstr "El menú Arranjament."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__is_public
 msgid "Show In Preferences"
-msgstr ""
+msgstr "Mostra a les preferències"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -3954,7 +3980,7 @@ msgstr "Adreça de correu especificada"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Start From Scratch"
-msgstr ""
+msgstr "Comença des de Scratch"
 
 #. module: mass_mailing
 #. openerp-web
@@ -4171,7 +4197,7 @@ msgstr "El contacte ha escollit no rebre més correus d' aquesta llista"
 #: code:addons/mass_mailing/models/mailing_filter.py:0
 #, python-format
 msgid "The filter domain is not valid for this recipients."
-msgstr ""
+msgstr "El domini del filtre no és vàlid per a aquests destinataris."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_list__is_public
@@ -4224,6 +4250,8 @@ msgid ""
 "The saved filter targets different recipients and is incompatible with this "
 "mailing."
 msgstr ""
+"El filtre desat s'adreça a diferents destinataris i és incompatible amb "
+"aquest mailing."
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/utm_campaign.py:0
@@ -4372,6 +4400,8 @@ msgid ""
 "To track how many replies this mailing gets, make sure its reply-to address "
 "belongs to this database."
 msgstr ""
+"Per fer un seguiment de quantes respostes rep aquest mailing, assegureu-vos "
+"que la seva adreça de resposta pertanyi a aquesta base de dades."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_company_team
@@ -4397,7 +4427,7 @@ msgstr "Rebotes totals"
 #. module: mass_mailing
 #: model:ir.model.constraint,message:mass_mailing.constraint_mailing_trace_check_res_id_is_set
 msgid "Traces have to be linked to records with a not null res_id."
-msgstr ""
+msgstr "Els rastres s'han d'enllaçar a registres amb un resid no nul."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -4494,7 +4524,7 @@ msgstr "Actualitza les meves subscripcions"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
 msgid "Upload a file"
-msgstr ""
+msgstr "Puja un fitxer"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_block
@@ -4591,11 +4621,13 @@ msgid ""
 "Wait until your mailing has been sent to check how many recipients you "
 "managed to reach."
 msgstr ""
+"Espereu fins que s'hagi enviat el vostre mailing per a comprovar quants "
+"destinataris heu aconseguit arribar."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
 msgid "Want to import country, company name and more?"
-msgstr ""
+msgstr "Voleu importar el país, el nom de l'empresa i més?"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_alert_options
@@ -4663,7 +4695,7 @@ msgstr "Historial de comunicacions del lloc web"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Welcome Message"
-msgstr ""
+msgstr "Missatge de benvinguda"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__sub_model_object_field
@@ -4691,7 +4723,7 @@ msgstr "Quan vols enviar el correu?"
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__favorite_date
 msgid "When this mailing was added in the favorites"
-msgstr ""
+msgstr "Quan s'ha afegit aquest mailing als preferits"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_ir_model__is_mailing_enabled
@@ -4709,6 +4741,9 @@ msgid ""
 "                To save the same criteria for future use, you can add it to the favorite list\n"
 "                by clicking on <i class=\"fa fa-star-o text-warning\"></i> icon next to \"Recipients\"."
 msgstr ""
+"Mentre dissenyeu el mailing, podeu definir les regles per a filtrar els destinataris.\n"
+"                Per a desar els mateixos criteris per a un ús futur, podeu afegir-lo a la llista preferida\n"
+"                fent clic a la icona <i class=\"fa fa-star-o text-warning\"></i> al costat de \"Receptors\"."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_hr_options
@@ -4747,6 +4782,8 @@ msgid ""
 "Write or paste email addresses in the field below.\n"
 "                    Each line will be imported as a mailing list contact."
 msgstr ""
+"Escriviu o enganxeu adreces de correu electrònic al camp següent.\n"
+"                    Cada línia s'importarà com a contacte de la llista de correu."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features
@@ -4788,6 +4825,8 @@ msgid ""
 "You cannot delete these UTM Mediums as they are linked to the following mailings in Mass Mailing:\n"
 "%(mailing_names)s"
 msgstr ""
+"No podeu suprimir aquests suports UTM perquè estan enllaçats als següents mailings en el mailing massiu:\n"
+"%(mailingnames)s"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/utm_source.py:0
@@ -4796,6 +4835,8 @@ msgid ""
 "You cannot delete these UTM Sources as they are linked to the following mailings in Mass Mailing:\n"
 "%(mailing_names)s"
 msgstr ""
+"No podeu suprimir aquestes fonts UTM, ja que estan enllaçades als següents mailings en el mailing massiu:\n"
+"%(mailingnames)s"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_create_mass_mailings_from_campaign
@@ -4852,7 +4893,7 @@ msgstr "Heu estat correctament <strong>donat de baixa</strong>!"
 #: code:addons/mass_mailing/wizard/mailing_contact_import.py:0
 #, python-format
 msgid "You have to much emails, please upload a file."
-msgstr ""
+msgstr "Teniu molts correus electrònics, carregueu un fitxer."
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mailing_contact.py:0
@@ -4861,6 +4902,8 @@ msgid ""
 "You should give either list_ids, either subscription_list_ids to create new "
 "contacts."
 msgstr ""
+"Hauríeu de donar-los els IDs de llista, els IDs de subscripció per crear "
+"contactes nous."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribed
@@ -4971,7 +5014,7 @@ msgstr "Programar un correu"
 #: code:addons/mass_mailing/static/src/xml/mass_mailing.xml:0
 #, python-format
 msgid "template"
-msgstr ""
+msgstr "plantilla"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description

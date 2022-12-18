@@ -31,9 +31,9 @@
 # Wiktor Kaźmierczak <wik92tor@wp.pl>, 2022
 # Martin Trigaux, 2022
 # Jacek Michalski <michalski.jck@gmail.com>, 2022
-# Łukasz Grzenkowicz <lukasz.grzenkowicz@gmail.com>, 2022
-# Maksym <ms@myodoo.pl>, 2022
 # Paweł Wodyński <pw@myodoo.pl>, 2022
+# Maksym <ms@myodoo.pl>, 2022
+# Łukasz Grzenkowicz <lukasz.grzenkowicz@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -41,7 +41,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-02 08:12+0000\n"
 "PO-Revision-Date: 2016-08-05 13:09+0000\n"
-"Last-Translator: Paweł Wodyński <pw@myodoo.pl>, 2022\n"
+"Last-Translator: Łukasz Grzenkowicz <lukasz.grzenkowicz@gmail.com>, 2022\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -90,7 +90,7 @@ msgstr "&amp;nbsp;"
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_pro_forma_invoice
 msgid "'PRO-FORMA - %s' % (object.name)"
-msgstr ""
+msgstr "'PRO-FORMA - %s' % (object.name)"
 
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_saleorder
@@ -98,6 +98,8 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
+"(object.state in ('draft', 'sent') and 'Oferta - %s' % (object.name)) or "
+"'Zamówienie - %s' % (object.name)"
 
 #. module: sale
 #. openerp-web
@@ -337,6 +339,36 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
+"        Witaj,\n"
+"        <br/><br/>\n"
+"        Twoja\n"
+"        <t t-if=\"ctx.get('proforma')\">\n"
+"            faktura pro forma dla <t t-out=\"doc_name or ''\">oferty</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"            <t t-if=\"object.origin\">\n"
+"                (z referencją: <t t-out=\"object.origin or ''\"/> )\n"
+"            </t>\n"
+"            na kwotę <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</span> jest dostępna.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"doc_name or ''\">oferty</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"/>\n"
+"            <t t-if=\"object.origin\">\n"
+"                (z referencją: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"            </t>\n"
+"            na kwotę <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</span> jest gotowa do przeglądu.\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        W razie pytań, skontaktuj się z nami.\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -969,6 +1001,8 @@ msgid ""
 "Check this box if you send quotations to your customers rather than "
 "confirming orders straight away."
 msgstr ""
+"Zaznacz to pole, jeśli wysyłasz klientom oferty zamiast od razu potwierdzać "
+"zamówienia."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
@@ -2193,7 +2227,7 @@ msgstr "Marże"
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_sent
 msgid "Mark Quotation as Sent"
-msgstr ""
+msgstr "Oznacz ofertę jako wysłaną"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
@@ -2438,6 +2472,8 @@ msgid ""
 "Once the quotation is confirmed, it becomes a sales order.<br> You will be "
 "able to create an invoice and collect the payment."
 msgstr ""
+"Po potwierdzeniu oferty staje się ona zamówieniem sprzedaży. <br>Będziesz "
+"mógł wystawić fakturę i przyjąć płatność."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_pay
@@ -2951,7 +2987,7 @@ msgstr "Oferta wysłana"
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
 msgid "Quotation Validity is required and must be greater than 0."
-msgstr ""
+msgstr "Ważność oferty jest wymagana i musi być większa niż 0."
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
@@ -2969,7 +3005,7 @@ msgstr "Oferta wysłana"
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Quotation viewed by customer %s"
-msgstr ""
+msgstr "Oferta wyświetlona przez klienta %s"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotations
@@ -3049,7 +3085,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Reject This Quotation"
-msgstr ""
+msgstr "Odrzuć tą ofertę"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_report
@@ -4172,7 +4208,7 @@ msgstr "Jednostki miary"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr ""
+msgstr "Kategorie jednostek miary"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
@@ -4259,7 +4295,7 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "View Quotation"
-msgstr ""
+msgstr "Zobacz ofertę"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4335,6 +4371,8 @@ msgid ""
 "You can not delete a sent quotation or a confirmed sales order. You must "
 "first cancel it."
 msgstr ""
+"Nie możesz usunąć wysłanej oferty lub potwierdzonego zamówienia sprzedaży. "
+"Najpierw musisz je anulować."
 
 #. module: sale
 #: code:addons/sale/models/sale_order_line.py:0
@@ -4466,3 +4504,6 @@ msgid ""
 "(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
+"(ctx.get('proforma') and 'Proforma' or 'Oferta') or 'Zamówienie' }} (Ref {{ "
+"object.name or 'n/a' }})"

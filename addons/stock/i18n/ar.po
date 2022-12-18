@@ -184,7 +184,7 @@ msgstr "'نوع العملية - %s' % object.name"
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking_packages
 msgid "'Packages - %s' % (object.name)"
-msgstr ""
+msgstr "'الطرود - %s' % (object.name) "
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking
@@ -645,7 +645,7 @@ msgstr "<strong>المطلوبة</strong> "
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "<strong>Pack Date:</strong>"
-msgstr ""
+msgstr "<strong>تاريخ التعبئة:</strong> "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
@@ -734,7 +734,7 @@ msgstr "يجب ألا يكون لبند الحركة المنتهي كمية م�
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_product_location_check
 msgid "A replenishment rule already exists for this product on this location."
-msgstr ""
+msgstr "توجد قاعدة تجديد المخزون بالفعل لهذا المنتج في هذا الموقع. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__detailed_type
@@ -1002,7 +1002,7 @@ msgstr "تطبيق"
 #: code:addons/stock/static/src/xml/inventory_adjustments.xml:0
 #, python-format
 msgid "Apply All"
-msgstr ""
+msgstr "تطبيق الكل "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__route_ids
@@ -1211,7 +1211,7 @@ msgstr "ماسح الباركود "
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__valid_ean
 msgid "Barcode is valid EAN"
-msgstr ""
+msgstr "الباركود هو رقم عالمي للسلع والمنتجات صالح "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
@@ -1443,7 +1443,7 @@ msgstr "اختر مخطط بطاقات العناوين "
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Choose Type of Labels To Print"
-msgstr ""
+msgstr "اختر نوع بطاقات العناوين لطباعتها "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quantity_history__inventory_datetime
@@ -1460,7 +1460,7 @@ msgstr "اختار الموقع الوجهة "
 #. module: stock
 #: model:ir.model,name:stock.model_lot_label_layout
 msgid "Choose the sheet layout to print lot labels"
-msgstr ""
+msgstr "اختر مخطط الورقة لطباعة بطاقات عناوين المجموعة "
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_label_layout
@@ -1470,7 +1470,7 @@ msgstr "اختر مخطط الورقة لطباعة بطاقات العناوي�
 #. module: stock
 #: model:ir.model,name:stock.model_picking_label_type
 msgid "Choose whether to print product or lot/sn labels"
-msgstr ""
+msgstr "اختر إما طباعة بطاقات عناوين المنتج أو رقم الدفعة/الرقم التسلسلي "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
@@ -1490,7 +1490,7 @@ msgstr "مسح البنود "
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Clear quantities"
-msgstr ""
+msgstr "مسح الكميات "
 
 #. module: stock
 #. openerp-web
@@ -2133,6 +2133,8 @@ msgid ""
 "Define a minimum stock rule so that Odoo automatically creates requests for "
 "quotations or confirmed manufacturing orders to resupply your stock."
 msgstr ""
+"قم بتحديد قاعدة الحد الأدنى للمخزون حتى يقوم أودو بإنشاء طلبات عروض أسعار "
+"تلقائياً أو أوامر تصنيع مؤكدة لإعادة تزويد مخزونك. "
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -2580,12 +2582,12 @@ msgstr "مسودات الحركات"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.duplicated_sn_warning
 msgid "Duplicated SN Warning"
-msgstr ""
+msgstr "تحذير الرقم التسلسلي المتكرر "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__sn_duplicated
 msgid "Duplicated Serial Number"
-msgstr ""
+msgstr "الرقم التسلسلي المتكرر "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
@@ -2848,7 +2850,7 @@ msgstr "وصف التوقع "
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Forecast Report"
-msgstr ""
+msgstr "تقرير التوقعات "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__virtual_available
@@ -3140,7 +3142,7 @@ msgstr "إخفاء نوع الانتقاء "
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__hide_reservation_method
 msgid "Hide Reservation Method"
-msgstr ""
+msgstr "إخفاء طريقة الحجز "
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -3254,6 +3256,8 @@ msgid ""
 "If the UoM of a lot is not 'units', the lot will be considered as a unit and"
 " only one label will be printed for this lot."
 msgstr ""
+"إذا لم تكن وحدة قياس المجموعة 'وحدات'، سيتم اعتبار المجموعة كوحدة وستتم "
+"طباعة بطاقة عنوان واحدة فقط لهذه المجموعة. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__active
@@ -3290,7 +3294,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__sn_duplicated
 msgid "If the same SN is in another Quant"
-msgstr ""
+msgstr "إذا كان الرقم التسلسلي نفسه في كمية أخرى "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_reserved
@@ -3309,6 +3313,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically show the reception "
 "report (if there are moves to allocate to) when validating."
 msgstr ""
+"إذا كان مربع الاختيار هذا محدداً، سيقوم أودو تلقائياً بإظهار تقرير الاستلام "
+"(إذا كان هناك حركات لتخصيصها إليه) عند التصديق. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__print_label
@@ -3811,7 +3817,7 @@ msgstr "رقم اللوط/الرقم المسلسل:"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_picking_label_type__label_type
 msgid "Labels to print"
-msgstr ""
+msgstr "بطاقات العناوين لطباعتها "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
@@ -3831,7 +3837,7 @@ msgstr "آخر 30 يوم"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__last_count_date
 msgid "Last Count Date"
-msgstr ""
+msgstr "تاريخ آخر احتساب "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__last_delivery_partner_id
@@ -3994,7 +4000,7 @@ msgstr "آخر تحديث في"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__last_count_date
 msgid "Last time the Quantity was Updated"
-msgstr ""
+msgstr "آخر مرة تم تحديث الكمية فيها "
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__products_availability_state__late
@@ -4173,7 +4179,7 @@ msgstr "الدفعة "
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__picking_label_type__label_type__lots
 msgid "Lot/SN Labels"
-msgstr ""
+msgstr "بطاقات عناوين أرقام المجموعات/الأرقام التسلسلية "
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_lot
@@ -4663,7 +4669,7 @@ msgstr "الشحنة (الشحنات) التالية المتأثرة: "
 #: code:addons/stock/report/report_stock_reception.py:0
 #, python-format
 msgid "No %s selected or a delivery order selected"
-msgstr ""
+msgstr "ليس هناك %s محدد أو أمر توصيل محدد "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -4689,7 +4695,7 @@ msgstr "لا يوجد تتبع"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "No allocation need found."
-msgstr ""
+msgstr "لم يتم العثور على حاجة للتخصيص. "
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -4888,12 +4894,12 @@ msgstr "الكمية في اليد:"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__label_quantity__lots
 msgid "One per lot/SN"
-msgstr ""
+msgstr "واحدة لكل رقم مجموعة/رقم تسلسلي "
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__label_quantity__units
 msgid "One per unit"
-msgstr ""
+msgstr "واحدة لكل وحدة "
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -5155,12 +5161,12 @@ msgstr "تعبئة "
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__pack_date
 msgid "Pack Date"
-msgstr ""
+msgstr "تاريخ التعبئة "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "Pack Date:"
-msgstr ""
+msgstr "تاريخ التعبئة: "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__pack_type_id
@@ -5507,12 +5513,12 @@ msgstr "طباعة"
 #. module: stock
 #: model:res.groups,name:stock.group_stock_lot_print_gs1
 msgid "Print GS1 Barcodes for Lot & Serial Numbers"
-msgstr ""
+msgstr "طباعة باركودات GS1 لأرقام المجموعات والأرقام التسلسلية "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_lot_print_gs1
 msgid "Print GS1 Barcodes for Lots & Serial Numbers"
-msgstr ""
+msgstr "طباعة باركودات GS1 لأرقام المجموعات والأرقام التسلسلية "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__print_label
@@ -5666,7 +5672,7 @@ msgstr "تقرير بطاقة عنوان المنتج "
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__picking_label_type__label_type__products
 msgid "Product Labels"
-msgstr ""
+msgstr "بطاقات عناوين المنتجات "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -7068,7 +7074,7 @@ msgstr "إظهار التحقق من التوافر "
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_clear_qty_button
 msgid "Show Clear Qty Button"
-msgstr ""
+msgstr "إظهار زر مسح الكميات "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_operations
@@ -7117,7 +7123,7 @@ msgstr "إظهار تقرير الاستلام عند التصديق "
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_set_qty_button
 msgid "Show Set Qty Button"
-msgstr ""
+msgstr "إظهار زر تعيين الكميات "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__show_transfers
@@ -7263,7 +7269,7 @@ msgstr "معلم بنجمة "
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Starred Products"
-msgstr ""
+msgstr "المنتجات المعلمة بنجمة "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__state
@@ -7705,7 +7711,7 @@ msgstr ""
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "The backorder %s has been created."
-msgstr ""
+msgstr "لقد تم إنشاء الطلب المتأخر %s. "
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
@@ -7731,7 +7737,7 @@ msgstr "يتم تعيين الشركة تلقائياً من تفضيلات مس
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "The deadline has been automatically updated due to a delay on %s."
-msgstr ""
+msgstr "لقد تم تحديث الموعد النهائي تلقائياً نظراً للتأخير في %s. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__delay
@@ -7756,7 +7762,7 @@ msgstr "المخزون المتوقع في "
 #: code:addons/stock/models/stock_orderpoint.py:0
 #, python-format
 msgid "The inter-warehouse transfers have been generated"
-msgstr ""
+msgstr "لقد تم إنشاء عمليات النقل ما بين المستودعات "
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_inventory_freq_nonneg
@@ -7783,7 +7789,7 @@ msgid ""
 "                if it should show the customer."
 msgstr ""
 "يتيح لك نظام نوع العملية تعيين نوع محدد\n"
-"                لكل عملية مخزون والتي ستقوم بتغيير طرق عرضهوفقاً لذلك.\n"
+"                لكل عملية مخزون والتي ستقوم بتغيير طرق عرضه وفقاً لذلك.\n"
 "                في نوع العملية، بإمكانك، على سبيل المثال، تحديد ما إذا كانت التعبئة مطلوبة افتراضياً،\n"
 "                أو ما إذا كان يجب إظهار العميل. "
 
@@ -7828,7 +7834,7 @@ msgid ""
 "precision defined on the unit of measure \"%s\". Please change the quantity "
 "done or the rounding precision of your unit of measure."
 msgstr ""
-"لا تنتثل الكمية المنتهية من المنتج \"%s\" بدقة التقريب المحددة في وحدة "
+"لا تمتثل الكمية المنتهية من المنتج \"%s\" بدقة التقريب المحددة في وحدة "
 "الحساب \"%s\". يرجى تغيير الكمية المنتهية أو دقة التقريب لوحدة قياسك. "
 
 #. module: stock
@@ -7848,6 +7854,8 @@ msgid ""
 "The requested operation cannot be processed because of a programming error "
 "setting the `reserved_qty` field instead of the `reserved_uom_qty`."
 msgstr ""
+"تعذّر تنفيذ العملية المطلوبة بسبب خطأ في البرمجة تسبب في أن يحل الحقل "
+"`reserved_qty` مكان الحقل `reserved_uom_qty`. "
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:0
@@ -7923,7 +7931,7 @@ msgstr "لا توجد حركة منتج بعد "
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.duplicated_sn_warning
 msgid "This SN is already in another location."
-msgstr ""
+msgstr "هذا الرقم التسلسلي موجود في موقع آخر بالفعل. "
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -8012,7 +8020,7 @@ msgstr "هذه الدفعة %(lot_name)s غير متوافقة مع هذا ال�
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "This lot/serial number is already in another location"
-msgstr ""
+msgstr "هذا الرقم التسلسلي/رقم المجموعة موجود في موقع آخر بالفعل. "
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_action
@@ -8100,6 +8108,7 @@ msgstr "هذا السجل موجود بالفعل. "
 #, python-format
 msgid "This report cannot be used for done and not done %s at the same time"
 msgstr ""
+"لا يمكن استخدام هذا التقرير للـ%s المنتهية وغير المنتهية في الوقت ذاته. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -8142,6 +8151,8 @@ msgid ""
 "Those products you added are tracked but lots/serials were not defined. Once applied those can't be changed.<br/>\n"
 "                    Apply anyway?"
 msgstr ""
+"تلك المنتجات التي قمت بإضافتها متتبعة، ولكن لم يتم تحديد أرقام مجموعات/أرقام تسلسلية لها. لن تتمكن من تغييرها بمجرد أن تقوم بتطبيقها.<br/>\n"
+"                    التطبيق بأي حال؟ "
 
 #. module: stock
 #: model:digest.tip,name:stock.digest_tip_stock_0
@@ -8383,7 +8394,7 @@ msgstr "تشغيل قاعدة أخرى إذا لم يكن هناك مخزون "
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Trigger Manual"
-msgstr ""
+msgstr "تشغيل الوضع اليدوي "
 
 #. module: stock
 #. openerp-web
@@ -8480,7 +8491,7 @@ msgstr "وحدة القياس"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Units Of Measure"
-msgstr "وحدا ت القياس"
+msgstr "وحدات القياس "
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_unit_measure_stock
@@ -8568,6 +8579,8 @@ msgid ""
 "Use GS1 nomenclature datamatrix whenever barcodes are printed for lots and "
 "serial numbers."
 msgstr ""
+"استخدم تسمية الرمز المصفوفي لـ GS1 متى ما تمت طباعة الباركودات لأرقام "
+"المجموعات والأرقام التسلسلية. "
 
 #. module: stock
 #: model:res.groups,name:stock.group_reception_report
@@ -8808,7 +8821,7 @@ msgstr "تحذير"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Warning Duplicated SN"
-msgstr ""
+msgstr "تحذير الرقم التسلسي المكرر "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form

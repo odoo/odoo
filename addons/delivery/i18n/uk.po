@@ -3,17 +3,18 @@
 # 	* delivery
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Bohdan Lisnenko, 2019
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
+# ТАрас <tratatuta@i.ua>, 2018
+# Bohdan Lisnenko, 2021
+# Martin Trigaux, 2022
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
+"POT-Creation-Date: 2022-04-19 13:57+0000\n"
+"PO-Revision-Date: 2016-08-05 12:57+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -78,6 +79,22 @@ msgstr ""
 "                                    <span class=\"o_stat_text\">Середовище</span>"
 
 #. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.stock_report_delivery_package_section_line_inherit_delivery
+msgid "<span> - Weight (estimated): </span>"
+msgstr "<span> - Вага (орієнтовано): </span>"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.delivery_stock_report_delivery_no_package_section_line
+#: model_terms:ir.ui.view,arch_db:delivery.stock_report_delivery_package_section_line_inherit_delivery
+msgid "<span> - Weight: </span>"
+msgstr "<span> - Вага: </span>"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
+msgid "<span>Shipping Weight: </span>"
+msgstr "<span>Вага доставки: </span>"
+
+#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 #: model_terms:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Carrier:</strong>"
@@ -90,11 +107,25 @@ msgstr "<strong>Код HS</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
+msgid "<strong>Shipping Weight: </strong>"
+msgstr "<strong>Вага доставки: </strong>"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
 msgid ""
 "<strong>Shipping Weight:</strong>\n"
-"                <br/>"
+"                    <br/>"
 msgstr ""
 "<strong>Вага доставки:</strong>\n"
+"                    <br/>"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
+msgid ""
+"<strong>Total Weight:</strong>\n"
+"                <br/>"
+msgstr ""
+"<strong>Загальна вага:</strong>\n"
 "                <br/>"
 
 #. module: delivery
@@ -103,7 +134,11 @@ msgid "<strong>Tracking Number:</strong>"
 msgstr "<strong>Номер відстеження:</strong>"
 
 #. module: delivery
-#: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
+#: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
+msgid "<strong>Weight: </strong>"
+msgstr "<strong>Вага: </strong>"
+
+#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_shipping2
 msgid ""
 "<strong>Weight:</strong>\n"
@@ -154,6 +189,7 @@ msgstr ""
 "компанії"
 
 #. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
 msgstr "Заархівовано"
@@ -185,13 +221,30 @@ msgstr "Скасувати"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__carrier_id
-#: model:ir.model.fields,field_description:delivery.field_product_packaging__package_carrier_type
+#: model:ir.model.fields,field_description:delivery.field_stock_move_line__carrier_id
+#: model:ir.model.fields,field_description:delivery.field_stock_package_type__package_carrier_type
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_id
+#: model_terms:ir.ui.view,arch_db:delivery.stock_move_line_view_search_delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
 msgid "Carrier"
 msgstr "Перевізник"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_package_type__shipper_package_code
+msgid "Carrier Code"
+msgstr "Код перевізника"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_move_line__carrier_name
+msgid "Carrier Name"
+msgstr "Назва перевізника"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.stock_move_line_view_search_delivery
+msgid "Carrier name"
+msgstr "Назва перевізника"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_choose_delivery_carrier__carrier_id
@@ -239,7 +292,7 @@ msgstr "Створив"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__create_date
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__create_date
 msgid "Created on"
-msgstr "Створено на"
+msgstr "Створено"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__currency_id
@@ -267,16 +320,6 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Define a new delivery method"
 msgstr "Визначте новий метод доставки"
-
-#. module: delivery
-#: model:product.category,name:delivery.product_category_deliveries
-msgid "Deliveries"
-msgstr "Доставки"
-
-#. module: delivery
-#: model:ir.ui.menu,name:delivery.menu_delivery
-msgid "Delivery"
-msgstr "Доставка"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
@@ -313,17 +356,9 @@ msgid "Delivery Package Selection Wizard"
 msgstr "Помічник вибору упаковки доставки"
 
 #. module: delivery
-#: model:ir.actions.act_window,name:delivery.action_delivery_packaging_view
-#: model:ir.ui.menu,name:delivery.menu_delivery_packagings
-#: model_terms:ir.ui.view,arch_db:delivery.product_packaging_delivery_tree
-msgid "Delivery Packages"
-msgstr "Упаковки доставки"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__delivery_packaging_id
-#: model_terms:ir.ui.view,arch_db:delivery.product_packaging_delivery_form
-msgid "Delivery Packaging"
-msgstr "Пакування доставки"
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__delivery_package_type_id
+msgid "Delivery Package Type"
+msgstr "Тип упаковки доставки"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_price
@@ -357,9 +392,20 @@ msgid "Delivery cost should be recomputed"
 msgstr "Витрати на доставку слід перерахувати"
 
 #. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.vpicktree_view_tree
+msgid "Destination"
+msgstr "Призначення"
+
+#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Destination Availability"
 msgstr "Наявність місця призначення"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_move_line__destination_country_code
+#: model:ir.model.fields,field_description:delivery.field_stock_picking__destination_country_code
+msgid "Destination Country"
+msgstr "Країна призначення"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__sequence
@@ -392,7 +438,7 @@ msgid ""
 "                UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "                to each method."
 msgstr ""
-"Кожен перевізник (наприклад, UPS) може мати кілька способів доставки (наприклад,\n"
+"Кожен носій (наприклад, UPS) може мати кілька способів доставки (наприклад,\n"
 "UPS Express, UPS Standard) із набором правил ціноутворення\n"
 "до кожного методу."
 
@@ -445,6 +491,12 @@ msgid "Fixed Price"
 msgstr "Фіксована ціна"
 
 #. module: delivery
+#: code:addons/delivery/models/sale_order.py:0
+#, python-format
+msgid "Free Shipping"
+msgstr "Безкоштовна доставка"
+
+#. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.product,name:delivery.product_product_delivery
 #: model:product.template,name:delivery.product_product_delivery_product_template
@@ -479,18 +531,9 @@ msgstr "Групувати за"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_product__hs_code
 #: model:ir.model.fields,field_description:delivery.field_product_template__hs_code
+#: model_terms:ir.ui.view,arch_db:delivery.product_template_hs_code
 msgid "HS Code"
 msgstr "HS Code"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_product_packaging__height
-msgid "Height"
-msgstr "Висота"
-
-#. module: delivery
-#: model:ir.model.constraint,message:delivery.constraint_product_packaging_positive_height
-msgid "Height must be positive"
-msgstr "Висота повинна бути більше нуля"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__id
@@ -513,6 +556,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Install more Providers"
 msgstr "Встановити більше провайдерів"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__shipping_insurance
+msgid "Insurance Percentage"
+msgstr "Відсоток страхування"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__integration_level
@@ -545,7 +593,7 @@ msgstr "Є доставкою"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier____last_update
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule____last_update
 msgid "Last Modified on"
-msgstr "Останні зміни на"
+msgstr "Остання модифікація"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__write_uid
@@ -562,16 +610,6 @@ msgstr "Востаннє оновив"
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__write_date
 msgid "Last Updated on"
 msgstr "Останнє оновлення"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_product_packaging__length
-msgid "Length"
-msgstr "Довжина"
-
-#. module: delivery
-#: model:ir.model.constraint,message:delivery.constraint_product_packaging_positive_length
-msgid "Length must be positive"
-msgstr "Довжина повинна бути позитивною"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__debug_logging
@@ -594,33 +632,17 @@ msgid "Margin on Rate"
 msgstr "Маржа на ставці"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_product_packaging__max_weight
-msgid "Max Weight"
-msgstr "Максимальна вага"
-
-#. module: delivery
-#: model:ir.model.constraint,message:delivery.constraint_product_packaging_positive_max_weight
-msgid "Max Weight must be positive"
-msgstr "Максимальна вага повинна бути позитивною"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__max_value
 msgid "Maximum Value"
 msgstr "Максимальне значення"
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_product_packaging__max_weight
-msgid "Maximum weight shippable in this packaging"
-msgstr "Максимальна вага відправляється в цій упаковці"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__name
-#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Name"
-msgstr "Ім'я"
+msgstr "Назва"
 
 #. module: delivery
-#: model:ir.model.fields.selection,name:delivery.selection__product_packaging__package_carrier_type__none
+#: model:ir.model.fields.selection,name:delivery.selection__stock_package_type__package_carrier_type__none
 msgid "No carrier integration"
 msgstr "Немає інтеграції перевізників"
 
@@ -648,14 +670,15 @@ msgid "Order"
 msgstr "Замовлення"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_product_product__country_of_origin
+#: model:ir.model.fields,field_description:delivery.field_product_template__country_of_origin
+msgid "Origin of Goods"
+msgstr "Походження твоарів"
+
+#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "Package"
 msgstr "Упаковка"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_product_packaging__shipper_package_code
-msgid "Package Code"
-msgstr "Код упаковки"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:0
@@ -673,7 +696,7 @@ msgstr "Пакунок занадто важкий!"
 #: model:ir.model,name:delivery.model_stock_quant_package
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__package_ids
 msgid "Packages"
-msgstr "Пакунки"
+msgstr "Упаковки"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__picking_id
@@ -709,9 +732,9 @@ msgid "Print Return Label"
 msgstr "Друкувати етикетку повернення"
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_product_packaging
-msgid "Product Packaging"
-msgstr "Пакування товару"
+#: model:ir.model,name:delivery.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "Переміщення товару (Рядок складського переміщення)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__product_qty
@@ -758,12 +781,23 @@ msgid "Return Picking"
 msgstr "Повернути комплектування"
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_product_product__country_of_origin
+#: model:ir.model.fields,help:delivery.field_product_template__country_of_origin
+msgid ""
+"Rules of origin determine where goods originate, i.e. not where they have been shipped from, but where they have been produced or manufactured.\n"
+"As such, the ‘origin’ is the 'economic nationality' of goods traded in commerce."
+msgstr ""
+"Правила походження визначають походження товарів, тобто не те, звідки вони були відправлені, а те, де вони були вироблені чи виготовлені.\n"
+"Таким чином, «походження» є «економічною національністю» товарів, що продаються."
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_base_price
 msgid "Sale Base Price"
 msgstr "Базова ціна продажу"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_price
+#: model:ir.model.fields,field_description:delivery.field_stock_move_line__sale_price
 msgid "Sale Price"
 msgstr "Ціна продажу"
 
@@ -775,7 +809,7 @@ msgstr "Замовлення на продаж"
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Рядок замовлення на продаж"
+msgstr "Рядок замовлення"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
@@ -808,11 +842,11 @@ msgstr ""
 #: code:addons/delivery/models/stock_picking.py:0
 #, python-format
 msgid ""
-"Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: "
-"%.2f %s"
+"Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
+"%(ref)s<br/>Cost: %(price).2f %(currency)s"
 msgstr ""
-"Відправлення надіслане перевізнику %s для відправлення з номером відстеження"
-" %s<br/>Вартість: %.2f %s"
+"Відправлення надіслане перевізнику %(carrier_name)s для доставки з номером "
+"відстеження %(ref)s<br/>Вартість: %(price).2f %(currency)s"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_price
@@ -826,6 +860,7 @@ msgstr "Інформація про доставку"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__carrier_id
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Shipping Method"
 msgstr "Метод доставки"
 
@@ -850,6 +885,15 @@ msgid "Shipping Weight:"
 msgstr "Вага вантажу:"
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__shipping_insurance
+msgid ""
+"Shipping insurance is a service which may reimburse senders whose parcels "
+"are lost, stolen, and/or damaged in transit."
+msgstr ""
+"Страхування доставки – це послуга, яка може відшкодувати відправникам, чиї "
+"посилки втрачено, викрадено та/або пошкоджено під час транспортування."
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_product__hs_code
 #: model:ir.model.fields,help:delivery.field_product_template__hs_code
 msgid ""
@@ -870,6 +914,36 @@ msgid "Stock Move"
 msgstr "Складське переміщення "
 
 #. module: delivery
+#: model:ir.model,name:delivery.model_stock_package_type
+msgid "Stock package type"
+msgstr "Тип складської упаковки"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__supports_shipping_insurance
+msgid "Supports Shipping Insurance"
+msgstr "Підтримує стархування доставки"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_quant_package__weight_uom_rounding
+msgid "Technical field indicating weight's number of decimal places"
+msgstr "Технічне поле, що вказує кількість знаків після коми"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_quant_package__weight_is_kg
+msgid "Technical field indicating whether weight uom is kg or not (i.e. lb)"
+msgstr "Технічне поле, яке вказує, чи є од. вим. ваги кг чи ні (тобто фунти)"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_stock_move_line__destination_country_code
+#: model:ir.model.fields,help:delivery.field_stock_picking__destination_country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"Код країни ISO у двох символах.\n"
+"Ви можете використовувати це поле для швидкого пошуку."
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
 msgid ""
 "The return label can be downloaded by the customer from the customer portal."
@@ -879,6 +953,11 @@ msgstr "Етикетка повернення може бути звантаже
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__return_label_on_delivery
 msgid "The return label is automatically generated at the delivery."
 msgstr "Етикетка повернення автоматично генерується на доставці."
+
+#. module: delivery
+#: model:ir.model.constraint,message:delivery.constraint_delivery_carrier_shipping_insurance_is_percentage
+msgid "The shipping insurance must be a percentage between 0 and 100."
+msgstr "Страхування доставки має бути відсотком між 0 та 100."
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:0
@@ -907,7 +986,7 @@ msgstr ""
 #: code:addons/delivery/models/delivery_grid.py:0
 #, python-format
 msgid "There is no matching delivery rule."
-msgstr "Немає відповідного правила доставки."
+msgstr "Немає визначеного правила доставки."
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -917,8 +996,8 @@ msgid ""
 "                quotation) or the invoice (based on the delivery orders)."
 msgstr ""
 "Ці методи дозволяють автоматично розрахувати вартість доставки\n"
-"відповідно до ваших налаштувань; на замовленні на продаж (на підставі\n"
-"комерційної пропозиції) або рахунку-фактури (на підставі замовлень на доставку)."
+"відповідно до ваших налаштувань; на замовлення клієнта (на підставі\n"
+"комерційної пропозиції або рахунку-фактури (на підставі замовлень на доставку)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
@@ -931,18 +1010,25 @@ msgid "Total weight of all the products contained in the package."
 msgstr "Загальна вага всіх товарів, що міститься в упаковці."
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_stock_picking__shipping_weight
+msgid ""
+"Total weight of packages and products not in a package. Packages with no "
+"shipping weight specified will default to their products' total weight. This"
+" is the weight used to compute the cost of the shipping."
+msgstr ""
+"Загальна вага пакунків та товарів без упаковки. Для пакунків без ваги "
+"доставки буде визначено загальну вашу їхніх товарів за замовчуванням. Це "
+"вага, що використовується для обчислення вартості доставки."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_stock_picking__weight_bulk
+msgid "Total weight of products which are not in a package."
+msgstr "Загальна вага товарів без упаковки."
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__shipping_weight
 msgid "Total weight of the package."
 msgstr "Загальна вага пакунка."
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_stock_picking__shipping_weight
-msgid ""
-"Total weight of the packages and products which are not in a package. That's"
-" the weight used to compute the cost of the shipping."
-msgstr ""
-"Загальна вага пакунків і товарів, які не входять в упаковку. Це вага, що "
-"використовується для обчислення вартості доставки."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking__weight
@@ -1008,7 +1094,6 @@ msgid "Variable Factor"
 msgstr "Змінний фактор"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_stock_picking__volume
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__volume
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable_factor__volume
 msgid "Volume"
@@ -1048,31 +1133,23 @@ msgid "Weight unit of measure label"
 msgstr "Мітка одиниці вимірювання ваги"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_product_packaging__width
-msgid "Width"
-msgstr "Ширина"
+#: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
+msgid "Weight:"
+msgstr "Вага:"
 
 #. module: delivery
-#: model:ir.model.constraint,message:delivery.constraint_product_packaging_positive_width
-msgid "Width must be positive"
-msgstr "Ширина повинна бути позитивна"
-
-#. module: delivery
-#: code:addons/delivery/models/stock_picking.py:0
+#: code:addons/delivery/models/sale_order.py:0
 #, python-format
 msgid ""
-"You are shipping different packaging types in the same shipment.\n"
-"Packaging Types: %s"
+"You can not update the shipping costs on an order where it was already invoiced!\n"
+"\n"
+"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"\n"
 msgstr ""
-"Ви доставляєте різні типи упаковки в одній і тій же партії.\n"
-"Типи упаковки: %s"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_choose_delivery_carrier__partner_id
-msgid "You can find a customer from their name, email, tax ID or reference."
-msgstr ""
-"Ви можете знайти клієнта за його ім'ям, електронною поштою, ID податку або "
-"референсом."
+"Ви не можете оновити вартість доставки на замовленні, яке вже було виставлене у рахунку!\n"
+"\n"
+"Наступні рядки доставки (товар, к-сть виставлена у рахунку та ціна) вже були оброблені:\n"
+"\n"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
@@ -1098,6 +1175,26 @@ msgstr "Індекс від"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_to
 msgid "Zip To"
 msgstr "Індекс до"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery
+msgid "^A0N,44,33^FDShipping Weight:"
+msgstr "^A0N,44,33^FD Вага товару:"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery
+msgid "^A0N,44,33^FDWeight:"
+msgstr "^A0N,44,33^FD Вага:"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery
+msgid "^FO310,200"
+msgstr "^FO310,200"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery
+msgid "^FS"
+msgstr "^FS"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form

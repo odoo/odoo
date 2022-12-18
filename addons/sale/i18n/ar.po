@@ -83,6 +83,8 @@ msgid ""
 "<b>Congratulations</b>, your first quotation is sent!<br>Check your email to"
 " validate the quote."
 msgstr ""
+"<b>تهانينا</b>، لقد تم إرسال أول عرض السعر لك!<br>تحقق من بريدك الإلكتروني "
+"لتصديق عرض السعر."
 
 #. module: sale
 #. openerp-web
@@ -313,6 +315,35 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
+"        مرحباً،\n"
+"        <br/><br/>\n"
+"        <t t-if=\"ctx.get('proforma')\">\n"
+"            الفاتورة الشكلية <t t-out=\"doc_name or ''\">لعرض السعر</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"            <t t-if=\"object.origin\">\n"
+"                (ذات الرقم المرجعي: <t t-out=\"object.origin or ''\"/> )\n"
+"            </t>\n"
+"            والتي تبلغ قيمتها <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</span> متاحة.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"doc_name or ''\">عرض السعر</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"/>\n"
+"            <t t-if=\"object.origin\">\n"
+"                (ذو الرقم المرجعي: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"            </t>\n"
+"            والذي تبلغ قيمته <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</span> جاهز لمراجعته.\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        لا تتردد في التواصل معنا إذا كانت لديك أي أسئلة أو استفسارات.\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br/>ميتشل آدمن</t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -442,6 +473,8 @@ msgid ""
 "<span class=\"o_stat_text\">Customer</span>\n"
 "                            <span class=\"o_stat_text\">Preview</span>"
 msgstr ""
+"<span class=\"o_stat_text\">معاينة</span>\n"
+"                            <span class=\"o_stat_text\">العميل</span> "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -515,6 +548,9 @@ msgid ""
 "                            Shipping Address:\n"
 "                        </strong>"
 msgstr ""
+"<strong class=\"d-block mb-1\">\n"
+"                            عنوان الشحن:\n"
+"                        </strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -634,13 +670,13 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Pay Quotation"
-msgstr ""
+msgstr "قبول ودفع قيمة عرض السعر "
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Sign Quotation"
-msgstr ""
+msgstr "القبول والتوقيع على عرض السعر "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -775,6 +811,8 @@ msgid ""
 "An order is to upsell when delivered quantities are above initially\n"
 "            ordered quantities, and the invoicing policy is based on ordered quantities."
 msgstr ""
+"يتم الارتقاء بالصفقة عندما تكون الكميات التي تم توصيلها أكبر من\n"
+"                الكميات المطلوبة، وسياسة الفوترة مبينية على الكميات المطلوبة. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__analytic_account_id
@@ -826,6 +864,8 @@ msgid ""
 "As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
 "            to sell extra hours when all ordered hours have been consumed."
 msgstr ""
+"كمثال، إذا قمت ببيع ساعات الخدمة المدفوعة مسبقاً، سوف يقترح أودو أن تقوم\n"
+"            ببيع ساعات إضافية عندما يتم استهلاك كافة الساعات المطلوبة."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -935,7 +975,7 @@ msgstr "تم الإلغاء "
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Capture Transaction"
-msgstr "التقاط المعاملة"
+msgstr "تسجيل المعاملة "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_category_id
@@ -1081,7 +1121,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__country_code
 msgid "Country code"
-msgstr ""
+msgstr "رمز الدولة "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_loyalty
@@ -1356,7 +1396,7 @@ msgstr "طرق التوصيل "
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered
 msgid "Delivery Quantity"
-msgstr ""
+msgstr "كمية التوصيل "
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
@@ -1547,7 +1587,7 @@ msgstr "معالج تأليف رسالة بريد إلكتروني"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__invoice_mail_template_id
 msgid "Email sent to the customer once the invoice is available."
-msgstr ""
+msgstr "بريد إلكتروني يتم إرساله إلى العميل بمجرد أن تصبح الفاتورة متاحة. "
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__confirmation_mail_template_id
@@ -1730,7 +1770,7 @@ msgstr "التجميع حسب "
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
 msgid "Has Fiscal Position Changed"
-msgstr ""
+msgstr "تغير الوضع المالي "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
@@ -1990,7 +2030,7 @@ msgstr "القيمة المستهدف فوترتها"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing and Payments"
-msgstr ""
+msgstr "الفوترة والمدفوعات "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -2508,7 +2548,7 @@ msgstr "تاريخ الطلب "
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Order Date:"
-msgstr ""
+msgstr "تاريخ الطلب: "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
@@ -2711,7 +2751,7 @@ msgstr "الخصم غير شامل ضريبة القيمة المضافة "
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxinc
 msgid "Price Reduce Tax incl"
-msgstr ""
+msgstr "الخصم شامل ضريبة القيمة المضافة "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__pricelist_id
@@ -2722,7 +2762,7 @@ msgstr "قائمه الأسعار"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__pricelist_item_id
 msgid "Pricelist Item"
-msgstr ""
+msgstr "عنصر قائمة الأسعار "
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_pricelist_main
@@ -2749,7 +2789,7 @@ msgstr "فاتورة شكلية "
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Pro-Forma Invoice #"
-msgstr ""
+msgstr "رقم الفاتورة الشكلية "
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
@@ -2819,13 +2859,13 @@ msgstr "متغيرات المنتج "
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Product prices have been recomputed according to pricelist %s."
-msgstr ""
+msgstr "لقد تمت إعادة احتساب أسعار المنتجات وفقاً لقائمة الأسعار %s. "
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Product taxes have been recomputed according to fiscal position %s."
-msgstr ""
+msgstr "لقد تمت إعادة احتساب أسعار المنتجات وفقاً للوضع المالي %s. "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2886,7 +2926,7 @@ msgstr "الكمية "
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_to_invoice
 msgid "Quantity To Invoice"
-msgstr ""
+msgstr "الكمية لفوترتها "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_qty_configurator
@@ -2933,7 +2973,7 @@ msgstr "تاريخ عرض السعر"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Quotation Date:"
-msgstr ""
+msgstr "تاريخ عرض السعر: "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
@@ -3021,7 +3061,7 @@ msgstr "إعادة احتساب كافة الأسعار بناءً على قائ
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all taxes based on this fiscal position"
-msgstr ""
+msgstr "إعادة احتساب كافة الضرائب بناءً على هذا الوضع المالي "
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -3032,7 +3072,7 @@ msgstr "المرجع "
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__origin
 msgid "Reference of the document that generated this sales order request"
-msgstr ""
+msgstr "مرجع المستند الذي أصدر طلب أمر المبيعات هذا. "
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_payment_register
@@ -3495,7 +3535,7 @@ msgstr "إظهار الهوامش على الطلبات "
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Sign & Pay Quotation"
-msgstr ""
+msgstr "التوقيع ودفع قيمة عرض السعر "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3829,7 +3869,7 @@ msgid ""
 "This mode is advised if you issue the final invoice at the order and not after the delivery."
 msgstr ""
 "يتم إنشاء الفاتورة تلقائيًا وتتوفر في بوابة العميل عندما يتم تأكيد المعاملة بواسطة بوابة الدفع.\n"
-"يتم تعيين الفاتورة كمدفوعة ويتم تسجيل الدفع في دفتر يومية المدفوعات المحدد في 8تهيئة بوابة الدفع.\n"
+"يتم تعيين الفاتورة كمدفوعة ويتم تسجيل الدفع في دفتر يومية المدفوعات المحدد في تهيئة بوابة الدفع.\n"
 "ينصح بهذا الوضع إذا كنت تصدر الفاتورة النهائية مع الطلب وليس بعد التوصيل. "
 
 #. module: sale
@@ -4052,6 +4092,7 @@ msgstr ""
 msgid ""
 "This will update all taxes based on the currently selected fiscal position."
 msgstr ""
+"سيقوم ذلك بتحديث كافة الضرائب بناءً على الأوضاع المالية المحددة حالياً. "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4080,9 +4121,9 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
-"لإرسال دعوات في وضع ما بين الشركات، قم بفتح جهة اتصال أو اختر عدة جهات اتصال"
-" في عرض القائمة واضغط على خيار 'إدارة الوصول إلى بوابة العملاء' من القائمة "
-"المنسدلة. "
+"لإرسال دعوات في وضع العمل بين الشركات، قم بفتح جهة اتصال أو اختر عدة جهات "
+"اتصال في عرض القائمة واضغط على خيار 'إدارة الوصول إلى بوابة العملاء' من "
+"القائمة المنسدلة *إجراء*. "
 
 #. module: sale
 #. openerp-web
@@ -4253,7 +4294,7 @@ msgstr "تحديث الأسعار "
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Taxes"
-msgstr ""
+msgstr "تحديث الضرائب "
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
@@ -4286,7 +4327,7 @@ msgstr "قيد شبكة المتغير "
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "View Order"
-msgstr ""
+msgstr "عرض الطلب "
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
@@ -4387,6 +4428,8 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "            or check every order and invoice them one by one."
 msgstr ""
+"يمكنك تحديد كافة الطلبات وفوترتها دفعة واحدة،<br>\n"
+"            أو تحقق من كل طلب وقم بالفوترة كل على حدة. "
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_acquirer__so_reference_type

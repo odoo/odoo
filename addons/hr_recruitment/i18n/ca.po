@@ -12,7 +12,7 @@
 # Arnau Ros, 2022
 # eriiikgt, 2022
 # marcescu, 2022
-# jabelchi, 2022
+# Josep Anton Belchi, 2022
 # Jonatan Gk, 2022
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
 # ericrolo, 2022
@@ -20,6 +20,8 @@
 # Martin Trigaux, 2022
 # Quim - eccit <quim@eccit.com>, 2022
 # Cristian Cruz, 2022
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2022
+# Ivan Espinola, 2022
 # 
 msgid ""
 msgstr ""
@@ -27,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-19 13:57+0000\n"
 "PO-Revision-Date: 2016-08-05 12:59+0000\n"
-"Last-Translator: Cristian Cruz, 2022\n"
+"Last-Translator: Ivan Espinola, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -91,7 +93,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" title=\"Company\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" title=\"Company\"/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -119,6 +121,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('address_id', '!=', False)]}\" "
 "class=\"oe_read_only\">Remote</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('addressid', '!=', False)]}\" "
+"class=\"oereadonly\">remot</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
@@ -173,12 +177,12 @@ msgstr "<span class=\"bg-success\">Contractat/da</span>"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "<span class=\"o_stat_text\">Trackers</span>"
-msgstr ""
+msgstr "<span class=\"ostattext\">Trackers</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "<span class=\"o_stat_value\">Employee</span>"
-msgstr ""
+msgstr "<span class=\"ostatvalue\">Empleat</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_stage_kanban
@@ -404,6 +408,32 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"    <tr>\n"
+"        <td valign=\"top\">\n"
+"            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"                Benvolgut,<br/><br/>\n"
+"                Volem donar-li les gràcies pel seu interès i el seu temps.<br/>\n"
+"                Li desitgem tot el millor en els seus esforços futurs.\n"
+"                <br/><br/>\n"
+"                Millor<br/>\n"
+"                <div style=\"font-size: 11px; color: grey;\">\n"
+"                    <t t-if=\"object.userid\">\n"
+"                        -- <br/>\n"
+"                        <strong t-out=\"object.userid.name or ''\">Marc Demo</strong><br/>\n"
+"                        Correu electrònic: <t t-out=\"object.userid.email or ''\">mark.brown23@example.com</t><br/>\n"
+"                        Telèfon: <t t-out=\"object.userid.phone or ''\">+1 650-123-4567</t>\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        -- <br/>\n"
+"                        <t t-out=\"object.companyid.name or ''\">YourCompany</t><br/>\n"
+"                        L'equip HR<br/>\n"
+"                    </t>\n"
+"                </div>\n"
+"            </div>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_refuse
@@ -452,6 +482,48 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"    <tr>\n"
+"        <td valign=\"top\">\n"
+"            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"                Hola,<br/><br/>\n"
+"                Gràcies pel seu interès a unir-se a\n"
+"                <b><t t-out=\"object.companyid.name or ''\">YourCompany</t></b> team.  We\n"
+"                Volia fer-li saber això, tot i que el seu currículum és\n"
+"                competitiu, el nostre equip de contractació ha revisat la vostra sol·licitud\n"
+"                i <b>no la va seleccionar per a més consideració</b>.\n"
+"                <br/><br/>\n"
+"                Tingueu en compte que el reclutament és dur i que podem fer\n"
+"                errors. No dubteu a respondre a aquest correu electrònic si\n"
+"                penseu que hem comès un error, o si voleu més informació\n"
+"                sobre la nostra decisió.\n"
+"                <br/><br/>\n"
+"                No obstant això, farem constar el seu currículum i entrarem\n"
+"                contacteu amb vosaltres sobre les oportunitats futures que poden ser\n"
+"                Millor per a les teves habilitats i experiència.\n"
+"                <br/><br/>\n"
+"                Us desitgem el millor en la cerca de feina i esperem que\n"
+"                tindrà l'oportunitat de considerar-te per a un altre paper\n"
+"                En el futur.\n"
+"                <br/><br/>\n"
+"                Gràcies.\n"
+"                <div style=\"font-size: 11px; color: grey;\">\n"
+"                    <t t-if=\"object.userid\">\n"
+"                        -- <br/>\n"
+"                        <strong t-out=\"object.userid.name or ''\">Mitchell Admin</strong><br/>\n"
+"                        Correu electrònic: <t t-out=\"object.userid.email or ''\">admin.yourcompany.example.com</t><br/>\n"
+"                        Telèfon: <t t-out=\"object.userid.phone or ''\">+1 650-123-4567</t>\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        -- <br/>\n"
+"                        <t t-out=\"object.companyid.name or ''\">YourCompany</t><br/>\n"
+"                        L'equip de HR\n"
+"                    </t>\n"
+"                </div>\n"
+"            </div>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_defaults
@@ -483,13 +555,13 @@ msgstr "Activitats"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activities_overdue
 msgid "Activities Overdue"
-msgstr ""
+msgstr "Activitats endarrerides"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activities_today
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Activities Today"
-msgstr ""
+msgstr "Activitats d'avui"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_exception_decoration
@@ -665,7 +737,7 @@ msgstr "Candidats"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__applicant_hired
 msgid "Applicants Hired"
-msgstr ""
+msgstr "Aplicadors contractats"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
@@ -834,6 +906,10 @@ msgid ""
 "statistics according to the source of the application: LinkedIn, Monster, "
 "Indeed, etc."
 msgstr ""
+"En establir un àlies a una posició de treball, els correus electrònics "
+"enviats a aquesta adreça creen aplicacions automàticament. Fins i tot podeu "
+"utilitzar diversos elements de seguiment per a obtenir estadístiques d'acord"
+" amb la font de l'aplicació: LinkedIn, Monster, INDEED, etc."
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_calendar_event
@@ -928,7 +1004,7 @@ msgstr "Contracte"
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
 msgid "Contract Proposal"
-msgstr ""
+msgstr "Pressupost del contracte"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
@@ -941,6 +1017,8 @@ msgstr "Contracte firmat"
 #, python-format
 msgid "Copy this email address, to paste it in your email composer, to apply."
 msgstr ""
+"Copieu aquesta adreça de correu electrònic, per enganxar-la al vostre editor"
+" de correu electrònic, per aplicar-la."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -950,20 +1028,20 @@ msgstr "Crear"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Create Employee"
-msgstr ""
+msgstr "Crea un treballador"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.create_job_simple
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "Create a Job Position"
-msgstr ""
+msgstr "Crea una posició de tasca"
 
 #. module: hr_recruitment
 #. openerp-web
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Create your first Job Position."
-msgstr ""
+msgstr "Creeu la vostra primera posició de treball."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__create_uid
@@ -1028,6 +1106,9 @@ msgid ""
 "empty, the default email address will be used which is in human resources "
 "settings"
 msgstr ""
+"Defineix una adreça de contacte específica per a aquesta posició de la "
+"tasca. Si el manteniu buit, s'utilitzarà l'adreça de correu electrònic "
+"predeterminada que es troba a la configuració dels recursos humans"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
@@ -1036,6 +1117,9 @@ msgid ""
 "            qualification call, first interview, second interview, refused,\n"
 "            hired."
 msgstr ""
+"Definiu aquí les etapes del procés de contractació, per exemple:\n"
+"            trucada de qualificació, primera entrevista, segona entrevista, refusada.\n"
+"            Llogat."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
@@ -1050,7 +1134,7 @@ msgstr "Títol"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__name
 msgid "Degree Name"
-msgstr ""
+msgstr "Nom del títol"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_degree
@@ -1077,7 +1161,7 @@ msgstr "Departament"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__manager_id
 msgid "Department Manager"
-msgstr ""
+msgstr "Gestor del departament"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_department
@@ -1123,7 +1207,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
 msgid "Doctoral Degree"
-msgstr ""
+msgstr "Grau de Doctorat"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__documents_count
@@ -1148,7 +1232,7 @@ msgstr "Documents"
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_1
 msgid "Doesn't fit the job requirements"
-msgstr ""
+msgstr "No s'adapta als requeriments del treball"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
@@ -1156,6 +1240,8 @@ msgid ""
 "Don't forget to specify the department if your recruitment process\n"
 "            is different according to the job position."
 msgstr ""
+"No oblideu especificar el departament si el vostre procés de contractació\n"
+"            és diferent segons el lloc de treball."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -1188,6 +1274,9 @@ msgid ""
 "Email alias for this job position. New emails will automatically create new "
 "applicants for this job position."
 msgstr ""
+"Àlies de correu electrònic per a aquest lloc de treball. Els nous correus "
+"electrònics crearan automàticament nous sol·licitants per a aquest lloc de "
+"treball."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_cc
@@ -1199,17 +1288,22 @@ msgstr "cc de correu electrònic"
 #, python-format
 msgid "Email of the applicant is not set, email won't be sent."
 msgstr ""
+"No s'ha definit el correu electrònic del sol·licitant, no s'enviarà el "
+"correu electrònic."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__name
 msgid "Email subject for applications sent via email"
 msgstr ""
+"Assumpte del correu electrònic per a les aplicacions enviades per correu "
+"electrònic"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
 #, python-format
 msgid "Email template must be selected to send a mail"
 msgstr ""
+"Cal seleccionar la plantilla de correu electrònic per enviar un correu"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
@@ -1227,12 +1321,12 @@ msgstr "Nom de l'empleat"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__emp_id
 msgid "Employee linked to the applicant."
-msgstr ""
+msgstr "Empleat vinculat al sol·licitant."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_hired_template
 msgid "Employee:"
-msgstr ""
+msgstr "Treballador:"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_config_employees
@@ -1247,7 +1341,7 @@ msgstr "Excel·lent"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_department__expected_employee
 msgid "Expected Employee"
-msgstr ""
+msgstr "Treballador esperat"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__salary_expected
@@ -1257,7 +1351,7 @@ msgstr "Salari esperat"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__salary_expected_extra
 msgid "Expected Salary Extra"
-msgstr ""
+msgstr "S'espera un salari extra"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1267,12 +1361,12 @@ msgstr "Filtres estesos"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__extended_interviewer_ids
 msgid "Extended Interviewer"
-msgstr ""
+msgstr "Entrevista ampliat"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Extra advantages..."
-msgstr ""
+msgstr "Més avantatges..."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__favorite_user_ids
@@ -1332,12 +1426,12 @@ msgstr "Activitats Futures"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_kanban
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "Generate Email"
-msgstr ""
+msgstr "Genera el correu electrònic"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_applicant_get_refuse_reason
 msgid "Get Refuse Reason"
-msgstr ""
+msgstr "Obtén la raó de rebuig"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_degree__sequence
@@ -1393,7 +1487,7 @@ msgstr "Responsable HR"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__has_domain
 msgid "Has Domain"
-msgstr ""
+msgstr "Té domini"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__has_message
@@ -1413,7 +1507,7 @@ msgstr "Contractat"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__hired_stage
 msgid "Hired Stage"
-msgstr ""
+msgstr "Estocs amagats"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__id
@@ -1462,6 +1556,8 @@ msgstr "Si està marcat, alguns missatges tenen un error d'entrega."
 msgid ""
 "If checked, this stage is used to determine the hire date of an applicant"
 msgstr ""
+"Si està marcada, s'utilitzarà aquesta etapa per a determinar la data de "
+"contractació d'un sol·licitant"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__template_id
@@ -1469,6 +1565,8 @@ msgid ""
 "If set, a message is posted on the applicant using the template when the "
 "applicant is set to the stage."
 msgstr ""
+"Si s'estableix, es publicarà un missatge al sol·licitant utilitzant la "
+"plantilla quan el sol·licitant estigui establert a l'escenari."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_bounced_content
@@ -1502,12 +1600,12 @@ msgstr "En curs"
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
 msgid "Initial Qualification"
-msgstr ""
+msgstr "Qualificació inicial"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__module_hr_recruitment_survey
 msgid "Interview Forms"
-msgstr ""
+msgstr "Formularis d'entrevistes"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__interviewer_id
@@ -1517,7 +1615,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__interviewer_ids
 msgid "Interviewers"
-msgstr ""
+msgstr "Entrevistes"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__is_mail_template_editor
@@ -1537,7 +1635,7 @@ msgstr "És seguidor"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__is_warning_visible
 msgid "Is Warning Visible"
-msgstr ""
+msgstr "És visible l'avís"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_job.py:0
@@ -1555,17 +1653,17 @@ msgstr "Feina"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 #, python-format
 msgid "Job Applications"
-msgstr ""
+msgstr "Aplicacions de treballs"
 
 #. module: hr_recruitment
 #: model:utm.campaign,title:hr_recruitment.utm_campaign_job
 msgid "Job Campaign"
-msgstr ""
+msgstr "Campanya del treball"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__address_id
 msgid "Job Location"
-msgstr ""
+msgstr "Ubicació de la tasca"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_job
@@ -1575,12 +1673,12 @@ msgstr "Lloc de treball"
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_department_new
 msgid "Job Position Created"
-msgstr ""
+msgstr "S'ha creat la posició del treball"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_new
 msgid "Job Position created"
-msgstr ""
+msgstr "S'ha creat la posició del treball"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job
@@ -1593,12 +1691,12 @@ msgstr "Llocs de treball"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Job Posting"
-msgstr ""
+msgstr "Enviament de tasques"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__job_ids
 msgid "Job Specific"
-msgstr ""
+msgstr "Tasca específica"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1613,17 +1711,17 @@ msgstr "Treballs - Formulari de selecció de personal"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_sources
 msgid "Jobs Sources"
-msgstr ""
+msgstr "Fonts de treballs"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__legend_blocked
 msgid "Kanban Blocked"
-msgstr ""
+msgstr "Kanban blocat"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__legend_normal
 msgid "Kanban Ongoing"
-msgstr ""
+msgstr "Kanban en curs"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__kanban_state
@@ -1633,12 +1731,12 @@ msgstr "Estat kanban"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__legend_done
 msgid "Kanban Valid"
-msgstr ""
+msgstr "Valid Kanban"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_digest_digest__kpi_hr_recruitment_new_colleagues_value
 msgid "Kpi Hr Recruitment New Colleagues Value"
-msgstr ""
+msgstr "Valor de reclutament de col·legues nous del Kpi"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__lang
@@ -1649,7 +1747,7 @@ msgstr "Idioma"
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "Last Meeting"
-msgstr ""
+msgstr "Última reunió"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason____last_update
@@ -1666,7 +1764,7 @@ msgstr "Última modificació el "
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__last_stage_id
 msgid "Last Stage"
-msgstr ""
+msgstr "Última etapa"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__date_last_stage_update
@@ -1709,6 +1807,7 @@ msgstr "Activitats endarrerides"
 #, python-format
 msgid "Let people apply by email to save time."
 msgstr ""
+"Permet que la gent sol·liciti per correu electrònic per estalviar temps."
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job
@@ -1724,6 +1823,8 @@ msgid ""
 "Let's create the position. An email will be setup for applications, and a "
 "public job description, if you use the Website app."
 msgstr ""
+"Creem la posició. Si utilitzeu l'aplicació Lloc web, s'instal·larà un correu"
+" electrònic per a les aplicacions i una descripció pública de la tasca."
 
 #. module: hr_recruitment
 #. openerp-web
@@ -1731,21 +1832,21 @@ msgstr ""
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Let's have a look at how to <b>improve</b> your <b>hiring process</b>."
-msgstr ""
+msgstr "Mirem com <b>millorar</b> el vostre procés de contractació <b>."
 
 #. module: hr_recruitment
 #. openerp-web
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Let's have a look at the applications pipeline."
-msgstr ""
+msgstr "Donem un cop d'ull al gasoducte de les aplicacions."
 
 #. module: hr_recruitment
 #. openerp-web
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Let’s create this new employee now."
-msgstr ""
+msgstr "Creem aquest nou empleat ara."
 
 #. module: hr_recruitment
 #. openerp-web
@@ -1772,7 +1873,7 @@ msgstr "Adjunt principal"
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
 msgid "Master Degree"
-msgstr ""
+msgstr "Grau mestre"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__medium_id
@@ -1782,12 +1883,12 @@ msgstr "Mitja"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__meeting_display_date
 msgid "Meeting Display Date"
-msgstr ""
+msgstr "Data de visualització de la sessió"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__meeting_display_text
 msgid "Meeting Display Text"
-msgstr ""
+msgstr "Text de visualització de la sessió"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__meeting_ids
@@ -1817,7 +1918,7 @@ msgstr "Mòbil"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Motivations..."
-msgstr ""
+msgstr "Motivacions..."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__my_activity_date_deadline
@@ -1827,7 +1928,7 @@ msgstr "Venciment de l'activitat"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "My Applications"
-msgstr ""
+msgstr "Les meves aplicacions"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_job_filter_recruitment
@@ -1837,7 +1938,7 @@ msgstr "Els meus favorits"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_search_view
 msgid "My Job Positions"
-msgstr ""
+msgstr "Les meves posicions de treball"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__name
@@ -1854,18 +1955,18 @@ msgstr "Nou"
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_new
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_new
 msgid "New Applicant"
-msgstr ""
+msgstr "Aplicant nou"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
 msgid "New Applicants"
-msgstr ""
+msgstr "Aplicadors nous"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_new_application
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__new_application_count
 msgid "New Application"
-msgstr ""
+msgstr "Aplicació nova"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_action_from_department
@@ -1881,22 +1982,22 @@ msgstr "Empleats nous"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_department__new_hired_employee
 msgid "New Hired Employee"
-msgstr ""
+msgstr "Nou treballador contractat"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_employee_view_search
 msgid "Newly Hired"
-msgstr ""
+msgstr "Nou Amagat"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_employee_action_from_department
 msgid "Newly Hired Employees"
-msgstr ""
+msgstr "Empleats contractats recentment"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_employee__newly_hired_employee
 msgid "Newly hired employee"
-msgstr ""
+msgstr "Treballador contractat recentment"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_tree_activity
@@ -1927,13 +2028,13 @@ msgstr "Tipus de la següent activitat"
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "Next Meeting"
-msgstr ""
+msgstr "Següent reunió"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "No Meeting"
-msgstr ""
+msgstr "Sense reunió"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
@@ -1945,13 +2046,13 @@ msgstr "Sense assumpte"
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "No application yet"
-msgstr ""
+msgstr "Encara no hi ha cap aplicació"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
 #: model_terms:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
 msgid "No applications yet"
-msgstr ""
+msgstr "Encara no hi ha cap aplicació"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_recruitment_report_filtered_department
@@ -1981,11 +2082,13 @@ msgid ""
 "Number of applications that are new in the flow (typically at first step of "
 "the flow)"
 msgstr ""
+"Nombre d'aplicacions que són noves en el flux (normalment al primer pas del "
+"flux)"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__delay_close
 msgid "Number of days to close"
-msgstr ""
+msgstr "Nombre de dies per tancar"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_has_error_counter
@@ -2008,6 +2111,8 @@ msgid ""
 "Odoo helps you track applicants in the recruitment\n"
 "                process and follow up all operations: meetings, interviews, etc."
 msgstr ""
+"Odoo us ajuda a fer un seguiment dels sol·licitants en la contractació\n"
+"                processa i segueix totes les operacions: reunions, entrevistes, etc."
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
@@ -2015,6 +2120,8 @@ msgid ""
 "Odoo helps you track applicants in the recruitment\n"
 "            process and follow up all operations: meetings, interviews, etc."
 msgstr ""
+"Odoo us ajuda a fer un seguiment dels sol·licitants en la contractació\n"
+"            processa i segueix totes les operacions: reunions, entrevistes, etc."
 
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_user
@@ -2024,7 +2131,7 @@ msgstr "Oficial"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__old_application_count
 msgid "Old Application"
-msgstr ""
+msgstr "Aplicació antiga"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -2035,7 +2142,7 @@ msgstr "En marxa"
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__module_website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Online Posting"
-msgstr ""
+msgstr "Publicació en línia"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_force_thread_id
@@ -2071,12 +2178,12 @@ msgstr "Valor opcional a utilitzar si el camp objectiu està buit"
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Or talk about this applicant privately with your colleagues."
-msgstr ""
+msgstr "O parlar d'aquest sol·licitant en privat amb els seus col·legues."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Other applications"
-msgstr ""
+msgstr "Altres aplicacions"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_user_id
@@ -2107,7 +2214,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__hr_responsible_id
 msgid "Person responsible of validating the employee's contracts."
-msgstr ""
+msgstr "Persona responsable de validar els contractes de l'empleat."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_phone
@@ -2145,12 +2252,12 @@ msgstr "Salari proposat"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__salary_proposed_extra
 msgid "Proposed Salary Extra"
-msgstr ""
+msgstr "Salari proposat extra"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Publish available jobs on your website"
-msgstr ""
+msgstr "Publica els treballs disponibles al vostre lloc web"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
@@ -2207,7 +2314,7 @@ msgstr "Anàlisis del procés de selecció"
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_interviewer
 msgid "Recruitment Interviewer"
-msgstr ""
+msgstr "Entrevista de contractació"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -2217,12 +2324,12 @@ msgstr "Procés de selecció "
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_stage
 msgid "Recruitment Stages"
-msgstr ""
+msgstr "Escales de reclutament"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
 msgid "Recruitments"
-msgstr ""
+msgstr "Reclutaments"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__kanban_state__blocked
@@ -2255,13 +2362,13 @@ msgstr "Motiu de rebuig"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant_refuse_reason
 msgid "Refuse Reason of Applicant"
-msgstr ""
+msgstr "Rebutja la raó de l'aspirant"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_refuse_reason_action
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_applicant_refuse_reason
 msgid "Refuse Reasons"
-msgstr ""
+msgstr "Rebutja les raons"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -2273,7 +2380,7 @@ msgstr "Rebutjada"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Remote"
-msgstr ""
+msgstr "Remot"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__render_model
@@ -2320,7 +2427,7 @@ msgstr "Salari esperat pel candidat"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__salary_expected_extra
 msgid "Salary Expected by Applicant, extra advantages"
-msgstr ""
+msgstr "Salari esperat per l'aplicant, avantatges addicionals"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__salary_proposed
@@ -2330,29 +2437,29 @@ msgstr "Salari proposat per la organizació"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__salary_proposed_extra
 msgid "Salary Proposed by the Organisation, extra advantages"
-msgstr ""
+msgstr "Salari proposat per l'Organització, avantatges addicionals"
 
 #. module: hr_recruitment
 #. openerp-web
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Save it !"
-msgstr ""
+msgstr "Desa'l!"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "Schedule Interview"
-msgstr ""
+msgstr "Entrevista de la planificació"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Search Applicants"
-msgstr ""
+msgstr "Cerca als aspirants"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_view_search
 msgid "Search Source"
-msgstr ""
+msgstr "Font de cerca"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
@@ -2384,7 +2491,7 @@ msgstr "Enviar correu"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Send Interview Survey"
-msgstr ""
+msgstr "Envia una enquesta d'entrevista"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -2397,11 +2504,13 @@ msgid ""
 "Send an Interview Survey to the applicant during\n"
 "                                        the recruitment process"
 msgstr ""
+"Envia una enquesta d'entrevista al sol·licitant durant\n"
+"                                        el procés de contractació"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_applicant_send_mail
 msgid "Send mails to applicants"
-msgstr ""
+msgstr "Envia correus als sol·licitants"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -2414,6 +2523,8 @@ msgstr "Envia els textos als vostres contactes"
 #, python-format
 msgid "Send your email. Followers will get a copy of the communication."
 msgstr ""
+"Envia el teu correu electrònic. Els seguidors rebran una còpia de la "
+"comunicació."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__sequence
@@ -2442,20 +2553,22 @@ msgstr "Text original"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_source
 msgid "Source of Applicants"
-msgstr ""
+msgstr "Origen dels aspirants"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_source_action
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_source
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "Sources of Applicants"
-msgstr ""
+msgstr "Fonts dels aspirants"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__job_ids
 msgid ""
 "Specific jobs that uses this stage. Other jobs will not use this stage."
 msgstr ""
+"Treballs específics que utilitzen aquesta etapa. Altres llocs de treball no "
+"utilitzaran aquesta fase."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__stage_id
@@ -2491,6 +2604,8 @@ msgid ""
 "Stage of the applicant before being in the current stage. Used for lost "
 "cases analysis."
 msgstr ""
+"Segell del sol·licitant abans d'estar en la fase actual. S'utilitza per a "
+"l'anàlisi de casos perduts."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_act
@@ -2530,7 +2645,7 @@ msgstr "Assumpte"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__name
 msgid "Subject / Application"
-msgstr ""
+msgstr "Assumpte / Aplicació"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
@@ -2564,21 +2679,24 @@ msgid ""
 "The UTM campaign '%s' cannot be deleted as it is used in the recruitment "
 "process."
 msgstr ""
+"La campanya UTM '%s' no es pot suprimir perquè s'utilitza en el procés de "
+"reclutament."
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_3
 msgid "The applicant gets a better offer"
-msgstr ""
+msgstr "El sol·licitant rep una oferta millor"
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_2
 msgid "The applicant is not interested anymore"
-msgstr ""
+msgstr "El sol·licitant ja no està interessat"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__availability
 msgid "The date at which the applicant will be available to start working"
 msgstr ""
+"La data en què el sol·licitant estarà disponible per començar a treballar"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
@@ -2587,12 +2705,14 @@ msgid ""
 "The email will not be sent to the following applicant(s) as they don't have "
 "email address."
 msgstr ""
+"El correu electrònic no s'enviarà al/s sol·licitant/s següent/s perquè no "
+"tenen adreça electrònica."
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/wizard/applicant_send_mail.py:0
 #, python-format
 msgid "The following applicants are missing an email address: %s."
-msgstr ""
+msgstr "Als següents sol·licitants els falta una adreça electrònica: %s."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_model_id
@@ -2609,7 +2729,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.constraint,message:hr_recruitment.constraint_hr_recruitment_degree_name_uniq
 msgid "The name of the Degree of Recruitment must be unique!"
-msgstr ""
+msgstr "El nom del Grau de Reclutament ha de ser únic!"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_name
@@ -2671,12 +2791,12 @@ msgstr ""
 #: model:digest.tip,name:hr_recruitment.digest_tip_hr_recruitment_0
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
 msgid "Tip: Let candidates apply by email"
-msgstr ""
+msgstr "Consell: Permet que els candidats sol·licitin per correu electrònic"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "To Recruit"
-msgstr ""
+msgstr "Recrutar"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -2686,12 +2806,12 @@ msgstr "Activitats d'avui"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "Tooltips"
-msgstr ""
+msgstr "Consells d'eina"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Trackers"
-msgstr ""
+msgstr "Elements de seguiment"
 
 #. module: hr_recruitment
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
@@ -2732,7 +2852,7 @@ msgstr "Missatges pendents de llegir"
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid "Use emails and links trackers"
-msgstr ""
+msgstr "Utilitza els elements de seguiment de correus electrònics i enllaços"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -2741,6 +2861,10 @@ msgid ""
 "process. Select the form to use in the job position detail form. This relies"
 " on the Survey app."
 msgstr ""
+"Utilitza formularis d'entrevista adaptats a cada lloc de treball durant el "
+"procés de reclutament. Seleccioneu el formulari a utilitzar en el formulari "
+"de detall de la posició del treball. Això es basa en l'aplicació de "
+"l'enquesta."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__user_email
@@ -2760,7 +2884,7 @@ msgstr "Molt bé"
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid "Want to analyse where applications come from ?"
-msgstr ""
+msgstr "Voleu analitzar d'on procedeixen les aplicacions?"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__website_message_ids
@@ -2777,7 +2901,7 @@ msgstr "Historial de comunicacions del lloc web"
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "What do you want to recruit today? Choose a job title..."
-msgstr ""
+msgstr "Què vols reclutar avui? Trieu un títol de la tasca..."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_applicant_send_mail__sub_model_object_field
@@ -2800,13 +2924,13 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
 msgid "Write your message here..."
-msgstr ""
+msgstr "Escriu el teu missatge aquí..."
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "You are not allowed to perform this action."
-msgstr ""
+msgstr "No teniu permís per a realitzar aquesta acció."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
@@ -2814,6 +2938,8 @@ msgid ""
 "You can define here the labels that will be displayed for the kanban state instead\n"
 "                        of the default labels."
 msgstr ""
+"Aquí podeu definir les etiquetes que es mostraran per a l'estat kanban\n"
+"                        de les etiquetes predeterminades."
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/utm_source.py:0
@@ -2822,6 +2948,8 @@ msgid ""
 "You cannot delete these UTM Sources as they are linked to the following recruitment sources in Recruitment:\n"
 "%(recruitment_sources)s"
 msgstr ""
+"No podeu suprimir aquestes fonts UTM, ja que estan enllaçades a les següents fonts de reclutament en la contractació:\n"
+"%(recruitmentsources)s"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
@@ -2835,12 +2963,12 @@ msgstr "Heu de definir un nom de contacte per a aquest sol·licitant."
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_not_interested
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_refuse
 msgid "Your Job Application: {{ object.job_id.name }}"
-msgstr ""
+msgstr "La vostra aplicació de treball: {{ object.jobid.name }}"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "e.g. LinkedIn"
-msgstr ""
+msgstr "p. ex. LinkedIn"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -2850,9 +2978,9 @@ msgstr "p.e. Director de vendes"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "e.g. Sales Manager 2 year experience"
-msgstr ""
+msgstr "P. ex. Gestor de vendes 2 anys d'experiència"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "e.g. sales-manager"
-msgstr ""
+msgstr "p. ex. sales-manager"

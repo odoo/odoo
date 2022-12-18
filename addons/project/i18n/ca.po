@@ -24,6 +24,8 @@
 # Josep Anton Belchi, 2022
 # Cristian Cruz, 2022
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2022
+# Farouk Jabiri, 2022
+# Ivan Espinola, 2022
 # 
 msgid ""
 msgstr ""
@@ -31,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-02 08:11+0000\n"
 "PO-Revision-Date: 2016-08-05 13:08+0000\n"
-"Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2022\n"
+"Last-Translator: Ivan Espinola, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -568,7 +570,7 @@ msgstr "<span class=\"o_stat_text\">El marge brut</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Rating</span>"
-msgstr ""
+msgstr "<span class=\"ostattext\">Valoració</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -921,6 +923,8 @@ msgid ""
 "Analyze how quickly your team is completing your project's tasks and check "
 "if everything is progressing according to plan."
 msgstr ""
+"Analitza la rapidesa amb què el teu equip està completant les tasques del "
+"teu projecte i comprova si tot està progressant segons el pla."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
@@ -1142,7 +1146,7 @@ msgstr "Avaluació Mitjana: Insatisfet"
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Okay"
-msgstr ""
+msgstr "Valoració mitjana: correcta"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1450,6 +1454,8 @@ msgstr "Crear"
 msgid ""
 "Create <b>activities</b> to set yourself to-dos or to schedule meetings."
 msgstr ""
+"Creeu <b>activitats</b> per establir-vos tasques pendents o programar "
+"reunions."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__create_date
@@ -1730,11 +1736,15 @@ msgstr ""
 msgid ""
 "Define the steps your projects move through from creation to completion."
 msgstr ""
+"Definiu els passos que els vostres projectes passen de la creació a la "
+"compleció."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 msgid "Define the steps your tasks move through from creation to completion."
 msgstr ""
+"Definiu els passos que les vostres tasques es mouen des de la creació fins a"
+" la compleció."
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
@@ -1870,7 +1880,7 @@ msgstr "Nom a mostrar"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__display_parent_task_button
 msgid "Display Parent Task Button"
-msgstr ""
+msgstr "Mostra el botó de tasca pare"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__display_project_id
@@ -2076,7 +2086,7 @@ msgstr "Plegat al Kanban"
 #: model:ir.model.fields,help:project.field_project_task_burndown_chart_report__is_closed
 #: model:ir.model.fields,help:project.field_report_project_task_user__is_closed
 msgid "Folded in Kanban stages are closing stages."
-msgstr ""
+msgstr "Plegats en etapes Kanban són etapes de tancament."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2095,7 +2105,7 @@ msgstr "Seguit"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Followed Tasks"
-msgstr ""
+msgstr "Tasques seguides"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_follower_ids
@@ -2461,13 +2471,13 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Invalid operator: %s"
-msgstr ""
+msgstr "Operador no vàlid: %s"
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Invalid value: %s"
-msgstr ""
+msgstr "Valor no vàlid: %s"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -2512,7 +2522,7 @@ msgstr "És seguidor"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_milestone_exceeded
 msgid "Is Milestone Exceeded"
-msgstr ""
+msgstr "S'ha excedit la fita"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_private
@@ -2544,6 +2554,8 @@ msgid ""
 "It seems that some tasks are part of a recurrence. At least one of them must"
 " be kept as a model to create the next occurences."
 msgstr ""
+"Sembla que algunes tasques són part d'una recurrència. Almenys un d'ells "
+"s'ha de mantenir com a model per crear les següents ocurrències."
 
 #. module: project
 #. openerp-web
@@ -2616,6 +2628,8 @@ msgid ""
 "Keep track of the progress of your tasks from creation to completion.<br>\n"
 "                    Collaborate efficiently by chatting in real-time or via email."
 msgstr ""
+"Feu un seguiment del progrés de les vostres tasques des de la creació fins a la compleció.<br>\n"
+"                    Col·laboreu eficientment xatejant en temps real o per correu electrònic."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_action
@@ -2623,6 +2637,8 @@ msgid ""
 "Keep track of the progress of your tasks from creation to completion.<br>\n"
 "                Collaborate efficiently by chatting in real-time or via email."
 msgstr ""
+"Feu un seguiment del progrés de les vostres tasques des de la creació fins a la compleció.<br>\n"
+"                Col·laboreu eficientment xatejant en temps real o per correu electrònic."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened_value
@@ -2736,7 +2752,7 @@ msgstr "Activitats endarrerides"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Late Milestones"
-msgstr ""
+msgstr "Milestones tardanes"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
@@ -2891,6 +2907,8 @@ msgid ""
 "Measure your customer satisfaction by sending rating requests when your "
 "tasks reach a certain stage."
 msgstr ""
+"Mesureu la satisfacció del vostre client enviant sol·licituds de "
+"qualificació quan les vostres tasques arribin a una determinada fase."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__favorite_user_ids
@@ -3130,7 +3148,7 @@ msgstr "Pròximes Recurrències"
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "No Rating"
-msgstr ""
+msgstr "Sense valoració"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3197,7 +3215,7 @@ msgstr "Normal"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Not Starred"
-msgstr ""
+msgstr "Sense estrelles"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__note
@@ -3365,6 +3383,8 @@ msgid ""
 "Organize your tasks by dispatching them across the pipeline.<br>\n"
 "                    Collaborate efficiently by chatting in real-time or via email."
 msgstr ""
+"Organitzeu les vostres tasques enviant-les a través del conducte.<br>\n"
+"                    Col·laboreu eficientment xatejant en temps real o per correu electrònic."
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -3843,6 +3863,8 @@ msgstr "Projectes arxivats"
 msgid ""
 "Projects contain tasks on the same topic, and each has its own dashboard."
 msgstr ""
+"Els projectes contenen tasques sobre el mateix tema, i cadascun té el seu "
+"propi tauler."
 
 #. module: project
 #. openerp-web
@@ -4211,7 +4233,7 @@ msgstr "Ds"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Satisfaction"
-msgstr ""
+msgstr "Satisfacció"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -4531,7 +4553,7 @@ msgstr "Estat"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Status Update - "
-msgstr ""
+msgstr "Actualització de l'estat -"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__activity_state
@@ -4582,7 +4604,7 @@ msgstr "Hores planificades per a les subtasques"
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 msgid "Submitted On"
-msgstr ""
+msgstr "Enviat el"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__subtask_planned_hours
@@ -4931,6 +4953,7 @@ msgstr ""
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
 msgid "The project's start date must be before its end date."
 msgstr ""
+"La data d'inici del projecte ha de ser anterior a la data de finalització."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -5085,7 +5108,7 @@ msgstr "Títol de l'actualització"
 #: code:addons/project/static/src/xml/project_templates.xml:0
 #, python-format
 msgid "To Bill"
-msgstr ""
+msgstr "Factura"
 
 #. module: project
 #: model:project.project.stage,name:project.project_project_stage_0
@@ -5188,7 +5211,7 @@ msgstr "Dues vegades un mes"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Two tasks cannot depend on each other."
-msgstr ""
+msgstr "Dues tasques no poden dependre l'una de l'altra."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__activity_exception_decoration
@@ -5248,7 +5271,7 @@ msgstr "Actualitza"
 #: model:mail.message.subtype,name:project.mt_project_update_create
 #: model:mail.message.subtype,name:project.mt_update_create
 msgid "Update Created"
-msgstr ""
+msgstr "Actualització creada"
 
 #. module: project
 #. openerp-web
@@ -5577,7 +5600,7 @@ msgstr "p. ex. Festa a l'Oficina"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
 #: model_terms:ir.ui.view,arch_db:project.quick_create_task_form
 msgid "e.g. Send Invitations"
-msgstr ""
+msgstr "P. ex. Envia les invitacions"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified

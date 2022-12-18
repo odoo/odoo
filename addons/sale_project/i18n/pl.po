@@ -5,7 +5,7 @@
 # Translators:
 # Jaroslaw Kaczmarski, 2020
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2020
-# Andrzej Donczew <a.donczew@hadron.eu.com>, 2020
+# Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2020
 # Maksym <ms@myodoo.pl>, 2020
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2022
 # Zdzisław Krajewski <zdzichucb@gmail.com>, 2022
@@ -15,9 +15,9 @@
 # Natalia Gros <nag@odoo.com>, 2022
 # DanielDemedziuk <daniel.demedziuk@gmail.com>, 2022
 # Martin Trigaux, 2022
-# Paweł Wodyński <pw@myodoo.pl>, 2022
 # Dariusz Żbikowski <darek@krokus.com.pl>, 2022
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2022
+# Paweł Wodyński <pw@myodoo.pl>, 2022
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-02 08:12+0000\n"
 "PO-Revision-Date: 2020-02-13 10:47+0000\n"
-"Last-Translator: Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2022\n"
+"Last-Translator: Paweł Wodyński <pw@myodoo.pl>, 2022\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -312,7 +312,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__sale_order_line__qty_delivered_method__milestones
 msgid "Milestones"
-msgstr ""
+msgstr "Kamienie Milowe"
 
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order_line.py:0
@@ -346,6 +346,13 @@ msgstr ""
 msgid ""
 "On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
 "         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
+msgstr ""
+
+#. module: sale_project
+#: code:addons/sale_project/models/project.py:0
+#: code:addons/sale_project/models/project.py:0
+#, python-format
+msgid "Other Revenues"
 msgstr ""
 
 #. module: sale_project
@@ -393,12 +400,12 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_milestone
 msgid "Project Milestone"
-msgstr ""
+msgstr "Kamień Milowy Projektu"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_type__milestones
 msgid "Project Milestones"
-msgstr ""
+msgstr "Kamienie Milowe Projektu"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
@@ -437,7 +444,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__reached_milestones_ids
 msgid "Reached Milestones"
-msgstr ""
+msgstr "Osiągnięte Kamienie Milowe"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_search
