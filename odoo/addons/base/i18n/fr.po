@@ -1204,6 +1204,9 @@ msgid ""
 "        New fields and BOE export format for mod 303.\n"
 "    "
 msgstr ""
+"\n"
+"        Nouveaux champs et format d'exportation de la déclaration en douane pour le mod 303.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_renting
@@ -7012,6 +7015,37 @@ msgid ""
 "    https://www.sii.cl/factura_electronica/factura_mercado/Instructivo_Emision_Boleta_Elect.pdf\n"
 "    "
 msgstr ""
+"\n"
+"Objectif du module :\n"
+"===================\n"
+"\n"
+"Dans le cadre des exigences SII (exigences légales au Chili), \n"
+"à partir de mars 2021, les transactions boletas doivent être envoyées au SII dans le cadre du\n"
+"flux électronique en  utilisant un service web différent de celui utilisé pour les factures électroniques. \n"
+"Auparavant, il n'était pas nécessaire d'envoyer les boletas au SII, seulement un rapport quotidien.\n"
+"\n"
+"En plus d'envoyer la Boleta séparément (via le flux EDI), \n"
+"en fin de journée, un résumé quotidien contenant toutes les transactions Boletas\n"
+"doit être envoyé au SII - par voie électronique (une exigence légale). \n"
+"Ceci est appelé \"Libre de ventas diarias\" (auparavant \"reporte de consumo de folios\" ou RCOF). \n"
+"\n"
+"\n"
+"Différences entre les Boletas électroniques et les flux de facturation électronique :\n"
+"=========================================================================\n"
+"\n"
+"Ces flux présentent des différences importantes qui nous amènent à écrire cette PR avec les modifications spécifiques. \n"
+"Voici les différences :\n"
+"\n"
+"* Le mécanisme d'envoi des boletas électroniques nécessite des serveurs dédiés, différents de ceux utilisés à la réception de la facture électronique (\"Palena\" pour l'environnement de production - palena.sii.cl et \"Maullin\" pour l'environnement de test - maullin.sii.cl). \n"
+"* Les services d'authentification, interrogeant le statut d'une livraison et le statut d'un document seront différents.\n"
+"* Le jeton d'authentification obtenu\n"
+"* Le schéma XML pour l'envoi des boletas électroniques a été mis à jour avec l'intégration de nouvelles étiquettes\n"
+"* Le diagnostic de validation des boletas électroniques sera délivré via un service web \"REST\" qui a en entrée le track-id de la livraison. Les factures électroniques continueront de recevoir leurs diagnostics par email.\n"
+"* Le track-id (\"identificador de envío\") lié aux boletas électroniques comportera 15 chiffres. (La facture électronique en comporte 10)\n"
+"\n"
+"Points fors de ce Guide SII :\n"
+"    https://www.sii.cl/factura_electronica/factura_mercado/Instructivo_Emision_Boleta_Elect.pdf\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality
@@ -7822,6 +7856,17 @@ msgid ""
 "Set the payment reference type from the Sales Journal.\n"
 "    "
 msgstr ""
+"\n"
+"Il s'agit du module Odoo pour gérer la comptabilité en Finlande.\n"
+"============================================================\n"
+"\n"
+"Après avoir installé ce module, vous aurez accès :\n"
+"    * au plan comptable finlandais\n"
+"    * aux positions fiscales\n"
+"    * aux types de référence de paiement de facture (référence standard finlandaise & référence du créancier finlandais (RF))\n"
+"\n"
+"Définissez le type de référence de paiement à partir du journal des ventes.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_uom
@@ -8566,6 +8611,10 @@ msgid ""
 "widget.\n"
 "    "
 msgstr ""
+"\n"
+"Ce module ajoute la possibilité de filtrer par numéro de chèque dans le widget\n"
+"de réconciliation.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_attendance
@@ -9119,6 +9168,11 @@ msgid ""
 "Set shipping address on purchase orders created from purchase agreements\n"
 "and link with originating sale order.\n"
 msgstr ""
+"\n"
+"Ce module fait le lien entre la demande d'achat et les applications de dropshipping.\n"
+"\n"
+"Définissez l'adresse d'expédition sur les bons de commande créés à partir de contrats d'achat\n"
+"et faites le lien avec la commande client d'origine.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_approvals
@@ -11229,7 +11283,7 @@ msgstr "Nom du détenteur du compte si différent du partenaire"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_intrastat_expiry
 msgid "Account Invoice Expiry"
-msgstr ""
+msgstr "Expiration facture compte"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract
@@ -11249,7 +11303,7 @@ msgstr "Numéro de compte"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_sale_timesheet
 msgid "Account Sale Timesheet"
-msgstr ""
+msgstr "Compte Vente Feuille de temps"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
@@ -11303,7 +11357,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_account_sale_timesheet
 msgid "Account sale timesheet"
-msgstr ""
+msgstr "Compte vente feuille de temps"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting
@@ -13584,6 +13638,8 @@ msgid ""
 "Bridge created to add the number of invoices linked to an AA to a project "
 "form"
 msgstr ""
+"Module passerelle créé pour ajouter le nombre de factures lié à une AA à un "
+"formulaire de projet"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_sale_subscription
@@ -14151,7 +14207,7 @@ msgstr "Fonctionnalités basiques d'impression de chèques"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_accountant_check_printing
 msgid "Check printing enterprise addons"
-msgstr ""
+msgstr "Modules supplémentaires pour l'impression de chèques"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__employee
@@ -18204,6 +18260,24 @@ msgid ""
 "3. The trial balance Month 13 report must be generated with dates for all the\n"
 "   fiscal year to report.\n"
 msgstr ""
+"Rapports fiscaux pour l'écriture de clôture\n"
+"================================\n"
+"\n"
+"Le rapport de bilan de vérification est complété pour générer l'écriture de clôture\n"
+"(c'est-à-dire le 13e mois)\n"
+"\n"
+"Configuration\n"
+"=============\n"
+"\n"
+"Étapes à suivre pour obtenir la rapport :\n"
+"\n"
+"1. L'écriture comptable pour le transfert des exercices doit être générée manuellement\n"
+"   avec la date de fin de l'exercice fiscal qui se clôture. Elle doit être comptabilisée.\n"
+"\n"
+"2. Cette écriture doit être définie comme l'écriture de clôture pour l'exercice fiscal.\n"
+"\n"
+"3. Le rapport bilan de vérification 13e mois doit être généré avec les dates de tous les\n"
+"exercices fiscaux à rapporter.\n"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__image_url
@@ -20239,6 +20313,9 @@ msgid ""
 "Inherited Qweb view cannot have 'Groups' define on the record. Use 'groups' "
 "attributes inside the view definition"
 msgstr ""
+"La vue Qweb héritée ne peut pas avoir de 'Groupes' définis sur "
+"l'enregistrement. Utilisez les attributs 'groupes' dans la définition de la "
+"vue"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__inherit_id
@@ -24178,6 +24255,60 @@ msgid ""
 "for your own company. Follow people, share best practices, 'like' top ideas,\n"
 "etc.\n"
 msgstr ""
+"Réseau social d'entreprise d'Odoo\n"
+"------------------------------\n"
+"\n"
+"Communiquez avec des experts, suivez les événements qui vous intéressent, partagez des documents et encouragez les\n"
+"bonnes pratiques grâce au module <a href=\"https://www.odoo.com/app/discuss\">Réseau social d'entreprise</a> d'Odoo. Accomplissez votre travail\n"
+"en collaborant efficacement à travers départements, régions, documents et applications\n"
+"d'entreprise, tout en réduisant la surcharge d'emails.\n"
+"\n"
+"Communiquez avec des experts\n"
+"--------------------\n"
+"\n"
+"La prochaine fois que vous avez une question pour le département Marketing, Vente, R&D ou autre, \n"
+"n'envoyez pas d'emails en masse. Publiez plutôt la question sur Odoo et recevez des réponses\n"
+"des bonnes personnes.\n"
+"\n"
+"Suivez les événements qui vous intéressent\n"
+"-------------------------\n"
+"\n"
+"Vous souhaitez être informé des nouvelles fonctionnalités des produits, des offres spéciales, des goulots d'étranglement \n"
+"des projets ou de tout autre événement ? Suivez simplement les événements qui vous intéressent pour obtenir\n"
+"les informations dont vous avez besoin ; c'est aussi simple que cela.\n"
+"\n"
+"Obtenez des résultats\n"
+"---------------\n"
+"\n"
+"Vous pouvez traiter (au lieu de simplement lire) la boîte de réception et facilement marquer les messages nécessitant des actions\n"
+"futures. Découvrez le bonheur d'avoir une boîte de réception vide chaque jour ; vous ne serez plus\n"
+"submergé par les informations.\n"
+"\n"
+"Encouragez les bonnes pratiques\n"
+"----------------------\n"
+"\n"
+"Réduisez le nombre de réunions et d'échanges d'emails en collaborant dans des groupes\n"
+"d'intérêt. Créez un groupe pour permettre aux personnes de partager des documents, d'échanger des idées et de voter pour \n"
+"promouvoir les bonnes pratiques.\n"
+"\n"
+"Améliorez l'accès aux informations et à l'expertise\n"
+"-------------------------------------------\n"
+"\n"
+"Brisez les silos d'information. Recherchez dans vos systèmes existants les réponses\n"
+"et l'expertise nécessaires pour exécuter rapidement les projets.\n"
+"\n"
+"Collaborez en toute sécurité\n"
+"--------------------\n"
+"\n"
+"Définissez la politique de sécurité appropriée ; publique, privée ou sur invitation uniquement --\n"
+"en fonction du degré de sensibilité des informations.\n"
+"\n"
+"Un réseau de type Twitter pour mon entreprise\n"
+"---------------------------------------\n"
+"\n"
+"Faites en sorte que chaque employé se sente plus connecté en plus impliqué en mettant en place des fonctionnalités similaires à celles de Twitter\n"
+"pour votre propre entreprise. Suivez des personnes, partagez des bonnes pratiques, \"likez\" les bonnes idées,\n"
+"etc.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr
@@ -27707,7 +27838,7 @@ msgstr "Projet Achats"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_project_account
 msgid "Project Sales Accounting"
-msgstr ""
+msgstr "Projet Ventes Comptabilité"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_sale_subscription
@@ -27727,7 +27858,7 @@ msgstr "Projet Comptabilité Budget"
 #. module: base
 #: model:ir.module.module,summary:base.module_project_account_accountant
 msgid "Project accounting"
-msgstr ""
+msgstr "Projet comptabilité"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_account_asset
@@ -27757,7 +27888,7 @@ msgstr "Projet Paie Comptabilité"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_project_account
 msgid "Project sales accounting"
-msgstr ""
+msgstr "Projet ventes comptabilité"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_sale_subscription
@@ -27952,12 +28083,12 @@ msgstr "Stocker les Appels d'Offres"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_requisition_stock_dropshipping
 msgid "Purchase Requisition Stock Dropshipping"
-msgstr ""
+msgstr "Demande d'achat Stock Dropshipping"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_purchase_requisition_stock_dropshipping
 msgid "Purchase Requisition, Stock, Dropshipping"
-msgstr ""
+msgstr "Demande d'achat, Stock, Dropshipping"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_stock
@@ -29755,6 +29886,8 @@ msgstr "Paramètres"
 #: model:ir.module.module,summary:base.module_pos_settle_due
 msgid "Settle custumer's due in the POS UI."
 msgstr ""
+"Réglez le montant dû par le client dans l'interface d'utilisateur du point "
+"de vente."
 
 #. module: base
 #: model:res.country,name:base.sc
@@ -33744,7 +33877,7 @@ msgstr "Paiement Site Web"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_gift_card
 msgid "Website Sale Gift Card"
-msgstr ""
+msgstr "Site web Vente Carte-cadeau"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_product_configurator
@@ -33917,7 +34050,7 @@ msgstr "Actions de l'interface"
 #: model:ir.module.module,description:base.module_payment_transfer
 #: model:ir.module.module,shortdesc:base.module_payment_transfer
 msgid "Wire Transfer Payment Acquirer"
-msgstr ""
+msgstr "Intermédiaire de paiement de virement bancaire"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_line__wizard_id
