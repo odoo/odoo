@@ -28496,8 +28496,8 @@ msgstr "模块`%s`现在可能不能使用，请稍后再试。"
 #. module: base
 #: code:addons/base/models/ir_module.py:0
 #, python-format
-msgid "The `base` module cannot be uninstalled"
-msgstr "`base` 模块不能卸载"
+msgid "Those modules cannot be uninstalled: %s"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -32028,3 +32028,9 @@ msgstr "是"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "阿兰群岛"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore must be active."
+msgstr ""
