@@ -28550,8 +28550,8 @@ msgstr "`%s` 모듈이 현재 사용할 수 없는 것 같습니다. 잠시 후 
 #. module: base
 #: code:addons/base/models/ir_module.py:0
 #, python-format
-msgid "The `base` module cannot be uninstalled"
-msgstr "`기본 '모듈은 제거할 수 없습니다."
+msgid "Those modules cannot be uninstalled: %s"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -32105,3 +32105,9 @@ msgstr "예"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "올란드 제도"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore must be active."
+msgstr ""
