@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
@@ -48,11 +48,6 @@ msgstr "会社"
 #: model:ir.model,name:project_timesheet_holidays.model_res_config_settings
 msgid "Config Settings"
 msgstr "コンフィグ設定"
-
-#. module: project_timesheet_holidays
-#: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__internal_project_id
-msgid "Default project value for timesheet generated from time off type."
-msgstr ""
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_employee
@@ -129,10 +124,18 @@ msgid "Task"
 msgstr "タスク"
 
 #. module: project_timesheet_holidays
-#: model:ir.model.fields,help:project_timesheet_holidays.field_hr_leave_type__timesheet_project_id
+#: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__internal_project_id
 msgid ""
-"The project will contain the timesheet generated when a time off is "
-"validated."
+"The default project used when automatically generating timesheets via time "
+"off requests. You can specify another project on each time off type "
+"individually."
+msgstr ""
+
+#. module: project_timesheet_holidays
+#: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
+msgid ""
+"The default task used when automatically generating timesheets via time off "
+"requests. You can specify another task on each time off type individually."
 msgstr ""
 
 #. module: project_timesheet_holidays
