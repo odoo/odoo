@@ -19,6 +19,7 @@
 # Piia Paurson <piia@avalah.ee>, 2021
 # Algo Kärp <algokarp@gmail.com>, 2021
 # Triine Aavik <triine@avalah.ee>, 2021
+# Jana Jaakson, 2022
 # 
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-27 11:49+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Triine Aavik <triine@avalah.ee>, 2021\n"
+"Last-Translator: Jana Jaakson, 2022\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -273,6 +274,8 @@ msgid ""
 "A globally unique identifier for this pos configuration, used to prevent "
 "conflicts in client-generated data."
 msgstr ""
+"Selle PoS konfiguratsiooni globaalselt unikaalne identifikaator, mida "
+"kasutatakse konfliktide vältimiseks kliendi loodud andmetes."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__login_number
@@ -457,6 +460,8 @@ msgid ""
 "the Sales Journal set on this point of sale if you use the Accounting "
 "application."
 msgstr ""
+"Kui kasutate raamatupidamisrakendust, peavad kõik saadaolevad hinnakirjad "
+"olema samas valuutas nagu ettevõtes või müügikoha müügiandmikes."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -471,7 +476,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_all_sales_lines
 msgid "All sales lines"
-msgstr ""
+msgstr "Kõik müügiliinid"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -799,6 +804,8 @@ msgid ""
 "Categories are used to browse your products through the\n"
 "                touchscreen interface."
 msgstr ""
+"Kategooriaid kasutatakse Teie toodete sirvimiseks \n"
+"                puutetundliku ekraani liides."
 
 #. module: point_of_sale
 #. openerp-web
@@ -873,6 +880,7 @@ msgid ""
 "Check if the product should be weighted using the hardware scale "
 "integration."
 msgstr ""
+"Kontrollige, kas toodet tuleks riistvaraskaala integratsiooni abil kaaluda."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_product__available_in_pos
@@ -886,6 +894,8 @@ msgstr "Kontrollige, kas soovite, et see toode ilmuks PoS-is."
 msgid ""
 "Check if you want to group products of this category in point of sale orders"
 msgstr ""
+"Märkige, kas soovite selle kategooria tooteid müügikoha tellimustes "
+"rühmitada"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__cash_control
@@ -1216,7 +1226,7 @@ msgstr "Praegune sessioon"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__current_user_id
 msgid "Current Session Responsible"
-msgstr ""
+msgstr "Käesoleva seansi eest vastutaja"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__current_session_state
@@ -1409,7 +1419,7 @@ msgstr ""
 #: model:product.product,name:point_of_sale.desk_pad
 #: model:product.template,name:point_of_sale.desk_pad_product_template
 msgid "Desk Pad"
-msgstr ""
+msgstr "Lauaalus"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_desks
@@ -1832,7 +1842,7 @@ msgstr "HTTPS-ühendus IoT Boxiga nurjus"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Hardware Events"
-msgstr ""
+msgstr "Riistvara sündmused"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1980,6 +1990,9 @@ msgid ""
 "                Invocing/Accounting app will create Bank and Cash payment\n"
 "                methods automatically."
 msgstr ""
+"Kontoplaani installeerimine Üldsätted jaotisest\n"
+"                Arvete/Raamatupidamise rakendus loob panga-ja sularahamakse\n"
+"                meetodid automaatselt."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_mercury
@@ -2131,7 +2144,7 @@ msgstr "Andmike kanderead"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__kpi_pos_total_value
 msgid "Kpi Pos Total Value"
-msgstr ""
+msgstr "PoS KPI koguväärtus"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.led_lamp
@@ -2356,7 +2369,7 @@ msgstr "Muu"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_hr
 msgid "Module Pos Hr"
-msgstr ""
+msgstr "Moodul PoS Hr"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
@@ -2920,7 +2933,7 @@ msgstr "Maksetaotlus on ootel"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Payment reversed"
-msgstr ""
+msgstr "Makse tühistatud"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -2992,7 +3005,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
 #, python-format
 msgid "Picking POS"
-msgstr ""
+msgstr "POSi valimine"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3043,7 +3056,7 @@ msgstr "Konfigureerige makseviis oma kassas."
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
-msgstr ""
+msgstr "Määrake selle toote Tulukonto: \"%s\" (id:%d)."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3247,7 +3260,7 @@ msgstr "Müügikoha Kasutajate grupp"
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_cashbox__pos_config_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__pos_config_ids
 msgid "Pos Config"
-msgstr ""
+msgstr "PoS konfiguratsioon"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_move__pos_order_ids
@@ -3511,7 +3524,7 @@ msgstr "Tootehinnad kviitungitel"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_tipproduct
 msgid "Product tips"
-msgstr ""
+msgstr "Tootesoovitused"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_template_action_pos_product
@@ -3564,7 +3577,7 @@ msgstr "Kogus"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Read Weighing Scale"
-msgstr ""
+msgstr "Lugege kaalu"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4506,6 +4519,8 @@ msgid ""
 "The selected pricelists must belong to no company or the company of the "
 "point of sale."
 msgstr ""
+"Valitud hinnakirjad ei tohi kuuluda ühelegi ettevõttele ega müügikoha "
+"ettevõttele."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4567,6 +4582,8 @@ msgid ""
 "There are still orders in draft state in the session. Pay or cancel the following orders to validate the session:\n"
 "%s"
 msgstr ""
+"Selle sessiooni mõned tellimused on veel mustand statuses. Sessiooni kinnitamiseks maksa või tühista järgmised tellimused:\n"
+"%s"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5386,7 +5403,7 @@ msgstr "nt. ettevõtte aadress, veebisait"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "e.g. Return Policy, Thanks for shopping with us!"
-msgstr ""
+msgstr "nt. Tagastusreeglid, Tänan, et koos meiega ostlesite!"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view

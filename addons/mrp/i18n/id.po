@@ -17,8 +17,9 @@
 # PAS IRVANUS <ipankbiz@gmail.com>, 2019
 # Gradien Foundation <gradien.co@gmail.com>, 2020
 # whenwesober, 2020
-# Muftiara Syuhada <muftiara.syuhada@falinwa.com>, 2020
+# Muftiara Syuhada <muftiara.syuhada@gmail.com>, 2020
 # Abdul Munif Hanafi <amunifhanafi@gmail.com>, 2021
+# Abe Manyo, 2022
 # 
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Abdul Munif Hanafi <amunifhanafi@gmail.com>, 2021\n"
+"Last-Translator: Abe Manyo, 2022\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1877,6 +1878,14 @@ msgstr "Apakah Pengguna Ini Sedang Bekerja"
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "It has already been unblocked."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid ""
+"It is not possible to unplan one single Work Order. You should unplan the "
+"Manufacturing Order instead in order to unplan all the linked operations."
 msgstr ""
 
 #. module: mrp
@@ -3904,6 +3913,15 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The product has already been used at least once, editing its structure may "
+"lead to undesirable behaviours. You should rather archive the product and "
+"create a new one with a new bill of materials."
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:0
 #, python-format
 msgid "The production order for '%s' has no quantity specified."
@@ -3935,6 +3953,14 @@ msgid ""
 msgstr ""
 "Rute mengandung semua Pusat Kerja yang telah digunakan dan untuk berapa "
 "lama. Ini akan membuat order kerja yang mengubah pelaksanaan order produksi."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#, python-format
+msgid ""
+"The selected serial number does not correspond to the one used in the "
+"manufacturing order, please select another one."
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -4103,7 +4129,7 @@ msgstr "Luncurkan"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "To Process"
-msgstr ""
+msgstr "Untuk Diproses"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
