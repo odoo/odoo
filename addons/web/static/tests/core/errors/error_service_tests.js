@@ -417,3 +417,85 @@ QUnit.test("lazy loaded handlers", async (assert) => {
     await unhandledRejectionCb(errorEvent);
     assert.verifySteps(["in handler"]);
 });
+
+// The following test(s) do not want the preventDefault to be done automatically.
+QUnit.module("Error Service", {
+    beforeEach() {
+        serviceRegistry.add("error", errorService);
+        serviceRegistry.add("dialog", dialogService);
+        serviceRegistry.add("notification", notificationService);
+        serviceRegistry.add("rpc", makeFakeRPCService());
+        serviceRegistry.add("localization", makeFakeLocalizationService());
+        serviceRegistry.add("ui", uiService);
+        const windowAddEventListener = browser.addEventListener;
+        browser.addEventListener = (type, cb) => {
+            if (type === "unhandledrejection") {
+                unhandledRejectionCb = cb;
+            } else if (type === "error") {
+                errorCb = cb;
+            }
+        };
+        registerCleanup(() => {
+            browser.addEventListener = windowAddEventListener;
+        });
+    },
+});
+
+QUnit.test("logs the traceback of the full error chain for unhandledrejection", async (assert) => {
+    assert.expect(2);
+    const regexParts = [
+        /^.*This is a wrapper error/,
+        /Caused by:.*This is a second wrapper error/,
+        /Caused by:.*This is the original error/,
+    ];
+    const errorRegex = new RegExp(regexParts.map((re) => re.source).join(/[\s\S]*/.source));
+    patchWithCleanup(console, {
+        error(errorMessage) {
+            assert.ok(errorRegex.test(errorMessage));
+        },
+    });
+
+    const error = new Error("This is a wrapper error");
+    error.cause = new Error("This is a second wrapper error");
+    error.cause.cause = new Error("This is the original error");
+
+    // start the services
+    await makeTestEnv();
+    const errorEvent = new PromiseRejectionEvent("unhandledrejection", {
+        reason: error,
+        promise: null,
+        cancelable: true,
+    });
+    await unhandledRejectionCb(errorEvent);
+    assert.ok(errorEvent.defaultPrevented);
+});
+
+QUnit.test("logs the traceback of the full error chain for uncaughterror", async (assert) => {
+    assert.expect(2);
+    const regexParts = [
+        /^.*This is a wrapper error/,
+        /Caused by:.*This is a second wrapper error/,
+        /Caused by:.*This is the original error/,
+    ];
+    const errorRegex = new RegExp(regexParts.map((re) => re.source).join(/[\s\S]*/.source));
+    patchWithCleanup(console, {
+        error(errorMessage) {
+            assert.ok(errorRegex.test(errorMessage));
+        },
+    });
+
+    const error = new Error("This is a wrapper error");
+    error.cause = new Error("This is a second wrapper error");
+    error.cause.cause = new Error("This is the original error");
+
+    // start the services
+    await makeTestEnv();
+    const errorEvent = new Event("error", {
+        promise: null,
+        cancelable: true,
+    });
+    errorEvent.error = error;
+    errorEvent.filename = "dummy_file.js"; // needed to not be treated as a CORS error
+    await errorCb(errorEvent);
+    assert.ok(errorEvent.defaultPrevented);
+});
