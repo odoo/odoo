@@ -3,12 +3,12 @@
 
 import logging
 import math
-
-from lxml import etree
+import itertools
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
 from odoo.tools import parse_date
+from odoo.tools.misc import unique
 
 _logger = logging.getLogger(__name__)
 
@@ -29,11 +29,13 @@ class Currency(models.Model):
     name = fields.Char(string='Currency', size=3, required=True, help="Currency Code (ISO 4217)")
     full_name = fields.Char(string='Name')
     symbol = fields.Char(help="Currency sign, to be used when printing amounts.", required=True)
-    rate = fields.Float(compute='_compute_current_rate', string='Current Rate', digits=0,
+    rate = fields.Float(compute='_compute_rate', string='Current Rate', digits=0,
                         help='The rate of the currency to the currency of rate 1.')
-    inverse_rate = fields.Float(compute='_compute_current_rate', digits=0, readonly=True,
+    # Technical field to cache values of _get_rates during one transaction
+    current_rate = fields.Float(compute='_compute_current_rate', string='Technical Current Rate', digits=0)
+    inverse_rate = fields.Float(compute='_compute_rate', digits=0, readonly=True,
                                 help='The currency of rate 1 to the rate of the currency.')
-    rate_string = fields.Char(compute='_compute_current_rate')
+    rate_string = fields.Char(compute='_compute_rate')
     rate_ids = fields.One2many('res.currency.rate', 'currency_id', string='Rates')
     rounding = fields.Float(string='Rounding Factor', digits=(12, 6), default=0.01,
         help='Amounts in this currency are rounded off to the nearest multiple of the rounding factor.')
@@ -96,35 +98,47 @@ class Currency(models.Model):
             group_user.sudo()._remove_group(group_mc.sudo())
 
     def _get_rates(self, company, date):
-        if not self.ids:
-            return {}
-        self.env['res.currency.rate'].flush_model(['rate', 'currency_id', 'company_id', 'name'])
-        query = """SELECT c.id,
-                          COALESCE((SELECT r.rate FROM res_currency_rate r
-                                  WHERE r.currency_id = c.id AND r.name <= %s
-                                    AND (r.company_id IS NULL OR r.company_id = %s)
-                               ORDER BY r.company_id, r.name DESC
-                                  LIMIT 1), 1.0) AS rate
-                   FROM res_currency c
-                   WHERE c.id IN %s"""
-        self._cr.execute(query, (date, company.id, tuple(self.ids)))
-        currency_rates = dict(self._cr.fetchall())
-        return currency_rates
+        self = self.with_company(company).with_context(date=date)
+        return {currency.id: currency.current_rate for currency in self}
 
     @api.depends_context('company')
     def _compute_is_current_company_currency(self):
         for currency in self:
             currency.is_current_company_currency = self.env.company.currency_id == currency
 
-    @api.depends('rate_ids.rate')
+    @api.depends('rate_ids.rate', 'rate_ids.currency_id', 'rate_ids.company_id', 'rate_ids.name')
+    @api.depends_context('company', 'date')
     def _compute_current_rate(self):
+        def _rates(company, date):
+            if not self.ids:
+                return {}
+            self.env['res.currency.rate'].flush_model(['rate', 'currency_id', 'company_id', 'name'])
+            query = """SELECT c.id,
+                            COALESCE((SELECT r.rate FROM res_currency_rate r
+                                    WHERE r.currency_id = c.id AND r.name <= %s
+                                        AND (r.company_id IS NULL OR r.company_id = %s)
+                                ORDER BY r.company_id, r.name DESC
+                                    LIMIT 1), 1.0) AS rate
+                    FROM res_currency c
+                    WHERE c.id IN %s"""
+            self.env.cr.execute(query, (date, company.id, tuple(self.ids)))
+            return dict(self._cr.fetchall())
+
+        date = self.env.context.get('date')
+        assert date, "Date should be set in the context to compute the current_rate"
+        currency_rates = _rates(self.env.company, date)
+        for currency in self:
+            currency.current_rate = currency_rates.get(currency.id) or 1.0
+
+    @api.depends('current_rate')
+    @api.depends_context('company', 'date')
+    def _compute_rate(self):
         date = self._context.get('date') or fields.Date.context_today(self)
         company = self.env['res.company'].browse(self._context.get('company_id')) or self.env.company
         # the subquery selects the last rate before 'date' for the given currency/company
-        currency_rates = self._get_rates(company, date)
         last_rate = self.env['res.currency.rate']._get_last_rates_for_companies(company)
         for currency in self:
-            currency.rate = (currency_rates.get(currency.id) or 1.0) / last_rate[company]
+            currency.rate = currency.with_company(company).with_context(date=date).current_rate / last_rate[company]
             currency.inverse_rate = 1 / currency.rate
             if currency != company.currency_id:
                 currency.rate_string = '1 %s = %.6f %s' % (company.currency_id.name, currency.rate, currency.name)
@@ -225,9 +239,11 @@ class Currency(models.Model):
 
     @api.model
     def _get_conversion_rate(self, from_currency, to_currency, company, date):
-        currency_rates = (from_currency + to_currency)._get_rates(company, date)
-        res = currency_rates.get(to_currency.id) / currency_rates.get(from_currency.id)
-        return res
+        # ensure that the prefetch contains from_currency one and to_currency one
+        prefetch_currency = tuple(unique(itertools.chain(from_currency._prefetch_ids, to_currency._prefetch_ids)))
+        from_currency = from_currency.with_prefetch(prefetch_currency).with_company(company).with_context(date=date)
+        to_currency = to_currency.with_prefetch(prefetch_currency).with_company(company).with_context(date=date)
+        return to_currency.current_rate / from_currency.current_rate
 
     def _convert(self, from_amount, to_currency, company, date, round=True):
         """Returns the converted amount of ``from_amount``` from the currency
