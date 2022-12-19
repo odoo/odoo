@@ -85,9 +85,13 @@ class ProductTemplate(models.Model):
     @api.constrains('uom_id')
     def _check_uom_not_in_invoice(self):
         for template in self:
-            invoices = self.env['account.move.line'].sudo().search([('product_id.product_tmpl_id.id', '=', template.id)], limit=1)
-            if invoices:
-                raise ValidationError(_('The product "%s" is used in invoices. You cannot change its Unit of Measure.', template.display_name))
+            aml_domain = [('product_id.product_tmpl_id.id', '=', template.id),
+                          ('product_uom_id.category_id.id', '!=', template.uom_id.category_id.id),
+                          ]
+            if self.env['account.move.line'].sudo().search(aml_domain, limit=1):
+                raise ValidationError(_("This product is already being used in posted Journal Entries.\n"
+                                        "If you want to change its Unit of Measure, please archive this product and create a new one."))
+
 
 class ProductProduct(models.Model):
     _inherit = "product.product"
