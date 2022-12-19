@@ -64,13 +64,9 @@ export const errorService = {
                     break;
                 }
             }
-            if (
-                originalError instanceof Error &&
-                originalError.errorEvent &&
-                !originalError.errorEvent.defaultPrevented
-            ) {
+            if (uncaughtError.event && !uncaughtError.event.defaultPrevented) {
                 // Log the full traceback instead of letting the browser log the incomplete one
-                originalError.errorEvent.preventDefault();
+                uncaughtError.event.preventDefault();
                 console.error(uncaughtError.traceback);
             }
         }
@@ -97,6 +93,7 @@ export const errorService = {
                 );
             } else {
                 uncaughtError = new UncaughtClientError();
+                uncaughtError.event = ev;
                 if (error instanceof Error) {
                     error.errorEvent = ev;
                     const annotated = env.debug && env.debug.includes("assets");
@@ -111,6 +108,7 @@ export const errorService = {
             const error = ev.reason;
             const uncaughtError = new UncaughtPromiseError();
             uncaughtError.unhandledRejectionEvent = ev;
+            uncaughtError.event = ev;
             if (error instanceof Error) {
                 error.errorEvent = ev;
                 const annotated = env.debug && env.debug.includes("assets");
