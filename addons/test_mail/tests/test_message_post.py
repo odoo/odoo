@@ -281,6 +281,10 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         self.assertFalse(self.env['mail.mail'].sudo().search([('mail_message_id', '=', msg.id)]),
                          'message_post: mail.mail notifications should have been auto-deleted')
 
+        # notified_partner_ids should be empty after copying the message
+        copy = msg.copy()
+        self.assertFalse(copy.notified_partner_ids)
+
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.tests')
     def test_post_notifications_keep_emails(self):
         self.test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id])
