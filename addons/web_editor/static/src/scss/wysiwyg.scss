@@ -669,6 +669,23 @@ img::selection {
         top: initial !important;
         left: initial !important;
     }
+
+    .oe-toolbar.oe-floating {
+        box-shadow: 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+        overflow-y: visible;
+
+        .dropdown-menu {
+            max-height: 200px;
+            overflow: auto;
+
+            &.colorpicker-menu {
+                bottom: auto;
+            }
+        }
+    }
 }
 
 // User modal in edit mode
