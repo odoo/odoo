@@ -848,7 +848,7 @@ QUnit.module("Views", (hooks) => {
                 [...cpButtons.querySelectorAll("button")].map((button) =>
                     button.textContent.trim()
                 ),
-                ["Create", "display", ""]
+                ["New", "display", ""]
             );
 
             await click(
@@ -859,7 +859,7 @@ QUnit.module("Views", (hooks) => {
                 [...cpButtons.querySelectorAll("button")].map((button) =>
                     button.textContent.trim()
                 ),
-                ["Create", "display", "default-selection"]
+                ["New", "display", "default-selection"]
             );
 
             await click(
@@ -870,7 +870,7 @@ QUnit.module("Views", (hooks) => {
                 [...cpButtons.querySelectorAll("button")].map((button) =>
                     button.textContent.trim()
                 ),
-                ["Create", "display", ""]
+                ["New", "display", ""]
             );
         }
     );
