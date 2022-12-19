@@ -149,19 +149,33 @@ class PosOrder(models.Model):
             'x_ext_order_ref': order.x_ext_order_ref,
             'x_receipt_printed': order.x_receipt_printed,
             'x_receipt_printed_date': order.x_receipt_printed_date,
+            'pos_si_trans_reference': order.pos_si_trans_reference,
+            'pos_trans_reference': order.pos_trans_reference,
+            'pos_refund_si_reference': order.pos_refund_si_reference,
+            'pos_refunded_id': order.pos_refunded_id.pos_si_trans_reference,
             'website_order_id': order.website_order_id
         })
         return fields
 
+
+
     @api.model
     def _order_fields(self, order):
         fields = super(PosOrder, self)._order_fields(order)
+        refunded_order_id = False;
+        if order.get('pos_refunded_id', False):
+            refunded_order = self.env['pos.order'].search([('id', '=', order.pos_refunded_id),('active', '=', True)])
+            refunded_order_id = refunded_order.pos_si_trans_reference
         fields.update({
             'x_ext_source': order.get('x_ext_source', False),
             'x_ext_order_ref': order.get('x_ext_order_ref', False),
             'x_receipt_printed': order.get('x_receipt_printed', False),
             'x_receipt_printed_date': order.get('x_receipt_printed_date', False),
-            'website_order_id': order.get('website_order_id', False)
+            'pos_si_trans_reference': order.get('pos_si_trans_reference', False),
+            'pos_trans_reference':  order.get('pos_trans_reference', False),
+            'pos_refund_si_reference':  order.get('pos_refund_si_reference', False),
+            'website_order_id': order.get('website_order_id', False),
+            'pos_refunded_id': refunded_order_id
         })
         return fields
 
