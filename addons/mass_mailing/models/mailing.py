@@ -1058,7 +1058,7 @@ class MassMailing(models.Model):
             composer_values = {
                 'auto_delete': not mailing.keep_archives,
                 # email-mode: keep original message for routing
-                'auto_delete_message': not mailing.reply_to_mode == 'update',
+                'auto_delete_keep_log': mailing.reply_to_mode == 'update',
                 'author_id': author_id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
                 'body': mailing._prepend_preview(mailing.body_html, mailing.preview),
