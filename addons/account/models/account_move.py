@@ -1437,6 +1437,32 @@ class AccountMove(models.Model):
         'line_ids.payment_id.state',
         'line_ids.full_reconcile_id')
     def _compute_amount(self):
+        in_invoices = self.filtered(lambda m: m.move_type == 'in_invoice')
+        out_invoices = self.filtered(lambda m: m.move_type == 'out_invoice')
+        entries = self.filtered(lambda m: m.move_type == 'entry')
+        reversed_mapping = defaultdict(lambda: self.env['account.move'])
+        if in_invoices or out_invoices or entries:
+            for reverse_move in self.env['account.move'].search([
+                ('state', '=', 'posted'),
+                '|', '|',
+                '&', ('reversed_entry_id', 'in', in_invoices.ids), ('move_type', '=', 'in_refund'),
+                '&', ('reversed_entry_id', 'in', out_invoices.ids), ('move_type', '=', 'out_refund'),
+                '&', ('reversed_entry_id', 'in', entries.ids), ('move_type', '=', 'entry'),
+            ]):
+                reversed_mapping[reverse_move.reversed_entry_id] += reverse_move
+
+        caba_mapping = defaultdict(lambda: self.env['account.move'])
+        caba_company_ids = self.company_id.filtered(lambda c: c.tax_exigibility)
+        if caba_company_ids:
+            reverse_moves_ids = [move.id for moves in reversed_mapping.values() for move in moves]
+            for caba_move in self.env['account.move'].search([
+                ('tax_cash_basis_origin_move_id', 'in', self.ids + reverse_moves_ids),
+                ('state', '=', 'posted'),
+                ('move_type', '=', 'entry'),
+                ('company_id', 'in', caba_company_ids.ids)
+            ]):
+                caba_mapping[caba_move.tax_cash_basis_origin_move_id] += caba_move
+
         for move in self:
 
             if move.payment_state == 'invoicing_legacy':
@@ -1515,17 +1541,10 @@ class AccountMove(models.Model):
                     new_pmt_state = 'partial'
 
             if new_pmt_state == 'paid' and move.move_type in ('in_invoice', 'out_invoice', 'entry'):
-                reverse_type = move.move_type == 'in_invoice' and 'in_refund' or move.move_type == 'out_invoice' and 'out_refund' or 'entry'
-                reverse_moves = self.env['account.move'].search([('reversed_entry_id', '=', move.id), ('state', '=', 'posted'), ('move_type', '=', reverse_type)])
-                if self.env.company.tax_exigibility:
-                    domain = [
-                        ('tax_cash_basis_origin_move_id', 'in', move.ids + reverse_moves.ids),
-                        ('state', '=', 'posted'),
-                        ('move_type', '=', 'entry')
-                    ]
-                    caba_moves = self.env['account.move'].search(domain)
-                else:
-                    caba_moves = self.env['account.move']
+                reverse_moves = reversed_mapping[move]
+                caba_moves = caba_mapping[move]
+                for reverse_move in reverse_moves:
+                    caba_moves |= caba_mapping[reverse_move]
 
                 # We only set 'reversed' state in cas of 1 to 1 full reconciliation with a reverse entry; otherwise, we use the regular 'paid' state
                 # We ignore potentials cash basis moves reconciled because the transition account of the tax is reconcilable
