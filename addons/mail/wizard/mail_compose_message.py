@@ -174,7 +174,9 @@ class MailComposer(models.TransientModel):
     # sending
     auto_delete = fields.Boolean('Delete Emails',
         help='This option permanently removes any track of email after it\'s been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.')
-    auto_delete_message = fields.Boolean('Delete Message Copy', help='Do not keep a copy of the email in the document communication history (mass mailing only)')
+    auto_delete_keep_log = fields.Boolean(
+        'Keep Message Copy', default=True,
+        help='Keep a copy of the email content if emails are removed (mass mailing only)')
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server')
     scheduled_date = fields.Char(
         'Scheduled Date',
@@ -640,7 +642,7 @@ class MailComposer(models.TransientModel):
         if email_mode:
             values.update(
                 auto_delete=self.auto_delete,
-                is_notification=not self.auto_delete_message,
+                is_notification=self.auto_delete_keep_log,
                 model=self.model,
             )
         # specific to post mode

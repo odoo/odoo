@@ -1092,7 +1092,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
                 fields_values={
                     'auto_delete': True,
                     'is_internal': False,
-                    'is_notification': True,  # not auto_delete_message -> keep underlying mail.message
+                    'is_notification': True,  # auto_delete_keep_log -> keep underlying mail.message
                     'message_type': 'email',
                     'model': test_record._name,
                     'notified_partner_ids': self.env['res.partner'],
@@ -1133,7 +1133,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
                 fields_values={
                     'auto_delete': False,
                     'is_internal': False,
-                    'is_notification': True,  # not auto_delete_message -> keep underlying mail.message
+                    'is_notification': True,  # auto_delete_keep_log -> keep underlying mail.message
                     'message_type': 'email',
                     'model': test_record._name,
                     'notified_partner_ids': self.env['res.partner'],

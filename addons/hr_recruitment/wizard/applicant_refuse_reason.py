@@ -47,11 +47,14 @@ class ApplicantGetRefuseReason(models.TransientModel):
             applicants = self.applicant_ids.filtered(lambda x: x.email_from or x.partner_id.email)
             # TDE note: keeping 16.0 behavior, clean me please
             message_values = {
-                'auto_delete_message' : True,
                 'email_layout_xmlid' : 'mail.mail_notification_light',
             }
             if len(applicants) > 1:
-                applicants.with_context(active_test=True).message_mail_with_source(self.template_id, **message_values)
+                applicants.with_context(active_test=True).message_mail_with_source(
+                    self.template_id,
+                    auto_delete_keep_log=False,
+                    **message_values
+                )
             else:
                 applicants.with_context(active_test=True).message_post_with_source(
                     self.template_id,
