@@ -88,6 +88,12 @@ const _DialogLinkWidget = Link.extend({
     /**
      * @override
      */
+    _getIsNewWindowFormRow() {
+        return this.$('input[name="is_new_window"]').closest('.form-group');
+    },
+    /**
+     * @override
+     */
     _getLinkOptions: function () {
         const options = [
             'input[name="link_style_color"]',
