@@ -100,6 +100,9 @@ export class ReceiptScreen extends AbstractReceiptScreen {
     get nextScreen() {
         return { name: "ProductScreen" };
     }
+    get ticketScreen() {
+        return { name: "TicketScreen" };
+    }
     whenClosing() {
         this.orderDone();
     }
@@ -130,6 +133,15 @@ export class ReceiptScreen extends AbstractReceiptScreen {
         if (this.env.pos.config.iface_customer_facing_display) {
             this.env.pos.send_current_order_to_customer_facing_display();
         }
+    }
+    resumeOrder() {
+        this.env.pos.removeOrder(this.currentOrder);
+        this.env.pos.selectNextOrder();
+        const { name, props } = this.ticketScreen;
+        this.pos.showScreen(name, props);
+    }
+    isResumeVisible() {
+        return this.env.pos.get_order_list().length > 1;
     }
     async printReceipt() {
         this.buttonPrintReceipt.el.className = "fa fa-fw fa-spin fa-circle-o-notch";

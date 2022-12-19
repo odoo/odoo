@@ -16,7 +16,9 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
         });
     },
     getTable(order) {
-        return `${order.getTable().floor.name} (${order.getTable().name})`;
+        if (order.getTable()) {
+            return `${order.getTable().floor.name} (${order.getTable().name})`;
+        }
     },
     //@override
     _getSearchFields() {

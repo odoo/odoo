@@ -1313,11 +1313,18 @@ td {
 .screen .top-content .button.highlight:hover {
     background: rgb(120,210,165);
 }
-
+.screen .validation-buttons {
+    display:  flex;
+    width:  100%;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 2px;
+}
 .screen .button.next.validation {
     position: sticky;
     bottom: 0;
     height: auto;
+    width: 100%;
     padding: map-get($spacers, 5) 0;
 }
 .screen .button.next:not(.highlight) {
@@ -1726,9 +1733,8 @@ td {
 /* c) The receipt screen */
 
 .pos .receipt-screen .screen-content {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr auto;
+    display: flex;
+    justify-content: space-between;
 }
 
 .pos .receipt-screen .left-content {

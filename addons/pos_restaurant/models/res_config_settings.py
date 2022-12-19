@@ -6,10 +6,7 @@ from odoo import fields, models, api
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    def _get_floors_domain(self):
-        return ['|', ('pos_config_id', 'in', self.pos_config_id.ids), ('pos_config_id', '=', False)]
-
-    pos_floor_ids = fields.One2many(related='pos_config_id.floor_ids', readonly=False, domain=lambda self: self._get_floors_domain())
+    pos_floor_ids = fields.Many2many(related='pos_config_id.floor_ids', readonly=False)
     pos_iface_orderline_notes = fields.Boolean(compute='_compute_pos_module_pos_restaurant', store=True, readonly=False)
     pos_iface_printbill = fields.Boolean(compute='_compute_pos_module_pos_restaurant', store=True, readonly=False)
     pos_iface_splitbill = fields.Boolean(compute='_compute_pos_module_pos_restaurant', store=True, readonly=False)

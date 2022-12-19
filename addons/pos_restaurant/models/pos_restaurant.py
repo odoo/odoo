@@ -12,7 +12,7 @@ class RestaurantFloor(models.Model):
     _order = "sequence, name"
 
     name = fields.Char('Floor Name', required=True)
-    pos_config_id = fields.Many2one('pos.config', string='Point of Sale')
+    pos_config_ids = fields.Many2many('pos.config', string='Point of Sales', domain="[('module_pos_restaurant', '=', True)]")
     background_image = fields.Binary('Background Image')
     background_color = fields.Char('Background Color', help='The background color of the floor in a html-compatible format', default='rgb(210, 210, 210)')
     table_ids = fields.One2many('restaurant.table', 'floor_id', string='Tables')
@@ -21,7 +21,7 @@ class RestaurantFloor(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):
-        confs = self.mapped('pos_config_id').filtered(lambda c: c.is_table_management == True)
+        confs = self.mapped('pos_config_ids').filtered(lambda c: c.is_table_management)
         opened_session = self.env['pos.session'].search([('config_id', 'in', confs.ids), ('state', '!=', 'closed')])
         if opened_session:
             error_msg = _("You cannot remove a floor that is used in a PoS session, close the session(s) first: \n")
@@ -34,12 +34,11 @@ class RestaurantFloor(models.Model):
 
     def write(self, vals):
         for floor in self:
-            if floor.pos_config_id.has_active_session and (vals.get('pos_config_id') or vals.get('active')) :
-                raise UserError(
-                    'Please close and validate the following open PoS Session before modifying this floor.\n'
-                    'Open session: %s' % (' '.join(floor.pos_config_id.mapped('name')),))
-            if vals.get('pos_config_id') and floor.pos_config_id.id and vals.get('pos_config_id') != floor.pos_config_id.id:
-                raise UserError(_('The %s is already used in another Pos Config.', floor.name))
+            for config in floor.pos_config_ids:
+                if config.has_active_session and (vals.get('pos_config_ids') or vals.get('active')):
+                    raise UserError(
+                        'Please close and validate the following open PoS Session before modifying this floor.\n'
+                        'Open session: %s' % (' '.join(config.mapped('name')),))
         return super(RestaurantFloor, self).write(vals)
 
 
@@ -81,7 +80,7 @@ class RestaurantTable(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):
-        confs = self.mapped('floor_id').mapped('pos_config_id').filtered(lambda c: c.is_table_management == True)
+        confs = self.mapped('floor_id').mapped('pos_config_ids').filtered(lambda c: c.is_table_management)
         opened_session = self.env['pos.session'].search([('config_id', 'in', confs.ids), ('state', '!=', 'closed')])
         if opened_session:
             error_msg = _("You cannot remove a table that is used in a PoS session, close the session(s) first.")

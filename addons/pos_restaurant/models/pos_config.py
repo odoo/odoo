@@ -10,7 +10,7 @@ class PosConfig(models.Model):
     iface_splitbill = fields.Boolean(string='Bill Splitting', help='Enables Bill Splitting in the Point of Sale.')
     iface_printbill = fields.Boolean(string='Bill Printing', help='Allows to print the Bill before payment.')
     iface_orderline_notes = fields.Boolean(string='Kitchen Notes', help='Allow custom kitchen notes on Orderlines.', default=True)
-    floor_ids = fields.One2many('restaurant.floor', 'pos_config_id', string='Restaurant Floors', help='The restaurant floors served by this point of sale.')
+    floor_ids = fields.Many2many('restaurant.floor', string='Restaurant Floors', help='The restaurant floors served by this point of sale.')
     printer_ids = fields.Many2many('restaurant.printer', 'pos_config_printer_rel', 'config_id', 'printer_id', string='Order Printers')
     is_table_management = fields.Boolean('Floors & Tables')
     is_order_printer = fields.Boolean('Order Printer')
@@ -26,7 +26,7 @@ class PosConfig(models.Model):
     def get_tables_order_count(self):
         """         """
         self.ensure_one()
-        tables = self.env['restaurant.table'].search([('floor_id.pos_config_id', 'in', self.ids)])
+        tables = self.env['restaurant.table'].search([('floor_id.pos_config_ids', '=', self.id)])
         domain = [('state', '=', 'draft'), ('table_id', 'in', tables.ids)]
 
         order_stats = self.env['pos.order'].read_group(domain, ['table_id'], 'table_id')

@@ -51,7 +51,7 @@ class TestFrontend(odoo.tests.HttpCase):
 
         main_floor = self.env['restaurant.floor'].create({
             'name': 'Main Floor',
-            'pos_config_id': pos_config.id,
+            'pos_config_ids': [(4, pos_config.id)],
         })
 
         table_05 = self.env['restaurant.table'].create({
@@ -79,7 +79,7 @@ class TestFrontend(odoo.tests.HttpCase):
 
         second_floor = self.env['restaurant.floor'].create({
             'name': 'Second Floor',
-            'pos_config_id': pos_config.id,
+            'pos_config_ids': [(4, pos_config.id)],
         })
 
         table_01 = self.env['restaurant.table'].create({

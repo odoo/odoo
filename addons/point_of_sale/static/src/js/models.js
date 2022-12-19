@@ -128,6 +128,7 @@ export class PosGlobalState extends PosModel {
                 toShow: [],
                 nPerPage: 80,
                 totalCount: null,
+                cacheDate: null,
             },
             ui: {
                 selectedSyncedOrderId: null,
@@ -138,6 +139,9 @@ export class PosGlobalState extends PosModel {
                 highlightHeaderNote: false,
             },
         };
+
+        this.ordersToUpdateSet = new Set(); // used to know which orders need to be sent to the back end when syncing
+        this.loadingOrderState = false; // used to prevent orders fetched to be put in the update set during the reactive change
 
         // these dynamic attributes can be watched for change by other models or widgets
         Object.assign(this, {
@@ -382,12 +386,20 @@ export class PosGlobalState extends PosModel {
      * Remove the order passed in params from the list of orders
      * @param order
      */
-    removeOrder(order) {
+    removeOrder(order, removeFromServer = true) {
         this.orders.remove(order);
         this.db.remove_unpaid_order(order);
         for (const line of order.get_orderlines()) {
             if (line.refunded_orderline_id) {
                 delete this.toRefundLines[line.refunded_orderline_id];
+            }
+        }
+        if (this.isOpenOrderShareable() && removeFromServer) {
+            if (this.ordersToUpdateSet.has(order)) {
+                this.ordersToUpdateSet.delete(order);
+            }
+            if (order.server_id && !order.finalized) {
+                this.db.set_order_to_remove_from_server(order);
             }
         }
     }
@@ -407,6 +419,9 @@ export class PosGlobalState extends PosModel {
     }
     _onReactiveOrderUpdated(order) {
         order.save_to_db();
+        if (this.isOpenOrderShareable()) {
+            this.ordersToUpdateSet.add(order);
+        }
     }
     createReactiveOrder(json) {
         const options = { pos: this };
@@ -425,10 +440,43 @@ export class PosGlobalState extends PosModel {
     }
     // creates a new empty order and sets it as the current order
     add_new_order() {
+        if (this.isOpenOrderShareable()) {
+            this.sendDraftToServer();
+        }
         const order = this.createReactiveOrder();
         this.orders.add(order);
         this.selectedOrder = order;
         return order;
+    }
+    selectNextOrder() {
+        if (this.orders.length > 0) {
+            this.selectedOrder = this.orders[0];
+        } else {
+            this.add_new_order();
+        }
+    }
+    async sendDraftToServer() {
+        const ordersUidsToSync = [...this.ordersToUpdateSet].map((order) => order.uid);
+        const ordersToSync = this.db.get_unpaid_orders_to_sync(ordersUidsToSync);
+        const ordersResponse = await this._save_to_server(ordersToSync, { draft: true });
+        const orders = [...this.ordersToUpdateSet].map((order) => order);
+        ordersResponse.forEach((orderResponseData) =>
+                this._updateOrder(orderResponseData, orders)
+        );
+        this.ordersToUpdateSet.clear();
+    }
+    addOrderToUpdateSet() {
+        this.ordersToUpdateSet.add(this.selectedOrder)
+    }
+    // created this hook for modularity
+    _updateOrder(ordersResponseData, orders) {
+        const order = orders.find(
+            (order) => order.name === ordersResponseData.pos_reference
+        );
+        if (order) {
+            order.server_id = ordersResponseData.id;
+            return order;
+        }
     }
     /**
      * Load the locally saved unpaid orders for this PoS Config.
@@ -438,6 +486,7 @@ export class PosGlobalState extends PosModel {
      * Only if tho order has orderlines.
      */
     async load_orders() {
+        this.loadingOrderState = true;
         var jsons = this.db.get_unpaid_orders();
         await this._loadMissingProducts(jsons);
         await this._loadMissingPartners(jsons);
@@ -470,6 +519,7 @@ export class PosGlobalState extends PosModel {
                 this.orders.add(order);
             }
         }
+        this.loadingOrderState = false;
     }
     async _loadMissingProducts(orders) {
         const missingProductIds = new Set([]);
@@ -557,6 +607,188 @@ export class PosGlobalState extends PosModel {
             this.addPartners(partners);
             i += 1;
         } while (partners.length);
+    }
+    setLoadingOrderState(bool) {
+        this.loadingOrderState = bool;
+    }
+    async _removeOrdersFromServer() {
+        const removedOrdersIds = this.db.get_ids_to_remove_from_server();
+        if (removedOrdersIds.length === 0) {
+            return;
+        }
+
+        this.set_synch("connecting", removedOrdersIds.length);
+        try {
+            const removeOrdersResponseData = await this.env.services.orm.silent.call(
+                "pos.order",
+                "remove_from_ui",
+                [removedOrdersIds]
+            );
+            this.set_synch("connected");
+            this._postRemoveFromServer(removedOrdersIds, removeOrdersResponseData);
+        } catch (reason) {
+            const error = reason.message;
+            if (error.code === 200) {
+                // Business Logic Error, not a connection problem
+                //if warning do not need to display traceback!!
+                if (error.data.exception_type == "warning") {
+                    delete error.data.debug;
+                }
+            }
+            // important to throw error here and let the rendering component handle the error
+            console.warn("Failed to remove orders:", removedOrdersIds);
+            throw error;
+        }
+    }
+    _postRemoveFromServer(serverIds, data) {
+        this.db.set_ids_removed_from_server(serverIds);
+    }
+    _replaceOrders(ordersToReplace, newOrdersJsons) {
+        ordersToReplace.forEach((order) => {
+            // We don't remove the validated orders because we still want to see them in the ticket screen.
+            // Orders in 'ReceiptScreen' or 'TipScreen' are validated orders.
+            if (this._shouldRemoveOrder(order)) {
+                this.removeOrder(order, false);
+            }
+        });
+        let removeSelected = true;
+        newOrdersJsons.forEach((json) => {
+            let isSelectedOrder = this._createOrder(json);
+            if (removeSelected && isSelectedOrder) {
+                removeSelected = false;
+            }
+        });
+        if (this._shouldRemoveSelectedOrder(removeSelected)) {
+            this._removeSelectedOrder();
+        }
+    }
+    _shouldRemoveOrder(order) {
+        return (!this.selectedOrder || (this.selectedOrder.uid != order.uid)) && order.server_id && !order.finalized;
+    }
+    _shouldRemoveSelectedOrder(removeSelected) {
+        return removeSelected && this.selectedOrder.server_id && !this.selectedOrder.finalized;
+    }
+    _shouldCreateOrder(json) {
+        return json.uid != this.selectedOrder.uid;
+    }
+    _isSelectedOrder(json) {
+        return json.uid == this.selectedOrder.uid;
+    }
+    _createOrder(json) {
+        if (this._shouldCreateOrder(json)) {
+            const order = this.createReactiveOrder(json);
+            this.orders.add(order);
+        }
+        return this._isSelectedOrder(json);
+    }
+    _removeSelectedOrder() {
+        this.removeOrder(this.selectedOrder, false);
+        const orderList = this.get_order_list();
+        if (orderList.length != 0) {
+            this.set_order(orderList[0]);
+        }
+    }
+    async _syncAllOrdersFromServer() {
+        await this._removeOrdersFromServer();
+        const ordersJson = await this._getOrdersJson();
+        let message = null;
+        message = await this._addPricelists(ordersJson);
+        let messageFp = null;
+        messageFp = await this._addFiscalPositions(ordersJson);
+        if (messageFp) {
+            if (message) {
+                message += "\n" + messageFp;
+            } else {
+                message = messageFp;
+            }
+        }
+        const allOrders = [...this.get_order_list()];
+        this._replaceOrders(allOrders, ordersJson);
+        this.sortOrders();
+        return message;
+    }
+    async _getOrdersJson() {
+        return await this.env.services.orm.call("pos.order", "get_draft_share_order_ids", [], {
+            config_id: this.config.id,
+        });
+    }
+    async _addPricelists(ordersJson) {
+        let pricelistsToGet = [];
+        ordersJson.forEach((order) => {
+            let found = false;
+            for (let pricelist of this.pricelists) {
+                if (pricelist.id === order.pricelist_id) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found && order.pricelist_id) {
+                pricelistsToGet.push(order.pricelist_id);
+            }
+        });
+        let message = null;
+        if (pricelistsToGet.length > 0) {
+            const pricelistsJson = await this._getPricelistJson(pricelistsToGet);
+            message = this._addPosPricelists(pricelistsJson);
+        }
+        return message;
+    }
+    async _getPricelistJson(pricelistsToGet) {
+        return await this.env.services.orm.call("pos.session", "get_pos_ui_product_pricelists_by_ids", [
+            [odoo.pos_session_id],
+            pricelistsToGet,
+        ]);
+    }
+    _addPosPricelists(pricelistsJson) {
+        if (!this.config.use_pricelist) {
+            this.config.use_pricelist = true;
+        }
+        this.pricelists.push(...pricelistsJson);
+        let message = "";
+        const pricelistsNames = pricelistsJson.map((pricelist) => {
+            return pricelist.display_name;
+        })
+        message = _.str.sprintf(_t("%s fiscal position(s) added to the configuration."), pricelistsNames.join(", "));
+        return message;
+    }
+    async _addFiscalPositions(ordersJson) {
+        let fiscalPositionToGet = [];
+        ordersJson.forEach((order) => {
+            let found = false;
+            for (let fp of this.fiscal_positions) {
+                if (fp.id === order.fiscal_position_id) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found && order.fiscal_position_id) {
+                fiscalPositionToGet.push(order.fiscal_position_id);
+            }
+        });
+        let message = null;
+        if (fiscalPositionToGet.length > 0) {
+            const fiscalPositionJson = await this._getFiscalPositionJson(fiscalPositionToGet);
+            message = this._addPosFiscalPosition(fiscalPositionJson);
+        }
+        return message;
+    }
+    async _getFiscalPositionJson(fiscalPositionToGet) {
+        return await this.env.services.orm.call("pos.session", "get_pos_ui_account_fiscal_positions_by_ids", [
+            [odoo.pos_session_id],
+            fiscalPositionToGet,
+        ]);
+    }
+    _addPosFiscalPosition(fiscalPositionJson) {
+        this.fiscal_positions.push(...fiscalPositionJson);
+        let message = "";
+        const fiscalPositionNames = fiscalPositionJson.map((fp) => {
+            return fp.display_name;
+        })
+        message = _.str.sprintf(_t("%s fiscal position(s) added to the configuration."), fiscalPositionNames.join(", "));
+        return message;
+    }
+    sortOrders() {
+        this.orders.sort((a, b) => (a.name > b.name) ? 1 : -1)
     }
     async getProductInfo(product, quantity) {
         const order = this.get_order();
@@ -648,6 +880,9 @@ export class PosGlobalState extends PosModel {
     set_start_order() {
         if (this.orders.length && !this.selectedOrder) {
             this.selectedOrder = this.orders[0];
+            if (this.isOpenOrderShareable()) {
+                this.ordersToUpdateSet.add(this.orders[0]);
+            }
         } else {
             this.add_new_order();
         }
@@ -1401,6 +1636,9 @@ export class PosGlobalState extends PosModel {
         this.db.update_partners(partnerWithUpdatedTotalDue);
         return partnerWithUpdatedTotalDue;
     }
+    isOpenOrderShareable() {
+        return this.config.trusted_config_ids.length > 0;
+    }
 }
 PosGlobalState.prototype.electronic_payment_interfaces = {};
 
@@ -1671,7 +1909,7 @@ export class Orderline extends PosModel {
             } catch {
                 console.error(
                     "ERROR: attempting to recover product ID",
-                    options.json.product_id,
+                    options.json.product_id[0],
                     "not available in the point of sale. Correct the product or clean the browser cache."
                 );
             }
@@ -2676,7 +2914,7 @@ export class Order extends PosModel {
         var orderlines = json.lines;
         for (var i = 0; i < orderlines.length; i++) {
             var orderline = orderlines[i][2];
-            if (this.pos.db.get_product_by_id(orderline.product_id)) {
+            if (orderline.product_id && this.pos.db.get_product_by_id(orderline.product_id)) {
                 this.add_orderline(
                     new Orderline({}, { pos: this.pos, order: this, json: orderline })
                 );

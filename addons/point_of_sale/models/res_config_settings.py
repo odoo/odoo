@@ -105,6 +105,7 @@ class ResConfigSettings(models.TransientModel):
     pos_warehouse_id = fields.Many2one(related='pos_config_id.warehouse_id', readonly=False, string="Warehouse (PoS)")
     point_of_sale_use_ticket_qr_code = fields.Boolean(related='company_id.point_of_sale_use_ticket_qr_code', readonly=False)
     pos_auto_validate_terminal_payment = fields.Boolean(related='pos_config_id.auto_validate_terminal_payment', readonly=False, string="Automatically validates orders paid with a payment terminal.")
+    pos_trusted_config_ids = fields.Many2many(related='pos_config_id.trusted_config_ids', readonly=False)
     point_of_sale_ticket_unique_code = fields.Boolean(related='company_id.point_of_sale_ticket_unique_code', readonly=False)
 
     @api.model_create_multi
@@ -313,3 +314,13 @@ class ResConfigSettings(models.TransientModel):
                 res_config.pos_iface_customer_facing_display_via_proxy = False
             else:
                 res_config.pos_iface_customer_facing_display_via_proxy = res_config.pos_config_id.iface_customer_facing_display_via_proxy
+
+    @api.onchange('pos_trusted_config_ids')
+    def _onchange_trusted_config_ids(self):
+        for config in self:
+            removed_trusted_configs = set(config.pos_config_id.trusted_config_ids.ids) - set(config.pos_trusted_config_ids.ids)
+            for old in config.pos_config_id.trusted_config_ids:
+                if config.pos_config_id.id not in old.trusted_config_ids.ids:
+                    old._add_trusted_config_id(config.pos_config_id)
+                if old.id in removed_trusted_configs:
+                    old._remove_trusted_config_id(config.pos_config_id)

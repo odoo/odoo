@@ -1862,12 +1862,7 @@ class PosSession(models.Model):
         for pricelist in pricelists:
             pricelist['items'] = []
 
-        pricelist_by_id = {pricelist['id']: pricelist for pricelist in pricelists}
-        pricelist_item_domain = [('pricelist_id', 'in', [p['id'] for p in pricelists])]
-        for item in self.env['product.pricelist.item'].search_read(pricelist_item_domain, self._product_pricelist_item_fields()):
-            pricelist_by_id[item['pricelist_id'][0]]['items'].append(item)
-
-        return pricelists
+        return self._prepare_product_pricelists(pricelists)
 
     def _loader_params_product_category(self):
         return {'search_params': {'domain': [], 'fields': ['name', 'parent_id']}}
@@ -2081,6 +2076,43 @@ class PosSession(models.Model):
             return list(total_sold_per_user_per_category.items()), list(total_refund_per_user_per_category.items())
         else:
             return list(total_sold_per_user_per_category[0].items()), list(total_refund_per_user_per_category[0].items())
+
+    def get_pos_ui_product_pricelists_by_ids(self, pricelist_ids):
+        params = self._loader_params_product_pricelist()
+        params['search_params']['domain'] = [('id', 'in', pricelist_ids)]
+        pricelists = self.env['product.pricelist'].search_read(**params['search_params'])
+        for pricelist in pricelists:
+            if not self.config_id.use_pricelist:
+                self.config_id.use_pricelist = True
+            pricelist_id = self.env['product.pricelist'].browse(pricelist['id'])
+            self.config_id.available_pricelist_ids += pricelist_id
+            pricelist['items'] = []
+
+        return self._prepare_product_pricelists(pricelists)
+
+    def _prepare_product_pricelists(self, pricelists):
+        pricelist_by_id = {pricelist['id']: pricelist for pricelist in pricelists}
+        pricelist_item_domain = [('pricelist_id', 'in', [p['id'] for p in pricelists])]
+        for item in self.env['product.pricelist.item'].search_read(pricelist_item_domain, self._product_pricelist_item_fields()):
+            pricelist_by_id[item['pricelist_id'][0]]['items'].append(item)
+
+        return pricelists
+
+    def get_pos_ui_account_fiscal_positions_by_ids(self, fp_ids):
+        params = self._loader_params_account_fiscal_position()
+        params['search_params']['domain'] = [('id', 'in', fp_ids)]
+        fps = self.env['account.fiscal.position'].search_read(**params['search_params'])
+        fiscal_position_tax_ids = sum([fpos['tax_ids'] for fpos in fps], [])
+        fiscal_position_tax = self.env['account.fiscal.position.tax'].search_read([('id', 'in', fiscal_position_tax_ids)])
+        fiscal_position_by_id = {fpt['id']: fpt for fpt in fiscal_position_tax}
+        for fiscal_position in fps:
+            if not self.config_id.tax_regime_selection:
+                self.config_id.tax_regime_selection = True
+            fiscal_position_id = self.env['account.fiscal.position'].browse(fiscal_position['id'])
+            self.config_id.fiscal_position_ids += fiscal_position_id
+            fiscal_position['fiscal_position_taxes_by_id'] = {tax_id: fiscal_position_by_id[tax_id] for tax_id in fiscal_position['tax_ids']}
+
+        return fps
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'

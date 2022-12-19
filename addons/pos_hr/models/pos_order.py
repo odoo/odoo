@@ -28,3 +28,17 @@ class PosOrder(models.Model):
             'employee_id': order.employee_id.id,
         })
         return result
+
+    def _get_fields_for_draft_order(self):
+        fields = super(PosOrder, self)._get_fields_for_draft_order()
+        fields.append('employee_id')
+        return fields
+
+    @api.model
+    def get_draft_share_order_ids(self, config_id):
+        orders = super(PosOrder, self).get_draft_share_order_ids(config_id)
+        for order in orders:
+            if order['employee_id']:
+                order['employee_id'] = order['employee_id'][0]
+
+        return orders

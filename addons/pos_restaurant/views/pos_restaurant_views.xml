@@ -12,7 +12,7 @@
                         <field name="active" invisible="1"/>
                         <group col="4">
                             <field name="name" />
-                            <field name="pos_config_id" />
+                            <field name="pos_config_ids" widget="many2many_tags"/>
                             <field name="background_color" groups="base.group_no_one" />
                         </group>
                         <field name="table_ids">
@@ -34,7 +34,7 @@
                 <tree string="Restaurant Floors">
                     <field name="sequence" widget="handle" />
                     <field name="name" />
-                    <field name="pos_config_id" />
+                    <field name="pos_config_ids" widget="many2many_tags"/>
                 </tree>
             </field>
         </record>
@@ -56,12 +56,12 @@
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
                     <field name="name"/>
-                    <field name="pos_config_id" />
+                    <field name="pos_config_ids" />
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
                                 <div><strong>Floor Name: </strong><t t-esc="record.name.value"/></div>
-                                <div><strong>Point of Sale: </strong><t t-esc="record.pos_config_id.value"/></div>
+                                <div><strong>Point of Sales: </strong><t t-esc="record.pos_config_ids.value"/></div>
                             </div>
                         </t>
                     </templates>

@@ -31,6 +31,7 @@ export class Navbar extends Component {
         this.pos = usePos();
         this.debug = useService("debug");
         this.popup = useService("popup");
+        this.notification = useService("pos_notification");
     }
     get customerFacingDisplayButtonIsShown() {
         return this.env.pos.config.iface_customer_facing_display;
@@ -40,12 +41,32 @@ export class Navbar extends Component {
         this.popup.add(CashMovePopup);
     }
 
-    onTicketButtonClick() {
+    async onTicketButtonClick() {
         if (this.isTicketScreenShown) {
             this.pos.closeScreen();
         } else {
-            this.pos.showScreen("TicketScreen");
+            if (this._shouldLoadOrders()) {
+                try {
+                    this.env.pos.setLoadingOrderState(true);
+                    const message = await this.env.pos._syncAllOrdersFromServer();
+                    if (message) {
+                        this.notification.add(
+                            _.str.sprintf(message),
+                            5000
+                        );
+                    }
+                } finally {
+                    this.env.pos.setLoadingOrderState(false);
+                    this.pos.showScreen("TicketScreen");
+                }
+            } else {
+                this.pos.showScreen("TicketScreen");
+            }
         }
+    }
+
+    _shouldLoadOrders() {
+        return this.env.pos.config.trusted_config_ids.length > 0;
     }
 
     get isTicketScreenShown() {

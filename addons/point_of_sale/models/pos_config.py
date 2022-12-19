@@ -5,7 +5,7 @@ from datetime import datetime
 from uuid import uuid4
 import pytz
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
 
 
@@ -175,6 +175,9 @@ class PosConfig(models.Model):
     limited_partners_amount = fields.Integer(default=100)
     partner_load_background = fields.Boolean(default=True)
     auto_validate_terminal_payment = fields.Boolean(default=True, help="Automatically validates orders paid with a payment terminal.")
+    trusted_config_ids = fields.Many2many("pos.config", relation="pos_config_trust_relation", column1="is_trusting",
+                                          column2="is_trusted", string="Trusted Point of Sale Configurations",
+                                          domain="[('id', '!=', pos_config_id), ('module_pos_restaurant', '=', False)]")
 
     @api.depends('payment_method_ids')
     def _compute_cash_control(self):
@@ -364,6 +367,13 @@ class PosConfig(models.Model):
             if len(cash_method.journal_id.pos_payment_method_ids) > 1:
                 raise ValidationError(_("You cannot use the same journal on multiples cash payment methods."))
 
+    @api.constrains('trusted_config_ids')
+    def _check_trusted_config_ids_currency(self):
+        for config in self:
+            for trusted_config in config.trusted_config_ids:
+                if trusted_config.currency_id != config.currency_id:
+                    raise ValidationError(_("You cannot share open orders with configuration that does not use the same currency."))
+
     def name_get(self):
         result = []
         for config in self:
@@ -411,6 +421,12 @@ class PosConfig(models.Model):
             forbidden_fields = []
             for key in self._get_forbidden_change_fields():
                 if key in vals.keys():
+                    if key == 'use_pricelist' and vals[key]:
+                        continue
+                    if key == 'available_pricelist_ids':
+                        removed_pricelist = set(self.available_pricelist_ids.ids) - set(vals[key][0][2])
+                        if len(removed_pricelist) == 0:
+                            continue
                     field_name = self._fields[key].get_description(self.env)["string"]
                     forbidden_fields.append(field_name)
             if len(forbidden_fields) > 0:
@@ -703,3 +719,9 @@ class PosConfig(models.Model):
             'res_id': self.id,
             'context': {'pos_config_open_modal': True},
         }
+
+    def _add_trusted_config_id(self, config_id):
+        self.trusted_config_ids += config_id
+
+    def _remove_trusted_config_id(self, config_id):
+        self.trusted_config_ids -= config_id

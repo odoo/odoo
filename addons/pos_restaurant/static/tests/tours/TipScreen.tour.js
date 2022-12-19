@@ -55,7 +55,7 @@ ProductScreen.check.totalAmountIs("8.0");
 Chrome.do.backToFloor();
 FloorScreen.check.orderCountSyncedInTableIs("5", "1");
 Chrome.do.clickTicketButton();
-TicketScreen.check.nthRowContains("3", "Tipping");
+TicketScreen.check.nthRowContains("4", "Tipping");
 
 // Tip 20% on order1
 TicketScreen.do.selectOrder("-0001");
