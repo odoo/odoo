@@ -54,12 +54,6 @@ class ProductTemplate(models.Model):
             fiscal_pos = self.env['account.fiscal.position']
         return fiscal_pos.map_accounts(accounts)
 
-    @api.constrains('uom_id')
-    def _check_uom_not_in_invoice(self):
-        for template in self:
-            invoices = self.env['account.move.line'].sudo().search([('product_id.product_tmpl_id.id', '=', template.id)], limit=1)
-            if invoices:
-                raise ValidationError(_('The product "%s" is used in invoices. You cannot change its Unit of Measure.', template.display_name))
 
 class ProductProduct(models.Model):
     _inherit = "product.product"
