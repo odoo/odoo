@@ -130,6 +130,14 @@ class Check {
             },
         ];
     }
+    contains( string) {
+        return [
+            {
+                trigger: `.ticket-screen .orders:contains("${string}")`,
+                run: () => {},
+            },
+        ];
+    }
     noNewTicketButton() {
         return [
             {
