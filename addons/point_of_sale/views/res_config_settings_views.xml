@@ -79,6 +79,17 @@
                             <setting string="Margins &amp; Costs" help="Show margins &amp; costs on product information">
                                 <field name="pos_is_margins_costs_accessible_to_every_user"/>
                             </setting>
+                            <setting string="Share Open Orders" help="Allow to access each other's active orders" id="is_order_shared" attrs="{'invisible': [('pos_module_pos_restaurant', '=', True)]}">
+                                <div class="content-group">
+                                    <div class="row mt16">
+                                        <label string="Trusted POS" for="pos_trusted_config_ids" class="col-lg-3 o_light_label" />
+                                        <field name="pos_trusted_config_ids" widget="many2many_tags" options="{'no_create':'true'}" placeholder="Select PoS to start sharing orders"/>
+                                    </div>
+                                    <div>
+                                        <button name="%(point_of_sale.action_pos_config_tree)d" icon="fa-arrow-right" type="action" string="Point of Sales" class="btn-link"/>
+                                    </div>
+                                </div>
+                            </setting>
                         </block>
 
                         <block title="Accounting" id="pos_accounting_section">

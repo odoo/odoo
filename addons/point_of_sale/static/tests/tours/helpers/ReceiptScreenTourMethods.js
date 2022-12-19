@@ -7,7 +7,7 @@ class Do {
         return [
             {
                 content: "go to next screen",
-                trigger: ".receipt-screen .button.next.highlight",
+                trigger: ".receipt-screen .button.next.highlight[name='done']",
             },
         ];
     }

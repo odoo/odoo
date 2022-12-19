@@ -210,7 +210,7 @@
         <record id="floor_main" model="restaurant.floor">
             <field name="name">Main Floor</field>
             <field name="background_color">rgb(136,137,242)</field>
-            <field name="pos_config_id" ref="pos_restaurant.pos_config_restaurant"/>
+            <field name="pos_config_ids" eval="[(6, 0, [ref('pos_restaurant.pos_config_restaurant')])]"/>
         </record>
 
         <record id="table_01" model="restaurant.table">
@@ -350,7 +350,7 @@
         <record id="floor_patio" model="restaurant.floor">
             <field name="name">Patio</field>
             <field name="background_color">rgb(130, 233, 171)</field>
-            <field name="pos_config_id" ref="pos_restaurant.pos_config_restaurant"/>
+            <field name="pos_config_ids" eval="[(6, 0, [ref('pos_restaurant.pos_config_restaurant')])]"/>
         </record>
 
         <!-- Patio: Left table row -->

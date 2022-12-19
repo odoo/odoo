@@ -68,8 +68,8 @@ ProductScreen.check.isShown();
 // Check that the Paid filter will show the 2 synced orders.
 Chrome.do.clickTicketButton();
 TicketScreen.do.selectFilter("Paid");
-TicketScreen.check.nthRowContains(2, "Brandon Freeman");
-TicketScreen.check.nthRowContains(3, "-0003");
+TicketScreen.check.nthRowContains(3, "Brandon Freeman");
+TicketScreen.check.nthRowContains(2, "-0003");
 // Invoice order
 TicketScreen.do.selectOrder("-0003");
 TicketScreen.check.orderWidgetIsNotEmpty();

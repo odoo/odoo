@@ -27,6 +27,13 @@ patch(ReceiptScreen.prototype, "pos_restaurant.ReceiptScreen", {
             this._super(...arguments);
         }
     },
+    isResumeVisible() {
+        if (this.env.pos.config.iface_floorplan &&
+            this.env.pos.table) {
+                return this.env.pos.getTableOrders(this.env.pos.table.id).length > 1;
+            }
+        return this._super(...arguments);
+    },
     //@override
     get nextScreen() {
         if (this.env.pos.config.iface_floorplan) {

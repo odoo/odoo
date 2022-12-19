@@ -4,7 +4,7 @@ import { Order } from "@point_of_sale/js/models";
 import { IndependentToOrderScreen } from "@point_of_sale/js/Misc/IndependentToOrderScreen";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { parse } from "web.field_utils";
+import { parse, format } from "web.field_utils";
 
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
@@ -143,6 +143,9 @@ export class TicketScreen extends IndependentToOrderScreen {
                 this._selectNextOrder(order);
             }
             this.env.pos.removeOrder(order);
+        }
+        if (this.env.pos.isOpenOrderShareable()) {
+            this.env.pos._removeOrdersFromServer();
         }
     }
     async onNextPage() {
@@ -543,6 +546,9 @@ export class TicketScreen extends IndependentToOrderScreen {
         };
     }
     _setOrder(order) {
+        if (this.env.pos.isOpenOrderShareable()) {
+            this.env.pos.sendDraftToServer();
+        }
         this.env.pos.set_order(order);
         this.close();
     }
@@ -650,16 +656,18 @@ export class TicketScreen extends IndependentToOrderScreen {
         const limit = this._state.syncedOrders.nPerPage;
         const offset =
             (this._state.syncedOrders.currentPage - 1) * this._state.syncedOrders.nPerPage;
-        const { ids, totalCount } = await this.orm.call("pos.order", "search_paid_order_ids", [], {
+        const { ordersInfo, totalCount } = await this.orm.call("pos.order", "search_paid_order_ids", [], {
             config_id: this.env.pos.config.id,
             domain,
             limit,
             offset,
         });
-        const idsNotInCache = ids.filter((id) => !(id in this._state.syncedOrders.cache));
-        if (idsNotInCache.length > 0) {
+        const idsNotInCache = ordersInfo.filter((orderInfo) => !(orderInfo[0] in this._state.syncedOrders.cache));
+        const idsNotUpToDate = ordersInfo.filter((orderInfo) => format.datetime(moment(orderInfo[1]), {}, {}) > format.datetime(moment(this._state.syncedOrders.cacheDate), {}, { timezone: false }));
+        const idsToLoad = idsNotInCache.concat(idsNotUpToDate).map((info) => info[0]);
+        if (idsToLoad.length > 0) {
             const fetchedOrders = await this.orm.call("pos.order", "export_for_ui", [
-                idsNotInCache,
+                idsToLoad,
             ]);
             // Check for missing products and partners and load them in the PoS
             await this.env.pos._loadMissingProducts(fetchedOrders);
@@ -672,7 +680,11 @@ export class TicketScreen extends IndependentToOrderScreen {
                     { pos: this.env.pos, json: order }
                 );
             });
+            //Update the datetime indicator of the cache refresh
+            this._state.syncedOrders.cacheDate = new Date();
         }
+
+        const ids = ordersInfo.map((info) => info[0]);
         this._state.syncedOrders.totalCount = totalCount;
         this._state.syncedOrders.toShow = ids.map((id) => this._state.syncedOrders.cache[id]);
     }

@@ -19,9 +19,8 @@ class PosSession(models.Model):
     def _loader_params_restaurant_floor(self):
         return {
             'search_params': {
-                'domain': [('pos_config_id', '=', self.config_id.id)],
+                'domain': [('pos_config_ids', '=', self.config_id.id)],
                 'fields': ['name', 'background_color', 'table_ids', 'sequence'],
-                'order': 'sequence',
             },
         }
 
