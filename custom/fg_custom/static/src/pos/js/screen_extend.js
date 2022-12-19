@@ -12,7 +12,10 @@ odoo.define('fg_custom.order_screen', function(require) {
                 var order = this.env.pos.get_order();
                 var old_name = order.name
                 const data = await this._getSiTransSequence(old_name);
-                this._receiptEnv.receipt.pos_si_trans_reference = data;
+                this._receiptEnv.receipt.pos_trans_reference = data.pos_trans_reference;
+                this._receiptEnv.receipt.pos_si_trans_reference = data.pos_si_trans_reference;
+                this._receiptEnv.receipt.pos_refund_si_reference = data.pos_refund_si_reference;
+                this._receiptEnv.receipt.pos_refunded_id = data.pos_refunded_id;
             }
 
             async _getSiTransSequence(name) {

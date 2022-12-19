@@ -33,6 +33,10 @@ odoo.define('fg_custom.FgPosReceipt', function (require) {
                 x_receipt_printed: this.x_receipt_printed,
                 x_receipt_printed_date: this.x_receipt_printed_date,
                 website_order_id: this.website_order_id,
+                pos_si_trans_reference: this.pos_si_trans_reference,
+                pos_trans_reference: this.pos_trans_reference,
+                pos_refund_si_reference: this.pos_refund_si_reference,
+                pos_refunded_id: this.pos_refunded_id,
             });
             return json;
         },
@@ -44,6 +48,11 @@ odoo.define('fg_custom.FgPosReceipt', function (require) {
              this.x_receipt_printed = json.x_receipt_printed;
              this.x_receipt_printed_date = json.x_receipt_printed_date;
              this.website_order_id = json.website_order_id;
+             this.pos_si_trans_reference = json.pos_si_trans_reference;
+             this.pos_trans_reference = json.pos_trans_reference;
+             this.pos_refund_si_reference = json.pos_refund_si_reference;
+             this.pos_refunded_id = json.pos_refunded_id;
+
         },
         export_for_printing: function(){
             var receipt = super_ordermodel.export_for_printing.apply(this, arguments);
@@ -53,6 +62,11 @@ odoo.define('fg_custom.FgPosReceipt', function (require) {
             receipt.x_receipt_printed= this.x_receipt_printed;
             receipt.x_receipt_printed_date= this.x_receipt_printed_date;
             receipt.website_order_id= this.website_order_id;
+            receipt.pos_si_trans_reference= this.pos_si_trans_reference;
+            receipt.pos_trans_reference= this.pos_trans_reference;
+            receipt.pos_refund_si_reference= this.pos_refund_si_reference;
+            receipt.pos_refunded_id= this.pos_refunded_id;
+
             var val = {};
             _.each(receipt.orderlines, function(line){
                 if(line.program_id && line.is_program_reward){

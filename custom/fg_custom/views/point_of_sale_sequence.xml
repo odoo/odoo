@@ -2,7 +2,7 @@
 <odoo>
     <data noupdate="1">
         <record id="seq_pos_si_trans" model="ir.sequence">
-            <field name="name">Si/Trans Receipt Number</field>
+            <field name="name">SI Receipt Number</field>
             <field name="code">pos.order.si.tra</field>
             <field name="padding">8</field>
             <field name="number_increment">1</field>
@@ -11,6 +11,27 @@
         </record>
     </data>
 
+    <data noupdate="1">
+        <record id="seq_pos_trans" model="ir.sequence">
+            <field name="name">Trans Receipt Number for Refund</field>
+            <field name="code">pos.order.si.tra</field>
+            <field name="padding">8</field>
+            <field name="number_increment">1</field>
+            <field name="number_next_actual">1</field>
+            <field name="company_id" eval="False" />
+        </record>
+    </data>
+
+    <data noupdate="1">
+        <record id="seq_pos_refund_si" model="ir.sequence">
+            <field name="name">Trans Receipt Number for Refund</field>
+            <field name="code">pos.order.si.tra</field>
+            <field name="padding">8</field>
+            <field name="number_increment">1</field>
+            <field name="number_next_actual">1</field>
+            <field name="company_id" eval="False" />
+        </record>
+    </data>
 
 <!--    change page title-->
     <template id="web_layout_title_pogi" name="change title" inherit_id="web.layout">
