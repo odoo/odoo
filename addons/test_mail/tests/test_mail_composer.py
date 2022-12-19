@@ -128,7 +128,7 @@ class TestComposerForm(TestMailComposer):
             self._get_web_context(self.test_record, add_web=True)
         ))
         self.assertTrue(composer_form.auto_delete, 'MailComposer: comment mode should remove notification emails by default')
-        self.assertTrue(composer_form.auto_delete_keep_log)
+        self.assertFalse(composer_form.auto_delete_keep_log, 'MailComposer: keep_log makes no sense in comment mode, only auto_delete')
         self.assertEqual(composer_form.author_id, self.env.user.partner_id)
         self.assertFalse(composer_form.body)
         self.assertFalse(composer_form.composition_batch)
@@ -206,7 +206,7 @@ class TestComposerForm(TestMailComposer):
             self._get_web_context(self.test_record, add_web=True, default_template_id=self.template.id)
         ))
         self.assertTrue(composer_form.auto_delete, 'Should take template value')
-        self.assertTrue(composer_form.auto_delete_keep_log)
+        self.assertFalse(composer_form.auto_delete_keep_log, 'MailComposer: keep_log makes no sense in comment mode, only auto_delete')
         self.assertEqual(composer_form.author_id, self.env.user.partner_id)
         self.assertEqual(composer_form.body, f'<p>TemplateBody {self.test_record.name}</p>')
         self.assertFalse(composer_form.composition_batch)
@@ -236,7 +236,7 @@ class TestComposerForm(TestMailComposer):
                 default_template_id=self.template.id),
         ))
         self.assertTrue(composer_form.auto_delete, 'Should take composer value')
-        self.assertTrue(composer_form.auto_delete_keep_log)
+        self.assertFalse(composer_form.auto_delete_keep_log, 'MailComposer: keep_log makes no sense in comment mode, only auto_delete')
         self.assertEqual(composer_form.author_id, self.env.user.partner_id)
         self.assertEqual(composer_form.body, self.template.body_html,
                          'MailComposer: comment in batch mode should have template raw body if template')
@@ -267,7 +267,7 @@ class TestComposerForm(TestMailComposer):
             default_template_id=self.template.id,
         ))
         self.assertTrue(composer_form.auto_delete, 'Should take composer value')
-        self.assertTrue(composer_form.auto_delete_keep_log)
+        self.assertFalse(composer_form.auto_delete_keep_log, 'MailComposer: keep_log makes no sense in comment mode, only auto_delete')
         self.assertEqual(composer_form.author_id, self.env.user.partner_id)
         self.assertEqual(composer_form.body, self.template.body_html,
                          'MailComposer: comment in batch mode should have template raw body if template')
@@ -299,7 +299,7 @@ class TestComposerForm(TestMailComposer):
             default_template_id=self.template.id,
         ))
         self.assertTrue(composer_form.auto_delete, 'Should take composer value')
-        self.assertTrue(composer_form.auto_delete_keep_log)
+        self.assertFalse(composer_form.auto_delete_keep_log, 'MailComposer: keep_log makes no sense in comment mode, only auto_delete')
         self.assertEqual(composer_form.author_id, self.env.user.partner_id)
         self.assertEqual(composer_form.body, '<p>TemplateBody </p>')
         self.assertFalse(composer_form.composition_batch)
@@ -327,7 +327,7 @@ class TestComposerForm(TestMailComposer):
             self._get_web_context(self.test_records, add_web=True)
         ))
         self.assertFalse(composer_form.auto_delete)
-        self.assertTrue(composer_form.auto_delete_keep_log)
+        self.assertFalse(composer_form.auto_delete_keep_log, 'MailComposer: if emails are kept, logs are automatically kept')
         self.assertEqual(composer_form.author_id, self.env.user.partner_id)
         self.assertFalse(composer_form.body)
         self.assertTrue(composer_form.composition_batch)
@@ -659,9 +659,10 @@ class TestComposerInternals(TestMailComposer):
                 # default creation values
                 if composition_mode == 'comment':
                     self.assertTrue(composer.auto_delete, 'By default, remove notification emails')
+                    self.assertFalse(composer.auto_delete_keep_log, 'Not used in comment mode')
                 else:
                     self.assertFalse(composer.auto_delete, 'By default, keep mailing emails')
-                self.assertTrue(composer.auto_delete_keep_log)
+                    self.assertFalse(composer.auto_delete_keep_log, 'Emails are not unlinked, logs are already kept')
                 self.assertTrue(composer.email_add_signature)
                 self.assertEqual(composer.email_layout_xmlid, 'mail.test_layout')
                 self.assertEqual(composer.message_type, 'comment')
@@ -675,7 +676,7 @@ class TestComposerInternals(TestMailComposer):
                 # values come from template
                 if composition_mode == 'comment':
                     self.assertTrue(composer.auto_delete)
-                    self.assertTrue(composer.auto_delete_keep_log)
+                    self.assertFalse(composer.auto_delete_keep_log, 'Not used in comment mode')
                     self.assertTrue(composer.email_add_signature, 'TODO: should be False as template negates this config')
                     self.assertEqual(composer.email_layout_xmlid, 'mail.test_layout')
                     self.assertEqual(composer.message_type, 'comment')
@@ -704,14 +705,12 @@ class TestComposerInternals(TestMailComposer):
                 composer._onchange_template_id_wrapper()
 
                 if composition_mode == 'comment':
-                    # self.assertFalse(composer.auto_delete, 'TODO: should be updated')
-                    self.assertTrue(composer.auto_delete)
+                    self.assertFalse(composer.auto_delete)
                     self.assertEqual(composer.message_type, 'notification')
                     self.assertEqual(composer.subtype_id, self.env.ref('mail.mt_note'))
                     self.assertTrue(composer.subtype_is_log)
                 else:
-                    # self.assertFalse(composer.auto_delete, 'TODO: should be updated')
-                    self.assertTrue(composer.auto_delete)
+                    self.assertFalse(composer.auto_delete)
                     self.assertEqual(composer.message_type, 'notification')
                     self.assertEqual(composer.subtype_id, self.env.ref('mail.mt_note'))
                     self.assertTrue(composer.subtype_is_log)
@@ -1238,7 +1237,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
             'partner_ids': [(4, self.partner_1.id), (4, self.partner_2.id)]
         })
         self.assertTrue(composer.auto_delete, 'Comment mode removes notification emails by default')
-        self.assertTrue(composer.auto_delete_keep_log)
+        self.assertFalse(composer.auto_delete_keep_log, 'Not used in comment mode')
         with self.mock_mail_gateway(mail_unlink_sent=True):
             composer._action_send_mail()
 
@@ -1260,7 +1259,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
             'partner_ids': [(4, self.partner_1.id), (4, self.partner_2.id)]
         })
         self.assertFalse(composer.auto_delete)
-        self.assertTrue(composer.auto_delete_keep_log)
+        self.assertFalse(composer.auto_delete_keep_log, 'Not used in comment mode')
         with self.mock_mail_gateway(mail_unlink_sent=True):
             composer._action_send_mail()
 
@@ -1684,8 +1683,7 @@ class TestComposerResultsMass(TestMailComposer):
 
         self.assertEqual(len(self._mails), 2, 'Should have sent 1 email per record')
         self.assertEqual(len(self._new_mails), 2, 'Should have created 1 mail.mail per record')
-        # self.assertEqual(self._new_mails.exists(), self._new_mails, 'Should not have deleted mail.mail records')
-        self.assertFalse(self._new_mails.exists(), 'TODO: Template is forced over composer value, which is not correct')
+        self.assertEqual(self._new_mails.exists(), self._new_mails, 'Should not have deleted mail.mail records')
         self.assertEqual(len(self._new_msgs), 2, 'Should have created 1 mail.mail per record')
         self.assertEqual(self._new_msgs.exists(), self._new_msgs, 'Should not have deleted mail.message records')
 
