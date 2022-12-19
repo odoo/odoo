@@ -112,6 +112,12 @@ const LinkTools = Link.extend({
     /**
      * @override
      */
+    _getIsNewWindowFormRow() {
+        return this.$('we-checkbox[name="is_new_window"]').closest('we-row');
+    },
+    /**
+     * @override
+     */
     _getLinkOptions: function () {
         const options = [
             'we-selection-items[name="link_style_color"] > we-button',
