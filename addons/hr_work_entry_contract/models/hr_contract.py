@@ -2,14 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import itertools
-import pytz
-
 from collections import defaultdict
 from datetime import datetime, date
+import pytz
+
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
-from odoo.addons.resource.models.resource import datetime_to_string, string_to_datetime, Intervals
+from odoo.addons.resource.models.utils import string_to_datetime, Intervals
 from odoo.osv import expression
 from odoo.exceptions import UserError
 
