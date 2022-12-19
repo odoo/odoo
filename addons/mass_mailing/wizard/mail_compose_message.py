@@ -53,9 +53,6 @@ class MailComposeMessage(models.TransientModel):
                     mail_values['body_html'] = body
 
             mail_values.update({
-                'auto_delete': not self.mass_mailing_id.keep_archives,
-                # email-mode: keep original message for routing
-                'is_notification': self.mass_mailing_id.reply_to_mode == 'update',
                 'mailing_id': self.mass_mailing_id.id,
                 'mailing_trace_ids': [(0, 0, trace_values_all[res_id])] if res_id in trace_values_all else False,
             })
