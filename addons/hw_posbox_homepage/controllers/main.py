@@ -97,7 +97,7 @@ class IoTboxHomepage(Home):
             'system': platform.system(),
             }
 
-    @http.route('/', type='http', auth='none')
+    @http.route()
     def index(self):
         wifi = Path.home() / 'wifi_network.txt'
         remote_server = Path.home() / 'odoo-remote-server.conf'

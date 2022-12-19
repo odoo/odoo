@@ -27,8 +27,7 @@ class WebsiteEventTrackQuizCommunityController(EventCommunityController):
         values = self._get_community_leaderboard_render_values(event, None, None)
         return request.render('website_event_track_quiz.event_leaderboard', values)
 
-    @http.route('/event/<model("event.event"):event>/community',
-                type='http', auth="public", website=True, sitemap=False)
+    @http.route()
     def community(self, event, **kwargs):
         values = self._get_community_leaderboard_render_values(event, None, None)
         return request.render('website_event_track_quiz.event_leaderboard', values)

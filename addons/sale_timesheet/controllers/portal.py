@@ -133,6 +133,6 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
                 })
         return values
 
-    @http.route(['/my/timesheets', '/my/timesheets/page/<int:page>'], type='http', auth="user", website=True)
-    def portal_my_timesheets(self, page=1, sortby=None, filterby=None, search=None, search_in='all', groupby='sol', **kw):
-        return super().portal_my_timesheets(page, sortby, filterby, search, search_in, groupby, **kw)
+    @http.route()
+    def portal_my_timesheets(self, *args, groupby='sol', **kw):
+        return super().portal_my_timesheets(*args, groupby=groupby, **kw)
