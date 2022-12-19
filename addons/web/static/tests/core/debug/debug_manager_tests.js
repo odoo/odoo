@@ -367,18 +367,27 @@ QUnit.module("DebugMenu", (hooks) => {
         serverData.views["pony,18,pivot"] = "<pivot></pivot>";
         serverData.models["ir.ui.view"] = {
             fields: {},
-            records: [{ id: 18 }],
+            records: [{ id: 18, name: "Edit view" }],
         };
         serverData.views["ir.ui.view,false,form"] = `<form><field name="id"/></form>`;
+        serverData.views["ir.ui.view,false,search"] = `<search></search>`;
 
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 1234);
         await click(target.querySelector(".o_debug_manager button"));
         await click(target.querySelector(".o_debug_manager .dropdown-item"));
-        assert.containsOnce(target, ".modal .o_form_view");
+        assert.containsN(target, ".breadcrumb-item", 2);
         assert.strictEqual(
-            target.querySelector(".modal .o_form_view .o_field_widget[name=id] input").value,
-            "18"
+            target.querySelector(".breadcrumb-item.active").textContent,
+            "Edit view"
+        );
+        assert.strictEqual(target.querySelector(".o_field_widget[name=id] input").value, "18");
+
+        await click(target, ".breadcrumb .o_back_button");
+        assert.containsOnce(target, ".breadcrumb-item");
+        assert.strictEqual(
+            target.querySelector(".breadcrumb-item.active").textContent,
+            "Reporting Ponies"
         );
     });
 
@@ -403,20 +412,22 @@ QUnit.module("DebugMenu", (hooks) => {
         serverData.actions[1].search_view_id = [293, "some_search_view"];
         serverData.models["ir.ui.view"] = {
             fields: {},
-            records: [{ id: 293 }],
+            records: [{ id: 293, name: "Edit view" }],
         };
         serverData.views["ir.ui.view,false,form"] = `<form><field name="id"/></form>`;
+        serverData.views["ir.ui.view,false,search"] = `<search></search>`;
 
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 1);
         await click(target.querySelector(".o_debug_manager button"));
         await click(target.querySelector(".o_debug_manager .dropdown-item"));
         await legacyExtraNextTick();
-        assert.containsOnce(target, ".modal .o_form_view");
+        assert.containsN(target, ".breadcrumb-item", 2);
         assert.strictEqual(
-            target.querySelector(".modal .o_form_view .o_field_widget[name=id] input").value,
-            "293"
+            target.querySelector(".breadcrumb-item.active").textContent,
+            "Edit view"
         );
+        assert.strictEqual(target.querySelector(".o_field_widget[name=id] input").value, "293");
     });
 
     QUnit.test("edit search view on action without search_view_id", async (assert) => {
@@ -461,10 +472,11 @@ QUnit.module("DebugMenu", (hooks) => {
         };
         serverData.models["ir.ui.view"] = {
             fields: {},
-            records: [{ id: 293 }],
+            records: [{ id: 293, name: "Edit view" }],
         };
         serverData.views = {};
         serverData.views["ir.ui.view,false,form"] = `<form><field name="id"/></form>`;
+        serverData.views["ir.ui.view,false,search"] = `<search></search>`;
         serverData.views["partner,false,toy"] = `<toy></toy>`;
         serverData.views["partner,293,search"] = `<search></search>`;
 
@@ -475,11 +487,12 @@ QUnit.module("DebugMenu", (hooks) => {
         await click(target.querySelector(".o_debug_manager button"));
         await click(target.querySelector(".o_debug_manager .dropdown-item"));
         await legacyExtraNextTick();
-        assert.containsOnce(target, ".modal .o_form_view");
+        assert.containsN(target, ".breadcrumb-item", 2);
         assert.strictEqual(
-            target.querySelector(".modal .o_form_view .o_field_widget[name=id] input").value,
-            "293"
+            target.querySelector(".breadcrumb-item.active").textContent,
+            "Edit view"
         );
+        assert.strictEqual(target.querySelector(".o_field_widget[name=id] input").value, "293");
     });
 
     QUnit.test(
