@@ -4,12 +4,21 @@
     const stopPromises = [];
     const schedulers = new Set();
 
+    function isRunning(scheduler) {
+        for (const fiber of scheduler.tasks) {
+            if (fiber.node.status !== 2) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     function hookIntoScheduler(scheduler) {
         const { flush: originalFlush } = scheduler;
         scheduler.flush = function flush() {
             originalFlush.call(this, ...arguments);
             window.requestAnimationFrame(() => {
-                if ([...schedulers].every(({ tasks }) => tasks.size === 0)) {
+                if ([...schedulers].every((scheduler) => !isRunning(scheduler))) {
                     while (stopPromises.length) {
                         stopPromises.pop().resolve();
                     }
@@ -47,10 +56,11 @@
         const stopError = new Error("Timeout: the render didn't stop.");
         // Set up the timeout to reject if no render happens.
         let timeoutNoRender;
+
         const timeoutProm = new Promise((resolve, reject) => {
             timeoutNoRender = setTimeout(() => {
                 let error = startError;
-                const runningSchedulers = [...schedulers].filter(({ tasks }) => tasks.size > 0);
+                const runningSchedulers = [...schedulers].filter(isRunning);
                 if (runningSchedulers.length) {
                     error = stopError;
                 }
@@ -82,7 +92,7 @@
         await new Promise(function (resolve) {
             setTimeout(() => window.requestAnimationFrame(() => resolve()));
         });
-        if ([...schedulers].some(({ tasks }) => tasks.size > 0)) {
+        if ([...schedulers].some(isRunning)) {
             await afterNextRender(() => {}, timeoutDelay);
         }
     };
