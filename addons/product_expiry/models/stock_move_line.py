@@ -54,8 +54,8 @@ class StockMoveLine(models.Model):
         if self.expiration_date:
             res.update({
                 'expiration_date': self.expiration_date,
-                'use_date': self.product_id.use_time and self.expiration_date - datetime.timedelta(days=(self.product_id.expiration_time - self.product_id.use_time)),
-                'removal_date': self.product_id.removal_time and self.expiration_date - datetime.timedelta(days=(self.product_id.expiration_time - self.product_id.removal_time)),
-                'alert_date': self.product_id.alert_time and self.expiration_date - datetime.timedelta(days=(self.product_id.expiration_time - self.product_id.alert_time))
+                'use_date': self.expiration_date - datetime.timedelta(days=self.product_id.use_time),
+                'removal_date': self.expiration_date - datetime.timedelta(days=self.product_id.removal_time),
+                'alert_date': self.expiration_date - datetime.timedelta(days=self.product_id.alert_time),
             })
         return res
