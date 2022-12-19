@@ -308,7 +308,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
 
 
     # Do not use semantic controller due to sudo()
-    @http.route(['/partners/<partner_id>'], type='http', auth="public", website=True)
+    @http.route()
     def partners_detail(self, partner_id, **post):
         _, partner_id = unslug(partner_id)
         current_grade, current_country = None, None

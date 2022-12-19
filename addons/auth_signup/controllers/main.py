@@ -162,7 +162,7 @@ class AuthSignupHome(Home):
             raise SignupError(_('Authentication Failed.'))
 
 class AuthBaseSetup(BaseSetup):
-    @http.route('/base_setup/data', type='json', auth='user')
+    @http.route()
     def base_setup_data(self, **kwargs):
         res = super().base_setup_data(**kwargs)
         res.update({'resend_invitation': True})

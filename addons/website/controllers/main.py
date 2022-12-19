@@ -74,7 +74,7 @@ class QueryURL(object):
 
 class Website(Home):
 
-    @http.route('/', type='http', auth="public", website=True, sitemap=True)
+    @http.route('/', auth="public", website=True, sitemap=True)
     def index(self, **kw):
         """ The goal of this controller is to make sure we don't serve a 404 as
         the website homepage. As this is the website entry point, serving a 404
