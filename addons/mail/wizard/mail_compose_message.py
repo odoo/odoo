@@ -101,9 +101,6 @@ class MailComposer(models.TransientModel):
         if 'create_uid' in fields_list and 'create_uid' not in result:
             result['create_uid'] = self.env.uid
 
-        # comment mode by default removes emails
-        if 'auto_delete' in fields_list and 'auto_delete' not in result and result.get('composition_mode') == 'comment':
-            result['auto_delete'] = True
         # batch post mode by default use queues for notifications
         if 'force_send' in fields_list and 'force_send' not in result:
             result['force_send'] = (
@@ -186,10 +183,13 @@ class MailComposer(models.TransientModel):
         'wizard_id', 'partner_id', 'Additional Contacts',
         domain=_partner_ids_domain)
     # sending
-    auto_delete = fields.Boolean('Delete Emails',
+    auto_delete = fields.Boolean(
+        'Delete Emails',
+        compute="_compute_auto_delete", readonly=False, store=True,
         help='This option permanently removes any track of email after it\'s been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.')
     auto_delete_keep_log = fields.Boolean(
-        'Keep Message Copy', default=True,
+        'Keep Message Copy',
+        compute="_compute_auto_delete_keep_log", readonly=False, store=True,
         help='Keep a copy of the email content if emails are removed (mass mailing only)')
     force_send = fields.Boolean(
         'Send mailing or notifications directly')
@@ -282,6 +282,31 @@ class MailComposer(models.TransientModel):
         for composer in self:
             composer.reply_to_force_new = composer.reply_to_mode == 'new'
 
+    @api.depends('composition_mode', 'template_id')
+    def _compute_auto_delete(self):
+        """ Computation is coming either from template, either from composition
+        mode. When having a template, its value is copied. Without template it
+        is True in comment mode to remove notification emails by default. In
+        email mode we keep emails (backward compatibility mode). """
+        for composer in self:
+            if composer.template_id:
+                composer.auto_delete = composer.template_id.auto_delete
+            else:
+                composer.auto_delete = composer.composition_mode == 'comment'
+
+    @api.depends('composition_mode', 'auto_delete')
+    def _compute_auto_delete_keep_log(self):
+        """ Keep logs is used only in email mode. It is used to keep the core
+        message when unlinking sent emails. It allows to keep the message as
+        a trace in the record's chatter. In other modes it has no use and
+        can be set to False. When auto_delete is turned off it has no usage. """
+        toreset = self.filtered(
+            lambda comp: comp.composition_mode != 'mass_mail' or
+                            not comp.auto_delete
+        )
+        toreset.auto_delete_keep_log = False
+        (self - toreset).auto_delete_keep_log = True
+
     # Overrides of mail.render.mixin
     @api.depends('model')
     def _compute_render_model(self):
@@ -324,8 +349,7 @@ class MailComposer(models.TransientModel):
             template = self.env['mail.template'].browse(template_id)
             values = dict(
                 (field, template[field])
-                for field in ('auto_delete',
-                              'email_from',
+                for field in ('email_from',
                               'reply_to',
                               'scheduled_date',
                               'subject',
@@ -346,7 +370,6 @@ class MailComposer(models.TransientModel):
                 self.env['mail.template'].browse(template_id),
                 template_res_ids,
                 ('attachment_ids',
-                 'auto_delete',
                  'body_html',
                  'email_cc',
                  'email_from',
@@ -380,8 +403,6 @@ class MailComposer(models.TransientModel):
                 default_model=model,
                 default_res_ids=res_ids
             ).default_get(['attachment_ids',
-                           'auto_delete',
-                           'auto_delete_keep_log',
                            'body',
                            'composition_mode',
                            'email_from',
@@ -397,8 +418,6 @@ class MailComposer(models.TransientModel):
             values = dict(
                 (key, default_values[key])
                 for key in ('attachment_ids',
-                            'auto_delete',
-                            'auto_delete_keep_log',
                             'body',
                             'email_from',
                             'mail_server_id',
@@ -761,7 +780,6 @@ class MailComposer(models.TransientModel):
                 # some fields are specific to mail or message
                 **(
                     {
-                        'auto_delete': self.auto_delete,
                         'body_html': bodies[res_id],
                         'res_id': res_id,
                     } if email_mode else {}),
@@ -775,7 +793,6 @@ class MailComposer(models.TransientModel):
                 self.template_id,
                 res_ids,
                 ('attachment_ids',
-                 'auto_delete',
                  'email_to',
                  'email_cc',
                  'mail_server_id',
@@ -787,9 +804,6 @@ class MailComposer(models.TransientModel):
             for res_id in res_ids:
                 # remove attachments from template values as they should not be rendered
                 template_values[res_id].pop('attachment_ids', None)
-                # auto_delete is not supported in batch post, only in mass mail
-                if not email_mode:
-                    template_values[res_id].pop('auto_delete', False)
                 mail_values_all[res_id].update(template_values[res_id])
 
         # Handle recipients. Without template, if no partner_ids is given, update
