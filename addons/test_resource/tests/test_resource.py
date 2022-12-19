@@ -7,7 +7,7 @@ from pytz import timezone, utc
 
 from odoo import fields
 from odoo.exceptions import ValidationError
-from odoo.addons.resource.models.resource import Intervals, sum_intervals
+from odoo.addons.resource.models.utils import Intervals, sum_intervals
 from odoo.addons.test_resource.tests.common import TestResourceCommon
 from odoo.tests.common import TransactionCase
 

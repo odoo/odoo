@@ -14,7 +14,7 @@ from odoo.osv import expression
 from odoo.tools import format_date
 from odoo.tools.translate import _
 from odoo.tools.float_utils import float_round
-from odoo.addons.resource.models.resource import Intervals
+from odoo.addons.resource.models.utils import Intervals
 
 _logger = logging.getLogger(__name__)
 

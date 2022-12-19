@@ -10,7 +10,7 @@ from datetime import datetime, time
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
-from odoo.addons.resource.models.resource import HOURS_PER_DAY
+from odoo.addons.resource.models.utils import HOURS_PER_DAY
 from odoo.addons.hr_holidays.models.hr_leave import get_employee_from_context
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.translate import _
