@@ -67,14 +67,5 @@
         @include o-kanban-css-filter(danger, map-get($theme-colors, "danger"));
         @include o-kanban-css-filter(muted, map-get($theme-colors, "dark"));
         @include o-kanban-css-filter(info, map-get($theme-colors, "info"));
-
-        &.o_kanban_group_show {
-            display: flex;
-            flex-flow: column nowrap;
-
-            > * {
-                flex: 0 0 auto;
-            }
-        }
     }
 }
