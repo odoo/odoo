@@ -302,7 +302,7 @@ class TestAccountComposerPerformance(BaseMailAccountPerformance):
                 )),
             },
             fields_values={
-                'auto_delete': False,
+                'auto_delete': True,
                 'email_from': self.user_account_other.email_formatted,
                 'is_notification': True,  # should keep logs by default
                 'mail_server_id': self.mail_server_global,
@@ -406,7 +406,7 @@ class TestAccountComposerPerformance(BaseMailAccountPerformance):
                 )),
             },
             fields_values={
-                'auto_delete': False,
+                'auto_delete': True,
                 'email_from': self.user_account_other.email_formatted,
                 'is_notification': True,  # should keep logs by default
                 'mail_server_id': self.mail_server_global,
