@@ -212,7 +212,7 @@ const LinkTools = Link.extend({
     /**
      * @override
      */
-    _updateOptionsUI: function () {
+    _updateOptionsUI: async function () {
         const el = this.el.querySelector('[name="link_style_color"] we-button.active');
         if (el) {
             this.colorCombinationClass = el.dataset.value;
@@ -221,9 +221,9 @@ const LinkTools = Link.extend({
             // Show custom colors only for Custom style.
             this.$('.link-custom-color').toggleClass('d-none', el.dataset.value !== 'custom');
 
-            this._updateColorpicker('color');
-            this._updateColorpicker('background-color');
-            this._updateColorpicker('border-color');
+            await this._updateColorpicker('color');
+            await this._updateColorpicker('background-color');
+            await this._updateColorpicker('border-color');
 
             const borderWidth = this.linkEl.style['border-width'];
             const numberAndUnit = getNumericAndUnit(borderWidth);
