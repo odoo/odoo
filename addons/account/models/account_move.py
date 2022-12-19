@@ -1684,18 +1684,1186 @@ class AccountMove(models.Model):
 
     def _check_fiscalyear_lock_date(self):
         for move in self:
+<<<<<<< HEAD
             lock_date = move.company_id._get_user_fiscal_lock_date()
             if move.date <= lock_date:
                 if self.user_has_groups('account.group_account_manager'):
                     message = _("You cannot add/modify entries prior to and inclusive of the lock date %s.", format_date(self.env, lock_date))
+||||||| parent of 2403c55c0d7 (temp)
+            if move.is_sale_document(include_receipts=True):
+                move.invoice_filter_type_domain = 'sale'
+            elif move.is_purchase_document(include_receipts=True):
+                move.invoice_filter_type_domain = 'purchase'
+            else:
+                move.invoice_filter_type_domain = False
+
+    @api.depends('partner_id')
+    def _compute_commercial_partner_id(self):
+        for move in self:
+            move.commercial_partner_id = move.partner_id.commercial_partner_id
+
+    @api.depends('commercial_partner_id')
+    def _compute_bank_partner_id(self):
+        for move in self:
+            if move.is_inbound():
+                move.bank_partner_id = move.company_id.partner_id
+            else:
+                move.bank_partner_id = move.commercial_partner_id
+
+    @api.model
+    def _get_invoice_in_payment_state(self):
+        ''' Hook to give the state when the invoice becomes fully paid. This is necessary because the users working
+        with only invoicing don't want to see the 'in_payment' state. Then, this method will be overridden in the
+        accountant module to enable the 'in_payment' state. '''
+        return 'paid'
+
+    @api.depends(
+        'line_ids.matched_debit_ids.debit_move_id.move_id.payment_id.is_matched',
+        'line_ids.matched_debit_ids.debit_move_id.move_id.line_ids.amount_residual',
+        'line_ids.matched_debit_ids.debit_move_id.move_id.line_ids.amount_residual_currency',
+        'line_ids.matched_credit_ids.credit_move_id.move_id.payment_id.is_matched',
+        'line_ids.matched_credit_ids.credit_move_id.move_id.line_ids.amount_residual',
+        'line_ids.matched_credit_ids.credit_move_id.move_id.line_ids.amount_residual_currency',
+        'line_ids.debit',
+        'line_ids.credit',
+        'line_ids.currency_id',
+        'line_ids.amount_currency',
+        'line_ids.amount_residual',
+        'line_ids.amount_residual_currency',
+        'line_ids.payment_id.state',
+        'line_ids.full_reconcile_id')
+    def _compute_amount(self):
+        for move in self:
+
+            if move.payment_state == 'invoicing_legacy':
+                # invoicing_legacy state is set via SQL when setting setting field
+                # invoicing_switch_threshold (defined in account_accountant).
+                # The only way of going out of this state is through this setting,
+                # so we don't recompute it here.
+                move.payment_state = move.payment_state
+                continue
+
+            total_untaxed = 0.0
+            total_untaxed_currency = 0.0
+            total_tax = 0.0
+            total_tax_currency = 0.0
+            total_to_pay = 0.0
+            total_residual = 0.0
+            total_residual_currency = 0.0
+            total = 0.0
+            total_currency = 0.0
+            currencies = move._get_lines_onchange_currency().currency_id
+
+            for line in move.line_ids:
+                if move._payment_state_matters():
+                    # === Invoices ===
+
+                    if not line.exclude_from_invoice_tab:
+                        # Untaxed amount.
+                        total_untaxed += line.balance
+                        total_untaxed_currency += line.amount_currency
+                        total += line.balance
+                        total_currency += line.amount_currency
+                    elif line.tax_line_id:
+                        # Tax amount.
+                        total_tax += line.balance
+                        total_tax_currency += line.amount_currency
+                        total += line.balance
+                        total_currency += line.amount_currency
+                    elif line.account_id.user_type_id.type in ('receivable', 'payable'):
+                        # Residual amount.
+                        total_to_pay += line.balance
+                        total_residual += line.amount_residual
+                        total_residual_currency += line.amount_residual_currency
+=======
+            if move.is_sale_document(include_receipts=True):
+                move.invoice_filter_type_domain = 'sale'
+            elif move.is_purchase_document(include_receipts=True):
+                move.invoice_filter_type_domain = 'purchase'
+            else:
+                move.invoice_filter_type_domain = False
+
+    @api.depends('partner_id')
+    def _compute_commercial_partner_id(self):
+        for move in self:
+            move.commercial_partner_id = move.partner_id.commercial_partner_id
+
+    @api.depends('commercial_partner_id')
+    def _compute_bank_partner_id(self):
+        for move in self:
+            if move.is_inbound():
+                move.bank_partner_id = move.company_id.partner_id
+            else:
+                move.bank_partner_id = move.commercial_partner_id
+
+    @api.model
+    def _get_invoice_in_payment_state(self):
+        ''' Hook to give the state when the invoice becomes fully paid. This is necessary because the users working
+        with only invoicing don't want to see the 'in_payment' state. Then, this method will be overridden in the
+        accountant module to enable the 'in_payment' state. '''
+        return 'paid'
+
+    @api.depends(
+        'line_ids.matched_debit_ids.debit_move_id.move_id.payment_id.is_matched',
+        'line_ids.matched_debit_ids.debit_move_id.move_id.line_ids.amount_residual',
+        'line_ids.matched_debit_ids.debit_move_id.move_id.line_ids.amount_residual_currency',
+        'line_ids.matched_credit_ids.credit_move_id.move_id.payment_id.is_matched',
+        'line_ids.matched_credit_ids.credit_move_id.move_id.line_ids.amount_residual',
+        'line_ids.matched_credit_ids.credit_move_id.move_id.line_ids.amount_residual_currency',
+        'line_ids.debit',
+        'line_ids.credit',
+        'line_ids.currency_id',
+        'line_ids.amount_currency',
+        'line_ids.amount_residual',
+        'line_ids.amount_residual_currency',
+        'line_ids.payment_id.state',
+        'line_ids.full_reconcile_id')
+    def _compute_amount(self):
+        reversed_mapping = defaultdict(lambda: self.env['account.move'])
+        for reverse_move in self.env['account.move'].search([
+            ('state', '=', 'posted'),
+            ('reversed_entry_id', 'in', self.ids)
+        ]):
+            reversed_mapping[reverse_move.reversed_entry_id] += reverse_move
+
+        caba_mapping = defaultdict(lambda: self.env['account.move'])
+        caba_company_ids = self.company_id.filtered(lambda c: c.tax_exigibility)
+        if caba_company_ids:
+            reverse_moves_ids = [move.id for moves in reversed_mapping.values() for move in moves]
+            for caba_move in self.env['account.move'].search([
+                ('tax_cash_basis_origin_move_id', 'in', self.ids + reverse_moves_ids),
+                ('state', '=', 'posted'),
+                ('move_type', '=', 'entry'),
+                ('company_id', 'in', caba_company_ids.ids)
+            ]):
+                caba_mapping[caba_move.tax_cash_basis_origin_move_id] += caba_move
+
+        for move in self:
+
+            if move.payment_state == 'invoicing_legacy':
+                # invoicing_legacy state is set via SQL when setting setting field
+                # invoicing_switch_threshold (defined in account_accountant).
+                # The only way of going out of this state is through this setting,
+                # so we don't recompute it here.
+                move.payment_state = move.payment_state
+                continue
+
+            total_untaxed = 0.0
+            total_untaxed_currency = 0.0
+            total_tax = 0.0
+            total_tax_currency = 0.0
+            total_to_pay = 0.0
+            total_residual = 0.0
+            total_residual_currency = 0.0
+            total = 0.0
+            total_currency = 0.0
+            currencies = move._get_lines_onchange_currency().currency_id
+
+            for line in move.line_ids:
+                if move._payment_state_matters():
+                    # === Invoices ===
+
+                    if not line.exclude_from_invoice_tab:
+                        # Untaxed amount.
+                        total_untaxed += line.balance
+                        total_untaxed_currency += line.amount_currency
+                        total += line.balance
+                        total_currency += line.amount_currency
+                    elif line.tax_line_id:
+                        # Tax amount.
+                        total_tax += line.balance
+                        total_tax_currency += line.amount_currency
+                        total += line.balance
+                        total_currency += line.amount_currency
+                    elif line.account_id.user_type_id.type in ('receivable', 'payable'):
+                        # Residual amount.
+                        total_to_pay += line.balance
+                        total_residual += line.amount_residual
+                        total_residual_currency += line.amount_residual_currency
+>>>>>>> 2403c55c0d7 (temp)
                 else:
                     message = _("You cannot add/modify entries prior to and inclusive of the lock date %s. Check the company settings or ask someone with the 'Adviser' role", format_date(self.env, lock_date))
                 raise UserError(message)
         return True
 
+<<<<<<< HEAD
     @api.constrains('auto_post', 'invoice_date')
     def _require_bill_date_for_autopost(self):
         """Vendor bills must have an invoice date set to be posted. Require it for auto-posted bills."""
+||||||| parent of 2403c55c0d7 (temp)
+            if move.move_type == 'entry' or move.is_outbound():
+                sign = 1
+            else:
+                sign = -1
+            move.amount_untaxed = sign * (total_untaxed_currency if len(currencies) == 1 else total_untaxed)
+            move.amount_tax = sign * (total_tax_currency if len(currencies) == 1 else total_tax)
+            move.amount_total = sign * (total_currency if len(currencies) == 1 else total)
+            move.amount_residual = -sign * (total_residual_currency if len(currencies) == 1 else total_residual)
+            move.amount_untaxed_signed = -total_untaxed
+            move.amount_tax_signed = -total_tax
+            move.amount_total_signed = abs(total) if move.move_type == 'entry' else -total
+            move.amount_residual_signed = total_residual
+            move.amount_total_in_currency_signed = abs(move.amount_total) if move.move_type == 'entry' else -(sign * move.amount_total)
+
+            currency = currencies if len(currencies) == 1 else move.company_id.currency_id
+
+            # Compute 'payment_state'.
+            new_pmt_state = 'not_paid' if move.move_type != 'entry' else False
+
+            if move._payment_state_matters() and move.state == 'posted':
+                if currency.is_zero(move.amount_residual):
+                    reconciled_payments = move._get_reconciled_payments()
+                    if not reconciled_payments or all(payment.is_matched for payment in reconciled_payments):
+                        new_pmt_state = 'paid'
+                    else:
+                        new_pmt_state = move._get_invoice_in_payment_state()
+                elif currency.compare_amounts(total_to_pay, total_residual) != 0:
+                    new_pmt_state = 'partial'
+
+            if new_pmt_state == 'paid' and move.move_type in ('in_invoice', 'out_invoice', 'entry'):
+                reverse_type = move.move_type == 'in_invoice' and 'in_refund' or move.move_type == 'out_invoice' and 'out_refund' or 'entry'
+                reverse_moves = self.env['account.move'].search([('reversed_entry_id', '=', move.id), ('state', '=', 'posted'), ('move_type', '=', reverse_type)])
+                if self.env.company.tax_exigibility:
+                    domain = [
+                        ('tax_cash_basis_origin_move_id', 'in', move.ids + reverse_moves.ids),
+                        ('state', '=', 'posted'),
+                        ('move_type', '=', 'entry')
+                    ]
+                    caba_moves = self.env['account.move'].search(domain)
+                else:
+                    caba_moves = self.env['account.move']
+
+                # We only set 'reversed' state in cas of 1 to 1 full reconciliation with a reverse entry; otherwise, we use the regular 'paid' state
+                # We ignore potentials cash basis moves reconciled because the transition account of the tax is reconcilable
+                reverse_moves_full_recs = reverse_moves.mapped('line_ids.full_reconcile_id')
+                if reverse_moves_full_recs.mapped('reconciled_line_ids.move_id').filtered(lambda x: x not in (caba_moves + reverse_moves + reverse_moves_full_recs.mapped('exchange_move_id'))) == move:
+                    new_pmt_state = 'reversed'
+
+            move.payment_state = new_pmt_state
+
+    def _inverse_amount_total(self):
+        for move in self:
+            if len(move.line_ids) != 2 or move.is_invoice(include_receipts=True):
+                continue
+
+            to_write = []
+
+            amount_currency = abs(move.amount_total)
+            balance = move.currency_id._convert(amount_currency, move.company_currency_id, move.company_id, move.date)
+
+            for line in move.line_ids:
+                if not line.currency_id.is_zero(balance - abs(line.balance)):
+                    to_write.append((1, line.id, {
+                        'debit': line.balance > 0.0 and balance or 0.0,
+                        'credit': line.balance < 0.0 and balance or 0.0,
+                        'amount_currency': line.balance > 0.0 and amount_currency or -amount_currency,
+                    }))
+
+            move.write({'line_ids': to_write})
+
+    def _get_domain_matching_suspense_moves(self):
+        self.ensure_one()
+        domain = self.env['account.move.line']._get_suspense_moves_domain()
+        domain += ['|', ('partner_id', '=?', self.partner_id.id), ('partner_id', '=', False)]
+        if self.is_inbound():
+            domain.append(('balance', '=', -self.amount_residual))
+        else:
+            domain.append(('balance', '=', self.amount_residual))
+        return domain
+
+    def _compute_has_matching_suspense_amount(self):
+        for r in self:
+            res = False
+            if r.state == 'posted' and r.is_invoice() and r.payment_state == 'not_paid':
+                domain = r._get_domain_matching_suspense_moves()
+                #there are more than one but less than 5 suspense moves matching the residual amount
+                if (0 < self.env['account.move.line'].search_count(domain) < 5):
+                    domain2 = [
+                        ('payment_state', '=', 'not_paid'),
+                        ('state', '=', 'posted'),
+                        ('amount_residual', '=', r.amount_residual),
+                        ('move_type', '=', r.move_type)]
+                    #there are less than 5 other open invoices of the same type with the same residual
+                    if self.env['account.move'].search_count(domain2) < 5:
+                        res = True
+            r.invoice_has_matching_suspense_amount = res
+
+    @api.depends('partner_id', 'invoice_source_email', 'partner_id.name')
+    def _compute_invoice_partner_display_info(self):
+        for move in self:
+            vendor_display_name = move.partner_id.display_name
+            if not vendor_display_name:
+                if move.invoice_source_email:
+                    vendor_display_name = _('@From: %(email)s', email=move.invoice_source_email)
+                else:
+                    vendor_display_name = _('#Created by: %s', move.sudo().create_uid.name or self.env.user.name)
+            move.invoice_partner_display_name = vendor_display_name
+
+    @api.depends('currency_id')
+    def _compute_display_inactive_currency_warning(self):
+        for move in self.with_context(active_test=False):
+            move.display_inactive_currency_warning = not move.currency_id.active
+
+    def _compute_payments_widget_to_reconcile_info(self):
+        for move in self:
+            move.invoice_outstanding_credits_debits_widget = json.dumps(False)
+            move.invoice_has_outstanding = False
+
+            if move.state != 'posted' \
+                    or move.payment_state not in ('not_paid', 'partial') \
+                    or not move.is_invoice(include_receipts=True):
+                continue
+
+            pay_term_lines = move.line_ids\
+                .filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))
+
+            domain = [
+                ('account_id', 'in', pay_term_lines.account_id.ids),
+                ('parent_state', '=', 'posted'),
+                ('partner_id', '=', move.commercial_partner_id.id),
+                ('reconciled', '=', False),
+                '|', ('amount_residual', '!=', 0.0), ('amount_residual_currency', '!=', 0.0),
+            ]
+
+            payments_widget_vals = {'outstanding': True, 'content': [], 'move_id': move.id}
+
+            if move.is_inbound():
+                domain.append(('balance', '<', 0.0))
+                payments_widget_vals['title'] = _('Outstanding credits')
+            else:
+                domain.append(('balance', '>', 0.0))
+                payments_widget_vals['title'] = _('Outstanding debits')
+
+            for line in self.env['account.move.line'].search(domain):
+
+                if line.currency_id == move.currency_id:
+                    # Same foreign currency.
+                    amount = abs(line.amount_residual_currency)
+                else:
+                    # Different foreign currencies.
+                    amount = move.company_currency_id._convert(
+                        abs(line.amount_residual),
+                        move.currency_id,
+                        move.company_id,
+                        line.date,
+                    )
+
+                if move.currency_id.is_zero(amount):
+                    continue
+
+                payments_widget_vals['content'].append({
+                    'journal_name': line.ref or line.move_id.name,
+                    'amount': amount,
+                    'currency': move.currency_id.symbol,
+                    'id': line.id,
+                    'move_id': line.move_id.id,
+                    'position': move.currency_id.position,
+                    'digits': [69, move.currency_id.decimal_places],
+                    'date': fields.Date.to_string(line.date),
+                    'account_payment_id': line.payment_id.id,
+                })
+
+            if not payments_widget_vals['content']:
+                continue
+
+            move.invoice_outstanding_credits_debits_widget = json.dumps(payments_widget_vals)
+            move.invoice_has_outstanding = True
+
+    def _get_reconciled_info_JSON_values(self):
+        self.ensure_one()
+        reconciled_vals = []
+        for partial, amount, counterpart_line in self._get_reconciled_invoices_partials():
+            reconciled_vals.append(self._get_reconciled_vals(partial, amount, counterpart_line))
+        return reconciled_vals
+
+    def _get_reconciled_vals(self, partial, amount, counterpart_line):
+        if counterpart_line.move_id.ref:
+            reconciliation_ref = '%s (%s)' % (counterpart_line.move_id.name, counterpart_line.move_id.ref)
+        else:
+            reconciliation_ref = counterpart_line.move_id.name
+        return {
+            'name': counterpart_line.name,
+            'journal_name': counterpart_line.journal_id.name,
+            'amount': amount,
+            'currency': self.currency_id.symbol,
+            'digits': [69, self.currency_id.decimal_places],
+            'position': self.currency_id.position,
+            'date': counterpart_line.date,
+            'payment_id': counterpart_line.id,
+            'partial_id': partial.id,
+            'account_payment_id': counterpart_line.payment_id.id,
+            'payment_method_name': counterpart_line.payment_id.payment_method_line_id.name,
+            'move_id': counterpart_line.move_id.id,
+            'ref': reconciliation_ref,
+        }
+
+    @api.depends('move_type', 'line_ids.amount_residual')
+    def _compute_payments_widget_reconciled_info(self):
+        for move in self:
+            payments_widget_vals = {'title': _('Less Payment'), 'outstanding': False, 'content': []}
+
+            if move.state == 'posted' and move.is_invoice(include_receipts=True):
+                payments_widget_vals['content'] = move._get_reconciled_info_JSON_values()
+
+            if payments_widget_vals['content']:
+                move.invoice_payments_widget = json.dumps(payments_widget_vals, default=date_utils.json_default)
+            else:
+                move.invoice_payments_widget = json.dumps(False)
+
+    @api.depends('line_ids.amount_currency', 'line_ids.tax_base_amount', 'line_ids.tax_line_id', 'partner_id', 'currency_id', 'amount_total', 'amount_untaxed')
+    def _compute_tax_totals_json(self):
+        """ Computed field used for custom widget's rendering.
+            Only set on invoices.
+        """
+        for move in self:
+            if not move.is_invoice(include_receipts=True):
+                # Non-invoice moves don't support that field (because of multicurrency: all lines of the invoice share the same currency)
+                move.tax_totals_json = None
+                continue
+
+            tax_lines_data = move._prepare_tax_lines_data_for_totals_from_invoice()
+
+            move.tax_totals_json = json.dumps({
+                **self._get_tax_totals(move.partner_id, tax_lines_data, move.amount_total, move.amount_untaxed, move.currency_id),
+                'allow_tax_edition': move.is_purchase_document(include_receipts=True) and move.state == 'draft',
+            })
+
+    def _prepare_tax_lines_data_for_totals_from_invoice(self, tax_line_id_filter=None, tax_ids_filter=None):
+        """ Prepares data to be passed as tax_lines_data parameter of _get_tax_totals() from an invoice.
+
+            NOTE: tax_line_id_filter and tax_ids_filter are used in l10n_latam to restrict the taxes with consider
+                  in the totals.
+
+            :param tax_line_id_filter: a function(aml, tax) returning true if tax should be considered on tax move line aml.
+            :param tax_ids_filter: a function(aml, taxes) returning true if taxes should be considered on base move line aml.
+
+            :return: A list of dict in the format described in _get_tax_totals's tax_lines_data's docstring.
+        """
+        self.ensure_one()
+
+        tax_line_id_filter = tax_line_id_filter or (lambda aml, tax: True)
+        tax_ids_filter = tax_ids_filter or (lambda aml, tax: True)
+
+        balance_multiplicator = -1 if self.is_inbound() else 1
+        tax_lines_data = []
+
+        for line in self.line_ids:
+            if line.tax_line_id and tax_line_id_filter(line, line.tax_line_id):
+                tax_lines_data.append({
+                    'line_key': 'tax_line_%s' % line.id,
+                    'tax_amount': line.amount_currency * balance_multiplicator,
+                    'tax': line.tax_line_id,
+                })
+
+            if line.tax_ids:
+                for base_tax in line.tax_ids.flatten_taxes_hierarchy():
+                    if tax_ids_filter(line, base_tax):
+                        tax_lines_data.append({
+                            'line_key': 'base_line_%s' % line.id,
+                            'base_amount': line.amount_currency * balance_multiplicator,
+                            'tax': base_tax,
+                            'tax_affecting_base': line.tax_line_id,
+                        })
+
+        return tax_lines_data
+
+    @api.model
+    def _prepare_tax_lines_data_for_totals_from_object(self, object_lines, tax_results_function):
+        """ Prepares data to be passed as tax_lines_data parameter of _get_tax_totals() from any
+            object using taxes. This helper is intended for purchase.order and sale.order, as a common
+            function centralizing their behavior.
+
+            :param object_lines: A list of records corresponding to the sub-objects generating the tax totals
+                                 (sale.order.line or purchase.order.line, for example)
+
+            :param tax_results_function: A function to be called to get the results of the tax computation for a
+                                         line in object_lines. It takes the object line as its only parameter
+                                         and returns a dict in the same format as account.tax's compute_all
+                                         (most probably after calling it with the right parameters).
+
+            :return: A list of dict in the format described in _get_tax_totals's tax_lines_data's docstring.
+        """
+        tax_lines_data = []
+
+        for line in object_lines:
+            tax_results = tax_results_function(line)
+
+            for tax_result in tax_results['taxes']:
+                current_tax = self.env['account.tax'].browse(tax_result['id'])
+
+                # Tax line
+                tax_lines_data.append({
+                    'line_key': f"tax_line_{line.id}_{tax_result['id']}",
+                    'tax_amount': tax_result['amount'],
+                    'tax': current_tax,
+                })
+
+                # Base for this tax line
+                tax_lines_data.append({
+                    'line_key': 'base_line_%s' % line.id,
+                    'base_amount': tax_results['total_excluded'],
+                    'tax': current_tax,
+                })
+
+                # Base for the taxes whose base is affected by this tax line
+                if tax_result['tax_ids']:
+                    affected_taxes = self.env['account.tax'].browse(tax_result['tax_ids'])
+                    for affected_tax in affected_taxes:
+                        tax_lines_data.append({
+                            'line_key': 'affecting_base_line_%s_%s' % (line.id, tax_result['id']),
+                            'base_amount': tax_result['amount'],
+                            'tax': affected_tax,
+                            'tax_affecting_base': current_tax,
+                        })
+
+        return tax_lines_data
+
+    @api.model
+    def _get_tax_totals(self, partner, tax_lines_data, amount_total, amount_untaxed, currency):
+        """ Compute the tax totals for the provided data.
+
+        :param partner:        The partner to compute totals for
+        :param tax_lines_data: All the data about the base and tax lines as a list of dictionaries.
+                               Each dictionary represents an amount that needs to be added to either a tax base or amount.
+                               A tax amount looks like:
+                                   {
+                                       'line_key':             unique identifier,
+                                       'tax_amount':           the amount computed for this tax
+                                       'tax':                  the account.tax object this tax line was made from
+                                   }
+                               For base amounts:
+                                   {
+                                       'line_key':             unique identifier,
+                                       'base_amount':          the amount to add to the base of the tax
+                                       'tax':                  the tax basing itself on this amount
+                                       'tax_affecting_base':   (optional key) the tax whose tax line is having the impact
+                                                               denoted by 'base_amount' on the base of the tax, in case of taxes
+                                                               affecting the base of subsequent ones.
+                                   }
+        :param amount_total:   Total amount, with taxes.
+        :param amount_untaxed: Total amount without taxes.
+        :param currency:       The currency in which the amounts are computed.
+
+        :return: A dictionary in the following form:
+            {
+                'amount_total':                              The total amount to be displayed on the document, including every total types.
+                'amount_untaxed':                            The untaxed amount to be displayed on the document.
+                'formatted_amount_total':                    Same as amount_total, but as a string formatted accordingly with partner's locale.
+                'formatted_amount_untaxed':                  Same as amount_untaxed, but as a string formatted accordingly with partner's locale.
+                'allow_tax_edition':                         True if the user should have the ability to manually edit the tax amounts by group
+                                                             to fix rounding errors.
+                'groups_by_subtotals':                       A dictionary formed liked {'subtotal': groups_data}
+                                                             Where total_type is a subtotal name defined on a tax group, or the default one: 'Untaxed Amount'.
+                                                             And groups_data is a list of dict in the following form:
+                                                                {
+                                                                    'tax_group_name':                  The name of the tax groups this total is made for.
+                                                                    'tax_group_amount':                The total tax amount in this tax group.
+                                                                    'tax_group_base_amount':           The base amount for this tax group.
+                                                                    'formatted_tax_group_amount':      Same as tax_group_amount, but as a string
+                                                                                                       formatted accordingly with partner's locale.
+                                                                    'formatted_tax_group_base_amount': Same as tax_group_base_amount, but as a string
+                                                                                                       formatted accordingly with partner's locale.
+                                                                    'tax_group_id':                    The id of the tax group corresponding to this dict.
+                                                                    'group_key':                       A unique key identifying this total dict,
+                                                                }
+                'subtotals':                                 A list of dictionaries in the following form, one for each subtotal in groups_by_subtotals' keys
+                                                                {
+                                                                    'name':                            The name of the subtotal
+                                                                    'amount':                          The total amount for this subtotal, summing all
+                                                                                                       the tax groups belonging to preceding subtotals and the base amount
+                                                                    'formatted_amount':                Same as amount, but as a string
+                                                                                                       formatted accordingly with partner's locale.
+                                                                }
+            }
+        """
+        account_tax = self.env['account.tax']
+
+        grouped_taxes = defaultdict(lambda: defaultdict(lambda: {'base_amount': 0.0, 'tax_amount': 0.0, 'base_line_keys': set()}))
+        subtotal_priorities = {}
+        for line_data in tax_lines_data:
+            tax_group = line_data['tax'].tax_group_id
+
+            # Update subtotals priorities
+            if tax_group.preceding_subtotal:
+                subtotal_title = tax_group.preceding_subtotal
+                new_priority = tax_group.sequence
+            else:
+                # When needed, the default subtotal is always the most prioritary
+                subtotal_title = _("Untaxed Amount")
+                new_priority = 0
+
+            if subtotal_title not in subtotal_priorities or new_priority < subtotal_priorities[subtotal_title]:
+                subtotal_priorities[subtotal_title] = new_priority
+
+            # Update tax data
+            tax_group_vals = grouped_taxes[subtotal_title][tax_group]
+
+            if 'base_amount' in line_data:
+                # Base line
+                if tax_group == line_data.get('tax_affecting_base', account_tax).tax_group_id:
+                    # In case the base has a tax_line_id belonging to the same group as the base tax,
+                    # the base for the group will be computed by the base tax's original line (the one with tax_ids and no tax_line_id)
+                    continue
+
+                if line_data['line_key'] not in tax_group_vals['base_line_keys']:
+                    # If the base line hasn't been taken into account yet, at its amount to the base total.
+                    tax_group_vals['base_line_keys'].add(line_data['line_key'])
+                    tax_group_vals['base_amount'] += line_data['base_amount']
+
+            else:
+                # Tax line
+                tax_group_vals['tax_amount'] += line_data['tax_amount']
+
+        # Compute groups_by_subtotal
+        groups_by_subtotal = {}
+        for subtotal_title, groups in grouped_taxes.items():
+            groups_vals = [{
+                'tax_group_name': group.name,
+                'tax_group_amount': amounts['tax_amount'],
+                'tax_group_base_amount': amounts['base_amount'],
+                'formatted_tax_group_amount': formatLang(self.env, amounts['tax_amount'], currency_obj=currency),
+                'formatted_tax_group_base_amount': formatLang(self.env, amounts['base_amount'], currency_obj=currency),
+                'tax_group_id': group.id,
+                'group_key': '%s-%s' %(subtotal_title, group.id),
+            } for group, amounts in sorted(groups.items(), key=lambda l: l[0].sequence)]
+
+            groups_by_subtotal[subtotal_title] = groups_vals
+
+        # Compute subtotals
+        subtotals_list = [] # List, so that we preserve their order
+        previous_subtotals_tax_amount = 0
+        for subtotal_title in sorted((sub for sub in subtotal_priorities), key=lambda x: subtotal_priorities[x]):
+            subtotal_value = amount_untaxed + previous_subtotals_tax_amount
+            subtotals_list.append({
+                'name': subtotal_title,
+                'amount': subtotal_value,
+                'formatted_amount': formatLang(self.env, subtotal_value, currency_obj=currency),
+            })
+
+            subtotal_tax_amount = sum(group_val['tax_group_amount'] for group_val in groups_by_subtotal[subtotal_title])
+            previous_subtotals_tax_amount += subtotal_tax_amount
+
+        # Assign json-formatted result to the field
+        return {
+            'amount_total': amount_total,
+            'amount_untaxed': amount_untaxed,
+            'formatted_amount_total': formatLang(self.env, amount_total, currency_obj=currency),
+            'formatted_amount_untaxed': formatLang(self.env, amount_untaxed, currency_obj=currency),
+            'groups_by_subtotal': groups_by_subtotal,
+            'subtotals': subtotals_list,
+            'allow_tax_edition': False,
+        }
+
+    @api.depends('date', 'line_ids.debit', 'line_ids.credit', 'line_ids.tax_line_id', 'line_ids.tax_ids', 'line_ids.tax_tag_ids')
+    def _compute_tax_lock_date_message(self):
+        for move in self:
+            invoice_date = move.invoice_date or fields.Date.context_today(move)
+            accounting_date = move.date or fields.Date.context_today(move)
+            affects_tax_report = move._affect_tax_report()
+            lock_dates = move._get_violated_lock_dates(accounting_date, affects_tax_report)
+            if lock_dates:
+                accounting_date = move._get_accounting_date(invoice_date, affects_tax_report)
+                lock_date, lock_type = lock_dates[-1]
+                tax_lock_date_message = _(
+                    "The accounting date being set prior to the %(lock_type)s lock date %(lock_date)s,"
+                    " it will be changed to %(accounting_date)s upon posting.",
+                    lock_type=lock_type,
+                    lock_date=format_date(move.env, lock_date),
+                    accounting_date=format_date(move.env, accounting_date))
+                for lock_date, lock_type in lock_dates[:-1]:
+                    tax_lock_date_message += _(" The %(lock_type)s lock date is set on %(lock_date)s.",
+                                               lock_type=lock_type,
+                                               lock_date=format_date(move.env, lock_date))
+                move.tax_lock_date_message = tax_lock_date_message
+            else:
+                move.tax_lock_date_message = False
+
+    @api.depends('line_ids.account_id.internal_type')
+    def _compute_always_tax_exigible(self):
+=======
+            if move.move_type == 'entry' or move.is_outbound():
+                sign = 1
+            else:
+                sign = -1
+            move.amount_untaxed = sign * (total_untaxed_currency if len(currencies) == 1 else total_untaxed)
+            move.amount_tax = sign * (total_tax_currency if len(currencies) == 1 else total_tax)
+            move.amount_total = sign * (total_currency if len(currencies) == 1 else total)
+            move.amount_residual = -sign * (total_residual_currency if len(currencies) == 1 else total_residual)
+            move.amount_untaxed_signed = -total_untaxed
+            move.amount_tax_signed = -total_tax
+            move.amount_total_signed = abs(total) if move.move_type == 'entry' else -total
+            move.amount_residual_signed = total_residual
+            move.amount_total_in_currency_signed = abs(move.amount_total) if move.move_type == 'entry' else -(sign * move.amount_total)
+
+            currency = currencies if len(currencies) == 1 else move.company_id.currency_id
+
+            # Compute 'payment_state'.
+            new_pmt_state = 'not_paid' if move.move_type != 'entry' else False
+
+            if move._payment_state_matters() and move.state == 'posted':
+                if currency.is_zero(move.amount_residual):
+                    reconciled_payments = move._get_reconciled_payments()
+                    if not reconciled_payments or all(payment.is_matched for payment in reconciled_payments):
+                        new_pmt_state = 'paid'
+                    else:
+                        new_pmt_state = move._get_invoice_in_payment_state()
+                elif currency.compare_amounts(total_to_pay, total_residual) != 0:
+                    new_pmt_state = 'partial'
+
+            if new_pmt_state == 'paid' and move.move_type in ('in_invoice', 'out_invoice', 'entry'):
+                reverse_moves = reversed_mapping[move]
+                caba_moves = caba_mapping[move]
+                for reverse_move in reverse_moves:
+                    caba_moves |= caba_mapping[reverse_move]
+
+                # We only set 'reversed' state in cas of 1 to 1 full reconciliation with a reverse entry; otherwise, we use the regular 'paid' state
+                # We ignore potentials cash basis moves reconciled because the transition account of the tax is reconcilable
+                reverse_moves_full_recs = reverse_moves.mapped('line_ids.full_reconcile_id')
+                if reverse_moves_full_recs.mapped('reconciled_line_ids.move_id').filtered(lambda x: x not in (caba_moves + reverse_moves + reverse_moves_full_recs.mapped('exchange_move_id'))) == move:
+                    new_pmt_state = 'reversed'
+
+            move.payment_state = new_pmt_state
+
+    def _inverse_amount_total(self):
+        for move in self:
+            if len(move.line_ids) != 2 or move.is_invoice(include_receipts=True):
+                continue
+
+            to_write = []
+
+            amount_currency = abs(move.amount_total)
+            balance = move.currency_id._convert(amount_currency, move.company_currency_id, move.company_id, move.date)
+
+            for line in move.line_ids:
+                if not line.currency_id.is_zero(balance - abs(line.balance)):
+                    to_write.append((1, line.id, {
+                        'debit': line.balance > 0.0 and balance or 0.0,
+                        'credit': line.balance < 0.0 and balance or 0.0,
+                        'amount_currency': line.balance > 0.0 and amount_currency or -amount_currency,
+                    }))
+
+            move.write({'line_ids': to_write})
+
+    def _get_domain_matching_suspense_moves(self):
+        self.ensure_one()
+        domain = self.env['account.move.line']._get_suspense_moves_domain()
+        domain += ['|', ('partner_id', '=?', self.partner_id.id), ('partner_id', '=', False)]
+        if self.is_inbound():
+            domain.append(('balance', '=', -self.amount_residual))
+        else:
+            domain.append(('balance', '=', self.amount_residual))
+        return domain
+
+    def _compute_has_matching_suspense_amount(self):
+        for r in self:
+            res = False
+            if r.state == 'posted' and r.is_invoice() and r.payment_state == 'not_paid':
+                domain = r._get_domain_matching_suspense_moves()
+                #there are more than one but less than 5 suspense moves matching the residual amount
+                if (0 < self.env['account.move.line'].search_count(domain) < 5):
+                    domain2 = [
+                        ('payment_state', '=', 'not_paid'),
+                        ('state', '=', 'posted'),
+                        ('amount_residual', '=', r.amount_residual),
+                        ('move_type', '=', r.move_type)]
+                    #there are less than 5 other open invoices of the same type with the same residual
+                    if self.env['account.move'].search_count(domain2) < 5:
+                        res = True
+            r.invoice_has_matching_suspense_amount = res
+
+    @api.depends('partner_id', 'invoice_source_email', 'partner_id.name')
+    def _compute_invoice_partner_display_info(self):
+        for move in self:
+            vendor_display_name = move.partner_id.display_name
+            if not vendor_display_name:
+                if move.invoice_source_email:
+                    vendor_display_name = _('@From: %(email)s', email=move.invoice_source_email)
+                else:
+                    vendor_display_name = _('#Created by: %s', move.sudo().create_uid.name or self.env.user.name)
+            move.invoice_partner_display_name = vendor_display_name
+
+    @api.depends('currency_id')
+    def _compute_display_inactive_currency_warning(self):
+        for move in self.with_context(active_test=False):
+            move.display_inactive_currency_warning = not move.currency_id.active
+
+    def _compute_payments_widget_to_reconcile_info(self):
+        for move in self:
+            move.invoice_outstanding_credits_debits_widget = json.dumps(False)
+            move.invoice_has_outstanding = False
+
+            if move.state != 'posted' \
+                    or move.payment_state not in ('not_paid', 'partial') \
+                    or not move.is_invoice(include_receipts=True):
+                continue
+
+            pay_term_lines = move.line_ids\
+                .filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))
+
+            domain = [
+                ('account_id', 'in', pay_term_lines.account_id.ids),
+                ('parent_state', '=', 'posted'),
+                ('partner_id', '=', move.commercial_partner_id.id),
+                ('reconciled', '=', False),
+                '|', ('amount_residual', '!=', 0.0), ('amount_residual_currency', '!=', 0.0),
+            ]
+
+            payments_widget_vals = {'outstanding': True, 'content': [], 'move_id': move.id}
+
+            if move.is_inbound():
+                domain.append(('balance', '<', 0.0))
+                payments_widget_vals['title'] = _('Outstanding credits')
+            else:
+                domain.append(('balance', '>', 0.0))
+                payments_widget_vals['title'] = _('Outstanding debits')
+
+            for line in self.env['account.move.line'].search(domain):
+
+                if line.currency_id == move.currency_id:
+                    # Same foreign currency.
+                    amount = abs(line.amount_residual_currency)
+                else:
+                    # Different foreign currencies.
+                    amount = move.company_currency_id._convert(
+                        abs(line.amount_residual),
+                        move.currency_id,
+                        move.company_id,
+                        line.date,
+                    )
+
+                if move.currency_id.is_zero(amount):
+                    continue
+
+                payments_widget_vals['content'].append({
+                    'journal_name': line.ref or line.move_id.name,
+                    'amount': amount,
+                    'currency': move.currency_id.symbol,
+                    'id': line.id,
+                    'move_id': line.move_id.id,
+                    'position': move.currency_id.position,
+                    'digits': [69, move.currency_id.decimal_places],
+                    'date': fields.Date.to_string(line.date),
+                    'account_payment_id': line.payment_id.id,
+                })
+
+            if not payments_widget_vals['content']:
+                continue
+
+            move.invoice_outstanding_credits_debits_widget = json.dumps(payments_widget_vals)
+            move.invoice_has_outstanding = True
+
+    def _get_reconciled_info_JSON_values(self):
+        self.ensure_one()
+        reconciled_vals = []
+        for partial, amount, counterpart_line in self._get_reconciled_invoices_partials():
+            reconciled_vals.append(self._get_reconciled_vals(partial, amount, counterpart_line))
+        return reconciled_vals
+
+    def _get_reconciled_vals(self, partial, amount, counterpart_line):
+        if counterpart_line.move_id.ref:
+            reconciliation_ref = '%s (%s)' % (counterpart_line.move_id.name, counterpart_line.move_id.ref)
+        else:
+            reconciliation_ref = counterpart_line.move_id.name
+        return {
+            'name': counterpart_line.name,
+            'journal_name': counterpart_line.journal_id.name,
+            'amount': amount,
+            'currency': self.currency_id.symbol,
+            'digits': [69, self.currency_id.decimal_places],
+            'position': self.currency_id.position,
+            'date': counterpart_line.date,
+            'payment_id': counterpart_line.id,
+            'partial_id': partial.id,
+            'account_payment_id': counterpart_line.payment_id.id,
+            'payment_method_name': counterpart_line.payment_id.payment_method_line_id.name,
+            'move_id': counterpart_line.move_id.id,
+            'ref': reconciliation_ref,
+        }
+
+    @api.depends('move_type', 'line_ids.amount_residual')
+    def _compute_payments_widget_reconciled_info(self):
+        for move in self:
+            payments_widget_vals = {'title': _('Less Payment'), 'outstanding': False, 'content': []}
+
+            if move.state == 'posted' and move.is_invoice(include_receipts=True):
+                payments_widget_vals['content'] = move._get_reconciled_info_JSON_values()
+
+            if payments_widget_vals['content']:
+                move.invoice_payments_widget = json.dumps(payments_widget_vals, default=date_utils.json_default)
+            else:
+                move.invoice_payments_widget = json.dumps(False)
+
+    @api.depends('line_ids.amount_currency', 'line_ids.tax_base_amount', 'line_ids.tax_line_id', 'partner_id', 'currency_id', 'amount_total', 'amount_untaxed')
+    def _compute_tax_totals_json(self):
+        """ Computed field used for custom widget's rendering.
+            Only set on invoices.
+        """
+        for move in self:
+            if not move.is_invoice(include_receipts=True):
+                # Non-invoice moves don't support that field (because of multicurrency: all lines of the invoice share the same currency)
+                move.tax_totals_json = None
+                continue
+
+            tax_lines_data = move._prepare_tax_lines_data_for_totals_from_invoice()
+
+            move.tax_totals_json = json.dumps({
+                **self._get_tax_totals(move.partner_id, tax_lines_data, move.amount_total, move.amount_untaxed, move.currency_id),
+                'allow_tax_edition': move.is_purchase_document(include_receipts=True) and move.state == 'draft',
+            })
+
+    def _prepare_tax_lines_data_for_totals_from_invoice(self, tax_line_id_filter=None, tax_ids_filter=None):
+        """ Prepares data to be passed as tax_lines_data parameter of _get_tax_totals() from an invoice.
+
+            NOTE: tax_line_id_filter and tax_ids_filter are used in l10n_latam to restrict the taxes with consider
+                  in the totals.
+
+            :param tax_line_id_filter: a function(aml, tax) returning true if tax should be considered on tax move line aml.
+            :param tax_ids_filter: a function(aml, taxes) returning true if taxes should be considered on base move line aml.
+
+            :return: A list of dict in the format described in _get_tax_totals's tax_lines_data's docstring.
+        """
+        self.ensure_one()
+
+        tax_line_id_filter = tax_line_id_filter or (lambda aml, tax: True)
+        tax_ids_filter = tax_ids_filter or (lambda aml, tax: True)
+
+        balance_multiplicator = -1 if self.is_inbound() else 1
+        tax_lines_data = []
+
+        for line in self.line_ids:
+            if line.tax_line_id and tax_line_id_filter(line, line.tax_line_id):
+                tax_lines_data.append({
+                    'line_key': 'tax_line_%s' % line.id,
+                    'tax_amount': line.amount_currency * balance_multiplicator,
+                    'tax': line.tax_line_id,
+                })
+
+            if line.tax_ids:
+                for base_tax in line.tax_ids.flatten_taxes_hierarchy():
+                    if tax_ids_filter(line, base_tax):
+                        tax_lines_data.append({
+                            'line_key': 'base_line_%s' % line.id,
+                            'base_amount': line.amount_currency * balance_multiplicator,
+                            'tax': base_tax,
+                            'tax_affecting_base': line.tax_line_id,
+                        })
+
+        return tax_lines_data
+
+    @api.model
+    def _prepare_tax_lines_data_for_totals_from_object(self, object_lines, tax_results_function):
+        """ Prepares data to be passed as tax_lines_data parameter of _get_tax_totals() from any
+            object using taxes. This helper is intended for purchase.order and sale.order, as a common
+            function centralizing their behavior.
+
+            :param object_lines: A list of records corresponding to the sub-objects generating the tax totals
+                                 (sale.order.line or purchase.order.line, for example)
+
+            :param tax_results_function: A function to be called to get the results of the tax computation for a
+                                         line in object_lines. It takes the object line as its only parameter
+                                         and returns a dict in the same format as account.tax's compute_all
+                                         (most probably after calling it with the right parameters).
+
+            :return: A list of dict in the format described in _get_tax_totals's tax_lines_data's docstring.
+        """
+        tax_lines_data = []
+
+        for line in object_lines:
+            tax_results = tax_results_function(line)
+
+            for tax_result in tax_results['taxes']:
+                current_tax = self.env['account.tax'].browse(tax_result['id'])
+
+                # Tax line
+                tax_lines_data.append({
+                    'line_key': f"tax_line_{line.id}_{tax_result['id']}",
+                    'tax_amount': tax_result['amount'],
+                    'tax': current_tax,
+                })
+
+                # Base for this tax line
+                tax_lines_data.append({
+                    'line_key': 'base_line_%s' % line.id,
+                    'base_amount': tax_results['total_excluded'],
+                    'tax': current_tax,
+                })
+
+                # Base for the taxes whose base is affected by this tax line
+                if tax_result['tax_ids']:
+                    affected_taxes = self.env['account.tax'].browse(tax_result['tax_ids'])
+                    for affected_tax in affected_taxes:
+                        tax_lines_data.append({
+                            'line_key': 'affecting_base_line_%s_%s' % (line.id, tax_result['id']),
+                            'base_amount': tax_result['amount'],
+                            'tax': affected_tax,
+                            'tax_affecting_base': current_tax,
+                        })
+
+        return tax_lines_data
+
+    @api.model
+    def _get_tax_totals(self, partner, tax_lines_data, amount_total, amount_untaxed, currency):
+        """ Compute the tax totals for the provided data.
+
+        :param partner:        The partner to compute totals for
+        :param tax_lines_data: All the data about the base and tax lines as a list of dictionaries.
+                               Each dictionary represents an amount that needs to be added to either a tax base or amount.
+                               A tax amount looks like:
+                                   {
+                                       'line_key':             unique identifier,
+                                       'tax_amount':           the amount computed for this tax
+                                       'tax':                  the account.tax object this tax line was made from
+                                   }
+                               For base amounts:
+                                   {
+                                       'line_key':             unique identifier,
+                                       'base_amount':          the amount to add to the base of the tax
+                                       'tax':                  the tax basing itself on this amount
+                                       'tax_affecting_base':   (optional key) the tax whose tax line is having the impact
+                                                               denoted by 'base_amount' on the base of the tax, in case of taxes
+                                                               affecting the base of subsequent ones.
+                                   }
+        :param amount_total:   Total amount, with taxes.
+        :param amount_untaxed: Total amount without taxes.
+        :param currency:       The currency in which the amounts are computed.
+
+        :return: A dictionary in the following form:
+            {
+                'amount_total':                              The total amount to be displayed on the document, including every total types.
+                'amount_untaxed':                            The untaxed amount to be displayed on the document.
+                'formatted_amount_total':                    Same as amount_total, but as a string formatted accordingly with partner's locale.
+                'formatted_amount_untaxed':                  Same as amount_untaxed, but as a string formatted accordingly with partner's locale.
+                'allow_tax_edition':                         True if the user should have the ability to manually edit the tax amounts by group
+                                                             to fix rounding errors.
+                'groups_by_subtotals':                       A dictionary formed liked {'subtotal': groups_data}
+                                                             Where total_type is a subtotal name defined on a tax group, or the default one: 'Untaxed Amount'.
+                                                             And groups_data is a list of dict in the following form:
+                                                                {
+                                                                    'tax_group_name':                  The name of the tax groups this total is made for.
+                                                                    'tax_group_amount':                The total tax amount in this tax group.
+                                                                    'tax_group_base_amount':           The base amount for this tax group.
+                                                                    'formatted_tax_group_amount':      Same as tax_group_amount, but as a string
+                                                                                                       formatted accordingly with partner's locale.
+                                                                    'formatted_tax_group_base_amount': Same as tax_group_base_amount, but as a string
+                                                                                                       formatted accordingly with partner's locale.
+                                                                    'tax_group_id':                    The id of the tax group corresponding to this dict.
+                                                                    'group_key':                       A unique key identifying this total dict,
+                                                                }
+                'subtotals':                                 A list of dictionaries in the following form, one for each subtotal in groups_by_subtotals' keys
+                                                                {
+                                                                    'name':                            The name of the subtotal
+                                                                    'amount':                          The total amount for this subtotal, summing all
+                                                                                                       the tax groups belonging to preceding subtotals and the base amount
+                                                                    'formatted_amount':                Same as amount, but as a string
+                                                                                                       formatted accordingly with partner's locale.
+                                                                }
+            }
+        """
+        account_tax = self.env['account.tax']
+
+        grouped_taxes = defaultdict(lambda: defaultdict(lambda: {'base_amount': 0.0, 'tax_amount': 0.0, 'base_line_keys': set()}))
+        subtotal_priorities = {}
+        for line_data in tax_lines_data:
+            tax_group = line_data['tax'].tax_group_id
+
+            # Update subtotals priorities
+            if tax_group.preceding_subtotal:
+                subtotal_title = tax_group.preceding_subtotal
+                new_priority = tax_group.sequence
+            else:
+                # When needed, the default subtotal is always the most prioritary
+                subtotal_title = _("Untaxed Amount")
+                new_priority = 0
+
+            if subtotal_title not in subtotal_priorities or new_priority < subtotal_priorities[subtotal_title]:
+                subtotal_priorities[subtotal_title] = new_priority
+
+            # Update tax data
+            tax_group_vals = grouped_taxes[subtotal_title][tax_group]
+
+            if 'base_amount' in line_data:
+                # Base line
+                if tax_group == line_data.get('tax_affecting_base', account_tax).tax_group_id:
+                    # In case the base has a tax_line_id belonging to the same group as the base tax,
+                    # the base for the group will be computed by the base tax's original line (the one with tax_ids and no tax_line_id)
+                    continue
+
+                if line_data['line_key'] not in tax_group_vals['base_line_keys']:
+                    # If the base line hasn't been taken into account yet, at its amount to the base total.
+                    tax_group_vals['base_line_keys'].add(line_data['line_key'])
+                    tax_group_vals['base_amount'] += line_data['base_amount']
+
+            else:
+                # Tax line
+                tax_group_vals['tax_amount'] += line_data['tax_amount']
+
+        # Compute groups_by_subtotal
+        groups_by_subtotal = {}
+        for subtotal_title, groups in grouped_taxes.items():
+            groups_vals = [{
+                'tax_group_name': group.name,
+                'tax_group_amount': amounts['tax_amount'],
+                'tax_group_base_amount': amounts['base_amount'],
+                'formatted_tax_group_amount': formatLang(self.env, amounts['tax_amount'], currency_obj=currency),
+                'formatted_tax_group_base_amount': formatLang(self.env, amounts['base_amount'], currency_obj=currency),
+                'tax_group_id': group.id,
+                'group_key': '%s-%s' %(subtotal_title, group.id),
+            } for group, amounts in sorted(groups.items(), key=lambda l: l[0].sequence)]
+
+            groups_by_subtotal[subtotal_title] = groups_vals
+
+        # Compute subtotals
+        subtotals_list = [] # List, so that we preserve their order
+        previous_subtotals_tax_amount = 0
+        for subtotal_title in sorted((sub for sub in subtotal_priorities), key=lambda x: subtotal_priorities[x]):
+            subtotal_value = amount_untaxed + previous_subtotals_tax_amount
+            subtotals_list.append({
+                'name': subtotal_title,
+                'amount': subtotal_value,
+                'formatted_amount': formatLang(self.env, subtotal_value, currency_obj=currency),
+            })
+
+            subtotal_tax_amount = sum(group_val['tax_group_amount'] for group_val in groups_by_subtotal[subtotal_title])
+            previous_subtotals_tax_amount += subtotal_tax_amount
+
+        # Assign json-formatted result to the field
+        return {
+            'amount_total': amount_total,
+            'amount_untaxed': amount_untaxed,
+            'formatted_amount_total': formatLang(self.env, amount_total, currency_obj=currency),
+            'formatted_amount_untaxed': formatLang(self.env, amount_untaxed, currency_obj=currency),
+            'groups_by_subtotal': groups_by_subtotal,
+            'subtotals': subtotals_list,
+            'allow_tax_edition': False,
+        }
+
+    @api.depends('date', 'line_ids.debit', 'line_ids.credit', 'line_ids.tax_line_id', 'line_ids.tax_ids', 'line_ids.tax_tag_ids')
+    def _compute_tax_lock_date_message(self):
+        for move in self:
+            invoice_date = move.invoice_date or fields.Date.context_today(move)
+            accounting_date = move.date or fields.Date.context_today(move)
+            affects_tax_report = move._affect_tax_report()
+            lock_dates = move._get_violated_lock_dates(accounting_date, affects_tax_report)
+            if lock_dates:
+                accounting_date = move._get_accounting_date(invoice_date, affects_tax_report)
+                lock_date, lock_type = lock_dates[-1]
+                tax_lock_date_message = _(
+                    "The accounting date being set prior to the %(lock_type)s lock date %(lock_date)s,"
+                    " it will be changed to %(accounting_date)s upon posting.",
+                    lock_type=lock_type,
+                    lock_date=format_date(move.env, lock_date),
+                    accounting_date=format_date(move.env, accounting_date))
+                for lock_date, lock_type in lock_dates[:-1]:
+                    tax_lock_date_message += _(" The %(lock_type)s lock date is set on %(lock_date)s.",
+                                               lock_type=lock_type,
+                                               lock_date=format_date(move.env, lock_date))
+                move.tax_lock_date_message = tax_lock_date_message
+            else:
+                move.tax_lock_date_message = False
+
+    @api.depends('line_ids.account_id.internal_type')
+    def _compute_always_tax_exigible(self):
+>>>>>>> 2403c55c0d7 (temp)
         for record in self:
             if record.auto_post != 'no' and record.is_purchase_document() and not record.invoice_date:
                 raise ValidationError(_("For this entry to be automatically posted, it required a bill date."))
