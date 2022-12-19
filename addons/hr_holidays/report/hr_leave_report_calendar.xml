@@ -50,7 +50,7 @@
                         domain="[('employee_id.member_of_department', '=', True)]"
                         help="My Department"/>
                 <separator/>
-                <filter string="Off Today" name="off_today" domain="[('start_datetime', '&lt;=', context_today().strftime('%Y-%m-%d')), ('stop_datetime', '&gt;=', context_today().strftime('%Y-%m-%d'))]" help="My Department"/>
+                <filter string="Off Today" name="off_today" domain="[('is_absent', '=', True)]" help="Employees Off Today"/>
                 <separator/>
                 <filter string="Approved" name="validate" domain="[('state', '=', 'validate')]" help="validate"/>
                 <filter string="Waiting for Approval" name="approve" domain="[('state','in',('confirm','validate1'))]"/>
