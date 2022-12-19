@@ -25,6 +25,22 @@ class TestAccruedSaleOrders(AccountTestInvoicingCommon):
             'invoice_policy': 'delivery',
             'property_account_income_id': cls.alt_inc_account.id,
         })
+        cls.default_plan = cls.env['account.analytic.plan'].create({'name': 'Default', 'company_id': False})
+        cls.analytic_account_a = cls.env['account.analytic.account'].create({
+            'name': 'analytic_account_a',
+            'plan_id': cls.default_plan.id,
+            'company_id': False,
+        })
+        cls.analytic_account_b = cls.env['account.analytic.account'].create({
+            'name': 'analytic_account_b',
+            'plan_id': cls.default_plan.id,
+            'company_id': False,
+        })
+        cls.analytic_account_c = cls.env['account.analytic.account'].create({
+            'name': 'analytic_account_c',
+            'plan_id': cls.default_plan.id,
+            'company_id': False,
+        })
         cls.sale_order = cls.env['sale.order'].with_context(tracking_disable=True).create({
             'partner_id': cls.partner_a.id,
             'order_line': [
@@ -35,6 +51,10 @@ class TestAccruedSaleOrders(AccountTestInvoicingCommon):
                     'product_uom': cls.product_a.uom_id.id,
                     'price_unit': cls.product_a.list_price,
                     'tax_id': False,
+                    'analytic_distribution': {
+                        cls.analytic_account_a.id : 80.0,
+                        cls.analytic_account_b.id : 20.0,
+                    },
                 }),
                 Command.create({
                     'name': cls.product_b.name,
@@ -43,9 +63,13 @@ class TestAccruedSaleOrders(AccountTestInvoicingCommon):
                     'product_uom': cls.product_b.uom_id.id,
                     'price_unit': cls.product_b.list_price,
                     'tax_id': False,
+                    'analytic_distribution': {
+                        cls.analytic_account_b.id : 100.0,
+                    },
                 })
             ]
         })
+        cls.sale_order.analytic_account_id = cls.analytic_account_c
         cls.sale_order.action_confirm()
         cls.account_expense = cls.company_data['default_account_expense']
         cls.account_revenue = cls.company_data['default_account_revenue']
@@ -95,4 +119,19 @@ class TestAccruedSaleOrders(AccountTestInvoicingCommon):
             {'account_id': self.account_revenue.id, 'debit': 0, 'credit': 5000 / 2, 'amount_currency': -5000},
             {'account_id': self.alt_inc_account.id, 'debit': 0, 'credit': 1000 / 2, 'amount_currency': -1000},
             {'account_id': self.account_expense.id, 'debit': 6000 / 2, 'credit': 0, 'amount_currency': 0.0},
+        ])
+
+    def test_analytic_account_accrued_order(self):
+        self.sale_order.order_line.qty_delivered = 10
+
+        self.assertRecordValues(self.env['account.move'].search(self.wizard.create_entries()['domain']).line_ids, [
+            # reverse move lines
+            {'account_id': self.account_revenue.id, 'debit': 10000.0, 'credit': 0.0, 'analytic_distribution': {str(self.analytic_account_a.id): 80.0, str(self.analytic_account_b.id): 20.0, str(self.analytic_account_c.id): 100.0}},
+            {'account_id': self.alt_inc_account.id, 'debit': 2000.0, 'credit': 0.0, 'analytic_distribution': {str(self.analytic_account_b.id): 100.0, str(self.analytic_account_c.id): 100.0}},
+            {'account_id': self.account_expense.id, 'debit': 0.0, 'credit': 12000.0, 'analytic_distribution': {str(self.analytic_account_a.id): 66.67, str(self.analytic_account_b.id): 33.33, str(self.analytic_account_c.id): 100.0}},
+            # move lines
+            {'account_id': self.account_revenue.id, 'debit': 0.0, 'credit': 10000.0, 'analytic_distribution': {str(self.analytic_account_a.id): 80.0, str(self.analytic_account_b.id): 20.0, str(self.analytic_account_c.id): 100.0}},
+            {'account_id': self.alt_inc_account.id, 'debit': 0.0, 'credit': 2000.0, 'analytic_distribution': {str(self.analytic_account_b.id): 100.0, str(self.analytic_account_c.id): 100.0}},
+            {'account_id': self.account_expense.id, 'debit': 12000.0, 'credit': 0.0, 'analytic_distribution': {str(self.analytic_account_a.id): 66.67, str(self.analytic_account_b.id): 33.33, str(self.analytic_account_c.id): 100.0}},
+
         ])
