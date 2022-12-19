@@ -4,9 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# 稀饭~~ <wangwhai@qq.com>, 2022
-# Raymond Yu <cl_yu@hotmail.com>, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:02+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
+"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,7 +43,7 @@ msgid ""
 "<h3>Please make a payment to: </h3><ul><li>Bank: %s</li><li>Account Number: "
 "%s</li><li>Account Holder: %s</li></ul>"
 msgstr ""
-"<h3>请付款至: </h3><ul><li>银行: %s</li><li> 账号: %s</li><li>账户持有人: %s</li></ul>"
+"<h3>请支付至: </h3><ul><li>银行: %s</li><li> 账号: %s</li><li>账户持有人: %s</li></ul>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -64,7 +63,7 @@ msgstr "<i class=\"fa fa-trash\"/>删除"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
 msgid "<span class=\"o_stat_text\">Saved Payment Methods</span>"
-msgstr "<span class=\"o_stat_text\">保存的付款方式</span>"
+msgstr "<span class=\"o_stat_text\">保存的支付方式</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -88,7 +87,7 @@ msgstr "<span><i class=\"fa fa-arrow-right\"/> 如何配置您的PayPal账户</s
 msgid ""
 "<span>Start selling directly without an account; an email will be sent by "
 "Paypal to create your new account and collect your payments.</span>"
-msgstr "<span>无需账户即可直接开始销售; Paypal将发送一封电子邮件来创建您的新账户并收取您的付款。</span>"
+msgstr "<span>无需账户即可直接开始销售; Paypal将发送一封电子邮件来创建您的新账户并收取您的支付。</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -96,7 +95,7 @@ msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
 "                                If you believe that it is an error, please contact the website administrator."
 msgstr ""
-"<strong>找不到合适的付款方式。</strong><br/>\n"
+"<strong>找不到合适的支付方式。</strong><br/>\n"
 "                                如果您认为这是一个错误，请联系网站管理员。"
 
 #. module: payment
@@ -118,7 +117,7 @@ msgstr ""
 msgid ""
 "<strong>Warning</strong> Make sure your are logged in as the right partner "
 "before making this payment."
-msgstr "<strong>警告</strong>：在付款之前，请确认您是以正确的伙伴身份登录的。"
+msgstr "<strong>警告</strong>：在支付之前，请确认您是以正确的伙伴身份登录的。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -128,7 +127,7 @@ msgstr "<strong>警告</strong>货币缺失或者不正确。"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<strong>Warning</strong> You must be logged in to pay."
-msgstr "<strong>警告</strong>您必须登录后才能付款。"
+msgstr "<strong>警告</strong>您必须登录后才能支付。"
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -157,7 +156,7 @@ msgstr "参考号码%(ref)s的交易已经被启动 (%(provider_name)s)。"
 msgid ""
 "A transaction with reference %(ref)s has been initiated to save a new "
 "payment method (%(provider_name)s)"
-msgstr "参考号码%(ref)s的交易已经被启动来保存一个新的付款方式 (%(provider_name)s)。"
+msgstr "参考号码%(ref)s的交易已经被启动来保存一个新的支付方式 (%(provider_name)s)。"
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -165,7 +164,7 @@ msgstr "参考号码%(ref)s的交易已经被启动来保存一个新的付款�
 msgid ""
 "A transaction with reference %(ref)s has been initiated using the payment "
 "method %(token)s (%(provider_name)s)."
-msgstr "使用付款方式%(token)s (%(provider_name)s)的带参考号码%(ref)s的交易已经被启动。"
+msgstr "使用支付方式%(token)s (%(provider_name)s)的带参考号码%(ref)s的交易已经被启动。"
 
 #. module: payment
 #: code:addons/payment/wizards/payment_onboarding_wizard.py:0
@@ -242,12 +241,12 @@ msgstr "金额最大值"
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "An error occurred during the processing of this payment."
-msgstr "在处理这项付款的过程中发生了一个错误。"
+msgstr "在处理这项支付的过程中发生了一个错误。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "An error occurred during the processing of your payment."
-msgstr "在处理这项付款的过程中发生了一个错误。"
+msgstr "在处理这项支付的过程中发生了一个错误。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
@@ -363,7 +362,7 @@ msgstr "已取消的消息"
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Cancelled payments"
-msgstr "取消付款"
+msgstr "取消支付"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__capture_manually
@@ -394,7 +393,7 @@ msgstr "下级交易"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
 msgid "Choose a payment method"
-msgstr "选择付款方式"
+msgstr "选择支付方式"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
@@ -498,7 +497,7 @@ msgstr "创建一个新的支付令牌"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_icon
 msgid "Create a payment icon"
-msgstr "创建付款图标"
+msgstr "创建支付图标"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__create_uid
@@ -586,7 +585,7 @@ msgstr "币种"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__manual
 msgid "Custom payment instructions"
-msgstr "自定义付款说明"
+msgstr "自定义支付说明"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_id
@@ -757,7 +756,7 @@ msgstr "拥有多个服务商"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__is_post_processed
 msgid "Has the payment been post-processed"
-msgstr "付款是否经过后期处理"
+msgstr "支付是否经过后期处理"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__pre_msg
@@ -790,7 +789,7 @@ msgid ""
 "If a specific payment provider is selected, customers will only be allowed "
 "to pay via this one. If 'All' is selected, customers can pay via any "
 "available payment provider."
-msgstr "如果选择了一个特定的支付提供商，客户将只被允许通过这个支付机构付款。如果选择了 \"所有\"，客户可以通过任何可用的支付提供商进行支付。"
+msgstr "如果选择了一个特定的支付提供商，客户将只被允许通过这个支付机构支付。如果选择了 \"所有\"，客户可以通过任何可用的支付提供商进行支付。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -802,7 +801,7 @@ msgstr "如果没有定义，将使用服务商的名称"
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "If the payment hasn't been confirmed you can contact us."
-msgstr "如果付款尚未确认，您可以与我们联系。"
+msgstr "如果支付尚未确认，您可以与我们联系。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_methods
@@ -820,7 +819,7 @@ msgstr "图像"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__image_payment_form
 msgid "Image displayed on the payment form"
-msgstr "在付款表单上显示的图像"
+msgstr "在支付表单上显示的图像"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__state
@@ -828,7 +827,7 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
-"在测试模式下，通过测试付款界面处理虚假付款。\n"
+"在测试模式下，通过测试支付界面处理虚假支付。\n"
 "设置提供程序时，建议使用此模式。"
 
 #. module: payment
@@ -932,7 +931,7 @@ msgstr "无法向该提供商提出请求，因为该提供商已被禁用。"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_meth_link
 msgid "Manage payment methods"
-msgstr "管理付款方式"
+msgstr "管理支付方式"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__manual
@@ -973,7 +972,7 @@ msgstr "消息"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__manual_name
 msgid "Method"
-msgstr "付款方式"
+msgstr "支付方式"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_mollie
@@ -985,7 +984,7 @@ msgstr "Mollie"
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Multiple payment options selected"
-msgstr "选择多种付款方式"
+msgstr "选择多种支付方式"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__name
@@ -1006,14 +1005,14 @@ msgstr "没有供应商设置"
 msgid ""
 "No manual payment method could be found for this company. Please create one "
 "from the Payment Provider menu."
-msgstr "没有找到该公司的手动付款方式。请从支付提供商菜单中创建一个。"
+msgstr "没有找到该公司的手动支付方式。请从支付提供商菜单中创建一个。"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "No payment has been processed."
-msgstr "未处理任何付款。"
+msgstr "未处理任何支付。"
 
 #. module: payment
 #. openerp-web
@@ -1137,17 +1136,17 @@ msgstr "PayPal"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__payment_details
 msgid "Payment Details"
-msgstr "付款详情"
+msgstr "支付详情"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Payment Followup"
-msgstr "付款追踪"
+msgstr "支付追踪"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Payment Form"
-msgstr "付款形式"
+msgstr "支付形式"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_icon
@@ -1168,12 +1167,12 @@ msgstr "支付说明"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__link
 msgid "Payment Link"
-msgstr "付款链接"
+msgstr "支付链接"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__payment_method
 msgid "Payment Method"
-msgstr "付款方式"
+msgstr "支付方式"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_provider
@@ -1194,19 +1193,19 @@ msgstr "可用的支付服务商"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__description
 msgid "Payment Ref"
-msgstr "付款参考"
+msgstr "支付参考"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_token
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__token_id
 msgid "Payment Token"
-msgstr "付款令牌"
+msgstr "支付令牌"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner__payment_token_count
 #: model:ir.model.fields,field_description:payment.field_res_users__payment_token_count
 msgid "Payment Token Count"
-msgstr "付款令牌计数"
+msgstr "支付令牌计数"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_token
@@ -1216,12 +1215,12 @@ msgstr "付款令牌计数"
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_list
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_search
 msgid "Payment Tokens"
-msgstr "付款令牌"
+msgstr "支付令牌"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "付款交易"
+msgstr "支付交易"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction
@@ -1229,7 +1228,7 @@ msgstr "付款交易"
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_list
 msgid "Payment Transactions"
-msgstr "付款交易"
+msgstr "支付交易"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction_linked_to_token
@@ -1262,14 +1261,14 @@ msgstr "支付"
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Payments failed"
-msgstr "付款失败"
+msgstr "支付失败"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Payments received"
-msgstr "付款已收到"
+msgstr "支付已收到"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__paypal_user_type
@@ -1296,14 +1295,14 @@ msgstr "电话"
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Please select a payment option."
-msgstr "请选择一个付款方式。"
+msgstr "请选择一个支付方式。"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Please select only one payment option."
-msgstr "请只选择一种付款方式。"
+msgstr "请只选择一种支付方式。"
 
 #. module: payment
 #: code:addons/payment/wizards/payment_link_wizard.py:0
@@ -1422,12 +1421,12 @@ msgstr "SEPA 直接借记"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.manage
 msgid "Save Payment Method"
-msgstr "保存付款方法"
+msgstr "保存支付方法"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.checkout
 msgid "Save my payment details"
-msgstr "保存我的付款细节"
+msgstr "保存我的支付细节"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -1437,7 +1436,7 @@ msgstr "选择国家。留空以便在所有地方都是可用的。"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_onboarding_payment_method
 msgid "Selected onboarding payment method"
-msgstr "选择付款方式"
+msgstr "选择支付方式"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__sequence
@@ -1495,7 +1494,7 @@ msgstr "显示 \"完成 \"信息"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_payment_icon_ids
 msgid "Show Payment Icon"
-msgstr "显示付款图标"
+msgstr "显示支付图标"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_pending_msg
@@ -1642,7 +1641,7 @@ msgstr "如果订单在支付过程中被成功完成，所显示的信息"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__pending_msg
 msgid "The message displayed if the order pending after the payment process"
-msgstr "如果订单在付款过程中被搁置，所显示的信息"
+msgstr "如果订单在支付过程中被搁置，所显示的信息"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__pre_msg
@@ -1688,7 +1687,7 @@ msgstr "该支付提供商的技术代码。"
 msgid ""
 "The template rendering a form submitted to redirect the user when making a "
 "payment"
-msgstr "模板渲染一个提交的表单，以便在付款时重定向用户"
+msgstr "模板渲染一个提交的表单，以便在支付时重定向用户"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__express_checkout_form_view_id
@@ -1699,7 +1698,7 @@ msgstr "呈现快速支付方式表单的模板"
 #: model:ir.model.fields,help:payment.field_payment_provider__inline_form_view_id
 msgid ""
 "The template rendering the inline payment form when making a direct payment"
-msgstr "直接付款时渲染内联付款表格的模板"
+msgstr "直接支付时渲染内联支付表格的模板"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__token_inline_form_view_id
@@ -1736,7 +1735,7 @@ msgstr "参考号码%(ref)s的交易%(amount)s已经被 (%(provider_name)s) 确�
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 #, python-format
 msgid "The value of the payment amount must be positive."
-msgstr "付款金额的值必须为正数。"
+msgstr "支付金额的值必须为正数。"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
@@ -1746,7 +1745,7 @@ msgstr "没有任何交易可以显示"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "There is nothing to pay."
-msgstr "不需要付款。"
+msgstr "不需要支付。"
 
 #. module: payment
 #: code:addons/payment/models/payment_provider.py:0
@@ -1764,7 +1763,7 @@ msgid ""
 "provider's database, allowing the customer to reuse it for a next purchase."
 msgstr ""
 "这控制了客户是否可以将他们的支付方式保存为支付令牌。\n"
-"支付令牌是保存在提供商数据库中的付款方式详情的匿名链接，\n"
+"支付令牌是保存在提供商数据库中的支付方式详情的匿名链接，\n"
 "允许客户在下次采购时重新使用。"
 
 #. module: payment
@@ -1773,7 +1772,7 @@ msgid ""
 "This controls whether customers can use express payment methods. Express "
 "checkout enables customers to pay with Google Pay and Apple Pay from which "
 "address information is collected at payment."
-msgstr "这控制了客户是否可以使用快速支付方式。快速结账允许客户使用Google支付和Apple支付来付款，在支付时收集地址信息。"
+msgstr "这控制了客户是否可以使用快速支付方式。快速结账允许客户使用Google支付和Apple支付来支付，在支付时收集地址信息。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__image
@@ -1787,17 +1786,17 @@ msgstr "这个字段持有用于该支付图标的图像，限制在64x64 px以�
 msgid ""
 "This partner has no email, which may cause issues with some payment "
 "providers. Setting an email for this partner is advised."
-msgstr "此合作伙伴没有电子邮件，这可能会导致某些付款服务商出现问题。建议为此合作伙伴设置电子邮件。"
+msgstr "此合作伙伴没有电子邮件，这可能会导致某些支付服务商出现问题。建议为此合作伙伴设置电子邮件。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
 msgid "This payment method has been verified by our system."
-msgstr "这种付款方式已经被我们的系统所验证。"
+msgstr "这种支付方式已经被我们的系统所验证。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
 msgid "This payment method has not been verified by our system."
-msgstr "这种付款方式没有经过我们的系统验证。"
+msgstr "这种支付方式没有经过我们的系统验证。"
 
 #. module: payment
 #. openerp-web
@@ -1822,7 +1821,7 @@ msgstr "支持的标记化"
 msgid ""
 "Transaction authorization is not supported by the following payment "
 "providers: %s"
-msgstr "下列付款服务商不支持交易授权：%s"
+msgstr "下列支付服务商不支持交易授权：%s"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_refund
@@ -1885,7 +1884,7 @@ msgstr "无效交易"
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Waiting for payment"
-msgstr "等待付款"
+msgstr "等待支付"
 
 #. module: payment
 #: code:addons/payment/models/payment_provider.py:0
@@ -1906,42 +1905,42 @@ msgstr "警告！"
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "We are not able to delete your payment method."
-msgstr "我们无法删除您的付款方式。"
+msgstr "我们无法删除您的支付方式。"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "We are not able to find your payment, but don't worry."
-msgstr "我们找不到您的付款。"
+msgstr "我们找不到您的支付。"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "We are not able to process your payment."
-msgstr "我们无法处理您的付款。"
+msgstr "我们无法处理您的支付。"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "We are not able to save your payment method."
-msgstr "我们无法保存您的付款方式。"
+msgstr "我们无法保存您的支付方式。"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/post_processing.js:0
 #, python-format
 msgid "We are processing your payment, please wait ..."
-msgstr "我们正在处理您的付款，请稍等……"
+msgstr "我们正在处理您的支付，请稍等……"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "We are waiting for the payment provider to confirm the payment."
-msgstr "我们正在等待付款服务商确认付款"
+msgstr "我们正在等待支付服务商确认支付"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__tokenize
@@ -1984,28 +1983,28 @@ msgstr "您无法发布一个禁用的服务商。"
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "You do not have access to this payment token."
-msgstr "您无权访问此付款令牌。"
+msgstr "您无权访问此支付令牌。"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "You should receive an email confirming your payment in a few minutes."
-msgstr "您应该在几分钟内收到一封确认付款的EMail。"
+msgstr "您应该在几分钟内收到一封确认支付的EMail。"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "You will be notified when the payment is confirmed."
-msgstr "付款确认后会通知您。"
+msgstr "支付确认后会通知您。"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "You will be notified when the payment is fully confirmed."
-msgstr "付款完全确认后，会通知您。"
+msgstr "支付完全确认后，会通知您。"
 
 #. module: payment
 #. openerp-web
@@ -2040,7 +2039,7 @@ msgstr "订单正在处理中，请稍候…"
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_transfer
 #, python-format
 msgid "Your payment has been authorized."
-msgstr "付款已获授权。"
+msgstr "支付已获授权。"
 
 #. module: payment
 #: code:addons/payment/models/payment_provider.py:0
@@ -2061,14 +2060,14 @@ msgstr "付款已获授权。"
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_transfer
 #, python-format
 msgid "Your payment has been cancelled."
-msgstr "您的付款已被取消。"
+msgstr "您的支付已被取消。"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Your payment has been received but need to be confirmed manually."
-msgstr "付款已经收到，但需手工确认。"
+msgstr "支付已经收到，但需手工确认。"
 
 #. module: payment
 #: code:addons/payment/models/payment_provider.py:0
@@ -2089,7 +2088,7 @@ msgstr "付款已经收到，但需手工确认。"
 #, python-format
 msgid ""
 "Your payment has been successfully processed but is waiting for approval."
-msgstr "您的付款已经成功处理，但正在等待批准。"
+msgstr "您的支付已经成功处理，但正在等待批准。"
 
 #. module: payment
 #: code:addons/payment/models/payment_provider.py:0
@@ -2110,19 +2109,19 @@ msgstr "您的付款已经成功处理，但正在等待批准。"
 #: model_terms:payment.provider,done_msg:payment.payment_provider_transfer
 #, python-format
 msgid "Your payment has been successfully processed. Thank you!"
-msgstr "您的付款已经成功处理。谢谢您！"
+msgstr "您的支付已经成功处理。谢谢您！"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "Your payment has not been processed yet."
-msgstr "您的付款还未处理。"
+msgstr "您的支付还未处理。"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Your payment is in pending state."
-msgstr "付款处于待处理状态。"
+msgstr "支付处于待处理状态。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form

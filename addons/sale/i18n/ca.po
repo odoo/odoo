@@ -16,16 +16,18 @@
 # marcescu, 2022
 # Carles Antoli <carlesantoli@hotmail.com>, 2022
 # Josep Anton Belchi, 2022
-# José Cabrera Lozano <jose.cabrera@edukative.es>, 2022
-# Arnau Ros, 2022
-# Jonatan Gk, 2022
-# Quim - eccit <quim@eccit.com>, 2022
-# eriiikgt, 2022
 # Martin Trigaux, 2022
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2022
 # Cristian Cruz, 2022
 # Guspy12, 2022
 # CristianCruzParra, 2022
+# Ivan Espinola, 2022
+# eriiikgt, 2022
+# Quim - eccit <quim@eccit.com>, 2022
+# Jonatan Gk, 2022
+# José Cabrera Lozano <jose.cabrera@edukative.es>, 2022
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2022
+# Arnau Ros, 2022
+# Farouk Jabiri, 2022
 # 
 msgid ""
 msgstr ""
@@ -33,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: CristianCruzParra, 2022\n"
+"Last-Translator: Farouk Jabiri, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,13 +73,13 @@ msgstr "%(amount)s vençut %(date)s"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "%(line_description)s (Canceled)"
-msgstr ""
+msgstr "%(line_description)s (cancel·lat)"
 
 #. module: sale
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "%(line_description)s (Draft)"
-msgstr ""
+msgstr "%(line_description)s (esborrany)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -112,6 +114,8 @@ msgid ""
 "<b>Congratulations</b>, your first quotation is sent!<br>Check your email to"
 " validate the quote."
 msgstr ""
+"<b>Enhorabona</b>, s'envia la primer pressupost!<br>Comproveu el vostre "
+"correu electrònic per validar la cita."
 
 #. module: sale
 #. openerp-web
@@ -313,6 +317,186 @@ msgid ""
 "</t>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
+"        Hola.\n"
+"        <br/><br/>\n"
+"        <t t-set=\"transaction\" t-value=\"object.getportallasttransaction()\"/>\n"
+"        La vostra comanda <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span> en <span style=\"font-weight:bold;\" t-out=\"formatamount(object.amounttotal, object.currencyid) or ''\">$ 10.00</span>\n"
+"        <t t-if=\"object.state == 'sale' or (transaction and transaction.state in ('done', 'authorized'))\">\n"
+"            s'ha confirmat.<br/>\n"
+"            Gràcies per la seva confiança!\n"
+"        </t>\n"
+"        <t t-elif=\"transaction and transaction.state == 'pending'\">\n"
+"            està pendent. Es confirmarà quan es rebi el pagament.\n"
+"            <t t-if=\"object.reference\">\n"
+"                La vostra referència de pagament és <span style=\"font-weight:bold;\" t-out=\"object.reference or ''\"/>.\n"
+"            </t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        No dubteu a contactar amb nosaltres si teniu cap pregunta.\n"
+"        <t t-if=\"not ishtmlempty(object.userid.signature)\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.userid.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"<t t-if=\"hasattr(object, 'websiteid') and object.websiteid\">\n"
+"    <div style=\"margin: 0px; padding: 0px;\">\n"
+"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
+"            <tr style=\"border-bottom: 2px solid #dee2e6;\">\n"
+"                <td style=\"width: 150px;\"><span style=\"font-weight:bold;\">Productes</span></td>\n"
+"                <td/>\n"
+"                <td width=\"15%\" align=\"center\"><span style=\"font-weight:bold;\">Quantitat</span></td>\n"
+"                <td width=\"20%\" align=\"right\"><span style=\"font-weight:bold;\">\n"
+"                <t t-if=\"object.userid.hasgroup('account.groupshowlinesubtotalstaxexcluded')\">\n"
+"                    IVA excl.\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    Inclús d'IVA </t>\n"
+"                </span></td>\n"
+"            </tr>\n"
+"        </table>\n"
+"        <t t-foreach=\"object.orderline\" t-as=\"line\">\n"
+"            <t t-if=\"(not hasattr(line, 'isdelivery') or not line.isdelivery) and line.displaytype in ['linesection', 'linenote']\">\n"
+"                <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
+"                    <t t-set=\"loopcyclenumber\" t-value=\"loopcyclenumber or 0\"/>\n"
+"                    <tr t-att-style=\"'background-color: #f2f2f2' if loopcyclenumber % 2 == 0 else 'background-color: #ffffff'\">\n"
+"                        <t t-set=\"loopcyclenumber\" t-value=\"loopcyclenumber + 1\"/>\n"
+"                        <td colspan=\"4\">\n"
+"                            <t t-if=\"line.displaytype == 'linesection'\">\n"
+"                                <span style=\"font-weight:bold;\" t-out=\"line.name or ''\">tenint cura del camp d'arbres</span>\n"
+"                            </t>\n"
+"                            <t t-elif=\"line.displaytype == 'linenote'\">\n"
+"                                <i t-out=\"line.name or ''\">tenint cura del camp d'arbres</i>\n"
+"                            </t>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </table>\n"
+"            </t>\n"
+"            <t t-elif=\"(not hasattr(line, 'isdelivery') or not line.isdelivery)\">\n"
+"                <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
+"                    <t t-set=\"loopcyclenumber\" t-value=\"loopcyclenumber or 0\"/>\n"
+"                    <tr t-att-style=\"'background-color: #f2f2f2' if loopcyclenumber % 2 == 0 else 'background-color: #ffffff'\">\n"
+"                        <t t-set=\"loopcyclenumber\" t-value=\"loopcyclenumber + 1\"/>\n"
+"                        <td style=\"width: 150px;\">\n"
+"                            <img t-attf-src=\"/web/image/product.product/{{ line.productid.id }}/image128\" style=\"width: 64px; height: 64px; object-fit: contain;\" alt=\"Product image\"/>\n"
+"                        </td>\n"
+"                        <td align=\"left\" t-out=\"line.productid.name or ''\">tenint cura del camp d'arbres</td>\n"
+"                        <td width=\"15%\" align=\"center\" t-out=\"line.productuomqty or ''\">1</td>\n"
+"                        <td width=\"20%\" align=\"right\"><span style=\"font-weight:bold;\">\n"
+"                        <t t-if=\"object.userid.hasgroup('account.groupshowlinesubtotalstaxexcluded')\">\n"
+"                            <t t-out=\"formatamount(line.pricereducetaxexcl, object.currencyid) or ''\">$ 10.00</t>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <t t-out=\"formatamount(line.pricereducetaxinc, object.currencyid) or ''\">$ 10.00</t>\n"
+"                        </t>\n"
+"                        </span></td>\n"
+"                    </tr>\n"
+"                </table>\n"
+"            </t>\n"
+"        </t>\n"
+"    </div>\n"
+"    <div style=\"margin: 0px; padding: 0px;\" t-if=\"hasattr(object, 'carrierid') and object.carrierid\">\n"
+"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
+"            <tr>\n"
+"                <td style=\"width: 60%\"/>\n"
+"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><span style=\"font-weight:bold;\">Lliurament:</span></td>\n"
+"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"formatamount(object.amountdelivery, object.currencyid) or ''\">$ 0.00</td>\n"
+"            </tr>\n"
+"            <tr>\n"
+"                <td style=\"width: 60%\"/>\n"
+"                <td style=\"width: 30%;\" align=\"right\"><span style=\"font-weight:bold;\">SubTotal:</span></td>\n"
+"                <td style=\"width: 10%;\" align=\"right\" t-out=\"formatamount(object.amountuntaxed, object.currencyid) or ''\">$ 10.00</td>\n"
+"            </tr>\n"
+"        </table>\n"
+"    </div>\n"
+"    <div style=\"margin: 0px; padding: 0px;\" t-else=\"\">\n"
+"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
+"            <tr>\n"
+"                <td style=\"width: 60%\"/>\n"
+"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><span style=\"font-weight:bold;\">SubTotal:</span></td>\n"
+"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"formatamount(object.amountuntaxed, object.currencyid) or ''\">$ 10.00</td>\n"
+"            </tr>\n"
+"        </table>\n"
+"    </div>\n"
+"    <div style=\"margin: 0px; padding: 0px;\">\n"
+"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
+"            <tr>\n"
+"                <td style=\"width: 60%\"/>\n"
+"                <td style=\"width: 30%;\" align=\"right\"><span style=\"font-weight:bold;\">Impostos:</span></td>\n"
+"                <td style=\"width: 10%;\" align=\"right\" t-out=\"formatamount(object.amounttax, object.currencyid) or ''\">$ 0.00</td>\n"
+"            </tr>\n"
+"            <tr>\n"
+"                <td style=\"width: 60%\"/>\n"
+"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><span style=\"font-weight:bold;\">Total:</span></td>\n"
+"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"formatamount(object.amounttotal, object.currencyid) or ''\">$ 10.00</td>\n"
+"            </tr>\n"
+"        </table>\n"
+"    </div>\n"
+"    <div t-if=\"object.partnerinvoiceid\" style=\"margin: 0px; padding: 0px;\">\n"
+"        <table width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
+"            <tr>\n"
+"                <td style=\"padding-top: 10px;\">\n"
+"                    <span style=\"font-weight:bold;\">Factura a:</span>\n"
+"                    <t t-out=\"object.partnerinvoiceid.street or ''\">1201 S Figueroa St</t>\n"
+"                    <t t-out=\"object.partnerinvoiceid.city or ''\">Los Angeles</t>\n"
+"                    <t t-out=\"object.partnerinvoiceid.stateid.name or ''\">California</t>\n"
+"                    <t t-out=\"object.partnerinvoiceid.zip or ''\">90015</t>\n"
+"                    <t t-out=\"object.partnerinvoiceid.countryid.name or ''\">Estats Units</t>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr>\n"
+"                <td>\n"
+"                    <span style=\"font-weight:bold;\">Mètode de pagament:</span>\n"
+"                    <t t-if=\"transaction.tokenid\">\n"
+"                        <t t-out=\"transaction.tokenid.displayname or ''\"/>\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        <t t-out=\"transaction.providerid.sudo().name or ''\"/>\n"
+"                    </t>\n"
+"                    (<t t-out=\"formatamount(transaction.amount, object.currencyid) or ''\">$ 10.00</t>)\n"
+"                </td>\n"
+"            </tr>\n"
+"        </table>\n"
+"    </div>\n"
+"    <div t-if=\"object.partnershippingid and not object.onlyservices\" style=\"margin: 0px; padding: 0px;\">\n"
+"        <table width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
+"            <tr>\n"
+"                <td>\n"
+"                    <br/>\n"
+"                    <span style=\"font-weight:bold;\">Envia a:</span>\n"
+"                    <t t-out=\"object.partnershippingid.street or ''\">1201 S Figueroa St</t>\n"
+"                    <t t-out=\"object.partnershippingid.city or ''\">Los Angeles</t>\n"
+"                    <t t-out=\"object.partnershippingid.stateid.name or ''\">California</t>\n"
+"                    <t t-out=\"object.partnershippingid.zip or ''\">90015</t>\n"
+"                    <t t-out=\"object.partnershippingid.countryid.name or ''\">Estats Units</t>\n"
+"                </td>\n"
+"            </tr>\n"
+"        </table>\n"
+"        <table t-if=\"hasattr(object, 'carrierid') and object.carrierid\" width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
+"            <tr>\n"
+"                <td>\n"
+"                    <span style=\"font-weight:bold;\">Mètode d'enviament:</span>\n"
+"                    <t t-out=\"object.carrierid.name or ''\"/>\n"
+"                    <t t-if=\"object.amountdelivery == 0.0\">\n"
+"                        (Lliure)\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        (<t t-out=\"formatamount(object.amountdelivery, object.currencyid) or ''\">$ 10.00</t>)\n"
+"                    </t>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr t-if=\"object.carrierid.carrierdescription\">\n"
+"                <td>\n"
+"                    <strong>Descripció d'enviament:</strong>\n"
+"                    <t t-out=\"object.carrierid.carrierdescription\"/>\n"
+"                </td>\n"
+"            </tr>\n"
+"        </table>\n"
+"    </div>\n"
+"</t>\n"
+"</div>"
 
 #. module: sale
 #: model:mail.template,body_html:sale.email_template_edi_sale
@@ -348,6 +532,35 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
+"        Hola.\n"
+"        <br/><br/>\n"
+"        El vostre\n"
+"        <t t-if=\"ctx.get('proforma')\">\n"
+"            Factura proforma <t t-out=\"doc_name or ''\">citació</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"            <t t-if=\"object.origin\">\n"
+"                (amb referència: <t t-out=\"object.origin or ''\"/> )\n"
+"            </t>\n"
+"            Hi ha disponible un import de <span style=\"font-weight: bold;\" t-out=\"formatamount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</span>.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"doc_name or ''\">cita</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"/>\n"
+"            <t t-if=\"object.origin\">\n"
+"                (amb referència: <t t-out=\"object.origin or ''\">S00052</t>)\n"
+"            </t>\n"
+"            L'import en <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</span> està llest per a la revisió.\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        No dubteu a contactar amb nosaltres si teniu cap pregunta.\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>"
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_cancellation
@@ -371,6 +584,23 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"docname\" t-value=\"object.typename\"/>\n"
+"        Benvolgut <t t-out=\"object.partnerid.name or ''\">usuari</t>,\n"
+"        <br/><br/>\n"
+"        Si us plau, aviseu-vos que\n"
+"        <t t-out=\"docname or ''\">cita</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
+"        <t t-if=\"object.origin\">\n"
+"            (amb referència: <t t-out=\"object.origin or ''\">S00052</t>)\n"
+"        </t>\n"
+"        s'ha cancel·lat. Per tant, no se li hauria de cobrar més per aquesta comanda.\n"
+"        Si cal qualsevol reemborsament, s'executarà en el millor dels casos.\n"
+"        <br/><br/>\n"
+"        No dubteu a contactar amb nosaltres si teniu cap pregunta.\n"
+"        <br/>\n"
+"    </p>\n"
+"</div>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -400,7 +630,7 @@ msgstr "<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" title=\"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> <b>Authorized</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/> <b>Autoritzat</b>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -492,7 +722,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
 msgid "<span class=\"flex-grow-1\">/ Month</span>"
-msgstr ""
+msgstr "<span class=\"flex-grow-1\">/ Mes</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -505,6 +735,8 @@ msgid ""
 "<span class=\"o_stat_text\">Customer</span>\n"
 "                            <span class=\"o_stat_text\">Preview</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Client</span>\n"
+"                            <span class=\"o_stat_text\">Previsualització</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -543,6 +775,10 @@ msgid ""
 "                            Draft invoices for this order will be cancelled. <br/>\n"
 "                        </span>"
 msgstr ""
+"<span>Segur que voleu cancel·lar aquesta comanda? <br/></span>\n"
+"                        <span id=\"display_invoice_alert\" attrs=\"{'invisible': [('display_invoice_alert', '=', False)]}\">\n"
+"                            Es cancel·laran els esborranys de factura d'aquesta comanda. <br/>\n"
+"                        </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -568,12 +804,12 @@ msgstr "<span>Per una quantitat de:</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<span>Payment</span>"
-msgstr ""
+msgstr "<span>Pagament</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<span>Signature</span>"
-msgstr ""
+msgstr "<span>Signatura</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -592,6 +828,9 @@ msgid ""
 "                            Shipping Address:\n"
 "                        </strong>"
 msgstr ""
+"<strong class=\"d-block mb-1\">\n"
+"                            Adreça d'enviament:\n"
+"                        </strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -690,6 +929,9 @@ msgid ""
 "invoicing,according to their invoicing policy (based on ordered or delivered"
 " quantity)."
 msgstr ""
+"Una factura estàndard s'emet amb totes les línies de comanda preparades per "
+"a la facturació, d'acord amb la seva política de facturació (basada en la "
+"quantitat ordenada o lliurada)."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__product_type
@@ -720,13 +962,13 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Pay Quotation"
-msgstr ""
+msgstr "Accepta el pressupost de pagament"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Sign Quotation"
-msgstr ""
+msgstr "Accepta i signa el pressupost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -855,6 +1097,8 @@ msgid ""
 "An order is to upsell when delivered quantities are above initially\n"
 "            ordered quantities, and the invoicing policy is based on ordered quantities."
 msgstr ""
+"Una ordre és revendre quan les quantitats lliurades estan per sobre inicialment\n"
+"            Quantitats ordenades, i la política de facturació es basa en quantitats ordenades."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution
@@ -870,7 +1114,7 @@ msgstr "Compte analític"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution_stored_char
 msgid "Analytic Distribution Stored Char"
-msgstr ""
+msgstr "Caràcter emmagatzemat de la distribució analítica"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__analytic
@@ -917,6 +1161,8 @@ msgid ""
 "As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
 "            to sell extra hours when all ordered hours have been consumed."
 msgstr ""
+"Per exemple, si vens hores de servei prepagades, Odoo et recomana\n"
+"            vendre hores extres quan s'hagin consumit totes les hores ordenades."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -983,6 +1229,10 @@ msgid ""
 "purchase amount, period). Rewards can be discounts (% or amount) or free "
 "products."
 msgstr ""
+"Augmenteu les vostres vendes amb diversos tipus de programes: Cupons, "
+"Promocions, Targeta de regal, Lleialtat. Es poden establir condicions "
+"específiques (productes, clients, quantitat mínima de compra, període). Les "
+"recomptes poden ser descomptes (% o import) o productes gratuïts."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__campaign_id
@@ -996,12 +1246,12 @@ msgstr "Campanya"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__can_edit_body
 msgid "Can Edit Body"
-msgstr "Pot Editar el Cos"
+msgstr "Pot Modificar el Cos"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_updatable
 msgid "Can Edit Product"
-msgstr "Pot Editar Producte"
+msgstr "Pot Modificar el Producte"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
@@ -1015,7 +1265,7 @@ msgstr "Cancel·lar"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Cancel %s"
-msgstr ""
+msgstr "Cancel·la %s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__cancel
@@ -1084,7 +1334,7 @@ msgstr "Comunicació"
 #. module: sale
 #: model:ir.model,name:sale.model_res_company
 msgid "Companies"
-msgstr "Companyies"
+msgstr "Empreses"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__company_id
@@ -1114,7 +1364,7 @@ msgstr "Calcular despeses d'enviament amb FedEx"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Sendcloud"
-msgstr ""
+msgstr "Calcula els costos d'enviament i d'enviament amb Sendcloud"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1185,7 +1435,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__country_code
 msgid "Country code"
-msgstr ""
+msgstr "Codi de país"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_loyalty
@@ -1338,7 +1588,7 @@ msgstr "Industria del client"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__access_url
 msgid "Customer Portal URL"
-msgstr "URL del portal dels clients"
+msgstr "L'URL del portal dels clients"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__client_order_ref
@@ -1364,7 +1614,7 @@ msgstr "Clients"
 #: model:product.product,name:sale.product_product_4e
 #: model:product.product,name:sale.product_product_4f
 msgid "Customizable Desk"
-msgstr "Desk personalitzable"
+msgstr "Escriptori personalitzable"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
@@ -1464,7 +1714,7 @@ msgstr "Mètodes lliurament"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered
 msgid "Delivery Quantity"
-msgstr ""
+msgstr "Quantitat de lliurament"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
@@ -1528,7 +1778,7 @@ msgstr "Import del descompte"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Discounts, Loyalty & Gift Card"
-msgstr ""
+msgstr "Descomptes, targeta de regal de lleialtat"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_name
@@ -1550,7 +1800,7 @@ msgstr "Tipus de visualització"
 #: code:addons/sale/static/src/js/product_discount_field.js:0
 #, python-format
 msgid "Do you want to apply this value to all lines ?"
-msgstr ""
+msgstr "Voleu aplicar aquest valor a totes les línies?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1594,7 +1844,7 @@ msgstr "Producte en Dipòsit "
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down Payment: %s (Draft)"
-msgstr ""
+msgstr "Pagament: %s (esborrany)"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
@@ -1607,7 +1857,7 @@ msgstr "Dipòsits"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down payment"
-msgstr ""
+msgstr "Pagament de baixada"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
@@ -1654,7 +1904,7 @@ msgstr "Connector EasyPost"
 #: code:addons/sale/static/src/js/sale_product_field.js:0
 #, python-format
 msgid "Edit Configuration"
-msgstr "Editar configuración"
+msgstr "Modificar configuració"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_provider_onboarding_wizard__payment_method__digital_signature
@@ -1675,6 +1925,7 @@ msgstr "Assistent de redacció de correu electrònic"
 #: model:ir.model.fields,help:sale.field_res_config_settings__invoice_mail_template_id
 msgid "Email sent to the customer once the invoice is available."
 msgstr ""
+"Correu electrònic enviat al client un cop la factura estigui disponible."
 
 #. module: sale
 #: model_terms:product.product,website_description:sale.product_product_4e
@@ -1843,7 +2094,7 @@ msgstr "Agrupar per"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
 msgid "Has Fiscal Position Changed"
-msgstr ""
+msgstr "Ha canviat la posició fiscal"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
@@ -2074,6 +2325,8 @@ msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                    them before validation."
 msgstr ""
+"Les factures es crearan en esborrany perquè pugueu revisar\n"
+"                    abans de la validació."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
@@ -2102,7 +2355,7 @@ msgstr "Objectiu de la facturació"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing and Payments"
-msgstr ""
+msgstr "Invocació i pagaments"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -2113,7 +2366,7 @@ msgstr "Adreça de facturació i d'enviament:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move_line__is_downpayment
 msgid "Is Downpayment"
-msgstr ""
+msgstr "És pagament endarrerit"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__is_mail_template_editor
@@ -2301,6 +2554,8 @@ msgstr "Adjunt principal"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage Promotions, coupons, loyalty cards, Gift cards &amp; eWallet"
 msgstr ""
+"Gestiona les promocions, cupons, cartes de lleialtat, cartes de regal i "
+"eWallet"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__manual
@@ -2598,7 +2853,7 @@ msgstr "Signatura online"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Online confirmation"
-msgstr ""
+msgstr "Confirmació en línia"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
@@ -2677,7 +2932,7 @@ msgstr "Data comanda"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Order Date:"
-msgstr ""
+msgstr "Data de la comanda:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
@@ -2796,7 +3051,7 @@ msgstr "Paga amb"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__other
 msgid "Pay with another payment provider"
-msgstr ""
+msgstr "Paga amb un altre proveïdor de pagaments"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__paypal
@@ -2852,7 +3107,7 @@ msgstr "Tipus d'usuari Paypal"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_url
 msgid "Portal Access URL"
-msgstr "URL del portal d'accés"
+msgstr "L'URL del portal d'accés"
 
 #. module: sale
 #: model_terms:product.product,website_description:sale.product_product_4e
@@ -2861,8 +3116,8 @@ msgid ""
 "Press a button and watch your desk glide effortlessly from sitting to "
 "standing height in seconds."
 msgstr ""
-"Premeu un botó i mireu el vostre escriptori planant-se sense esforç de seure"
-" a alçada en segons."
+"Premi un botó i vegi com el seu escriptori es llisca sense esforç de la "
+"posició asseguda a la dempeus en qüestió de segons."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce
@@ -2877,7 +3132,7 @@ msgstr "Preu reduït sense IVA"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxinc
 msgid "Price Reduce Tax incl"
-msgstr ""
+msgstr "Inclús de l'impost de reducció de preus"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__pricelist_id
@@ -2888,7 +3143,7 @@ msgstr "Tarifa"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__pricelist_item_id
 msgid "Pricelist Item"
-msgstr ""
+msgstr "Element de la llista de preus"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_pricelist_main
@@ -2915,7 +3170,7 @@ msgstr "Factura proforma"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Pro-Forma Invoice #"
-msgstr ""
+msgstr "Factura Pro-Forma #"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
@@ -2990,12 +3245,15 @@ msgstr "Variants de producte"
 #, python-format
 msgid "Product prices have been recomputed according to pricelist %s."
 msgstr ""
+"Els preus del producte s'han tornat a calcular segons la llista de preus %s."
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Product taxes have been recomputed according to fiscal position %s."
 msgstr ""
+"Els impostos sobre els productes s'han tornat a calcular d'acord amb la "
+"posició fiscal %s."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3196,7 +3454,7 @@ msgstr "Recalcular tots els preus sobre la base d'aquesta llista de preus"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all taxes based on this fiscal position"
-msgstr ""
+msgstr "Recalcula tots els impostos en funció d'aquesta posició fiscal"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -3208,6 +3466,8 @@ msgstr "Referència"
 #: model:ir.model.fields,help:sale.field_sale_order__origin
 msgid "Reference of the document that generated this sales order request"
 msgstr ""
+"Referència del document que ha generat aquesta sol·licitud de comanda de "
+"vendes"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_payment_register
@@ -3240,6 +3500,8 @@ msgid ""
 "Request a online signature and/or payment to the customer in order to "
 "confirm orders automatically."
 msgstr ""
+"Sol·licita una signatura en línia i/o un pagament al client per tal de "
+"confirmar les comandes automàticament."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3315,7 +3577,7 @@ msgstr "Comandes de venda"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_provider_onboarding_wizard
 msgid "Sale Payment provider onboarding wizard"
-msgstr ""
+msgstr "Assistent d'integració del proveïdor de pagaments en venda"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3482,6 +3744,9 @@ msgid ""
 "invoiced to your customer. Remove the sales order item for the timesheet "
 "entry to be non-billable."
 msgstr ""
+"L'element de la comanda de vendes al qual s'afegirà el temps dedicat per a "
+"facturar-lo al vostre client. Elimina l'element de comanda de vendes perquè "
+"l'entrada del full de temps no sigui billable."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
@@ -3491,17 +3756,17 @@ msgstr "Preus de venda"
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_cancellation
 msgid "Sales: Order Cancellation"
-msgstr ""
+msgstr "Vendes: cancel·lació de la comanda"
 
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_confirmation
 msgid "Sales: Order Confirmation"
-msgstr ""
+msgstr "Vendes: confirmació de la comanda"
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
 msgid "Sales: Send Quotation"
-msgstr ""
+msgstr "Vendes: envia un pressupost"
 
 #. module: sale
 #: code:addons/sale/models/crm_team.py:0
@@ -3615,7 +3880,7 @@ msgstr "Envieu un pressupost per a provar el portal de client."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
 msgid "Send and cancel"
-msgstr ""
+msgstr "Envia i cancel·la"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3630,7 +3895,7 @@ msgstr "Enviar mostra"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_sendcloud
 msgid "Sendcloud Connector"
-msgstr ""
+msgstr "Connector Sendcloud"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3647,12 +3912,12 @@ msgstr ""
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_cancellation
 msgid "Sent automatically to customers when you cancel an order"
-msgstr ""
+msgstr "Enviat automàticament als clients quan cancel·leu una comanda"
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_confirmation
 msgid "Sent to customers on order confirmation"
-msgstr ""
+msgstr "Enviat als clients amb confirmació de comanda"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sequence
@@ -3672,7 +3937,7 @@ msgstr "Fixa diferents preus per producte, descomptes automàtics..."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Set payments"
-msgstr "Establiu pagaments"
+msgstr "Establir pagaments"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3710,7 +3975,7 @@ msgstr "Mostra marges en comandes"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Sign & Pay Quotation"
-msgstr ""
+msgstr "Signa i paga el pressupost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3869,7 +4134,7 @@ msgstr "Total d'impostos"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_totals
 msgid "Tax Totals"
-msgstr ""
+msgstr "Totals d'impostos"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_tax
@@ -3981,6 +4246,8 @@ msgid ""
 "The delivery date is sooner than the expected date. You may be unable to "
 "honor the delivery date."
 msgstr ""
+"La data de lliurament és més aviat que la data prevista. Pot ser que no "
+"pugueu complir la data de lliurament."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
@@ -4006,6 +4273,9 @@ msgid ""
 "The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment provider.\n"
 "This mode is advised if you issue the final invoice at the order and not after the delivery."
 msgstr ""
+"La factura es genera automàticament i està disponible al portal del client quan el proveïdor de pagaments confirma la transacció.\n"
+"La factura es marca com a pagada i el pagament es registra al diari de pagament definit a la configuració del proveïdor de pagaments.\n"
+"Aquest mode s'aconsella si emeteu la factura final a la comanda i no després del lliurament."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4074,6 +4344,9 @@ msgid ""
 "to \"Ordered quantities\". Please update your deposit product to be able to "
 "create a deposit invoice."
 msgstr ""
+"El producte utilitzat per facturar un pagament endarrerit hauria de tenir un"
+" conjunt de polítiques de factures a \"quants ordenades\". Actualitzeu el "
+"producte de dipòsit per poder crear una factura de dipòsit."
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -4231,6 +4504,8 @@ msgstr ""
 msgid ""
 "This will update all taxes based on the currently selected fiscal position."
 msgstr ""
+"Això actualitzarà tots els impostos en funció de la posició fiscal "
+"seleccionada."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4463,7 +4738,7 @@ msgstr "Oportunitat de venda incremental"
 #. module: sale
 #: model:mail.template,description:sale.email_template_edi_sale
 msgid "Used by salespeople when they send quotations or proforma to prospects"
-msgstr ""
+msgstr "Utilitzat pels venedors quan envien cites o proforma als usuaris"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -4541,8 +4816,8 @@ msgid ""
 "We pay special attention to detail, which is why our desks are of a superior"
 " quality."
 msgstr ""
-"Paguem atenció especial als detalls, per això els nostres pupitres són d'una"
-" qualitat superior."
+"Prestem especial atenció als detalls, per això els nostres escriptoris són "
+"de qualitat superior."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__website_message_ids
@@ -4593,6 +4868,8 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "            or check every order and invoice them one by one."
 msgstr ""
+"Podeu seleccionar totes les comandes i facturar-les per lots,<br>\n"
+"            o comproveu cada comanda i facturant-les una per una."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_provider__so_reference_type
@@ -4612,6 +4889,8 @@ msgid ""
 "You cannot change the product's type because it is already used in sales "
 "orders."
 msgstr ""
+"No podeu canviar el tipus del producte perquè ja s'utilitza en comandes de "
+"venda."
 
 #. module: sale
 #: code:addons/sale/models/sale_order_line.py:0
@@ -4666,7 +4945,7 @@ msgid ""
 " Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
 "El pressupost conté productes de la companyia  %(product_company)s i el pressupost pertany a la companyia %(quote_company)s. \n"
-"Canvieu la companyia de la comanda o retireu els productes d'altres companyies (%(bad_products)s)."
+"Canvieu la companyia del pressupost o retireu els productes d'altres companyies (%(bad_products)s)."
 
 #. module: sale
 #: model:ir.actions.server,name:sale.send_invoice_cron_ir_actions_server
@@ -4731,3 +5010,5 @@ msgid ""
 "{{ object.company_id.name }} {{ object.type_name }} Cancelled (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
+"{{ object.companyid.name }} {{ object.typename }} cancel·lat (Ref {{ "
+"object.name o 'n/a' }})"

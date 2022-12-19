@@ -12,8 +12,9 @@
 # Quim - eccit <quim@eccit.com>, 2022
 # Martin Trigaux, 2022
 # oscaryuu, 2022
-# jabelchi, 2022
+# Josep Anton Belchi, 2022
 # marcescu, 2022
+# Ivan Espinola, 2022
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2022
 # 
 msgid ""
@@ -143,7 +144,7 @@ msgstr "Models de distribució analític"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution_stored_char
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution_stored_char
 msgid "Analytic Distribution Stored Char"
-msgstr ""
+msgstr "Caràcter emmagatzemat de la distribució analítica"
 
 #. module: analytic
 #. openerp-web
@@ -202,7 +203,7 @@ msgstr "Plans analítics:"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
 msgid "Analytic distribution to apply"
-msgstr ""
+msgstr "Distribució analítica a aplicar"
 
 #. module: analytic
 #: code:addons/analytic/models/analytic_plan.py:0
@@ -288,7 +289,7 @@ msgstr "Nens"
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_plan_action
 msgid "Click to add a new analytic account plan."
-msgstr ""
+msgstr "Feu clic per a afegir un nou pla de compte analític."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__color
@@ -303,7 +304,7 @@ msgstr "Índex de color"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_commercial_marketing
 msgid "Commercial & Marketing"
-msgstr ""
+msgstr "Màrqueting comercial"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__company_id
@@ -386,7 +387,7 @@ msgstr "Data"
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__active
 msgid "Deactivate the account."
-msgstr ""
+msgstr "Desactiva el compte."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__debit
@@ -606,7 +607,7 @@ msgstr "Nebula"
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "No Analytic Accounts for this plan"
-msgstr ""
+msgstr "No hi ha cap compte analític per a aquest pla"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
@@ -623,7 +624,7 @@ msgstr "Encara sense activitat en aquest compte"
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 #, python-format
 msgid "No plans available"
-msgstr ""
+msgstr "No hi ha plans disponibles"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction_counter
@@ -655,7 +656,7 @@ msgstr "D'acord"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_internal
 msgid "Operating Costs"
-msgstr ""
+msgstr "Costos operatius"
 
 #. module: analytic
 #. openerp-web
@@ -674,7 +675,7 @@ msgstr "Altres"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_our_super_product
 msgid "Our Super Product"
-msgstr ""
+msgstr "El nostre superproducte"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__parent_id
@@ -695,7 +696,7 @@ msgstr "Empresa"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__partner_category_id
 msgid "Partner Category"
-msgstr ""
+msgstr "Categoria de socis"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__plan_id
@@ -736,7 +737,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__root_plan_id
 msgid "Root Plan"
-msgstr ""
+msgstr "Pla arrel"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_sms_error
@@ -746,7 +747,7 @@ msgstr "Error de lliurament SMS"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_seagate_p2
 msgid "Seagate P2"
-msgstr ""
+msgstr "Seagate P2"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
@@ -760,6 +761,9 @@ msgid ""
 "create new customer invoice or Sales order if we select this company, it "
 "will automatically take this as an analytic account)"
 msgstr ""
+"Seleccioneu una empresa per a la qual s'utilitzarà la distribució analítica "
+"(p. ex. crear una nova factura de client o comanda de vendes si seleccioneu "
+"aquesta empresa, automàticament ho tindrà com a compte analític)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_category_id
@@ -768,6 +772,9 @@ msgid ""
 "(e.g. create new customer invoice or Sales order if we select this partner, "
 "it will automatically take this as an analytic account)"
 msgstr ""
+"Seleccioneu una categoria de soci per a la qual s'utilitzarà la distribució "
+"analítica (p. ex. crear una nova factura de client o comanda de venda si "
+"seleccioneu aquest soci, automàticament ho tindrà com a compte analític)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_id
@@ -776,11 +783,14 @@ msgid ""
 "create new customer invoice or Sales order if we select this partner, it "
 "will automatically take this as an analytic account)"
 msgstr ""
+"Seleccioneu un soci per al qual s'utilitzarà la distribució analítica (p. "
+"ex. crear una nova factura de client o comanda de vendes si seleccioneu "
+"aquest soci, automàticament tindrà això com un compte analític)"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
 msgid "Simultaneous conditions to meet"
-msgstr ""
+msgstr "Condicions simultànies per complir"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_spark
@@ -790,7 +800,7 @@ msgstr "Spark Systems"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
 msgid "Subplans"
-msgstr ""
+msgstr "Subplans"
 
 #. module: analytic
 #: code:addons/analytic/models/analytic_line.py:0
@@ -850,6 +860,8 @@ msgid ""
 "You can't set a different company on your analytic account since there are "
 "some analytic items linked to it."
 msgstr ""
+"No podeu establir una empresa diferent al vostre compte analític, ja que hi "
+"ha alguns elements analítics enllaçats."
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
