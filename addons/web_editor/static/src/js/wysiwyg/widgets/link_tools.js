@@ -367,6 +367,15 @@ const LinkTools = Link.extend({
         if ($target.closest('[name="link_border_style"]').length) {
             return;
         }
+        if ($target.closest('[name="link_style_color"]')) {
+            // Reset custom styles when changing link style.
+            this.$link.css('color', '');
+            this.$link.css('background-color', '');
+            this.$link.css('background-image', '');
+            this.$link.css('border-width', '');
+            this.$link.css('border-style', '');
+            this.$link.css('border-color', '');
+        }
         const $select = $target.closest('we-select');
         $select.find('we-selection-items we-button').toggleClass('active', false);
         this._setSelectOption($target, true);
