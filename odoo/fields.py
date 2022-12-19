@@ -719,7 +719,8 @@ class Field(MetaField('DummyField', (object,), {})):
         """
         Return whether the field may be used for grouping in :meth:`~odoo.models.BaseModel.read_group`.
         """
-        return self.store and self.column_type
+        # TODO: to add in the read_group it-self
+        return (self.store and self.column_type) or self.related
 
     #
     # Company-dependent fields
@@ -3101,6 +3102,7 @@ class Many2oneReference(Integer):
     type = 'many2one_reference'
 
     model_field = None
+    group_operator = None
 
     _related_model_field = property(attrgetter('model_field'))
 

@@ -29,6 +29,7 @@ class Aggregate(models.Model):
     key = fields.Integer()
     value = fields.Integer("Value")
     partner_id = fields.Many2one('res.partner')
+    display_name = fields.Char()
 
 
 # we use a selection that is in reverse lexical order, in order to check the
