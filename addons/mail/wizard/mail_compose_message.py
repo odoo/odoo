@@ -101,6 +101,10 @@ class MailComposer(models.TransientModel):
         if 'create_uid' in fields_list and 'create_uid' not in result:
             result['create_uid'] = self.env.uid
 
+        # comment mode by default removes emails
+        if 'auto_delete' in fields_list and 'auto_delete' not in result and result.get('composition_mode') == 'comment':
+            result['auto_delete'] = True
+
         return {
             fname: result[fname]
             for fname in result if fname in fields_list
@@ -264,7 +268,8 @@ class MailComposer(models.TransientModel):
             template = self.env['mail.template'].browse(template_id)
             values = dict(
                 (field, template[field])
-                for field in ('email_from',
+                for field in ('auto_delete',
+                              'email_from',
                               'reply_to',
                               'scheduled_date',
                               'subject',
@@ -285,6 +290,7 @@ class MailComposer(models.TransientModel):
                 self.env['mail.template'].browse(template_id),
                 template_res_ids,
                 ('attachment_ids',
+                 'auto_delete',
                  'body_html',
                  'email_cc',
                  'email_from',
@@ -318,6 +324,8 @@ class MailComposer(models.TransientModel):
                 default_model=model,
                 default_res_ids=res_ids
             ).default_get(['attachment_ids',
+                           'auto_delete',
+                           'auto_delete_keep_log',
                            'body',
                            'composition_mode',
                            'email_from',
@@ -333,6 +341,8 @@ class MailComposer(models.TransientModel):
             values = dict(
                 (key, default_values[key])
                 for key in ('attachment_ids',
+                            'auto_delete',
+                            'auto_delete_keep_log',
                             'body',
                             'email_from',
                             'mail_server_id',
@@ -657,7 +667,7 @@ class MailComposer(models.TransientModel):
             values.update(
                 email_add_signature=not bool(self.template_id) and self.email_add_signature,
                 email_layout_xmlid=self.email_layout_xmlid,
-                mail_auto_delete=self.template_id.auto_delete if self.template_id else True,
+                mail_auto_delete=self.auto_delete,
                 model_description=model_description,
             )
         return values
