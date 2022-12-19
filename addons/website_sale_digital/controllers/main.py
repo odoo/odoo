@@ -14,9 +14,7 @@ from odoo.addons.sale.controllers.portal import CustomerPortal
 class WebsiteSaleDigital(CustomerPortal):
     orders_page = '/my/orders'
 
-    @http.route([
-        '/my/orders/<int:order_id>',
-    ], type='http', auth='public', website=True)
+    @http.route()
     def portal_order_page(self, order_id=None, **post):
         response = super(WebsiteSaleDigital, self).portal_order_page(order_id=order_id, **post)
         if not 'sale_order' in response.qcontext:

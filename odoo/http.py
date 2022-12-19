@@ -797,13 +797,7 @@ def _generate_routing_rules(modules, nodb_only, converters=None):
                     _logger.warning("The endpoint %s is not decorated by @route(), decorating it myself.", f'{cls.__module__}.{cls.__name__}.{method_name}')
                     submethod = route()(submethod)
 
-                # Ensure "type" is defined on each method's own routing,
-                # also ensure overrides don't change the routing type.
-                default_type = submethod.original_routing.get('type', 'http')
-                routing_type = merged_routing.setdefault('type', default_type)
-                if submethod.original_routing.get('type') not in (None, routing_type):
-                    _logger.warning("The endpoint %s changes the route type, using the original type: %r.", f'{cls.__module__}.{cls.__name__}.{method_name}', routing_type)
-                submethod.original_routing['type'] = routing_type
+                _check_and_complete_route_definition(cls, submethod, merged_routing)
 
                 merged_routing.update(submethod.original_routing)
 
@@ -826,6 +820,24 @@ def _generate_routing_rules(modules, nodb_only, converters=None):
 
                 yield (url, endpoint)
 
+
+def _check_and_complete_route_definition(controller_cls, submethod, merged_routing):
+    """Verify and complete the route definition.
+
+    * Ensure 'type' is defined on each method's own routing.
+    * also ensure overrides don't change the routing type.
+
+    :param submethod: route method
+    :param dict merged_routing: accumulated routing values (defaults + submethod ancestor methods)
+    """
+    default_type = submethod.original_routing.get('type', 'http')
+    routing_type = merged_routing.setdefault('type', default_type)
+    if submethod.original_routing.get('type') not in (None, routing_type):
+        _logger.warning(
+            "The endpoint %s changes the route type, using the original type: %r.",
+            f'{controller_cls.__module__}.{controller_cls.__name__}.{submethod.__name__}',
+            routing_type)
+    submethod.original_routing['type'] = routing_type
 
 # =========================================================
 # Session

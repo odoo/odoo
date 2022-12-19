@@ -35,7 +35,7 @@ class WebsiteSale(main.WebsiteSale):
             order._auto_apply_rewards()
         return res
 
-    @http.route(['/shop/cart'], type='http', auth="public", website=True)
+    @http.route()
     def cart(self, **post):
         order = request.website.sale_get_order()
         if order:

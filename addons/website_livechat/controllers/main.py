@@ -59,7 +59,7 @@ class WebsiteLivechat(LivechatController):
         }
         return request.render("website_livechat.channel_page", values)
 
-    @http.route('/im_livechat/get_session', type="json", auth='public', cors="*")
+    @http.route()
     def get_session(self, channel_id, anonymous_name, previous_operator_id=None, chatbot_script_id=None, persisted=True, **kwargs):
         """ Override to use visitor name instead of 'Visitor' whenever a visitor start a livechat session. """
         visitor_sudo = request.env['website.visitor']._get_visitor_from_request()
