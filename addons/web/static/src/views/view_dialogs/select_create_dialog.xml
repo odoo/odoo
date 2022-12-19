@@ -22,7 +22,7 @@
                     </button>
                 </t>
                 <t t-if="!props.noCreate">
-                    <button class="btn btn-primary o_create_button" data-hotkey="c" t-on-click="createEditRecord">Create</button>
+                    <button class="btn btn-primary o_create_button" data-hotkey="c" t-on-click="createEditRecord">New</button>
                 </t>
                 <button class="btn o_form_button_cancel" t-att-class="(!props.multiSelect &amp;&amp; props.noCreate) ? 'btn-primary' : 'btn-secondary'" data-hotkey="z" t-on-click="() => this.props.close()">Close</button>
             </t>
