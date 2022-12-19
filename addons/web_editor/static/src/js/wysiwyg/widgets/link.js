@@ -336,6 +336,15 @@ const Link = Widget.extend({
     },
     /**
      * Abstract method: return a JQuery object containing the UI elements
+     * holding the "Open in new window" option's row of the link.
+     *
+     * @abstract
+     * @private
+     * @returns {JQuery}
+     */
+    _getIsNewWindowFormRow() {},
+    /**
+     * Abstract method: return a JQuery object containing the UI elements
      * holding the styling options of the link (eg: color, size, shape).
      *
      * @abstract
@@ -495,7 +504,7 @@ const Link = Widget.extend({
         var $linkUrlInput = this.$('#o_link_dialog_url_input');
         let value = $linkUrlInput.val();
         let isLink = value.indexOf('@') < 0;
-        this.$('input[name="is_new_window"]').closest('.row').toggleClass('d-none', !isLink);
+        this._getIsNewWindowFormRow().toggleClass('d-none', !isLink);
         this.$('.o_strip_domain').toggleClass('d-none', value.indexOf(window.location.origin) !== 0);
     },
     /**
