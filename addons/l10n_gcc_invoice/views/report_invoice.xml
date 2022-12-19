@@ -283,7 +283,7 @@
 
                                             <t t-if="arabic_name != english_name">
                                                 <br/>
-                                                <span t-field="line.with_context(lang='ar_001').product_id.name"
+                                                <span t-out="line.with_context(lang='ar_001').product_id.name"
                                                     style="text:right"
                                                     t-options="{'widget': 'text'}"/>
                                             </t>
