@@ -5,7 +5,7 @@
 # Translators:
 # Ondřej Janovský <ondrej.janovsky@alarex.cz>, 2022
 # Ondřej Skuhravý <ondra.sk@volny.cz>, 2022
-# Chris <krystof.reklamy13@gmail.com>, 2022
+# Chris, 2022
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2022
 # Damian Brencic <brencicdamian12313@gmail.com>, 2022
 # milda dvorak <milda.dvorak@optimal4.cz>, 2022
@@ -1200,6 +1200,12 @@ msgstr ""
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "A line cannot have both children and a groupby value (line '%s')."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "A line of this move is using a deprecated account, you cannot post it."
 msgstr ""
 
 #. module: account
@@ -3528,6 +3534,12 @@ msgstr "Zaokrouhlování hotovosti"
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Cash Statement"
 msgstr "Hotovostní výpis"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Cash basis rounding difference"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -10536,6 +10548,12 @@ msgid "Period Comparison"
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "Please create new accounts from the Chart of Accounts menu."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Please define a payment method line on your payment."
@@ -13372,8 +13390,8 @@ msgstr ""
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid ""
-"The country set on the the foreign VAT fiscal position must match the one "
-"set on the report."
+"The country set on the foreign VAT fiscal position must match the one set on"
+" the report."
 msgstr ""
 
 #. module: account

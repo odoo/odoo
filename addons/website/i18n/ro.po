@@ -134,7 +134,7 @@ msgstr "'nu a corespuns niciunei pagini."
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_hybrid
 msgid "' did not match anything."
-msgstr ""
+msgstr "nu găsit înregistrări."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_hybrid
@@ -142,6 +142,8 @@ msgid ""
 "' did not match anything.\n"
 "                        Results are displayed for '"
 msgstr ""
+"' nu găsit înregistrări..\n"
+"                        Rezultate afișate sunt în schimb pentru  '"
 
 #. module: website
 #. openerp-web
@@ -179,7 +181,7 @@ msgstr "'%s' nu este o dată cu oră corectă"
 #: model_terms:ir.ui.view,arch_db:website.list_website_public_pages
 #, python-format
 msgid "'. Showing results for '"
-msgstr ""
+msgstr "'. Afișare rezultate pentru '"
 
 #. module: website
 #. openerp-web
@@ -2948,6 +2950,13 @@ msgid "Contacts"
 msgstr "Contacte"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid "Contain"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Contains"
 msgstr "Conține"
@@ -3060,8 +3069,11 @@ msgid "Course"
 msgstr "Curs"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #: model_terms:ir.ui.view,arch_db:website.record_cover
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
+#, python-format
 msgid "Cover"
 msgstr "Copertă"
 
@@ -7556,9 +7568,12 @@ msgid "Portfolio"
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content_options
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
+#, python-format
 msgid "Position"
 msgstr "Poziție"
 
@@ -8266,7 +8281,7 @@ msgstr "Redirecționare căutare"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_hybrid
 msgid "Search Results"
-msgstr ""
+msgstr "Rezultatele căutării"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_search

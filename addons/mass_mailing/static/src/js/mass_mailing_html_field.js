@@ -210,7 +210,7 @@ export class MassMailingHtmlField extends HtmlField {
 
         if (device.isMobile) {
             $snippetsSideBar.hide();
-            this.$content.attr('style', 'padding-left: 0px !important');
+            this.wysiwyg.$iframe.attr('style', 'padding-left: 0px !important');
         }
 
         if (!odoo.debug) {
@@ -281,8 +281,8 @@ export class MassMailingHtmlField extends HtmlField {
                     layoutStyles: $theme.data('layout-styles'),
                 };
             });
-            $themes.parent().remove();
         }
+        $themes.parent().remove();
 
         if (!this._themeParams.length) {
             return;

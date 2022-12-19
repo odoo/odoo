@@ -394,6 +394,7 @@
     const DEFAULT_GAUGE_MIDDLE_COLOR = "#f1c232";
     const DEFAULT_GAUGE_UPPER_COLOR = "#6aa84f";
     const LINE_FILL_TRANSPARENCY = 0.4;
+    const MIN_FIG_SIZE = 80;
     // session
     const DEBOUNCE_TIME = 200;
     const MESSAGE_VERSION = 1;
@@ -3029,7 +3030,6 @@
         "SET_FORMATTING",
         "CLEAR_FORMATTING",
         "SET_BORDER",
-        "SET_DECIMAL",
         /** CHART */
         "CREATE_CHART",
         "UPDATE_CHART",
@@ -4092,13 +4092,12 @@
   }
   .o-link-icon {
     float: right;
-    padding-left: 4%;
+    padding-left: 5px;
     .o-icon {
       height: 16px;
     }
   }
   .o-link-icon .o-icon {
-    padding-top: 3px;
     height: 13px;
   }
   .o-link-icon:hover {
@@ -5204,20 +5203,13 @@
         }
         const dataSets = [zoneToXc(dataSetZone)];
         const sheetId = getters.getActiveSheetId();
-        const { x: offsetCorrectionX, y: offsetCorrectionY } = getters.getMainViewportCoordinates();
-        const { offsetX, offsetY } = getters.getActiveSheetScrollInfo();
-        const { width, height } = getters.getSheetViewDimension();
         const size = { width: DEFAULT_FIGURE_WIDTH, height: DEFAULT_FIGURE_HEIGHT };
-        const rect = getters.getVisibleRect(getters.getActiveMainViewport());
-        const scrollableViewportWidth = Math.min(rect.width, width - offsetCorrectionX);
-        const scrollableViewportHeight = Math.min(rect.height, height - offsetCorrectionY);
+        const { x, y } = getters.getMainViewportCoordinates();
+        const { offsetX, offsetY } = getters.getActiveSheetScrollInfo();
+        const { width, height } = getters.getVisibleRect(getters.getActiveMainViewport());
         const position = {
-            x: offsetCorrectionX +
-                offsetX +
-                Math.max(0, (scrollableViewportWidth - DEFAULT_FIGURE_WIDTH) / 2),
-            y: offsetCorrectionY +
-                offsetY +
-                Math.max(0, (scrollableViewportHeight - DEFAULT_FIGURE_HEIGHT) / 2),
+            x: x + offsetX + Math.max(0, (width - size.width) / 2),
+            y: y + offsetY + Math.max(0, (height - size.height) / 2),
         }; // Position at the center of the scrollable viewport
         let title = "";
         const cells = env.model.getters.getCellsInZone(sheetId, {
@@ -8192,7 +8184,7 @@
             baselineDisplay: getBaselineText(baselineCell, keyValueCell === null || keyValueCell === void 0 ? void 0 : keyValueCell.evaluated, chart.baselineMode),
             baselineArrow: getBaselineArrowDirection(baselineCell === null || baselineCell === void 0 ? void 0 : baselineCell.evaluated, keyValueCell === null || keyValueCell === void 0 ? void 0 : keyValueCell.evaluated, chart.baselineMode),
             baselineColor: getBaselineColor(baselineCell === null || baselineCell === void 0 ? void 0 : baselineCell.evaluated, chart.baselineMode, keyValueCell === null || keyValueCell === void 0 ? void 0 : keyValueCell.evaluated, chart.baselineColorUp, chart.baselineColorDown),
-            baselineDescr: _t(chart.baselineDescr || ""),
+            baselineDescr: chart.baselineDescr ? _t(chart.baselineDescr) : "",
             fontColor: chartFontColor(background),
             background,
             baselineStyle: chart.baselineMode !== "percentage" ? baselineCell === null || baselineCell === void 0 ? void 0 : baselineCell.style : undefined,
@@ -20520,7 +20512,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     const ANCHOR_SIZE = 8;
     const BORDER_WIDTH = 1;
     const ACTIVE_BORDER_WIDTH = 2;
-    const MIN_FIG_SIZE = 80;
     css /*SCSS*/ `
   div.o-figure {
     box-sizing: content-box;
@@ -20719,7 +20710,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         setup() {
             owl.useEffect((selectedFigureId, thisFigureId, el) => {
                 if (selectedFigureId === thisFigureId) {
-                    el === null || el === void 0 ? void 0 : el.focus();
+                    /** Scrolling on a newly inserted figure that overflows outside the viewport
+                     * will break the whole layout.
+                     * NOTE: `preventScroll`does not work on mobile but then again,
+                     * mobile is not really supported ATM.
+                     *
+                     * TODO: When implementing proper mobile, we will need to scroll the viewport
+                     * correctly (and render?) before focusing the element.
+                     */
+                    el === null || el === void 0 ? void 0 : el.focus({ preventScroll: true });
                 }
             }, () => [this.env.model.getters.getSelectedFigureId(), this.props.figure.id, this.figureRef.el]);
         }
@@ -20728,16 +20727,16 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             ev.stopPropagation();
             const initialX = ev.clientX;
             const initialY = ev.clientY;
-            this.dnd.isActive = true;
             this.dnd.x = figure.x;
             this.dnd.y = figure.y;
             this.dnd.width = figure.width;
             this.dnd.height = figure.height;
             const onMouseMove = (ev) => {
-                const deltaX = dirX * (ev.clientX - initialX);
-                const deltaY = dirY * (ev.clientY - initialY);
-                this.dnd.width = Math.max(figure.width + deltaX, MIN_FIG_SIZE);
-                this.dnd.height = Math.max(figure.height + deltaY, MIN_FIG_SIZE);
+                this.dnd.isActive = true;
+                const deltaX = Math.max(dirX * (ev.clientX - initialX), MIN_FIG_SIZE - figure.width);
+                const deltaY = Math.max(dirY * (ev.clientY - initialY), MIN_FIG_SIZE - figure.height);
+                this.dnd.width = figure.width + deltaX;
+                this.dnd.height = figure.height + deltaY;
                 if (dirX < 0) {
                     this.dnd.x = figure.x - deltaX;
                 }
@@ -20783,12 +20782,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const { offsetX, offsetY } = this.env.model.getters.getActiveSheetScrollInfo();
             const initialX = ev.clientX - position.left;
             const initialY = ev.clientY - position.top;
-            this.dnd.isActive = true;
             this.dnd.x = figure.x;
             this.dnd.y = figure.y;
             this.dnd.width = figure.width;
             this.dnd.height = figure.height;
             const onMouseMove = (ev) => {
+                this.dnd.isActive = true;
                 const newX = ev.clientX - position.left;
                 let deltaX = newX - initialX;
                 if (newX > offsetCorrectionX && initialX < offsetCorrectionX) {
@@ -21969,6 +21968,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return {
                 left: `${this.props.position.left + x}px`,
                 bottom: "0px",
+                height: `${SCROLLBAR_WIDTH$1}px`,
                 right: `${SCROLLBAR_WIDTH$1}px`,
             };
         }
@@ -22010,6 +22010,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return {
                 top: `${this.props.position.top + y}px`,
                 right: "0px",
+                width: `${SCROLLBAR_WIDTH$1}px`,
                 bottom: `${SCROLLBAR_WIDTH$1}px`,
             };
         }
@@ -26350,7 +26351,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
      */
     function repairInitialMessages(data, initialMessages) {
         initialMessages = fixTranslatedSheetIds(data, initialMessages);
-        initialMessages = dropSortCommands(data, initialMessages);
+        initialMessages = dropCommands(initialMessages, "SORT_CELLS");
+        initialMessages = dropCommands(initialMessages, "SET_DECIMAL");
         return initialMessages;
     }
     /**
@@ -26388,14 +26390,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         return messages;
     }
-    function dropSortCommands(data, initialMessages) {
+    function dropCommands(initialMessages, commandType) {
         const messages = [];
         for (const message of initialMessages) {
             if (message.type === "REMOTE_REVISION") {
                 messages.push({
                     ...message,
-                    // @ts-ignore
-                    commands: message.commands.filter((command) => command.type !== "SORT_CELLS"),
+                    commands: message.commands.filter((command) => command.type !== commandType),
                 });
             }
             else {
@@ -34731,6 +34732,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.clientId = "local";
             this.pendingMessages = [];
             this.waitingAck = false;
+            this.isReplayingInitialRevisions = false;
             this.processedRevisions = new Set();
             this.uuidGenerator = new UuidGenerator();
             this.debouncedMove = debounce(this._move.bind(this), DEBOUNCE_TIME);
@@ -34790,6 +34792,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.transportService.onNewMessage(this.clientId, this.onMessageReceived.bind(this));
         }
         loadInitialMessages(messages) {
+            this.isReplayingInitialRevisions = true;
             this.on("unexpected-revision-id", this, ({ revisionId }) => {
                 throw new Error(`The spreadsheet could not be loaded. Revision ${revisionId} is corrupted.`);
             });
@@ -34797,6 +34800,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 this.onMessageReceived(message);
             }
             this.off("unexpected-revision-id", this);
+            this.isReplayingInitialRevisions = false;
         }
         /**
          * Notify the server that the user client left the collaborative session
@@ -34984,6 +34988,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     clientId: revision.clientId,
                     commands: revision.commands,
                 };
+            }
+            if (this.isReplayingInitialRevisions) {
+                throw new Error(`Trying to send a new revision while replaying initial revision. This can lead to endless dispatches every time the spreadsheet is open.
+      ${JSON.stringify(message)}`);
             }
             this.transportService.sendMessage({
                 ...message,
@@ -35260,16 +35268,24 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.adjustViewportZoneX();
             this.adjustViewportZoneY();
         }
+        /**
+         *
+         * @param zone
+         * @returns Computes the absolute coordinate of a given zone inside the viewport
+         */
         getRect(zone) {
             const targetZone = intersection(zone, this.zone);
             if (targetZone) {
+                const x = this.getters.getColRowOffset("COL", this.zone.left, targetZone.left) +
+                    this.offsetCorrectionX;
+                const y = this.getters.getColRowOffset("ROW", this.zone.top, targetZone.top) + this.offsetCorrectionY;
+                const width = Math.min(this.getters.getColRowOffset("COL", targetZone.left, targetZone.right + 1), this.width);
+                const height = Math.min(this.getters.getColRowOffset("ROW", targetZone.top, targetZone.bottom + 1), this.height);
                 return {
-                    x: this.getters.getColRowOffset("COL", this.zone.left, targetZone.left) +
-                        this.offsetCorrectionX,
-                    y: this.getters.getColRowOffset("ROW", this.zone.top, targetZone.top) +
-                        this.offsetCorrectionY,
-                    width: this.getters.getColRowOffset("COL", targetZone.left, targetZone.right + 1),
-                    height: this.getters.getColRowOffset("ROW", targetZone.top, targetZone.bottom + 1),
+                    x,
+                    y,
+                    width,
+                    height,
                 };
             }
             else {
@@ -41666,7 +41682,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     case 3 /* Status.Finalizing */:
                         throw new Error("Cannot dispatch commands in the finalize state");
                     case 2 /* Status.RunningCore */:
-                        throw new Error("A UI plugin cannot dispatch while handling a core command");
+                        if (isCoreCommand(command)) {
+                            throw new Error(`A UI plugin cannot dispatch ${type} while handling a core command`);
+                        }
+                        this.dispatchToHandlers(this.handlers, command);
                 }
                 return DispatchResult.Success;
             };
@@ -41788,7 +41807,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         onRemoteRevisionReceived({ commands }) {
             for (let command of commands) {
+                const previousStatus = this.status;
+                this.status = 2 /* Status.RunningCore */;
                 this.dispatchToHandlers(this.uiPlugins, command);
+                this.status = previousStatus;
             }
             this.finalize();
         }
@@ -42054,8 +42076,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2022-11-24T09:38:39.745Z';
-    exports.__info__.hash = 'b167b3e';
+    exports.__info__.date = '2022-12-09T14:58:12.180Z';
+    exports.__info__.hash = '6c89e26';
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map

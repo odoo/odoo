@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+from collections import defaultdict
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
@@ -13,22 +14,31 @@ class StockQuantPackage(models.Model):
 
     @api.depends('quant_ids', 'package_type_id')
     def _compute_weight(self):
+        if self.env.context.get('picking_id'):
+            package_weights = defaultdict(float)
+            # Ordering by qty_done prevents the default ordering by groupby fields that can inject multiple Left Joins in the resulting query.
+            res_groups = self.env['stock.move.line'].read_group(
+                [('result_package_id', 'in', self.ids), ('product_id', '!=', False), ('picking_id', '=', self.env.context['picking_id'])],
+                ['id:count'],
+                ['result_package_id', 'product_id', 'product_uom_id', 'qty_done'],
+                lazy=False, orderby='qty_done asc'
+            )
+            for res_group in res_groups:
+                product_id = self.env['product.product'].browse(res_group['product_id'][0])
+                product_uom_id = self.env['uom.uom'].browse(res_group['product_uom_id'][0])
+                package_weights[res_group['result_package_id'][0]] += (
+                    res_group['__count']
+                    * product_uom_id._compute_quantity(res_group['qty_done'], product_id.uom_id)
+                    * product_id.weight
+                )
         for package in self:
-            # set initial weight to package type base weight
             weight = package.package_type_id.base_weight or 0.0
             if self.env.context.get('picking_id'):
-                # TODO: potential bottleneck: N packages = N queries, use groupby ?
-                current_picking_move_line_ids = self.env['stock.move.line'].search([
-                    ('result_package_id', '=', package.id),
-                    ('picking_id', '=', self.env.context['picking_id'])
-                ])
-                for ml in current_picking_move_line_ids:
-                    weight += ml.product_uom_id._compute_quantity(
-                        ml.qty_done, ml.product_id.uom_id) * ml.product_id.weight
+                package.weight = weight + package_weights[package.id]
             else:
                 for quant in package.quant_ids:
                     weight += quant.quantity * quant.product_id.weight
-            package.weight = weight
+                package.weight = weight
 
     def _get_default_weight_uom(self):
         return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
@@ -59,19 +69,32 @@ class StockPicking(models.Model):
     def _compute_packages(self):
         for package in self:
             packs = set()
-            for move_line in package.move_line_ids:
-                if move_line.result_package_id:
-                    packs.add(move_line.result_package_id.id)
+            if self.env['stock.move.line'].search_count([('picking_id', '=', package.id), ('result_package_id', '!=', False)]):
+                for move_line in package.move_line_ids:
+                    if move_line.result_package_id:
+                        packs.add(move_line.result_package_id.id)
             package.package_ids = list(packs)
 
     @api.depends('move_line_ids', 'move_line_ids.result_package_id', 'move_line_ids.product_uom_id', 'move_line_ids.qty_done')
     def _compute_bulk_weight(self):
+        picking_weights = defaultdict(float)
+        # Ordering by qty_done prevents the default ordering by groupby fields that can inject multiple Left Joins in the resulting query.
+        res_groups = self.env['stock.move.line'].read_group(
+            [('picking_id', 'in', self.ids), ('product_id', '!=', False), ('result_package_id', '=', False)],
+            ['id:count'],
+            ['picking_id', 'product_id', 'product_uom_id', 'qty_done'],
+            lazy=False, orderby='qty_done asc'
+        )
+        for res_group in res_groups:
+            product_id = self.env['product.product'].browse(res_group['product_id'][0])
+            product_uom_id = self.env['uom.uom'].browse(res_group['product_uom_id'][0])
+            picking_weights[res_group['picking_id'][0]] += (
+                res_group['__count']
+                * product_uom_id._compute_quantity(res_group['qty_done'], product_id.uom_id)
+                * product_id.weight
+            )
         for picking in self:
-            weight = 0.0
-            for move_line in picking.move_line_ids:
-                if move_line.product_id and not move_line.result_package_id:
-                    weight += move_line.product_uom_id._compute_quantity(move_line.qty_done, move_line.product_id.uom_id) * move_line.product_id.weight
-            picking.weight_bulk = weight
+            picking.weight_bulk = picking_weights[picking.id]
 
     @api.depends('move_line_ids.result_package_id', 'move_line_ids.result_package_id.shipping_weight', 'weight_bulk')
     def _compute_shipping_weight(self):

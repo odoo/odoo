@@ -6,6 +6,7 @@
 # Martin Trigaux, 2022
 # NGUYỄN HỮU DŨNG, 2022
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
+# Thi Huong Nguyen, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022\n"
+"Last-Translator: Thi Huong Nguyen, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -650,7 +651,7 @@ msgstr "Tài khoản phân tích"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_distribution_stored_char
 msgid "Analytic Distribution Stored Char"
-msgstr "Biểu đồ phân phối phân tích được lưu trữ"
+msgstr "Char Phân bổ Phân tích được Lưu trữ"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_analytic_applicability
@@ -2875,6 +2876,7 @@ msgstr "Đúng nếu email nhắc nhở được xác nhận bởi nhà cung c�
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
+#: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Type a message..."
 msgstr "Đang nhập tin nhắn..."
 
@@ -2995,6 +2997,15 @@ msgstr "Công nợ nhà cung cấp"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Vendor Bills"
 msgstr "Hoá đơn Nhà cung cấp"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/report/purchase_report.py:0
+#, python-format
+msgid ""
+"Value: 'avg_days_to_purchase' should only be used to show an average. If you"
+" are seeing this message then it is being accessed incorrectly."
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search

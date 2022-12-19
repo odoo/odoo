@@ -3,8 +3,8 @@
 # 	* sale
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Jolien De Paepe, 2022
+# Martin Trigaux, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
@@ -300,7 +300,7 @@ msgstr ""
 "        Hallo,\n"
 "        <br/><br/>\n"
 "        <t t-set=\"transaction\" t-value=\"object.get_portal_last_transaction()\"/>\n"
-"        Je bestelling <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span> ten belope van <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
+"        Je bestelling <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span> voor het bedrag van <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
 "        <t t-if=\"object.state == 'sale' or (transaction and transaction.state in ('done', 'authorized'))\">\n"
 "            is bevestigd.<br/>\n"
 "            Bedankt voor je vertrouwen!\n"
@@ -403,7 +403,7 @@ msgstr ""
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%;\" align=\"right\"><span style=\"font-weight:bold;\">Belastingen:</span></td>\n"
+"                <td style=\"width: 30%;\" align=\"right\"><span style=\"font-weight:bold;\">BTW:</span></td>\n"
 "                <td style=\"width: 10%;\" align=\"right\" t-out=\"format_amount(object.amount_tax, object.currency_id) or ''\">$ 0.00</td>\n"
 "            </tr>\n"
 "            <tr>\n"
@@ -518,21 +518,20 @@ msgstr ""
 "<br/><br/>\n"
 "Je\n"
 "<t t-if=\"ctx.get('proforma')\">\n"
-"Pro forma factuur voor <t t-out=\"doc_name or ''\">citaat</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"Pro forma factuur voor de <t t-out=\"doc_name or ''\">offerte</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
 "<t t-if=\"object.origin\">\n"
 "(met referentie: <t t-out=\"object.origin or ''\"/> )\n"
-"</t>\n"
-"bedrag in <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</span> is beschikbaar.\n"
+"</t>ten belope van <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</span> is beschikbaar.\n"
 "</t>\n"
 "<t t-else=\"\">\n"
-"<t t-out=\"doc_name or ''\">citaat</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"/>\n"
+"<t t-out=\"doc_name or ''\">offerte</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"/>\n"
 "<t t-if=\"object.origin\">\n"
 "(met referentie: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "</t>\n"
-"bedrag in <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</span> is klaar voor beoordeling.\n"
+"voor het bedrag van <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</span> is klaar voor beoordeling.\n"
 "</t>\n"
 "<br/><br/>\n"
-"Aarzel niet om ons te contacteren indien je vragen heeft.\n"
+"Aarzel niet om ons te contacteren indien je vragen hebt.\n"
 "<t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "<br/><br/>\n"
 "<t t-out=\"object.user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
@@ -1106,7 +1105,7 @@ msgstr "Kostenplaats"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution_stored_char
 msgid "Analytic Distribution Stored Char"
-msgstr "Kostenplaatsdistributie Opgeslagen Char"
+msgstr "Kostenplaatsdistributie opgeslagen karakter"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__analytic
@@ -1942,9 +1941,9 @@ msgid ""
 " a validated expense can be re-invoice to a customer at its cost or sales "
 "price."
 msgstr ""
-"Declaraties en leveranciersfacturen kunnen worden door-gefactureerd aan de "
-"klant. Met deze optie kan een bevestigde declaratie worden door-gefactureerd"
-" aan de klant op basis van de kostprijs of de verkoopprijs."
+"Onkosten en leveranciersfacturen kunnen worden doorgerekend aan de klant. "
+"Met deze optie kunnen bevestigde onkosten worden doorgerekend aan de klant "
+"op basis van de kostprijs of de verkoopprijs."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__validity_date
@@ -3240,7 +3239,8 @@ msgstr "Productprijzen zijn herberekend volgens prijslijst %s."
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Product taxes have been recomputed according to fiscal position %s."
-msgstr "Productbelastingen zijn herberekend volgens fiscale positie %s."
+msgstr ""
+"De BTW's van de producten zijn herberekend volgens fiscale positie %s."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3441,7 +3441,7 @@ msgstr "Bereken alle prijzen opnieuw op basis van deze prijslijst"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all taxes based on this fiscal position"
-msgstr "Bereken alle belastingen opnieuw op basis van deze fiscale positie"
+msgstr "Bereken alle BTW's opnieuw op basis van deze fiscale positie"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -4289,6 +4289,13 @@ msgstr ""
 " is."
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/controllers/portal.py:0
+#, python-format
+msgid "The access token is invalid."
+msgstr "Het toegangstoken is ongeldig."
+
+#. module: sale
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "The ordered quantity has been updated."
@@ -4479,8 +4486,8 @@ msgstr ""
 msgid ""
 "This will update all taxes based on the currently selected fiscal position."
 msgstr ""
-"Hiermee worden alle belastingen bijgewerkt op basis van de momenteel "
-"geselecteerde fiscale positie."
+"Hiermee worden alle BTW's bijgewerkt op basis van de nu geselecteerde "
+"fiscale positie."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4696,7 +4703,7 @@ msgstr "Prijzen bijwerken"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Taxes"
-msgstr "Belastingen bijwerken"
+msgstr "BTW bijwerken"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
@@ -4720,7 +4727,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "Valid Until"
-msgstr "Geldig tot"
+msgstr "Geldig t/m"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template

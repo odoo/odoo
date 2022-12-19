@@ -945,7 +945,16 @@ options.registry.BackgroundShape.include({
             return el;
         }
         return _getLastPreFilterLayerElement(this.$target);
-    }
+    },
+    /**
+     * @override
+     */
+    _removeShapeEl(shapeEl) {
+        this.trigger_up('widgets_stop_request', {
+            $target: $(shapeEl),
+        });
+        return this._super(...arguments);
+    },
 });
 
 options.registry.ReplaceMedia.include({
@@ -2242,8 +2251,11 @@ const VisibilityPageOptionUpdate = options.Class.extend({
      */
     async start() {
         await this._super(...arguments);
-        const shown = await this._isShown();
-        this.trigger_up('snippet_option_visibility_update', {show: shown});
+        // TODO in master: Use the data-invisible system to get rid of this
+        // piece of code.
+        this._isShown().then(isShown => {
+            this.trigger_up('snippet_option_visibility_update', {show: isShown});
+        });
     },
     /**
      * @override
@@ -3638,6 +3650,61 @@ options.registry.SwitchableViews = options.Class.extend({
     _checkIfWidgetsUpdateNeedReload() {
         return true;
     }
+});
+
+options.registry.GridImage = options.Class.extend({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see this.selectClass for parameters
+     */
+    changeGridImageMode(previewMode, widgetValue, params) {
+        const imageGridItemEl = this._getImageGridItem();
+        if (imageGridItemEl) {
+            imageGridItemEl.classList.toggle('o_grid_item_image_contain', widgetValue === 'contain');
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Returns the parent column if it is marked as a grid item containing an
+     * image.
+     *
+     * @returns {?HTMLElement}
+     */
+    _getImageGridItem() {
+        const parentEl = this.$target[0].parentNode;
+        if (parentEl && parentEl.classList.contains('o_grid_item_image')) {
+            return parentEl;
+        }
+        return null;
+    },
+    /**
+     * @override
+     */
+    _computeVisibility() {
+        return this._super(...arguments)
+            && !!this._getImageGridItem()
+            && !('shape' in this.$target[0].dataset);
+    },
+    /**
+     * @override
+     */
+    _computeWidgetState(methodName, params) {
+        if (methodName === 'changeGridImageMode') {
+            const imageGridItemEl = this._getImageGridItem();
+            return imageGridItemEl && imageGridItemEl.classList.contains('o_grid_item_image_contain')
+                ? 'contain'
+                : 'cover';
+        }
+        return this._super(...arguments);
+    },
 });
 
 return {

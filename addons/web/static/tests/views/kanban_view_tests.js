@@ -363,6 +363,22 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_kanban_record:contains(gnap)");
     });
 
+    QUnit.test("generic tags are case insensitive", async function (assert) {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <templates><t t-name="kanban-box">
+                        <Div class="test">Hello</Div>
+                    </t></templates>
+                </kanban>`,
+        });
+
+        assert.containsN(target, "div.test", 4);
+    });
+
     QUnit.test("display full is supported on fields", async (assert) => {
         await makeView({
             type: "kanban",
@@ -1271,12 +1287,7 @@ QUnit.module("Views", (hooks) => {
         assert.step("next page");
         await click(target.querySelector(".o_pager_next"));
         assert.deepEqual(getPagerValue(target), [4, 4]);
-        assert.verifySteps([
-            "render",
-            "next page",
-            "onUpdatedPager",
-            "render"
-        ]);
+        assert.verifySteps(["render", "next page", "onUpdatedPager", "render"]);
     });
 
     QUnit.test("click on a button type='delete' to delete a record in a column", async (assert) => {
@@ -6661,6 +6672,67 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_quick_create_unfolded");
         assert.containsOnce(target, ".o_kanban_example_background_container");
     });
+
+    QUnit.test(
+        "empty kanban with sample data grouped by date range (fill temporal)",
+        async (assert) => {
+            serverData.models.partner.records = [];
+
+            await makeView({
+                arch: `
+                <kanban sample="1">
+                    <field name="date" allow_group_range_value="true"/>
+                    <field name="state"/>
+                    <field name="int_field"/>
+                    <progressbar field="state" sum_field="int_field" help="progress" colors="{}"/>
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="foo"/>
+                            <field name="int_field"/>
+                        </div>
+                    </templates>
+                </kanban>`,
+                serverData,
+                groupBy: ["date:month"],
+                resModel: "partner",
+                type: "kanban",
+                noContentHelp: "No content helper",
+                mockRPC(route, args) {
+                    if (args.method === "web_read_group") {
+                        // Simulate fill temporal
+                        return {
+                            groups: [
+                                {
+                                    date_count: 0,
+                                    state: false,
+                                    "date:month": "December 2022",
+                                    __range: {
+                                        "date:month": {
+                                            from: "2022-12-01",
+                                            to: "2023-01-01",
+                                        },
+                                    },
+                                    __domain: [
+                                        ["date", ">=", "2022-12-01"],
+                                        ["date", "<", "2023-01-01"],
+                                    ],
+                                },
+                            ],
+                            length: 1,
+                        };
+                    }
+                },
+            });
+
+            assert.containsOnce(target, ".o_view_nocontent");
+            assert.strictEqual(
+                target.querySelector(".o_kanban_group .o_column_title").textContent,
+                "December 2022"
+            );
+            assert.containsOnce(target, ".o_kanban_group");
+            assert.containsN(target, ".o_kanban_group .o_kanban_record", 16);
+        }
+    );
 
     QUnit.test("empty grouped kanban with sample data and click quick create", async (assert) => {
         await makeView({

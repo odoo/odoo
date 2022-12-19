@@ -23,9 +23,9 @@
 # Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2022
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2022
 # Hrvoje Sić <hrvoje.sic@gmail.com>, 2022
-# Bole <bole@dajmi5.com>, 2022
-# Martin Trigaux, 2022
 # Matej Mijoč, 2022
+# Martin Trigaux, 2022
+# Bole <bole@dajmi5.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Matej Mijoč, 2022\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2022\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,7 +65,7 @@ msgstr "# prodajnih naloga"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "%(amount)s due %(date)s"
-msgstr ""
+msgstr "%(amount)s dospijeće %(date)s"
 
 #. module: sale
 #: code:addons/sale/models/sale_order_line.py:0
@@ -100,7 +100,7 @@ msgstr ""
 #: model:product.product,description_sale:sale.product_product_4e
 #: model:product.product,description_sale:sale.product_product_4f
 msgid "160x80cm, with large legs."
-msgstr "160x80cm, sa velikim(dugim) nogama"
+msgstr "160x80cm, sa velikim nogama."
 
 #. module: sale
 #. openerp-web
@@ -3825,7 +3825,7 @@ msgstr "Oznake"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
 msgid "Tax Country"
-msgstr ""
+msgstr "Država poreza"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -3987,6 +3987,13 @@ msgstr ""
 #, python-format
 msgid "The order is not in a state requiring customer signature."
 msgstr "Narudžba nije u stanju koje zahtijeva potpis kupca."
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/controllers/portal.py:0
+#, python-format
+msgid "The access token is invalid."
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/models/sale_order_line.py:0
@@ -4262,6 +4269,7 @@ msgid "Type Name"
 msgstr "Upiši ime"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Type a message..."

@@ -346,7 +346,7 @@ class HrExpense(models.Model):
 
         product = self.env['product.product'].search([('can_be_expensed', '=', True)])
         if product:
-            product = product.filtered(lambda p: p.default_code == "EXP_GEN") or product[0]
+            product = product.filtered(lambda p: p.default_code == "EXP_GEN")[0] or product[0]
         else:
             raise UserError(_("You need to have at least one category that can be expensed in your database to proceed!"))
 
@@ -1146,12 +1146,21 @@ class HrExpenseSheet(models.Model):
     def approve_expense_sheets(self):
         self._check_can_approve()
 
+        self._validate_analytic_distribution()
         duplicates = self.expense_line_ids.duplicate_expense_ids.filtered(lambda exp: exp.state in ['approved', 'done'])
         if duplicates:
             action = self.env["ir.actions.act_window"]._for_xml_id('hr_expense.hr_expense_approve_duplicate_action')
             action['context'] = {'default_sheet_ids': self.ids, 'default_expense_ids': duplicates.ids}
             return action
         self._do_approve()
+
+    def _validate_analytic_distribution(self):
+        for line in self.expense_line_ids:
+            line._validate_distribution(**{
+                'account': line.account_id.id,
+                'business_domain': 'expense',
+                'company_id': line.company_id.id,
+            })
 
     def _do_approve(self):
         self._check_can_approve()

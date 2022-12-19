@@ -21,6 +21,11 @@ class TestHrEmployee(TestHrCommon):
             'image_1920': False
         })
 
+    def test_employee_linked_partner(self):
+        user_partner = self.user_without_image.partner_id
+        work_contact = self.employee_without_image.work_contact_id
+        self.assertEqual(user_partner, work_contact)
+
     def test_employee_resource(self):
         _tz = 'Pacific/Apia'
         self.res_users_hr_officer.company_id.resource_calendar_id.tz = _tz
@@ -152,10 +157,14 @@ class TestHrEmployee(TestHrCommon):
 
     def test_employee_create_from_signup(self):
         # Test that an employee is not created when signin up on the website
+        partner = self.env['res.partner'].create({
+            'name': 'test partner'
+        })
         self.env['res.users'].signup({
             'name': 'Test User',
             'login': 'test_user',
             'email': 'test_user@odoo.com',
             'password': 'test_user_password',
+            'partner_id': partner.id,
         })
         self.assertFalse(self.env['res.users'].search([('login', '=', 'test_user')]).employee_id)

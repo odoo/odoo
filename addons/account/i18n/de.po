@@ -6,9 +6,11 @@
 # Leon Grill <leg@odoo.com>, 2022
 # Jinjiu Liu, 2022
 # Johannes Croe <jcr@odoo.com>, 2022
-# Friederike Fasterling-Nesselbosch, 2022
 # Felix Hoßfeld <felix.hossfeld@thoughtgang.de>, 2022
 # Andreas Jonderko <a.jonderko@gastronovi.com>, 2022
+# Niyas Raphy, 2022
+# Felix Schubert <felix.schubert@go-erp.com>, 2022
+# Friederike Fasterling-Nesselbosch, 2022
 # Martin Trigaux, 2022
 # 
 msgid ""
@@ -1339,6 +1341,12 @@ msgid "A line cannot have both children and a groupby value (line '%s')."
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "A line of this move is using a deprecated account, you cannot post it."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "A payment must always belongs to a bank or cash journal."
@@ -1606,7 +1614,7 @@ msgstr "Debitorenkonto"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_account_reconcile
 msgid "Account Reconcile"
-msgstr ""
+msgstr "Konto abgleichen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -1900,12 +1908,12 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_report_external_value
 msgid "Accounting Report External Value"
-msgstr ""
+msgstr "Buchhaltung Bericht Externer Wert"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_line
 msgid "Accounting Report Line"
-msgstr ""
+msgstr "Buchhaltung Bericht Linie"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1941,7 +1949,7 @@ msgstr "Kontenmapping für die Steuerzuordnung"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__account_prefix
 msgid "Accounts Prefix"
-msgstr ""
+msgstr "Kontenpräfix"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__account_id
@@ -2637,7 +2645,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_distribution_stored_char
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__analytic_distribution_stored_char
 msgid "Analytic Distribution Stored Char"
-msgstr ""
+msgstr "Analytische Verteilung gespeichertes Zeichen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_analytic
@@ -3692,6 +3700,12 @@ msgstr "Bargeld-Runden"
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Cash Statement"
 msgstr "Bargeld-Auszug"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Cash basis rounding difference"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -9088,7 +9102,7 @@ msgstr "Abgestimmte Buchungszeilen"
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Matched Transactions"
-msgstr ""
+msgstr "Abgestimmte Transaktionen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__full_reconcile_id
@@ -10837,6 +10851,12 @@ msgstr "Periode"
 #: model:ir.model.fields,field_description:account.field_account_report__filter_period_comparison
 msgid "Period Comparison"
 msgstr "Zeitraum Vergleich"
+
+#. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "Please create new accounts from the Chart of Accounts menu."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -13730,11 +13750,9 @@ msgstr "Das Land auf das diese Steuer anwendbar ist."
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid ""
-"The country set on the the foreign VAT fiscal position must match the one "
-"set on the report."
+"The country set on the foreign VAT fiscal position must match the one set on"
+" the report."
 msgstr ""
-"Das Land, das in der ausländischen Umsatzsteuerposition angegeben ist, muss "
-"mit dem Land übereinstimmen, das im Bericht angegeben ist."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template__country_id

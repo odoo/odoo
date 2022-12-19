@@ -21,10 +21,10 @@
 # Egon Raamat <egon@avalah.ee>, 2022
 # Piia Paurson <piia@avalah.ee>, 2022
 # Martin Trigaux, 2022
-# Andre Roomet <andreroomet@gmail.com>, 2022
 # Patrick-Jordan Kiudorv, 2022
-# Jana Jaakson, 2022
 # Leaanika Randmets, 2022
+# Jana Jaakson, 2022
+# Andre Roomet <andreroomet@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -32,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Leaanika Randmets, 2022\n"
+"Last-Translator: Andre Roomet <andreroomet@gmail.com>, 2022\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1181,6 +1181,12 @@ msgstr ""
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "A line cannot have both children and a groupby value (line '%s')."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "A line of this move is using a deprecated account, you cannot post it."
 msgstr ""
 
 #. module: account
@@ -2769,7 +2775,7 @@ msgstr "Saadaval maksemeetod"
 #: model:ir.model.fields,field_description:account.field_account_payment__available_payment_method_line_ids
 #: model:ir.model.fields,field_description:account.field_account_payment_register__available_payment_method_line_ids
 msgid "Available Payment Method Line"
-msgstr ""
+msgstr "Maksemeetodi rida saadaval"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_average
@@ -3495,6 +3501,12 @@ msgstr "Sularaha ümardamised"
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Cash Statement"
 msgstr "Kassa väljavõte"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Cash basis rounding difference"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -9749,6 +9761,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
+"Valikuline tõlkekeel (ISO-kood), mis valitakse meili saatmisel. Kui seda "
+"pole määratud, kasutatakse ingliskeelset versiooni. Tavaliselt peaks see "
+"olema kohahoidja avaldis, mis pakub sobivat keelt, nt. {{ "
+"object.partner_id.lang }}."
 
 #. module: account
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
@@ -11144,7 +11160,7 @@ msgstr "Järjesta uuesti  raamatupidamise kanded"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "Esitlusmudel"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_resequence_wizard__ordering__date
@@ -11245,7 +11261,7 @@ msgstr "Res partnerpank"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_resequence
 msgid "Resequence"
-msgstr "Ebakõla"
+msgstr "Järjekorra seadistamine"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -13301,8 +13317,8 @@ msgstr ""
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid ""
-"The country set on the the foreign VAT fiscal position must match the one "
-"set on the report."
+"The country set on the foreign VAT fiscal position must match the one set on"
+" the report."
 msgstr ""
 
 #. module: account
@@ -14981,7 +14997,7 @@ msgstr "Tarnija arve"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_account__vendor_bill_count
 msgid "Vendor Bill Count"
-msgstr ""
+msgstr "Ostuarvete arv"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

@@ -1738,12 +1738,12 @@ class TestViews(ViewCase):
         def _test_modifiers(what, expected):
             modifiers = {}
             if isinstance(what, dict):
-                transfer_field_to_modifiers(what, modifiers)
+                transfer_field_to_modifiers(what, modifiers, ['invisible', 'readonly', 'required'])
             else:
                 node = etree.fromstring(what) if isinstance(what, str) else what
                 transfer_node_to_modifiers(node, modifiers)
             simplify_modifiers(modifiers)
-            assert modifiers == expected, "%s != %s" % (modifiers, expected)
+            assert str(modifiers) == str(expected), "%s != %s" % (modifiers, expected)
 
         _test_modifiers('<field name="a"/>', {})
         _test_modifiers('<field name="a" invisible="1"/>', {"invisible": True})
@@ -1752,6 +1752,14 @@ class TestViews(ViewCase):
         _test_modifiers('<field name="a" invisible="0"/>', {})
         _test_modifiers('<field name="a" readonly="0"/>', {})
         _test_modifiers('<field name="a" required="0"/>', {})
+        _test_modifiers(
+            """<field name="a" attrs="{'readonly': 1}"/>""",
+            {"readonly": True},
+        )
+        _test_modifiers(
+            """<field name="a" attrs="{'readonly': 0}"/>""",
+            {},
+        )
         # TODO: Order is not guaranteed
         _test_modifiers(
             '<field name="a" invisible="1" required="1"/>',
@@ -2879,6 +2887,28 @@ class TestViews(ViewCase):
                 <field name="inherit_id" groups="base.group_portal" %(attrs)s/>
             </form>
         """, valid=True)
+
+    def test_attrs_groups_with_groups_in_model(self):
+        """Tests the attrs is well processed to modifiers for a field node combining:
+        - a `groups` attribute on the field node in the view architecture
+        - a `groups` attribute on the field in the Python model
+        This is an edge case and it worths a unit test."""
+        self.patch(type(self.env['res.partner']).name, 'groups', 'base.group_system')
+        self.env.user.groups_id += self.env.ref('base.group_multi_company')
+        view = self.View.create({
+            'name': 'foo',
+            'model': 'res.partner',
+            'arch': """
+                <form>
+                    <field name="active"/>
+                    <field name="name" groups="base.group_multi_company" attrs="{'invisible': [('active', '=', True)]}"/>
+                </form>
+            """,
+        })
+        arch = self.env['res.partner'].get_view(view_id=view.id)['arch']
+        tree = etree.fromstring(arch)
+        node_field_name = tree.xpath('//field[@name="name"]')[0]
+        self.assertEqual(node_field_name.get('modifiers'), '{"invisible": [["active", "=", true]]}')
 
     def test_button(self):
         arch = """

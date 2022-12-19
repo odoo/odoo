@@ -3059,16 +3059,15 @@ class BaseModel(metaclass=MetaModel):
             new_translations = old_translations
             for lang, translation in translations.items():
                 old_value = new_translations.get(lang) or new_translations.get('en_US')
-                translation_safe = {}
                 if digest:
                     old_terms = field.get_trans_terms(old_value)
                     old_terms_digested2value = {digest(old_term): old_term for old_term in old_terms}
-                    translation = {old_terms_digested2value[key]: value for key, value in translation.items() if key in old_terms_digested2value}
-                for key, value in translation.items():
-                    new_term = field.translate.term_converter(value)
-                    if len(field.get_trans_terms(new_term)) == 1:  # drop illegal new terms
-                        translation_safe[key] = new_term
-                new_translations[lang] = field.translate(translation_safe.get, old_value)
+                    translation = {
+                        old_terms_digested2value[key]: value
+                        for key, value in translation.items()
+                        if key in old_terms_digested2value
+                    }
+                new_translations[lang] = field.translate(translation.get, old_value)
             self.env.cache.update_raw(self, field, [new_translations], dirty=True)
             self.modified([field_name])
         return True
@@ -3236,8 +3235,17 @@ class BaseModel(metaclass=MetaModel):
                 cr.execute(query_str, params + [sub_ids])
                 result += cr.fetchall()
         else:
-            self.check_access_rule('read')
-            result = [(id_,) for id_ in self.ids]
+            try:
+                self.check_access_rule('read')
+            except MissingError:
+                # Method _read() should never raise a MissingError, but method
+                # check_access_rule() can, because it must read fields on self.
+                # So we restrict 'self' to existing records (to avoid an extra
+                # exists() at the end of the method).
+                self = self.exists()
+                self.check_access_rule('read')
+
+            result = [(id_,) for id_ in self._ids]
 
         fetched = self.browse()
         if result:
@@ -6103,7 +6111,7 @@ class BaseModel(metaclass=MetaModel):
             DeprecationWarning, stacklevel=2,
         )
         if fnames is None:
-            self.env._recompute()
+            self.env._recompute_all()
         elif records is None:
             self._recompute_model(fnames)
         else:

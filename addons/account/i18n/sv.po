@@ -32,6 +32,7 @@
 # Simon S, 2022
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
 # Martin Trigaux, 2022
+# Malin Eriksson, 2022
 # 
 msgid ""
 msgstr ""
@@ -39,7 +40,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Malin Eriksson, 2022\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1207,6 +1208,12 @@ msgstr ""
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "A line cannot have both children and a groupby value (line '%s')."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "A line of this move is using a deprecated account, you cannot post it."
 msgstr ""
 
 #. module: account
@@ -3503,6 +3510,12 @@ msgstr "Avrundningar"
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Cash Statement"
 msgstr "Kontantutdrag"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Cash basis rounding difference"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -10419,6 +10432,12 @@ msgid "Period Comparison"
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "Please create new accounts from the Chart of Accounts menu."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Please define a payment method line on your payment."
@@ -13190,8 +13209,8 @@ msgstr ""
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid ""
-"The country set on the the foreign VAT fiscal position must match the one "
-"set on the report."
+"The country set on the foreign VAT fiscal position must match the one set on"
+" the report."
 msgstr ""
 
 #. module: account
@@ -15781,7 +15800,7 @@ msgstr "t.ex Bankavgifter"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "e.g. Current Assets"
-msgstr ""
+msgstr "Te.x. Omsättningstillgångar"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form

@@ -16,16 +16,17 @@ export class MonetaryField extends Component {
         useInputField({
             getValue: () => this.formattedValue,
             refName: "numpadDecimal",
-            parse: (v) => parseMonetary(v, { currencyId: this.currencyId }),
+            parse: parseMonetary,
         });
         useNumpadDecimal();
     }
 
     get currencyId() {
-        return this.props.currencyField
-            ? this.props.record.data[this.props.currencyField][0]
-            : (this.props.record.data.currency_id && this.props.record.data.currency_id[0]) ||
-                  undefined;
+        const currencyField = this.props.currencyField ||
+                              this.props.record.fields[this.props.name].currency_field ||
+                              "currency_id";
+        const currency = this.props.record.data[currencyField];
+        return currency && currency[0];
     }
     get currency() {
         if (!isNaN(this.currencyId) && this.currencyId in session.currencies) {
