@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.FormStatusIndicator" owl="1">
-        <div class="o_form_status_indicator ms-md-1" t-att-class="{ o_form_status_indicator_new_record: props.model.root.isVirtual }">
+        <div class="o_form_status_indicator d-md-flex ms-md-1" t-att-class="{ o_form_status_indicator_new_record: props.model.root.isVirtual }">
             <div class="o_form_status_indicator_buttons d-flex" t-att-class="{ invisible: !(props.model.root.isVirtual or displayButtons) }">
                 <button
                     type="button"
@@ -27,7 +27,7 @@
             </div>
             <span
                 t-if="!props.model.root.isVirtual and indicatorMode === 'invalid'"
-                class="text-danger ms-2"
+                class="text-danger small ms-2"
                 data-tooltip="Correct issues to save, or discard changes">
                 <i class="fa fa-warning" />
                 Unable to save
