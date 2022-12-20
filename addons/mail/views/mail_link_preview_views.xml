@@ -1,6 +1,33 @@
 <?xml version="1.0"?>
 <odoo>
 
+    <record model="ir.ui.view" id="mail_link_preview_view_form">
+        <field name="name">mail.link.preview.form</field>
+        <field name="model">mail.link.preview</field>
+        <field name="arch" type="xml">
+            <form string="Link Previews">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="message_id"/>
+                            <field name="og_type"/>
+                            <field name="og_image"/>
+                            <field name="image_mimetype"/>
+                        </group>
+                        <group>
+                            <field name="source_url"/>
+                            <field name="og_title"/>
+                            <field name="og_mimetype"/>
+                        </group>
+                    </group>
+                    <group string="Description" name="description">
+                        <field name="og_description" nolabel="1" colspan="2" placeholder="Add Description Here ...."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
     <record id="mail_link_preview_view_tree" model="ir.ui.view">
         <field name="name">mail.link.preview.tree</field>
         <field name="model">mail.link.preview</field>
