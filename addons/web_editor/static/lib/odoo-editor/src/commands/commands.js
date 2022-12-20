@@ -187,6 +187,10 @@ function insert(editor, data, isText = true) {
         currentNode = nodeToInsert;
     }
 
+    for (const insertedLink of insertedNodes.filter(node => node.nodeName === 'A')) {
+        editor.fillLink(insertedLink);
+    }
+
     currentNode = lastChildNode || currentNode;
     selection.removeAllRanges();
     const newRange = new Range();

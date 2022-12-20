@@ -1188,7 +1188,7 @@ const Wysiwyg = Widget.extend({
                 linkWidget.applyLinkToDom(data);
                 this.odooEditor.historyStep();
                 link = linkWidget.$link[0];
-                this.odooEditor.setContenteditableLink(linkWidget.$link[0]);
+                this.odooEditor.fillLink(linkWidget.$link[0]);
                 setSelection(link, 0, link, link.childNodes.length, false);
                 // Focus the link after the dialog element is removed because
                 // if the dialog element is still in the DOM at the time of

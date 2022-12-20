@@ -968,9 +968,6 @@ export class OdooEditor extends EventTarget {
             }
         }
         if (sideEffect) {
-            if (!this._fixLinkMutatedElements) {
-                this._activateContenteditable();
-            }
             this.historySetSelection(step);
             this.dispatchEvent(new Event('historyRevert'));
         }
@@ -1309,26 +1306,18 @@ export class OdooEditor extends EventTarget {
         }
     }
 
-    setContenteditableLink(link) {
-        const editableChildren = link.querySelectorAll('[contenteditable=true]');
-        this._stopContenteditable();
-
-        this._fixLinkMutatedElements = {
-            link,
-            wasContenteditableTrue: [...editableChildren],
-            wasContenteditableFalse: [],
-            wasContenteditableNull: [],
-        };
-        const contentEditableAttribute = link.getAttribute('contenteditable');
-        if (contentEditableAttribute === 'true') {
-            this._fixLinkMutatedElements.wasContenteditableTrue.push(link);
-        } else if (contentEditableAttribute === 'false') {
-            this._fixLinkMutatedElements.wasContenteditableFalse.push(link);
-        } else {
-            this._fixLinkMutatedElements.wasContenteditableNull.push(link);
+    fillLink(link) {
+        for (const zws of link.querySelectorAll('span[oe-zws-empty-inline]')) {
+            zws.remove();
         }
-
-        [...editableChildren, link].forEach(node => node.setAttribute('contenteditable', true));
+        const startZws = document.createElement('span');
+        startZws.append(document.createTextNode('\u200B'));
+        startZws.setAttribute("oe-zws-empty-inline", "");
+        link.prepend(startZws);
+        const endZws = document.createElement('span');
+        endZws.append(document.createTextNode('\u200B'));
+        endZws.setAttribute("oe-zws-empty-inline", "");
+        link.append(endZws);
     }
 
     /**
@@ -1627,19 +1616,7 @@ export class OdooEditor extends EventTarget {
             }
         }
         if (editorCommands[method]) {
-            // Make sure to restore the content editable before applying an
-            // editor command, as it might have been temporarily disabled for
-            // browser behaviors which should not concern editor commands.
-            const link = this._fixLinkMutatedElements && this._fixLinkMutatedElements.link;
-            if (this._fixLinkMutatedElements) {
-                this.resetContenteditableLink();
-                this._activateContenteditable();
-            }
-            const returnValue = editorCommands[method](this, ...args);
-            if (link) {
-                this.setContenteditableLink(link);
-            }
-            return returnValue;
+            return editorCommands[method](this, ...args);
         }
         if (method.startsWith('justify')) {
             const mode = method.split('justify').join('').toLocaleLowerCase();
@@ -1687,20 +1664,6 @@ export class OdooEditor extends EventTarget {
             } else {
                 throw error;
             }
-        }
-    }
-    resetContenteditableLink() {
-        if (this._fixLinkMutatedElements) {
-            for (const element of this._fixLinkMutatedElements.wasContenteditableTrue) {
-                element.setAttribute('contenteditable', 'true');
-            }
-            for (const element of this._fixLinkMutatedElements.wasContenteditableFalse) {
-                element.setAttribute('contenteditable', 'false');
-            }
-            for (const element of this._fixLinkMutatedElements.wasContenteditableNull) {
-                element.removeAttribute('contenteditable');
-            }
-            delete this._fixLinkMutatedElements;
         }
     }
     _activateContenteditable() {
@@ -2506,6 +2469,7 @@ export class OdooEditor extends EventTarget {
                     }
                     selection.collapseToEnd();
                 }
+                [...this.editable.querySelectorAll('a')].forEach(link => this.fillLink(link));
                 this.historyStep();
             } else if (ev.inputType === 'insertLineBreak') {
                 this._compositionStep();
@@ -2517,6 +2481,7 @@ export class OdooEditor extends EventTarget {
             }
         } else if (ev.inputType === 'insertCompositionText') {
             this._fromCompositionText = true;
+            [...this.editable.querySelectorAll('a')].forEach(link => this.fillLink(link));
         }
     }
 
@@ -2644,6 +2609,28 @@ export class OdooEditor extends EventTarget {
      */
     _onSelectionChange() {
         const selection = this.document.getSelection();
+        if (selection.isCollapsed) {
+            // Always move the selection _before_ a zws if it was after one.
+            if (closestElement(selection.anchorNode, 'span[oe-zws-empty-inline]')) {
+                const previous = previousLeaf(selection.anchorNode, this.editable);
+                setSelection(previous, nodeSize(previous));
+            } else if (selection.anchorOffset) {
+                if (
+                    selection.anchorNode.nodeType === Node.TEXT_NODE &&
+                    selection.anchorNode.textContent[selection.anchorOffset - 1] === '\u200B'
+                ) {
+                    setSelection(selection.anchorNode, selection.anchorOffset - 1);
+                }
+            } else {
+                const previous = selection.anchorNode.previousSibling;
+                if (
+                    previous && previous.nodeType === Node.TEXT_NODE &&
+                    previous.textContent[previous.textContent.length - 1] === '\u200B'
+                ) {
+                    setSelection(previous, previous.textContent.length - 1);
+                }
+            }
+        }
         // When CTRL+A in the editor, sometimes the browser use the editable
         // element as an anchor & focus node. This is an issue for the commands
         // and the toolbar so we need to fix the selection to be based on the
@@ -2749,7 +2736,6 @@ export class OdooEditor extends EventTarget {
 
     clean() {
         this.observerUnactive();
-        this.resetContenteditableLink();
         for (const hint of this.editable.querySelectorAll('.oe-hint')) {
             hint.classList.remove('oe-hint', 'oe-command-temporary-hint');
             if (hint.classList.length === 0) {
@@ -2808,6 +2794,8 @@ export class OdooEditor extends EventTarget {
         for (const el of element.querySelectorAll('[contenteditable="false"]')) {
             el.setAttribute('oe-keep-contenteditable', '');
         }
+
+        [...element.querySelectorAll('a')].forEach(link => this.fillLink(link));
     }
 
     cleanForSave(element = this.editable) {
@@ -3030,21 +3018,6 @@ export class OdooEditor extends EventTarget {
     _onMouseDown(ev) {
         this._currentMouseState = ev.type;
 
-        // When selecting all the text within a link then triggering delete or
-        // inserting a character, the cursor and insertion is outside the link.
-        // To avoid this problem, we make all editable zone become uneditable
-        // except the link. Then when cliking outside the link, reset the
-        // editable zones.
-        const link = closestElement(ev.target, 'a');
-        this.resetContenteditableLink();
-        this._activateContenteditable();
-        if (
-            link && link.isContentEditable &&
-            !link.querySelector('div') &&
-            !closestElement(ev.target, '.o_not_editable')
-        ) {
-            this.setContenteditableLink(link);
-        }
         // Ignore any changes that might have happened before this point.
         this.observer.takeRecords();
 
