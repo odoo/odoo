@@ -231,7 +231,8 @@ class AccountFrFec(models.TransientModel):
             and (unaffected_earnings_results[11] != '0,00'
                  or unaffected_earnings_results[12] != '0,00')):
             #search an unaffected earnings account
-            unaffected_earnings_account = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_unaffected_earnings').id)], limit=1)
+            unaffected_earnings_account = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_unaffected_earnings').id),
+                                                                              ('company_id', '=', company.id)], limit=1)
             if unaffected_earnings_account:
                 unaffected_earnings_results[4] = unaffected_earnings_account.code
                 unaffected_earnings_results[5] = unaffected_earnings_account.name
