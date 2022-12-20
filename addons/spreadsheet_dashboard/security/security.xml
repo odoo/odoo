@@ -1,4 +1,12 @@
 <odoo>
+
+    <record id="ir_rule_spreadsheet_dashboard_group" model="ir.rule">
+        <field name="name">Spreadsheet dashboard group</field>
+        <field name="model_id" ref="model_spreadsheet_dashboard_group"/>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="domain_force">[('id', 'in', user.groups_id.ids)]</field>
+    </record>
+
     <record id="ir_rule_spreadsheet_dashboard" model="ir.rule">
         <field name="name">Spreadsheet dashboard: groups</field>
         <field name="model_id" ref="model_spreadsheet_dashboard"/>
