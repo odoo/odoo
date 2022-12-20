@@ -505,6 +505,12 @@
                             </t>
                         </span>
                     </div>
+                     <t t-if="line.discount > 0">
+                        <div>
+                           Discount  <span t-esc="line.discount" class="pos-receipt-left-align"/>%
+                            <span t-esc="env.pos.format_currency_no_symbol(price_discount*-1)" class="price_display pos-receipt-right-align"/>
+                        </div>
+                     </t>
                     <t t-if="line.customer_note">
                         <div class="pos-receipt-left-padding pos-receipt-customer-note">
                             <t t-esc="line.customer_note"/>
