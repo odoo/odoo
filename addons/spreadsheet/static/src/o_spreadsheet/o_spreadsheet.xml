@@ -27,7 +27,7 @@
       <div class="o-sheet-item o-list-sheets" t-on-click="listSheets">
         <t t-call="o-spreadsheet-Icon.LIST"/>
       </div>
-      <div class="o-all-sheets">
+      <div class="o-all-sheets flex-shrink-0 me-3">
         <t t-foreach="getVisibleSheets()" t-as="sheet" t-key="sheet.id">
           <div
             class="o-sheet-item o-sheet"
@@ -51,7 +51,7 @@
       <t t-set="selectedStatistic" t-value="getSelectedStatistic()"/>
       <div
         t-if="selectedStatistic !== undefined"
-        class="o-selection-statistic"
+        class="o-selection-statistic text-truncate"
         t-on-click="listSelectionStatistics">
         <t t-esc="selectedStatistic"/>
         <span>
@@ -287,7 +287,6 @@
       class="o-grid o-two-columns"
       tabindex="-1"
       t-on-wheel="onMouseWheel"
-      t-on-copy="copy"
       t-on-click="onClosePopover">
       <div class="mx-auto h-100 position-relative" t-ref="grid" t-att-style="gridContainer">
         <GridOverlay
@@ -603,6 +602,7 @@
           class="position-absolute"
           style="z-index:-1000;"
           t-on-input="onInput"
+          t-on-contextmenu="onInputContextMenu"
           t-ref="hiddenInput"
         />
       </t>
