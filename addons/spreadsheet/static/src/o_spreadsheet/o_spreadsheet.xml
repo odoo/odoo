@@ -27,7 +27,7 @@
       <div class="o-sheet-item o-list-sheets" t-on-click="listSheets">
         <t t-call="o-spreadsheet-Icon.LIST"/>
       </div>
-      <div class="o-all-sheets">
+      <div class="o-all-sheets flex-shrink-0 me-3">
         <t t-foreach="getVisibleSheets()" t-as="sheet" t-key="sheet.id">
           <div
             class="o-sheet-item o-sheet"
@@ -51,7 +51,7 @@
       <t t-set="selectedStatistic" t-value="getSelectedStatistic()"/>
       <div
         t-if="selectedStatistic !== undefined"
-        class="o-selection-statistic"
+        class="o-selection-statistic text-truncate"
         t-on-click="listSelectionStatistics">
         <t t-esc="selectedStatistic"/>
         <span>
@@ -277,7 +277,11 @@
   </t>
 
   <t t-name="o-spreadsheet-SpreadsheetDashboard" owl="1">
-    <div class="o-grid o-two-columns" tabindex="-1" t-on-wheel="onMouseWheel" t-on-copy="copy">
+    <div
+      class="o-grid o-two-columns"
+      tabindex="-1"
+      t-on-wheel="onMouseWheel"
+      t-on-click="onClosePopover">
       <div class="mx-auto h-100 position-relative" t-ref="grid" t-att-style="gridContainer">
         <GridOverlay
           onCellHovered.bind="onCellHovered"
@@ -366,7 +370,6 @@
           <t
             t-component="figureRegistry.get(props.figure.tag).Component"
             t-key="props.figure.id"
-            sidePanelIsOpen="props.sidePanelIsOpen"
             onFigureDeleted="props.onFigureDeleted"
             figure="displayedFigure"
           />
@@ -449,11 +452,7 @@
   <t t-name="o-spreadsheet-FiguresContainer" owl="1">
     <div>
       <t t-foreach="getVisibleFigures()" t-as="figure" t-key="figure.id">
-        <FigureComponent
-          sidePanelIsOpen="this.props.sidePanelIsOpen"
-          onFigureDeleted="this.props.onFigureDeleted"
-          figure="figure"
-        />
+        <FigureComponent onFigureDeleted="this.props.onFigureDeleted" figure="figure"/>
       </t>
     </div>
   </t>
@@ -483,7 +482,7 @@
   </t>
 
   <t t-name="o-spreadsheet-FilterIcon" owl="1">
-    <div class="o-filter-icon" t-att-style="style" t-on-click="props.onClick">
+    <div class="o-filter-icon" t-att-style="style" t-on-click.stop="props.onClick">
       <t t-if="props.isActive" t-call="o-spreadsheet-Icon.FILTER_ICON_ACTIVE"/>
       <t t-else="" t-call="o-spreadsheet-Icon.FILTER_ICON"/>
     </div>
@@ -599,7 +598,6 @@
         onGridResized.bind="onGridResized"
         onGridMoved.bind="moveCanvas"
         gridOverlayDimensions="gridOverlayDimensions"
-        sidePanelIsOpen="props.sidePanelIsOpen"
         onFigureDeleted.bind="focus"
       />
       <HeadersOverlay onOpenContextMenu="(type, x, y) => this.toggleContextMenu(type, x, y)"/>
@@ -616,6 +614,7 @@
           class="position-absolute"
           style="z-index:-1000;"
           t-on-input="onInput"
+          t-on-contextmenu="onInputContextMenu"
           t-ref="hiddenInput"
         />
       </t>
@@ -668,15 +667,9 @@
       class="o-grid-overlay"
       t-att-style="props.gridOverlayDimensions"
       t-on-mousedown="onMouseDown"
-      t-on-dblclick="onDoubleClick"
+      t-on-dblclick.self="onDoubleClick"
       t-on-contextmenu="onContextMenu">
-      <!-- TODO remove sidePanelIsOpen props. It is wrong.
-      If you have a CF sidepanel open, selecting a figure should
-      not open the figure side panel -->
-      <FiguresContainer
-        sidePanelIsOpen="props.sidePanelIsOpen"
-        onFigureDeleted="props.onFigureDeleted"
-      />
+      <FiguresContainer onFigureDeleted="props.onFigureDeleted"/>
     </div>
   </t>
 
