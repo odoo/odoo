@@ -65,6 +65,12 @@
             return content;
         }
         /**
+         * Check if the key is already in the registry
+         */
+        contains(key) {
+            return key in this.content;
+        }
+        /**
          * Get a list of all elements in the registry
          */
         getAll() {
@@ -365,6 +371,7 @@
     const PADDING_AUTORESIZE_VERTICAL = 3;
     const PADDING_AUTORESIZE_HORIZONTAL = MIN_CELL_TEXT_MARGIN;
     const FILTER_ICON_MARGIN = 2;
+    const FILTER_ICON_EDGE_LENGTH = 17;
     // Menus
     const MENU_WIDTH = 250;
     const MENU_ITEM_HEIGHT = 28;
@@ -5352,10 +5359,7 @@
         .add("HIDE_COLUMNS_ROWS", inverseHideColumnsRows)
         .add("UNHIDE_COLUMNS_ROWS", inverseUnhideColumnsRows);
     for (const cmd of coreTypes.values()) {
-        try {
-            inverseCommandRegistry.get(cmd);
-        }
-        catch (_) {
+        if (!inverseCommandRegistry.contains(cmd)) {
             inverseCommandRegistry.add(cmd, identity);
         }
     }
@@ -11382,9 +11386,6 @@
                         sheetId: this.env.model.getters.getActiveSheetId(),
                         id: this.props.figure.id,
                     });
-                    if (this.props.sidePanelIsOpen) {
-                        this.env.toggleSidePanel("ChartPanel");
-                    }
                     this.props.onFigureDeleted();
                 },
             });
@@ -11426,7 +11427,6 @@
     ChartFigure.components = { Menu };
     ChartFigure.props = {
         figure: Object,
-        sidePanelIsOpen: Boolean,
         onFigureDeleted: Function,
     };
 
@@ -19676,7 +19676,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     break;
                 case "STOP_EDITION":
                     if (cmd.cancel) {
-                        this.cancelEdition();
+                        this.cancelEditionAndActivateSheet();
                         this.resetContent();
                     }
                     else {
@@ -19692,7 +19692,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     this.replaceSelection(cmd.text);
                     break;
                 case "SELECT_FIGURE":
-                    this.cancelEdition();
+                    this.cancelEditionAndActivateSheet();
                     this.resetContent();
                     break;
                 case "ADD_COLUMNS_ROWS":
@@ -19737,6 +19737,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     this.selectionEnd = this.currentContent.length;
                     break;
                 case "ACTIVATE_SHEET":
+                    if (!this.currentContent.startsWith("=")) {
+                        this.cancelEdition();
+                        this.resetContent();
+                    }
                     if (cmd.sheetIdFrom !== cmd.sheetIdTo) {
                         const { col, row } = this.getters.getNextVisibleCellPosition({
                             sheetId: cmd.sheetIdTo,
@@ -19753,7 +19757,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     const sheetIdExists = !!this.getters.tryGetSheet(this.sheetId);
                     if (!sheetIdExists && this.mode !== "inactive") {
                         this.sheetId = this.getters.getActiveSheetId();
-                        this.cancelEdition();
+                        this.cancelEditionAndActivateSheet();
                         this.resetContent();
                         this.ui.notifyUI({
                             type: "ERROR",
@@ -19918,7 +19922,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         stopEdition() {
             if (this.mode !== "inactive") {
-                this.cancelEdition();
+                this.cancelEditionAndActivateSheet();
                 const col = this.col;
                 const row = this.row;
                 let content = this.currentContent;
@@ -19958,12 +19962,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 this.setContent("");
             }
         }
-        cancelEdition() {
+        cancelEditionAndActivateSheet() {
             if (this.mode === "inactive") {
                 return;
             }
-            this.mode = "inactive";
-            this.selection.release(this);
+            this.cancelEdition();
             const sheetId = this.getters.getActiveSheetId();
             if (sheetId !== this.sheetId) {
                 this.dispatch("ACTIVATE_SHEET", {
@@ -19998,6 +20001,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 return `${value * 100}%`;
             }
             return numberToString(value);
+        }
+        cancelEdition() {
+            if (this.mode === "inactive") {
+                return;
+            }
+            this.mode = "inactive";
+            this.selection.release(this);
         }
         /**
          * Reset the current content to the active cell content
@@ -21076,8 +21086,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     display: flex;
     align-items: center;
     justify-content: center;
-    width: ${ICON_EDGE_LENGTH}px;
-    height: ${ICON_EDGE_LENGTH}px;
+    width: ${FILTER_ICON_EDGE_LENGTH}px;
+    height: ${FILTER_ICON_EDGE_LENGTH}px;
 
     svg {
       path {
@@ -21121,10 +21131,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const rowDims = this.env.model.getters.getRowDimensionsInViewport(sheetId, position.row);
             const colDims = this.env.model.getters.getColDimensionsInViewport(sheetId, position.col);
             // TODO : change this offset when we support vertical cell align
-            const centeringOffset = (rowDims.size - ICON_EDGE_LENGTH) / 2;
+            const centeringOffset = Math.floor((rowDims.size - FILTER_ICON_EDGE_LENGTH) / 2);
             return {
-                x: colDims.end - ICON_EDGE_LENGTH + this.props.gridPosition.x - FILTER_ICON_MARGIN,
-                y: rowDims.end - ICON_EDGE_LENGTH + this.props.gridPosition.y - centeringOffset,
+                x: colDims.end - FILTER_ICON_EDGE_LENGTH + this.props.gridPosition.x - FILTER_ICON_MARGIN - 1,
+                y: rowDims.end - FILTER_ICON_EDGE_LENGTH + this.props.gridPosition.y - centeringOffset,
             };
         }
         isFilterActive(position) {
@@ -21281,7 +21291,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.borderWidth = borderWidth !== undefined ? borderWidth : BORDER_WIDTH;
             owl.useEffect((selectedFigureId, thisFigureId, el) => {
                 if (selectedFigureId === thisFigureId) {
-                    el === null || el === void 0 ? void 0 : el.focus();
+                    /** Scrolling on a newly inserted figure that overflows outside the viewport
+                     * will break the whole layout.
+                     * NOTE: `preventScroll`does not work on mobile but then again,
+                     * mobile is not really supported ATM.
+                     *
+                     * TODO: When implementing proper mobile, we will need to scroll the viewport
+                     * correctly (and render?) before focusing the element.
+                     */
+                    el === null || el === void 0 ? void 0 : el.focus({ preventScroll: true });
                 }
             }, () => [this.env.model.getters.getSelectedFigureId(), this.props.figure.id, this.figureRef.el]);
         }
@@ -21404,7 +21422,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             ev.stopPropagation();
             const initialX = ev.clientX;
             const initialY = ev.clientY;
-            this.dnd.isActive = true;
             this.dnd.x = figure.x;
             this.dnd.y = figure.y;
             this.dnd.width = figure.width;
@@ -21412,6 +21429,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             let onMouseMove;
             if (this.keepRatio && dirX != 0 && dirY != 0) {
                 onMouseMove = (ev) => {
+                    this.dnd.isActive = true;
                     const deltaX = Math.min(dirX * (initialX - ev.clientX), figure.width - this.minFigSize);
                     const deltaY = Math.min(dirY * (initialY - ev.clientY), figure.height - this.minFigSize);
                     const fraction = Math.min(deltaX / figure.width, deltaY / figure.height);
@@ -21427,6 +21445,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             else {
                 onMouseMove = (ev) => {
+                    this.dnd.isActive = true;
                     const deltaX = Math.max(dirX * (ev.clientX - initialX), MIN_FIG_SIZE - figure.width);
                     const deltaY = Math.max(dirY * (ev.clientY - initialY), MIN_FIG_SIZE - figure.height);
                     this.dnd.width = figure.width + deltaX;
@@ -21469,20 +21488,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (!selectResult.isSuccessful) {
                 return;
             }
-            if (this.props.sidePanelIsOpen) {
-                this.env.openSidePanel("ChartPanel");
-            }
             const position = gridOverlayPosition();
             const { x: offsetCorrectionX, y: offsetCorrectionY } = this.env.model.getters.getMainViewportCoordinates();
             const { offsetX, offsetY } = this.env.model.getters.getActiveSheetScrollInfo();
             const initialX = ev.clientX - position.left;
             const initialY = ev.clientY - position.top;
-            this.dnd.isActive = true;
             this.dnd.x = figure.x;
             this.dnd.y = figure.y;
             this.dnd.width = figure.width;
             this.dnd.height = figure.height;
             const onMouseMove = (ev) => {
+                this.dnd.isActive = true;
                 const newX = ev.clientX - position.left;
                 let deltaX = newX - initialX;
                 if (newX > offsetCorrectionX && initialX < offsetCorrectionX) {
@@ -21551,12 +21567,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     FigureComponent.template = "o-spreadsheet-FigureComponent";
     FigureComponent.components = {};
     FigureComponent.defaultProps = {
-        sidePanelIsOpen: false,
         onFigureDeleted: function () { },
     };
     FigureComponent.props = {
         figure: Object,
-        sidePanelIsOpen: { type: Boolean, optional: true },
         onFigureDeleted: { type: Function, optional: true },
     };
 
@@ -21580,7 +21594,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     FiguresContainer.template = "o-spreadsheet-FiguresContainer";
     FiguresContainer.components = { FigureComponent };
     FiguresContainer.props = {
-        sidePanelIsOpen: Boolean,
         onFigureDeleted: Function,
     };
     figureRegistry.add("chart", { Component: ChartFigure, SidePanelComponent: "ChartPanel" });
@@ -21761,7 +21774,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         onCellRightClicked: () => { },
         onGridResized: () => { },
         onFigureDeleted: () => { },
-        sidePanelIsOpen: false,
     };
     GridOverlay.props = {
         onCellHovered: { type: Function, optional: true },
@@ -21772,7 +21784,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         onFigureDeleted: { type: Function, optional: true },
         onGridMoved: Function,
         gridOverlayDimensions: String,
-        sidePanelIsOpen: { type: Boolean, optional: true },
     };
 
     class GridPopover extends owl.Component {
@@ -22972,7 +22983,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.focus();
         }
         focus() {
-            if (!this.env.model.getters.getSelectedFigureId()) {
+            if (!this.env.model.getters.getSelectedFigureId() &&
+                this.env.model.getters.getEditionMode() === "inactive") {
                 this.hiddenInput.el.focus();
             }
         }
@@ -23123,6 +23135,21 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         // ---------------------------------------------------------------------------
         // Context Menu
         // ---------------------------------------------------------------------------
+        onInputContextMenu(ev) {
+            ev.preventDefault();
+            const lastZone = this.env.model.getters.getSelectedZone();
+            const { left: col, top: row } = lastZone;
+            let type = "CELL";
+            this.env.model.dispatch("STOP_EDITION");
+            if (this.env.model.getters.getActiveCols().has(col)) {
+                type = "COL";
+            }
+            else if (this.env.model.getters.getActiveRows().has(row)) {
+                type = "ROW";
+            }
+            const { x, y, width, height } = this.env.model.getters.getVisibleRect(lastZone);
+            this.toggleContextMenu(type, x + width, y + height);
+        }
         onCellRightClicked(col, row, { x, y }) {
             const zones = this.env.model.getters.getSelectedZones();
             const lastZone = zones[zones.length - 1];
@@ -29342,6 +29369,24 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             };
             this.dispatch("CREATE_FIGURE", { sheetId, figure });
         }
+        import(data) {
+            for (const sheet of data.sheets) {
+                const images = (sheet.figures || []).filter((figure) => figure.tag === "image");
+                for (const image of images) {
+                    this.history.update("nextId", this.nextId + 1);
+                    this.history.update("images", sheet.id, image.id, image.data);
+                }
+            }
+        }
+        export(data) {
+            var _a;
+            for (const sheet of data.sheets) {
+                const images = sheet.figures.filter((figure) => figure.tag === "image");
+                for (const image of images) {
+                    image.data = (_a = this.images[sheet.id]) === null || _a === void 0 ? void 0 : _a[image.id];
+                }
+            }
+        }
     }
     ImagePlugin.getters = ["getImage", "getImagePath", "getImageSize"];
     figureRegistry.add("image", {
@@ -34704,7 +34749,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             /** Filter Header */
             box.isFilterHeader = this.getters.isFilterHeader(position);
-            const headerIconWidth = box.isFilterHeader ? ICON_EDGE_LENGTH + FILTER_ICON_MARGIN : 0;
+            const headerIconWidth = box.isFilterHeader ? FILTER_ICON_EDGE_LENGTH + FILTER_ICON_MARGIN : 0;
             /** Content */
             const text = this.getters.getCellText(position, showFormula);
             const textWidth = this.getters.getTextWidth(position) + MIN_CELL_TEXT_MARGIN;
@@ -38139,14 +38184,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 offsetX: offsetScrollbarX + deltaX,
                 offsetY: offsetScrollbarY + deltaY,
             });
-        }
-        copy(ev) {
-            this.env.model.dispatch("COPY");
-            const content = this.env.model.getters.getClipboardContent();
-            // TODO use env.clipboard
-            // TODO add a test
-            ev.clipboardData.setData("text/plain", content);
-            ev.preventDefault();
         }
     }
     SpreadsheetDashboard.template = "o-spreadsheet-SpreadsheetDashboard";
@@ -42928,6 +42965,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         formatValue,
         computeTextWidth,
         createEmptyWorkbookData,
+        createEmptySheet,
         getDefaultChartJsRuntime,
         chartFontColor,
         getMenuChildren,
@@ -43000,8 +43038,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2022-12-09T15:01:03.892Z';
-    exports.__info__.hash = '1419e57';
+    exports.__info__.date = '2022-12-20T11:01:03.280Z';
+    exports.__info__.hash = '7daa2dd';
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map
