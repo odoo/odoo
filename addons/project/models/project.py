@@ -14,7 +14,6 @@ from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.osv import expression
 from odoo.tools.misc import get_lang
 
-from .project_task_recurrence import DAYS, WEEKS
 from .project_update import STATUS_COLOR
 
 
@@ -656,7 +655,7 @@ class Project(models.Model):
         res = super(Project, self).write(vals) if vals else True
 
         if 'allow_recurring_tasks' in vals and not vals.get('allow_recurring_tasks'):
-            self.env['project.task'].search([('project_id', 'in', self.ids), ('recurring_task', '=', True)]).write({'recurring_task': False})
+            self.env['project.task'].search([('project_id', 'in', self.ids), ('repeat', '=', True)]).write({'repeat': False})
 
         if 'active' in vals:
             # archiving/unarchiving a project does it on its tasks, too
@@ -1044,7 +1043,8 @@ class Task(models.Model):
     _name = "project.task"
     _description = "Task"
     _date_name = "date_assign"
-    _inherit = ['portal.mixin', 'mail.thread.cc', 'mail.activity.mixin', 'rating.mixin']
+    _recurrence_model = 'project.task.recurrence'
+    _inherit = ['portal.mixin', 'mail.thread.cc', 'mail.activity.mixin', 'rating.mixin', 'recurrent.mixin']
     _mail_post_access = 'read'
     _order = "priority desc, sequence, id desc"
     _primary_email = 'email_from'
@@ -1231,87 +1231,9 @@ class Task(models.Model):
     display_parent_task_button = fields.Boolean(compute='_compute_display_parent_task_button', compute_sudo=True)
 
     # recurrence fields
+    recurrence_id = fields.Many2one(_recurrence_model)
     allow_recurring_tasks = fields.Boolean(related='project_id.allow_recurring_tasks')
-    recurring_task = fields.Boolean(string="Recurrent")
     recurring_count = fields.Integer(string="Tasks in Recurrence", compute='_compute_recurring_count')
-    recurrence_id = fields.Many2one('project.task.recurrence', copy=False)
-    recurrence_update = fields.Selection([
-        ('this', 'This task'),
-        ('subsequent', 'This and following tasks'),
-        ('all', 'All tasks'),
-    ], default='this', store=False)
-    recurrence_message = fields.Char(string='Next Recurrencies', compute='_compute_recurrence_message')
-
-    repeat_interval = fields.Integer(string='Repeat Every', default=1, compute='_compute_repeat', readonly=False)
-    repeat_unit = fields.Selection([
-        ('day', 'Days'),
-        ('week', 'Weeks'),
-        ('month', 'Months'),
-        ('year', 'Years'),
-    ], default='week', compute='_compute_repeat', readonly=False)
-    repeat_type = fields.Selection([
-        ('forever', 'Forever'),
-        ('until', 'End Date'),
-        ('after', 'Number of Repetitions'),
-    ], default="forever", string="Until", compute='_compute_repeat', readonly=False)
-    repeat_until = fields.Date(string="End Date", compute='_compute_repeat', readonly=False)
-    repeat_number = fields.Integer(string="Repetitions", default=1, compute='_compute_repeat', readonly=False)
-
-    repeat_on_month = fields.Selection([
-        ('date', 'Date of the Month'),
-        ('day', 'Day of the Month'),
-    ], default='date', compute='_compute_repeat', readonly=False)
-
-    repeat_on_year = fields.Selection([
-        ('date', 'Date of the Year'),
-        ('day', 'Day of the Year'),
-    ], default='date', compute='_compute_repeat', readonly=False)
-
-    mon = fields.Boolean(string="Mon", compute='_compute_repeat', readonly=False)
-    tue = fields.Boolean(string="Tue", compute='_compute_repeat', readonly=False)
-    wed = fields.Boolean(string="Wed", compute='_compute_repeat', readonly=False)
-    thu = fields.Boolean(string="Thu", compute='_compute_repeat', readonly=False)
-    fri = fields.Boolean(string="Fri", compute='_compute_repeat', readonly=False)
-    sat = fields.Boolean(string="Sat", compute='_compute_repeat', readonly=False)
-    sun = fields.Boolean(string="Sun", compute='_compute_repeat', readonly=False)
-
-    repeat_day = fields.Selection([
-        (str(i), str(i)) for i in range(1, 32)
-    ], compute='_compute_repeat', readonly=False)
-    repeat_week = fields.Selection([
-        ('first', 'First'),
-        ('second', 'Second'),
-        ('third', 'Third'),
-        ('last', 'Last'),
-    ], default='first', compute='_compute_repeat', readonly=False)
-    repeat_weekday = fields.Selection([
-        ('mon', 'Monday'),
-        ('tue', 'Tuesday'),
-        ('wed', 'Wednesday'),
-        ('thu', 'Thursday'),
-        ('fri', 'Friday'),
-        ('sat', 'Saturday'),
-        ('sun', 'Sunday'),
-    ], string='Day Of The Week', compute='_compute_repeat', readonly=False)
-    repeat_month = fields.Selection([
-        ('january', 'January'),
-        ('february', 'February'),
-        ('march', 'March'),
-        ('april', 'April'),
-        ('may', 'May'),
-        ('june', 'June'),
-        ('july', 'July'),
-        ('august', 'August'),
-        ('september', 'September'),
-        ('october', 'October'),
-        ('november', 'November'),
-        ('december', 'December'),
-    ], compute='_compute_repeat', readonly=False)
-
-    repeat_show_dow = fields.Boolean(compute='_compute_repeat_visibility')
-    repeat_show_day = fields.Boolean(compute='_compute_repeat_visibility')
-    repeat_show_week = fields.Boolean(compute='_compute_repeat_visibility')
-    repeat_show_month = fields.Boolean(compute='_compute_repeat_visibility')
 
     # Account analytic
     analytic_account_id = fields.Many2one('account.analytic.account', ondelete='set null', compute='_compute_analytic_account_id', store=True, readonly=False,
@@ -1435,67 +1357,32 @@ class Task(models.Model):
         if not self._check_m2m_recursion('depend_on_ids'):
             raise ValidationError(_("Two tasks cannot depend on each other."))
 
-    @api.model
-    def _get_recurrence_fields(self):
-        return ['repeat_interval', 'repeat_unit', 'repeat_type', 'repeat_until', 'repeat_number',
-                'repeat_on_month', 'repeat_on_year', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat',
-                'sun', 'repeat_day', 'repeat_week', 'repeat_month', 'repeat_weekday']
-
-    @api.depends('recurring_task', 'repeat_unit', 'repeat_on_month', 'repeat_on_year')
-    def _compute_repeat_visibility(self):
-        for task in self:
-            task.repeat_show_day = task.recurring_task and (task.repeat_unit == 'month' and task.repeat_on_month == 'date') or (task.repeat_unit == 'year' and task.repeat_on_year == 'date')
-            task.repeat_show_week = task.recurring_task and (task.repeat_unit == 'month' and task.repeat_on_month == 'day') or (task.repeat_unit == 'year' and task.repeat_on_year == 'day')
-            task.repeat_show_dow = task.recurring_task and task.repeat_unit == 'week'
-            task.repeat_show_month = task.recurring_task and task.repeat_unit == 'year'
-
-    @api.depends('recurring_task')
-    def _compute_repeat(self):
-        rec_fields = self._get_recurrence_fields()
-        defaults = self.default_get(rec_fields)
-        for task in self:
-            for f in rec_fields:
-                if task.recurrence_id:
-                    task[f] = task.recurrence_id[f]
-                else:
-                    if task.recurring_task:
-                        task[f] = defaults.get(f)
-                    else:
-                        task[f] = False
-
-    def _get_weekdays(self, n=1):
-        self.ensure_one()
-        if self.repeat_unit == 'week':
-            return [fn(n) for day, fn in DAYS.items() if self[day]]
-        return [DAYS.get(self.repeat_weekday)(n)]
-
     def _get_recurrence_start_date(self):
         return fields.Date.today()
 
     @api.depends(
-        'recurring_task', 'repeat_interval', 'repeat_unit', 'repeat_type', 'repeat_until',
-        'repeat_number', 'repeat_on_month', 'repeat_on_year', 'mon', 'tue', 'wed', 'thu', 'fri',
-        'sat', 'sun', 'repeat_day', 'repeat_week', 'repeat_month', 'repeat_weekday')
+        'repeat',
+        'repeat_interval',
+        'repeat_unit',
+        'repeat_type',
+        'repeat_until',
+        'repeat_number'
+    )
     def _compute_recurrence_message(self):
         self.recurrence_message = False
-        for task in self.filtered(lambda t: t.recurring_task and t._is_recurrence_valid()):
+        for task in self.filtered(lambda t: t.repeat and t._is_recurrence_valid()):
             date = task._get_recurrence_start_date()
             recurrence_left = task.recurrence_id.recurrence_left if task.recurrence_id  else task.repeat_number
-            number_occurrences = min(5, recurrence_left if task.repeat_type == 'after' else 5)
+            number_occurrences = min(5, recurrence_left if task.repeat_type == 'number' else 5)
             delta = task.repeat_interval if task.repeat_unit == 'day' else 1
-            recurring_dates = self.env['project.task.recurrence']._get_next_recurring_dates(
+            recurring_dates = self.env['project.task.recurrence']._get_next_occurences_dates(
                 date + timedelta(days=delta),
                 task.repeat_interval,
                 task.repeat_unit,
                 task.repeat_type,
                 task.repeat_until,
-                task.repeat_on_month,
-                task.repeat_on_year,
-                task._get_weekdays(WEEKS.get(task.repeat_week)),
-                task.repeat_day,
-                task.repeat_week,
-                task.repeat_month,
-                count=number_occurrences)
+                count=number_occurrences
+            )
             date_format = self.env['res.lang']._lang_get(self.env.user.lang).date_format
             if recurrence_left == 0:
                 recurrence_title = _('There are no more occurrences.')
@@ -1503,7 +1390,7 @@ class Task(models.Model):
                 recurrence_title = _('A new task will be created on the following dates:')
             task.recurrence_message = '<p><span class="fa fa-check-circle"></span> %s</p><ul>' % recurrence_title
             task.recurrence_message += ''.join(['<li>%s</li>' % date.strftime(date_format) for date in recurring_dates[:5]])
-            if task.repeat_type == 'after' and recurrence_left > 5 or task.repeat_type == 'forever' or len(recurring_dates) > 5:
+            if task.repeat_type == 'number' and recurrence_left > 5 or task.repeat_type == 'forever' or len(recurring_dates) > 5:
                 task.recurrence_message += '<li>...</li>'
             task.recurrence_message += '</ul>'
             if task.repeat_type == 'until':
@@ -1512,8 +1399,7 @@ class Task(models.Model):
     def _is_recurrence_valid(self):
         self.ensure_one()
         return self.repeat_interval > 0 and\
-                (not self.repeat_show_dow or self._get_weekdays()) and\
-                (self.repeat_type != 'after' or self.repeat_number) and\
+                (self.repeat_type != 'number' or self.repeat_number) and\
                 (self.repeat_type != 'until' or self.repeat_until and self.repeat_until > fields.Date.today())
 
     @api.depends('recurrence_id')
@@ -1819,7 +1705,7 @@ class Task(models.Model):
     def default_get(self, default_fields):
         vals = super(Task, self).default_get(default_fields)
 
-        days = list(DAYS.keys())
+        days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
         week_start = fields.Datetime.today().weekday()
 
         if all(d in default_fields for d in days):
@@ -1923,12 +1809,12 @@ class Task(models.Model):
     def _load_records_create(self, vals_list):
         projects_with_recurrence = self.env['project.project'].search([('allow_recurring_tasks', '=', True)])
         for vals in vals_list:
-            if vals.get('recurring_task'):
+            if vals.get('repeat'):
                 if vals.get('project_id') in projects_with_recurrence.ids and not vals.get('recurrence_id'):
                     default_val = self.default_get(self._get_recurrence_fields())
                     vals.update(**default_val)
                 else:
-                    for field_name in self._get_recurrence_fields() + ['recurring_task']:
+                    for field_name in self._get_recurrence_fields() + ['repeat']:
                         vals.pop(field_name, None)
             project_id = vals.get('project_id')
             if project_id:
@@ -1987,7 +1873,7 @@ class Task(models.Model):
                 vals['date_last_stage_update'] = fields.Datetime.now()
             # recurrence
             rec_fields = vals.keys() & self._get_recurrence_fields()
-            if rec_fields and vals.get('recurring_task') is True:
+            if rec_fields and vals.get('repeat') is True:
                 rec_values = {rec_field: vals[rec_field] for rec_field in rec_fields}
                 rec_values['next_recurrence_date'] = fields.Datetime.today()
                 recurrence = self.env['project.task.recurrence'].create(rec_values)
@@ -2036,7 +1922,7 @@ class Task(models.Model):
         if 'parent_id' in vals and vals['parent_id'] in self.ids:
             raise UserError(_("Sorry. You can't set a task as its parent task."))
         if 'active' in vals and not vals.get('active') and any(self.mapped('recurrence_id')):
-            vals['recurring_task'] = False
+            vals['repeat'] = False
         if 'recurrence_id' in vals and vals.get('recurrence_id') and any(not task.active for task in self):
             raise UserError(_('Archived tasks cannot be recurring. Please unarchive the task first.'))
         # stage change: update date_last_stage_update
@@ -2058,12 +1944,12 @@ class Task(models.Model):
             for task in self:
                 if task.recurrence_id:
                     task.recurrence_id.write(rec_values)
-                elif vals.get('recurring_task'):
+                elif vals.get('repeat'):
                     rec_values['next_recurrence_date'] = fields.Datetime.today()
                     recurrence = self.env['project.task.recurrence'].create(rec_values)
                     task.recurrence_id = recurrence.id
 
-        if 'recurring_task' in vals and not vals.get('recurring_task'):
+        if 'repeat' in vals and not vals.get('repeat'):
             self.recurrence_id.unlink()
 
         tasks = self
@@ -2582,12 +2468,12 @@ class Task(models.Model):
 
     def action_stop_recurrence(self):
         tasks = self.env['project.task'].with_context(active_test=False).search([('recurrence_id', 'in', self.recurrence_id.ids)])
-        tasks.write({'recurring_task': False})
+        tasks.write({'repeat': False})
         self.recurrence_id.unlink()
 
     def action_continue_recurrence(self):
         self.recurrence_id = False
-        self.recurring_task = False
+        self.repeat = False
 
     # ---------------------------------------------------
     # Rating business

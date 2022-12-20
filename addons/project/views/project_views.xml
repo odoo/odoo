@@ -1077,10 +1077,6 @@
                     <field name="allow_subtasks" invisible="1" />
                     <field name="is_closed" invisible="1" />
                     <field name="allow_recurring_tasks" invisible="1" />
-                    <field name="repeat_show_dow" invisible="1" />
-                    <field name="repeat_show_day" invisible="1" />
-                    <field name="repeat_show_week" invisible="1" />
-                    <field name="repeat_show_month" invisible="1" />
                     <field name="recurrence_id" invisible="1" />
                     <field name="allow_task_dependencies" invisible="1" />
                     <field name="rating_last_value" invisible="1"/>
@@ -1094,7 +1090,7 @@
                         <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('project_id', '=', False), ('stage_id', '=', False)]}"/>
                         <field name="personal_stage_type_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('project_id', '!=', False)]}" domain="[('user_id', '=', uid)]" string="Personal Stage"/>
                     </header>
-                    <div class="alert alert-info oe_edit_only mb-0" role="status" attrs="{'invisible': ['|', ('recurring_task', '=', False), ('recurrence_id', '=', False)]}" groups="project.group_project_recurring_tasks">
+                    <div class="alert alert-info oe_edit_only mb-0" role="status" attrs="{'invisible': ['|', ('repeat', '=', False), ('recurrence_id', '=', False)]}" groups="project.group_project_recurring_tasks">
                         <p>Edit recurring task</p>
                         <field name="recurrence_update" widget="radio"/>
                     </div>
@@ -1279,48 +1275,27 @@
                             </field>
                         </page>
                         <page name="recurrence" string="Recurrent"  groups="project.group_project_recurring_tasks">
-                            <label for="recurring_task" />
-                            <field name="recurring_task" attrs="{'invisible': ['|', ('allow_recurring_tasks', '=', False), ('active', '=', False)]}"/>
-                            <group attrs="{'invisible': [('recurring_task', '=', False)]}">
+                            <label for="repeat" />
+                            <field name="repeat" attrs="{'invisible': ['|', ('allow_recurring_tasks', '=', False), ('active', '=', False)]}"/>
+                            <group attrs="{'invisible': [('repeat', '=', False)]}">
                                 <group>
                                     <label for="repeat_interval" />
                                     <div class="o_col">
                                         <div class="o_row">
-                                            <field name="repeat_interval" attrs="{'required': [('recurring_task', '=', True)]}" />
-                                            <field name="repeat_unit" attrs="{'required': [('recurring_task', '=', True)]}" />
+                                            <field name="repeat_interval" attrs="{'required': [('repeat', '=', True)]}" />
+                                            <field name="repeat_unit" attrs="{'required': [('repeat', '=', True)]}" />
                                         </div>
-                                        <widget name="week_days" attrs="{'invisible': [('repeat_show_dow', '=', False)]}"/>
                                     </div>
-
-                                    <label for="repeat_on_month" string="Repeat On" attrs="{'invisible': [('repeat_unit', 'not in', ('month', 'year'))]}" />
-                                    <div class="o_row" attrs="{'invisible': [('repeat_unit', 'not in', ('month', 'year'))]}">
-                                        <field name="repeat_on_month" attrs="{'invisible': [('repeat_unit', '!=', 'month')], 'required': [('repeat_unit', '=', 'month')]}" />
-                                        <field name="repeat_on_year" attrs="{'invisible': [('repeat_unit', '!=', 'year')], 'required': [('repeat_unit', '=', 'year')]}" />
-
-                                        <field name="repeat_day" attrs="{'invisible': [('repeat_show_day', '=', False)], 'required': [('repeat_show_day', '=', True)]}" />
-                                        <field name="repeat_week" attrs="{'invisible': [('repeat_show_week', '=', False)], 'required': [('repeat_show_week', '=', True)]}" />
-                                        <field name="repeat_weekday" attrs="{'invisible': [('repeat_show_week', '=', False)], 'required': [('repeat_show_week', '=', True)]}" />
-                                        <span attrs="{'invisible': ['|', ('repeat_show_week', '=', False), ('repeat_show_month', '=', False)]}">of</span>
-                                        <field name="repeat_month" attrs="{'invisible': [('repeat_show_month', '=', False)], 'required': [('repeat_show_month', '=', True)]}" />
-                                    </div>
-                                    <!-- Those fields are added to trigger the compute method for the recurrence feature. -->
-                                    <field name="mon" invisible="1"/>
-                                    <field name="tue" invisible="1"/>
-                                    <field name="wed" invisible="1"/>
-                                    <field name="thu" invisible="1"/>
-                                    <field name="fri" invisible="1"/>
-                                    <field name="sat" invisible="1"/>
-                                    <field name="sun" invisible="1"/>
 
                                     <label for="repeat_type" />
                                     <div class="o_row">
-                                        <field name="repeat_type" attrs="{'required': [('recurring_task', '=', True)]}" />
+                                        <field name="repeat_type" attrs="{'required': [('repeat', '=', True)]}" />
                                         <field name="repeat_until" attrs="{'invisible': [('repeat_type', '!=', 'until')], 'required': [('repeat_type', '=', 'until')]}" />
-                                        <field name="repeat_number" attrs="{'invisible': [('repeat_type', '!=', 'after')], 'required': [('repeat_type', '=', 'after')]}" />
+                                        <field name="repeat_number" attrs="{'invisible': [('repeat_type', '!=', 'number')], 'required': [('repeat_type', '=', 'number')]}" />
                                     </div>
                                 </group>
                             </group>
-                            <group attrs="{'invisible': ['|', ('recurring_task', '=', False), ('recurrence_message', '=', False)]}">
+                            <group attrs="{'invisible': ['|', ('repeat', '=', False), ('recurrence_message', '=', False)]}">
                                 <div class="alert alert-success o_form_project_recurrence_message" role="status" colspan="2">
                                     <field name="recurrence_message" widget="html" class="mb-0" />
                                 </div>

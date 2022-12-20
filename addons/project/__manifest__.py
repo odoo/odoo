@@ -18,6 +18,7 @@
         'web',
         'web_tour',
         'digest',
+        'recurrence',
     ],
     'data': [
         'security/project_security.xml',
