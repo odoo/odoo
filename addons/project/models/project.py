@@ -2133,7 +2133,6 @@ class Task(models.Model):
             'email_from': msg.get('from'),
             'planned_hours': 0.0,
             'partner_id': msg.get('author_id'),
-            'description': msg.get('body'),
         }
         defaults.update(custom_values)
 
@@ -2186,6 +2185,9 @@ class Task(models.Model):
                     ('partner_id', '=', False),
                     ('email_from', '=', new_partner.email),
                     ('is_closed', '=', False)]).write({'partner_id': new_partner.id})
+        # use the sanitized body of the email from the message thread to populate the task's description
+        if not self.description and message.subtype_id == self._creation_subtype() and self.partner_id == message.author_id:
+            self.description = message.body
         return super(Task, self)._message_post_after_hook(message, msg_vals)
 
     def action_assign_to_me(self):
