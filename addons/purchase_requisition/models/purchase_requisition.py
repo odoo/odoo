@@ -147,7 +147,7 @@ class PurchaseRequisition(models.Model):
             raise UserError(_('You have to cancel or validate every RfQ before closing the purchase requisition.'))
         for requisition in self:
             for requisition_line in requisition.line_ids:
-                requisition_line.supplier_info_ids.unlink()
+                requisition_line.supplier_info_ids.sudo().unlink()
         self.write({'state': 'done'})
 
     @api.ondelete(at_uninstall=False)
