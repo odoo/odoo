@@ -1490,9 +1490,9 @@ class DynamicList extends DataPoint {
             params.orderBy && params.orderBy.length ? params.orderBy : state.orderBy || []; // rename orderBy
         this.offset = state.offset || 0;
         this.count = 0;
-        this.limit = params.limit || state.limit || this.constructor.DEFAULT_LIMIT;
+        this.initialLimit = state.initialLimit || params.limit || this.constructor.DEFAULT_LIMIT;
+        this.limit = state.limit || params.limit || this.constructor.DEFAULT_LIMIT;
         this.isDomainSelected = false;
-        this.loadedCount = state.loadedCount || 0;
 
         this.editedRecord = null;
         this.onCreateRecord = params.onCreateRecord || (() => {});
@@ -1596,7 +1596,7 @@ class DynamicList extends DataPoint {
     exportState() {
         return {
             limit: this.limit,
-            loadedCount: this.records.length,
+            initialLimit: this.initialLimit,
             orderBy: this.orderBy,
         };
     }
@@ -2026,11 +2026,9 @@ export class DynamicRecordList extends DynamicList {
     }
 
     async loadMore() {
-        this.offset = this.records.length;
-        const nextRecords = await this._loadRecords();
-        for (const record of nextRecords) {
-            this.addRecord(record);
-        }
+        this.limit = this.records.length + this.initialLimit;
+        this.records = await this._loadRecords();
+        this.model.notify();
     }
 
     async quickCreate(activeFields, context) {
@@ -2106,13 +2104,6 @@ export class DynamicRecordList extends DynamicList {
                 ...this.context,
             },
         };
-        if (this.loadedCount > this.limit) {
-            // This condition means that we are reloading a list of records
-            // that has been manually extended: we need to load exactly the
-            // same amount of records.
-            kwargs.limit = this.loadedCount;
-            kwargs.offset = 0;
-        }
         const { records: rawRecords, length } =
             this.data ||
             (await this.model.orm.webSearchRead(
@@ -2281,10 +2272,12 @@ export class DynamicGroupList extends DynamicList {
     }
 
     exportState() {
-        return {
+        const state = {
             ...super.exportState(),
             groups: this.groups,
         };
+        delete state.limit;
+        return state;
     }
 
     /**
