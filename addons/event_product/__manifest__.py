@@ -21,6 +21,5 @@ Point of Sale. It allows to link ticket and product
     'demo': [
         'data/event_product_demo.xml',
     ],
-    'auto_install': False,
     'license': 'LGPL-3',
 }

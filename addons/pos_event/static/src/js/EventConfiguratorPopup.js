@@ -75,7 +75,7 @@ export class EventConfiguratorPopup extends AbstractAwaitablePopup  {
                     const product = this.env.pos.db.get_product_by_id(this.ticketInfoMap[ticketId]["productId"]);
                     this.ticketInfoMap[ticketId]["product"] = product;
                 }
-            } catch (error) {
+            } catch {
                 this.cancel();
                 this.showPopup("OfflineErrorPopup", {
                     title: this.env._t("Connection Error"),
