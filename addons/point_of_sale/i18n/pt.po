@@ -5,7 +5,6 @@
 # Translators:
 # Vitor Fernandes <vmlf01@gmail.com>, 2022
 # Catarina Rocha <cr@opencloud.pro>, 2022
-# Diogo Duarte <diogocarvalhoduarte@gmail.com>, 2022
 # Marcelo Pereira <marcelo.pereira@arxi.pt>, 2022
 # Tiago Santos <tiago.santos@arxi.pt>, 2022
 # Joao Felix <jrmfelix@gmail.com>, 2022
@@ -22,6 +21,7 @@
 # Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Manuela Silva <mmsrs@sky.com>, 2022
+# Diogo Duarte <diogocarvalhoduarte@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Manuela Silva <mmsrs@sky.com>, 2022\n"
+"Last-Translator: Diogo Duarte <diogocarvalhoduarte@gmail.com>, 2022\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3162,6 +3162,13 @@ msgid "Maximum Exceeded"
 msgstr ""
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Misc/NumberBuffer.js:0
+#, python-format
+msgid "Maximum value reached"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error
 msgid "Message Delivery error"
 msgstr "Erro de Envio de Mensagem"
@@ -4104,6 +4111,8 @@ msgid "Picking Type"
 msgstr "Tipo de Operação de Stock"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Pickings"
@@ -4243,6 +4252,15 @@ msgstr "Por favor selecione o cliente"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__pos_categ_id
 msgid "PoS Category"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Please close and validate the following open PoS Sessions before modifying this payment method.\n"
+"Open sessions: %s"
 msgstr ""
 
 #. module: point_of_sale
@@ -5931,6 +5949,15 @@ msgstr ""
 msgid ""
 "The Point of Sale only supports the \"add a rounding line\" rounding "
 "strategy."
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid ""
+"The amount cannot be higher than the due amount if you don't have a cash "
+"payment method configured."
 msgstr ""
 
 #. module: point_of_sale

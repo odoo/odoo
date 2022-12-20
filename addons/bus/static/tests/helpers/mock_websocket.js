@@ -73,7 +73,12 @@ export function patchWebsocketWorkerWithCleanup(params = {}) {
     websocketWorker = websocketWorker || new WebsocketWorker('wss://odoo.com/websocket');
     patchWithCleanup(browser, {
         SharedWorker: function () {
-            return new SharedWorkerMock(websocketWorker);
+            const sharedWorker = new SharedWorkerMock(websocketWorker);
+            registerCleanup(() => {
+                sharedWorker._messageChannel.port1.close();
+                sharedWorker._messageChannel.port2.close();
+            });
+            return sharedWorker;
         },
     }, { pure: true });
     registerCleanup(() => {
