@@ -136,7 +136,7 @@
                             <t t-set="total_discount_percentage" t-value="total_discount_percentage + t_per_lines"/>
                         </t>
 <!--                        <t t-if="line.price_display >= 0 and !line.is_program_reward">-->
-                        <t t-if="!line.is_program_reward">
+                        <t t-if="!line.is_program_reward and line.product_name !='Discount'">
                             <t t-set="total_vat" t-value="total_vat + line.tax"/>
                             <t t-set="total_qty" t-value="total_qty + Math.abs(line.quantity)"/>
                             <t t-set="price_discount" t-value="line.price_with_tax_before_discount - line.price_with_tax"/>
