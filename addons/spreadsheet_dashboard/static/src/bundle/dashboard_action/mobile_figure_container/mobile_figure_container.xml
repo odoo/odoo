@@ -7,7 +7,6 @@
         <t
             t-foreach="figures" t-as="figure"
             t-component="getFigureComponent(figure)"
-            sidePanelIsOpen="false"
             onFigureDeleted="() => {}"
             figure="figure"
             t-key="figure.id"/>
