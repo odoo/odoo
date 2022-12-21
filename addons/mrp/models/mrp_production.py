@@ -38,7 +38,7 @@ class MrpProduction(models.Model):
     def _get_default_is_locked(self):
         return not self.user_has_groups('mrp.group_unlocked_by_default')
 
-    name = fields.Char('Reference', copy=False, readonly=True)
+    name = fields.Char('Reference', default='New', copy=False, readonly=True)
     priority = fields.Selection(
         PROCUREMENT_PRIORITIES, string='Priority', default='0',
         help="Components will be reserved first for the MO with the highest priorities.")
@@ -131,7 +131,7 @@ class MrpProduction(models.Model):
                         ('product_id','=',False),
         ('type', '=', 'normal')]""",
         check_company=True, compute='_compute_bom_id', store=True, precompute=True,
-        help="Bill of Materials allow you to define the list of required components to make a finished product.")
+        help="Bills of Materials, also called recipes, are used to autocomplete components and work order instructions.")
 
     state = fields.Selection([
         ('draft', 'Draft'),

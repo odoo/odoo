@@ -67,12 +67,13 @@
                             <field name="type" widget="radio"/>
                             <p colspan="2" class="oe_grey oe_edit_only" attrs="{'invisible': [('type','!=','phantom')]}">
                             <ul>
-                                A BoM of type kit is used to split the product into its components.
+                                A BoM of type Kit is not produced with a manufacturing order.<br/>
+                                Instead, it is used to decompose a BoM into its components when :
                                 <li>
-                                    At the creation of a Manufacturing Order.
+                                    it is added as a component in a manufacturing order
                                 </li>
                                 <li>
-                                    At the creation of a Stock Transfer.
+                                    it is moved via a transfer, such as a receipt or a delivery order for instance.
                                 </li>
                             </ul>
                             </p>
@@ -187,6 +188,9 @@
                                         <strong class="o_kanban_record_title"><span clatt="mt4"><field name="product_tmpl_id"/></span></strong>
                                     </div>
                                     <span class="float-end badge rounded-pill"><t t-esc="record.product_qty.value"/> <small><t t-esc="record.product_uom_id.value"/></small></span>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <field name="code"/>
                                 </div>
                             </div>
                         </t>

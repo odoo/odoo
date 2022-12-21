@@ -9,13 +9,19 @@
             <field name="arch" type="xml">
                 <form string="Change Product Qty">
                     <group>
-                        <field name="product_qty"/>
-                        <field name="mo_id" invisible="1"/>
+                        <group>
+                            <label for="product_qty"/>
+                            <div>
+                                <field name="product_qty" class="oe_inline"/>
+                            </div>
+                        </group>
                     </group>
+                    <span class="text-muted">Modifying the quantity to produce will also modify the quantities of components to consume for this manufacturing order.</span>
+                    <field name="mo_id" invisible="1"/>
                     <footer>
-                        <button name="change_prod_qty" string="Approve" data-hotkey="q"
+                        <button name="change_prod_qty" string="Set Quantity" data-hotkey="q"
                             colspan="1" type="object" class="btn-primary"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z" />
                     </footer>
                 </form>
             </field>
