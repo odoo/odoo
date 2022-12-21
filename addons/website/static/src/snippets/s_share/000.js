@@ -18,6 +18,15 @@ const ShareWidget = publicWidget.Widget.extend({
 
         return this._super(...arguments);
     },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        // TODO adapt in master. Ugly way here to fix existing s_share snippets
+        // before entering edit mode.
+        this.el.classList.add('o_no_link_popover');
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
