@@ -53,9 +53,9 @@ import {
     rightLeafOnlyNotBlockPath,
     isBlock,
     isMacOS,
-    childNodeIndex,
-    getSelectedNodes,
-    isVoidElement
+    isVoidElement,
+    cleanZWS,
+    isZWS,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -2850,14 +2850,14 @@ export class OdooEditor extends EventTarget {
         // we only remove the attribute to ensure we don't break some style.
         // Otherwise we remove the entire inline element.
         for (const emptyElement of element.querySelectorAll('[oe-zws-empty-inline]')) {
-            if (emptyElement.textContent.length === 1 && emptyElement.textContent.includes('\u200B')) {
+            if (isZWS(emptyElement)) {
                 if (emptyElement.classList.length > 0) {
                     emptyElement.removeAttribute('oe-zws-empty-inline');
                 } else {
                     emptyElement.remove();
                 }
             } else {
-                emptyElement.textContent = emptyElement.textContent.replace('\u200B', '');
+                cleanZWS(emptyElement);
                 emptyElement.removeAttribute('oe-zws-empty-inline');
             }
         }
@@ -2874,10 +2874,10 @@ export class OdooEditor extends EventTarget {
             el.removeAttribute('oe-keep-contenteditable');
         }
 
-        // Remove Zero Width Spzces on Font awesome elements
+        // Remove Zero Width Spaces on Font awesome elements
         const faSelector = 'i.fa,span.fa,i.fab,span.fab,i.fad,span.fad,i.far,span.far';
         for (const el of element.querySelectorAll(faSelector)) {
-            el.textContent = el.textContent.replace('\u200B', '');
+            cleanZWS(el);
         }
 
     }
