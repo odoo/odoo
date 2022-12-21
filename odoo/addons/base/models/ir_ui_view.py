@@ -1397,7 +1397,7 @@ actual arch.
     # view validation
     #-------------------------------------------------------------------
 
-    def _validate_view(self, node, model_name, editable=True, full=False):
+    def _validate_view(self, node, model_name, view_type=None, editable=True, full=False):
         """ Validate the given architecture node, and return its corresponding
         NameManager.
 
@@ -1409,6 +1409,13 @@ actual arch.
         :return: the combined architecture's NameManager
         """
         self.ensure_one()
+
+        view_type = view_type or self.type
+        if node.tag != view_type:
+            self._raise_view_error(_(
+                'The root node of a %(view_type)s view should be a <%(view_type)s>, not a <%(tag)s>',
+                view_type=view_type, tag=node.tag,
+            ), node)
 
         if model_name not in self.env:
             self._raise_view_error(_('Model not found: %(model)s', model=model_name), node)
@@ -1493,7 +1500,7 @@ actual arch.
             if len(searchpanels) > 1:
                 self._raise_view_error(_('Search tag can only contain one search panel'), node)
             node.remove(searchpanels[0])
-            self._validate_view(searchpanels[0], name_manager.model._name,
+            self._validate_view(searchpanels[0], name_manager.model._name, view_type="searchpanel",
                                 editable=False, full=node_info['validate'])
 
     def _validate_tag_field(self, node, name_manager, node_info):
@@ -1532,7 +1539,7 @@ actual arch.
                     continue
                 node.remove(child)
                 sub_manager = self._validate_view(
-                    child, field.comodel_name, editable=node_info['editable'], full=validate,
+                    child, field.comodel_name, view_type=child.tag, editable=node_info['editable'], full=validate,
                 )
                 for fname, groups_uses in sub_manager.mandatory_parent_fields.items():
                     for groups, use in groups_uses.items():
@@ -1646,7 +1653,7 @@ actual arch.
             groupby_node = E.groupby(*node)
             # validate the node as a nested view
             sub_manager = self._validate_view(
-                groupby_node, field.comodel_name, editable=False, full=node_info['validate'],
+                groupby_node, field.comodel_name, view_type="groupby", editable=False, full=node_info['validate'],
             )
             name_manager.has_field(node, name)
             for fname, groups_uses in sub_manager.mandatory_parent_fields.items():

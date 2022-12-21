@@ -1548,6 +1548,11 @@ class TestViews(ViewCase):
         kw.setdefault('active', True)
         if 'arch_db' in kw:
             arch_db = kw['arch_db']
+            if kw.get('inherit_id'):
+                self.cr.execute('SELECT type FROM ir_ui_view WHERE id = %s', [kw['inherit_id']])
+                kw['type'] = self.cr.fetchone()[0]
+            else:
+                kw['type'] = etree.fromstring(arch_db).tag
             kw['arch_db'] = Json({'en_US': arch_db}) if self.env.lang == 'en_US' else Json({'en_US': arch_db, self.env.lang: arch_db})
 
         keys = sorted(kw)
@@ -1557,6 +1562,32 @@ class TestViews(ViewCase):
         query = 'INSERT INTO ir_ui_view(%s) VALUES(%s) RETURNING id' % (fields, params)
         self.cr.execute(query, kw)
         return self.cr.fetchone()[0]
+
+    def test_view_root_node_matches_view_type(self):
+        view = self.View.create({
+            'name': 'foo',
+            'model': 'ir.ui.view',
+            'arch': """
+                <form>
+                </form>
+            """,
+        })
+        self.assertEqual(view.type, 'form')
+
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'foo',
+                'model': 'ir.ui.view',
+                'type': 'form',
+                'arch': """
+                    <data>
+                        <div>
+                        </div>
+                        <form>
+                        </form>
+                    </data>
+                """,
+            })
 
     def test_custom_view_validation(self):
         model = 'ir.actions.act_url'
