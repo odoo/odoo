@@ -220,14 +220,4 @@ class TestConsumeTrackedComponentCommon(common.TransactionCase):
             i += 1
 
         if isAvailable:
-            mark_done_action = mrp_productions[i].button_mark_done()
-            immediate_production_wizard = Form(
-                self.env['mrp.immediate.production']
-                .with_context(**mark_done_action['context'])
-                ).save()
-            error = False
-            try:
-                immediate_production_wizard.process()
-            except UserError:
-                error = True
-            self.assertFalse(error, "Immediate Production Wizard shall not raise an error.")
+            mrp_productions[i].button_mark_done()

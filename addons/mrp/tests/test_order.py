@@ -1598,9 +1598,6 @@ class TestMrpOrder(TestMrpCommon):
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location_components, 5.0)
         mo.action_assign()
         res_dict = mo.button_mark_done()
-        self.assertEqual(res_dict.get('res_model'), 'mrp.immediate.production')
-        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
-        wizard.process()
         self.assertEqual(mo.move_raw_ids.mapped('state'), ['done', 'done'])
         self.assertEqual(mo.move_raw_ids.mapped('quantity_done'), [1, 1])
         self.assertEqual(mo.move_finished_ids.state, 'done')
@@ -1628,9 +1625,6 @@ class TestMrpOrder(TestMrpCommon):
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location_components, 5.0)
         mo.action_assign()
         action = mo.button_mark_done()
-        self.assertEqual(action.get('res_model'), 'mrp.immediate.production')
-        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
-        action = wizard.process()
         self.assertEqual(action.get('res_model'), 'mrp.production.backorder')
         wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
         action = wizard.action_backorder()
@@ -1648,9 +1642,6 @@ class TestMrpOrder(TestMrpCommon):
         self.env['stock.quant']._update_available_quantity(p1, self.stock_location_components, 5.0)
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location_components, 5.0)
         action = mo.button_mark_done()
-        self.assertEqual(action.get('res_model'), 'mrp.immediate.production')
-        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
-        action = wizard.process()
         self.assertEqual(action.get('res_model'), 'mrp.production.backorder')
         wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
         action = wizard.action_backorder()
@@ -1682,10 +1673,7 @@ class TestMrpOrder(TestMrpCommon):
         mo3.action_confirm()
         mo3.action_assign()
         mos = mo1 | mo2 | mo3
-        res_dict = mos.button_mark_done()
-        self.assertEqual(res_dict.get('res_model'), 'mrp.immediate.production')
-        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
-        wizard.process()
+        mos.button_mark_done()
         self.assertEqual(mos.move_raw_ids.mapped('state'), ['done'] * 6)
         self.assertEqual(mos.move_raw_ids.mapped('quantity_done'), [1] * 6)
         self.assertEqual(mos.move_finished_ids.mapped('state'), ['done'] * 3)
@@ -1749,10 +1737,7 @@ class TestMrpOrder(TestMrpCommon):
         self.env['stock.quant']._update_available_quantity(p1, self.stock_location_components, 5.0)
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location_components, 5.0)
         mo.action_assign()
-        res_dict = mo.button_mark_done()
-        self.assertEqual(res_dict.get('res_model'), 'mrp.immediate.production')
-        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
-        wizard.process()
+        mo.button_mark_done()
         self.assertEqual(mo.move_raw_ids.mapped('state'), ['done'] * 2)
         self.assertEqual(mo.move_raw_ids.mapped('quantity_done'), [1] * 2)
         self.assertEqual(mo.move_finished_ids.state, 'done')
@@ -1787,10 +1772,7 @@ class TestMrpOrder(TestMrpCommon):
         mo = mo_form.save()
         mo.action_confirm()
         mo.action_assign()
-        res_dict = mo.button_mark_done()
-        self.assertEqual(res_dict.get('res_model'), 'mrp.immediate.production')
-        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
-        wizard.process()
+        mo.button_mark_done()
         self.assertEqual(mo.move_raw_ids.state, 'done')
         self.assertEqual(mo.move_raw_ids.quantity_done, 12)
         self.assertEqual(mo.move_finished_ids.state, 'done')
@@ -1848,10 +1830,7 @@ class TestMrpOrder(TestMrpCommon):
             mo_form.bom_id = bom
             mo = mo_form.save()
             mo.action_confirm()
-            action = mo.button_mark_done()
-            self.assertEqual(action.get('res_model'), 'mrp.immediate.production')
-            wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
-            action = wizard.process()
+            mo.button_mark_done()
 
             self.assertEqual(mo.move_raw_ids.product_uom_qty, 0.2)
             self.assertEqual(mo.move_raw_ids.quantity_done, 0.2)
@@ -1968,10 +1947,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo_product_final_form.reservation_state, 'assigned')
 
         # produce
-        res_dict = mo_product_final_form.button_mark_done()
-        self.assertEqual(res_dict.get('res_model'), 'mrp.immediate.production')
-        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
-        wizard.process()
+        mo_product_final_form.button_mark_done()
 
         # check that in _generate_consumed_move_line,
         # we do not create an extra move line because
@@ -2056,10 +2032,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo_2.workorder_ids[0].state, 'waiting')
 
         # produce
-        res_dict = (mo_1 | mo_2).button_mark_done()
-        self.assertEqual(res_dict.get('res_model'), 'mrp.immediate.production')
-        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
-        wizard.process()
+        (mo_1 | mo_2).button_mark_done()
         self.assertEqual(mo_1.state, 'done')
         self.assertEqual(mo_2.state, 'done')
 
@@ -2224,10 +2197,7 @@ class TestMrpOrder(TestMrpCommon):
         mo.action_assign()
         self.assertEqual(list(mo.workorder_ids.mapped("state")), ["ready"])
 
-        res_dict = mo.button_mark_done()
-        self.assertEqual(res_dict.get('res_model'), 'mrp.immediate.production')
-        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
-        wizard.process()
+        mo.button_mark_done()
         self.assertEqual(list(mo.workorder_ids.mapped("state")), ["done"])
 
     def test_products_with_variants(self):

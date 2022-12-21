@@ -765,7 +765,7 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Manufacturing
     run: "text 1",
 },
 
-...tour.stepUtils.statusbarButtonsSteps('Mark as Done', _t("Mark as Done"), ".o_statusbar_status .btn.dropdown-toggle:contains('To Close')"),
+...tour.stepUtils.statusbarButtonsSteps('Produce All', _t("Produce All"), ".o_statusbar_status .btn.dropdown-toggle:contains('To Close')"),
 {
     edition: "enterprise",
     trigger: '.o_menu_toggle',
