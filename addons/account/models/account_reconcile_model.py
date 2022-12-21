@@ -454,6 +454,7 @@ class AccountReconcileModel(models.Model):
 
         for line_vals in writeoff_vals_list:
             st_line_residual -= st_line.company_currency_id.round(line_vals['balance'])
+            line_vals['currency_id'] = st_line.company_currency_id.id
 
         # Check we have enough information to create an open balance.
         if open_balance_vals and not open_balance_vals.get('account_id'):
