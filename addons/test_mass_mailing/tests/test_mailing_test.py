@@ -4,10 +4,11 @@ import lxml.html
 
 from odoo.addons.test_mass_mailing.tests.common import TestMassMailCommon
 from odoo.fields import Command
-from odoo.tests.common import users
+from odoo.tests.common import users, tagged
 from odoo.tools import mute_logger
 
 
+@tagged('mailing_manage')
 class TestMailingTest(TestMassMailCommon):
 
     @users('user_marketing')

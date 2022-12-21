@@ -34,9 +34,7 @@ class BaseMailPerformance(MailCommon, TransactionCaseWithUserDemo):
             'mobile': '0456123456',
         })
 
-        cls.test_attachments_vals = cls._generate_attachments_data(
-            cls, 3, res_model='mail.compose.message', res_id=0
-        )
+        cls.test_attachments_vals = cls._generate_attachments_data(3, 'mail.compose.message', 0)
 
     def setUp(self):
         super(BaseMailPerformance, self).setUp()

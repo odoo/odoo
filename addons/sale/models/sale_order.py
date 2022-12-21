@@ -904,7 +904,7 @@ class SaleOrder(models.Model):
     def _show_cancel_wizard(self):
         """ Decide whether the sale.order.cancel wizard should be shown to cancel specified orders.
 
-        :return: True if there are draft order(s) in the given orders
+        :return: True if there is any non-draft order in the given orders
         :rtype: bool
         """
         if self.env.context.get('disable_cancel_warning'):

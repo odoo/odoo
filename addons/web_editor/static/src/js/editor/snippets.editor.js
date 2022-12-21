@@ -2461,7 +2461,6 @@ var SnippetsMenu = Widget.extend({
                         if (editor.isSticky()) {
                             editor.toggleOverlay(true, false);
                             customize$Elements = await editor.toggleOptions(true);
-                            break;
                         }
                     }
                 }

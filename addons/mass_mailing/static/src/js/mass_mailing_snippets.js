@@ -380,4 +380,22 @@ options.registry.DesignTab = options.Class.extend({
     },
 });
 
+options.userValueWidgetsRegistry['we-colorpicker'] = options.userValueWidgetsRegistry['we-colorpicker'].extend({
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    toggleVisibility() {
+        this._super(...arguments);
+        if (this.$target.is('a')) {
+            // There is an option in link tools for that, do not duplicate it.
+            this.$el.hide();
+        }
+    },
+});
+
 });
