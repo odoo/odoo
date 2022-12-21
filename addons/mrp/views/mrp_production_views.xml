@@ -92,25 +92,25 @@
                 <header>
                     <field name="confirm_cancel" invisible="1"/>
                     <field name="show_lock" invisible="1"/>
-                    <button name="button_mark_done" attrs="{'invisible': ['|', '|', ('state', 'in', ('draft', 'cancel', 'done', 'to_close')), ('qty_producing', '=', 0), ('move_raw_ids', '!=', [])]}" string="Validate" type="object" class="oe_highlight"
-                            confirm="There are no components to consume. Are you still sure you want to continue?" data-hotkey="g"/>
-                    <button name="button_mark_done" attrs="{'invisible': ['|', '|', ('state', 'in', ('draft', 'cancel', 'done', 'to_close')), ('qty_producing', '=', 0), ('move_raw_ids', '=', [])]}" string="Validate" type="object" class="oe_highlight" data-hotkey="g"/>
+                    <field name="show_produce" invisible="1"/>
+                    <field name="show_produce_all" invisible="1"/>
                     <button name="button_mark_done" attrs="{'invisible': [
                         '|',
                         ('move_raw_ids', '=', []),
-                        '&amp;',
+                        ('show_produce', '=', False)]}" string="Produce" type="object" class="oe_highlight" data-hotkey="g"/>
+                    <button name="button_mark_done" attrs="{'invisible': [
                         '|',
-                        ('state', 'not in', ('confirmed', 'progress')),
-                        ('qty_producing', '!=', 0),
-                        ('state', '!=', 'to_close')]}" string="Mark as Done" type="object" class="oe_highlight" data-hotkey="g"/>
+                        ('move_raw_ids', '=', []),
+                        ('show_produce_all', '=', False)]}" string="Produce All" type="object" class="oe_highlight" data-hotkey="g"/>
                     <button name="button_mark_done" attrs="{'invisible': [
                         '|',
                         ('move_raw_ids', '!=', []),
-                        '&amp;',
+                        ('show_produce', '=', False)]}" string="Produce" type="object" class="oe_highlight" data-hotkey="g"
+                            confirm="There are no components to consume. Are you still sure you want to continue?"/>
+                    <button name="button_mark_done" attrs="{'invisible': [
                         '|',
-                        ('state', 'not in', ('confirmed', 'progress')),
-                        ('qty_producing', '!=', 0),
-                        ('state', '!=', 'to_close')]}" string="Mark as Done" type="object" class="oe_highlight" data-hotkey="g"
+                        ('move_raw_ids', '!=', []),
+                        ('show_produce_all', '=', False)]}" string="Produce All" type="object" class="oe_highlight" data-hotkey="g"
                             confirm="There are no components to consume. Are you still sure you want to continue?"/>
                     <button name="action_confirm" attrs="{'invisible': [('state', '!=', 'draft')]}" string="Confirm" type="object" class="oe_highlight" data-hotkey="v"/>
                     <button name="button_plan" attrs="{'invisible': ['|', '|', ('state', 'not in', ('confirmed', 'progress', 'to_close')), ('workorder_ids', '=', []), ('is_planned', '=', True)]}" type="object" string="Plan" class="oe_highlight" data-hotkey="x"/>
@@ -330,7 +330,8 @@
                                     <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" invisible="1"/>
                                     <field name="state" invisible="1" force_save="1"/>
                                     <field name="should_consume_qty" invisible="1"/>
-                                    <field name="product_uom_qty" widget="mrp_should_consume" force_save="1" string="To Consume" attrs="{'readonly': ['&amp;', ('parent.state', '!=', 'draft'), '|', '&amp;', ('parent.state', 'not in', ('confirmed', 'progress', 'to_close')), ('parent.is_planned', '!=', True), ('parent.is_locked', '=', True)]}"/>
+                                    <field name="product_uom_qty" force_save="1" string="To Consume" attrs="{'readonly': ['&amp;', ('parent.state', '!=', 'draft'), '|', '&amp;', ('parent.state', 'not in', ('confirmed', 'progress', 'to_close')), ('parent.is_planned', '!=', True), ('parent.is_locked', '=', True)], 'column_invisible': [('parent.show_produce_all', '=', False)]}"/>
+                                    <field name="product_uom_qty" widget="mrp_should_consume" force_save="1" string="To Consume" attrs="{'readonly': ['&amp;', ('parent.state', '!=', 'draft'), '|', '&amp;', ('parent.state', 'not in', ('confirmed', 'progress', 'to_close')), ('parent.is_planned', '!=', True), ('parent.is_locked', '=', True)], 'column_invisible': [('parent.show_produce_all', '=', True)]}"/>
                                     <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('id', '!=', False)]}" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
                                     <field name="product_type" invisible="1"/>
                                     <field name="product_qty" invisible="1" readonly="1"/>
