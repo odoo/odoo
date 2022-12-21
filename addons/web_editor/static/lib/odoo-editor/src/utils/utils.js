@@ -2427,3 +2427,14 @@ export function peek(arr) {
 export function isMacOS() {
     return window.navigator.userAgent.includes('Mac');
 }
+
+/**
+ * Remove zero-width spaces from the provided node and its descendants.
+ *
+ * @param {Node} node
+ */
+export function cleanZWS(node) {
+    [node, ...descendants(node)]
+        .filter(node => node.nodeType === Node.TEXT_NODE)
+        .forEach(node => node.nodeValue = node.nodeValue.replace(/\u200B/g, ''));
+}
