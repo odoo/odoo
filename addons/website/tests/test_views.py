@@ -1010,11 +1010,20 @@ class TestCowViewSaving(TestViewSavingCommon):
         self.assertEqual(specific_view.with_context(lang='fr_BE').arch, '<div>bonjour</div>',
                          "updating translation of base view doesn't update specific view")
 
-        self.env['ir.module.module']._load_module_terms(['website'], ['en_US', 'fr_BE'], overwrite=True)
+        self.env['res.lang']._activate_lang('es_ES')
+        # Translate specific 'arch_db' while the generic value has no content for the
+        # translation language.
+        specific_view.update_field_translations('arch_db', {'es_ES': {'hello': 'hola'}})
+        self.assertEqual(specific_view.with_context(lang='es_ES').arch, '<div>hola</div>')
+
+        self.env['ir.module.module']._load_module_terms(['website'], ['en_US', 'fr_BE', 'es_ES'], overwrite=True)
 
         specific_view.invalidate_model(['arch_db', 'arch'])
         self.assertEqual(specific_view.with_context(lang='fr_BE').arch, '<div>salut</div>',
                          "loading module translation copy translation from base to specific view")
+
+        self.assertEqual(specific_view.with_context(lang='es_ES').arch, '<div>hola</div>',
+                         "loading module translation should not remove specific translations that are not available on base view")
 
     def test_soc_complete_flow(self):
         """
