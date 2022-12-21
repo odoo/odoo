@@ -84,5 +84,5 @@ class AccountJournal(models.Model):
         if linked_providers:
             raise UserError(_(
                 "You must first deactivate a payment provider before deleting its journal.\n"
-                "Linked acquirer: %s", ', '.join(p.display_name for p in linked_providers)
+                "Linked providers: %s", ', '.join(p.display_name for p in linked_providers)
             ))
