@@ -51,8 +51,7 @@ class ProductProduct(models.Model):
         'Cost', company_dependent=True,
         digits='Product Price',
         groups="base.group_user",
-        help="""In Standard Price & AVCO: value of the product (automatically computed in AVCO).
-        In FIFO: value of the next unit that will leave the stock (automatically computed).
+        help="""Value of the product (automatically computed in AVCO).
         Used to value the product when the purchase cost is not known (e.g. inventory adjustment).
         Used to compute margins on sale orders.""")
     volume = fields.Float('Volume', digits='Volume')
