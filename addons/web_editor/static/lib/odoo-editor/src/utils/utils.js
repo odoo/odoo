@@ -1259,6 +1259,9 @@ export function isMediaElement(node) {
             (node.classList.contains('o_image') || node.classList.contains('media_iframe_video')))
     );
 }
+export function isVoidElement(node) {
+    return isMediaElement(node) || node.tagName === 'HR';
+}
 
 export function containsUnremovable(node) {
     if (!node) {
