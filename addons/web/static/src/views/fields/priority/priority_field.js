@@ -50,7 +50,7 @@ export class PriorityField extends Component {
     }
 
     getTooltip(value) {
-        return this.props.tooltipLabel ? `${this.props.tooltipLabel}: ${value}` : value;
+        return this.props.tooltipLabel && this.props.tooltipLabel !== value ? `${this.props.tooltipLabel}: ${value}` : value;
     }
     /**
      * @param {string} value
