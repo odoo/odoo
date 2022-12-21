@@ -70,6 +70,7 @@ import {
     parseHTML,
     splitTextNode,
     isEditorTab,
+    isVoidElement
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -2161,7 +2162,8 @@ export class OdooEditor extends EventTarget {
         this.observerUnactive('_activateContenteditable');
         this.editable.setAttribute('contenteditable', this.options.isRootEditable);
 
-        for (const node of this.options.getContentEditableAreas(this)) {
+        const editableAreas = this.options.getContentEditableAreas(this).filter(node => !isVoidElement(node));
+        for (const node of editableAreas) {
             if (!node.isContentEditable) {
                 node.setAttribute('contenteditable', true);
             }
