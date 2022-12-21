@@ -353,7 +353,7 @@ export class WebsitePreview extends Component {
                     additionalContext: {
                         params: {
                             website_id: this.websiteId,
-                            url_return: '/[lang]',
+                            url_return: $.deparam(href).url_return,
                         },
                     },
                 });
