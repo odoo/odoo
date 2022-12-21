@@ -270,19 +270,6 @@ class Currency(models.Model):
         # apply rounding
         return to_currency.round(to_amount) if round else to_amount
 
-    @api.model
-    def _compute(self, from_currency, to_currency, from_amount, round=True):
-        _logger.warning('The `_compute` method is deprecated. Use `_convert` instead')
-        date = self._context.get('date') or fields.Date.today()
-        company = self.env['res.company'].browse(self._context.get('company_id')) or self.env.company
-        return from_currency._convert(from_amount, to_currency, company, date)
-
-    def compute(self, from_amount, to_currency, round=True):
-        _logger.warning('The `compute` method is deprecated. Use `_convert` instead')
-        date = self._context.get('date') or fields.Date.today()
-        company = self.env['res.company'].browse(self._context.get('company_id')) or self.env.company
-        return self._convert(from_amount, to_currency, company, date)
-
     def _select_companies_rates(self):
         return """
             SELECT
