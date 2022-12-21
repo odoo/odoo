@@ -1791,7 +1791,7 @@ Please change the quantity done or the rounding precision of your unit of measur
     @api.ondelete(at_uninstall=False)
     def _unlink_if_draft_or_cancel(self):
         if any(move.state not in ('draft', 'cancel') for move in self):
-            raise UserError(_('You can only delete draft moves.'))
+            raise UserError(_('You can only delete draft or cancelled moves.'))
 
     def unlink(self):
         # With the non plannified picking, draft moves could have some move lines.
