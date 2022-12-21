@@ -31,7 +31,7 @@ With this module you will have:
 .. _SAT: http://www.sat.gob.mx/
     """,
     "depends": [
-        "account",
+        "l10n_multilang"
     ],
     "data": [
         "data/account.account.tag.csv",
