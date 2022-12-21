@@ -18,6 +18,7 @@ import {
     isZWS,
     getUrlsInfosInString,
     URL_REGEX,
+    isVoidElement,
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
@@ -219,7 +220,7 @@ class Sanitize {
             // Ensure elements which should not contain any content are tagged
             // contenteditable=false to avoid any hiccup.
             if (
-                (isMediaElement(node) || node.tagName === 'HR') &&
+                isVoidElement(node) &&
                 node.getAttribute('contenteditable') !== 'false'
             ) {
                 node.setAttribute('contenteditable', 'false');
