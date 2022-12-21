@@ -2159,6 +2159,7 @@ class TestMrpOrder(TestMrpCommon):
 
         self.assertEqual(list(mo.workorder_ids.mapped("state")), ["waiting"])
         mo.action_assign()
+        duration_expected = mo.workorder_ids.duration_expected
         self.assertEqual(list(mo.workorder_ids.mapped("state")), ["ready"])
 
         res_dict = mo.button_mark_done()
@@ -2166,6 +2167,7 @@ class TestMrpOrder(TestMrpCommon):
         wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
         wizard.process()
         self.assertEqual(list(mo.workorder_ids.mapped("state")), ["done"])
+        self.assertEqual(duration_expected, mo.workorder_ids.duration_expected)
 
     def test_products_with_variants(self):
         """Check for product with different variants with same bom"""
