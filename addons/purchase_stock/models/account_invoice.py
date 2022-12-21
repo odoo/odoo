@@ -42,11 +42,9 @@ class AccountMove(models.Model):
                     continue
 
                 # Retrieve accounts needed to generate the price difference.
-                accounts = line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=move.fiscal_position_id)
-                debit_expense_account = accounts['expense']
+                debit_expense_account = line._get_price_diff_account()
                 if not debit_expense_account:
                     continue
-
                 if line.product_id.cost_method != 'standard' and line.purchase_line_id:
 
                     # Retrieve stock valuation moves.
@@ -70,14 +68,22 @@ class AccountMove(models.Model):
                     valuation_price_unit = line.product_id.uom_id._compute_price(valuation_price_unit, line.product_uom_id)
 
                 else:
-                    continue
+                    price_unit = line.product_id.uom_id._compute_price(line.product_id.standard_price, line.product_uom_id)
+                    price_unit = -price_unit if line.move_id.move_type == 'in_refund' else price_unit
+                    valuation_price_unit = line.company_currency_id._convert(
+                        price_unit, move.currency_id,
+                        move.company_id, fields.Date.today(), round=False
+                    )
 
 
                 price_unit = line._get_gross_unit_price()
 
                 price_unit_val_dif = price_unit - valuation_price_unit
                 # If there are some valued moves, we only consider their quantity already used
-                relevant_qty = line._get_out_and_not_invoiced_qty(valuation_stock_moves)
+                if line.product_id.cost_method == 'standard':
+                    relevant_qty = line.quantity
+                else:
+                    relevant_qty = line._get_out_and_not_invoiced_qty(valuation_stock_moves)
                 price_subtotal = relevant_qty * price_unit_val_dif
 
                 # We consider there is a price difference if the subtotal is not zero. In case a
