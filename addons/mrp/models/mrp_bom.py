@@ -200,6 +200,11 @@ class MrpBom(models.Model):
     def name_create(self, name):
         # prevent to use string as product_tmpl_id
         if isinstance(name, str):
+            key = 'default_' + self._rec_name
+            if key in self.env.context:
+                result = super().name_create(self.env.context[key])
+                self.browse(result[0]).code = name
+                return result
             raise UserError(_("You cannot create a new Bill of Material from here."))
         return super(MrpBom, self).name_create(name)
 

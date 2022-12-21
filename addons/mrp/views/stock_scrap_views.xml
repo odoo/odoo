@@ -28,6 +28,10 @@
         <field name="model">stock.scrap</field>
         <field name="inherit_id" ref="stock.stock_scrap_search_view"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='create_date']" position="after">
+                <filter string="Draft" name="filter_draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Done" name="filter_done" domain="[('state', '=', 'done')]"/>
+            </xpath>
             <xpath expr="//filter[@name='transfer']" position="after">
                 <filter string="Manufacturing Order" name="production_id" domain="[]" context="{'group_by':'production_id'}"/>
             </xpath>
