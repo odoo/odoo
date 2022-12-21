@@ -219,8 +219,7 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         self.assertEqual(len(mo.move_raw_ids.analytic_account_line_id), 0)
 
         # Mark as done
-        wizard_dict = mo.button_mark_done()
-        Form(self.env[(wizard_dict.get('res_model'))].with_context(wizard_dict['context'])).save().process()
+        mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
         self.assertEqual(len(mo.move_raw_ids.analytic_account_line_id), 1)
 
