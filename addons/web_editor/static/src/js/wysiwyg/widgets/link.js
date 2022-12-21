@@ -120,7 +120,7 @@ const Link = Widget.extend({
     /**
      * @override
      */
-    start: function () {
+    start: async function () {
         for (const option of this._getLinkOptions()) {
             const $option = $(option);
             const value = $option.is('input') ? $option.val() : $option.data('value');
@@ -136,6 +136,11 @@ const Link = Widget.extend({
             }
             this._setSelectOption($option, active);
         }
+
+        const _super = this._super.bind(this);
+
+        await this._updateOptionsUI();
+
         if (this.data.url) {
             var match = /mailto:(.+)/.exec(this.data.url);
             this.$('input[name="url"]').val(match ? match[1] : this.data.url);
@@ -143,13 +148,11 @@ const Link = Widget.extend({
             this._savedURLInputOnDestroy = false;
         }
 
-        this._updateOptionsUI();
-
         if (!this.noFocusUrl) {
             this.focusUrl();
         }
 
-        return this._super.apply(this, arguments);
+        return _super(...arguments);
     },
     /**
      * @override
@@ -185,13 +188,6 @@ const Link = Widget.extend({
             this.$link.css('border-width', data.customBorderWidth);
             this.$link.css('border-style', data.customBorderStyle);
             this.$link.css('border-color', data.customBorder);
-        } else {
-            this.$link.css('color', '');
-            this.$link.css('background-color', '');
-            this.$link.css('background-image', '');
-            this.$link.css('border-width', '');
-            this.$link.css('border-style', '');
-            this.$link.css('border-color', '');
         }
         const attrs = Object.assign({}, this.data.oldAttributes, {
             href: data.url,

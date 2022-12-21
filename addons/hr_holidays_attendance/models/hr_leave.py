@@ -105,3 +105,7 @@ class HRLeave(models.Model):
         # TODO master change to ondelete
         self.sudo().overtime_id.unlink()
         return super().unlink()
+
+    def _force_cancel(self, *args, **kwargs):
+        super()._force_cancel(*args, **kwargs)
+        self.sudo().overtime_id.unlink()
