@@ -18,9 +18,9 @@
         </field>
         <field name="line_ids">
             <!-- Section 0 -->
-             <record id="tax_report_title_vat_calculation" model="account.report.line">
-                 <field name="name">Vat calculation of supplied goods and services - total value(i. + ii.)</field>
-                 <field name="code">c_0_total</field>
+            <record id="tax_report_title_vat_calculation" model="account.report.line">
+                <field name="name">Vat calculation of supplied goods and services - total value(i. + ii.)</field>
+                <field name="code">c_0_total</field>
                 <field name="expression_ids">
                     <record id="tax_report_line_0_0_tag_column1" model="account.report.expression">
                         <field name="label">tax_base</field>
@@ -270,196 +270,196 @@
                                 <field name="formula">II.4_tax</field>
                             </record>
                         </field>
-                    </record>
-                    <!-- Sub Section 5 -->
-                    <record id="tax_report_line_II_5" model="account.report.line">
-                        <field name="name">5. Acquisition of goods within the eu at a rate 5%</field>
-                        <field name="code">hr15</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_line_II_5_tag_column1" model="account.report.expression">
-                                <field name="label">tax_base</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">II.5_base</field>
-                            </record>
-                            <record id="tax_report_line_II_5_tag_column2" model="account.report.expression">
-                                <field name="label">tax_amount</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">II.5_tax</field>
-                            </record>
-                        </field>
-                    </record>
-                    <!-- Sub Section 6 -->
-                    <record id="tax_report_line_II_6" model="account.report.line">
-                        <field name="name">6. Acquisition of goods within the eu at a rate 13%</field>
-                        <field name="code">hr16</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_line_II_6_tag_column1" model="account.report.expression">
-                                <field name="label">tax_base</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">II.6_base</field>
-                            </record>
-                            <record id="tax_report_line_II_6_tag_column2" model="account.report.expression">
-                                <field name="label">tax_amount</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">II.6_tax</field>
-                            </record>
-                        </field>
-                    </record>
-                    <!-- Sub Section 7 -->
-                    <record id="tax_report_line_II_7" model="account.report.line">
-                        <field name="name">7. Acquisition of goods within the eu at a rate 25%</field>
-                        <field name="code">hr17</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_line_II_7_tag_column1" model="account.report.expression">
-                                <field name="label">tax_base</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">II.7_base</field>
-                            </record>
-                            <record id="tax_report_line_II_7_tag_column2" model="account.report.expression">
-                                <field name="label">tax_amount</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">II.7_tax</field>
-                            </record>
-                        </field>
-                    </record>
-                    <!-- Sub Section 8 -->
-                    <record id="tax_report_line_II_8" model="account.report.line">
-                        <field name="name">8. Services received from eu at a rate 5%</field>
-                        <field name="code">hr18</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_line_II_8_tag_column1" model="account.report.expression">
-                                <field name="label">tax_base</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">II.8_base</field>
-                            </record>
-                            <record id="tax_report_line_II_8_tag_column2" model="account.report.expression">
-                                <field name="label">tax_amount</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">II.8_tax</field>
-                            </record>
-                        </field>
-                    </record>
-                    <!-- Sub Section 9 -->
-                    <record id="tax_report_line_II_9" model="account.report.line">
-                        <field name="name">9. Services received from eu at a rate 13%</field>
-                        <field name="code">hr19</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_line_II_9_tag_column1" model="account.report.expression">
-                                <field name="label">tax_base</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">II.9_base</field>
-                            </record>
-                            <record id="tax_report_line_II_9_tag_column2" model="account.report.expression">
-                                <field name="label">tax_amount</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">II.9_tax</field>
-                            </record>
-                        </field>
-                    </record>
-                    <!-- Sub Section 10 -->
-                    <record id="tax_report_line_II_10" model="account.report.line">
-                        <field name="name">10. Services received from eu at a rate 25%</field>
-                        <field name="code">hr20</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_line_II_10_tag_column1" model="account.report.expression">
-                                <field name="label">tax_base</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">II.10_base</field>
-                            </record>
-                            <record id="tax_report_line_II_10_tag_column2" model="account.report.expression">
-                                <field name="label">tax_amount</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">II.10_tax</field>
-                            </record>
-                        </field>
-                    </record>
-                    <!-- Sub Section 11 -->
-                    <record id="tax_report_line_II_11" model="account.report.line">
-                        <field name="name">11. Supplies of goods and services received from taxable persons not established in the republic of croatia at a rate 5%</field>
-                        <field name="code">hr21</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_line_II_11_tag_column1" model="account.report.expression">
-                                <field name="label">tax_base</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">II.11_base</field>
-                            </record>
-                            <record id="tax_report_line_II_11_tag_column2" model="account.report.expression">
-                                <field name="label">tax_amount</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">II.11_tax</field>
-                            </record>
-                        </field>
-                    </record>
-                    <!-- Sub Section 12 -->
-                    <record id="tax_report_line_II_12" model="account.report.line">
-                        <field name="name">12. Supplies of goods and services received from taxable persons not established in the republic of croatia at a rate 13%</field>
-                        <field name="code">hr22</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_line_II_12_tag_column1" model="account.report.expression">
-                                <field name="label">tax_base</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">II.12_base</field>
-                            </record>
-                            <record id="tax_report_line_II_12_tag_column2" model="account.report.expression">
-                                <field name="label">tax_amount</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">II.12_tax</field>
-                            </record>
-                        </field>
-                    </record>
-                    <!-- Sub Section 13 -->
-                    <record id="tax_report_line_II_13" model="account.report.line">
-                        <field name="name">13. Supplies of goods and services received from taxable persons not established in the republic of croatia at a rate 25%</field>
-                        <field name="code">hr23</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_line_II_13_tag_column1" model="account.report.expression">
-                                <field name="label">tax_base</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">II.13_base</field>
-                            </record>
-                            <record id="tax_report_line_II_13_tag_column2" model="account.report.expression">
-                                <field name="label">tax_amount</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">II.13_tax</field>
-                            </record>
-                        </field>
-                    </record>
-                    <!-- Sub Section 14 -->
-                    <record id="tax_report_line_II_14" model="account.report.line">
-                        <field name="name">14. Subsequent exemption on exportation related to personal  passenger transportation</field>
-                        <field name="code">hr24</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_line_II_14_tag_column1" model="account.report.expression">
-                                <field name="label">tax_base</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">II.14_base</field>
-                            </record>
-                            <record id="tax_report_line_II_14_tag_column2" model="account.report.expression">
-                                <field name="label">tax_amount</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">II.14_tax</field>
-                            </record>
-                        </field>
-                    </record>
-                    <!-- Sub Section 15 -->
-                    <record id="tax_report_line_II_15" model="account.report.line">
-                        <field name="name">15. Vat calculated on importation</field>
-                        <field name="code">hr25</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_line_II_15_tag_column1" model="account.report.expression">
-                                <field name="label">tax_base</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">II.15_base</field>
-                            </record>
-                            <record id="tax_report_line_II_15_tag_column2" model="account.report.expression">
-                                <field name="label">tax_amount</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">II.15_tax</field>
-                            </record>
-                        </field>
-                    </record>
-                </field>
-            </record>
+                        </record>
+                        <!-- Sub Section 5 -->
+                        <record id="tax_report_line_II_5" model="account.report.line">
+                            <field name="name">5. Acquisition of goods within the eu at a rate 5%</field>
+                            <field name="code">hr15</field>
+                            <field name="expression_ids">
+                                <record id="tax_report_line_II_5_tag_column1" model="account.report.expression">
+                                    <field name="label">tax_base</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">II.5_base</field>
+                                </record>
+                                <record id="tax_report_line_II_5_tag_column2" model="account.report.expression">
+                                    <field name="label">tax_amount</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">II.5_tax</field>
+                                </record>
+                            </field>
+                        </record>
+                        <!-- Sub Section 6 -->
+                        <record id="tax_report_line_II_6" model="account.report.line">
+                            <field name="name">6. Acquisition of goods within the eu at a rate 13%</field>
+                            <field name="code">hr16</field>
+                            <field name="expression_ids">
+                                <record id="tax_report_line_II_6_tag_column1" model="account.report.expression">
+                                    <field name="label">tax_base</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">II.6_base</field>
+                                </record>
+                                <record id="tax_report_line_II_6_tag_column2" model="account.report.expression">
+                                    <field name="label">tax_amount</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">II.6_tax</field>
+                                </record>
+                            </field>
+                        </record>
+                        <!-- Sub Section 7 -->
+                        <record id="tax_report_line_II_7" model="account.report.line">
+                            <field name="name">7. Acquisition of goods within the eu at a rate 25%</field>
+                            <field name="code">hr17</field>
+                            <field name="expression_ids">
+                                <record id="tax_report_line_II_7_tag_column1" model="account.report.expression">
+                                    <field name="label">tax_base</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">II.7_base</field>
+                                </record>
+                                <record id="tax_report_line_II_7_tag_column2" model="account.report.expression">
+                                    <field name="label">tax_amount</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">II.7_tax</field>
+                                </record>
+                            </field>
+                        </record>
+                        <!-- Sub Section 8 -->
+                        <record id="tax_report_line_II_8" model="account.report.line">
+                            <field name="name">8. Services received from eu at a rate 5%</field>
+                            <field name="code">hr18</field>
+                            <field name="expression_ids">
+                                <record id="tax_report_line_II_8_tag_column1" model="account.report.expression">
+                                    <field name="label">tax_base</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">II.8_base</field>
+                                </record>
+                                <record id="tax_report_line_II_8_tag_column2" model="account.report.expression">
+                                    <field name="label">tax_amount</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">II.8_tax</field>
+                                </record>
+                            </field>
+                        </record>
+                        <!-- Sub Section 9 -->
+                        <record id="tax_report_line_II_9" model="account.report.line">
+                            <field name="name">9. Services received from eu at a rate 13%</field>
+                            <field name="code">hr19</field>
+                            <field name="expression_ids">
+                                <record id="tax_report_line_II_9_tag_column1" model="account.report.expression">
+                                    <field name="label">tax_base</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">II.9_base</field>
+                                </record>
+                                <record id="tax_report_line_II_9_tag_column2" model="account.report.expression">
+                                    <field name="label">tax_amount</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">II.9_tax</field>
+                                </record>
+                            </field>
+                        </record>
+                        <!-- Sub Section 10 -->
+                        <record id="tax_report_line_II_10" model="account.report.line">
+                            <field name="name">10. Services received from eu at a rate 25%</field>
+                            <field name="code">hr20</field>
+                            <field name="expression_ids">
+                                <record id="tax_report_line_II_10_tag_column1" model="account.report.expression">
+                                    <field name="label">tax_base</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">II.10_base</field>
+                                </record>
+                                <record id="tax_report_line_II_10_tag_column2" model="account.report.expression">
+                                    <field name="label">tax_amount</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">II.10_tax</field>
+                                </record>
+                            </field>
+                        </record>
+                        <!-- Sub Section 11 -->
+                        <record id="tax_report_line_II_11" model="account.report.line">
+                            <field name="name">11. Supplies of goods and services received from taxable persons not established in the republic of croatia at a rate 5%</field>
+                            <field name="code">hr21</field>
+                            <field name="expression_ids">
+                                <record id="tax_report_line_II_11_tag_column1" model="account.report.expression">
+                                    <field name="label">tax_base</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">II.11_base</field>
+                                </record>
+                                <record id="tax_report_line_II_11_tag_column2" model="account.report.expression">
+                                    <field name="label">tax_amount</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">II.11_tax</field>
+                                </record>
+                            </field>
+                        </record>
+                        <!-- Sub Section 12 -->
+                        <record id="tax_report_line_II_12" model="account.report.line">
+                            <field name="name">12. Supplies of goods and services received from taxable persons not established in the republic of croatia at a rate 13%</field>
+                            <field name="code">hr22</field>
+                            <field name="expression_ids">
+                                <record id="tax_report_line_II_12_tag_column1" model="account.report.expression">
+                                    <field name="label">tax_base</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">II.12_base</field>
+                                </record>
+                                <record id="tax_report_line_II_12_tag_column2" model="account.report.expression">
+                                    <field name="label">tax_amount</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">II.12_tax</field>
+                                </record>
+                            </field>
+                        </record>
+                        <!-- Sub Section 13 -->
+                        <record id="tax_report_line_II_13" model="account.report.line">
+                            <field name="name">13. Supplies of goods and services received from taxable persons not established in the republic of croatia at a rate 25%</field>
+                            <field name="code">hr23</field>
+                            <field name="expression_ids">
+                                <record id="tax_report_line_II_13_tag_column1" model="account.report.expression">
+                                    <field name="label">tax_base</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">II.13_base</field>
+                                </record>
+                                <record id="tax_report_line_II_13_tag_column2" model="account.report.expression">
+                                    <field name="label">tax_amount</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">II.13_tax</field>
+                                </record>
+                            </field>
+                        </record>
+                        <!-- Sub Section 14 -->
+                        <record id="tax_report_line_II_14" model="account.report.line">
+                            <field name="name">14. Subsequent exemption on exportation related to personal  passenger transportation</field>
+                            <field name="code">hr24</field>
+                            <field name="expression_ids">
+                                <record id="tax_report_line_II_14_tag_column1" model="account.report.expression">
+                                    <field name="label">tax_base</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">II.14_base</field>
+                                </record>
+                                <record id="tax_report_line_II_14_tag_column2" model="account.report.expression">
+                                    <field name="label">tax_amount</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">II.14_tax</field>
+                                </record>
+                            </field>
+                        </record>
+                        <!-- Sub Section 15 -->
+                        <record id="tax_report_line_II_15" model="account.report.line">
+                            <field name="name">15. Vat calculated on importation</field>
+                            <field name="code">hr25</field>
+                            <field name="expression_ids">
+                                <record id="tax_report_line_II_15_tag_column1" model="account.report.expression">
+                                    <field name="label">tax_base</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">II.15_base</field>
+                                </record>
+                                <record id="tax_report_line_II_15_tag_column2" model="account.report.expression">
+                                    <field name="label">tax_amount</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">II.15_tax</field>
+                                </record>
+                            </field>
+                        </record>
+                    </field>
+                </record>
             <!-- Section III -->
             <record id="tax_report_title_calculed_vat" model="account.report.line">
                 <field name="name">III. Calculated input vat – total amount (1.+2.+3.+4.+5.+6.+7.+8.+9.+10.+11.+12.+13. +14.+15.)</field>
@@ -870,9 +870,9 @@
                 </field>
             </record>
             <!-- Section VII -->
-             <record id="tax_report_title_annual_deductible" model="account.report.line">
+            <record id="tax_report_title_annual_deductible" model="account.report.line">
                 <field name="name">VII. Annual deductible proportion(%)</field>
-             </record>
+            </record>
         </field>
     </record>
 </odoo>

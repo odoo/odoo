@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    "name": "Croatia - Accounting",
+    "name": "Croatia - Accounting (Euro)",
     "description": """
     Croatian Chart of Accounts updated (RRIF ver.2021)
 
