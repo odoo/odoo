@@ -641,13 +641,17 @@ class TestStockValuationFIFO(TestStockValuationCommon):
         self.assertEqual(sum(self.product1.stock_valuation_layer_ids.mapped('remaining_qty')), 15)
 
     def test_change_in_past_decrease_out_1(self):
+        """ Decrease the qty_done of an outgoing stock.move.line will act like
+        an inventory adjustement and not a return. It will take the standard price
+        of the product in order to set the value and not the move's layers.
+        """
         self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
         move1 = self._make_in_move(self.product1, 20, unit_cost=10)
         move2 = self._make_out_move(self.product1, 15)
         move3 = self._make_in_move(self.product1, 20, unit_cost=15)
         move2.move_line_ids.qty_done = 5
 
-        self.assertEqual(self.product1.value_svl, 450)
+        self.assertEqual(self.product1.value_svl, 490)
         self.assertEqual(self.product1.quantity_svl, 35)
         self.assertEqual(sum(self.product1.stock_valuation_layer_ids.mapped('remaining_qty')), 35)
 
@@ -715,7 +719,7 @@ class TestStockValuationFIFO(TestStockValuationCommon):
 
         self.assertEqual(self.product1.value_svl, 30)
         self.assertEqual(self.product1.quantity_svl, 2)
-        self.assertAlmostEqual(self.product1.standard_price, 10)
+        self.assertAlmostEqual(self.product1.standard_price, 15)
 
     def test_return_delivery_2(self):
         self._make_in_move(self.product1, 1, unit_cost=10)
@@ -828,7 +832,7 @@ class TestStockValuationChangeCostMethod(TestStockValuationCommon):
         move3 = self._make_out_move(self.product1, 1)
 
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
-        self.assertEqual(self.product1.value_svl, 380)
+        self.assertEqual(self.product1.value_svl, 289.94)
         self.assertEqual(self.product1.quantity_svl, 19)
 
     def test_fifo_to_avco(self):
@@ -843,7 +847,7 @@ class TestStockValuationChangeCostMethod(TestStockValuationCommon):
         move3 = self._make_out_move(self.product1, 1)
 
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
-        self.assertEqual(self.product1.value_svl, 380)
+        self.assertEqual(self.product1.value_svl, 289.94)
         self.assertEqual(self.product1.quantity_svl, 19)
 
     def test_avco_to_standard(self):

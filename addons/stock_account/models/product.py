@@ -353,9 +353,16 @@ class ProductProduct(models.Model):
                     new_standard_price = next_candidates and next_candidates[0].unit_cost or new_standard_price
                 break
 
-        # Update the standard price with the price of the last used candidate, if any.
-        if new_standard_price and self.cost_method == 'fifo':
-            self.sudo().with_company(company.id).with_context(disable_auto_svl=True).standard_price = new_standard_price
+        # Fifo out will change the AVCO value of the product. So in case of out,
+        # we recompute it base on the remaining value and quantities.
+        if self.cost_method == 'fifo':
+            quantity_svl = sum(candidates.mapped('remaining_qty'))
+            value_svl = sum(candidates.mapped('remaining_value'))
+            product = self.sudo().with_company(company.id).with_context(disable_auto_svl=True)
+            if float_compare(quantity_svl, 0.0, precision_rounding=self.uom_id.rounding) > 0:
+                product.standard_price = value_svl / quantity_svl
+            elif candidates and not float_is_zero(qty_to_take_on_candidates, precision_rounding=self.uom_id.rounding):
+                product.standard_price = new_standard_price
 
         # If there's still quantity to value but we're out of candidates, we fall in the
         # negative stock use case. We chose to value the out move at the price of the
@@ -474,7 +481,7 @@ class ProductProduct(models.Model):
 
         # If some negative stock were fixed, we need to recompute the standard price.
         product = self.with_company(company.id)
-        if product.cost_method == 'average' and not float_is_zero(product.quantity_svl, precision_rounding=self.uom_id.rounding):
+        if product.cost_method in ['average', 'fifo'] and not float_is_zero(product.quantity_svl, precision_rounding=self.uom_id.rounding):
             product.sudo().with_context(disable_auto_svl=True).write({'standard_price': product.value_svl / product.quantity_svl})
 
         self.env['stock.valuation.layer'].browse(x[0].id for x in as_svls)._validate_accounting_entries()
