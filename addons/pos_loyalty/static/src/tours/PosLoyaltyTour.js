@@ -195,3 +195,14 @@ ProductScreen.do.selectPriceList('Test multi-currency');
 PosLoyalty.check.orderTotalIs('0.00');
 
 Tour.register('PosLoyaltyTour4', { test: true, url: '/pos/web' }, getSteps());
+
+startSteps();
+
+ProductScreen.do.clickHomeCategory();
+
+ProductScreen.exec.addOrderline('Test Product 1', '1.00', '100');
+PosLoyalty.do.clickDiscountButton();
+PosLoyalty.do.clickConfirmButton();
+ProductScreen.check.totalAmountIs('92.00');
+
+Tour.register('PosLoyaltyTour5', { test: true, url: '/pos/web' }, getSteps());
