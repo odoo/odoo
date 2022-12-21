@@ -1992,6 +1992,7 @@ class StockMove(models.Model):
                                                          order='reservation_date, priority desc, date asc, id asc')
         moves_to_reserve._action_assign()
 
+<<<<<<< HEAD
     def _rollup_move_dests(self, seen):
         for dst in self.move_dest_ids:
             if dst.id not in seen:
@@ -2106,3 +2107,23 @@ class StockMove(models.Model):
                     result[out] = (-remaining, False)
 
         return result
+||||||| parent of 2b891f1615b (temp)
+    def _get_orig_reserved_availability(self):
+        self.ensure_one()
+        reserved = self.reserved_availability if self.show_reserved_availability else 0.0
+        if not reserved and self.move_orig_ids:
+            reserved = sum([m._get_orig_reserved_availability() for m in self.move_orig_ids])
+        return reserved
+=======
+    def _get_orig_reserved_availability(self, done_ids=False):
+        self.ensure_one()
+        if not done_ids:
+            done_ids = set()
+        if self.id in done_ids:
+            return 0
+        done_ids.add(self.id)
+        reserved = self.reserved_availability if self.show_reserved_availability else 0.0
+        if self.move_orig_ids:
+            reserved += sum([m._get_orig_reserved_availability(done_ids) for m in self.move_orig_ids])
+        return reserved
+>>>>>>> 2b891f1615b (temp)
