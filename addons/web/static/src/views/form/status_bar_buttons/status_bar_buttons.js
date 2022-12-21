@@ -14,6 +14,20 @@ export class StatusBarButtons extends Component {
             .filter((entry) => entry[1].isVisible)
             .map((entry) => entry[0]);
     }
+
+    get visibleFileUploadSlotsNames() {
+        if (!this.props.slots) {
+            return [];
+        }
+        return Object.entries(this.props.slots)
+            .filter((entry) => entry[1].isVisible)
+            .filter((entry) => entry[1].isFileUpload)
+            .map((entry) => entry[0]);
+    }
+
+    get visibleNotFileUploadSlotsNames() {
+        return this.visibleSlotNames.filter(x => !this.visibleFileUploadSlotsNames.includes(x));
+    }
 }
 StatusBarButtons.template = "web.StatusBarButtons";
 StatusBarButtons.components = {

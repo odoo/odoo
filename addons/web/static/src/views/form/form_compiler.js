@@ -443,6 +443,7 @@ export class FormCompiler extends ViewCompiler {
             const slot = createElement("t", {
                 "t-set-slot": `button_${slotId++}`,
                 isVisible: button.getAttribute("t-if") || true,
+                isFileUpload: (button.getAttribute("name") && button.getAttribute("name") == "'attach_document'") || false,
             });
             append(slot, button);
             append(statusBarButtons, slot);
