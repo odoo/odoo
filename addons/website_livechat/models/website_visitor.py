@@ -7,6 +7,7 @@ import json
 from odoo import models, api, fields, _
 from odoo.exceptions import UserError
 from odoo.http import request
+from odoo.tools.sql import column_exists, create_column
 
 
 class WebsiteVisitor(models.Model):
@@ -17,6 +18,13 @@ class WebsiteVisitor(models.Model):
     mail_channel_ids = fields.One2many('mail.channel', 'livechat_visitor_id',
                                        string="Visitor's livechat channels", readonly=True)
     session_count = fields.Integer('# Sessions', compute="_compute_session_count")
+
+    def _auto_init(self):
+        # Skip the computation of the field `livechat_operator_id` at the module installation
+        # We can assume no livechat operator attributed to visitor if it was not installed
+        if not column_exists(self.env.cr, "website_visitor", "livechat_operator_id"):
+            create_column(self.env.cr, "website_visitor", "livechat_operator_id", "int4")
+        return super()._auto_init()
 
     @api.depends('mail_channel_ids.livechat_active', 'mail_channel_ids.livechat_operator_id')
     def _compute_livechat_operator_id(self):
