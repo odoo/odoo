@@ -36,11 +36,11 @@
                                 </td>
                             </tr>
                         </t>
-                        <t t-foreach="receipt_start_end_order_list" t-as="c">
+                        <t t-foreach="start_end_order_list" t-as="c">
                             <tr>
                                 <td style="width:28%">
                                     <div class="left_content" style="text-align: left;font-size: 15px;">
-                                        <p>RECEIPT NO(s):</p>
+                                        <p>TRANS NO(s):</p>
                                     </div>
                                 </td>
                                 <td style="width:40%">
@@ -52,11 +52,27 @@
                                 </td>
                             </tr>
                         </t>
-                        <t t-foreach="start_end_order_list" t-as="c">
+                        <t t-foreach="receipt_start_end_order_list" t-as="c">
                             <tr>
                                 <td style="width:28%">
                                     <div class="left_content" style="text-align: left;font-size: 15px;">
-                                        <p>TRANS NO(s):</p>
+                                        <p>SI NO(s):</p>
+                                    </div>
+                                </td>
+                                <td style="width:40%">
+                                    <p>
+                                        <t t-esc="c"/>
+                                    </p>
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                        </t>
+                        <t t-foreach="refund_start_end_order_list" t-as="c">
+                            <tr>
+                                <td style="width:28%">
+                                    <div class="left_content" style="text-align: left;font-size: 15px;">
+                                        <p>REFUND SI NO(s):</p>
                                     </div>
                                 </td>
                                 <td style="width:40%">
@@ -111,13 +127,13 @@
                             <td>..............................</td>
                             <td style="text-align: center;">
                                 <p>
-                                    <t t-esc="total_qty + return_order_count"/>
+                                    <t t-esc="total_qty"/>
                                 </p>
                             </td>
                             <td>
                                 <div class="right_content" style="text-align: right;font-size: 15px;">
                                     <p>
-                                        <span t-esc="total_amt + return_order_total" t-options='{"widget": "float", "precision": 2}'/>
+                                        <span t-esc="total_amt" t-options='{"widget": "float", "precision": 2}'/>
                                         <t t-esc="company.currency_id.name"/>
                                     </p>
                                 </div>
@@ -603,13 +619,13 @@
                                 </td>
                             </tr>
                         </t>
-                        <t t-set="is_receipt_no" t-value="1"/>
-                        <t t-foreach="receipt_start_end_order_list" t-as="c">
-                            <tr t-if="is_receipt_no">
-                                <t t-set="is_receipt_no" t-value="0"/>
+                        <t t-set="is_trans_no" t-value="1"/>
+                        <t t-foreach="start_end_order_list" t-as="c">
+                            <tr t-if="is_trans_no">
+                                <t t-set="is_trans_no" t-value="0"/>
                                 <td style="width:28%">
                                     <div class="left_content" style="text-align: left;font-size: 15px;">
-                                        <p>RECEIPT NO(s):</p>
+                                        <p>TRANS NO(s):</p>
                                     </div>
                                 </td>
                                 <td style="width:40%">
@@ -621,13 +637,31 @@
                                 </td>
                             </tr>
                         </t>
-                        <t t-set="is_trans_no" t-value="1"/>
-                        <t t-foreach="start_end_order_list" t-as="c">
-                            <tr t-if="is_trans_no">
-                                <t t-set="is_trans_no" t-value="0"/>
+                        <t t-set="is_receipt_no" t-value="1"/>
+                        <t t-foreach="receipt_start_end_order_list" t-as="c">
+                            <tr t-if="is_receipt_no">
+                                <t t-set="is_receipt_no" t-value="0"/>
                                 <td style="width:28%">
                                     <div class="left_content" style="text-align: left;font-size: 15px;">
-                                        <p>TRANS NO(s):</p>
+                                        <p>SI NO(s):</p>
+                                    </div>
+                                </td>
+                                <td style="width:40%">
+                                    <p>
+                                        <t t-esc="c"/>
+                                    </p>
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                        </t>
+                        <t t-set="is_refund_receipt_no" t-value="1"/>
+                        <t t-foreach="refund_start_end_order_list" t-as="c">
+                            <tr t-if="is_refund_receipt_no">
+                                <t t-set="is_receipt_no" t-value="0"/>
+                                <td style="width:28%">
+                                    <div class="left_content" style="text-align: left;font-size: 15px;">
+                                        <p>REFUND SI NO(s):</p>
                                     </div>
                                 </td>
                                 <td style="width:40%">
@@ -682,13 +716,13 @@
                             <td>..............................</td>
                             <td style="text-align: center;">
                                 <p>
-                                    <t t-esc="total_qty + return_order_count"/>
+                                    <t t-esc="total_qty"/>
                                 </p>
                             </td>
                             <td>
                                 <div class="right_content" style="text-align: right;font-size: 15px;">
                                     <p>
-                                        <span t-esc="total_amt + return_order_total" t-options='{"widget": "float", "precision": 2}'/>
+                                        <span t-esc="total_amt" t-options='{"widget": "float", "precision": 2}'/>
                                         <t t-esc="company.currency_id.name"/>
                                     </p>
                                 </div>
