@@ -7,6 +7,7 @@ import { companyService } from "@web/webclient/company_service";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { setupViewRegistries } from "@web/../tests/views/helpers";
 
+import { timesheetUOMService } from "@hr_timesheet/services/timesheet_uom_service";
 
 export const getServerData = () => JSON.parse(JSON.stringify({
     models: {
@@ -122,9 +123,16 @@ export function setupTestEnv() {
                 rounding: 0.01,
                 timesheet_widget: 'float_toggle',
             },
+            3: {
+                id: 3,
+                name: "foo",
+                rounding: 0.01,
+                timesheet_widget: "float_factor",
+            },
         },
     });
 
     const serviceRegistry = registry.category("services");
     serviceRegistry.add("company", companyService, { force: true });
+    serviceRegistry.add("timesheet_uom", timesheetUOMService, { force: true });
 }

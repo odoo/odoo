@@ -4,14 +4,13 @@ import { registry } from "@web/core/registry";
 
 import { TimesheetUOM, timesheetUOM } from "../timesheet_uom/timesheet_uom";
 
-
 export class TimesheetUOMNoToggle extends TimesheetUOM {
-
-    get timesheetWidget() {
-        const timesheetWidget = super.timesheetWidget;
-        return timesheetWidget !== "float_toggle" ? timesheetWidget : "float_factor";
+    get timesheetComponent() {
+        if (this.timesheetUOMService.timesheetWidget === "float_toggle") {
+            return this.timesheetUOMService.getTimesheetComponent("float_factor");
+        }
+        return super.timesheetComponent;
     }
-
 }
 
 // As FloatToggleField won't be used by TimesheetUOMNoToggle, we remove it from the components that we get from TimesheetUOM.
