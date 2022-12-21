@@ -70,8 +70,7 @@ class SurveyInvite(models.TransientModel):
 
     @api.depends('partner_ids', 'survey_id')
     def _compute_existing_partner_ids(self):
-        existing_answers = self.survey_id.user_input_ids
-        self.existing_partner_ids = existing_answers.mapped('partner_id') & self.partner_ids
+        self.existing_partner_ids = list(set(self.survey_id.user_input_ids.partner_id.ids) & set(self.partner_ids.ids))
 
     @api.depends('emails', 'survey_id')
     def _compute_existing_emails(self):
