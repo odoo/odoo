@@ -163,6 +163,88 @@ class TestUiFeedback(HttpCaseWithUserDemo):
         access_token = self.survey_feedback.access_token
         self.start_tour("/survey/start/%s" % access_token, 'test_survey')
 
+    def test_04_public_survey_with_triggers(self):
+        """ Check that chained conditional questions are correctly
+        hidden from survey when a previously selected triggering answer is
+        unselected. E.g., if a specific answer for "Question 1" is selected,
+        which triggers asking "Question 2", and a specific answer for
+        "Question 2" is selected and triggers asking "Question 3",
+        changing the selected answer for "Question 1" should:
+          * hide questions 2 and 3
+          * enable submitting the survey without answering questions 2 and 3,
+           even if "constr_mandatory=True", as they are not visible.
+        """
+        survey_with_triggers = self.env['survey.survey'].create({
+            'title': 'Survey With Triggers',
+            'access_token': '3cfadce3-3f7e-41da-920d-10fa0eb19527',
+            'access_mode': 'public',
+            'users_can_go_back': True,
+            'questions_layout': 'one_page',
+            'description': "<p>Test survey with conditional questions</p>",
+            'question_and_page_ids': [
+                (0, 0, {
+                    'title': 'Q1',
+                    'sequence': 1,
+                    'question_type': 'simple_choice',
+                    'suggested_answer_ids': [
+                        (0, 0, {
+                            'value': 'Answer 1',
+                            'sequence': 1,
+                        }), (0, 0, {
+                            'value': 'Answer 2',
+                            'sequence': 2,
+                        }),
+                    ],
+                    'constr_mandatory': True,
+                }), (0, 0, {
+                    'title': 'Q2',
+                    'sequence': 2,
+                    'question_type': 'simple_choice',
+                    'suggested_answer_ids': [
+                        (0, 0, {
+                            'value': 'Answer 1',
+                            'sequence': 1,
+                        }), (0, 0, {
+                            'value': 'Answer 2',
+                            'sequence': 2,
+                        })
+                    ],
+                    'is_conditional': True,
+                    'constr_mandatory': True,
+                }), (0, 0, {
+                    'title': 'Q3',
+                    'sequence': 3,
+                    'question_type': 'simple_choice',
+                    'suggested_answer_ids': [
+                        (0, 0, {
+                            'value': 'Answer 1',
+                            'sequence': 1,
+                        }), (0, 0, {
+                            'value': 'Answer 2',
+                            'sequence': 2,
+                        })
+                    ],
+                    'is_conditional': True,
+                    'constr_mandatory': True,
+                }),
+            ]
+        })
+
+        q1 = survey_with_triggers.question_ids.filtered(lambda q: q.title == 'Q1')
+        q1_a1 = q1.suggested_answer_ids.filtered(lambda a: a.value == 'Answer 1')
+        q2 = survey_with_triggers.question_ids.filtered(lambda q: q.title == 'Q2')
+        q2_a1 = q2.suggested_answer_ids.filtered(lambda a: a.value == 'Answer 1')
+        q3 = survey_with_triggers.question_ids.filtered(lambda q: q.title == 'Q3')
+
+        q2.triggering_question_id = q1
+        q2.triggering_answer_id = q1_a1
+
+        q3.triggering_question_id = q2
+        q3.triggering_answer_id = q2_a1
+
+        access_token = survey_with_triggers.access_token
+        self.start_tour("/survey/start/%s" % access_token, 'test_survey_chained_conditional_questions')
+
     def test_06_survey_prefill(self):
         access_token = self.survey_feedback.access_token
         self.start_tour("/survey/start/%s" % access_token, 'test_survey_prefill')
