@@ -400,7 +400,7 @@ describe('Link', () => {
             }, {
                 isRootEditable: false,
                 getContentEditableAreas: function (editor) {
-                    return editor.editable.querySelectorAll('a span');
+                    return [...editor.editable.querySelectorAll('a span')];
                 }
             });
         });
