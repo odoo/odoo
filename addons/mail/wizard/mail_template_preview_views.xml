@@ -15,7 +15,7 @@
                         <div class="row">
                             <span class="col-md-5 col-lg-4 col-sm-12 ps-0">Choose an example <field name="model_id" readonly="1"/> record:</span>
                             <div class="col-md-7 col-lg-6 col-sm-12 ps-0">
-                                <field name="resource_ref" readonly="False"
+                                <field name="resource_ref" readonly="False" class="w-100"
                                     options="{'hide_model': True, 'no_create': True, 'no_open': True}"
                                     attrs="{'invisible': [('no_record', '=', True)]}"/>
                                 <b attrs="{'invisible': [('no_record', '=', False)]}" class="text-warning">No record for this model</b>
@@ -24,7 +24,7 @@
                         <div class="row">
                             <span class="col-md-5 col-lg-4 col-sm-12 ps-0">Force a language: </span>
                             <div class="col-md-7 col-lg-6 col-sm-12 ps-0">
-                                <field name="lang" placeholder="Select a language"/>
+                                <field name="lang" placeholder="Select a language" class="w-100"/>
                             </div>
                         </div>
                     </div>
