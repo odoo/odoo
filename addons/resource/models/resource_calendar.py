@@ -269,7 +269,7 @@ class ResourceCalendar(models.Model):
     # Computation API
     # --------------------------------------------------
 
-    def _attendance_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None):
+    def _attendance_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None, lunch=False):
         assert start_dt.tzinfo and end_dt.tzinfo
         self.ensure_one()
 
@@ -284,7 +284,7 @@ class ResourceCalendar(models.Model):
             ('calendar_id', '=', self.id),
             ('resource_id', 'in', resource_ids),
             ('display_type', '=', False),
-            ('day_period', '!=', 'lunch'),
+            ('day_period', '!=' if not lunch else '=', 'lunch'),
         ]])
 
         attendances = self.env['resource.calendar.attendance'].search(domain)

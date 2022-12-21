@@ -90,6 +90,22 @@ class HrContract(models.Model):
             ))
         return result
 
+    def _get_lunch_intervals(self, start_dt, end_dt):
+        # {resource: intervals}
+        employees_by_calendar = defaultdict(lambda: self.env['hr.employee'])
+        for contract in self:
+            employees_by_calendar[contract.resource_calendar_id] |= contract.employee_id
+        result = {}
+        for calendar, employees in employees_by_calendar.items():
+            result.update(calendar._attendance_intervals_batch(
+                start_dt,
+                end_dt,
+                resources=employees.resource_id,
+                tz=pytz.timezone(calendar.tz),
+                lunch=True,
+            ))
+        return result
+
     def _get_interval_work_entry_type(self, interval):
         self.ensure_one()
         if 'work_entry_type_id' in interval[2] and interval[2].work_entry_type_id[:1]:
