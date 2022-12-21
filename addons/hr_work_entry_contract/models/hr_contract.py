@@ -11,6 +11,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.addons.resource.models.utils import string_to_datetime, Intervals
 from odoo.osv import expression
+from odoo.tools import ormcache
 from odoo.exceptions import UserError
 
 
@@ -32,8 +33,10 @@ class HrContract(models.Model):
     '''
     )
 
-    def _get_default_work_entry_type(self):
-        return self.env.ref('hr_work_entry.work_entry_type_attendance', raise_if_not_found=False)
+    @ormcache('self.structure_type_id')
+    def _get_default_work_entry_type_id(self):
+        attendance = self.env.ref('hr_work_entry.work_entry_type_attendance', raise_if_not_found=False)
+        return attendance.id if attendance else False
 
     def _get_leave_work_entry_type_dates(self, leave, date_from, date_to, employee):
         return self._get_leave_work_entry_type(leave)
@@ -110,7 +113,7 @@ class HrContract(models.Model):
         self.ensure_one()
         if 'work_entry_type_id' in interval[2] and interval[2].work_entry_type_id[:1]:
             return interval[2].work_entry_type_id[:1]
-        return self._get_default_work_entry_type()
+        return self.env['hr.work.entry.type'].browse(self._get_default_work_entry_type_id())
 
     def _get_valid_leave_intervals(self, attendances, interval):
         self.ensure_one()
