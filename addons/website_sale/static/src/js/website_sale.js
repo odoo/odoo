@@ -15,7 +15,7 @@ const { ComponentWrapper } = require('web.OwlCompatibility');
 const { ProductImageViewerWrapper } = require("@website_sale/js/components/website_sale_image_viewer");
 
 publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerMixin, {
-    selector: '.oe_website_sale',
+    // selector: '.oe_website_sale',
     events: _.extend({}, VariantMixin.events || {}, {
         'change form .js_product:first input[name="add_qty"]': '_onChangeAddQuantity',
         'mouseup .js_publish': '_onMouseupPublish',

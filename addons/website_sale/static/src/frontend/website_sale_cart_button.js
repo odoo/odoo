@@ -25,7 +25,7 @@ export const WebsiteSaleCartButtonParent = {
                 buttonSelector: this.cartButtonAdditionalSelector,
             });
             this.cartButtons.push(cartButton);
-            cartButton.setElement(btn);
+            cartButton.attachTo(btn);
         });
         return result;
     },

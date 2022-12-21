@@ -3,6 +3,7 @@
 import { patch } from "@web/core/utils/patch";
 import { Widget } from "web.public.widget";
 import VariantMixin from "sale.VariantMixin";
+import { WebsiteSaleCartButtonParent } from "./website_sale_cart_button";
 
 /**
  * Patch actual VariantMixin as it is used by the product configurator.
@@ -91,6 +92,12 @@ patch(VariantMixin, "@website_sale/frontend/website_sale_variant", {
 });
 
 /**
+ * @typedef {Object} ProductOptions
+ * @property {Array} combination - list of ids for the combination.
+ * @property {Integer} add_qty - quantity to add
+ */
+
+/**
  * Widget version of VariantMixin.
  * This widget represents an attribute selector for a product.
  *
@@ -105,14 +112,25 @@ patch(VariantMixin, "@website_sale/frontend/website_sale_variant", {
  *  The current one is mainly used for eCommerce (badly) and for the
  *  product configurator (for which it was designed) however the mixin will make no sense
  *  if the configurator ever gets completely updated to owl (which it should).
- *  Meaning eCommerce will need its alternative right away.
+ *  Meaning eCommerce will need its alternative right away and making our own solution is viable.
  */
 
-export const WebsiteSaleVariantWidget = Widget.extend({
+export const WebsiteSaleOptions = Widget.extend({
     events: {
-        "change .css_attribute_color input": "onChangeColorAttribute",
-        "change .main_product:not(.in_cart) input.js_quantity": "onChangeAddQuantity",
-        "change [data-attribute_exclusions]": "onChangeVariant",
+        "change .css_attribute_color input": "onChangeColorAttribute", // Visual
+        "change input#add_qty": "onChangeAddQuantity",
+        "click .css_quantity a.js_add_cart_json > i.fa-minus": 
+        "change [data-attribute_exclusions]": "onChangeVariant", // Change of attribute
+    },
+
+
+    /**
+     * @override
+     */
+    start() {
+        const result = this._super(...arguments);
+        this.quantityInput = this.el.querySelector("input[name='add_qty']");
+        return result;
     },
 
     /**
@@ -146,5 +164,56 @@ export const WebsiteSaleVariantWidget = Widget.extend({
         if (checkedInput) {
             checkedInput.classList.add("active");
         }
+    },
+
+    /**
+     *
+     */
+    onChangeVariant(ev) {
+        console.log("Changed variant");
+    },
+
+    /**
+     * @returns {Integer} currently selected quantity
+     */
+    getCurrentQuantity() {
+        return parseInt(this.quantityInput.value);
+    },
+
+    /**
+     * Changing the to add quantity triggers a reload of product information.
+     */
+    onChangeAddQuantity(ev) {
+        console.log("Changed quantity to", this.getCurrentQuantity());
+    },
+
+    /**
+     * Returns an object with the current configuration of the product.
+     *
+     * @returns {{combination: Array<Integer>, add_qty: Integer}}
+     */
+    getCurrentConfiguration() {
+        const combination = [];
+        this.el.querySelectorAll("input.js_variant_change:checked, select.js_variant_change").forEach((el) => {
+            // String -> Integer
+            combination.push(parseInt(el.value));
+        });
+        return {
+            combination,
+            add_qty: this.getCurrentQuantity(),
+        };
+    },
+});
+
+export const WebsiteSaleOptionsWithCartButton = WebsiteSaleOptions.extend(WebsiteSaleCartButtonParent).extend({
+    addToCartButtonSelector: "a#add_to_cart",
+
+    async getProductInfo(ev) {
+        const configuration = this.getCurrentConfiguration();
+        ev.data.resolve({
+            product_id: 1,
+            add_qty: configuration.add_qty,
+            combination: configuration.combination,
+        });
     },
 });
