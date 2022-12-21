@@ -2,8 +2,6 @@ odoo.define('web.sample_server_tests', function (require) {
     "use strict";
 
     const SampleServer = require('web.SampleServer');
-    const session = require('web.session');
-    const { mock } = require('web.test_utils');
 
     const {
         MAIN_RECORDSET_SIZE, SEARCH_READ_LIMIT, // Limits
@@ -83,10 +81,6 @@ odoo.define('web.sample_server_tests', function (require) {
         QUnit.test("Sample data: people type + all field names", async function (assert) {
             assert.expect(26);
 
-            mock.patch(session, {
-                company_currency_id: 4,
-            });
-
             const allFieldNames = Object.keys(this.fields['res.users']);
             const server = new DeterministicSampleServer('res.users', this.fields['res.users']);
             const { records } = await server.mockRpc({
@@ -145,7 +139,7 @@ odoo.define('web.sample_server_tests', function (require) {
             assert.ok(selectionValues.includes(rec.type));
 
             // Relational fields
-            assert.strictEqual(rec.currency[0], 4);
+            assert.strictEqual(rec.currency[0], 1);
             // Currently we expect the currency name to be a latin string, which
             // is not important; in most case we only need the ID. The following
             // assertion can be removed if needed.
@@ -166,7 +160,6 @@ odoo.define('web.sample_server_tests', function (require) {
                 (id) => typeof id === 'number')
             );
 
-            mock.unpatch(session);
         });
 
         QUnit.test("Sample data: country type", async function (assert) {
