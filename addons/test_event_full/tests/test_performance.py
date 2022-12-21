@@ -150,7 +150,7 @@ class TestEventPerformance(EventPerformanceCase):
         has_social = 'social_menu' in self.env['event.event']  # otherwise view may crash in enterprise
 
         # type and website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=445):  # tef 400 / com 406
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=450):  # tef 402 / com 408
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             # Require for `website_menu` to be visible
             # <div name="event_menu_configuration" groups="base.group_no_one">
@@ -453,7 +453,7 @@ class TestOnlineEventPerformance(EventPerformanceCase, UtilPerf):
         # website customer data
         with freeze_time(self.reference_now):
             self.authenticate('user_eventmanager', 'user_eventmanager')
-            with self.assertQueryCount(default=39):  # tef 38
+            with self.assertQueryCount(default=42):  # tef 41
                 self._test_url_open('/event')
 
     @warmup
@@ -461,7 +461,7 @@ class TestOnlineEventPerformance(EventPerformanceCase, UtilPerf):
         # website customer data
         with freeze_time(self.reference_now):
             self.authenticate(None, None)
-            with self.assertQueryCount(default=28):
+            with self.assertQueryCount(default=38):
                 self._test_url_open('/event')
 
     # @warmup
