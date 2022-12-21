@@ -499,7 +499,7 @@ class ProductProduct(models.Model):
                 # code readability. At this point, only a few sellers should remain, so it should
                 # not be a performance issue.
                 if company_id:
-                    sellers = [x for x in sellers if x.company_id.id in [company_id, False]]
+                    sellers = [x for x in sellers if x.company_id in [company_id, False]]
             if sellers:
                 for s in sellers:
                     seller_variant = s.product_name and (
