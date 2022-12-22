@@ -23,7 +23,7 @@ class WebsiteVisitor(models.Model):
         # Skip the computation of the field `livechat_operator_id` at the module installation
         # We can assume no livechat operator attributed to visitor if it was not installed
         if not column_exists(self.env.cr, "website_visitor", "livechat_operator_id"):
-            create_column(self.env.cr, "website_visitor", "livechat_operator_id", "BOOLEAN")
+            create_column(self.env.cr, "website_visitor", "livechat_operator_id", "int4")
 
         return super()._auto_init()
 
