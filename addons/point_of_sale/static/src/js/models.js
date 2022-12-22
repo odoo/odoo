@@ -3287,6 +3287,9 @@ exports.Order = Backbone.Model.extend({
         }
         line.order = this;
         this.orderlines.add(line);
+        this.selectLastOrderline(line);
+    },
+    selectLastOrderline: function(line){
         this.select_orderline(this.get_last_orderline());
     },
     get_orderline: function(id){
@@ -3363,7 +3366,9 @@ exports.Order = Backbone.Model.extend({
     remove_orderline: function( line ){
         this.assert_editable();
         this.orderlines.remove(line);
-        this.select_orderline(this.get_last_orderline());
+        if (this.selected_orderline === line) {
+            this.select_orderline(this.get_last_orderline());
+        }
     },
 
     fix_tax_included_price: function(line){
