@@ -1,13 +1,8 @@
 /** @odoo-module **/
 
+import { assets } from "@web/core/assets";
 import { browser } from "@web/core/browser/browser";
 import { Domain } from "@web/core/domain";
-import { evaluateExpr } from "@web/core/py_js/py";
-import { deepCopy } from "@web/core/utils/objects";
-import { intersection } from "@web/core/utils/arrays";
-import { registry } from "@web/core/registry";
-import { makeFakeRPCService, makeMockFetch } from "./mock_services";
-import { patchWithCleanup } from "./utils";
 import {
     deserializeDate,
     deserializeDateTime,
@@ -15,7 +10,12 @@ import {
     serializeDate,
     serializeDateTime,
 } from "@web/core/l10n/dates";
-import { assets } from "@web/core/assets";
+import { evaluateExpr } from "@web/core/py_js/py";
+import { registry } from "@web/core/registry";
+import { intersection } from "@web/core/utils/arrays";
+import { deepCopy } from "@web/core/utils/objects";
+import { makeFakeRPCService, makeMockFetch } from "./mock_services";
+import { patchWithCleanup } from "./utils";
 
 const serviceRegistry = registry.category("services");
 
@@ -35,11 +35,61 @@ const VALID_AGGREGATE_FUNCTIONS = [
     "avg",
     "sum",
 ];
+let logId = 1;
 
 // -----------------------------------------------------------------------------
 // Utils
 // -----------------------------------------------------------------------------
 
+/**
+ * @param {string} prefix
+ * @param {string} title
+ */
+function makeLogger(prefix, title) {
+    const log = (bullet, colorValue, ...data) => {
+        const color = `color: ${colorValue}`;
+        const styles = [[color, "font-weight: bold"].join(";")];
+
+        let msg = `${bullet} %c[${prefix}:${id}]`;
+        if (title) {
+            msg += `%c ${title}`;
+            styles.push(color);
+        }
+
+        console.log(msg, ...styles, ...data);
+    };
+
+    /**
+     * Request logger: color is blue-ish.
+     * @param  {...any} data
+     */
+    const request = (...data) => {
+        hasCalledRequest = true;
+        log("->", "#66e", ...data);
+    };
+
+    /**
+     * Response logger: color is orange.
+     * @param  {...any} data
+     */
+    const response = (...data) => {
+        if (!hasCalledRequest) {
+            console.warn(`Response logged before request.`);
+        }
+        log("<-", "#f80", ...data);
+        hasCalledRequest = false;
+    };
+
+    const id = logId++;
+    let hasCalledRequest = false;
+
+    return { request, response };
+}
+
+/**
+ * @param {Element} tree
+ * @param {(node: Element) => any} cb
+ */
 function traverseElementTree(tree, cb) {
     if (cb(tree)) {
         Array.from(tree.children).forEach((c) => traverseElementTree(c, cb));
@@ -107,10 +157,10 @@ export class MockServer {
      * server errors.
      */
     async performRPC(route, args) {
+        const logger = makeLogger("RPC", route);
         args = JSON.parse(JSON.stringify(args));
         if (this.debug) {
-            console.log("%c[rpc] request " + route, "color: #66e; font-weight: bold;", args);
-            args = JSON.parse(JSON.stringify(args));
+            logger.request(args);
         }
         const result = await this._performRPC(route, args);
         // try {
@@ -120,21 +170,17 @@ export class MockServer {
         //   const event = result && result.event;
         //   const errorString = JSON.stringify(message || false);
         //   console.warn(
-        //     "%c[rpc] response (error) " + route,
+        //     "%c[RPC] response (error) " + route,
         //     "color: orange; font-weight: bold;",
         //     JSON.parse(errorString)
         //   );
         //   return Promise.reject({ message: errorString, event });
         // }
-        const resultString = JSON.stringify(result !== undefined ? result : false);
+        const actualResult = JSON.parse(JSON.stringify(result !== undefined ? result : false));
         if (this.debug) {
-            console.log(
-                "%c[rpc] response" + route,
-                "color: #66e; font-weight: bold;",
-                JSON.parse(resultString)
-            );
+            logger.response(actualResult);
         }
-        return JSON.parse(resultString);
+        return actualResult;
         // TODO?
         // var abort = def.abort || def.reject;
         // if (abort) {
@@ -581,7 +627,7 @@ export class MockServer {
             case "action_unarchive":
                 return this.mockWrite(args.model, [args.args[0], { active: true }]);
             case "copy":
-                return this.mockCopy(args.model, args.args[0]);
+                return this.mockCopy(args.model, args.args);
             case "create":
                 return this.mockCreate(args.model, args.args[0], args.kwargs);
             case "fields_get":
@@ -635,14 +681,14 @@ export class MockServer {
      *
      * @private
      * @param {string} modelName
-     * @param {integer} id the ID of a valid record
-     * @returns {integer} the ID of the duplicated record
+     * @param {[number, Record<string, any>]} params the ID of a valid record
+     * @returns {number} the ID of the duplicated record
      */
-    mockCopy(modelName, id) {
+    mockCopy(modelName, [id, recordData]) {
         const model = this.models[modelName];
         const newID = this.getUnusedID(modelName);
         const originalRecord = model.records.find((record) => record.id === id);
-        const duplicatedRecord = { ...originalRecord, id: newID };
+        const duplicatedRecord = { ...originalRecord, ...recordData, id: newID };
         duplicatedRecord.display_name = `${originalRecord.display_name} (copy)`;
         model.records.push(duplicatedRecord);
         return newID;
@@ -1489,7 +1535,7 @@ export class MockServer {
      *      (this parameter is used in _search_panel_range)
      * @param {boolean} [kwargs.enable_counters] whether to count records by value
      * @param {Array[]} [kwargs.filter_domain] domain generated by filters
-     * @param {integer} [kwargs.limit] maximal number of values to fetch
+     * @param {number} [kwargs.limit] maximal number of values to fetch
      * @param {Array[]} [kwargs.search_domain] base domain of search (this parameter
      *      is used in _search_panel_range)
      * @returns {Object}
@@ -1639,7 +1685,7 @@ export class MockServer {
      * @param {Array[]} [kwargs.group_domain] dict, one domain for each activated
      *      group for the group_by (if any). Those domains are used to fech accurate
      *      counters for values in each group
-     * @param {integer} [kwargs.limit] maximal number of values to fetch
+     * @param {number} [kwargs.limit] maximal number of values to fetch
      * @param {Array[]} [kwargs.search_domain] base domain of search
      * @returns {Object}
      */
@@ -2369,27 +2415,21 @@ export async function makeMockServer(serverData, mockRPC) {
     if (mockRPC) {
         const { loadJS, loadCSS } = assets;
         patchWithCleanup(assets, {
-            loadJS: async function (ressource) {
-                let res = await mockRPC(ressource, {});
+            loadJS: async function (resource) {
+                let res = await mockRPC(resource, {});
                 if (res === undefined) {
-                    res = await loadJS(ressource);
+                    res = await loadJS(resource);
                 } else {
-                    console.log(
-                        "%c[assets] fetch (mock) JS ressource " + ressource,
-                        "color: #66e; font-weight: bold;"
-                    );
+                    makeLogger("ASSETS", "fetch (mock) JS resource").request(resource);
                 }
                 return res;
             },
-            loadCSS: async function (ressource) {
-                let res = await mockRPC(ressource, {});
+            loadCSS: async function (resource) {
+                let res = await mockRPC(resource, {});
                 if (res === undefined) {
-                    res = await loadCSS(ressource);
+                    res = await loadCSS(resource);
                 } else {
-                    console.log(
-                        "%c[assets] fetch (mock) CSS ressource " + ressource,
-                        "color: #66e; font-weight: bold;"
-                    );
+                    makeLogger("ASSETS", "fetch (mock) CSS resource").request(resource);
                 }
                 return res;
             },
