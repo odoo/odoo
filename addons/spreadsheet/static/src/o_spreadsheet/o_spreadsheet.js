@@ -21983,7 +21983,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 left: `${this.props.position.left + x}px`,
                 bottom: "0px",
                 height: `${SCROLLBAR_WIDTH$1}px`,
-                right: `${SCROLLBAR_WIDTH$1}px`,
+                right: `0px`,
             };
         }
         onScroll(offset) {
@@ -22025,7 +22025,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 top: `${this.props.position.top + y}px`,
                 right: "0px",
                 width: `${SCROLLBAR_WIDTH$1}px`,
-                bottom: `${SCROLLBAR_WIDTH$1}px`,
+                bottom: `0px`,
             };
         }
         onScroll(offset) {
@@ -42035,6 +42035,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         markdownLink,
         createEmptyWorkbookData,
         createEmptySheet,
+        createEmptyExcelSheet,
         getDefaultChartJsRuntime,
         chartFontColor,
         getMenuChildren,
@@ -42099,8 +42100,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2022-12-20T11:00:11.862Z';
-    exports.__info__.hash = '0eaf65e';
+    exports.__info__.date = '2022-12-22T13:54:13.937Z';
+    exports.__info__.hash = 'd2940f6';
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map

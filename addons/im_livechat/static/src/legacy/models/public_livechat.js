@@ -289,6 +289,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      */
     toData() {
         return {
+            chatbot_script_id: this.messaging.publicLivechatGlobal.publicLivechat.data.chatbot_script_id,
             folded: this.messaging.publicLivechatGlobal.publicLivechat.isFolded,
             id: this.messaging.publicLivechatGlobal.publicLivechat.id,
             message_unread_counter: this.messaging.publicLivechatGlobal.publicLivechat.unreadCounter,
@@ -338,6 +339,11 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      *   otherwise
      */
     _notifyMyselfTyping(params) {
+        if (this.messaging.publicLivechatGlobal.publicLivechat.isTemporary) {
+            // channel is not created yet, it will be when first message is
+            // sent. Until then, do not notify visitor is typing.
+            return;
+        }
         return session.rpc('/im_livechat/notify_typing', {
             uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
             is_typing: params.typing,
