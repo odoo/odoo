@@ -61,6 +61,10 @@ class MailThread(models.AbstractModel):
         send an SMS on a record. """
         if 'mobile' in self:
             return ['mobile']
+        elif 'mobile' in self.partner_id:
+            if 'phone' in self.partner_id:
+                return ['mobile', 'phone']
+            return ['mobile']
         return []
 
     def _sms_get_recipients_info(self, force_field=False, partner_fallback=True):
@@ -96,6 +100,8 @@ class MailThread(models.AbstractModel):
         tocheck_fields = [force_field] if force_field else self._sms_get_number_fields()
         for record in self:
             all_numbers = [record[fname] for fname in tocheck_fields if fname in record]
+            if 'partner_id' in record:
+                all_numbers += [record.partner_id.phone, record.partner_id.mobile]
             all_partners = record._sms_get_default_partners()
 
             valid_number = False
@@ -326,6 +332,7 @@ class MailThread(models.AbstractModel):
                 'is_read': True,  # discard Inbox notification
                 'notification_status': 'ready' if sms.state == 'outgoing' else 'exception',
                 'failure_type': '' if sms.state == 'outgoing' else sms.error_code,
+
             } for sms in sms_all if (sms.partner_id and sms.partner_id.id not in existing_pids) or (not sms.partner_id and sms.number not in existing_numbers)]
             if notif_create_values:
                 self.env['mail.notification'].sudo().create(notif_create_values)
