@@ -291,8 +291,8 @@
         />
         <canvas t-ref="canvas"/>
         <GridPopover
-          gridPosition="canvasPosition"
           hoveredCell="hoveredCell"
+          gridRect="getGridRect()"
           onMouseWheel.bind="onMouseWheel"
           onClosePopover.bind="onClosePopover"
         />
@@ -633,8 +633,8 @@
       </t>
       <GridPopover
         t-if="!menuState.isOpen"
-        gridPosition="canvasPosition"
         hoveredCell="hoveredCell"
+        gridRect="getGridRect()"
         onMouseWheel.bind="onMouseWheel"
         onClosePopover.bind="onClosePopover"
       />
@@ -676,11 +676,11 @@
   <t t-name="o-spreadsheet-GridPopover" owl="1">
     <Popover
       t-if="cellPopover.isOpen"
-      position="cellPopover.coordinates"
-      childWidth="cellPopover.Component.size.width"
-      childHeight="cellPopover.Component.size.height"
-      flipHorizontalOffset="cellPopover.cellWidth"
-      flipVerticalOffset="cellPopover.cellHeight"
+      positioning="cellPopover.cellCorner"
+      maxHeight="cellPopover.Component.size and cellPopover.Component.size.maxHeight"
+      maxWidth="cellPopover.Component.size and cellPopover.Component.size.maxHidth"
+      anchorRect="cellPopover.anchorRect"
+      containerRect="env.getPopoverContainerRect()"
       onMouseWheel="props.onMouseWheel">
       <t
         t-component="cellPopover.Component"
@@ -1458,12 +1458,12 @@
   <t t-name="o-spreadsheet-Menu" owl="1">
     <Popover
       t-if="props.menuItems.length"
-      position="props.position"
-      childWidth="MENU_WIDTH"
-      childHeight="menuHeight"
-      flipHorizontalOffset="popover.flipHorizontalOffset"
-      flipVerticalOffset="popover.flipVerticalOffset"
-      marginTop="popover.marginTop">
+      anchorRect="popover.anchorRect"
+      positioning="popover.positioning"
+      verticalOffset="popover.verticalOffset"
+      onPopoverHidden="() => this.closeSubMenu()"
+      onPopoverMoved="() => this.closeSubMenu()"
+      maxHeight="menuHeight">
       <div
         t-ref="menu"
         class="o-menu"
@@ -1511,7 +1511,7 @@
 
   <t t-name="o-spreadsheet-Popover" owl="1">
     <t t-portal="'.o-spreadsheet'">
-      <div t-att-style="style" class="o-popover" t-on-wheel="props.onMouseWheel">
+      <div class="o-popover" t-ref="popover" t-on-wheel="props.onMouseWheel">
         <t t-slot="default"/>
       </div>
     </t>
@@ -1610,6 +1610,16 @@
           onSelectionChanged="(ranges) => this.onLabelRangeChanged(ranges)"
           onSelectionConfirmed="() => this.onLabelRangeConfirmed()"
         />
+        <label>
+          <input
+            type="checkbox"
+            name="aggregated"
+            t-att-checked="props.definition.aggregated"
+            t-on-change="onUpdateAggregated"
+            class="align-middle"
+          />
+          Aggregate
+        </label>
       </div>
       <div class="o-section o-sidepanel-error" t-if="errorMessages">
         <div t-foreach="errorMessages" t-as="error" t-key="error">
@@ -1892,6 +1902,16 @@
           onSelectionChanged="(ranges) => this.onLabelRangeChanged(ranges)"
           onSelectionConfirmed="() => this.onLabelRangeConfirmed()"
         />
+        <label>
+          <input
+            type="checkbox"
+            name="aggregated"
+            t-att-checked="props.definition.aggregated"
+            t-on-change="onUpdateAggregated"
+            class="align-middle"
+          />
+          Aggregate
+        </label>
       </div>
       <div class="o-section o-sidepanel-error" t-if="errorMessages">
         <div t-foreach="errorMessages" t-as="error" t-key="error">
@@ -1990,6 +2010,16 @@
           onSelectionChanged="(ranges) => this.onLabelRangeChanged(ranges)"
           onSelectionConfirmed="() => this.onLabelRangeConfirmed()"
         />
+        <label>
+          <input
+            type="checkbox"
+            name="aggregated"
+            t-att-checked="props.definition.aggregated"
+            t-on-change="onUpdateAggregated"
+            class="align-middle"
+          />
+          Aggregate
+        </label>
         <div t-if="canTreatLabelsAsText">
           <label>
             <input
