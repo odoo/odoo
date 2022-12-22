@@ -758,7 +758,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'date_from': '2021-12-15 00:00:00',
             'date_to': '2021-12-15 23:59:59',
         })
-        self.assertEqual(time_off_1.number_of_days, 2)
+        self.assertEqual(time_off_1.number_of_days, 5)
         self.assertEqual(time_off_2.number_of_days, 4)
 
     def test_time_off_recovery_on_unlink(self):
@@ -776,9 +776,9 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         })
         self.assertEqual(time_off.number_of_days, 4)
         global_time_off.unlink()
-        self.assertEqual(time_off.number_of_days, 3)
+        self.assertEqual(time_off.number_of_days, 5)
 
-    def test_time_off_auto_cancel(self):
+    def test_time_off_duration_zero(self):
         time_off = self.env['hr.leave'].create({
             'name': 'Holiday Request',
             'employee_id': self.employee_emp_id,
@@ -786,12 +786,15 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'date_from': '2021-11-15 00:00:00',
             'date_to': '2021-11-19 23:59:59',
         })
+        self.assertEqual(time_off.number_of_days, 5)
         self.env['resource.calendar.leaves'].create({
             'name': 'Global Time Off',
             'date_from': '2021-11-15 00:00:00',
             'date_to': '2021-11-19 23:59:59',
         })
-        self.assertEqual(time_off.active, False)
+        self.assertEqual(time_off.active, True)
+        self.assertEqual(time_off.number_of_days, 0)
+
     def test_holiday_type_requires_no_allocation(self):
         # holiday_type_2 initially requires an allocation
         # Once an allocation is granted and a leave is taken,
