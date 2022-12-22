@@ -19,6 +19,7 @@ class PosOrder(models.Model):
         res = super().action_pos_order_paid()
         event_registration_ids = self.lines.filtered('event_registration_ids').event_registration_ids
         event_registration_ids.action_confirm()
+        event_registration_ids._action_set_paid()
 
         return res
 
