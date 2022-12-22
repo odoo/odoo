@@ -5066,7 +5066,6 @@ class StockMove(TransactionCase):
             'quantity_done': 10.0,
             'picking_id': picking.id,
         })
-        picking._autoconfirm_picking()
         self.assertEqual(picking.state, 'assigned')
         move1.quantity_done = 12
         self.assertEqual(picking.state, 'assigned')

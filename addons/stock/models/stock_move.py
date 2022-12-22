@@ -390,12 +390,6 @@ class StockMove(models.Model):
                     qty_to_unreserve -= qty_unreserved
 
         def _process_increase(move, quantity):
-            moves = move
-            if move.picking_id.immediate_transfer:
-                moves = move._action_confirm(merge=False)
-            # Kits, already handle in action_explode, should be clean in master
-            if len(moves) > 1:
-                return
             if move.reserved_availability < move.quantity_done and move.state not in ['done', 'cancel']:
                 move._action_assign(force_qty=move.quantity_done)
             move._set_quantity_done(quantity)
@@ -625,8 +619,6 @@ Please change the quantity done or the rounding precision of your unit of measur
                 defaults['product_uom_qty'] = 0.0
                 defaults['additional'] = True
             elif picking_id.state not in ['cancel', 'draft', 'done']:
-                if picking_id.immediate_transfer:
-                    defaults['state'] = 'assigned'
                 defaults['product_uom_qty'] = 0.0
                 defaults['additional'] = True  # to trigger `_autoconfirm_picking`
         return defaults
@@ -645,7 +637,13 @@ Please change the quantity done or the rounding precision of your unit of measur
         for vals in vals_list:
             if vals.get('quantity_done') and 'lot_ids' in vals:
                 vals.pop('lot_ids')
-        return super().create(vals_list)
+        moves = super().create(vals_list)
+        moves_to_confirm = moves.filtered(lambda m: m.picking_id.immediate_transfer or m.additional)
+        if moves_to_confirm:
+            moves |= moves_to_confirm._action_confirm()
+            moves = moves.exists()
+            moves.picking_id.action_confirm()
+        return moves
 
     def write(self, vals):
         # Handle the write on the initial demand by updating the reserved quantity and logging

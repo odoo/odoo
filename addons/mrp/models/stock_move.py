@@ -403,8 +403,6 @@ class StockMove(models.Model):
         vals = []
         if bom_line.product_id.type in ['product', 'consu']:
             vals = self.copy_data(default=self._prepare_phantom_move_values(bom_line, product_qty, quantity_done))
-            if self.state == 'assigned':
-                vals['state'] = 'assigned'
         return vals
 
     def _is_consuming(self):

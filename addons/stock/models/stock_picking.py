@@ -770,7 +770,6 @@ class Picking(models.Model):
         for picking, scheduled_date in zip(pickings, scheduled_dates):
             if scheduled_date:
                 picking.with_context(mail_notrack=True).write({'scheduled_date': scheduled_date})
-        pickings._autoconfirm_picking()
 
         for picking, vals in zip(pickings, vals_list):
             # set partner as follower
@@ -807,8 +806,6 @@ class Picking(models.Model):
             after_vals['partner_id'] = vals['partner_id']
         if after_vals:
             self.move_ids.filtered(lambda move: not move.scrapped).write(after_vals)
-        if vals.get('move_ids'):
-            self._autoconfirm_picking()
 
         return res
 
@@ -862,7 +859,10 @@ class Picking(models.Model):
 
     def action_cancel(self):
         self.move_ids._action_cancel()
-        self.write({'is_locked': True})
+        self.write({
+            'is_locked': True,
+            'state': 'cancel',
+        })
         return True
 
     def _action_done(self):
@@ -1197,26 +1197,6 @@ class Picking(models.Model):
             if all(float_is_zero(move_line.qty_done, precision_digits=precision_digits) for move_line in picking.move_line_ids.filtered(lambda m: m.state not in ('done', 'cancel'))):
                 immediate_pickings |= picking
         return immediate_pickings
-
-    def _autoconfirm_picking(self):
-        """ Automatically run `action_confirm` on `self` if the picking is an immediate transfer or
-        if the picking is a planned transfer and one of its move was added after the initial
-        call to `action_confirm`. Note that `action_confirm` will only work on draft moves.
-        """
-        # Clean-up the context key to avoid forcing the creation of immediate transfers.
-        ctx = dict(self.env.context)
-        ctx.pop('default_immediate_transfer', None)
-        self = self.with_context(ctx)
-        for picking in self:
-            if picking.state in ('done', 'cancel'):
-                continue
-            if not picking.move_ids and not picking.package_level_ids:
-                continue
-            if picking.immediate_transfer or any(move.additional for move in picking.move_ids):
-                picking.action_confirm()
-                # Make sure the reservation is bypassed in immediate transfer mode.
-                if picking.immediate_transfer:
-                    picking.move_ids.write({'state': 'assigned'})
 
     def _create_backorder(self):
         """ This method is called when the user chose to create a backorder. It will create a new
