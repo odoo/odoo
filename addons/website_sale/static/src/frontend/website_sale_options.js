@@ -189,13 +189,13 @@ export const WebsiteSaleOptions = Widget.extend({
 
     /**
      * Returns an object with the current configuration of the product.
+     * May contain more values.
      *
      * @returns {{combination: Array<Integer>, add_qty: Integer}}
      */
     getCurrentConfiguration() {
         const combination = [];
         this.el.querySelectorAll("input.js_variant_change:checked, select.js_variant_change").forEach((el) => {
-            // String -> Integer
             combination.push(parseInt(el.value));
         });
         return {
