@@ -14,10 +14,10 @@ export const PosEventOrder = (Order) => class PosEventOrder extends Order {
         }
         return orderline;
     }
-    // hasEventLines() {
-    //     const hasEventLines = this.get_orderlines().some(line => line.product.detailed_type === "event");
-    //     return hasEventLines;
-    // }
+    hasEventLines() {
+        const hasEventLines = this.get_orderlines().some(line => line.eventId);
+        return hasEventLines;
+    }
 
 }
 Registries.Model.extend(Order, PosEventOrder);

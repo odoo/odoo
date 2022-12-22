@@ -23,13 +23,14 @@ class PosOrder(models.Model):
         return res
 
 
-
 class PosOrderLine(models.Model):
     _inherit = 'pos.order.line'
 
-    # event_id = fields.Many2one(
-    #     'event.event', string='Event',
-    #     compute="_compute_event_id", store=True, readonly=False, precompute=True,
-    #     help="Choose an event and it will automatically create a registration for this event.")
+    event_id = fields.Many2one('event.event', string='Event', compute="_compute_event_id", store=True, precompute=True)
     event_ticket_id = fields.Many2one('event.event.ticket', string='Event Ticket')
     event_registration_ids = fields.One2many('event.registration', 'pos_order_line_id', string='Event Registrations')
+
+    @api.depends('event_registration_ids')
+    def _compute_event_id(self):
+        for line in self:
+            line.event_id = line.event_registration_ids.event_id

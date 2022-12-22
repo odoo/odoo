@@ -24,7 +24,8 @@
                                 <div class="ticket-title">
                                     <span class="ticket-name">
                                         <t t-esc="ticket.name"/>
-                                        <t t-if="ticket.seats_available"><t t-esc="ticket.seats_available"/></t>
+                                        <t t-if="ticket.seats_available"> (<t t-esc="ticket.seats_available"/> seats remaining)</t>
+                                    </span>
                                     <span class="ticket-price" t-esc="env.pos.format_currency(ticketInfoMap[ticket.id].product.lst_price)"/>
                                 </div>
                                 <span t-if="ticket.description" class="ticket-description" t-esc="ticket.description"/>

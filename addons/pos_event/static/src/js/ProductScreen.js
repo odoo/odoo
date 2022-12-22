@@ -6,8 +6,7 @@ import Registries from "@point_of_sale/js/Registries";
 export const PosEventProductScreen = (ProductScreen) => class extends ProductScreen {
     async _onClickPay() {
         const order = this.env.pos.get_order();
-        const hasEventLines = order.get_orderlines().some(line => line.eventId);
-        if (hasEventLines && !order.get_partner()) {
+        if (order.hasEventLines() && !order.get_partner()) {
             const {confirmed} = await this.showPopup("ConfirmPopup", {
                 title: this.env._t("Customer needed"),
                 body: this.env._t("Buying event ticket requires a customer to be selected"),

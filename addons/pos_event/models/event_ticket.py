@@ -27,5 +27,3 @@ class EventTicket(models.Model):
             res.append(event)
 
         return res
-
-

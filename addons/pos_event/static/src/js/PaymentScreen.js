@@ -1,4 +1,4 @@
-/** @odoo-module alias=pos_event.PaymentScreen**/
+/** @odoo-module **/
 
 import PaymentScreen from "@point_of_sale/js/Screens/PaymentScreen/PaymentScreen";
 import Registries from "@point_of_sale/js/Registries";
