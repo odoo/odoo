@@ -1276,14 +1276,29 @@ class AccountMoveLine(models.Model):
     def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
         def to_tuple(t):
             return tuple(map(to_tuple, t)) if isinstance(t, (list, tuple)) else t
+        # Since the ORM only supports simple `order by` clauses, add a search_read to match a specific amount_residual
+        # so that they appear on the bank rec widget first. It is activated by context key when no order is specified.
+        matching_amount_res = []
+        extra_domain = []
+        preferred_amount = self.env.context.get('preferred_residual')
+        if not order and preferred_amount:
+            amount_domain = domain + [('amount_residual', '=', preferred_amount)]
+            matching_amount_res = super().search_read(amount_domain, fields, offset, limit, order)
+            if matching_amount_res:
+                if len(matching_amount_res) == limit:
+                    return matching_amount_res
+                else:
+                    extra_domain = [('amount_residual', '!=', preferred_amount)]
+                    if limit and limit > len(matching_amount_res):
+                        limit -= len(matching_amount_res)
         # Make an explicit order because we will need to reverse it
         order = (order or self._order) + ', id'
         # Add the domain and order by in order to compute the cumulated balance in _compute_cumulated_balance
         contextualized = self.with_context(
-            domain_cumulated_balance=to_tuple(domain or []),
+            domain_cumulated_balance=to_tuple(domain or [] + extra_domain),
             order_cumulated_balance=order,
         )
-        return super(AccountMoveLine, contextualized).search_read(domain, fields, offset, limit, order)
+        return matching_amount_res + super(AccountMoveLine, contextualized).search_read(domain + extra_domain, fields, offset, limit, order)
 
     def init(self):
         """ change index on partner_id to a multi-column index on (partner_id, ref), the new index will behave in the
