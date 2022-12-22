@@ -6,6 +6,8 @@ from odoo import SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
 from odoo.addons.account.models.account_tax import TYPE_TAX_USE
+from odoo.tools import html_escape
+
 
 import logging
 
@@ -29,6 +31,129 @@ def preserve_existing_tags_on_taxes(cr, registry, module):
     xml_records = env['ir.model.data'].search([('model', '=', 'account.account.tag'), ('module', 'like', module)])
     if xml_records:
         cr.execute("update ir_model_data set noupdate = 't' where id in %s", [tuple(xml_records.ids)])
+
+def update_taxes_from_templates(cr, chart_template_xmlid):
+    def _create_tax_from_template(company, template, old_tax=None):
+        """
+        Create a new tax from template with template xmlid, if there was already an old tax with that xmlid we
+        remove the xmlid from it but don't modify anything else.
+        """
+        def _remove_xml_id(xml_id):
+            module, name = xml_id.split(".", 1)
+            env['ir.model.data'].search([('module', '=', module), ('name', '=', name)]).unlink()
+
+        template_vals = template._get_tax_vals_complete(company)
+        chart_template = env["account.chart.template"].with_context(default_company_id=company.id)
+        if old_tax:
+            xml_id = old_tax.get_xml_id().get(old_tax.id)
+            if xml_id:
+                _remove_xml_id(xml_id)
+        chart_template.create_record_with_xmlid(company, template, "account.tax", template_vals)
+
+    def _update_tax_from_template(template, tax):
+        # -> update the tax : we only updates tax tags
+        tax_rep_lines = tax.invoice_repartition_line_ids + tax.refund_repartition_line_ids
+        template_rep_lines = template.invoice_repartition_line_ids + template.refund_repartition_line_ids
+        for tax_line, template_line in zip(tax_rep_lines, template_rep_lines):
+            tags_to_add = template_line._get_tags_to_add()
+            tags_to_unlink = tax_line.tag_ids
+            if tags_to_add != tags_to_unlink:
+                tax_line.write({"tag_ids": [(6, 0, tags_to_add.ids)]})
+                _cleanup_tags(tags_to_unlink)
+
+    def _get_template_to_tax_xmlid_mapping(company):
+        """
+        This function uses ir_model_data to return a mapping between the tax templates and the taxes, using their xmlid
+        :returns: {
+            account.tax.template.id: account.tax.id
+            }
+        """
+        env['ir.model.data'].flush()
+        env.cr.execute(
+            """
+            SELECT template.res_id AS template_res_id,
+                   tax.res_id AS tax_res_id
+            FROM ir_model_data tax
+            JOIN ir_model_data template
+            ON template.name = substr(tax.name, strpos(tax.name, '_') + 1)
+            WHERE tax.model = 'account.tax'
+            AND tax.name LIKE %s
+            -- tax.name is of the form: {company_id}_{account.tax.template.name}
+            """,
+            [r"%s\_%%" % company.id],
+        )
+        tuples = env.cr.fetchall()
+        return dict(tuples)
+
+    def _is_tax_and_template_same(template, tax):
+        """
+        This function compares account.tax and account.tax.template repartition lines.
+        A tax is considered the same as the template if they have the same:
+            - amount_type
+            - amount
+            - repartition lines percentages in the same order
+        """
+        tax_rep_lines = tax.invoice_repartition_line_ids + tax.refund_repartition_line_ids
+        template_rep_lines = template.invoice_repartition_line_ids + template.refund_repartition_line_ids
+        return (
+                tax.amount_type == template.amount_type
+                and tax.amount == template.amount
+                and len(tax_rep_lines) == len(template_rep_lines)
+                and all(
+                    rep_line_tax.factor_percent == rep_line_template.factor_percent
+                    for rep_line_tax, rep_line_template in zip(tax_rep_lines, template_rep_lines)
+                )
+        )
+
+    def _cleanup_tags(tags):
+        """
+        Checks if the tags are still used in taxes or move lines. If not we delete it.
+        """
+        for tag in tags:
+            tax_using_tag = env['account.tax.repartition.line'].sudo().search([('tag_ids', 'in', tag.id)], limit=1)
+            aml_using_tag = env['account.move.line'].sudo().search([('tax_tag_ids', 'in', tag.id)], limit=1)
+            report_line_using_tag = env['account.tax.report.line'].sudo().search([('tag_ids', 'in', tag.id)], limit=1)
+            if not (aml_using_tag or tax_using_tag or report_line_using_tag):
+                tag.unlink()
+
+    def _notify_accountant_managers(taxes_to_check):
+        accountant_manager_group = env.ref("account.group_account_manager")
+        partner_managers_ids = accountant_manager_group.users.mapped('partner_id')
+        odoobot = env.ref('base.partner_root')
+        message_body = _(
+            "Please check these taxes. They might be outdated. We did not update them. "
+            "Indeed, they do not exactly match the taxes of the original version of the localization module.<br/>"
+            "You might want to archive or adapt them.<br/><ul>"
+        )
+        for account_tax in taxes_to_check:
+            message_body += f"<li>{html_escape(account_tax.name)}</li>"
+        message_body += "</ul>"
+        partner_managers_ids.message_post(
+            subject=_('Your taxes have been updated !'),
+            author_id=odoobot.id,
+            body=message_body,
+            message_type='notification',
+            subtype_xmlid='mail.mt_comment',
+            partner_ids=[partner.id for partner in partner_managers_ids],
+        )
+
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    chart_template_id = env['ir.model.data'].xmlid_to_res_id(chart_template_xmlid)
+    companies = env['res.company'].search([('chart_template_id', '=', chart_template_id)])
+    outdated_taxes = []
+    for company in companies:
+        template_to_tax = _get_template_to_tax_xmlid_mapping(company)
+        templates = env['account.tax.template'].search([("chart_template_id", "=", chart_template_id)])
+        for template in templates:
+            tax = env["account.tax"].browse(template_to_tax.get(template.id))
+            if not tax or not _is_tax_and_template_same(template, tax):
+                _create_tax_from_template(company, template, old_tax=tax)
+                if tax:
+                    outdated_taxes.append(tax)
+            else:
+                _update_tax_from_template(template, tax)
+    if outdated_taxes:
+        _notify_accountant_managers(outdated_taxes)
 
 #  ---------------------------------------------------------------
 #   Account Templates: Account, Tax, Tax Code and chart. + Wizard
