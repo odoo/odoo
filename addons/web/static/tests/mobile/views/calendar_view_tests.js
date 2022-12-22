@@ -94,7 +94,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsNone(target, ".o_calendar_button_next", "next button should be hidden");
         assert.isVisible(
             target.querySelector(
-                ".o_cp_bottom_left .o_calendar_buttons .o_calendar_scale_buttons + button.o_cp_today_button"
+                ".o_cp_bottom_left .o_calendar_buttons .o_view_scale_selector + button.o_cp_today_button"
             ),
             "today button should be visible near the calendar buttons (bottom left corner)"
         );
@@ -113,7 +113,7 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         // switch to day mode
         await click(target, ".o_control_panel .scale_button_selection");
-        await click(target, ".o_control_panel .o_calendar_button_day");
+        await click(target, ".o_control_panel .o_scale_button_day");
         await nextTick();
         assert.containsOnce(
             target,
@@ -127,7 +127,7 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         // switch to month mode
         await click(target, ".o_control_panel .scale_button_selection");
-        await click(target, ".o_control_panel .o_calendar_button_month");
+        await click(target, ".o_control_panel .o_scale_button_month");
         await nextTick();
         assert.containsOnce(
             target,
@@ -141,7 +141,7 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         // switch to year mode
         await click(target, ".o_control_panel .scale_button_selection");
-        await click(target, ".o_control_panel .o_calendar_button_year");
+        await click(target, ".o_control_panel .o_scale_button_year");
         await nextTick();
         assert.containsOnce(
             target,

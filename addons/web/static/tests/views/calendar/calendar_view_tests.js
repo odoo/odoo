@@ -360,7 +360,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             "week scale should highlight 7 days in mini calendar"
         );
         await click(target, ".scale_button_selection");
-        await click(target, ".o_calendar_button_day"); // display only one day
+        await click(target, ".o_scale_button_day"); // display only one day
         assert.containsN(target, ".fc-event", 2, "should display 2 events on the day");
         assert.containsOnce(
             target,
@@ -368,7 +368,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             "should highlight the target day in mini calendar"
         );
         await click(target, ".scale_button_selection");
-        await click(target, ".o_calendar_button_month"); // display all the month
+        await click(target, ".o_scale_button_month"); // display all the month
         // We display the events or partner 1 2 and 4. Partner 2 has nothing and Event 6 is for partner 6 (not displayed)
         await click(target, ".o_calendar_filter_item[data-value='all'] input");
         await click(
@@ -4337,11 +4337,11 @@ QUnit.module("Views", ({ beforeEach }) => {
             `,
         });
 
-        await click(target, ".o_calendar_scale_buttons .scale_button_selection");
-        assert.containsOnce(target, ".o_calendar_scale_buttons .o_calendar_button_day");
-        assert.containsOnce(target, ".o_calendar_scale_buttons .o_calendar_button_week");
-        assert.containsNone(target, ".o_calendar_scale_buttons .o_calendar_button_month");
-        assert.containsNone(target, ".o_calendar_scale_buttons .o_calendar_button_year");
+        await click(target, ".o_view_scale_selector .scale_button_selection");
+        assert.containsOnce(target, ".o_view_scale_selector .o_scale_button_day");
+        assert.containsOnce(target, ".o_view_scale_selector .o_scale_button_week");
+        assert.containsNone(target, ".o_view_scale_selector .o_scale_button_month");
+        assert.containsNone(target, ".o_view_scale_selector .o_scale_button_year");
     });
 
     QUnit.test(`click outside the popup should close it`, async (assert) => {

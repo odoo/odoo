@@ -48,22 +48,7 @@
                     <i class="fa fa-arrow-right" />
                 </button>
             </span>
-            <span class="o_calendar_scale_buttons">
-                <Dropdown class="'btn-group'" togglerClass="'btn btn-secondary scale_button_selection text-uppercase'" hotkey="'v'" showCaret="true">
-                    <t t-set-slot="toggler">
-                        <t t-esc="scaleLabels[model.scale]" />
-                    </t>
-                    <t t-foreach="model.scales" t-as="scale" t-key="scale">
-                        <DropdownItem
-                            class="`o_calendar_button_${scale} btn btn-secondary text-uppercase`"
-                            hotkey="scale[0]"
-                            onSelected="() => this.setScale(scale)"
-                        >
-                            <t t-esc="scaleLabels[scale]" />
-                        </DropdownItem>
-                    </t>
-                </Dropdown>
-            </span>
+            <ViewScaleSelector scales="scales" currentScale="model.scale" setScale.bind="setScale" />
             <button t-if="env.isSmall" class="o_cp_today_button btn btn-sm btn-link" t-on-click="() => this.setDate('today')">
                 <span class="fa-stack o_calendar_button_today">
                     <i class="fa fa-calendar-o fa-stack-2x" role="img" aria-label="Today" title="Today" />
