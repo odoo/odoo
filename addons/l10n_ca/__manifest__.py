@@ -3,7 +3,7 @@
     'name': 'Canada - Accounting',
     'icon': '/account/static/description/l10n.png',
     'countries': ['ca'],
-    'author': 'Savoir-faire Linux (https://www.savoirfairelinux.com)',
+    'author': 'Savoir-faire Linux (https://www.savoirfairelinux.com); Odoo SA',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
@@ -38,7 +38,7 @@ position.
         'base_iban',
     ],
     'data': [
-        'data/res_company_data.xml',
+        'data/tax_report.xml',
         'views/res_partner_view.xml',
         'views/res_company_view.xml',
         'views/report_invoice.xml',
