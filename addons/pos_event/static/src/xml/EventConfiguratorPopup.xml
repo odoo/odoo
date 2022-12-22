@@ -13,7 +13,8 @@
                         <div class="event-title" t-esc="event.name"/>
                         <div class="event-info">
                             <span>Start: <t t-esc="event.date_begin"/></span>
-                            <span t-if="!event.event_registrations_open" class="badge-closed">Registration closed</span>
+                            <span t-if="!event.event_registrations_open" class="badge red">Registration closed</span>
+                            <span t-if="event.event_registrations_open and event.seats_available" class="badge green"><t t-esc="event.seats_available"/> seats remaining</span>
                             <span>End: <t t-esc="event.date_end"/></span>
                         </div>
                     </div>
@@ -21,7 +22,9 @@
                         <div t-foreach="event.tickets" t-as="ticket" t-key="ticket.id" class="ticket">
                             <div class="ticket-info">
                                 <div class="ticket-title">
-                                    <span class="ticket-name" t-esc="ticket.name"/>
+                                    <span class="ticket-name">
+                                        <t t-esc="ticket.name"/>
+                                        <t t-if="ticket.seats_available"><t t-esc="ticket.seats_available"/></t>
                                     <span class="ticket-price" t-esc="env.pos.format_currency(ticketInfoMap[ticket.id].product.lst_price)"/>
                                 </div>
                                 <span t-if="ticket.description" class="ticket-description" t-esc="ticket.description"/>

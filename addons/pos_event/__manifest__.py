@@ -21,6 +21,7 @@ this event.
     'data': [
         'data/pos_event_data.xml',
         'data/pos_event_demo.xml',
+        'views/pos_order_views.xml',
     ],
     'installable': True,
     'auto_install': ['event', 'point_of_sale'],
