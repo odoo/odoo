@@ -15,6 +15,7 @@
 
     <record id="demo_company_ca" model="res.company">
         <field name="name">CA Company</field>
+        <field name="paperformat_id" ref="base.paperformat_us"/>
         <field name="partner_id" ref="partner_demo_company_ca"/>
     </record>
 
@@ -24,12 +25,12 @@
 
     <function model="res.users" name="write">
         <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
-        <value eval="{'company_ids': [(4, ref('l10n_ca.demo_company_ca'))]}"/>
+        <value eval="{'company_ids': [Command.link(ref('l10n_ca.demo_company_ca'))]}"/>
     </function>
 
     <function model="account.chart.template" name="try_loading">
         <value eval="[]"/>
-        <value>ca</value>
+        <value>ca_2023</value>
         <value model="res.company" eval="obj().env.ref('l10n_ca.demo_company_ca')"/>
     </function>
 </odoo>
