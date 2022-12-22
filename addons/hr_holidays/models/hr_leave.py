@@ -12,7 +12,6 @@ from datetime import datetime, timedelta, time
 from pytz import timezone, UTC
 
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
-from odoo.tools import date_utils
 
 from odoo import api, Command, fields, models, tools
 from odoo.addons.base.models.res_partner import _tz_get
@@ -1474,60 +1473,6 @@ class HolidaysRequest(models.Model):
 
                     if not is_officer and (state == 'validate' and val_type == 'hr') and holiday.holiday_type == 'employee':
                         raise UserError(_('You must either be a Time off Officer or Time off Manager to approve this leave'))
-
-    ###################################################
-    # Time Off modification methods
-    ###################################################
-
-    def _split_leave_on_gto(self, gto): #gto = global time off
-        self.ensure_one()
-
-        leave_start = date_utils.start_of(self.date_from, 'day')
-        leave_end = date_utils.end_of(self.date_to - timedelta(seconds=1), 'day')
-        gto_start = date_utils.start_of(gto['date_from'], 'day')
-        gto_end = date_utils.end_of(gto['date_to'], 'day')
-        leave_tz = timezone(self.employee_id.resource_id.tz)
-
-        if gto_start <= leave_start\
-                and gto_end > leave_start\
-                and gto_end < leave_end:
-            self.write({
-                'date_from': leave_tz.localize(gto_end + timedelta(seconds=1))\
-                        .astimezone(UTC).replace(tzinfo=None)
-            })
-            return self.env['hr.leave']
-        if gto_start > leave_start\
-                and gto_end < leave_end:
-            copys = {
-                'date_from': self.date_from,
-                'date_to': leave_tz.localize(gto_start - timedelta(seconds=1))\
-                        .astimezone(UTC).replace(tzinfo=None)
-            }
-            self.write({
-                'date_from': leave_tz.localize(gto_end + timedelta(seconds=1))\
-                        .astimezone(UTC).replace(tzinfo=None)
-            })
-            return self.copy(copys)
-        if gto_start > leave_start\
-                and gto_start < leave_end\
-                and gto_end >= leave_end:
-            self.write({
-                'date_to': leave_tz.localize(gto_start - timedelta(seconds=1))\
-                        .astimezone(UTC).replace(tzinfo=None)
-            })
-            return self.env['hr.leave']
-
-    def split_leave(self, time_domain_dict):
-        self.ensure_one()
-
-        new_leaves = self.env['hr.leave']
-        for global_time_off in sorted(
-                filter(lambda r: r['date_to'] > self.date_from and r['date_from'] < self.date_to, time_domain_dict),
-                key=lambda r: r['date_from']):
-            new_leave = self._split_leave_on_gto(global_time_off)
-            if new_leave:
-                new_leaves |= new_leave
-        return new_leaves
 
     # ------------------------------------------------------------
     # Activity methods
