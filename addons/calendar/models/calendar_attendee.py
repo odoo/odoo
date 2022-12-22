@@ -12,6 +12,11 @@ from odoo.exceptions import UserError
 _logger = logging.getLogger(__name__)
 
 
+
+
+
+# Testing code owners
+
 class Attendee(models.Model):
     """ Calendar Attendee Information """
     _name = 'calendar.attendee'
