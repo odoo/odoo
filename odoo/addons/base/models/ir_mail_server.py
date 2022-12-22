@@ -653,6 +653,10 @@ class IrMailServer(models.Model):
         if mail_server:
             return mail_server[0], email_from
 
+        mail_server = mail_servers.filtered(lambda m: email_domain_extract(m.from_filter) == email_from_domain)
+        if mail_server:
+            return mail_server[0], mail_server[0].from_filter
+
         # 2. Try to find a mail server for <notifications@domain.com>
         if notifications_email:
             mail_server = mail_servers.filtered(lambda m: email_normalize(m.from_filter) == notifications_email)

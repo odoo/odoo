@@ -318,6 +318,7 @@ class MockSmtplibCase:
         (
             cls.server_domain,
             cls.server_user,
+            cls.server_user_other,
             cls.server_notification,
             cls.server_default,
         ) = cls.env['ir.mail_server'].create([
@@ -328,6 +329,10 @@ class MockSmtplibCase:
             }, {
                 'name': 'User specific server',
                 'from_filter': 'specific_user@test.com',
+                ** ir_mail_server_values,
+            }, {
+                'name': 'User specific server for other domain',
+                'from_filter': 'specific_user@other.com',
                 ** ir_mail_server_values,
             }, {
                 'name': 'Server Notifications',
