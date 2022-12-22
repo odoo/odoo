@@ -67,22 +67,20 @@ class CalendarLeaves(models.Model):
         sick_time_status = self.env.ref('hr_holidays.holiday_status_sl')
         for previous_duration, leave, state in zip(previous_durations, leaves, previous_states):
             duration_difference = previous_duration - leave.number_of_days
-            if duration_difference > 0 and leave['holiday_allocation_id'] and leave.number_of_days == 0.0:
+            message = False
+            if duration_difference > 0 and leave['holiday_allocation_id']:
                 message = _("Due to a change in global time offs, you have been granted %s day(s) back.", duration_difference)
-                leave._notify_change(message)
             if leave.number_of_days > previous_duration\
                     and leave.holiday_status_id not in sick_time_status:
-                new_leaves = leave.split_leave(time_domain_dict)
-                leaves |= new_leaves
-                previous_states += [state] * len(new_leaves)
-
-        leaves_to_cancel = self.env['hr.leave']
-        for state, leave in zip(previous_states, leaves):
-            leave.write({'state': state})
-            if leave.number_of_days == 0.0:
-                leaves_to_cancel |= leave
-
-        leaves_to_cancel._force_cancel(_("a new public holiday completely overrides this leave."), 'mail.mt_comment')
+                message = _("Due to a change in global time offs, %s extra day(s) have been taken from your allocation. Please review this leave if you need it to be changed.", -1 * duration_difference)
+            try:
+                leave.write({'state': state})
+                leave._check_holidays()
+            except ValidationError:
+                leave.action_refuse()
+                message = _("Due to a change in global time offs, this leave no longer has the required amount of available allocation and has been set to refused. Please review this leave.")
+            if message:
+                leave._notify_change(message)
 
     def _convert_timezone(self, utc_naive_datetime, tz_from, tz_to):
         """
