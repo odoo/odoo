@@ -307,7 +307,26 @@ odoo.define('pos_coupon.pos', function (require) {
             const regularLines = this.get_orderlines(...arguments)
                 .filter((line) => !line.is_program_reward);
             return regularLines[regularLines.length - 1];
+<<<<<<< HEAD
         }
+||||||| parent of 9b4a924a450 (temp)
+        },
+        set_pricelist: function (pricelist) {
+            _order_super.set_pricelist.apply(this, arguments);
+            this.trigger('update-rewards');
+        },
+=======
+        },
+        selectLastOrderline: function(line){
+            if(!line.is_program_reward) {
+                _order_super.selectLastOrderline.apply(this, arguments);
+            }
+        },
+        set_pricelist: function (pricelist) {
+            _order_super.set_pricelist.apply(this, arguments);
+            this.trigger('update-rewards');
+        },
+>>>>>>> 9b4a924a450 (temp)
 
         // NEW METHODS
 

@@ -2621,6 +2621,9 @@ class Order extends PosModel {
         }
         line.order = this;
         this.orderlines.add(line);
+        this.selectLastOrderline(line);
+    },
+    selectLastOrderline: function(line){
         this.select_orderline(this.get_last_orderline());
     }
     get_orderline(id){
@@ -2700,8 +2703,18 @@ class Order extends PosModel {
     remove_orderline( line ){
         this.assert_editable();
         this.orderlines.remove(line);
+<<<<<<< HEAD
         this.select_orderline(this.get_last_orderline());
     }
+||||||| parent of 9b4a924a450 (temp)
+        this.select_orderline(this.get_last_orderline());
+    },
+=======
+        if (this.selected_orderline === line) {
+            this.select_orderline(this.get_last_orderline());
+        }
+    },
+>>>>>>> 9b4a924a450 (temp)
 
     fix_tax_included_price(line){
         line.set_unit_price(line.compute_fixed_price(line.price));
