@@ -339,6 +339,11 @@ odoo.define('pos_coupon.pos', function (require) {
                 .filter((line) => !line.is_program_reward);
             return regularLines[regularLines.length - 1];
         },
+        selectLastOrderline: function(line){
+            if(!line.is_program_reward) {
+                _order_super.selectLastOrderline.apply(this, arguments);
+            }
+        },
         set_pricelist: function (pricelist) {
             _order_super.set_pricelist.apply(this, arguments);
             this.trigger('update-rewards');
