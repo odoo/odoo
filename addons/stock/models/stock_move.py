@@ -880,7 +880,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             'package_level_id', 'propagate_cancel', 'description_picking', 'date_deadline',
             'product_packaging_id',
         ]
-        if self.env['ir.config_parameter'].sudo().get_param('stock.merge_only_same_date'):
+        if not self.env['ir.config_parameter'].sudo().get_param('stock.merge_different_date'):
             fields.append('date')
         return fields
 
@@ -1668,8 +1668,10 @@ Please change the quantity done or the rounding precision of your unit of measur
                     move.move_dest_ids.filtered(lambda m: m.state != 'done')._action_cancel()
             else:
                 if all(state in ('done', 'cancel') for state in siblings_states):
-                    move.move_dest_ids.write({'procure_method': 'make_to_stock'})
-                    move.move_dest_ids.write({'move_orig_ids': [(3, move.id, 0)]})
+                    moves_dest = move.move_dest_ids
+                    moves_dest.write({'procure_method': 'make_to_stock'})
+                    moves_dest.write({'move_orig_ids': [(3, move.id, 0)]})
+                    moves_dest._recompute_state()
         moves_to_cancel.write({
             'state': 'cancel',
             'move_orig_ids': [(5, 0, 0)],
@@ -1788,10 +1790,11 @@ Please change the quantity done or the rounding precision of your unit of measur
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_draft_or_cancel(self):
-        if any(move.state not in ('draft', 'cancel') for move in self):
-            raise UserError(_('You can only delete draft moves.'))
+        if any(move.state == 'done' for move in self):
+            raise UserError(_('You can not delete done moves.'))
 
     def unlink(self):
+        self.filtered(lambda m: m.state not in ['cancel', 'draft'])._action_cancel()
         # With the non plannified picking, draft moves could have some move lines.
         self.with_context(prefetch_fields=False).mapped('move_line_ids').unlink()
         return super(StockMove, self).unlink()
