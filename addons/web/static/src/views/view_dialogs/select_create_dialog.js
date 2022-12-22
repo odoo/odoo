@@ -30,6 +30,7 @@ export class SelectCreateDialog extends Component {
     get viewProps() {
         const type = this.env.isSmall ? "kanban" : "list";
         const props = {
+            loadIrFilters: true,
             ...this.baseViewProps,
             context: this.props.context,
             domain: this.props.domain,
