@@ -1212,6 +1212,8 @@ class ChromeBrowser:
             '--remote-debugging-port': str(self.remote_debugging_port),
             '--no-sandbox': '',
             '--disable-gpu': '',
+            # '--enable-precise-memory-info': '', # uncomment to debug memory leaks in qunit suite
+            # '--js-flags': '--expose-gc', # uncomment to debug memory leaks in qunit suite
         }
         if self.touch_enabled:
             # enable Chrome's Touch mode, useful to detect touch capabilities using
