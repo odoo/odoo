@@ -95,7 +95,9 @@ class TestPaymentProvider(PaymentCommon):
         })
         transaction_fees = self.currency.round(
             self.provider._compute_fees(
-                self.amount, self.currency_usd, self.provider.company_id.country_id
+                self.amount,
+                self.provider.company_id.currency_id,
+                self.provider.company_id.country_id,
             )
         )
         self.assertEqual(transaction_fees, 4.91)
