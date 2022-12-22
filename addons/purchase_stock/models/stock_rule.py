@@ -22,7 +22,10 @@ class StockRule(models.Model):
         message_dict = super(StockRule, self)._get_message_dict()
         dummy, destination, dummy = self._get_message_values()
         message_dict.update({
-            'buy': _('When products are needed in <b>%s</b>, <br/> a request for quotation is created to fulfill the need.') % (destination)
+            'buy': _('When products are needed in <b>%s</b>, <br/> '
+                     'a request for quotation is created to fulfill the need.<br/>'
+                     'Note: This rule will be used in combination with the rules<br/>'
+                     'of the reception route(s)') % (destination)
         })
         return message_dict
 
