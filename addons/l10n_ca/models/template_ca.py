@@ -6,31 +6,53 @@ from odoo.addons.account.models.chart_template import template
 class AccountChartTemplate(models.AbstractModel):
     _inherit = 'account.chart.template'
 
-    @template('ca')
+    @template('ca_2023')
     def _get_ca_template_data(self):
         return {
-            'property_account_receivable_id': 'chart1151_en',
-            'property_account_payable_id': 'chart2111_en',
-            'property_account_income_categ_id': 'chart411_en',
-            'property_account_expense_categ_id': 'chart5111_en',
-            'property_stock_account_input_categ_id': 'chart2171_en',
-            'property_stock_account_output_categ_id': 'chart1145_en',
-            'property_stock_valuation_account_id': 'chart1141_en',
+            'property_account_receivable_id': 'l10n_ca_112110',
+            'property_account_payable_id': 'l10n_ca_221110',
+            'property_account_income_categ_id': 'l10n_ca_411100',
+            'property_account_expense_categ_id': 'l10n_ca_511210',
+            'property_stock_account_input_categ_id': 'l10n_ca_121130',
+            'property_stock_account_output_categ_id': 'l10n_ca_121140',
+            'property_stock_valuation_account_id': 'l10n_ca_121120',
             'use_anglo_saxon': True,
         }
 
-    @template('ca', 'res.company')
+    @template('ca_2023', 'res.company')
     def _get_ca_res_company(self):
+        company = self.env.company
+
+        def get_default_taxes():
+            """ Finds the correct default sale and purchase tax according to the company province """
+            if company.state_id.code == 'BC':
+                return 'gstpst_sale_tax_12_bc', 'gstpst_purchase_tax_12_bc'
+            elif company.state_id.code == 'MB':
+                return 'gstpst_sale_tax_12_mb', 'gstpst_purchase_tax_12_mb'
+            elif company.state_id.code in {'NB', 'NL', 'NS', 'PE'}:
+                return 'hst_sale_tax_15', 'hst_purchase_tax_15'
+            elif company.state_id.code == 'ON':
+                return 'hst_sale_tax_13', 'hst_purchase_tax_13'
+            elif company.state_id.code == 'SK':
+                return 'gstpst_sale_tax_11', 'gstpst_purchase_tax_11'
+            elif company.state_id.code == 'QC':
+                return 'gstqst_sale_tax_14975', 'gstqst_purchase_tax_14975'
+            else:
+                return 'gst_sale_tax_5', 'gst_purchase_tax_5'
+
+        default_sales_tax, default_purchase_tax = get_default_taxes()
         return {
-            self.env.company.id: {
+            company.id: {
                 'account_fiscal_country_id': 'base.ca',
-                'bank_account_code_prefix': '112',
-                'cash_account_code_prefix': '111',
-                'transfer_account_code_prefix': '113',
-                'account_default_pos_receivable_account_id': 'chart11511_en',
-                'income_currency_exchange_account_id': 'chart42_en',
-                'expense_currency_exchange_account_id': 'chart55_en',
-                'account_journal_early_pay_discount_loss_account_id': 'chart550001_en',
-                'account_journal_early_pay_discount_gain_account_id': 'chart420001_en',
+                'bank_account_code_prefix': '11131',
+                'cash_account_code_prefix': '11121',
+                'transfer_account_code_prefix': '1111',
+                'account_default_pos_receivable_account_id': 'l10n_ca_112113',
+                'income_currency_exchange_account_id': 'l10n_ca_423100',
+                'expense_currency_exchange_account_id': 'l10n_ca_522100',
+                'account_journal_early_pay_discount_loss_account_id': 'l10n_ca_522200',
+                'account_journal_early_pay_discount_gain_account_id': 'l10n_ca_423200',
+                'account_sale_tax_id': default_sales_tax,
+                'account_purchase_tax_id': default_purchase_tax,
             },
         }
