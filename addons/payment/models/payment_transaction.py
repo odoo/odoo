@@ -862,7 +862,7 @@ class PaymentTransaction(models.Model):
 
         :return: None
         """
-        self._reconcile_after_done()
+        self.filtered(lambda tx: tx.operation != 'validation')._reconcile_after_done()
         self._log_received_message()  # 2nd call to link the created account.payment in the chatter
         self.is_post_processed = True
 
