@@ -5,8 +5,14 @@ from werkzeug.urls import url_quote
 
 from odoo import api, models, fields, tools
 
-SUPPORTED_IMAGE_MIMETYPES = ['image/gif', 'image/jpe', 'image/jpeg', 'image/jpg', 'image/png', 'image/svg+xml']
-SUPPORTED_IMAGE_EXTENSIONS = ['.gif', '.jpe', '.jpeg', '.jpg', '.png', '.svg']
+SUPPORTED_IMAGE_MIMETYPES = {
+    'image/gif': '.gif',
+    'image/jpe': '.jpe',
+    'image/jpeg': '.jpeg',
+    'image/jpg': '.jpg',
+    'image/png': '.png',
+    'image/svg+xml': '.svg',
+}
 
 
 class IrAttachment(models.Model):
