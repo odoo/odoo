@@ -5,21 +5,17 @@ import { useModel } from "@web/views/model";
 import { RelationalModel } from "@web/views/relational_model";
 import { Component, xml, onWillStart, onWillUpdateProps } from "@odoo/owl";
 
+const defaultActiveField = { attrs: {}, options: {}, domain: "[]", string: "" };
+
 class _Record extends Component {
     setup() {
-        const activeFields =
-            this.props.info.activeFields ||
-            Object.fromEntries(
-                this.props.info.fieldNames.map((f) => [f, { attrs: {}, options: {}, domain: "[]" }])
-            );
-
         this.model = useModel(RelationalModel, {
             resId: this.props.info.resId,
             resModel: this.props.info.resModel,
             fields: this.props.fields,
             viewMode: "form",
             rootType: "record",
-            activeFields,
+            activeFields: this.getActiveFields(),
             mode: this.props.info.mode === "edit" ? "edit" : undefined,
             initialValues: this.props.info.initialValues,
         });
@@ -29,9 +25,36 @@ class _Record extends Component {
                 mode: nextProps.info.mode,
             });
         });
+
+        if (this.props.info.onRecordChanged) {
+            const load = this.model.load;
+            this.model.load = async (...args) => {
+                const res = await load.call(this.model, ...args);
+                const root = this.model.root;
+                root.onChanges = async () => {
+                    const changes = root.getChanges();
+                    this.props.info.onRecordChanged(root, changes);
+                };
+                return res;
+            };
+        }
+    }
+
+    getActiveFields() {
+        if (this.props.info.activeFields) {
+            const activeFields = {};
+            for (const [fName, fInfo] of Object.entries(this.props.info.activeFields)) {
+                activeFields[fName] = { ...defaultActiveField, ...fInfo };
+            }
+            return activeFields;
+        }
+        return Object.fromEntries(
+            this.props.info.fieldNames.map((f) => [f, { ...defaultActiveField }])
+        );
     }
 }
 _Record.template = xml`<t t-slot="default" record="model.root"/>`;
+_Record.props = ["slots", "info", "fields"];
 
 export class Record extends Component {
     setup() {
@@ -61,4 +84,5 @@ Record.props = [
     "resId?",
     "mode?",
     "initialValues?",
+    "onRecordChanged?",
 ];
