@@ -592,7 +592,7 @@ class IrAttachment(models.Model):
         if len(orig_ids) == limit and len(result) < self._context.get('need', limit):
             need = self._context.get('need', limit) - len(result)
             result.extend(self.with_context(need=need)._search(args, offset=offset + len(orig_ids),
-                                       limit=limit, order=order, count=count,
+                                       limit=limit, order=order, count=False,
                                        access_rights_uid=access_rights_uid)[:limit - len(result)])
 
         return len(result) if count else list(result)
