@@ -6,16 +6,18 @@
             <field name="model">res.company</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[hasclass('o_address_format')]" position="inside">
+                <xpath expr="//field[@name='country_id']" position="after">
                     <field name="l10n_sa_edi_building_number" placeholder="Building Number"
                            class="o_address_building_number" options='{"no_open": True, "no_create": True}'/>
                     <field name="l10n_sa_edi_plot_identification" placeholder="Plot Identification"
-                           class="o_address_plot_identification mr-2" options='{"no_open": True, "no_create": True}'/>
+                           class="o_address_plot_identification" options='{"no_open": True, "no_create": True}'/>
                     <field name="l10n_sa_edi_neighborhood" placeholder="Neighborhood"
                            class="o_address_neighborhood" options='{"no_open": True, "no_create": True}'/>
                 </xpath>
-                <xpath expr="//field[@name='vat']" position="after">
-                    <field name="l10n_sa_organization_unit"/>
+                <xpath expr="//field[@name='vat']" position="before">
+                    <field name="l10n_sa_additional_identification_scheme"/>
+                    <field name="l10n_sa_additional_identification_number"/>
+                    <field name="l10n_sa_organization_unit" invisible="1"/>
                     <field name="l10n_sa_serial_number"/>
                 </xpath>
             </field>

@@ -19,7 +19,8 @@ from cryptography.x509 import load_der_x509_certificate
 
 ZATCA_API_URLS = {
     "sandbox": "https://gw-apic-gov.gazt.gov.sa/e-invoicing/developer-portal",
-    "production": "https://gw-apic-gov.gazt.gov.sa/e-invoicing/core",
+    "preprod": "https://gw-apic-gov.gazt.gov.sa/e-invoicing/core",
+    "prod": "https://gw-apic-gov.gazt.gov.sa/e-invoicing/core",
     "apis": {
         "ccsid": "/compliance",
         "pcsid": "/production/csids",
@@ -93,8 +94,8 @@ class AccountEdiFormat(models.Model):
         :return: Given Invoice's hash
         :rtype: bytes
         """
-        e_invoice = next((d for d in invoice.edi_document_ids if d.edi_format_id.code == 'sa_zatca'), None)
-        if not invoice.company_id.l10n_sa_production_env or not e_invoice:
+        e_invoice = next((d for d in invoice.edi_document_ids if d.edi_format_id.code == 'sa_zatca' and d.attachment_id), None)
+        if invoice.company_id.l10n_sa_api_mode == 'sandbox' or not e_invoice or not e_invoice.attachment_id:
             # If no invoice, or if using Sandbox, return the b64 encoded SHA256 value of the '0' character
             return "NWZlY2ViNjZmZmM4NmYzOGQ5NTI3ODZjNmQ2OTZjNzljMmRiYzIzOWRkNGU5MWI0NjcyOWQ3M2EyN2ZiNTdlOQ==".encode()
         return self._l10n_sa_generate_invoice_xml_hash(b64decode(e_invoice.attachment_id.datas), mode)
@@ -157,54 +158,6 @@ class AccountEdiFormat(models.Model):
             raise UserError(_("Only 'hexdigest' and 'digest' methods are supported when generating invoice hash"))
         return b64encode(xml_hash)
 
-    def _l10n_sa_get_qr_code(self, company_id, xml_content, from_pos):
-        """
-            Generate ZATCA compliant QR Code for a given invoice.
-            Requirements for Phase 2 are different than the ones for Phase 1.
-
-        :param invoice: The invoice for which the QR code will be generated
-        :param xml_content: Rendered UBL content for the invoice
-        :return: b64 encoded QR code string
-        """
-
-        qr_code_str = ''
-        root = etree.fromstring(xml_content)
-
-        def get_qr_encoding(tag, field, int_length=1):
-            company_name_tag_encoding = tag.to_bytes(length=1, byteorder='big')
-            company_name_length_encoding = len(field).to_bytes(length=int_length, byteorder='big')
-            return company_name_tag_encoding + company_name_length_encoding + field
-
-        def xpath_ns(expr):
-            return root.xpath(expr, namespaces=self._l10n_sa_get_namespaces())[0].text.strip()
-
-        invoice_date = xpath_ns('//cbc:IssueDate')
-        invoice_time = xpath_ns('//cbc:IssueTime')
-        invoice_datetime = datetime.strptime(invoice_date + ' ' + invoice_time, '%Y-%m-%d %H:%M:%S')
-
-        amount_total = float(xpath_ns('//cbc:TaxInclusiveAmount'))
-        amount_tax = float(xpath_ns('//cac:TaxTotal/cbc:TaxAmount'))
-
-        if invoice_datetime and company_id.vat:
-            x509_certificate = load_der_x509_certificate(b64decode(xpath_ns('//ds:X509Certificate')), default_backend())
-            seller_name_enc = get_qr_encoding(1, company_id.display_name.encode())
-            seller_vat_enc = get_qr_encoding(2, company_id.vat.encode())
-            timestamp_enc = get_qr_encoding(3, invoice_datetime.strftime("%Y-%m-%dT%H:%M:%SZ").encode())
-            amount_total_enc = get_qr_encoding(4, float_repr(abs(amount_total), 2).encode())
-            amount_tax_enc = get_qr_encoding(5, float_repr(abs(amount_tax), 2).encode())
-            invoice_hash_enc = get_qr_encoding(6, xpath_ns('//ds:SignedInfo/ds:Reference/ds:DigestValue').encode())
-            signature_enc = get_qr_encoding(7, xpath_ns('//ds:SignatureValue').encode())
-            public_key_enc = get_qr_encoding(8, x509_certificate.public_key().public_bytes(Encoding.DER, PublicFormat.SubjectPublicKeyInfo))
-
-            str_to_encode = (seller_name_enc + seller_vat_enc + timestamp_enc + amount_total_enc +
-                             amount_tax_enc + invoice_hash_enc + signature_enc + public_key_enc)
-
-            if from_pos:
-                str_to_encode += get_qr_encoding(9, x509_certificate.signature)
-
-            qr_code_str = b64encode(str_to_encode).decode()
-        return qr_code_str
-
     @api.model
     def _l10n_sa_get_digital_signature(self, company_id, invoice_hash):
         """
@@ -248,10 +201,10 @@ class AccountEdiFormat(models.Model):
         signed_properties_final = etree.tostring(etree.fromstring(signed_properties_final))
         return b64encode(sha256(signed_properties_final).hexdigest().encode()).decode()
 
-    def _l10n_sa_sign_xml(self, company_id, xml_content, certificate_str, from_pos=False):
+    def _l10n_sa_sign_xml(self, xml_content, certificate_str, signature):
         """
             Function that signs XML content of a UBL document with a provided B64 encoded X509 certificate
-        :param company_id: Company id to be used for signing
+        :param invoice: Invoice to be submitted
         :param xml_content: XML content of the UBL document to be signed
         :param certificate_str: Base64 encoded stringself.env.ref('l10n_sa_edi.export_sa_zatca_ubl_signed_properties')._render(cert_data) of the X509 certificate
         :return: signed xml content
@@ -281,31 +234,13 @@ class AccountEdiFormat(models.Model):
         _set_content('public_key_hashing', public_key_hashing)
 
         prehash_content = etree.tostring(root)
-        invoice_hash_hex = self._l10n_sa_generate_invoice_xml_hash(prehash_content).decode()
         invoice_hash = self._l10n_sa_generate_invoice_xml_hash(prehash_content, 'digest')
-        digital_signature = self._l10n_sa_get_digital_signature(company_id, invoice_hash_hex)
 
         _set_content('invoice_hash', invoice_hash)
         _set_content('x509_certificate', b64_decoded_cert.decode())
-        _set_content('digital_signature', digital_signature)
+        _set_content('digital_signature', signature)
         _set_content('signed_properties_hashing', signed_properties_hash)
 
-        final_xml = etree.tostring(root, with_tail=False)
-
-        if from_pos:
-            final_xml = self._l10n_sa_apply_qr_code(company_id, final_xml, from_pos)
-
-        return final_xml
-
-    def _l10n_sa_apply_qr_code(self, company_id, xml_content, from_pos=False):
-        """
-            Apply QR code on Invoice UBL content
-        :return: XML content with QR code applied
-        """
-        root = etree.fromstring(xml_content)
-        qr_code = self._l10n_sa_get_qr_code(company_id, xml_content, from_pos)
-        qr_node = root.xpath('//*[local-name()="ID"][text()="QR"]/following-sibling::*/*')[0]
-        qr_node.text = qr_code
         return etree.tostring(root, with_tail=False)
 
     # ====== API Helper Methods =======
@@ -319,7 +254,7 @@ class AccountEdiFormat(models.Model):
         :return: Results of the API call
         :rtype: dict
         """
-        api_url = ZATCA_API_URLS['production' if self.env.company.l10n_sa_production_env else 'sandbox']
+        api_url = ZATCA_API_URLS[self.env.company.l10n_sa_api_mode]
         request_url = api_url + request_url
         try:
             request_response = requests.request(method, request_url, data=request_data.get('body'),
@@ -364,6 +299,10 @@ class AccountEdiFormat(models.Model):
         return response_data
 
     def _l10n_sa_api_headers(self):
+        """
+            Return the base headers to be included in ZATCA API calls
+        :return:
+        """
         return {
             'Content-Type': 'application/json',
             'Accept-Language': 'en',
@@ -371,27 +310,22 @@ class AccountEdiFormat(models.Model):
         }
 
     def _l10n_sa_authorization_header(self, CSID_data):
+        """
+            Compute the Authorization header by combining the CSID and the Secret key, then encode to Base64
+        :param CSID_data: Either CCSID or PCSID data
+        :return: Authorization Header
+        """
         auth_str = "%s:%s" % (CSID_data['binarySecurityToken'], CSID_data['secret'])
         return 'Basic ' + b64encode(auth_str.encode()).decode()
 
-    def _l10n_sa_assert_clearance_results(self, invoice, clearance_data):
+    def _l10n_sa_assert_clearance_status(self, invoice, clearance_data):
         """
-            Check clearance/reporting api results for success/errors
+            Assert Clearance status. To be overridden in case there are any other cases to be accounted for
+        :param invoice: Cleared invoice
+        :param clearance_data: Results of the clearance process
         """
-        if clearance_data.get('error'):
-            errors = json.loads(clearance_data['error'])
-            validation_results = errors.get('validationResults', {})
-            error_msg = ''
-            for err in validation_results.get('warningMessages', []):
-                error_msg += '\n - %s | %s' % (err['code'], err['message'])
-            for err in validation_results.get('errorMessages', []):
-                error_msg += '\n - %s | %s' % (err['code'], err['message'])
-            raise UserError(_("Invoice submissions failed: %s ") % error_msg)
-        mode = 'reporting' if invoice.l10n_sa_pos_origin else 'clearance'
-        if mode == 'clearance' and clearance_data.get('clearanceStatus', '') != 'CLEARED':
+        if clearance_data.get('clearanceStatus', '') != 'CLEARED':
             raise UserError(_("Invoice could not be cleared: \r\n %s ") % clearance_data)
-        elif mode == 'reporting' and clearance_data.get('reportingStatus', '') != 'REPORTED':
-            raise UserError(_("Invoice could not be reported: \r\n %s ") % clearance_data)
 
     # ====== API Calls to ZATCA =======
 
@@ -471,6 +405,14 @@ class AccountEdiFormat(models.Model):
         }
         return self._l10n_sa_call_api(request_data, ZATCA_API_URLS['apis']['compliance'], 'POST')
 
+    def _l10n_sa_get_api_clearance(self, invoice):
+        """
+            Return the API to be used for clearance. To be overridden to account for other cases, such as reporting.
+        :param invoice: Invoice to be cleared
+        :return: Clearance API Url
+        """
+        return ZATCA_API_URLS['apis']['clearance']
+
     def _l10n_sa_api_clearance(self, invoice, xml_content, PCSID_data):
         """
             API call to the CLEARANCE/REPORTING endpoint to sign an invoice
@@ -496,7 +438,7 @@ class AccountEdiFormat(models.Model):
                 'Clearance-Status': '1'
             }
         }
-        url_string = ZATCA_API_URLS['apis']['reporting' if invoice.l10n_sa_pos_origin else 'clearance']
+        url_string = self._l10n_sa_get_api_clearance(invoice)
         return self._l10n_sa_call_api(request_data, url_string, 'POST')
 
     # ====== Certificate Methods =======
@@ -553,25 +495,11 @@ class AccountEdiFormat(models.Model):
         :rtype: dict
         """
         values = self._get_ubl_values(invoice)
-        # Get the payment means from the pos's payment method, else use 'unknown' until a payment is registered
-        # for the invoice.
-        payment_means = 'unknown'
-        if invoice.l10n_sa_pos_origin:
-            payment_means = invoice.pos_order_ids.payment_ids.payment_method_id.type
-        is_export_invoice = invoice.partner_id.country_id != invoice.company_id.country_id and not invoice.l10n_sa_pos_origin
+        is_export_invoice = invoice.partner_id.country_id != invoice.company_id.country_id
         values.update({
             'type_code': 383 if invoice.debit_origin_id else 381 if invoice.move_type == 'out_refund' else 388,
-            'payment_means_code': {
-                'bank': 42,
-                'card': 48,
-                'cash': 10,
-                'transfer': 30,
-                'unknown': 1
-            }[payment_means],
-            'invoice_transaction_code': '0%s00%s00' % (
-                '2' if invoice.l10n_sa_pos_origin else '1',
-                '1' if is_export_invoice else '0'
-            ),
+            'payment_means_code': 1,
+            'invoice_transaction_code': '0100%s00' % ('1' if is_export_invoice else '0'),
             'is_export_invoice': is_export_invoice,
             'invoice_datetime': self._l10n_sa_get_zatca_datetime(invoice.l10n_sa_confirmation_datetime),
             'previous_invoice_hash': self._l10n_sa_generate_invoice_hash(invoice._l10n_sa_get_previous_invoice()),
@@ -602,11 +530,6 @@ class AccountEdiFormat(models.Model):
         ns_map = {'ext': 'urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2'}
         etree.cleanup_namespaces(root, top_nsmap=ns_map, keep_ns_prefixes=['ext'])
 
-        # Generate QR code and insert into UBL file
-        qr_code_el = root.xpath('//*[@id="invoiceQR"]')[0]
-        qr_code_el.text = invoice.l10n_sa_qr_code_str
-        qr_code_el.attrib.pop('id')
-
         return etree.tostring(root, with_tail=False).decode()
 
     def _l10n_sa_generate_zatca_template(self, invoice, invoice_values):
@@ -619,25 +542,46 @@ class AccountEdiFormat(models.Model):
         xml_content = self.env.ref('l10n_sa_edi.export_sa_zatca_invoice')._render(invoice_values)
         return self._l10n_sa_postprocess_zatca_template(invoice, xml_content, invoice_values)
 
-    def _l10n_sa_submit_einvoice(self, invoice, xml_content):
+    def _l10n_sa_submit_einvoice(self, invoice, signed_xml, PCSID_data):
         """
             Submit a generated Invoice UBL file by making calls to the following APIs:
                 -   A. Clearance API: Submit a standard Invoice to ZATCA for validation, returns signed UBL
                 -   B. Reporting API: Submit a simplified Invoice to ZATCA for validation
         :return: Signed Invoice's XML content string
         """
-        company_id = invoice.company_id
-        pos_origin = bool(invoice.pos_order_ids)
-        PCSID_data = self._l10n_sa_api_get_pcsid(invoice.journal_id)
-        x509_cert = PCSID_data['binarySecurityToken']
-        signed_xml = self._l10n_sa_sign_xml(company_id, xml_content, x509_cert, pos_origin)
         clearance_data = self._l10n_sa_api_clearance(invoice, signed_xml.decode(), PCSID_data)
-        self._l10n_sa_assert_clearance_results(invoice, clearance_data)
-        if invoice.l10n_sa_pos_origin:
-            # if invoice originates from POS, it is a SIMPLIFIED invoice, and thus it is only reported and returns
-            # no signed invoice. In this case, we just return the original content
-            return signed_xml.decode()
+        if clearance_data.get('error'):
+            errors = json.loads(clearance_data['error'])
+            validation_results = errors.get('validationResults', {})
+            error_msg = ''
+            for err in validation_results.get('warningMessages', []):
+                error_msg += '\n - %s | %s' % (err['code'], err['message'])
+            for err in validation_results.get('errorMessages', []):
+                error_msg += '\n - %s | %s' % (err['code'], err['message'])
+            raise UserError(_("Invoice submissions failed: %s ") % error_msg)
+        self._l10n_sa_assert_clearance_status(invoice, clearance_data)
+        return clearance_data
+
+    def _l10n_sa_post_einvoice_submission(self, invoice, signed_xml, clearance_data):
+        """
+            Once an invoice has been successfully submitted, it is returned as a Cleared invoice, on which data
+            from ZATCA was applied. To be overridden to account for other cases, such as Reporting.
+        :param invoice: Cleared Invoice
+        :param signed_xml: XML Data sent to ZATCA
+        :param clearance_data: Data received from ZATCA
+        :return: Cleared XML content
+        """
         return b64decode(clearance_data['clearedInvoice']).decode()
+
+    def _l10n_sa_get_signed_xml(self, invoice, unsigned_xml, x509_cert):
+        """
+            Helper method
+        :param invoice: Invoice to be signed
+        :param unsigned_xml: Unsigned XML Content
+        :param x509_cert: PCSID to be used for signing
+        :return: Signed XML Content
+        """
+        return self._l10n_sa_sign_xml(unsigned_xml, x509_cert, invoice.l10n_sa_unsigned_xml_signature)
 
     def _l10n_sa_export_zatca_invoice(self, invoice):
         """
@@ -648,15 +592,26 @@ class AccountEdiFormat(models.Model):
         :rtype: ir.attachment recordset
         """
         self.ensure_one()
-        # Create file content.
-        invoice_values = self._l10n_sa_prepare_values(invoice)
-        unsigned_xml = self._l10n_sa_generate_zatca_template(invoice, invoice_values)
-        cleared_xml = self._l10n_sa_submit_einvoice(invoice, unsigned_xml)
+
+        # Prepare UBL invoice values and render XML file
+        unsigned_xml = invoice.l10n_sa_unsigned_xml_data
+
+        # Load PCISD data and X509 certificate
+        PCSID_data = self._l10n_sa_api_get_pcsid(invoice.journal_id)
+        x509_cert = PCSID_data['binarySecurityToken']
+
+        # Apply Signature/QR code on the generated XML document and submit it
+        signed_xml = self._l10n_sa_get_signed_xml(invoice, unsigned_xml, x509_cert)
+        clearance_data = self._l10n_sa_submit_einvoice(invoice, signed_xml, PCSID_data)
+
+        # Once submission is done, check submission status
+        cleared_xml = self._l10n_sa_post_einvoice_submission(invoice, signed_xml, clearance_data)
+
+        # The ZATCA naming convention follows the following business rules:
+        # Seller Vat Number (BT-31), Date (BT-2), Time (KSA-25), Invoice Number (BT-1)
         vat = invoice.company_id.partner_id.commercial_partner_id.vat
         invoice_number = re.sub("[^a-zA-Z0-9 -]", "-", invoice.name)
         invoice_date = self._l10n_sa_get_zatca_datetime(invoice.l10n_sa_confirmation_datetime)
-        # The ZATCA naming convention follows the following business rules:
-        # Seller Vat Number (BT-31), Date (BT-2), Time (KSA-25), Invoice Number (BT-1)
         xml_name = '%s_%s_%s.xml' % (vat, invoice_date.strftime('%Y%m%dT%H%M%S'), invoice_number)
         return self.env['ir.attachment'].create({
             'name': xml_name,
@@ -707,7 +662,7 @@ class AccountEdiFormat(models.Model):
         try:
             attachment = self._l10n_sa_export_zatca_invoice(invoice)
         except UserError as e:
-            return {'error': e.args[0]}
+            return {invoice:{'error': e.args[0]}}
         return {invoice: {'success': True, 'attachment': attachment}}
 
     # ====== EDI Format Overrides =======
@@ -796,8 +751,8 @@ class AccountEdiFormat(models.Model):
         if self.code != 'sa_zatca' or invoice.company_id.country_code != 'SA':
             return super()._post_invoice_edi(invoices)
         if not invoice.journal_id.l10n_sa_compliance_checks_passed:
-            return {'error': _("ZATCA Compliance Checks need to be completed for the current company "
-                              "before invoices can be submitted to the Authority")}
+            return {invoice: {'error': _("ZATCA Compliance Checks need to be completed for the current company "
+                               "before invoices can be submitted to the Authority")}}
         return self._l10n_sa_post_zatca_edi(invoices)
 
     def _cancel_invoice_edi(self, invoices):

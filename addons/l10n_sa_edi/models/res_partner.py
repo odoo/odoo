@@ -14,15 +14,20 @@ class ResPartner(models.Model):
         ('MLS', 'MLSD License'),
         ('SAG', 'Sagia License'),
         ('OTH', 'Other OD')
-    ], default="CRN", string="Identification Scheme", help="Seller Identification scheme")
+    ], default="CRN", string="Identification Scheme", help="Additional Identification scheme for Seller/Buyer")
 
-    l10n_sa_additional_identification_number = fields.Char("Identification Number", copy=False, help="Seller Identification Number")
-
-    def _display_address_depends(self):
-        return super(ResPartner, self)._display_address_depends() + ['l10n_sa_edi_building_number',
-                                                                     'l10n_sa_edi_plot_identification',
-                                                                     'l10n_sa_edi_neighborhood']
+    l10n_sa_additional_identification_number = fields.Char("Identification Number",
+                                                           help="Additional Identification Number for Seller/Buyer")
 
     @api.model
-    def _get_default_address_format(self):
-        return "%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(l10n_sa_edi_building_number)s %(l10n_sa_edi_plot_identification)s\n%(l10n_sa_edi_neighborhood)s\n%(country_name)s"
+    def _commercial_fields(self):
+        return super()._commercial_fields() + ['l10n_sa_edi_building_number',
+                                               'l10n_sa_edi_plot_identification',
+                                               'l10n_sa_edi_neighborhood',
+                                               'l10n_sa_additional_identification_scheme',
+                                               'l10n_sa_additional_identification_number']
+
+    def _address_fields(self):
+        return super()._address_fields() + ['l10n_sa_edi_building_number',
+                                            'l10n_sa_edi_plot_identification',
+                                            'l10n_sa_edi_neighborhood']

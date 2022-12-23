@@ -4,7 +4,7 @@ from odoo import models, fields, api, _
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    l10n_sa_production_env = fields.Boolean(related='company_id.l10n_sa_production_env', readonly=False)
+    l10n_sa_api_mode = fields.Selection(related='company_id.l10n_sa_api_mode', readonly=False)
 
     @api.depends('company_id')
     def _compute_company_informations(self):

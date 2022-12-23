@@ -3,6 +3,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 from odoo.modules.module import get_module_resource
 from datetime import datetime
+from base64 import b64decode, b64encode
 from lxml import etree
 
 
@@ -23,6 +24,10 @@ class AccountJournal(models.Model):
     l10n_sa_compliance_checks_passed = fields.Boolean("Compliance Checks Done", default=False, copy=False,
                                                       help="Specifies if the Compliance Checks have been completed successfully")
 
+    def _l10n_sa_csr_required_fields(self):
+        return ['l10n_sa_private_key', 'l10n_sa_serial_number', 'l10n_sa_organization_unit', 'vat', 'name', 'city',
+                'country_id', 'state_id']
+
     @api.depends('company_id.l10n_sa_private_key', 'company_id.l10n_sa_serial_number',
                  'company_id.l10n_sa_organization_unit', 'company_id.vat', 'company_id.name', 'company_id.city',
                  'company_id.country_id', 'company_id.state_id')
@@ -33,10 +38,14 @@ class AccountJournal(models.Model):
         """
         for journal in self:
             journal._l10n_sa_reset_certificates()
-            if journal.company_id.l10n_sa_private_key and journal.company_id.l10n_sa_serial_number:
+            if all(journal.company_id[f] for f in self._l10n_sa_csr_required_fields()):
                 journal.l10n_sa_csr = journal.company_id._l10n_sa_generate_company_csr()
 
     def l10n_sa_regen_csr(self):
+        self.ensure_one()
+        if any(not self.company_id[f] for f in self._l10n_sa_csr_required_fields()):
+            raise UserError(_("Please, make sure all the following fields have been correctly set on the Company: \n")
+                            + "\n".join(" - %s" % self.company_id._fields[f].string for f in self._l10n_sa_csr_required_fields() if not self.company_id[f]))
         self._l10n_sa_compute_csr()
 
     @api.depends('l10n_sa_production_csid_json')
@@ -120,13 +129,23 @@ class AccountJournal(models.Model):
         return self.env.ref('l10n_sa_edi.edi_sa_zatca')._l10n_sa_api_compliance_checks(signed_xml, ccsid)
 
     @api.model
-    def _l10n_sa_sign_xml(self, company_id, xml_content, certificate_str, from_pos=False):
+    def _l10n_sa_sign_xml(self, xml_content, certificate_str, signature):
         """
             Helper function that calls the _l10n_sa_sign_xml method available on the EDI Format model to sign
             the UBL document of an invoice
         """
-        return self.env.ref('l10n_sa_edi.edi_sa_zatca')._l10n_sa_sign_xml(company_id, xml_content, certificate_str,
-                                                                          from_pos)
+        return self.env.ref('l10n_sa_edi.edi_sa_zatca')._l10n_sa_sign_xml(xml_content, certificate_str, signature)
+
+    def _l10n_sa_get_compliance_files(self):
+        """
+            Return the list of files to be used for the compliance checks.
+        """
+        file_names, compliance_files = ['standard/invoice.xml', 'standard/credit.xml', 'standard/debit.xml'], {}
+        for file in file_names:
+            fpath = get_module_resource('l10n_sa_edi', 'tests/compliance', file)
+            with open(fpath, 'rb') as ip:
+                compliance_files[file] = ip.read().decode()
+        return compliance_files
 
     def l10n_sa_run_compliance_checks(self):
         """
@@ -144,23 +163,31 @@ class AccountJournal(models.Model):
             raise UserError(_("Compliance checks can only be run for companies operating from KSA"))
         if not self.l10n_sa_compliance_csid_json:
             raise UserError(_("You need to request the CCSID first before you can proceed"))
-        file_names, compliance_files = ['standard/invoice.xml', 'standard/credit.xml', 'standard/debit.xml',
-                                        'simplified/invoice.xml', 'simplified/credit.xml', 'simplified/debit.xml'], {}
+        edi_format = self.env.ref('l10n_sa_edi.edi_sa_zatca')
         CCSID_data = json.loads(self.l10n_sa_compliance_csid_json)
-        for file in file_names:
-            fpath = get_module_resource('l10n_sa_edi', 'tests/compliance', file)
-            with open(fpath, 'rb') as ip:
-                compliance_files[file] = ip.read().decode()
+        compliance_files = self._l10n_sa_get_compliance_files()
         for fname, fval in compliance_files.items():
-            file_xml = self._l10n_sa_prepare_invoice_xml(fval)
-            signed_xml = self._l10n_sa_sign_xml(self.company_id, file_xml, CCSID_data['binarySecurityToken'],
-                                                'simplified' in fname)
-            result = self._l10n_sa_api_compliance_checks(signed_xml.decode(), CCSID_data)
+            invoice_hash_hex = edi_format._l10n_sa_generate_invoice_xml_hash(fval).decode()
+            digital_signature = edi_format._l10n_sa_get_digital_signature(self.company_id, invoice_hash_hex).decode()
+            prepared_xml = self._l10n_sa_prepare_compliance_xml(fname, fval, CCSID_data['binarySecurityToken'], digital_signature)
+            result = self._l10n_sa_api_compliance_checks(prepared_xml.decode(), CCSID_data)
             if result.get('error'):
                 raise UserError(_("Could not complete Compliance Checks for the following file: %s") % fname)
             if result['validationResults']['status'] != 'PASS':
                 raise UserError(_("Could not complete Compliance Checks for the following file: %s") % fname)
         self.l10n_sa_compliance_checks_passed = True
+
+    def _l10n_sa_prepare_compliance_xml(self, xml_name, xml_raw, PCSID, signature):
+        """
+            Prepare XML content to be used for Compliance checks
+        :param xml_name: Name of the compliance file to be used
+        :param xml_raw: Raw content of the compliance file
+        :param PCSID: X509 certificate obtained for the journal
+        :return: prepared & signed xml content for compliance checks
+        """
+        xml_content = self._l10n_sa_prepare_invoice_xml(xml_raw)
+        signed_xml = self._l10n_sa_sign_xml(xml_content, PCSID, signature)
+        return signed_xml
 
     def _l10n_sa_prepare_invoice_xml(self, xml_content):
         """
@@ -192,4 +219,4 @@ class AccountJournal(models.Model):
             completed
         """
         self.ensure_one()
-        return self.l10n_sa_compliance_csid_json and self.l10n_sa_production_csid_json and self.l10n_sa_compliance_checks_passed
+        return self.country_code != 'SA' or self.l10n_sa_production_csid_json

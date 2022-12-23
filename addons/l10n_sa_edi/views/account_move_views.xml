@@ -9,6 +9,7 @@
                 <field name="l10n_sa_reversal_reason"
                        attrs="{'invisible': [('move_type', 'not in', ('out_refund', 'in_refund'))]}"/>
             </field>
+            <button name="button_cancel_posted_moves" position="replace"/>
         </field>
     </record>
 </odoo>

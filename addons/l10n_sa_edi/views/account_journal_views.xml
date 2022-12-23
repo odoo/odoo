@@ -8,12 +8,13 @@
             <field name="inherit_id" ref="account.view_account_journal_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook" position="inside">
-                    <field name="l10n_sa_compliance_checks_passed" invisible="1"/>
+                    <field name="l10n_sa_csr" invisible="1"/>
                     <field name="l10n_sa_compliance_csid_json" invisible="1"/>
                     <field name="l10n_sa_production_csid_json" invisible="1"/>
+                    <field name="l10n_sa_compliance_checks_passed" invisible="1"/>
                     <page name="zatca_einvoicing" string="ZATCA" attrs="{'invisible': [('country_code', '!=', 'SA')]}">
                         <p>
-                            <b>In order to be able to submit Invoices to ZATCA, the following steps needs to be
+                            <b>In order to be able to submit Invoices to ZATCA, the following steps need to be
                                 completed:
                             </b>
                             <ol class="mt-2 mb-4">
@@ -35,7 +36,17 @@
                             </ol>
                         </p>
                         <div class="alert alert-info d-flex justify-content-between align-items-center" role="alert"
-                             attrs="{'invisible':[('l10n_sa_compliance_csid_json', '!=', False)]}">
+                             attrs="{'invisible':[('l10n_sa_csr', '!=', False)]}">
+                            <p class="mb-0">
+                                Generate a CSR before starting the onboarding process.
+                            </p>
+                            <button name="l10n_sa_regen_csr" type="object" icon="fa-key"
+                                    class="btn-info ">
+                                Generate a CSR
+                            </button>
+                        </div>
+                        <div class="alert alert-info d-flex justify-content-between align-items-center" role="alert"
+                             attrs="{'invisible':['|', ('l10n_sa_compliance_csid_json', '!=', False), ('l10n_sa_csr', '=', False)]}">
                             <p class="mb-0">
                                 Step 1: The Compliance CSID needs to be obtained before running the Compliance Checks.
                             </p>
@@ -45,7 +56,7 @@
                             </button>
                         </div>
                         <div class="alert alert-warning d-flex justify-content-between align-items-center" role="alert"
-                             attrs="{'invisible':['|', ('l10n_sa_compliance_checks_passed', '=', True), ('l10n_sa_compliance_csid_json', '=', False)]}">
+                             attrs="{'invisible':['|', ('l10n_sa_compliance_csid_json', '=', False), ('l10n_sa_compliance_checks_passed', '=', True)]}">
                             <p class="mb-0">
                                 Step 2: The compliance checks need to be completed before requesting a Production CSID
                             </p>
@@ -55,7 +66,7 @@
                             </button>
                         </div>
                         <div class="alert alert-info d-flex justify-content-between align-items-center" role="alert"
-                             attrs="{'invisible':[('l10n_sa_compliance_csid_json', '=', False)]}">
+                             attrs="{'invisible':[('l10n_sa_compliance_checks_passed', '=', False)]}">
                             <p class="mb-0" attrs="{'invisible': [('l10n_sa_production_csid_json', '!=', False)]}">
                                 Step 3: The Production CSID needs to be obtained before any invoice can be
                                 submitted to ZATCA. If it is expired, it needs to be renewed.
@@ -76,7 +87,8 @@
                                 Renew Production CSID
                             </button>
                         </div>
-                        <button name="l10n_sa_regen_csr" type="object" icon="fa-key" class="btn-danger mt8" groups="base.group_no_one">
+                        <button name="l10n_sa_regen_csr" type="object" icon="fa-key" class="btn-danger mt8"
+                                attrs="{'invisible':[('l10n_sa_csr', '=', False)]}" groups="base.group_no_one">
                             Regenerate the CSR
                         </button>
                     </page>

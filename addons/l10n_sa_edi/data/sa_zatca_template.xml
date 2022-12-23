@@ -82,6 +82,7 @@
                 </ext:UBLExtension>
             </ext:UBLExtensions>
         </template>
+
         <template id="export_sa_zatca_ubl_signed_properties">
             <xades:SignedProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" Id="xadesSignedProperties">
                 <xades:SignedSignatureProperties>
@@ -166,17 +167,6 @@
                 <cbc:TaxAmount t-att-currencyID="record.currency_id.name"
                     t-esc="format_monetary(record.amount_tax)" />
             </cac:TaxTotal>
-        </template>
-
-        <template id="export_sa_zatca_invoice_qr_code">
-            <cac:AdditionalDocumentReference xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
-                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
-                <cbc:ID>QR</cbc:ID>
-                <cac:Attachment>
-                    <cbc:EmbeddedDocumentBinaryObject mimeCode="text/plain" id="invoiceQR" />
-                </cac:Attachment>
-            </cac:AdditionalDocumentReference>
         </template>
 
         <template id="export_sa_zatca_invoice_previous_hash">
@@ -265,6 +255,7 @@
                     <cbc:IssueTime t-esc="invoice_datetime.strftime('%H:%M:%S')" />
                 </t>
             </xpath>
+
             <!-- Add Invoice UUID in compliance with rule BR-KSA-03 -->
             <xpath expr="//*[local-name()='Invoice']/*[local-name()='ID']" position="after">
                 <cbc:UUID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
@@ -291,20 +282,10 @@
                         <cbc:ID t-esc="(record.reversed_entry_id.name or record.ref) if type_code == 381 else record.debit_origin_id.name" />
                     </cac:InvoiceDocumentReference>
                 </cac:BillingReference>
-                <!-- Add QR Code in compliance with rule BR-KSA-27 -->
-                <t t-call="l10n_sa_edi.export_sa_zatca_invoice_qr_code" />
                 <!-- Add Previous Invoice Hash in compliance with rule BR-KSA-61 -->
                 <t t-call="l10n_sa_edi.export_sa_zatca_invoice_previous_hash" />
                 <!-- Add Invoice Counter Value in compliance with rules BR-KSA-33 and BR-KSA-34 -->
                 <t t-call="l10n_sa_edi.export_sa_zatca_invoice_counter_value" />
-                <!-- Add Signature references in compliance with rules BR-KSA-29 and BR-KSA-30 -->
-                <cac:Signature t-if="record.l10n_sa_pos_origin"
-                    xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
-                    xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-                    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
-                    <cbc:ID>urn:oasis:names:specification:ubl:signature:Invoice</cbc:ID>
-                    <cbc:SignatureMethod>urn:oasis:names:specification:ubl:dsig:enveloped:xades</cbc:SignatureMethod>
-                </cac:Signature>
             </xpath>
             <!-- Add the following elements in the Accounting parties elements:
                     -   Seller/Buyer name in compliance with rules BR-06 and BT-44 of the EN 16931 standard

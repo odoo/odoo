@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="export_sa_zatca_invoice_qr_code">
+            <cac:AdditionalDocumentReference xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                                             xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                                             xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:ID>QR</cbc:ID>
+                <cac:Attachment>
+                    <cbc:EmbeddedDocumentBinaryObject mimeCode="text/plain"/>
+                </cac:Attachment>
+            </cac:AdditionalDocumentReference>
+        </template>
+
+        <template id="export_sa_zatca_invoice_signature_refs">
+            <cac:Signature xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                           xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                           xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:ID>urn:oasis:names:specification:ubl:signature:Invoice</cbc:ID>
+                <cbc:SignatureMethod>urn:oasis:names:specification:ubl:dsig:enveloped:xades</cbc:SignatureMethod>
+            </cac:Signature>
+        </template>
+
+        <template id="export_sa_zatca_invoice_pos" inherit_id="l10n_sa_edi.export_sa_zatca_invoice">
+            <xpath expr="//*[local-name()='BillingReference']" position="after">
+                <!-- Add QR Code in compliance with rule BR-KSA-27 -->
+                <t t-if="record.pos_order_ids" t-call="l10n_sa_edi_pos.export_sa_zatca_invoice_qr_code"/>
+            </xpath>
+            <xpath expr="//t[@t-call='l10n_sa_edi.export_sa_zatca_invoice_counter_value']" position="after">
+                <!-- Add Signature references in compliance with rules BR-KSA-29 and BR-KSA-30 -->
+                <t t-if="record.pos_order_ids" t-call="l10n_sa_edi_pos.export_sa_zatca_invoice_signature_refs"/>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>
