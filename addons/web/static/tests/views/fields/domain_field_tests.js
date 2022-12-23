@@ -32,6 +32,7 @@ QUnit.module("Fields", (hooks) => {
                         },
                         bar: { string: "Bar", type: "boolean", default: true },
                         int_field: { string: "int_field", type: "integer" },
+                        image: { string: "Picture", type: "binary", searchable: true },
                     },
                     records: [
                         {
@@ -194,6 +195,30 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".o_field_domain").textContent.includes("Color index"),
             "field selector readonly value should now contain 'Color index'"
         );
+    });
+
+    QUnit.test("using binary field in domain widget", async function (assert) {
+        assert.expect(0);
+        serverData.models.partner.records[0].foo = "[]";
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="foo" widget="domain" options="{'model': 'partner'}" />
+                        </group>
+                    </sheet>
+                </form>`,
+        });
+
+        await click(target, ".o_domain_add_first_node_button");
+        await click(target, ".o_field_selector");
+        await click(document.body.querySelector(".o_field_selector_item[data-name='image']"));
     });
 
     QUnit.test("domain field is correctly reset on every view change", async function (assert) {
