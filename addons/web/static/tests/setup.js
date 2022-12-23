@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import core, { _t } from "web.core";
+import { _t } from "web.core";
+import LegacyBus from "web.Bus";
 import session from "web.session";
 import { assets, templates } from "@web/core/assets";
 import { browser, makeRAMLocalStorage } from "@web/core/browser/browser";
@@ -210,16 +211,14 @@ function patchBodyAddEventListener() {
     });
 }
 
-function patchLegacyCoreBus() {
+function patchLegacyBus() {
     // patch core.bus.on to automatically remove listners bound on the legacy bus
     // during a test (e.g. during the deployment of a service)
-    const originalOn = core.bus.on.bind(core.bus);
-    const originalOff = core.bus.off.bind(core.bus);
-    patchWithCleanup(core.bus, {
+    patchWithCleanup(LegacyBus.prototype, {
         on() {
-            originalOn(...arguments);
+            this._super(...arguments);
             registerCleanup(() => {
-                originalOff(...arguments);
+                this.off(...arguments);
             });
         },
     });
@@ -359,7 +358,7 @@ export async function setupTests() {
         cleanLoadedLanguages();
         patchBrowserWithCleanup();
         patchBodyAddEventListener();
-        patchLegacyCoreBus();
+        patchLegacyBus();
         patchOdoo();
         patchSessionInfo();
     });
