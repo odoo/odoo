@@ -7,6 +7,7 @@ import { click, getFixture, mount } from "../helpers/utils";
 import { setupViewRegistries } from "../views/helpers";
 
 import { Component, xml, useState } from "@odoo/owl";
+import { editInput } from "@web/../tests/helpers/utils";
 
 let serverData;
 let target;
@@ -182,5 +183,51 @@ QUnit.module("Record Component", (hooks) => {
         });
         assert.verifySteps([]);
         assert.strictEqual(target.querySelector(".o_field_widget input").value, "abc");
+    });
+
+    QUnit.test("provides a way to handle changes in the record", async function (assert) {
+        class Parent extends Component {
+            setup() {
+                this.fields = {
+                    foo: {
+                        name: "foo",
+                        type: "char",
+                    },
+                    bar: {
+                        name: "bar",
+                        type: "boolean",
+                    },
+                };
+                this.values = {
+                    foo: "abc",
+                    bar: true,
+                };
+            }
+
+            onRecordChanged(record, changes) {
+                assert.step("record changed");
+                assert.strictEqual(record.model.constructor.name, "RelationalModel");
+                assert.deepEqual(changes, { foo: "753" });
+            }
+        }
+        Parent.components = { Record, Field };
+        Parent.template = xml`
+            <Record resModel="'partner'" fieldNames="['foo']" fields="fields" initialValues="values" t-slot-scope="data" onRecordChanged.bind="onRecordChanged">
+                <Field name="'foo'" record="data.record"/>
+            </Record>
+        `;
+
+        await mount(Parent, target, {
+            env: await makeTestEnv({
+                serverData,
+                mockRPC(route) {
+                    assert.step(route);
+                },
+            }),
+        });
+        assert.strictEqual(target.querySelector("[name='foo'] input").value, "abc");
+        await editInput(target, "[name='foo'] input", "753");
+        assert.verifySteps(["record changed"]);
+        assert.strictEqual(target.querySelector("[name='foo'] input").value, "753");
     });
 });
