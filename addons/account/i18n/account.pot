@@ -1232,7 +1232,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
-#: model:ir.model,name:account.model_account_account
+#: code:addons/account/wizard/accrued_orders.py:0
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_id
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__account_id
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line_template__account_id
@@ -1437,6 +1437,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_taxcloud
+#: model:ir.model.fields,field_description:account.field_res_config_test__module_account_taxcloud
 msgid "Account TaxCloud"
 msgstr ""
 
@@ -1478,6 +1479,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
+#: model:ir.model.fields,help:account.field_res_config_test__account_journal_early_pay_discount_loss_account_id
 msgid ""
 "Account for the difference amount after the expense discount has been "
 "granted"
@@ -1485,6 +1487,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
+#: model:ir.model.fields,help:account.field_res_config_test__account_journal_early_pay_discount_gain_account_id
 msgid ""
 "Account for the difference amount after the income discount has been granted"
 msgstr ""
@@ -1542,6 +1545,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_chart_template__property_cash_basis_base_account_id
 #: model:ir.model.fields,help:account.field_res_company__account_cash_basis_base_account_id
 #: model:ir.model.fields,help:account.field_res_config_settings__account_cash_basis_base_account_id
+#: model:ir.model.fields,help:account.field_res_config_test__account_cash_basis_base_account_id
 msgid ""
 "Account that will be set on lines created in cash basis journal entry and "
 "used to keep track of the tax base amount."
@@ -1602,6 +1606,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
+#: model:ir.model.fields,field_description:account.field_res_config_test__module_account_accountant
 #: model:ir.ui.menu,name:account.account_account_menu
 #: model:ir.ui.menu,name:account.menu_finance_entries
 #: model_terms:ir.ui.view,arch_db:account.product_template_form_view
@@ -2118,6 +2123,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
+#: model:ir.model.fields,field_description:account.field_res_config_test__module_product_margin
 msgid "Allow Product Margin"
 msgstr ""
 
@@ -2128,6 +2134,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_check_printing
+#: model:ir.model.fields,field_description:account.field_res_config_test__module_account_check_printing
 msgid "Allow check printing and deposits"
 msgstr ""
 
@@ -2665,6 +2672,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_currency_rate_live
+#: model:ir.model.fields,field_description:account.field_res_config_test__module_currency_rate_live
 msgid "Automatic Currency Rates"
 msgstr ""
 
@@ -2878,6 +2886,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_suspense_account_id
+#: model:ir.model.fields,field_description:account.field_res_config_test__account_journal_suspense_account_id
 #, python-format
 msgid "Bank Suspense Account"
 msgstr ""
@@ -2896,6 +2905,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_suspense_account_id
+#: model:ir.model.fields,help:account.field_res_config_test__account_journal_suspense_account_id
 msgid ""
 "Bank Transactions are posted immediately after import or synchronization. Their counterparty is the bank suspense account.\n"
 "Reconciliation replaces the latter by the definitive account(s)."
@@ -2959,6 +2969,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_cash_basis_base_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_cash_basis_base_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_cash_basis_base_account_id
+#: model:ir.model.fields,field_description:account.field_res_config_test__account_cash_basis_base_account_id
 msgid "Base Tax Received Account"
 msgstr ""
 
@@ -3110,6 +3121,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_budget
+#: model:ir.model.fields,field_description:account.field_res_config_test__module_account_budget
 msgid "Budget Management"
 msgstr ""
 
@@ -3319,6 +3331,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_exigibility
+#: model:ir.model.fields,field_description:account.field_res_config_test__tax_exigibility
 msgid "Cash Basis"
 msgstr ""
 
@@ -3393,6 +3406,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
+#: model:ir.model.fields,field_description:account.field_res_config_test__account_journal_early_pay_discount_gain_account_id
 msgid "Cash Discount Gain account"
 msgstr ""
 
@@ -3405,6 +3419,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
+#: model:ir.model.fields,field_description:account.field_res_config_test__account_journal_early_pay_discount_loss_account_id
 msgid "Cash Discount Loss account"
 msgstr ""
 
@@ -3432,6 +3447,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
+#: model:ir.model.fields,field_description:account.field_res_config_test__group_cash_rounding
 msgid "Cash Rounding"
 msgstr ""
 
@@ -3833,6 +3849,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_chart_of_accounts
+#: model:ir.model.fields,field_description:account.field_res_config_test__has_chart_of_accounts
 msgid "Company has a chart of accounts"
 msgstr ""
 
@@ -4061,6 +4078,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_tax_group__country_code
 #: model:ir.model.fields,field_description:account.field_res_company__country_code
 #: model:ir.model.fields,field_description:account.field_res_config_settings__country_code
+#: model:ir.model.fields,field_description:account.field_res_config_test__country_code
 msgid "Country Code"
 msgstr ""
 
@@ -4511,6 +4529,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__currency_exchange_journal_id
+#: model:ir.model.fields,field_description:account.field_res_config_test__currency_exchange_journal_id
 msgid "Currency Exchange Journal"
 msgstr ""
 
@@ -4604,6 +4623,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_sale_delivery_address
+#: model:ir.model.fields,field_description:account.field_res_config_test__group_sale_delivery_address
 msgid "Customer Addresses"
 msgstr ""
 
@@ -4912,6 +4932,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_id
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Default Account"
 msgstr ""
 
@@ -4927,6 +4948,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_default_credit_limit
+#: model:ir.model.fields,field_description:account.field_res_config_test__account_default_credit_limit
 msgid "Default Credit Limit"
 msgstr ""
 
@@ -4958,6 +4980,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_purchase_tax_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__purchase_tax_id
+#: model:ir.model.fields,field_description:account.field_res_config_test__purchase_tax_id
 msgid "Default Purchase Tax"
 msgstr ""
 
@@ -4975,6 +4998,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__use_invoice_terms
+#: model:ir.model.fields,field_description:account.field_res_config_test__use_invoice_terms
 msgid "Default Terms & Conditions"
 msgstr ""
 
@@ -4991,6 +5015,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__incoterm_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__incoterm_id
+#: model:ir.model.fields,field_description:account.field_res_config_test__incoterm_id
 msgid "Default incoterm"
 msgstr ""
 
@@ -5361,6 +5386,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__qr_code
+#: model:ir.model.fields,field_description:account.field_res_config_test__qr_code
 msgid "Display SEPA QR-code"
 msgstr ""
 
@@ -5376,6 +5402,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__preview_ready
+#: model:ir.model.fields,field_description:account.field_res_config_test__preview_ready
 msgid "Display preview button"
 msgstr ""
 
@@ -5426,6 +5453,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_invoice_extract
+#: model:ir.model.fields,field_description:account.field_res_config_test__module_account_invoice_extract
 msgid "Document Digitization"
 msgstr ""
 
@@ -5620,11 +5648,13 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
+#: model:ir.model.fields,field_description:account.field_res_config_test__module_account_reports
 msgid "Dynamic Reports"
 msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_l10n_eu_oss
+#: model:ir.model.fields,field_description:account.field_res_config_test__module_l10n_eu_oss
 msgid "EU Intra-community Distance Selling"
 msgstr ""
 
@@ -5735,6 +5765,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_use_credit_limit
 #: model:ir.model.fields,help:account.field_res_config_settings__account_use_credit_limit
+#: model:ir.model.fields,help:account.field_res_config_test__account_use_credit_limit
 msgid "Enable the use of credit limit on partners."
 msgstr ""
 
@@ -6133,6 +6164,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_fiscal_country_id
+#: model:ir.model.fields,field_description:account.field_res_config_test__account_fiscal_country_id
 msgid "Fiscal Country Code"
 msgstr ""
 
@@ -6482,6 +6514,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__income_currency_exchange_account_id
+#: model:ir.model.fields,field_description:account.field_res_config_test__income_currency_exchange_account_id
 msgid "Gain Account"
 msgstr ""
 
@@ -6617,6 +6650,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_accounting_entries
+#: model:ir.model.fields,field_description:account.field_res_config_test__has_accounting_entries
 msgid "Has Accounting Entries"
 msgstr ""
 
@@ -6972,6 +7006,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_import_qif
+#: model:ir.model.fields,field_description:account.field_res_config_test__module_account_bank_statement_import_qif
 msgid "Import .qif files"
 msgstr ""
 
@@ -6991,16 +7026,19 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_import_csv
+#: model:ir.model.fields,field_description:account.field_res_config_test__module_account_bank_statement_import_csv
 msgid "Import in .csv format"
 msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_import_ofx
+#: model:ir.model.fields,field_description:account.field_res_config_test__module_account_bank_statement_import_ofx
 msgid "Import in .ofx format"
 msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_import_camt
+#: model:ir.model.fields,field_description:account.field_res_config_test__module_account_bank_statement_import_camt
 msgid "Import in CAMT.053 format"
 msgstr ""
 
@@ -7129,6 +7167,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_payment_debit_account_id
+#: model:ir.model.fields,help:account.field_res_config_test__account_journal_payment_debit_account_id
 msgid ""
 "Incoming payments are posted on an Outstanding Receipts Account. In the bank reconciliation widget, they appear as blue lines.\n"
 "Bank transactions are then reconciled on the Outstanding Receipts Accounts rather than the Receivable Account."
@@ -7232,6 +7271,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__transfer_account_id
+#: model:ir.model.fields,help:account.field_res_config_test__transfer_account_id
 msgid ""
 "Intermediary account used when moving from a liquidity account to another."
 msgstr ""
@@ -7269,6 +7309,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__transfer_account_id
+#: model:ir.model.fields,field_description:account.field_res_config_test__transfer_account_id
 msgid "Internal Transfer Account"
 msgstr ""
 
@@ -7309,6 +7350,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_payment__invoice_incoterm_id
 #: model:ir.model.fields,help:account.field_res_company__incoterm_id
 #: model:ir.model.fields,help:account.field_res_config_settings__incoterm_id
+#: model:ir.model.fields,help:account.field_res_config_test__incoterm_id
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
@@ -7316,6 +7358,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_intrastat
+#: model:ir.model.fields,field_description:account.field_res_config_test__module_account_intrastat
 msgid "Intrastat"
 msgstr ""
 
@@ -7438,6 +7481,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_payment
+#: model:ir.model.fields,field_description:account.field_res_config_test__module_account_payment
 msgid "Invoice Online Payment"
 msgstr ""
 
@@ -7835,9 +7879,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_payment.py:0
+#: code:addons/account/models/account_payment.py:0
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.js:0
 #: code:addons/account/static/src/js/legacy_mail_activity.js:0
-#: model:ir.model,name:account.model_account_move
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__move_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__move_id
 #: model:ir.model.fields,field_description:account.field_account_payment__move_id
@@ -8460,6 +8504,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__show_line_subtotals_tax_selection
+#: model:ir.model.fields,field_description:account.field_res_config_test__show_line_subtotals_tax_selection
 msgid "Line Subtotals Tax Display"
 msgstr ""
 
@@ -8536,6 +8581,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_cash_rounding__loss_account_id
 #: model:ir.model.fields,field_description:account.field_account_journal__loss_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__expense_currency_exchange_account_id
+#: model:ir.model.fields,field_description:account.field_res_config_test__expense_currency_exchange_account_id
 msgid "Loss Account"
 msgstr ""
 
@@ -9812,6 +9858,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_payment_credit_account_id
+#: model:ir.model.fields,help:account.field_res_config_test__account_journal_payment_credit_account_id
 msgid ""
 "Outgoing Payments are posted on an Outstanding Payments Account. In the bank reconciliation widget, they appear as blue lines.\n"
 "Bank transactions are then reconciled on the Outstanding Payments Account rather the Payable Account."
@@ -9842,6 +9889,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_credit_account_id
+#: model:ir.model.fields,field_description:account.field_res_config_test__account_journal_payment_credit_account_id
 msgid "Outstanding Payments Account"
 msgstr ""
 
@@ -9859,6 +9907,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_debit_account_id
+#: model:ir.model.fields,field_description:account.field_res_config_test__account_journal_payment_debit_account_id
 msgid "Outstanding Receipts Account"
 msgstr ""
 
@@ -10677,6 +10726,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__is_print
 #: model:ir.model.fields,field_description:account.field_res_config_settings__invoice_is_print
+#: model:ir.model.fields,field_description:account.field_res_config_test__invoice_is_print
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "Print"
@@ -10766,6 +10816,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_show_purchase_receipts
+#: model:ir.model.fields,field_description:account.field_res_config_test__group_show_purchase_receipts
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_receipt
 #: model:res.groups,name:account.group_purchase_receipts
 msgid "Purchase Receipt"
@@ -10845,6 +10896,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__quick_edit_mode
 #: model:ir.model.fields,field_description:account.field_res_config_settings__quick_edit_mode
+#: model:ir.model.fields,field_description:account.field_res_config_test__quick_edit_mode
 msgid "Quick encoding"
 msgstr ""
 
@@ -11461,6 +11513,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_sepa
+#: model:ir.model.fields,field_description:account.field_res_config_test__module_account_sepa
 msgid "SEPA Credit Transfer (SCT)"
 msgstr ""
 
@@ -11496,6 +11549,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_show_sale_receipts
+#: model:ir.model.fields,field_description:account.field_res_config_test__group_show_sale_receipts
 #: model:res.groups,name:account.group_sale_receipts
 msgid "Sale Receipt"
 msgstr ""
@@ -11514,6 +11568,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_use_credit_limit
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_use_credit_limit
+#: model:ir.model.fields,field_description:account.field_res_config_test__account_use_credit_limit
 msgid "Sales Credit Limit"
 msgstr ""
 
@@ -11803,6 +11858,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__invoice_is_email
+#: model:ir.model.fields,field_description:account.field_res_config_test__invoice_is_email
 msgid "Send Email"
 msgstr ""
 
@@ -12139,6 +12195,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_show_line_subtotals_tax_included
+#: model:ir.model.fields,field_description:account.field_res_config_test__group_show_line_subtotals_tax_included
 msgid "Show line subtotals with taxes (B2C)"
 msgstr ""
 
@@ -12149,6 +12206,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_show_line_subtotals_tax_excluded
+#: model:ir.model.fields,field_description:account.field_res_config_test__group_show_line_subtotals_tax_excluded
 #: model:res.groups,comment:account.group_show_line_subtotals_tax_excluded
 msgid "Show line subtotals without taxes (B2B)"
 msgstr ""
@@ -12162,6 +12220,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_snailmail_account
+#: model:ir.model.fields,field_description:account.field_res_config_test__module_snailmail_account
 msgid "Snailmail"
 msgstr ""
 
@@ -12410,6 +12469,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_storno
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_storno
+#: model:ir.model.fields,field_description:account.field_res_config_test__account_storno
 msgid "Storno accounting"
 msgstr ""
 
@@ -12565,6 +12625,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_cash_basis_journal_id
+#: model:ir.model.fields,field_description:account.field_res_config_test__tax_cash_basis_journal_id
 msgid "Tax Cash Basis Journal"
 msgstr ""
 
@@ -12601,6 +12662,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_config_settings__show_line_subtotals_tax_selection__tax_excluded
+#: model:ir.model.fields.selection,name:account.selection__res_config_test__show_line_subtotals_tax_selection__tax_excluded
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Tax Excluded"
 msgstr ""
@@ -12642,6 +12704,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_config_settings__show_line_subtotals_tax_selection__tax_included
+#: model:ir.model.fields.selection,name:account.selection__res_config_test__show_line_subtotals_tax_selection__tax_included
 msgid "Tax Included"
 msgstr ""
 
@@ -12765,6 +12828,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_calculation_rounding_method
+#: model:ir.model.fields,field_description:account.field_res_config_test__tax_calculation_rounding_method
 msgid "Tax calculation rounding method"
 msgstr ""
 
@@ -12855,6 +12919,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__early_pay_discount_computation
+#: model:ir.model.fields,field_description:account.field_res_config_test__early_pay_discount_computation
 msgid "Tax setting"
 msgstr ""
 
@@ -12955,6 +13020,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__chart_template_id
+#: model:ir.model.fields,field_description:account.field_res_config_test__chart_template_id
 msgid "Template"
 msgstr ""
 
@@ -12997,17 +13063,20 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__invoice_terms
+#: model:ir.model.fields,field_description:account.field_res_config_test__invoice_terms
 msgid "Terms & Conditions"
 msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__invoice_terms_html
+#: model:ir.model.fields,field_description:account.field_res_config_test__invoice_terms_html
 msgid "Terms & Conditions as a Web page"
 msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__terms_type
 #: model:ir.model.fields,field_description:account.field_res_config_settings__terms_type
+#: model:ir.model.fields,field_description:account.field_res_config_test__terms_type
 msgid "Terms & Conditions format"
 msgstr ""
 
@@ -13059,6 +13128,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_tax_group__country_code
 #: model:ir.model.fields,help:account.field_res_company__country_code
 #: model:ir.model.fields,help:account.field_res_config_settings__country_code
+#: model:ir.model.fields,help:account.field_res_config_test__country_code
 msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
@@ -13129,6 +13199,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__currency_exchange_journal_id
+#: model:ir.model.fields,help:account.field_res_config_test__currency_exchange_journal_id
 msgid ""
 "The accounting journal where automatic exchange differences will be "
 "registered"
@@ -13262,6 +13333,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
 #: model:ir.model.fields,help:account.field_res_company__account_fiscal_country_id
 #: model:ir.model.fields,help:account.field_res_config_settings__account_fiscal_country_id
+#: model:ir.model.fields,help:account.field_res_config_test__account_fiscal_country_id
 msgid "The country to use the tax reports from for this company"
 msgstr ""
 
@@ -14058,6 +14130,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__module_account_batch_payment
+#: model:ir.model.fields,help:account.field_res_config_test__module_account_batch_payment
 msgid ""
 "This allows you grouping payments into a single batch and eases the reconciliation process.\n"
 "-This installs the account_batch_payment module."
@@ -14128,6 +14201,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_default_credit_limit
+#: model:ir.model.fields,help:account.field_res_config_test__account_default_credit_limit
 msgid ""
 "This is the default credit limit that will be used on partners that do not "
 "have a specific limit on them."
@@ -14738,6 +14812,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_sepa_direct_debit
+#: model:ir.model.fields,field_description:account.field_res_config_test__module_account_sepa_direct_debit
 msgid "Use SEPA Direct Debit"
 msgstr ""
 
@@ -14769,6 +14844,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_batch_payment
+#: model:ir.model.fields,field_description:account.field_res_config_test__module_account_batch_payment
 msgid "Use batch payments"
 msgstr ""
 
@@ -15054,6 +15130,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_warning_account
+#: model:ir.model.fields,field_description:account.field_res_config_test__group_warning_account
 msgid "Warnings in Invoices"
 msgstr ""
 

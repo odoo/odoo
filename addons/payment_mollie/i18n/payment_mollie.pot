@@ -17,17 +17,20 @@ msgstr ""
 
 #. module: payment_mollie
 #: model_terms:ir.ui.view,arch_db:payment_mollie.payment_acquirer_form
+#: model_terms:ir.ui.view,arch_db:payment_mollie.payment_provider_form
 msgid "API Key"
 msgstr ""
 
 #. module: payment_mollie
+#. odoo-python
 #: code:addons/payment_mollie/models/payment_transaction.py:0
 #, python-format
 msgid "Canceled payment with status: %s"
 msgstr ""
 
 #. module: payment_mollie
-#: code:addons/payment_mollie/models/payment_acquirer.py:0
+#. odoo-python
+#: code:addons/payment_mollie/models/payment_provider.py:0
 #, python-format
 msgid "Could not establish the connection to the API."
 msgstr ""
@@ -35,15 +38,18 @@ msgstr ""
 #. module: payment_mollie
 #: model:account.payment.method,name:payment_mollie.payment_method_mollie
 #: model:ir.model.fields.selection,name:payment_mollie.selection__payment_acquirer__provider__mollie
+#: model:ir.model.fields.selection,name:payment_mollie.selection__payment_provider__code__mollie
 msgid "Mollie"
 msgstr ""
 
 #. module: payment_mollie
 #: model:ir.model.fields,field_description:payment_mollie.field_payment_acquirer__mollie_api_key
+#: model:ir.model.fields,field_description:payment_mollie.field_payment_provider__mollie_api_key
 msgid "Mollie API Key"
 msgstr ""
 
 #. module: payment_mollie
+#. odoo-python
 #: code:addons/payment_mollie/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
@@ -70,6 +76,7 @@ msgid "Provider"
 msgstr ""
 
 #. module: payment_mollie
+#. odoo-python
 #: code:addons/payment_mollie/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid payment status: %s"
@@ -84,4 +91,10 @@ msgstr ""
 #: model:ir.model.fields,help:payment_mollie.field_payment_acquirer__mollie_api_key
 msgid ""
 "The Test or Live API Key depending on the configuration of the acquirer"
+msgstr ""
+
+#. module: payment_mollie
+#: model:ir.model.fields,help:payment_mollie.field_payment_provider__mollie_api_key
+msgid ""
+"The Test or Live API Key depending on the configuration of the provider"
 msgstr ""

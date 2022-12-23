@@ -71,10 +71,12 @@ msgstr ""
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__res_config_settings__auth_totp_policy__all_required
+#: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__res_config_test__auth_totp_policy__all_required
 msgid "All users"
 msgstr ""
 
 #. module: auth_totp_mail_enforce
+#. odoo-python
 #: code:addons/auth_totp_mail_enforce/models/res_users.py:0
 #, python-format
 msgid "Cannot send email: user %s has no email address."
@@ -107,6 +109,7 @@ msgstr ""
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__res_config_settings__auth_totp_policy__employee_required
+#: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__res_config_test__auth_totp_policy__employee_required
 msgid "Employees only"
 msgstr ""
 
@@ -120,6 +123,7 @@ msgstr ""
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_res_config_settings__auth_totp_enforce
+#: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_res_config_test__auth_totp_enforce
 msgid "Enforce two-factor authentication"
 msgstr ""
 
@@ -185,6 +189,7 @@ msgstr ""
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_res_config_settings__auth_totp_policy
+#: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_res_config_test__auth_totp_policy
 msgid "Two-factor authentication enforcing policy"
 msgstr ""
 
@@ -195,6 +200,7 @@ msgid "User"
 msgstr ""
 
 #. module: auth_totp_mail_enforce
+#. odoo-python
 #: code:addons/auth_totp_mail_enforce/models/res_users.py:0
 #, python-format
 msgid "Verification failed, please double-check the 6-digit code"
@@ -208,12 +214,14 @@ msgid ""
 msgstr ""
 
 #. module: auth_totp_mail_enforce
+#. odoo-python
 #: code:addons/auth_totp_mail_enforce/models/res_users.py:0
 #, python-format
 msgid "You reached the limit of authentication mails sent for your account"
 msgstr ""
 
 #. module: auth_totp_mail_enforce
+#. odoo-python
 #: code:addons/auth_totp_mail_enforce/models/res_users.py:0
 #, python-format
 msgid "You reached the limit of code verifications for your account"

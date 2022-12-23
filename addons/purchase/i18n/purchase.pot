@@ -87,6 +87,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_account_3way_match
+#: model:ir.model.fields,field_description:purchase.field_res_config_test__module_account_3way_match
 msgid "3-way matching: purchases, receptions and bills"
 msgstr ""
 
@@ -577,6 +578,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__group_send_reminder
+#: model:ir.model.fields,help:purchase.field_res_config_test__group_send_reminder
 msgid "Allow automatically send email to remind your vendor the receipt date"
 msgstr ""
 
@@ -711,6 +713,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__default_purchase_method
+#: model:ir.model.fields,field_description:purchase.field_res_config_test__default_purchase_method
 msgid "Bill Control"
 msgstr ""
 
@@ -834,6 +837,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__company_currency_id
+#: model:ir.model.fields,field_description:purchase.field_res_config_test__company_currency_id
 msgid "Company Currency"
 msgstr ""
 
@@ -1382,6 +1386,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_double_validation
+#: model:ir.model.fields,field_description:purchase.field_res_config_test__po_double_validation
 msgid "Levels of Approvals *"
 msgstr ""
 
@@ -1392,6 +1397,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__lock_confirmed_po
+#: model:ir.model.fields,field_description:purchase.field_res_config_test__lock_confirmed_po
 msgid "Lock Confirmed Orders"
 msgstr ""
 
@@ -1437,6 +1443,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company__po_lead
 #: model:ir.model.fields,help:purchase.field_res_config_settings__po_lead
+#: model:ir.model.fields,help:purchase.field_res_config_test__po_lead
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
 "Orders for procuring products, they will be scheduled that many days earlier"
@@ -1445,6 +1452,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__use_po_lead
+#: model:ir.model.fields,help:purchase.field_res_config_test__use_po_lead
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
 "Orders for reordering products,they will be scheduled that many days earlier"
@@ -1475,12 +1483,14 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_double_validation_amount
+#: model:ir.model.fields,field_description:purchase.field_res_config_test__po_double_validation_amount
 msgid "Minimum Amount"
 msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company__po_double_validation_amount
 #: model:ir.model.fields,help:purchase.field_res_config_settings__po_double_validation_amount
+#: model:ir.model.fields,help:purchase.field_res_config_test__po_double_validation_amount
 msgid "Minimum amount for which a double validation is required"
 msgstr ""
 
@@ -1730,6 +1740,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_config_settings__default_purchase_method__purchase
+#: model:ir.model.fields.selection,name:purchase.selection__res_config_test__default_purchase_method__purchase
 msgid "Ordered quantities"
 msgstr ""
 
@@ -1877,6 +1888,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company__po_double_validation
 #: model:ir.model.fields,help:purchase.field_res_config_settings__po_double_validation
+#: model:ir.model.fields,help:purchase.field_res_config_test__po_double_validation
 msgid "Provide a double validation mechanism for purchases"
 msgstr ""
 
@@ -1890,6 +1902,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_requisition
+#: model:ir.model.fields,field_description:purchase.field_res_config_test__module_purchase_requisition
 msgid "Purchase Agreements"
 msgstr ""
 
@@ -1908,6 +1921,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_product_matrix
+#: model:ir.model.fields,field_description:purchase.field_res_config_test__module_purchase_product_matrix
 msgid "Purchase Grid Entry"
 msgstr ""
 
@@ -1928,6 +1942,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_lead
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_lead
+#: model:ir.model.fields,field_description:purchase.field_res_config_test__po_lead
 msgid "Purchase Lead Time"
 msgstr ""
 
@@ -1936,8 +1951,8 @@ msgstr ""
 #: code:addons/purchase/controllers/portal.py:0
 #: code:addons/purchase/models/purchase.py:0
 #: code:addons/purchase/models/purchase.py:0
+#: code:addons/purchase/models/purchase.py:0
 #: model:ir.actions.report,name:purchase.action_report_purchase_order
-#: model:ir.model,name:purchase.model_purchase_order
 #: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_id
 #: model:ir.model.fields,field_description:purchase.field_account_move__purchase_id
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_order_id
@@ -1967,6 +1982,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_order_approval
+#: model:ir.model.fields,field_description:purchase.field_res_config_test__po_order_approval
 msgid "Purchase Order Approval"
 msgstr ""
 
@@ -2008,12 +2024,14 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_lock
+#: model:ir.model.fields,field_description:purchase.field_res_config_test__po_lock
 msgid "Purchase Order Modification *"
 msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company__po_lock
 #: model:ir.model.fields,help:purchase.field_res_config_settings__po_lock
+#: model:ir.model.fields,help:purchase.field_res_config_test__po_lock
 msgid ""
 "Purchase Order Modification used when you want to purchase order editable "
 "after confirm"
@@ -2047,6 +2065,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_warning_purchase
+#: model:ir.model.fields,field_description:purchase.field_res_config_test__group_warning_purchase
 msgid "Purchase Warnings"
 msgstr ""
 
@@ -2225,6 +2244,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_send_reminder
+#: model:ir.model.fields,field_description:purchase.field_res_config_test__group_send_reminder
 #: model:ir.model.fields,field_description:purchase.field_res_partner__receipt_reminder_email
 #: model:ir.model.fields,field_description:purchase.field_res_users__receipt_reminder_email
 msgid "Receipt Reminder"
@@ -2263,6 +2283,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_config_settings__default_purchase_method__receive
+#: model:ir.model.fields.selection,name:purchase.selection__res_config_test__default_purchase_method__receive
 msgid "Received quantities"
 msgstr ""
 
@@ -2408,6 +2429,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__use_po_lead
+#: model:ir.model.fields,field_description:purchase.field_res_config_test__use_po_lead
 msgid "Security Lead Time for Purchase"
 msgstr ""
 
@@ -2686,6 +2708,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__default_purchase_method
+#: model:ir.model.fields,help:purchase.field_res_config_test__default_purchase_method
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid ""
 "This default value is applied to any new product created. This can be "
