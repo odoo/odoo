@@ -58,7 +58,7 @@ class AccountMove(models.Model):
                     ('purchase_line_id', '=', line.purchase_line_id.id),
                     ('state', '=', 'done'),
                     ('product_qty', '!=', 0.0),
-                ])
+                ]) if line.purchase_line_id else self.env['stock.move']
                 if move.move_type == 'in_refund':
                     valuation_stock_moves = valuation_stock_moves.filtered(lambda stock_move: stock_move._is_out())
                 else:
