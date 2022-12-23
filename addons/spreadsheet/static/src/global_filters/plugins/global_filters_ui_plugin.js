@@ -39,7 +39,7 @@ const MONTHS = {
     december: { value: 12, granularity: "month" },
 };
 
-const { UuidGenerator } = spreadsheet.helpers;
+const { UuidGenerator, createEmptyExcelSheet } = spreadsheet.helpers;
 const uuidGenerator = new UuidGenerator();
 
 export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
@@ -439,8 +439,7 @@ export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
             row++;
         }
         data.sheets.push({
-            id: uuidGenerator.uuidv4(),
-            name: "Active Filters",
+            ...createEmptyExcelSheet(uuidGenerator.uuidv4(), _t("Active Filters")),
             cells,
             colNumber: 2,
             rowNumber: this.getters.getGlobalFilters().length + 1,
