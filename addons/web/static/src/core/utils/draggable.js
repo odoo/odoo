@@ -43,6 +43,7 @@ import { pick } from "@web/core/utils/objects";
 /** @type {(params: DraggableParams) => DraggableState} */
 export const useDraggable = makeDraggableHook({
     name: "useDraggable",
+    onWillStartDrag: ({ctx}) => pick(ctx.current, "element"),
     onDragStart: ({ ctx }) => pick(ctx.current, "element"),
     onDrag: ({ ctx }) => pick(ctx.current, "element"),
     onDragEnd: ({ ctx }) => pick(ctx.current, "element"),
