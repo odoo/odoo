@@ -3,6 +3,7 @@
 
 {
     'name': 'Italy - E-invoicing (Withholding)',
+    'countries': ['it'],
     'version': '0.1',
     'depends': [
         'l10n_it_edi'

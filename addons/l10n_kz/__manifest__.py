@@ -2,6 +2,8 @@
 {
     'name': 'Kazakhstan - Accounting',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['kz'],
     'version': '1.0',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """

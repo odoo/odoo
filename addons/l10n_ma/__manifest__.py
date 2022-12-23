@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Morocco - Accounting',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['ma'],
     'author': 'kazacube (http://www.kazacube.com)',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """

@@ -2,6 +2,8 @@
 {
     'name': 'Croatia - Accounting (Euro)',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['hr'],
     'description': """
     Croatian Chart of Accounts updated (RRIF ver.2021)
 

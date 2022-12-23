@@ -3,7 +3,7 @@
 
 {
     'name': 'Italy - E-invoicing',
-    'icon': '/l10n_it/static/description/icon.png',
+    'countries': ['it'],
     'version': '0.3',
     'depends': [
         'l10n_it',

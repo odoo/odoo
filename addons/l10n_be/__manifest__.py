@@ -3,6 +3,8 @@
     'name': 'Belgium - Accounting',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/belgium.html',
     'version': '2.0',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['be'],
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 This is the base module to manage the accounting chart for Belgium in Odoo.

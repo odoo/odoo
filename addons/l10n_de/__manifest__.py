@@ -3,6 +3,8 @@
 
 {
     'name': 'Germany - Accounting',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['de'],
     'author': 'openbig.org (http://www.openbig.org)',
     'version': '1.1',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/germany.html',

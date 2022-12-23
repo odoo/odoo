@@ -2,6 +2,8 @@
 {
     'name': 'Finnish Localization',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['fi'],
     'version': '13.0.1',
     'author': 'Avoin.Systems, Tawasta, Vizucom, Sprintit',
     'category': 'Accounting/Localizations/Account Charts',

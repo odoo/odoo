@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Thailand - Accounting',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['th'],
     'version': '2.0',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """

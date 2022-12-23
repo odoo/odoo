@@ -2,6 +2,8 @@
 {
     'name': 'Sweden - Accounting',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['se'],
     'version': '1.0',
     'author': 'XCLUDE, Odoo S.A.',
     'category': 'Accounting/Localizations/Account Charts',

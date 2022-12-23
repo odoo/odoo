@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': "Egyptian E-Invoice Integration",
+    'countries': ['eg'],
     'summary': """
             Egyptian Tax Authority Invoice Integration
         """,

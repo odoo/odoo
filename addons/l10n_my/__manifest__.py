@@ -2,6 +2,8 @@
 {
     'name': 'Malaysia - Accounting',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['my'],
     'author': 'Odoo PS',
     'version': '1.0',
     'category': 'Accounting/Localizations/Account Charts',
@@ -15,6 +17,5 @@ This is the base module to manage the accounting chart for Malaysia in Odoo.
     'demo': [
         'demo/demo_company.xml',
     ],
-    'icon': '/base/static/img/country_flags/my.png',
     'license': 'LGPL-3',
 }

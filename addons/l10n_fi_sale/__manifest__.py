@@ -3,6 +3,7 @@
 
 {
     'name': 'Finland - Sale',
+    'countries': ['fi'],
     'version': '1.0',
     'description': """Finland Sale""",
     'category': 'Localization',
