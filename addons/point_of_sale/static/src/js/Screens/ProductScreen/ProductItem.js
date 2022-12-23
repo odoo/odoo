@@ -49,7 +49,7 @@ odoo.define('point_of_sale.ProductItem', function(require) {
             } catch (e) {
                 if (identifyError(e) instanceof ConnectionLostError||ConnectionAbortedError) {
                     this.showPopup('ErrorPopup', {
-                        title: this.env._t('OfflineErrorPopup'),
+                        title: this.env._t('Network Error'),
                         body: this.env._t('Cannot access product information screen if offline.'),
                     });
                 } else {
