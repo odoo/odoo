@@ -1339,6 +1339,8 @@ class Root(object):
         # TODO should we move this to ir.http so that only configured modules are served ?
         statics = {}
         for addons_path in odoo.addons.__path__:
+            if not os.path.exists(addons_path):
+                continue
             for module in sorted(os.listdir(str(addons_path))):
                 if module not in addons_manifest:
                     mod_path = opj(addons_path, module)
