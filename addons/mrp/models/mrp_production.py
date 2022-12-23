@@ -797,7 +797,6 @@ class MrpProduction(models.Model):
             if vals.get('date_planned_finished'):
                 production.move_finished_ids.write({'date': production.date_planned_finished})
             if any(field in ['move_raw_ids', 'move_finished_ids', 'workorder_ids'] for field in vals) and production.state != 'draft':
-                production._autoconfirm_production()
                 if production in production_to_replan:
                     production._plan_workorders()
             if production.state == 'done' and ('lot_producing_id' in vals or 'qty_producing' in vals):
@@ -1120,33 +1119,6 @@ class MrpProduction(models.Model):
         if all(move.state == 'assigned' for move in moves_in_first_operation):
             return 'assigned'
         return 'confirmed'
-
-    def _autoconfirm_production(self):
-        """Automatically run `action_confirm` on `self`.
-
-        If the production has one of its move was added after the initial call
-        to `action_confirm`.
-        """
-        moves_to_confirm = self.env['stock.move']
-        for production in self:
-            if production.state in ('done', 'cancel'):
-                continue
-            additional_moves = production.move_raw_ids.filtered(
-                lambda move: move.state == 'draft'
-            )
-            additional_moves._adjust_procure_method()
-            moves_to_confirm |= additional_moves
-            additional_byproducts = production.move_finished_ids.filtered(
-                lambda move: move.state == 'draft'
-            )
-            moves_to_confirm |= additional_byproducts
-
-        if moves_to_confirm:
-            moves_to_confirm = moves_to_confirm._action_confirm()
-            # run scheduler for moves forecasted to not have enough in stock
-            moves_to_confirm._trigger_scheduler()
-
-        self.workorder_ids.filtered(lambda w: w.state not in ['done', 'cancel'])._action_confirm()
 
     def _get_children(self):
         self.ensure_one()

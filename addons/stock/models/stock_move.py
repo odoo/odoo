@@ -620,7 +620,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                 defaults['additional'] = True
             elif picking_id.state not in ['cancel', 'draft', 'done']:
                 defaults['product_uom_qty'] = 0.0
-                defaults['additional'] = True  # to trigger `_autoconfirm_picking`
+                defaults['additional'] = True
         return defaults
 
     def name_get(self):
@@ -642,7 +642,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         if moves_to_confirm:
             moves |= moves_to_confirm._action_confirm()
             moves = moves.exists()
-            moves.picking_id.action_confirm()
+            moves._trigger_scheduler()
         return moves
 
     def write(self, vals):
