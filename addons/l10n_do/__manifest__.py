@@ -77,9 +77,7 @@ en Odoo):
         'base_iban',
     ],
     'data': [
-        'data/account_account_tag_data.xml',
         'data/account_tax_report_data.xml',
-        'data/l10n_do_res_partner_title.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
