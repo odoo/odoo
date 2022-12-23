@@ -3,7 +3,8 @@
 
 {
     'name': 'Indonesia E-faktur',
-    'icon': '/l10n_id/static/description/icon.png',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['id'],
     'version': '1.0',
     'description': """
         E-Faktur Menu(Indonesia)

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'United Arab Emirates - Point of Sale',
+    'countries': ['ae'],
     'author': 'Odoo PS',
     'category': 'Accounting/Localizations/Point of Sale',
     'description': """

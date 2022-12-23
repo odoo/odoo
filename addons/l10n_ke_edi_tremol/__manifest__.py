@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': "Kenya Tremol Device EDI Integration",
+    'countries': ['ke'],
     'summary': """
             Kenya Tremol Device EDI Integration
         """,

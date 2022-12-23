@@ -2,6 +2,8 @@
 {
     'name': 'United Arab Emirates - Accounting',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['ae'],
     'author': 'Tech Receptives',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """

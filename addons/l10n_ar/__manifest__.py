@@ -2,7 +2,8 @@
 {
     'name': 'Argentina - Accounting',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/argentina.html',
-    'icon': '/base/static/img/country_flags/ar.png',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['ar'],
     'version': '3.5',
     'description': """
 Functional

@@ -2,6 +2,8 @@
 {
     'name': 'Norway - Accounting',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['no'],
     'version': '2.1',
     'author': 'Rolv Råen',
     'category': 'Accounting/Localizations/Account Charts',

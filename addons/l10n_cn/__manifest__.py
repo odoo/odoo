@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'China - Accounting',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['cn'],
     'version': '1.8',
     'category': 'Accounting/Localizations/Account Charts',
     'author': 'openerp-china',

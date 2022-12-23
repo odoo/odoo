@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Ecuadorian Accounting',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['ec'],
     'version': '3.4',
     'description': """
 Functional
@@ -8,7 +10,7 @@ Functional
 
 This module adds accounting features for Ecuadorian localization, which
 represent the minimum requirements to operate a business in Ecuador in compliance
-with local regulation bodies such as the ecuadorian tax authority -SRI- and the 
+with local regulation bodies such as the ecuadorian tax authority -SRI- and the
 Superintendency of Companies -Super Intendencia de Compañías-
 
 Follow the next configuration steps:

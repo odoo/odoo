@@ -2,6 +2,8 @@
 {
     'name': 'Kenya - Accounting',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/kenya.html',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['ke'],
     'version': '1.0',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """

@@ -2,6 +2,8 @@
 {
     'name': 'Switzerland - Accounting',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/switzerland.html',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['ch'],
     'description': """
 Swiss localization
 ==================

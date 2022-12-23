@@ -3,7 +3,7 @@
 {
     "name": """Indian - E-invoicing""",
     "version": "1.03.00",
-    "icon": "/l10n_in/static/description/icon.png",
+    'countries': ['in'],
     "category": "Accounting/Localizations/EDI",
     "depends": [
         "account_edi",

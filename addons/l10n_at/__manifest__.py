@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Austria - Accounting',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['at'],
     'version': '3.0',
     'author': 'WT-IO-IT GmbH, Wolfgang Taferner (https://www.wt-io-it.at)',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',

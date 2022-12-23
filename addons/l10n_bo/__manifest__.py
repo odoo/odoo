@@ -2,6 +2,8 @@
 {
     'name': 'Bolivia - Accounting',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['bo'],
     'version': '2.0',
     'description': """
 Bolivian accounting chart and tax localization.

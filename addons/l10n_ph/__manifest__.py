@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Philippines - Accounting',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['ph'],
     'summary': """
         This is the module to manage the accounting chart for The Philippines.
     """,
@@ -24,5 +26,4 @@
         'demo/demo_company.xml',
     ],
     'license': 'LGPL-3',
-    'icon': '/base/static/img/country_flags/ph.png',
 }

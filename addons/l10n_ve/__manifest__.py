@@ -2,6 +2,8 @@
 {
     'name': 'Venezuela - Accounting',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['ve'],
     'author': 'Odoo S.A., Vauxoo',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """

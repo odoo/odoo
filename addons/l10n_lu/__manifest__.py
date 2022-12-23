@@ -2,6 +2,8 @@
 {
     'name': 'Luxembourg - Accounting',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/luxembourg.html',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['lu'],
     'version': '2.1',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """

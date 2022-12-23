@@ -2,6 +2,8 @@
 {
     'name': 'Uruguay - Accounting',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['uy'],
     'version': '0.1',
     'author': 'Uruguay l10n Team, Guillem Barba',
     'category': 'Accounting/Localizations/Account Charts',

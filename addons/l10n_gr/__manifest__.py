@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Greece - Accounting',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['gr'],
     'author': 'P. Christeas, Odoo S.A.',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
     'category': 'Accounting/Localizations/Account Charts',
