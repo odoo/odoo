@@ -2,8 +2,6 @@
 <odoo>
     <data>
 
-
-
         <!-- Tag -->
         <record id="tags_0" model="forum.tag">
             <field name="name">Contract</field>
@@ -62,7 +60,7 @@ In simple words does Odoo became CMS+ERP platform?</p>]]></field>
             <field name="forum_id" ref="website_forum.forum_help"/>
             <field name="name">Re: CMS replacement for ERP and eCommerce</field>
             <field name="content"><![CDATA[
-<p>Odoo v8 provides a web module and an e-commerce module: www.odoo.com/app/website
+<p>Odoo provides a web module and an e-commerce module: www.odoo.com/app/website
 The CMS editor in Odoo web is nice but I prefer Drupal for customization and there is a Drupal module for Odoo. I think WP is better than Odoo web too.
 </p>]]></field>
             <field name="parent_id" ref="question_1"/>
@@ -79,7 +77,7 @@ The CMS editor in Odoo web is nice but I prefer Drupal for customization and the
             <field name="user_id" ref="base.user_demo"/>
             <field name="vote">1</field>
         </record>
-        
+
         <!-- Run Scheduler -->
         <function model="gamification.challenge" name="_cron_update">
             <value eval="False"/>
