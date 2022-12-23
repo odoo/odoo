@@ -10,13 +10,16 @@ $o-colors: lighten(#000, 46.7%), #F06050, #F4A460, #F7CD1F, #6CC1ED, #814968,
 
 $o-colors-secondary: #aa4b6b, #30C381, #97743a, #F7CD1F, #4285F4, #8E24AA,
                      #D6145F, #173e43, #348F50, #AA3A38, #795548, #5e0231,
-                     #6be585, #999966, #e9d362, #b56969, #bdc3c7, #649173 !default;
+                     #6be585, #999966, #e9d362, #b56969, #bdc3c7, #649173,
+                     #ea00ff, #ff0026, #8bcc00, #00bfaf, #006aff, #af00bf,
+                     #bf001d, #bf6300, #8cff00, #00f2ff, #004ab3, #ff00d0,
+                     #ffa600, #3acc00, #00b6bf, #0048ff, #bf7c00, #04ff00,
+                     #00d0ff, #0036bf, #ff008c, #00bf49, #0092b3, #0004ff,
+                     #b20062, #649173 !default;
 
 // UI custom colors, complete list
-$o-colors-complete-first: #134E5E !default;
-
 $o-colors-complete: join(
-    set-nth($o-colors, 1, $o-colors-complete-first),
+    $o-colors,
     $o-colors-secondary
 )!default;
 
