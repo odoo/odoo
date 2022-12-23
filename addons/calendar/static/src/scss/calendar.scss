@@ -93,8 +93,8 @@
     border-color: map-get($theme-colors, 'light');
 }
 
-@for $i from 1 through length($o-filter_colors) {
-    $color: nth($o-filter_colors, $i);
+@for $i from 1 through length($o-colors-complete) {
+    $color: nth($o-colors-complete, $i);
 
     .o_cw_popover_link.o_calendar_color_#{$i - 1} {
         &.o_attendee_status_tentative {

@@ -3,9 +3,9 @@
     padding-left: 5px;
     margin-top: 2px;
     color: black;
-    @for $i from 1 through length($o-filter_colors) {
-        $color: nth($o-filter_colors, $i);
-        
+    @for $i from 1 through length($o-colors-complete) {
+        $color: nth($o-colors-complete, $i);
+
         &.o_calendar_color_#{$i - 1} {
             border-color: $color;
             background: $color;
