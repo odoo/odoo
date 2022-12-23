@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { SearchDropdownItem } from "@web/search/search_dropdown_item/search_dropdown_item";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { FACET_ICONS } from "../utils/misc";
 import { registry } from "@web/core/registry";
@@ -63,6 +63,5 @@ export class FavoriteMenu extends Component {
         this.dialogService.add(ConfirmationDialog, dialogProps);
     }
 }
-
 FavoriteMenu.template = "web.FavoriteMenu";
-FavoriteMenu.components = { Dropdown, DropdownItem };
+FavoriteMenu.components = { Dropdown, DropdownItem: SearchDropdownItem };

@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Jolien De Paepe, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
@@ -149,6 +150,20 @@ msgid ""
 msgstr ""
 "<strong>Gewicht:</strong>\n"
 "                <br/>"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__zip_prefix_ids
+msgid ""
+"Prefixes of zip codes that this carrier applies to. Note that regular "
+"expressions can be used to support countries with varying zip code lengths, "
+"i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
+"will only match '100' and not '1000')"
+msgstr ""
+"Voorvoegsels van postcodes waarop deze vervoerder van toepassing is. Merk op"
+" dat reguliere expressies kunnen worden gebruikt om landen met verschillende"
+" postcodelengtes te ondersteunen, d.w.z. '$' kan worden toegevoegd aan het "
+"einde van een voorvoegsel om overeen te komen met de exacte postcode (bijv. "
+"'100$' zal alleen overeenkomen met '100' en niet met '1000')"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__carrier_description
@@ -1036,6 +1051,18 @@ msgstr ""
 #: model:product.template,name:delivery.product_product_delivery_poste_product_template
 msgid "The Poste"
 msgstr "De post"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+#: code:addons/delivery/models/delivery_carrier.py:0
+#, python-format
+msgid ""
+"The package cannot be created because the total weight of the products in "
+"the picking is 0.0 %s"
+msgstr ""
+"Het pakket kan niet worden aangemaakt omdat het totale gewicht van de "
+"producten in de picking 0,0 is %s"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal

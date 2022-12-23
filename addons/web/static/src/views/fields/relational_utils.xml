@@ -43,7 +43,8 @@
             readonly=""
             t-att-placeholder="props.placeholder"
             t-att-value="props.value"
-            t-on-click="onSearchMoreSmall"
+            t-on-click="onSearchMore"
+            t-on-barcode-search="onBarcodeSearch"
         />
         <AutoComplete t-else=""
             value="props.value"

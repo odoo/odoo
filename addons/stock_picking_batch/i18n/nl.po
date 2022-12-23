@@ -71,7 +71,7 @@ msgid ""
 "A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
-"Een overboeking wordt niet automatisch toegevoegd aan batches die dit aantal regels overschrijden als de overboeking eraan wordt toegevoegd.\n"
+"Een verplaatsing wordt niet automatisch toegevoegd aan batches die dit aantal regels overschrijden als de verplaatsing eraan wordt toegevoegd.\n"
 "Laat deze waarde op '0' staan als er geen lijnlimiet is."
 
 #. module: stock_picking_batch
@@ -80,7 +80,7 @@ msgid ""
 "A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
 "Leave this value as '0' if no transfer limit."
 msgstr ""
-"Een overboeking wordt niet automatisch toegevoegd aan batches die dit aantal overboekingen overschrijden.\n"
+"Een verplaatsing wordt niet automatisch toegevoegd aan batches die dit aantal verplaatsingen overschrijden.\n"
 "Laat deze waarde op '0' staan als er geen overdrachtslimiet is."
 
 #. module: stock_picking_batch
@@ -132,7 +132,7 @@ msgstr "Toevoegen aan"
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_move_line_tree_detailed_wave
 #, python-format
 msgid "Add to Wave"
-msgstr "Voeg toe aan wave"
+msgstr "Toevoegen aan wave"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_to_batch_action_stock_picking
@@ -200,7 +200,8 @@ msgstr "Groepeer batches automatisch op hun bronlocatie."
 msgid ""
 "Automatically put pickings into batches as they are confirmed when possible."
 msgstr ""
-"Zet picks automatisch in batches zodra ze worden bevestigd, indien mogelijk."
+"Zet pickings automatisch in batches zodra ze worden bevestigd, indien "
+"mogelijk."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -237,7 +238,7 @@ msgstr "Batchpickingsregels"
 #: model:ir.ui.menu,name:stock_picking_batch.stock_picking_batch_menu
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
 msgid "Batch Transfers"
-msgstr "Batchpickingen"
+msgstr "Batchpickings"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -326,7 +327,7 @@ msgstr "Aantal wavepickings"
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid "Create a new batch transfer"
-msgstr "Maak een nieuwe batch verplaatsing"
+msgstr "Maak een nieuwe batchverplaatsing"
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
@@ -514,7 +515,7 @@ msgstr "Maximum aantal regels per batch"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_pickings
 msgid "Maximum transfers per batch"
-msgstr "Maximale overboekingen per batch"
+msgstr "Maximale verplaatsingen per batch"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error
@@ -686,7 +687,7 @@ msgstr ""
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Search Batch Transfer"
-msgstr "Zoek batchverwerkingen"
+msgstr "Zoek batchpicking"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -809,10 +810,10 @@ msgid ""
 "            It may also be useful to assign jobs (one person = one batch) or\n"
 "            help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
-"Het doel van batchverwerking is om bewerkingen te groeperen die mogelijk "
-"samen (moeten) gedaan worden om de efficiëntie te verhogen. Het kan ook "
-"handig zijn om functies toe te wijzen (één persoon = één batch) of helpt het"
-" tijdbeheer van functies (taken die klaar moeten zijn voor 13 uur)."
+"Het doel van batchpicking is om bewerkingen te groeperen die mogelijk samen "
+"(moeten) gedaan worden om de efficiëntie te verhogen. Het kan ook handig "
+"zijn om functies toe te wijzen (één persoon = één batch) of helpt het "
+"tijdbeheer van functies (taken die klaar moeten zijn voor 13 uur)."
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
@@ -822,7 +823,7 @@ msgid ""
 "                    It may also be useful to assign jobs (one person = one batch) or\n"
 "                    help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
-"Het doel van de golfoverdracht is om operaties van verschillende overdrachten te groeperen\n"
+"Het doel van de wavepicking is om operaties van verschillende overdrachten te groeperen\n"
 "                    samen om hun efficiëntie te verhogen.\n"
 "                    Het kan ook handig zijn om taken toe te wijzen (één persoon = één batch) of\n"
 "                    helpen bij het beheer van de timing van operaties (taken die om 13.00 uur moeten worden uitgevoerd)."
@@ -924,7 +925,7 @@ msgstr "Wavepickings"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
 msgid "Waves"
-msgstr "Golven"
+msgstr "Waves"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__website_message_ids

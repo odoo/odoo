@@ -497,6 +497,13 @@ describe('Format', () => {
                 contentAfter: `<p>${s(`ab[]cd`)}</p>`,
             });
         });
+        it('should do nothing when a block already has a line-through decoration', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p style="text-decoration: line-through;">a[b]c</p>`,
+                stepFunction: strikeThrough,
+                contentAfter: `<p style="text-decoration: line-through;">a[b]c</p>`,
+            });
+        });
     });
 
     describe('underline + strikeThrough', () => {
@@ -766,6 +773,20 @@ describe('setTagName', () => {
                 contentBefore: '<div>[ab]</div>',
                 stepFunction: editor => editor.execCommand('setTag', 'p'),
                 contentAfter: '<div><p>[ab]</p></div>',
+            });
+        });
+        it('should not add paragraph tag when selection is changed to normal in list', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<ul><li><h1>[abcd]</h1></li></ul>',
+                stepFunction: editor => editor.execCommand('setTag', "p"),
+                contentAfter: `<ul><li>[abcd]</li></ul>`
+            });
+        });
+        it('should not add paragraph tag to normal text in list', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<ul><li>[abcd]</li></ul>',
+                stepFunction: editor => editor.execCommand('setTag', "p"),
+                contentAfter: `<ul><li>[abcd]</li></ul>`
             });
         });
     });

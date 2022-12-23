@@ -402,6 +402,7 @@ class MrpProduction(models.Model):
         production_no_alert.json_popover = False
         for production in (self - production_no_alert):
             production.json_popover = json.dumps({
+                'popoverTemplate': 'stock.PopoverStockRescheduling',
                 'delay_alert_date': format_datetime(self.env, production.delay_alert_date, dt_format=False),
                 'late_elements': [{
                     'id': late_document.id,
@@ -1060,7 +1061,6 @@ class MrpProduction(models.Model):
     def _update_raw_moves(self, factor):
         self.ensure_one()
         update_info = []
-        move_to_unlink = self.env['stock.move']
         moves_to_assign = self.env['stock.move']
         procurements = []
         for move in self.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel')):
@@ -1079,14 +1079,7 @@ class MrpProduction(models.Model):
                         move.product_id, procurement_qty, move.product_uom,
                         move.location_id, move.name, move.origin, move.company_id, values))
                 update_info.append((move, old_qty, new_qty))
-            else:
-                if move.quantity_done > 0:
-                    raise UserError(_('Lines need to be deleted, but can not as you still have some quantities to consume in them. '))
-                move._action_cancel()
-                move_to_unlink |= move
-
         moves_to_assign._action_assign()
-        move_to_unlink.unlink()
         if procurements:
             self.env['procurement.group'].run(procurements)
         return update_info
@@ -1791,8 +1784,11 @@ class MrpProduction(models.Model):
             'state': 'done',
             'product_uom_qty': 0.0,
         })
-
+        diff_per_production = {}
         for production in self:
+            diff_per_production[production] = 1
+            if production.qty_produced != production.product_qty:
+                diff_per_production[production] = production.qty_produced/production.product_qty
             production.write({
                 'date_finished': fields.Datetime.now(),
                 'product_qty': production.qty_produced,
@@ -1801,8 +1797,11 @@ class MrpProduction(models.Model):
                 'state': 'done',
             })
 
-        for workorder in self.workorder_ids.filtered(lambda w: w.state not in ('done', 'cancel')):
-            workorder.duration_expected = workorder._get_duration_expected()
+        for workorder in self.workorder_ids:
+            if workorder.state not in ('done', 'cancel'):
+                workorder.duration_expected = workorder._get_duration_expected()
+            if workorder.duration == 0.0:
+                workorder.duration = workorder.duration_expected * diff_per_production[workorder.production_id]
 
         if not backorders:
             if self.env.context.get('from_workorder'):
@@ -1968,6 +1967,7 @@ class MrpProduction(models.Model):
             'view_id': self.env.ref('mrp.mrp_unbuild_form_view_simplified').id,
             'type': 'ir.actions.act_window',
             'context': {'default_product_id': self.product_id.id,
+                        'default_lot_id': self.lot_producing_id.id,
                         'default_mo_id': self.id,
                         'default_company_id': self.company_id.id,
                         'default_location_id': self.location_dest_id.id,

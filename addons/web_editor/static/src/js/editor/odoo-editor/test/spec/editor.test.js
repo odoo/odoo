@@ -1,5 +1,8 @@
 import { OdooEditor } from '../../src/OdooEditor.js';
-import { getTraversedNodes } from '../../src/utils/utils.js';
+import {
+    getTraversedNodes,
+    setSelection,
+} from '../../src/utils/utils.js';
 import {
     BasicEditor,
     deleteBackward,
@@ -82,6 +85,28 @@ describe('Editor', () => {
                     contentBefore: '<p>ab</p><i class="fa fa-beer"></i><p>c</p>',
                     contentAfter: '<p>ab</p><p style="margin-bottom: 0px;"><i class="fa fa-beer"></i></p><p>c</p>',
                 });
+            });
+        });
+        describe('allowInlineAtRoot options', () => {
+            it('should wrap inline node inside a p by default', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: 'abc',
+                    contentAfter: '<p style="margin-bottom: 0px;">abc</p>',
+                });
+            });
+            it('should wrap inline node inside a p if value is false', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: 'abc',
+                    contentAfter: '<p style="margin-bottom: 0px;">abc</p>',
+                }, { allowInlineAtRoot: false }
+                );
+            });
+            it('should keep inline nodes unchanged if value is true', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: 'abc',
+                    contentAfter: 'abc',
+                }, { allowInlineAtRoot: true, }
+                );
             });
         });
     });
@@ -5685,6 +5710,59 @@ X[]
                     stepFunction: async editor => insertText(editor, '`'),
                     contentAfter: '<p>a<code class="o_inline_code">b`cd`[]e</code>f</p>',
                 });
+            });
+        });
+    });
+
+    describe('oe-protected', () => {
+        it('should ignore protected elements children mutations', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                <div><p>a[]</p></div>
+                <div data-oe-protected="true"><p>a</p></div>
+                `),
+                stepFunction: async editor => {
+                    await insertText(editor, 'bc');
+                    const protectedParagraph = editor.editable.querySelector('[data-oe-protected="true"] > p');
+                    setSelection(protectedParagraph, 1);
+                    await insertText(editor, 'b');
+                    editor.historyUndo();
+                },
+                contentAfterEdit: unformat(`
+                <div><p>ab[]</p></div>
+                <div data-oe-protected="true"><p>ab</p></div>
+                `),
+            });
+        });
+        it('should not sanitize protected elements children', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                <div>
+                    <p><i class="fa"></i></p>
+                    <ul><li><p><br></p></li></ul>
+                </div>
+                <div data-oe-protected="true">
+                    <p><i class="fa"></i></p>
+                    <ul><li><p><br></p></li></ul>
+                </div>
+                `),
+                stepFunction: async editor => editor.sanitize(),
+                contentAfterEdit: unformat(`
+                <div>
+                    <p><i class="fa" contenteditable="false">\u200B</i></p>
+                    <ul><li><br></li></ul>
+                </div>
+                <div data-oe-protected="true">
+                    <p><i class="fa"></i></p>
+                    <ul><li><p><br></p></li></ul>
+                </div>
+                `),
+            });
+        });
+        it('should remove protected elements children during cleaning', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<div><p>a[]</p></div><div data-oe-protected="true"><p>a</p></div>',
+                contentAfter: '<div><p>a[]</p></div><div data-oe-protected="true"></div>',
             });
         });
     });

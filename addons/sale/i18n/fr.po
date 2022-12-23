@@ -3,9 +3,9 @@
 # 	* sale
 # 
 # Translators:
-# Damien Bouvy <dbo@odoo.com>, 2022
-# Yann Papouin <ypa@decgroupe.com>, 2022
 # Cécile Collart <cco@odoo.com>, 2022
+# Yann Papouin <ypa@decgroupe.com>, 2022
+# Damien Bouvy <dbo@odoo.com>, 2022
 # Martin Trigaux, 2022
 # Jolien De Paepe, 2022
 # 
@@ -2493,7 +2493,7 @@ msgstr "Conservons la signature électronique pour le moment."
 #: model_terms:product.product,website_description:sale.product_product_4e
 #: model_terms:product.product,website_description:sale.product_product_4f
 msgid "Locally handmade"
-msgstr "fait main localement"
+msgstr "Fait main localement"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
@@ -3062,7 +3062,7 @@ msgstr "Instructions de paiement"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__payment_method
 msgid "Payment Method"
-msgstr "Moyen de paiement"
+msgstr "Mode de paiement"
 
 #. module: sale
 #: model:ir.model,name:sale.model_payment_provider
@@ -3580,7 +3580,7 @@ msgstr "Avertissements de vente"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_payment_method
 msgid "Sale onboarding selected payment method"
-msgstr "Configuration de la méthode de paiement sélectionnée dans Ventes"
+msgstr "Configuration du mode de paiement sélectionné dans Ventes"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_packaging__sales
@@ -4298,6 +4298,13 @@ msgstr ""
 "L'état de la commande ne requiert pas de signature de la part du client."
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/controllers/portal.py:0
+#, python-format
+msgid "The access token is invalid."
+msgstr "Le jeton d'accès n'est pas valide."
+
+#. module: sale
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "The ordered quantity has been updated."
@@ -4589,6 +4596,7 @@ msgid "Type Name"
 msgstr "Nom du Type"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Type a message..."
@@ -4865,9 +4873,9 @@ msgid ""
 " communication will be given to the customer when they choose the payment "
 "method."
 msgstr ""
-"Vous pouvez définir le type de communication qui apparaitra sur les bons de "
-"commande. La communication sera donnée au client quand il choisira la "
-"méthode de paiement."
+"Vous pouvez définir le type de communication qui apparaîtra sur les bons de "
+"commande. La communication sera donnée au client quand il choisira le mode "
+"de paiement."
 
 #. module: sale
 #: code:addons/sale/models/product_product.py:0

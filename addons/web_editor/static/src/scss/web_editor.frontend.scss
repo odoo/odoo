@@ -34,7 +34,7 @@
 
 // GRID LAYOUT
 .o_grid_mode {
-    @include media-breakpoint-up(md) {
+    @include media-breakpoint-up(lg) {
         display: grid !important;
         grid-auto-rows: 50px;
         grid-template-columns: repeat(12, 1fr);
@@ -57,8 +57,15 @@
     --gutter-x: 30px;
 }
 
-.o_grid_item_image > img:not([data-shape]) {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
+.o_grid_item_image {
+    > img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+    }
+
+    &.o_grid_item_image_contain > img,
+    > img[data-shape] {
+        object-fit: contain !important;
+    }
 }

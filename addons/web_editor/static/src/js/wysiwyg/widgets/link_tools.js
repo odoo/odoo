@@ -207,7 +207,7 @@ const LinkTools = Link.extend({
     /**
      * @override
      */
-    _updateOptionsUI: function () {
+    _updateOptionsUI: async function () {
         const el = this.el.querySelector('[name="link_style_color"] we-button.active');
         if (el) {
             this.colorCombinationClass = el.dataset.value;
@@ -216,9 +216,9 @@ const LinkTools = Link.extend({
             // Show custom colors only for Custom style.
             this.$('.link-custom-color').toggleClass('d-none', el.dataset.value !== 'custom');
 
-            this._updateColorpicker('color');
-            this._updateColorpicker('background-color');
-            this._updateColorpicker('border-color');
+            await this._updateColorpicker('color');
+            await this._updateColorpicker('background-color');
+            await this._updateColorpicker('border-color');
 
             const borderWidth = this.linkEl.style['border-width'];
             const numberAndUnit = getNumericAndUnit(borderWidth);
@@ -362,6 +362,15 @@ const LinkTools = Link.extend({
         const $target = $(ev.target);
         if ($target.closest('[name="link_border_style"]').length) {
             return;
+        }
+        if ($target.closest('[name="link_style_color"]')) {
+            // Reset custom styles when changing link style.
+            this.$link.css('color', '');
+            this.$link.css('background-color', '');
+            this.$link.css('background-image', '');
+            this.$link.css('border-width', '');
+            this.$link.css('border-style', '');
+            this.$link.css('border-color', '');
         }
         const $select = $target.closest('we-select');
         $select.find('we-selection-items we-button').toggleClass('active', false);

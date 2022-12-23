@@ -24,6 +24,7 @@
                             </t>
                             <DropdownItem class="{ o_item_option: true, selected: option.isActive }"
                                 t-esc="option.description"
+                                checked="option.isActive"
                                 parentClosingMode="'none'"
                                 onSelected="() => this.onFilterSelected({ itemId: item.id, optionId: option.id })"
                             />
@@ -33,6 +34,7 @@
                 </t>
                 <t t-else="">
                     <DropdownItem class="{ o_menu_item: true, selected: item.isActive }"
+                        checked="item.isActive"
                         parentClosingMode="'none'"
                         t-esc="item.description"
                         onSelected="() => this.onFilterSelected({ itemId: item.id })"

@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:01+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,9 +41,8 @@ msgid ""
 msgstr ""
 "Дія кодового сервера може бути виконана з веб-сайту, використовуючи "
 "спеціальний контролер. Адресою є <base>/website/action/<website_path>. "
-"Встановіть це поле як Вірно, щоб дозволити користувачам запускати цю дію. "
-"Якщо встановлено значення Неправильно, дія не може бути виконана через веб-"
-"сайт."
+"Встановіть це поле як True, щоб дозволити користувачам запускати цю дію. "
+"Якщо встановлено значення False, дія не може бути виконана через веб-сайт."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -175,6 +175,10 @@ msgid ""
 "Post as Message: log on document\n"
 "Post as Note: mass SMS with archives"
 msgstr ""
+"Оберіть спосіб відправки SMS:\n"
+"SMS: масове відправлення SMS\n"
+"Опублікувати як Повідомлення: запис на документі\n"
+"Опублікувати як Примітку: масова відправка SMS з архівами"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__mail_post_method
@@ -184,6 +188,10 @@ msgid ""
 "Post as Message: post on document and notify followers\n"
 "Post as Note: log a note on document"
 msgstr ""
+"Оберіть спосіб для відправлення електронних листів:\n"
+"EMail: відправляти листи напряму\n"
+"Опублікувати як Повідомлення: публікувати на документах та підписникам\n"
+"Опублікувати як Примітку: запис примітки на документі"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_uid
@@ -207,6 +215,9 @@ msgid ""
 "        You can put a negative number if you need a delay before the\n"
 "        trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
+"Затримка після дати запуску.\n"
+"        Ви можете поставити від’ємне число, якщо вам потрібна затримка до дати запуску, як-от надсилання\n"
+" нагадування за 15 хвилин до зустрічі."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
@@ -274,6 +285,8 @@ msgid ""
 "Email, followers or activities action types cannot be used when deleting "
 "records."
 msgstr ""
+"Під час видалення записів не можна використовувати типи дій електронної "
+"пошти, підписників або дій."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__xml_id
@@ -291,6 +304,7 @@ msgstr "Поля, які запускають зміну."
 msgid ""
 "Form Modification based actions can only be used with code action type."
 msgstr ""
+"Дії на основі модифікації форми можна використовувати лише з типом дії коду."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__groups_id
@@ -400,7 +414,7 @@ msgstr "Примітка"
 #, python-format
 msgid ""
 "Note that this action can be triggered up to %d minutes after its schedule."
-msgstr ""
+msgstr "Зауважте, що цю дію можна запустити до %d хвилин після її планування."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_field_ids
@@ -463,12 +477,12 @@ msgstr "Шаблон SMS"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__mail_post_method
 msgid "Send as"
-msgstr ""
+msgstr "Надіслати як"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sms_method
 msgid "Send as (SMS)"
-msgstr ""
+msgstr "Надіслати як (SMS)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sequence
@@ -502,7 +516,7 @@ msgstr "Налаштуйте нову автоматизацію"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__mail_post_autofollow
 msgid "Subscribe Recipients"
-msgstr ""
+msgstr "Підписати одержувачів"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_summary
@@ -535,6 +549,8 @@ msgid ""
 "The action will be triggered if and only if one of these fields is updated. "
 "If empty, all fields are watched."
 msgstr ""
+"Дія буде запущена тоді і тільки якщо одне з цих полів буде оновлено. Якщо "
+"пусто, перевіряються всі поля."
 
 #. module: base_automation
 #. openerp-web
@@ -581,6 +597,15 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)\n"
 "- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
 msgstr ""
+"Тип дії сервера. Доступні такі значення:\n"
+"- «Виконати код Python»: блок коду Python, який буде виконано\n"
+"- «Створити новий запис»: створити новий запис із новими значеннями\n"
+"- «Оновити запис»: оновити значення запису\n"
+"- «Виконати кілька дій»: визначте дію, яка запускає кілька інших дій сервера\n"
+"- «Надіслати електронний лист»: опублікувати повідомлення, замітку або надіслати електронний лист (Обговорення)\n"
+"- «Додати підписників»: додати підписників до запису (Обговорення)\n"
+"- «Створити наступну дію»: створити дію (обговорення)\n"
+"- «Надіслати текстове повідомлення SMS»: відправити SMS, записати їх на документах (SMS)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
@@ -671,6 +696,8 @@ msgid ""
 "When should the condition be triggered.\n"
 "                If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"Коли має бути запущений стан.\n"
+"               Якщо є, буде перевірено планувальником. Якщо пусто, буде перевірено під час створення та оновлення."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active

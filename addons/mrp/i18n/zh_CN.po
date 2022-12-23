@@ -3,11 +3,11 @@
 # 	* mrp
 # 
 # Translators:
-# Martin Trigaux, 2022
 # 陕西_jack, 2022
 # Tony Peng <umingpeng@gmail.com>, 2022
-# Raymond Yu <cl_yu@hotmail.com>, 2022
 # digitalliuzg8888, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2022
+# Martin Trigaux, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
@@ -272,7 +272,7 @@ msgstr "<span class=\"o_stat_text\">源 MO</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Unbuilds</span>"
-msgstr "<span class=\"o_stat_text\">未建立</span>"
+msgstr "<span class=\"o_stat_text\">拆解</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
@@ -686,7 +686,7 @@ msgstr "分配序列号"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "At the creation of a Manufacturing Order."
-msgstr "在创建制造订单时。"
+msgstr "在制造订单创建时。"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -979,7 +979,7 @@ msgstr "BOM组件"
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
 msgid "BoM Cost"
-msgstr "BOM成本"
+msgstr "BOM 成本"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__bom_line_id
@@ -989,7 +989,7 @@ msgstr "BOM行"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__bom_line_ids
 msgid "BoM Lines"
-msgstr "BOM明细行"
+msgstr "BOM 明细行"
 
 #. module: mrp
 #: model:ir.actions.client,name:mrp.action_report_mrp_bom
@@ -1002,7 +1002,7 @@ msgstr "BOM 概要"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__type
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "BoM Type"
-msgstr "BOM类型"
+msgstr "BOM 类型"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -1071,7 +1071,7 @@ msgstr "副产品"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Can't find any production location."
-msgstr "找不到任何制造位置 。"
+msgstr "找不到任何生产位置 。"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1100,12 +1100,12 @@ msgstr "无法删除状态为完成的制造订单。"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__default_capacity
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__capacity
 msgid "Capacity"
-msgstr "产能"
+msgstr "能力"
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_capacity_positive_capacity
 msgid "Capacity should be a positive number."
-msgstr "容量应为正数。"
+msgstr "能力应为正数。"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_reported_from_previous_wo
@@ -1380,7 +1380,7 @@ msgstr "成本信息"
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.js:0
 #, python-format
 msgid "Costs"
-msgstr "费用"
+msgstr "成本"
 
 #. module: mrp
 #. openerp-web
@@ -1392,7 +1392,7 @@ msgstr "无法显示选择的电子表格"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_backorder_count
 msgid "Count of linked backorder"
-msgstr "缺货的欠单计数"
+msgstr "连接的欠单计数"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
@@ -1467,7 +1467,7 @@ msgid ""
 "the status of work orders upon MO confirmation. If this feature is ticked, "
 "and nothing is specified, Odoo will assume that all operations can be "
 "started simultaneously."
-msgstr "创建操作级依赖项，该依赖项将在MO确认时影响计划和工单状态。如果勾选此功能，且未指定任何内容，Odoo将假定所有操作都可以同时启动"
+msgstr "创建作业级依赖项，该依赖项将在MO确认时影响计划和工单状态。如果勾选此功能，且未指定任何内容，Odoo将假定所有作业都可以同时启动"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__created_production_id
@@ -1637,7 +1637,7 @@ msgid ""
 " be multiplied by two. However, note that both time before and after "
 "production will only be counted once."
 msgstr ""
-"可在该工作中心并行（同时）生产的默认件数（以产品单位为单位）。例如：产能为 5，您需要生产 10 个单位，那么物料清单上列出的操作时间将乘以 "
+"可在该工作中心并行（同时）生产的默认件数（以产品单位为单位）。例如：能力为 5，您需要生产 10 个单位，那么物料清单上列出的操作时间将乘以 "
 "2。但是，请注意，生产前后的时间将只计算一次。"
 
 #. module: mrp
@@ -1900,7 +1900,7 @@ msgstr "结束日期"
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__has_tracking
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__product_tracking
 msgid "Ensure the traceability of a storable product in your warehouse."
-msgstr "确保可追溯到仓库中的产品。"
+msgstr "确保仓库中的产品可追溯。"
 
 #. module: mrp
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
@@ -2072,7 +2072,7 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
-"预测数量(计算为手上数量 - 出库 + 入库) \n"
+"预测数量(计算为手上数量 - 出货 + 进货) \n"
 "对于单一库存位置来说，这包括了存储在此位置及其子位置的货物。\n"
 "对于单一库存来说，这包括了存储在此库存的库存位置及其子位置的货物。\n"
 "否则，这包括存储在任何“内部”类型的任何库存位置的货物。"
@@ -2092,7 +2092,7 @@ msgstr "预测的问题"
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #, python-format
 msgid "Free to Use"
-msgstr "免费使用"
+msgstr "自由使用"
 
 #. module: mrp
 #. openerp-web
@@ -2100,7 +2100,7 @@ msgstr "免费使用"
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
 msgid "Free to Use / On Hand"
-msgstr "免费使用 / 在手"
+msgstr "自由使用 / 在手"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2147,7 +2147,7 @@ msgstr "显示工作中心列表时显示顺序。"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__sequence
 msgid "Gives the sequence order when displaying."
-msgstr "用于显示顺序."
+msgstr "在显示时给出顺序."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__worksheet_google_slide
@@ -2201,7 +2201,7 @@ msgstr "有套件"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__has_message
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__has_message
 msgid "Has Message"
-msgstr "有信息"
+msgstr "有消息"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_document__priority__2
@@ -2268,7 +2268,7 @@ msgstr "表示异常活动的图标。"
 #: model:ir.model.fields,help:mrp.field_mrp_bom__product_id
 msgid ""
 "If a product variant is defined the BOM is available only for this product."
-msgstr "如果定义了产品变体，那么BOM仅用于本产品。"
+msgstr "如果定义了产品变体，那么BOM仅用于本产品变体。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_needaction
@@ -2931,7 +2931,7 @@ msgstr "制造参考"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_orderpoint__manufacturing_visibility_days
 msgid "Manufacturing Visibility Days"
-msgstr "制造可见性日"
+msgstr "制造可见性天数"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_action
@@ -2940,7 +2940,7 @@ msgid ""
 "                workers and/or machines, they are used for costing, scheduling, capacity planning, etc."
 msgstr ""
 "所有的制造订单作业都可以排到工作中心，安排制造安排到工作中心里去。 这工作中心是什么意思呢？工作中心它可以是\n"
-" 工人和/或机器的统称，意思是工作也可以叫一个工作中心，一台车床可以叫一个工作中心，它们用来做成本核算，排安排，产能安排等。"
+" 工人和/或机器的统称，意思是工作也可以叫一个工作中心，一台车床可以叫一个工作中心，它们用来做成本核算，排安排，能力安排等。"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_kanban_action
@@ -2950,7 +2950,7 @@ msgid ""
 "                They can be defined via the configuration menu."
 msgstr ""
 "所有的制造订单作业都可以排到工作中心，安排制造安排到工作中心里去。 这工作中心是什么意思呢？工作中心它可以是\n"
-" 工人和/或机器的统称，意思是工作也可以叫一个工作中心，一台车床可以叫一个工作中心，它们用来做成本核算，排安排，产能安排等。\n"
+" 工人和/或机器的统称，意思是工作也可以叫一个工作中心，一台车床可以叫一个工作中心，它们用来做成本核算，排安排，能力安排等。\n"
 "您可以通过配置菜单来设置并定义它。"
 
 #. module: mrp
@@ -3209,6 +3209,14 @@ msgid "Note that components"
 msgstr "备注那些部件"
 
 #. module: mrp
+#: code:addons/mrp/models/product.py:0 code:addons/mrp/models/product.py:0
+#, python-format
+msgid ""
+"Note that product(s): '%s' is/are still linked to active Bill of Materials, "
+"which means that the product can still be used on it/them."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_needaction_counter
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__message_needaction_counter
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_needaction_counter
@@ -3240,7 +3248,7 @@ msgstr "未建立数量"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__message_has_error_counter
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_has_error_counter
 msgid "Number of errors"
-msgstr "错误数"
+msgstr "错误数量"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_child_count
@@ -3506,25 +3514,25 @@ msgstr "最近一月效能"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Pick Components"
-msgstr "捡取组件"
+msgstr "拣取组件"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Pick components and then manufacture"
-msgstr "捡取组件并制造"
+msgstr "拣取组件并制造"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_warehouse__manufacture_steps__pbm
 msgid "Pick components and then manufacture (2 steps)"
-msgstr "选择组件然后制造（2个步骤）"
+msgstr "拣取组件然后制造（2个步骤）"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:0
 #: model:ir.model.fields.selection,name:mrp.selection__stock_warehouse__manufacture_steps__pbm_sam
 #, python-format
 msgid "Pick components, manufacture and then store products (3 steps)"
-msgstr "捡取组件制造，然后储存产品 (3 步)"
+msgstr "拣取组件制造，然后储存产品 (3 步)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_mto_pull_id
@@ -3576,7 +3584,7 @@ msgstr "根据预测安排制造或采购订单"
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Planned"
-msgstr "已计划"
+msgstr "已安排"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -3825,7 +3833,7 @@ msgstr "产品变体"
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_capacity_unique_product
 msgid "Product capacity should be unique for each workcenter."
-msgstr "产品产能对每个工作中心应该是唯一的"
+msgstr "产品能力对每个工作中心应该是唯一的"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_immediate_production_line__production_id
@@ -3901,7 +3909,7 @@ msgstr "生产开始延迟"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_multi__production_ids
 msgid "Productions To Split"
-msgstr "制作拆分"
+msgstr "待拆分生产"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workcenter_productivity_loss_type__loss_type__productive
@@ -4047,7 +4055,7 @@ msgstr "就绪"
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
 msgid "Ready to Produce"
-msgstr "准备生产"
+msgstr "生产准备就绪"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__production_real_duration
@@ -4094,7 +4102,7 @@ msgstr "生成本生产订单的前置文档编号."
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
 msgid "Reference:"
-msgstr "参照："
+msgstr "参考："
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__ir_attachment_id
@@ -4168,7 +4176,7 @@ msgstr "负责用户"
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #, python-format
 msgid "Resupply lead time."
-msgstr "重新供应前置时间."
+msgstr "补给前置时间."
 
 #. module: mrp
 #. openerp-web
@@ -4204,7 +4212,7 @@ msgstr "短信息发送错误"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_line__date
 msgid "Schedule Date"
-msgstr "预定日期"
+msgstr "安排日期"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -4408,7 +4416,7 @@ msgstr "显示详情"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_final_lots
 msgid "Show Final Lots"
-msgstr "显示最后一批"
+msgstr "显示最终批次"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_lock
@@ -4629,7 +4637,7 @@ msgstr "制造后库存作业类型"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__sam_rule_id
 msgid "Stock After Manufacturing Rule"
-msgstr "制造规则后的库存"
+msgstr "制造后库存规则"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_assign_serial
@@ -4674,7 +4682,7 @@ msgstr "库存规则"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__sam_loc_id
 msgid "Stock after Manufacturing Location"
-msgstr "制造地点后的库存"
+msgstr "制造后库存位置"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_stock_report_stock_rule
@@ -4685,7 +4693,7 @@ msgstr "库存规则报告"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Store Finished Product"
-msgstr "生产入库单"
+msgstr "存储完工产品"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__store_fname
@@ -4795,7 +4803,7 @@ msgstr "产品%(product)s上设置的属性值%(attribute)s与BoM产品%(bom_pro
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "The capacity must be strictly positive."
-msgstr "容量必须严格为正数."
+msgstr "能力必须严格为正数."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -4980,7 +4988,7 @@ msgstr "这是基于产品的BOM（BOM）的成本。 它是通过汇总构建�
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #, python-format
 msgid "This is the cost defined on the product."
-msgstr "这是产品的定义成本。"
+msgstr "这是产品定义的成本。"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_moves
@@ -5016,7 +5024,7 @@ msgid ""
 "This should be the smallest quantity that this product can be produced in. "
 "If the BOM contains operations, make sure the work center capacity is "
 "accurate."
-msgstr "这应该是该产品可以生产的最小数量。如果物料清单包含工序，请确保工作中心产能准确无误。"
+msgstr "这应该是该产品可以生产的最小数量。如果物料清单包含工序，请确保工作中心能力准确无误。"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__time_ids
@@ -5080,7 +5088,7 @@ msgstr "至"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__to_backorder
 msgid "To Backorder"
-msgstr "创建欠单"
+msgstr "待欠单"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__to_close
@@ -5153,7 +5161,7 @@ msgstr "总数量"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__product_uom_qty
 msgid "Total Quantity"
-msgstr "数量总计"
+msgstr "总数量"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_progress_count
@@ -5173,7 +5181,7 @@ msgstr "总时长"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "Total expected duration"
-msgstr "预计总工期"
+msgstr "总预计时长"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__production_duration_expected
@@ -5358,7 +5366,7 @@ msgstr "计量单位是库存控制的量度单位"
 #: model:product.template,uom_name:mrp.product_product_wood_ply_product_template
 #: model:product.template,uom_name:mrp.product_product_wood_wear_product_template
 msgid "Units"
-msgstr "件"
+msgstr "单位"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view

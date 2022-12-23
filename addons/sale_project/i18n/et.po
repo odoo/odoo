@@ -8,11 +8,12 @@
 # Arma Gedonsky <armagedonsky@hot.ee>, 2022
 # Rivo Zängov <eraser@eraser.ee>, 2022
 # Algo Kärp <algokarp@gmail.com>, 2022
-# Triine Aavik <triine@avalah.ee>, 2022
 # Martin Trigaux, 2022
 # Martin Aavastik <martin@avalah.ee>, 2022
 # Eneli Õigus <enelioigus@gmail.com>, 2022
+# Jana Jaakson, 2022
 # Leaanika Randmets, 2022
+# Triine Aavik <triine@avalah.ee>, 2022
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Leaanika Randmets, 2022\n"
+"Last-Translator: Triine Aavik <triine@avalah.ee>, 2022\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,12 +41,19 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    Eesmärke ei leitud. Loome ühe!\n"
+"                </p><p>\n"
+"                    Jälgige peamisi punkte, mis on vajalikud edu saavutamiseks.\n"
+"                </p>\n"
+"            "
 
 #. module: sale_project
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "%(name)s's Sales Order"
-msgstr ""
+msgstr "%(name)s müügitellimus"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__qty_delivered_method
@@ -67,7 +75,7 @@ msgstr ""
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "All items have been loaded"
-msgstr ""
+msgstr "Kõik artikklid on laetud"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__allow_billable
@@ -89,7 +97,7 @@ msgstr "Loo arve"
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
 #: model:ir.model.fields,field_description:sale_project.field_product_template__service_tracking
 msgid "Create on Order"
-msgstr ""
+msgstr "Loo tellimus"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__project_partner_id
@@ -111,12 +119,12 @@ msgstr "Kirjeldus"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__display_sale_order_button
 msgid "Display Sales Order"
-msgstr ""
+msgstr "Kuva müügitellimus"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__visible_project
 msgid "Display project"
-msgstr ""
+msgstr "Kuva projekti"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__project_id
@@ -126,17 +134,17 @@ msgstr "Loodud Odoo projektid"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__task_id
 msgid "Generated Task"
-msgstr "Loo projekt"
+msgstr "Loodud ülesanded"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_to_invoice
 msgid "Has SO to Invoice"
-msgstr ""
+msgstr "On müügitellimus, mida teha arveks"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_with_nothing_to_invoice
 msgid "Has a SO with an invoice status of No"
-msgstr ""
+msgstr "On müügitellimus arve staatusega Ei"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__invoice_count
@@ -147,7 +155,7 @@ msgstr "Arve kogus"
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Invoice ordered quantities as soon as this service is sold."
-msgstr ""
+msgstr "Arveldage tellitud kogused kohe peale teenuse müüki."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -157,6 +165,9 @@ msgid ""
 " for the order with a task for each sales order line to track the time "
 "spent."
 msgstr ""
+"Arveldage tellitud kogused kohe peale teenuse müüki. Loo tellimuse jaoks "
+"projekt koos ülesandega iga müügitellimuse rea jaoks, et jälgida kulutatud "
+"aega."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -165,6 +176,8 @@ msgid ""
 "Invoice ordered quantities as soon as this service is sold. Create a task in"
 " an existing project to track the time spent."
 msgstr ""
+"Arveldage tellitud kogused kohe peale teenuse müüki. Loo ülesanne "
+"olemasolevasse projekti, et jälgida kulutatud aega."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -173,6 +186,8 @@ msgid ""
 "Invoice ordered quantities as soon as this service is sold. Create an empty "
 "project for the order to track the time spent."
 msgstr ""
+"Arveldage tellitud kogused kohe peale teenuse müüki. Loo tellimuse jaoks "
+"tühi project, et jälgida kulutatud aega."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -181,6 +196,8 @@ msgid ""
 "Invoice this service when it is delivered (set the quantity by hand on your "
 "sales order lines). "
 msgstr ""
+"Esitage selle teenuse eest arve selle tarnimisel (määrake kogus käsitsi oma "
+"müügitellimuse ridadel). "
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -190,6 +207,9 @@ msgid ""
 "sales order lines). Create a project for the order with a task for each "
 "sales order line to track the time spent."
 msgstr ""
+"Esitage selle teenuse eest arve selle tarnimisel (määrake kogus käsitsi oma "
+"müügitellimuse ridadel). Loo tellimuse jaoks projekt koos ülesandega iga "
+"müügitellimuse rea jaoks, et jälgida kulutatud aega."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -199,6 +219,9 @@ msgid ""
 "sales order lines). Create a task in an existing project to track the time "
 "spent."
 msgstr ""
+"Esitage selle teenuse eest arve selle tarnimisel (määrake kogus käsitsi oma "
+"müügitellimuse ridadel). Loo ülesanne olemasolevasse projekti, et jälgida "
+"kulutatud aega."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -208,12 +231,15 @@ msgid ""
 "sales order lines). Create an empty project for the order to track the time "
 "spent."
 msgstr ""
+"Esitage selle teenuse eest arve selle tarnimisel (määrake kogus käsitsi oma "
+"müügitellimuse ridadel). Loo tellimuse jaoks tühi project, et jälgida "
+"kulutatud aega."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Invoice your milestones when they are reached."
-msgstr ""
+msgstr "Esitage eesmärkide eest arve kui need on saavutatud."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -222,6 +248,9 @@ msgid ""
 "Invoice your milestones when they are reached. Create a project for the "
 "order with a task for each sales order line to track the time spent."
 msgstr ""
+"Esitage eesmärkide eest arve kui need on saavutatud. Loo tellimuse jaoks "
+"projekt koos ülesandega iga müügitellimuse rea jaoks, et jälgida kulutatud "
+"aega."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -230,6 +259,8 @@ msgid ""
 "Invoice your milestones when they are reached. Create a task in an existing "
 "project to track the time spent."
 msgstr ""
+"Esitage eesmärkide eest arve kui need on saavutatud. Loo ülesanne "
+"olemasolevasse projekti, et jälgida kulutatud aega."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -238,11 +269,13 @@ msgid ""
 "Invoice your milestones when they are reached. Create an empty project for "
 "the order to track the time spent."
 msgstr ""
+"Esitage eesmärkide eest arve kui need on saavutatud. Loo tellimuse jaoks "
+"tühi project, et jälgida kulutatud aega."
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Invoice your time and material to customers"
-msgstr "Arveldage klientidele edasi kulunud aega ja materjale."
+msgstr "Arveldage klientidele kulunud aega ja materjale"
 
 #. module: sale_project
 #. openerp-web
@@ -266,7 +299,7 @@ msgstr "Arvelduse meetod"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__is_product_milestone
 msgid "Is Product Milestone"
-msgstr ""
+msgstr "On toote eesmärk"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__is_service
@@ -335,23 +368,23 @@ msgstr "Müügitellimus puudub"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
 msgid "No Sales Order Item"
-msgstr ""
+msgstr "Müügitellimuse artikkel puudub"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "Non-billable"
-msgstr ""
+msgstr "Mittearveldatav"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__no
 msgid "Nothing"
-msgstr "MItte midagi"
+msgstr "Mitte midagi"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_count
 msgid "Number of Projects"
-msgstr ""
+msgstr "Projektide arv"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__service_tracking
@@ -360,6 +393,13 @@ msgid ""
 "On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
 "         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
 msgstr ""
+
+#. module: sale_project
+#: code:addons/sale_project/models/project.py:0
+#: code:addons/sale_project/models/project.py:0
+#, python-format
+msgid "Other Revenues"
+msgstr "Muud tulud"
 
 #. module: sale_project
 #: code:addons/sale_project/models/project.py:0
@@ -373,6 +413,8 @@ msgid ""
 "Percentage of the ordered quantity that will automatically be delivered once"
 " the milestone is reached."
 msgstr ""
+"Protsent tellitud kogusest, mis tarnitakse automaatselt peale eesmärkide "
+"saavutamist."
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_product_template
@@ -396,17 +438,17 @@ msgstr "Projekt"
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
 msgid "Project & Task"
-msgstr ""
+msgstr "Projekt ja ülesanne"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_milestone
 msgid "Project Milestone"
-msgstr ""
+msgstr "Projekti eesmärk"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_type__milestones
 msgid "Project Milestones"
-msgstr ""
+msgstr "Projekti eesmärgid"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
@@ -430,17 +472,17 @@ msgstr "Projektid"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_ids
 msgid "Projects used in this sales order."
-msgstr "Müügitellimuses kasutatud projekt"
+msgstr "Müügitellimuses kasutatud project."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__quantity_percentage
 msgid "Quantity"
-msgstr "Tehtud kogused"
+msgstr "Kogus"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__reached_milestones_ids
 msgid "Reached Milestones"
-msgstr ""
+msgstr "Saavutatud eesmärgid"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_search
@@ -463,7 +505,7 @@ msgstr "Müük"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Sales & Invoicing"
-msgstr ""
+msgstr "Müük ja arveldamine"
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
@@ -480,7 +522,7 @@ msgstr "Müügitellimus"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_search
 msgid "Sales Order Id"
-msgstr ""
+msgstr "Müügitellimuse ID"
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
@@ -515,7 +557,7 @@ msgstr ""
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Sales Order Items"
-msgstr ""
+msgstr "Müügitellimuse artikkel"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_line
@@ -534,12 +576,14 @@ msgid ""
 "Sales order item that will be selected by default on the tasks and timesheets of this project, except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
 "It can be modified on each task and timesheet entry individually if necessary."
 msgstr ""
+"Müügitellimuse artikkel, mis valitakse selle projekti tööülesannetes ja ajatabelites vaikimisi, välja arvatud juhul, kui ajatabelites määratud töötaja on otseselt seotud projekti mõne muu müügitellimuse artikliga.\n"
+"Seda saab vajadusel muuta iga ülesande ja ajatabeli kirje puhul eraldi."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
 #: model:ir.model.fields,help:sale_project.field_project_task__project_sale_order_id
 msgid "Sales order to which the project is linked."
-msgstr ""
+msgstr "Müügitellimus, millega projekt on seotud."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id
@@ -550,21 +594,19 @@ msgstr "Müügitellimus, millega ülesanne on seotud."
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Invoice"
-msgstr ""
-"Valige arveldatav projekt, mille kohta saab ülesandeid luua. See seadistus "
-"tuleb määrata igale ettevõttele."
+msgstr "Otsi arvelt"
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order"
-msgstr ""
+msgstr "Otsi müügitellimusest"
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order Item"
-msgstr ""
+msgstr "Otsi müügitellimuse artiklist"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -594,12 +636,12 @@ msgstr "Ülesanne"
 #: code:addons/sale_project/models/sale_order_line.py:0
 #, python-format
 msgid "Task Created (%s): %s"
-msgstr ""
+msgstr "Ülesanne loodud (%s): %s"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_recurrence
 msgid "Task Recurrence"
-msgstr ""
+msgstr "Ülesande kordumine"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__tasks_count
@@ -623,7 +665,7 @@ msgstr "Ülesanded, mis on seotud selle müügiga"
 msgid ""
 "The product %s should not have a global project since it will generate a "
 "project."
-msgstr ""
+msgstr "Tootel %s ei tohiks olla globaalset projekti, kuna see loob projekti."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -632,6 +674,8 @@ msgid ""
 "The product %s should not have a project nor a project template since it "
 "will not generate project."
 msgstr ""
+"Tootel %s ei tohiks olla projekti ega projektimalli, kuna see ei loo "
+"projekti."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -640,14 +684,14 @@ msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
 msgstr ""
+"Tootel %s ei tohiks olla projektimalli, kuna see loob ülesande globaalses "
+"projektis."
 
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order_line.py:0
 #, python-format
 msgid "This task has been created from: %s (%s)"
-msgstr ""
-"See ülesanne on loodud: <a href=# data-oe-model=sale.order data-oe-"
-"id=%d>%s</a> (%s)"
+msgstr "See ülesanne on loodud: %s (%s)"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__task_to_invoice
@@ -663,7 +707,7 @@ msgstr "Jälgimisteenus"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__vendor_bill_count
 msgid "Vendor Bill Count"
-msgstr ""
+msgstr "Ostuarvete arv"
 
 #. module: sale_project
 #: code:addons/sale_project/models/project.py:0
@@ -679,3 +723,5 @@ msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr ""
+"Selle ülesandega ei saa sisuda tellimuse artiklit %(order_id)s - "
+"%(product_id)s, kuna see on uuesti arveldatud kulu."

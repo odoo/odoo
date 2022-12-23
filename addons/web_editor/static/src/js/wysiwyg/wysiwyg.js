@@ -78,11 +78,7 @@ const Wysiwyg = Widget.extend({
     init: function (parent, options) {
         this._super.apply(this, arguments);
         this.id = ++id;
-        this.options = options;
-        // autohideToolbar is true by default (false by default if navbar present).
-        this.options.autohideToolbar = typeof this.options.autohideToolbar === 'boolean'
-            ? this.options.autohideToolbar
-            : !options.snippets;
+        this.options = this._getEditorOptions(options);
         this.saving_mutex = new concurrency.Mutex();
         // Keeps track of color palettes per event name.
         this.colorpickers = {};
@@ -107,20 +103,19 @@ const Wysiwyg = Widget.extend({
      */
     start: async function () {
         await this._super.apply(this, arguments);
-        const options = this._editorOptions();
         // If this widget is started from the OWL legacy component, at the time
         // of start, the $el is not in the document yet. Some instruction in the
         // start rely on the $el being in the document at that time, including
         // code for the collaboration (for adding cursors) or the iframe loading
         // in mass_mailing.
-        if (options.autostart) {
+        if (this.options.autostart) {
             return this.startEdition();
         }
     },
     startEdition: async function () {
         const self = this;
 
-        var options = this._editorOptions();
+        const options = this.options;
 
         this.$editable = this.$editable || this.$el;
         if (options.value) {
@@ -171,6 +166,7 @@ const Wysiwyg = Widget.extend({
             getUnremovableElements: this.options.getUnremovableElements,
             defaultLinkAttributes: this.options.userGeneratedContent ? {rel: 'ugc' } : {},
             allowCommandVideo: this.options.allowCommandVideo,
+            allowInlineAtRoot: this.options.allowInlineAtRoot,
             getYoutubeVideoElement: getYoutubeVideoElement,
             getContextFromParentRect: options.getContextFromParentRect,
             getPowerboxElement: () => {
@@ -302,7 +298,7 @@ const Wysiwyg = Widget.extend({
 
                 const selection = self.odooEditor.document.getSelection();
                 const anchorNode = selection.anchorNode;
-                if (anchorNode && closestElement(anchorNode, '.oe-blackbox')) {
+                if (anchorNode && closestElement(anchorNode, '[data-oe-protected="true"]')) {
                     return;
                 }
 
@@ -740,7 +736,7 @@ const Wysiwyg = Widget.extend({
         if ($wrapwrap.length) {
             $('#wrapwrap')[0].removeEventListener('scroll', this.odooEditor.multiselectionRefresh, { passive: true });
         }
-        $(this.$root).off('mousedown');
+        $(this.$root).off('click');
         if (this.linkPopover) {
             this.linkPopover.hide();
         }
@@ -759,6 +755,15 @@ const Wysiwyg = Widget.extend({
      */
     renderElement: function () {
         this.$editable = this.options.editable || $('<div class="note-editable">');
+
+        // We add the field's name as id so default_focus will target it if
+        // needed. For that to work, it has to already be editable but note that
+        // the editor is at this point not yet instantiated.
+        if (typeof this.options.fieldId !== 'undefined' && !this.options.inIframe) {
+            this.$editable.attr('id', this.options.fieldId);
+            this.$editable.attr('contenteditable', true);
+        }
+
         this.$root = this.$editable;
         if (this.options.height) {
             this.$editable.height(this.options.height);
@@ -1362,6 +1367,11 @@ const Wysiwyg = Widget.extend({
         for (const style of stylesToCopy) {
             element.style.setProperty(`--we-cp-${style}`, weUtils.getCSSVariableValue(style));
         }
+
+        element.classList.toggle('o_we_has_btn_outline_primary',
+            weUtils.getCSSVariableValue('btn-primary-outline') === 'true');
+        element.classList.toggle('o_we_has_btn_outline_secondary',
+            weUtils.getCSSVariableValue('btn-secondary-outline') === 'true');
     },
     /**
      * Detached function to allow overriding.
@@ -1643,7 +1653,7 @@ const Wysiwyg = Widget.extend({
                         if (this.odooEditor.deselectTable() && hasValidSelection(this.odooEditor.editable)) {
                             this.odooEditor.document.getSelection().collapseToStart();
                         }
-                        this._updateEditorUI();
+                        this._updateEditorUI(this.lastMediaClicked && { target: this.lastMediaClicked });
                         colorpicker.off('color_leave');
                     });
                     colorpicker.on('color_hover', null, ev => {
@@ -1698,7 +1708,7 @@ const Wysiwyg = Widget.extend({
                 // Make it important so it has priority over selection color.
                 td.style.setProperty(propName, td.style[propName], previewMode ? 'important' : '');
             }
-        } else {
+        } else if (!this.lastMediaClicked) {
             // Ensure the selection in the fonts tags, otherwise an undetermined
             // race condition could generate a wrong selection later.
             const first = coloredElements[0];
@@ -1741,9 +1751,8 @@ const Wysiwyg = Widget.extend({
      * Handle custom keyboard shortcuts.
      */
     _handleShortcuts: function (e) {
-        const options = this._editorOptions();
         // Open the link tool when CTRL+K is pressed.
-        if (options.bindLinkTool && e && e.key === 'k' && (e.ctrlKey || e.metaKey)) {
+        if (this.options.bindLinkTool && e && e.key === 'k' && (e.ctrlKey || e.metaKey)) {
             e.preventDefault();
             this.openLinkToolsFromSelection();
         }
@@ -1777,7 +1786,7 @@ const Wysiwyg = Widget.extend({
     _updateEditorUI: function (e) {
         let selection = this.odooEditor.document.getSelection();
         const anchorNode = selection.anchorNode;
-        if (anchorNode && closestElement(anchorNode, '.oe-blackbox')) {
+        if (anchorNode && closestElement(anchorNode, '[data-oe-protected="true"]')) {
             return;
         }
 
@@ -1952,8 +1961,14 @@ const Wysiwyg = Widget.extend({
             button.classList.toggle('active', button.dataset.value === value);
         }
     },
-    _editorOptions: function () {
-        return Object.assign({}, this.defaultOptions, this.options);
+    _getEditorOptions: function (options) {
+        const finalOptions = {...this.defaultOptions, ...options};
+        // autohideToolbar is true by default (false by default if navbar present).
+        finalOptions.autohideToolbar = typeof finalOptions.autohideToolbar === 'boolean'
+            ? finalOptions.autohideToolbar
+            : !options.snippets;
+
+        return finalOptions;
     },
     _insertSnippetMenu: function () {
         return this.snippetsMenu.insertBefore(this.$el);
@@ -2004,7 +2019,7 @@ const Wysiwyg = Widget.extend({
         }
     },
     _getPowerboxOptions: function () {
-        const editorOptions = this._editorOptions();
+        const editorOptions = this.options;
         const categories = [];
         const commands = [
             {
@@ -2013,6 +2028,7 @@ const Wysiwyg = Widget.extend({
                 priority: 30,
                 description: _t('Add a blockquote section.'),
                 fontawesome: 'fa-quote-right',
+                isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     this.odooEditor.execCommand('setTag', 'blockquote');
                 },
@@ -2023,6 +2039,7 @@ const Wysiwyg = Widget.extend({
                 priority: 20,
                 description: _t('Add a code section.'),
                 fontawesome: 'fa-code',
+                isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     this.odooEditor.execCommand('setTag', 'pre');
                 },
@@ -2032,6 +2049,7 @@ const Wysiwyg = Widget.extend({
                 name: _t('Signature'),
                 description: _t('Insert your signature.'),
                 fontawesome: 'fa-pencil-square-o',
+                isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
                 callback: async () => {
                     const res = await this._rpc({
                         model: 'res.users',
@@ -2051,6 +2069,9 @@ const Wysiwyg = Widget.extend({
                 fontawesome: 'fa-columns',
                 callback: () => this.odooEditor.execCommand('columnize', 2, editorOptions.insertParagraphAfterColumns),
                 isDisabled: () => {
+                    if (!this.odooEditor.isSelectionInBlockRoot()) {
+                        return true;
+                    }
                     const anchor = this.odooEditor.document.getSelection().anchorNode;
                     const row = closestElement(anchor, '.o_text_columns .row');
                     return row && row.childElementCount === 2;
@@ -2064,6 +2085,9 @@ const Wysiwyg = Widget.extend({
                 fontawesome: 'fa-columns',
                 callback: () => this.odooEditor.execCommand('columnize', 3, editorOptions.insertParagraphAfterColumns),
                 isDisabled: () => {
+                    if (!this.odooEditor.isSelectionInBlockRoot()) {
+                        return true;
+                    }
                     const anchor = this.odooEditor.document.getSelection().anchorNode;
                     const row = closestElement(anchor, '.o_text_columns .row');
                     return row && row.childElementCount === 3;
@@ -2077,6 +2101,9 @@ const Wysiwyg = Widget.extend({
                 fontawesome: 'fa-columns',
                 callback: () => this.odooEditor.execCommand('columnize', 4, editorOptions.insertParagraphAfterColumns),
                 isDisabled: () => {
+                    if (!this.odooEditor.isSelectionInBlockRoot()) {
+                        return true;
+                    }
                     const anchor = this.odooEditor.document.getSelection().anchorNode;
                     const row = closestElement(anchor, '.o_text_columns .row');
                     return row && row.childElementCount === 4;
@@ -2090,6 +2117,9 @@ const Wysiwyg = Widget.extend({
                 fontawesome: 'fa-columns',
                 callback: () => this.odooEditor.execCommand('columnize', 0),
                 isDisabled: () => {
+                    if (!this.odooEditor.isSelectionInBlockRoot()) {
+                        return true;
+                    }
                     const anchor = this.odooEditor.document.getSelection().anchorNode;
                     const row = closestElement(anchor, '.o_text_columns .row');
                     return !row;
@@ -2452,7 +2482,9 @@ const Wysiwyg = Widget.extend({
         // No need for secure random number.
         return Math.floor(Math.random() * Math.pow(2, 52)).toString();
     },
-    resetEditor: function (value, { collaborationChannel } = {}) {
+    resetEditor: function (value, options) {
+        this.options = this._getEditorOptions(options);
+        const {collaborationChannel} = options;
         if (!this.ptp) {
             this.setValue(value);
             this.odooEditor.historyReset();

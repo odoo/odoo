@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class ResConfigSettings(models.TransientModel):
@@ -86,7 +86,7 @@ class ResConfigSettings(models.TransientModel):
         if self.quotation_validity_days <= 0:
             self.quotation_validity_days = self.env['res.company'].default_get(['quotation_validity_days'])['quotation_validity_days']
             return {
-                'warning': {'title': "Warning", 'message': "Quotation Validity is required and must be greater than 0."},
+                'warning': {'title': _("Warning"), 'message': _("Quotation Validity is required and must be greater than 0.")},
             }
 
     #=== CRUD METHODS ===#

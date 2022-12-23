@@ -299,12 +299,12 @@ export class WebsocketWorker {
         if (this.isDebug) {
             console.debug(`%c${new Date().toLocaleString()} - [onOpen]`, 'color: #c6e; font-weight: bold;');
         }
-        this.messageWaitQueue.forEach(msg => this.websocket.send(msg));
-        this.messageWaitQueue = [];
-        this.broadcast(this.isReconnecting ? 'reconnect' : 'connect');
         if (this.isReconnecting) {
             this._forceUpdateChannels();
         }
+        this.messageWaitQueue.forEach(msg => this.websocket.send(msg));
+        this.messageWaitQueue = [];
+        this.broadcast(this.isReconnecting ? 'reconnect' : 'connect');
         this.connectRetryDelay = 0;
         this.connectTimeout = null;
         this.isReconnecting = false;

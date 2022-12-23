@@ -16,7 +16,7 @@ class AccountBankStatement(models.Model):
         # create statement on a saved statement line in the tree view
         if self._context.get('st_line_id'):
             st_line = self.env['account.bank.statement.line'].browse(self._context['st_line_id'])
-            defaults['balance_start'] = st_line.running_balance - st_line.amount
+            defaults['balance_start'] = st_line.running_balance - (st_line.amount if st_line.state == 'posted' else 0)
             return defaults
         # create statement from a new line in the tree view, not stored in the db yet
         if self._context.get('st_line_date'):
@@ -61,7 +61,9 @@ class AccountBankStatement(models.Model):
                 raise UserError(_('One or more selected lines already belong to a complete statement.'))
         if lines:
             defaults['line_ids'] = [Command.set(lines.ids)]
-            defaults['balance_start'] = lines[-1:].running_balance - lines[-1:].amount
+            defaults['balance_start'] = lines[-1:].running_balance - (
+                lines[-1:].amount if lines[-1:].state == 'posted' else 0
+            )
             defaults['balance_end_real'] = lines[:1].running_balance
 
         return defaults
@@ -154,17 +156,19 @@ class AccountBankStatement(models.Model):
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
-    @api.depends('line_ids.internal_index')
+    @api.depends('line_ids.internal_index', 'line_ids.state')
     def _compute_date_index(self):
         for stmt in self:
             sorted_lines = stmt.line_ids.sorted('internal_index')
-            stmt.date = sorted_lines[-1:].date
             stmt.first_line_index = sorted_lines[:1].internal_index
+            stmt.date = sorted_lines.filtered(lambda l: l.state == 'posted')[-1:].date
 
-    @api.depends('balance_start', 'line_ids.amount')
+    @api.depends('balance_start', 'line_ids.amount', 'line_ids.state')
     def _compute_balance_end(self):
         for statement in self:
-            statement.balance_end = statement.balance_start + sum(statement.line_ids.mapped('amount'))
+            statement.balance_end = statement.balance_start + sum(
+                statement.line_ids.filtered(lambda l: l.state == 'posted').mapped('amount')
+            )
 
     @api.depends('journal_id')
     def _compute_currency_id(self):
@@ -179,7 +183,7 @@ class AccountBankStatement(models.Model):
     @api.depends('balance_end_real', 'balance_end')
     def _compute_is_complete(self):
         for stmt in self:
-            stmt.is_complete = stmt.line_ids and stmt.currency_id.compare_amounts(
+            stmt.is_complete = stmt.line_ids.filtered(lambda l: l.state == 'posted') and stmt.currency_id.compare_amounts(
                 stmt.balance_end, stmt.balance_end_real) == 0
 
     def _compute_is_valid(self):
@@ -205,7 +209,7 @@ class AccountBankStatement(models.Model):
     def create(self, vals_list):
         # EXTENDS base
         # If we are doing a split, we have to correct the split statement's balance to keep both original and new
-        # statements complete and valid.
+        # statements valid.
         if self._context.get('split_line_id'):
             old_statement = self.env['account.bank.statement.line'].browse(self._context.get('split_line_id')).statement_id
             old_lines = old_statement.line_ids
@@ -213,7 +217,7 @@ class AccountBankStatement(models.Model):
         if self._context.get('split_line_id'):
             statements.ensure_one()
             if old_statement:
-                net_change = sum((statements.line_ids & old_lines).mapped('amount'))
+                net_change = sum((statements.line_ids & old_lines).filtered(lambda l: l.state == 'posted').mapped('amount'))
                 old_statement.balance_start += net_change
         return statements
 

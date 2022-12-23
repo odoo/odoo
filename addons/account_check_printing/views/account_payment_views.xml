@@ -15,7 +15,8 @@
                 </xpath>
                 <xpath expr="//field[@name='payment_method_line_id']" position="after">
                     <field name="check_manual_sequencing" invisible="1"/>
-                    <field name="check_number" attrs="{'invisible': ['|', ('payment_method_code', '!=', 'check_printing'), ('check_number', '=', False)]}"/>
+                    <field name="show_check_number" invisible="1"/>
+                    <field name="check_number" attrs="{'invisible': [('show_check_number', '=', False)]}"/>
                 </xpath>
                 <xpath expr="//field[@name='name']" position='before'>
                     <widget name="web_ribbon" title="Sent" attrs="{'invisible': [('is_move_sent', '!=', True)]}"/>

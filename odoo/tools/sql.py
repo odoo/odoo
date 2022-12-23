@@ -277,6 +277,9 @@ def index_exists(cr, indexname):
     cr.execute("SELECT 1 FROM pg_indexes WHERE indexname=%s", (indexname,))
     return cr.rowcount
 
+def check_index_exist(cr, indexname):
+    assert index_exists(cr, indexname), f"{indexname} does not exist"
+
 def create_index(cr, indexname, tablename, expressions, method='btree', where=''):
     """ Create the given index unless it exists. """
     if index_exists(cr, indexname):

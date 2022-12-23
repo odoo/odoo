@@ -3,7 +3,7 @@
     <div t-name="stock.Forecasted" class="o_action" owl="1">
         <ControlPanel display="{ 'top-right' : false }">
             <t t-set-slot="control-panel-bottom-left-buttons">
-                <ForecastedButtons action="props.action" reloadReport.bind="reloadReport"/>
+                <ForecastedButtons action="props.action" resModel="resModel" reloadReport.bind="reloadReport"/>
             </t>
             <t t-set-slot="control-panel-bottom-right">
                 <div class="btn-group o_search_options position-static" role="search">

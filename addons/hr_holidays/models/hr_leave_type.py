@@ -97,7 +97,7 @@ class HolidaysType(models.Model):
         Not Allowed: User cannot request an allocation.""")
     allocation_validation_type = fields.Selection([
         ('officer', 'Approved by Time Off Officer'),
-        ('no', 'No validation needed')], default='officer', string='Approval',
+        ('no', 'No validation needed')], default='no', string='Approval',
         compute='_compute_allocation_validation_type', store=True, readonly=False,
         help="""Select the level of approval needed in case of request by employee
         - No validation needed: The employee's request is automatically approved.

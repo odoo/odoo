@@ -167,7 +167,7 @@
                     <t groups="hr_timesheet.group_hr_timesheet_user">
                         <field name="sale_order_id" invisible="1"/>
                         <field name="remaining_hours_available" invisible="1"/>
-                        <span id="remaining_hours_so_label" attrs="{'invisible': ['|', '|', '|', '|', ('allow_billable', '=', False), ('sale_order_id', '=', False), ('partner_id', '=', False), ('sale_line_id', '=', False), ('remaining_hours_available', '=', False)]}">
+                        <span id="remaining_hours_so_label" attrs="{'invisible': ['|', '|', '|', '|', ('allow_billable', '=', False), ('sale_order_id', '=', False), ('partner_id', '=', False), ('sale_line_id', '=', False), ('remaining_hours_available', '=', False)]}" class="o_td_label float-start">
                             <label class="fw-bold" for="remaining_hours_so" string="Remaining Hours on SO"
                                 attrs="{'invisible': ['|', ('encode_uom_in_days', '=', True), ('remaining_hours_so', '&lt;', 0)]}"/>
                             <label class="fw-bold" for="remaining_hours_so" string="Remaining Days on SO"
@@ -188,14 +188,12 @@
             <field name="model">project.task</field>
             <field name="inherit_id" ref="sale_project.view_sale_project_inherit_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='sale_line_id']" position="attributes">
-                    <attribute name="context">{'with_remaining_hours': True, 'with_price_unit': True}</attribute>
+                <xpath expr="//field[@name='sale_line_id'][2]" position="attributes">
+                    <attribute name="context">{'create': False, 'edit': False, 'delete': False, 'with_price_unit': True, 'with_remaining_hours': True}</attribute>
+                    <!-- To do: move allow_billable field in sale_project and add attrs directly on field in master -->
                     <attribute name="attrs">
                         {'invisible': [('allow_billable', '=', False)]}
                     </attribute>
-                </xpath>
-                <xpath expr="//field[@name='sale_order_id']" position="attributes">
-                    <attribute name="invisible">1</attribute>
                 </xpath>
             </field>
         </record>

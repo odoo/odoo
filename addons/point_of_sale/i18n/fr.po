@@ -3,11 +3,11 @@
 # 	* point_of_sale
 # 
 # Translators:
-# Martin Trigaux, 2022
-# Jolien De Paepe, 2022
 # Cécile Collart <cco@odoo.com>, 2022
 # Pierre Delacroix <pde@odoo.com>, 2022
 # Logan Gônet <logan.gonet.perso@outlook.com>, 2022
+# Jolien De Paepe, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Logan Gônet <logan.gonet.perso@outlook.com>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -212,7 +212,7 @@ msgstr "<span class=\"o_form_label\">Référence de la Commande</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Payment Methods</span>"
-msgstr "<span class=\"o_form_label\">Méthodes de Paiement</span>"
+msgstr "<span class=\"o_form_label\">Modes de paiement</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -248,7 +248,7 @@ msgid ""
 "                                    in order to install a Payment Terminal and make a fully integrated payment method."
 msgstr ""
 "<strong> &gt; Terminal de paiement</strong>\n"
-"                                    Pour installer un Terminal de paiement et le rendre complètement intégré aux moyens de paiement."
+"                                    Pour installer un Terminal de paiement et le rendre complètement intégré aux modes de paiement."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -499,7 +499,7 @@ msgstr "Ajoutez un client"
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_method_form
 msgid "Add a new payment method"
-msgstr "Ajoutez une nouvelle méthode de paiement"
+msgstr "Ajoutez un nouveau mode de paiement"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1001,7 +1001,7 @@ msgstr "Impossible de fermer la session sans connexion."
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Cannot return change without a cash payment method"
-msgstr "Impossible de rendre la monnaie sans méthode de paiement en espèces."
+msgstr "Impossible de rendre la monnaie sans mode de paiement en espèces."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1752,7 +1752,7 @@ msgstr "Avertissement écran client"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Customer is required for %s payment method."
-msgstr "Le client est requis pour le moyen de paiement %s."
+msgstr "Le client est requis pour le mode de paiement %s."
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_customer
@@ -1867,7 +1867,7 @@ msgid ""
 "Defines the name of the payment method that will be displayed in the Point "
 "of Sale when the payments are selected."
 msgstr ""
-"Défini le nom du moyen de paiement qui sera affiché sur le Point de Vente "
+"Défini le nom du mode de paiement qui sera affiché sur le Point de Vente "
 "lors que le paiement sera sélectionné."
 
 #. module: point_of_sale
@@ -2408,9 +2408,9 @@ msgid ""
 "Forces to set a customer when using this payment method and splits the "
 "journal entries for each customer. It could slow down the closing process."
 msgstr ""
-"Force à définir un client quand on utilise cette méthode de paiement et "
-"divise les entrées comptables par client. Ceci pourrait ralentir le "
-"processus de fermeture."
+"Force à définir un client quand on utilise cet mode de paiement et divise "
+"les entrées comptables par client. Ceci pourrait ralentir le processus de "
+"fermeture."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -2719,8 +2719,8 @@ msgid ""
 "                methods automatically."
 msgstr ""
 "Installer un plan comptable depuis les paramètres généraux \n"
-"                de l'application comptabilité/facturation créera des méthodes de paiement\n"
-"                banque et cash automatiquement."
+"                de l'application comptabilité/facturation créera des modes de paiement\n"
+"                banque et espèces automatiquement."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_mercury
@@ -3075,7 +3075,7 @@ msgstr ""
 "Laisser vide pour utiliser le compte débiteur du client.\n"
 "Définit le journal où enregistrer les paiements accumulés (ou un paiement individuel si l'identifiant du Client est vrai) après avoir fermé la session. \n"
 "Pour le journal de caisse, nous écrivons directement dans le compte par défaut dans le journal par des lignes de relevé.\n"
-"Pour les journaux bancaires, nous écrivons dans le compte débiteur défini pour cette méthode de paiement.\n"
+"Pour les journaux bancaires, nous écrivons dans le compte débiteur défini pour cet mode de paiement.\n"
 "Seuls les journaux de caisse et bancaires sont autorisés. "
 
 #. module: point_of_sale
@@ -3261,6 +3261,13 @@ msgstr "Marges & Coûts"
 #, python-format
 msgid "Maximum Exceeded"
 msgstr "Maximum dépassé"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Misc/NumberBuffer.js:0
+#, python-format
+msgid "Maximum value reached"
+msgstr "Valeur maximale atteinte"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error
@@ -3697,7 +3704,7 @@ msgstr "Ouvrir la caisse"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__open_session_ids
 msgid "Open PoS sessions that are using this payment method."
-msgstr "Ouvrir les sessions PdV qui utilisent cette méthode de paiement."
+msgstr "Ouvrir les sessions PdV qui utilisent ce mode de paiement."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -3960,7 +3967,7 @@ msgstr "Ligne de commandes en PdV"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__pos_payment_method_id
 msgid "POS Payment Method"
-msgstr "Moyen de paiement du PdV"
+msgstr "Mode de paiement du PdV"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_product_tree_view
@@ -4058,7 +4065,7 @@ msgstr "Date de règlement"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment_search
 #, python-format
 msgid "Payment Method"
-msgstr "Moyen de paiement"
+msgstr "Mode de paiement"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_payment_method_form
@@ -4071,7 +4078,7 @@ msgstr "Moyen de paiement"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_tree
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Payment Methods"
-msgstr "Méthodes de paiement"
+msgstr "Modes de paiement"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__ticket
@@ -4114,7 +4121,7 @@ msgstr "ID de la transaction"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #, python-format
 msgid "Payment method"
-msgstr "Méthode de paiement"
+msgstr "Mode de paiement"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4162,7 +4169,7 @@ msgstr "Écart de paiement"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_payment_methods_tree
 msgid "Payments Methods"
-msgstr "Methodes de paiements"
+msgstr "Modes de paiements"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4223,6 +4230,8 @@ msgid "Picking Type"
 msgstr "Type de transfert"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Pickings"
@@ -4289,7 +4298,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid "Please configure a payment method in your POS."
-msgstr "Configurez une méthode de paiement pour votre PdV."
+msgstr "Configurez un mode de paiement pour votre PdV."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4358,7 +4367,7 @@ msgstr "Veuiller renseigner un client"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenStatus.xml:0
 #, python-format
 msgid "Please select a payment method."
-msgstr "Veuillez sélectionner une méthode de paiement."
+msgstr "Veuillez sélectionner un mode de paiement."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4371,6 +4380,17 @@ msgstr "Veuillez sélectionner le client"
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__pos_categ_id
 msgid "PoS Category"
 msgstr "Catégorie du PdV"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Please close and validate the following open PoS Sessions before modifying this payment method.\n"
+"Open sessions: %s"
+msgstr ""
+"Veuillez fermer et valider les sessions PdV ouvertes suivantes avant de modifier ce mode de paiement.\n"
+"Sessions ouvertes : %s"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5430,7 +5450,7 @@ msgstr "Selectionner la position fiscale"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Select a payment method to validate the order."
-msgstr "Sélectionnez la méthode de paiement pour valider la commande."
+msgstr "Sélectionnez le mode de paiement pour valider la commande."
 
 #. module: point_of_sale
 #. openerp-web
@@ -6098,6 +6118,17 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid ""
+"The amount cannot be higher than the due amount if you don't have a cash "
+"payment method configured."
+msgstr ""
+"Le montant ne peut pas être supérieur au montant dû si vous n'avez pas "
+"configuré de mode de paiement en espèces."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid ""
 "The amount of your payment lines must be rounded to validate the "
 "transaction."
 msgstr ""
@@ -6235,8 +6266,8 @@ msgstr ""
 msgid ""
 "The payment method selected is not allowed in the config of the POS session."
 msgstr ""
-"La méthode de paiement sélectionnée n'est pas permise dans la configuration "
-"de la session du Pdv."
+"Le mode de paiement sélectionné n'est pas autorisé dans la configuration de "
+"la session du Pdv."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -6244,7 +6275,7 @@ msgstr ""
 msgid ""
 "The payment methods for the point of sale %s must belong to its company."
 msgstr ""
-"Les méthodes de paiement du point de vente %s doivent appartenir à son "
+"Les modes de paiement du point de vente %s doivent appartenir à son "
 "entreprise."
 
 #. module: point_of_sale
@@ -6493,17 +6524,17 @@ msgid ""
 "\n"
 " Please pay the exact amount or add a cash payment method in the point of sale configuration"
 msgstr ""
-"Il n'y a pas de methode de paiement en cash disponible dans ce point de vente.\n"
+"Il n'y a pas de mode de paiement en espèces disponible dans ce point de vente.\n"
 "\n"
-"Veuillez payer le montant exact ou ajouter une methode de paiement en cash dans la configuration du point de vente. "
+"Veuillez payer le montant exact ou ajouter un mode de paiement en espèces dans la configuration du point de vente. "
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "There is no cash payment method for this PoS Session"
 msgstr ""
-"Il n'y a pas de méthode de paiement en espèces pour cette session du point "
-"de vente."
+"Il n'y a pas de mode de paiement en espèces pour cette session du point de "
+"vente."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -6583,8 +6614,8 @@ msgstr ""
 msgid ""
 "This journal is associated with a payment method. You cannot modify its type"
 msgstr ""
-"Ce journal est associé avec une méthode de paiement. Vous ne pouvez pas "
-"modifier son type."
+"Ce journal est associé avec un mode de paiement. Vous ne pouvez pas modifier"
+" son type."
 
 #. module: point_of_sale
 #. openerp-web
@@ -6967,7 +6998,7 @@ msgstr "Prix unitaire"
 #: model:product.template,uom_name:point_of_sale.whiteboard_pen_product_template
 #: model:product.template,uom_name:point_of_sale.whiteboard_product_template
 msgid "Units"
-msgstr "Unités"
+msgstr "Unité(s)"
 
 #. module: point_of_sale
 #. openerp-web
@@ -7315,8 +7346,8 @@ msgid ""
 "You have enabled the \"Identify Customer\" option for %s payment method,but "
 "the order %s does not contain a customer."
 msgstr ""
-"Vous avez désactiver l'option \"Identifier client\" pour la méthode de "
-"paiement %s, mais la commande %s ne contient pas de client."
+"Vous avez désactiver l'option \"Identifier client\" pour le mode de paiement"
+" %s, mais la commande %s ne contient pas de client."
 
 #. module: point_of_sale
 #. openerp-web
@@ -7356,8 +7387,7 @@ msgstr ""
 msgid ""
 "You must have at least one payment method configured to launch a session."
 msgstr ""
-"Vous devez avoir au moins une méthode de paiement configurée pour ouvrir une"
-" session."
+"Vous devez configurer au moins un mode de paiement pour ouvrir une session."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
