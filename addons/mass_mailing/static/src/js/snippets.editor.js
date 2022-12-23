@@ -38,6 +38,22 @@ const MassMailingSnippetsMenu = snippetsEditor.SnippetsMenu.extend({
         $dropzone.attr('data-editor-sub-message', $hookParent.attr('data-editor-sub-message'));
         return $dropzone;
     },
+    /**
+     * @override
+     */
+    _computeSnippetTemplates: function (html) {
+        const $html = $(html);
+        const btnSelector = '.note-editable .oe_structure > div.o_mail_snippet_general .btn:not(.btn-link)';
+        const $colorpickers = $html.find('[data-selector] > we-colorpicker[data-css-property="background-color"]');
+        for (const colorpicker of $colorpickers) {
+            const $option = $(colorpicker).parent();
+            const selectors = $option.data('selector').split(',');
+            const filteredSelectors = selectors.filter(selector => !selector.includes(btnSelector)).join(',');
+            $option.attr('data-selector', filteredSelectors);
+        }
+        html = $html.toArray().map(node => node.outerHTML).join('');
+        return this._super(html);
+    },
 
     //--------------------------------------------------------------------------
     // Handler
