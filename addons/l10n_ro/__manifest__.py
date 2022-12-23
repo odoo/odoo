@@ -3,6 +3,8 @@
     'name': 'Romania - Accounting',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
     'author': 'Fekete Mihai (NextERP Romania SRL), Odoo S.A.',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['ro'],
     'category': 'Accounting/Localizations/Account Charts',
     'version': '1.0',
     'depends': [

@@ -3,6 +3,8 @@
     'name': 'Estonia - Accounting',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
     'version': '1.0',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['ee'],
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 This is the base module to manage the accounting chart for Estonia in Odoo.

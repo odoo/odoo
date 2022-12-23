@@ -5,7 +5,7 @@
     'name': 'France - Time Off',
     'version': '1.0',
     'category': 'Human Resources/Time Off',
-    'icon': '/l10n_fr/static/description/icon.png',
+    'countries': ['fr'],
     'summary': 'Management of leaves for part-time workers in France',
     'depends': ['hr_holidays', 'l10n_fr'],
     'auto_install': True,

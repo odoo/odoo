@@ -2,6 +2,8 @@
 {
     'name': 'Brazilian - Accounting',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['br'],
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 Base module for the Brazilian localization

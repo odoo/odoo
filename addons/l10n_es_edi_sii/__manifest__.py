@@ -6,6 +6,7 @@
 
 {
     'name': "Spain - SII EDI Suministro de Libros",
+    'countries': ['es'],
     'version': '1.0',
     'category': 'Accounting/Localizations/EDI',
     'description': """

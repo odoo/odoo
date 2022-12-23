@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Indian - UPI',
+    'countries': ['in'],
     'version': '1.0',
     'description': """
 Invoice with UPI QR code

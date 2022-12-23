@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'New Zealand - Accounting',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['nz'],
     'version': '1.1',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """

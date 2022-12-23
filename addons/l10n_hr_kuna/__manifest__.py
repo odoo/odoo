@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Croatia - Accounting (Kuna)',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['hr'],
     'description': """
 Croatian localisation.
 ======================

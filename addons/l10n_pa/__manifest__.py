@@ -2,6 +2,8 @@
 {
     'name': 'Panama - Accounting',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['pa'],
     'description': """
 Panamenian accounting chart and tax localization.
 

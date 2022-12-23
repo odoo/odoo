@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Vietnam - Accounting',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['vn'],
     'version': '2.0.1',
     'author': 'General Solutions',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',

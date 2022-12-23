@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Denmark - Accounting',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['dk'],
     'version': '1.0',
     'author': 'Odoo House ApS, VK DATA ApS',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',

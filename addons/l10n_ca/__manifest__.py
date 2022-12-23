@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Canada - Accounting',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['ca'],
     'author': 'Savoir-faire Linux (https://www.savoirfairelinux.com)',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
     'category': 'Accounting/Localizations/Account Charts',

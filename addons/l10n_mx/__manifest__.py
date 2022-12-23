@@ -2,6 +2,8 @@
 {
     'name': 'Mexico - Accounting',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/mexico.html',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['mx'],
     'version': '2.0',
     'author': 'Vauxoo',
     'category': 'Accounting/Localizations/Account Charts',
