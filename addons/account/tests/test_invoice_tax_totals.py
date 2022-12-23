@@ -617,3 +617,33 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             }],
             'subtotals_order': ["Tax exemption", "Tax application", "Reapply amount"],
         })
+
+    def test_round_globally_taxtotals(self):
+
+        decimal_precision_name = self.env['account.move.line']._fields['price_unit']._digits
+        decimal_precision = self.env['decimal.precision'].search([('name', '=', decimal_precision_name)])
+
+        self.assertTrue(decimal_precision, "Decimal precision '%s' not found" % decimal_precision_name)
+
+        decimal_precision.digits = 4
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
+
+        tax_17a = self.env['account.tax'].create({
+            'name': "tax_17a",
+            'amount_type': 'percent',
+            'amount': 17.0,
+        })
+        tax_17b = self.env['account.tax'].create({
+            'name': "tax_17b",
+            'amount_type': 'percent',
+            'amount': 17.0,
+        })
+
+        document = self._create_document_for_tax_totals_test([
+            (50.4, tax_17a),
+            (47.208, tax_17b),
+        ])
+
+        self.assertEqual(document.currency_id.round(
+            document.tax_totals['groups_by_subtotal']['Untaxed Amount'][0]['tax_group_amount']
+        ), 16.60)

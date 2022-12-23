@@ -921,12 +921,7 @@ class AccountTax(models.Model):
             }),
         }
 
-        def add_tax_values(record, results, grouping_key, serialized_grouping_key, tax_values):
-            # Add to global results.
-            results['tax_amount_currency'] += tax_values['tax_amount_currency']
-            results['tax_amount'] += tax_values['tax_amount']
-
-            # Add to tax details.
+        def get_tax_details(record, results, grouping_key, serialized_grouping_key, tax_values):
             if serialized_grouping_key not in results['tax_details']:
                 tax_details = results['tax_details'][serialized_grouping_key]
                 tax_details.update(grouping_key)
@@ -939,19 +934,30 @@ class AccountTax(models.Model):
                     tax_details['base_amount_currency'] += tax_values['base_amount_currency']
                     tax_details['base_amount'] += tax_values['base_amount']
                     tax_details['records'].add(record)
+            return tax_details
+
+        def add_tax_values(record, results, grouping_key, serialized_grouping_key, tax_values):
+            # Add to global results.
+            results['tax_amount_currency'] += tax_values['tax_amount_currency']
+            results['tax_amount'] += tax_values['tax_amount']
+
+            # Add to tax details.
+            tax_details = get_tax_details(record, results, grouping_key, serialized_grouping_key, tax_values)
             tax_details['tax_amount_currency'] += tax_values['tax_amount_currency']
             tax_details['tax_amount'] += tax_values['tax_amount']
             tax_details['group_tax_details'].append(tax_values)
 
         grouping_key_generator = grouping_key_generator or default_grouping_key_generator
 
+        amounts_per_repartition_line = {}
         for base_line, to_update_vals, tax_values_list in to_process:
             record = base_line['record']
 
             # Add to global tax amounts.
             global_tax_details['base_amount_currency'] += to_update_vals['price_subtotal']
 
-            currency = base_line['currency'] or self.env.company.currency_id
+            company = record.company_id if record and 'company_id' in record._fields else self.env.company
+            currency = base_line['currency'] or company.currency_id
             base_amount = currency.round(to_update_vals['price_subtotal'] / base_line['rate'])
             global_tax_details['base_amount'] += base_amount
 
@@ -970,8 +976,31 @@ class AccountTax(models.Model):
                 else:
                     record_global_tax_details = global_tax_details['tax_details_per_record'][record]
 
-                add_tax_values(record, global_tax_details, grouping_key, serialized_grouping_key, tax_values)
+                tax_details = get_tax_details(record, global_tax_details, grouping_key, serialized_grouping_key, tax_values)
+                amounts = amounts_per_repartition_line.setdefault(
+                    tax_values['tax_repartition_line'].id,
+                    {
+                        'tax_amount_currency': 0,
+                        'tax_amount': 0,
+                        'tax_details': tax_details
+                    }
+                )
+                amounts['tax_amount_currency'] += tax_values['tax_amount_currency']
+                amounts['tax_amount'] += tax_values['tax_amount']
+
                 add_tax_values(record, record_global_tax_details, grouping_key, serialized_grouping_key, tax_values)
+
+        global_tax_details['tax_amount_currency'] = 0
+        global_tax_details['tax_amount'] = 0
+        for amounts in amounts_per_repartition_line.values():
+            tax_amount_currency = currency.round(amounts['tax_amount_currency'])
+            tax_amount = company.currency_id.round(amounts['tax_amount'])
+
+            amounts['tax_details']['tax_amount_currency'] += tax_amount_currency
+            amounts['tax_details']['tax_amount'] += tax_amount
+
+            global_tax_details['tax_amount_currency'] += tax_amount_currency
+            global_tax_details['tax_amount'] += tax_amount
 
         return global_tax_details
 
