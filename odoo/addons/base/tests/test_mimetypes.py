@@ -27,6 +27,29 @@ ZIP = b"""UEsDBBQACAAIAGFva1AAAAAAAAAAAAAAAAAFACAAdC50eHRVVA0AB5bgaF6W4GheluBoXn
 MAUEsHCAAAAAACAAAAAAAAAFBLAQIUAxQACAAIAGFva1AAAAAAAgAAAAAAAAAFACAAAAAAAAAAAACkgQAAAAB0LnR4dFVUDQAHlu
 BoXpbgaF6W4GhedXgLAAEE6AMAAAToAwAAUEsFBgAAAAABAAEAUwAAAFUAAAAAAA=="""
 
+XML = b"""<?xml version='1.0' encoding='utf-8'?>
+<Document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03">
+  <CstmrCdtTrfInitn>
+    <GrpHdr>
+      <MsgId>123456Odoo S.A.893873733</MsgId>
+      <CreDtTm>2018-11-21T09:47:32</CreDtTm>
+      <NbOfTxs>0</NbOfTxs>
+      <CtrlSum>0.0</CtrlSum>
+      <InitgPty>
+        <Nm>Odoo S.A.</Nm>
+        <Id>
+          <OrgId>
+            <Othr>
+              <Id>BE0477472701</Id>
+              <Issr>KBO-BCE</Issr>
+            </Othr>
+          </OrgId>
+        </Id>
+      </InitgPty>
+    </GrpHdr>
+  </CstmrCdtTrfInitn>
+</Document>
+"""
 
 class test_guess_mimetype(BaseCase):
 
@@ -81,6 +104,9 @@ class test_guess_mimetype(BaseCase):
         mimetype = guess_mimetype(content, default='test')
         self.assertEqual(mimetype, 'application/zip')
 
+    def test_mimetype_xml(self):
+        mimetype = guess_mimetype(XML, default='test')
+        self.assertEqual(mimetype, 'application/xml')
 
     def test_mimetype_get_extension(self):
         self.assertEqual(get_extension('filename.Abc'), '.abc')
