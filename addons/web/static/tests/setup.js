@@ -22,21 +22,6 @@ import { App, whenReady } from "@odoo/owl";
 
 const { prepareRegistriesWithCleanup } = utils;
 
-patch(App.prototype, "TestOwlApp", {
-    destroy() {
-        if (!this.destroyed) {
-            this._super(...arguments);
-            this.destroyed = true;
-        }
-    },
-    addTemplate(name) {
-        registerCleanup(() => {
-            delete this.constructor.sharedTemplates[name];
-        });
-        return this._super(...arguments);
-    },
-});
-
 function stringifyObjectValues(obj, properties) {
     let res = "";
     for (const dotted of properties) {
@@ -109,6 +94,23 @@ function makeMockLocation(hasListeners = () => true) {
             }
             target[p] = value;
             return true;
+        },
+    });
+}
+
+function patchOwlApp() {
+    patchWithCleanup(App.prototype, {
+        destroy() {
+            if (!this.destroyed) {
+                this._super(...arguments);
+                this.destroyed = true;
+            }
+        },
+        addTemplate(name) {
+            registerCleanup(() => {
+                delete this.constructor.sharedTemplates[name];
+            });
+            return this._super(...arguments);
         },
     });
 }
@@ -361,6 +363,7 @@ export async function setupTests() {
         patchLegacyBus();
         patchOdoo();
         patchSessionInfo();
+        patchOwlApp();
     });
 
     await Promise.all([whenReady(), legacyProm]);
