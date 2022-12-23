@@ -110,7 +110,7 @@ export function mapActiveFieldsToFieldsInfo(activeFields, fields, viewType, env)
             fieldInfo.limit = FieldComponent.limit;
         }
 
-        if (fieldDescr.modifiers && fieldDescr.modifiers.invisible === true) {
+        if (fieldDescr.alwaysInvisible) {
             fieldInfo.__no_fetch = true;
         }
 

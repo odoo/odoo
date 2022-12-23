@@ -5,6 +5,7 @@ import { _lt } from "@web/core/l10n/translation";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { XMLParser } from "@web/core/utils/xml";
 import { DEFAULT_INTERVAL, DEFAULT_PERIOD } from "@web/search/utils/dates";
+import { isModifierAlwaysTrue } from "@web/views/utils";
 
 const ALL = _lt("All");
 const DEFAULT_LIMIT = 200;
@@ -111,7 +112,7 @@ export class SearchArchParser extends XMLParser {
         this.pushGroup("field");
         const preField = { type: "field" };
         const modifiers = JSON.parse(node.getAttribute("modifiers") || "{}");
-        if (modifiers.invisible === true) {
+        if (isModifierAlwaysTrue(modifiers.invisible)) {
             preField.invisible = true;
         }
         if (node.hasAttribute("domain")) {
@@ -221,7 +222,7 @@ export class SearchArchParser extends XMLParser {
             }
         }
         const modifiers = JSON.parse(node.getAttribute("modifiers") || "{}");
-        if (modifiers.invisible === true) {
+        if (isModifierAlwaysTrue(modifiers.invisible)) {
             preSearchItem.invisible = true;
             const fieldName = preSearchItem.fieldName;
             if (fieldName && !this.fields[fieldName]) {
@@ -290,7 +291,7 @@ export class SearchArchParser extends XMLParser {
                 continue;
             }
             const modifiers = JSON.parse(node.getAttribute("modifiers") || "{}");
-            if (modifiers.invisible === true) {
+            if (isModifierAlwaysTrue(modifiers.invisible)) {
                 continue;
             }
             const attrs = {};

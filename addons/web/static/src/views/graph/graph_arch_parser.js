@@ -2,7 +2,7 @@
 
 import { XMLParser } from "@web/core/utils/xml";
 import { GROUPABLE_TYPES } from "@web/search/utils/misc";
-import { archParseBoolean } from "@web/views/utils";
+import { archParseBoolean, isModifierAlwaysTrue } from "@web/views/utils";
 
 const MODES = ["bar", "line", "pie"];
 const ORDERS = ["ASC", "DESC", "asc", "desc", null];
@@ -51,7 +51,7 @@ export class GraphArchParser extends XMLParser {
                         archInfo.fieldAttrs[fieldName].string = string;
                     }
                     const modifiers = JSON.parse(node.getAttribute("modifiers") || "{}");
-                    if (modifiers.invisible === true) {
+                    if (isModifierAlwaysTrue(modifiers.invisible)) {
                         if (!archInfo.fieldAttrs[fieldName]) {
                             archInfo.fieldAttrs[fieldName] = {};
                         }

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { XMLParser } from "@web/core/utils/xml";
-import { archParseBoolean } from "@web/views/utils";
+import { archParseBoolean, isModifierAlwaysTrue } from "@web/views/utils";
 
 export class PivotArchParser extends XMLParser {
     parse(arch) {
@@ -43,7 +43,7 @@ export class PivotArchParser extends XMLParser {
                         archInfo.fieldAttrs[fieldName].string = node.getAttribute("string");
                     }
                     const modifiers = JSON.parse(node.getAttribute("modifiers") || "{}");
-                    if (modifiers.invisible === true) {
+                    if (isModifierAlwaysTrue(modifiers.invisible)) {
                         archInfo.fieldAttrs[fieldName].isInvisible = true;
                         break;
                     }

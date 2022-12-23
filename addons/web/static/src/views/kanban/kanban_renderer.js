@@ -11,7 +11,7 @@ import { useSortable } from "@web/core/utils/sortable";
 import { sprintf } from "@web/core/utils/strings";
 import { session } from "@web/session";
 import { isAllowedDateField } from "@web/views/relational_model";
-import { isNull, isRelational } from "@web/views/utils";
+import { isNull, isRelational, isModifierAlwaysTrue } from "@web/views/utils";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { useBounceButton } from "@web/views/view_hook";
 import { ColumnProgress } from "@web/views/view_components/column_progress";
@@ -189,7 +189,7 @@ export class KanbanRenderer extends Component {
         const { modifiers, type } = groupByField;
         return Boolean(
             !(modifiers && "readonly" in modifiers
-                ? modifiers.readonly
+                ? isModifierAlwaysTrue(modifiers.readonly)
                 : fields[groupByField.name].readonly) &&
                 (isAllowedDateField(groupByField) || MOVABLE_RECORD_TYPES.includes(type))
         );

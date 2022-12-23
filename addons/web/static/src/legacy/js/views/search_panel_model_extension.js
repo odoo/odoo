@@ -5,6 +5,7 @@
     import { sortBy } from "web.utils";
     import Domain from "web.Domain";
     import pyUtils from "web.py_utils";
+    import { isModifierAlwaysTrue } from "@web/views/utils";
 
     // DefaultViewTypes is the list of view types for which the searchpanel is
     // present by default (if not explicitly stated in the "view_types" attribute
@@ -416,7 +417,7 @@
             let hasCategoryWithCounters = false;
             let hasFilterWithDomain = false;
             this.config.archNodes.forEach(({ attrs, tag }, index) => {
-                if (tag !== "field" || attrs.invisible === "1") {
+                if (tag !== "field" || attrs.invisible && isModifierAlwaysTrue(JSON.parse(attrs.invisible))) {
                     return;
                 }
                 const type = attrs.select === "multi" ? "filter" : "category";

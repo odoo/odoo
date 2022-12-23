@@ -115,6 +115,24 @@ export function evalDomain(modifier, evalContext) {
 }
 
 /**
+ * Return True if the domain will be always evaluate as true
+ *
+ * @param {Array[] | boolean} modifier
+ * @returns {boolean}
+ */
+export function isModifierAlwaysTrue(modifier) {
+    if (!modifier) {
+        return false;
+    }
+    if (modifier === true || modifier === 1) {
+        return true;
+    }
+    if (modifier.length === 1 && modifier[0] === true) {
+        return true;
+    }
+}
+
+/**
  * @param {Element} rootNode
  * @returns {ViewActiveActions}
  */

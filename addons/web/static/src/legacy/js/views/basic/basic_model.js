@@ -93,6 +93,7 @@ var session = require('web.session');
 var utils = require('web.utils');
 var viewUtils = require('web.viewUtils');
 var localStorage = require('web.local_storage');
+const { isModifierAlwaysTrue } = require('@web/views/utils');
 
 var _t = core._t;
 
@@ -4050,7 +4051,7 @@ var BasicModel = AbstractModel.extend({
         if (fieldInfo) {
             var rawModifiers = fieldInfo.modifiers || {};
             var modifiers = this._evalModifiers(record, _.pick(rawModifiers, 'readonly'));
-            return modifiers.readonly && !fieldInfo.force_save;
+            return isModifierAlwaysTrue(modifiers.readonly) && !fieldInfo.force_save;
         } else {
             return false;
         }

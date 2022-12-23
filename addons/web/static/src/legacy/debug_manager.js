@@ -6,6 +6,7 @@ import { formatDateTime, parseDateTime } from "@web/core/l10n/dates";
 import { formatMany2one } from "@web/views/fields/formatters";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { isModifierAlwaysTrue } from "@web/views/utils";
 
 import { Component, onWillStart, useState } from "@odoo/owl";
 
@@ -119,7 +120,8 @@ class SetDefaultDialog extends Component {
                 if (modifierData) {
                     const evaluatedModifiers = modifierData.evaluatedModifiers[stateId];
                     invisibleOrReadOnly =
-                        evaluatedModifiers.invisible || evaluatedModifiers.readonly;
+                        isModifierAlwaysTrue(evaluatedModifiers.invisible) ||
+                        isModifierAlwaysTrue(evaluatedModifiers.readonly);
                 }
                 const fieldInfo = fields[fieldName];
                 const valueDisplayed = this.display(fieldInfo, fieldsValues[fieldName]);

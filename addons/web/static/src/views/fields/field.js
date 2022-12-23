@@ -5,6 +5,7 @@ import { registry } from "@web/core/registry";
 import {
     archParseBoolean,
     evalDomain,
+    isModifierAlwaysTrue,
     getClassNameFromDecoration,
     X2M_TYPES,
 } from "@web/views/utils";
@@ -220,8 +221,9 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
         props: {},
         rawAttrs: {},
         options: evaluateExpr(node.getAttribute("options") || "{}"),
-        alwaysInvisible: modifiers.invisible === true || modifiers.column_invisible === true,
+        alwaysInvisible: isModifierAlwaysTrue(modifiers.invisible) || isModifierAlwaysTrue(modifiers.column_invisible),
     };
+
     if (node.getAttribute("domain")) {
         fieldInfo.domain = node.getAttribute("domain");
     }

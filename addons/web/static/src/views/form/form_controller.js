@@ -38,7 +38,7 @@ export async function loadSubViews(
             continue; // what follows only concerns x2many fields
         }
         const fieldInfo = activeFields[fieldName];
-        if (fieldInfo.modifiers.invisible === true) {
+        if (fieldInfo.alwaysInvisible) {
             continue; // no need to fetch the sub view if the field is always invisible
         }
 
