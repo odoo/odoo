@@ -17,21 +17,6 @@ import { patch } from "@web/core/utils/patch";
 import { processTemplates } from "@web/core/assets";
 const { App, whenReady, loadFile } = owl;
 
-patch(App.prototype, "TestOwlApp", {
-    destroy() {
-        if (!this.destroyed) {
-            this._super(...arguments);
-            this.destroyed = true;
-        }
-    },
-    addTemplate(name) {
-        registerCleanup(() => {
-            delete this.constructor.sharedTemplates[name];
-        });
-        return this._super(...arguments);
-    },
-});
-
 function stringifyObjectValues(obj, properties) {
     let res = "";
     for (const dotted of properties) {
@@ -106,6 +91,23 @@ function makeMockLocation(hasListeners = () => true) {
             }
             target[p] = value;
             return true;
+        },
+    });
+}
+
+function patchOwlApp() {
+    patchWithCleanup(App.prototype, {
+        destroy() {
+            if (!this.destroyed) {
+                this._super(...arguments);
+                this.destroyed = true;
+            }
+        },
+        addTemplate(name) {
+            registerCleanup(() => {
+                delete this.constructor.sharedTemplates[name];
+            });
+            return this._super(...arguments);
         },
     });
 }
@@ -241,6 +243,7 @@ export async function setupTests() {
         patchLegacyCoreBus();
         patchOdoo();
         patchSessionInfo();
+        patchOwlApp();
     });
 
     const templatesUrl = `/web/webclient/qweb/${new Date().getTime()}?bundle=web.assets_qweb`;
