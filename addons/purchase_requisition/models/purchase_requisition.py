@@ -136,7 +136,6 @@ class PurchaseRequisition(models.Model):
 
     def action_draft(self):
         self.ensure_one()
-        self.name = 'New'
         self.write({'state': 'draft'})
 
     def action_done(self):
