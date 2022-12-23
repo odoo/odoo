@@ -536,6 +536,7 @@ class AccountEdiFormat(models.Model):
             tax = tax_values['tax_repartition_line'].tax_id
             tags = tax_values['tax_repartition_line'].tag_ids
             line_code = "other"
+            is_reverse_charge = False
             if not invl.currency_id.is_zero(tax_values['tax_amount_currency']):
                 if any(tag in tags for tag in self.env.ref("l10n_in.tax_tag_cess")):
                     if tax.amount_type != "percent":
@@ -549,10 +550,13 @@ class AccountEdiFormat(models.Model):
                         line_code = "state_cess"
                 else:
                     for gst in ["cgst", "sgst", "igst"]:
+                        if any(tag in tags for tag in self.env.ref("l10n_in.tax_tag_%s_rc"%(gst))):
+                            is_reverse_charge = True
                         if any(tag in tags for tag in self.env.ref("l10n_in.tax_tag_%s"%(gst))):
                             line_code = gst
             return {
                 "tax": tax,
+                "is_reverse_charge": is_reverse_charge,
                 "line_code": line_code,
             }
 
@@ -571,8 +575,7 @@ class AccountEdiFormat(models.Model):
     def _get_l10n_in_tax_details_by_line_code(self, tax_details):
         l10n_in_tax_details = {}
         for tax_detail in tax_details.values():
-            if tax_detail["tax"].l10n_in_reverse_charge:
-                l10n_in_tax_details.setdefault("is_reverse_charge", True)
+            l10n_in_tax_details.setdefault("is_reverse_charge", tax_detail["is_reverse_charge"])
             l10n_in_tax_details.setdefault("%s_rate" % (tax_detail["line_code"]), tax_detail["tax"].amount)
             l10n_in_tax_details.setdefault("%s_amount" % (tax_detail["line_code"]), 0.00)
             l10n_in_tax_details.setdefault("%s_amount_currency" % (tax_detail["line_code"]), 0.00)
