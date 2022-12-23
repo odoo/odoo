@@ -690,7 +690,6 @@ class AccountAccount(models.Model):
         if 'import_file' in self.env.context:
             code, name = self._split_code_name(name)
             return self.create({'code': code, 'name': name}).name_get()[0]
-        raise UserError(_("Please create new accounts from the Chart of Accounts menu."))
 
     def write(self, vals):
         # Do not allow changing the company_id when account_move_line already exist
