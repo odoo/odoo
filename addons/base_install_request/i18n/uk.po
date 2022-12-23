@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-27 15:12+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,12 +45,33 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Вітаємо,\n"
+"        <br/><br/>\n"
+"        <span style=\"font-weight: bold;\" t-out=\"object.user_id.name\"/> є запит на активацію <span style=\"font-weight: bold;\" t-out=\"object.module_id.shortdesc\"/> модуля. Цей модулю включений у вашу підписку. Він не має <span style=\"color: #875A7B; font-weight: bold;\">додаткової вартості</span>, але для його активації потрібні права адміністратора.\n"
+"        <br/><br/>\n"
+"        <blockquote>\n"
+"            <t t-out=\"object.body_html\"/>\n"
+"        </blockquote>\n"
+"        <br/><br/>\n"
+"        <a style=\"background-color:#875A7B; padding:8px 16px 8px 16px; text-decoration:none; color:#fff; border-radius:5px\" t-attf-href=\"/web?#action=base_install_request.action_base_module_install_review&amp;active_id={{ object.module_id.id }}&amp;menu_id={{ ctx['menu_id'] }}\">Переглянути запит</a>\n"
+"        <br/><br/>\n"
+"        Дякуємо,\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: base_install_request
 #: code:addons/base_install_request/models/ir_module_module.py:0
 #, python-format
 msgid "Activation Request of \"%s\""
-msgstr ""
+msgstr "Запит на активацію \"%s\""
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__body_html
@@ -77,7 +99,7 @@ msgstr "Створено"
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__module_ids
 msgid "Depending Apps"
-msgstr ""
+msgstr "Залежні модулі"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__display_name
@@ -94,7 +116,7 @@ msgstr "ID"
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_view_form
 msgid "Install App"
-msgstr ""
+msgstr "Встановити модуль"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request____last_update
@@ -117,7 +139,7 @@ msgstr "Останнє оновлення"
 #. module: base_install_request
 #: model:mail.template,name:base_install_request.mail_template_base_install_request
 msgid "Mail: Install Request"
-msgstr ""
+msgstr "Пошти: Запит на встановлення"
 
 #. module: base_install_request
 #: model:ir.model,name:base_install_request.model_ir_module_module
@@ -129,60 +151,60 @@ msgstr "Модуль"
 #. module: base_install_request
 #: model:ir.model,name:base_install_request.model_base_module_install_request
 msgid "Module Activation Request"
-msgstr ""
+msgstr "Запит на активацію модуля"
 
 #. module: base_install_request
 #: model:mail.template,subject:base_install_request.mail_template_base_install_request
 msgid "Module Activation Request for \"{{ object.module_id.shortdesc }}\""
-msgstr ""
+msgstr "Запит на активацію модуля для \"{{ object.module_id.shortdesc }}\""
 
 #. module: base_install_request
 #: model:ir.model,name:base_install_request.model_base_module_install_review
 msgid "Module Activation Review"
-msgstr ""
+msgstr "Огляд активації модуля"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__modules_description
 msgid "Modules Description"
-msgstr ""
+msgstr "Опис модулів"
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_view_form
 msgid "No extra cost, this application is free."
-msgstr ""
+msgstr "Немає додаткової вартості, цей модуль безкоштовний."
 
 #. module: base_install_request
 #: code:addons/base_install_request/wizard/base_module_install_request.py:0
 #, python-format
 msgid "No module selected."
-msgstr ""
+msgstr "Не вибрано модулів."
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.ir_module_module_view_kanban
 msgid "Request Access"
-msgstr ""
+msgstr "Доступ до запитів"
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
 msgid "Request Activation"
-msgstr ""
+msgstr "Надіслати запит на активацію"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__user_ids
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
 msgid "Send to:"
-msgstr ""
+msgstr "Надіслати до:"
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_description
 msgid "The following apps will be installed:"
-msgstr ""
+msgstr "Будуть встановлені наступні модулі:"
 
 #. module: base_install_request
 #: code:addons/base_install_request/wizard/base_module_install_request.py:0
 #, python-format
 msgid "The module is already installed."
-msgstr ""
+msgstr "Модуль вже встановлено."
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
@@ -190,6 +212,9 @@ msgid ""
 "This app is included in your subscription. It's free to activate, but only "
 "an administrator can do it. Fill this form to send an activation request."
 msgstr ""
+"Цей моудль включений у вашу підписку. Активація безкоштовна, але це може "
+"зробити лише адміністратор. Заповніть цю форму, щоб надіслати запит на "
+"активацію."
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__user_id
@@ -199,18 +224,18 @@ msgstr "Користувач"
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
 msgid "Why do you need this module ?"
-msgstr ""
+msgstr "Чому вам потрібен цей модуль?"
 
 #. module: base_install_request
 #: model:ir.actions.act_window,name:base_install_request.action_base_module_install_review
 msgid "You are about to install an extra application"
-msgstr ""
+msgstr "Ви збираєтеся встановити додатковий модуль"
 
 #. module: base_install_request
 #: code:addons/base_install_request/wizard/base_module_install_request.py:0
 #, python-format
 msgid "Your request has been successfully sent"
-msgstr ""
+msgstr "Ваш запит успішно надісланий"
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
@@ -218,3 +243,6 @@ msgid ""
 "e.g. I'd like to use the SMS Marketing module to organize the promotion of "
 "our internal events, and exhibitions. I need access for 3 people of my team."
 msgstr ""
+"напр. Я хотів би використовувати модуль SMS Маркетинг для організації "
+"просування наших внутрішніх заходів та виставок. Мені потрібен доступ для 3 "
+"людей з моєї команди."

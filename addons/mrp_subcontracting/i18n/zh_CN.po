@@ -166,7 +166,7 @@ msgstr "为了准确地管理库存，外包位置必须是内部类型，链接
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_filter
 msgid "Incoming transfer"
-msgstr "入向调拨"
+msgstr "进货调拨"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_location
@@ -189,6 +189,15 @@ msgid ""
 "List of Products used in the BoM, used to filter the list of products in the"
 " subcontracting portal view"
 msgstr "BoM中使用的产品列表，用于筛选外包门户视图中的产品列表"
+
+#. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/models/stock_picking.py:0
+#, python-format
+msgid ""
+"There shouldn't be multiple productions to record for the same subcontracted"
+" move."
+msgstr ""
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__production_ids
@@ -482,7 +491,7 @@ msgstr "外包补给作业类型"
 #: code:addons/mrp_subcontracting/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
 #, python-format
 msgid "Subcontracting:"
-msgstr "外包。"
+msgstr "外包："
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/report/mrp_report_bom_structure.py:0

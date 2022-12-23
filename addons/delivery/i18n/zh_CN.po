@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # 稀饭~~ <wangwhai@qq.com>, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
@@ -150,6 +151,15 @@ msgid ""
 msgstr ""
 "<strong>重量:</strong>\n"
 "                <br/>"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__zip_prefix_ids
+msgid ""
+"Prefixes of zip codes that this carrier applies to. Note that regular "
+"expressions can be used to support countries with varying zip code lengths, "
+"i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
+"will only match '100' and not '1000')"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__carrier_description
@@ -1012,6 +1022,16 @@ msgid "The Poste"
 msgstr "邮政"
 
 #. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+#: code:addons/delivery/models/delivery_carrier.py:0
+#, python-format
+msgid ""
+"The package cannot be created because the total weight of the products in "
+"the picking is 0.0 %s"
+msgstr "无法创建包裹，因为拣货单上产品的重量总计是0.0%s"
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
 msgid ""
 "The return label can be downloaded by the customer from the customer portal."
@@ -1104,7 +1124,7 @@ msgstr "运单/面单的追踪链接"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Tracking"
-msgstr "追溯"
+msgstr "追踪"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_tracking_ref
@@ -1134,7 +1154,7 @@ msgstr "调拨"
 #: model:product.template,uom_name:delivery.product_product_delivery_product_template
 #: model:product.template,uom_name:delivery.product_product_local_delivery_product_template
 msgid "Units"
-msgstr "件"
+msgstr "单位"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form

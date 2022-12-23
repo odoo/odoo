@@ -3,23 +3,22 @@
 # 	* base
 # 
 # Translators:
-# keecome <7017511@qq.com>, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
-# Martin Trigaux, 2022
 # lonely落叶 <liu--qiong@hotmail.com>, 2022
 # Benson <Benson.Dr@Gmail.com>, 2022
 # 深圳 JM <3440895@qq.com>, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # Emily Jia <eji@odoo.com>, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 13:34+0000\n"
+"POT-Creation-Date: 2022-12-16 09:04+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -536,6 +535,7 @@ msgstr ""
 "    "
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_config.py:0
 #, python-format
 msgid ""
@@ -628,6 +628,14 @@ msgstr ""
 "\n"
 "            Egyptian Tax Authority Invoice Integration\n"
 "        "
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_ke_edi_tremol
+msgid ""
+"\n"
+"            Kenya Tremol Device EDI Integration\n"
+"        "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_timesheet
@@ -737,6 +745,14 @@ msgstr ""
 "\n"
 "        Accounting reports for Pakistan\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_rs_reports
+msgid ""
+"\n"
+"        Accounting reports for Serbia\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es_reports
@@ -1479,6 +1495,22 @@ msgstr ""
 " "
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_rs
+msgid ""
+"\n"
+"        This is the base module of the Serbian localization. It manages chart of accounts and taxes.\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_ph
+msgid ""
+"\n"
+"        This is the module to manage the accounting chart for The Philippines.\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_account_qr_code_sepa
 msgid ""
 "\n"
@@ -1743,6 +1775,15 @@ msgstr ""
 "    "
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_de_datev_reports
+msgid ""
+"\n"
+"        This module serves to provide the possibility to define two identifiers\n"
+"        on partners: one for customer and one for supplier, used for the DateV export\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_maintenance
 msgid ""
 "\n"
@@ -1835,6 +1876,14 @@ msgstr ""
 "       This module integrate with the ETA Portal to automatically sign and send your invoices to the tax Authority.\n"
 "       Special thanks to Plementus <info@plementus.com> for their help in developing this module.\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_ke_edi_tremol
+msgid ""
+"\n"
+"       This module integrates with the Kenyan G03 Tremol control unit device to the KRA through TIMS.\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_multilang
@@ -1960,6 +2009,17 @@ msgstr ""
 "\n"
 "休假仪表板的甘特视图\n"
 " "
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_lt_saft
+msgid ""
+"\n"
+"    Lithuanian SAF-T is standard file format for exporting various types of accounting transactional data using the XML format.\n"
+"    The XSD version used is v2.01 (since 2019). It is the latest one used by the Lithuanian Authorities.\n"
+"    The first version of the SAF-T Financial is limited to the general ledger level including customer and supplier transactions.\n"
+"    Necessary master data is also included.\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_lock
@@ -2864,6 +2924,15 @@ msgstr ""
 "================================\n"
 "\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_syscohada_reports
+msgid ""
+"\n"
+"Accounting reports for OHADA\n"
+"=================================\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pt_reports
@@ -3902,13 +3971,13 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"批量付款\n"
+"批量支付\n"
 "========================================\n"
-"批量付款允许分组付款.\n"
+"批量支付允许分组支付.\n"
 "\n"
 "它们的用途是，但不仅限于，在将多张支票成批存入银行之前，将它们组合在一起.\n"
 "存入的总金额将在您的银行对帐单上显示为单笔交易.\n"
-"对帐时，只需选择相应的批次付款即可对帐该批次中的所有付款.\n"
+"对帐时，只需选择相应的批次支付即可对帐该批次中的所有支付.\n"
 "    "
 
 #. module: base
@@ -4198,15 +4267,9 @@ msgid ""
 "Certification and Skills for HR\n"
 "===============================\n"
 "\n"
-"This module adds certification to resumé for employees.\n"
+"This module adds certification to resume for employees.\n"
 "        "
 msgstr ""
-"\n"
-"人力资源认证与技能\n"
-"===============================\n"
-"\n"
-"此模块为员工的履历增加认证.\n"
-" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ve
@@ -4836,15 +4899,9 @@ msgid ""
 "E-learning and Skills for HR\n"
 "============================\n"
 "\n"
-"This module add completed courses to resumé for employees.\n"
+"This module add completed courses to resume for employees.\n"
 "        "
 msgstr ""
-"\n"
-"人力资源数位学习和技能\n"
-"============================\n"
-"\n"
-"本模块将已完成的课程增加到员工履历中.\n"
-" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_40
@@ -5029,46 +5086,7 @@ msgid ""
 "Easily access your documents from your employee profile.\n"
 msgstr ""
 "\n"
-"从员工文档轻松访问您的文档.\n"
-
-#. module: base
-#: model:ir.module.module,description:base.module_hw_l10n_eg_eta
-msgid ""
-"\n"
-"Egypt ETA Hardware Driver\n"
-"=======================\n"
-"\n"
-"This module allows Odoo to digitally sign invoices using an USB key approved by the egyptian government\n"
-"\n"
-"Special thanks to Plementus <info@plementus.com> for their help in developing this module.\n"
-"\n"
-"Requirements per system\n"
-"-----------------------\n"
-"\n"
-"Windows:\n"
-"    - eps2003csp11.dll\n"
-"    \n"
-"Linux/macOS:\n"
-"    - OpenSC\n"
-"\n"
-msgstr ""
-"\n"
-"Egypt ETA Hardware Driver\n"
-"=======================\n"
-"\n"
-"This module allows Odoo to digitally sign invoices using an USB key approved by the egyptian government\n"
-"\n"
-"Special thanks to Plementus <info@plementus.com> for their help in developing this module.\n"
-"\n"
-"Requirements per system\n"
-"-----------------------\n"
-"\n"
-"Windows:\n"
-"    - eps2003csp11.dll\n"
-"    \n"
-"Linux/macOS:\n"
-"    - OpenSC\n"
-"\n"
+"从员工文档轻松访问你的员工资料.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_edi
@@ -5723,7 +5741,7 @@ msgstr ""
 "\n"
 " 对于非数值成绩，可授予用户 **徽标**. 对于杰出成绩的简单「感谢」而言，徽标是一种简单的方式，用以表达对用户出色工作的感激.\n"
 "\n"
-" 目标和徽标都是灵活的，并且可适用于大量的模块和动作. 安装时，此模块会创建简单的目标以帮助新用户探索 Odoo 并设置其用户设置单据.\n"
+" 目标和徽标都是灵活的，并且可适用于大量的模块和动作. 安装时，此模块会创建简单的目标以帮助新用户探索 Odoo 并设置其用户资料.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uy
@@ -6778,10 +6796,10 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-" 向活动跟踪发言人群发邮件\n"
+" 向活动专题发言人群发邮件\n"
 "==============================\n"
 "\n"
-" 增加 UX 请求以简化活动跟踪发言人群发邮件的连接模块.\n"
+" 增加 UX 请求以简化活动专题发言人群发邮件的连接模块.\n"
 " "
 
 #. module: base
@@ -7379,13 +7397,53 @@ msgstr ""
 " 活动的组织和管理.\n"
 "======================================\n"
 "\n"
-" 活动模块允许您有效地组织活动及所有相关任务:计划、登记跟踪、\n"
+" 活动模块允许您有效地组织活动及所有相关任务:计划、登记专题、\n"
 " 出勤等.\n"
 "\n"
 " 关键功能\n"
 "------------\n"
 "* 管理您的活动和报名\n"
 "* 使用电子邮件自动确认，并向所有活动注册用户发送致谢信\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_latam_check
+msgid ""
+"\n"
+"Own Checks Management\n"
+"---------------------\n"
+"\n"
+"Extends 'Check Printing Base' module to manage own checks with more features:\n"
+"\n"
+"* allow using own checks that are not printed but filled manually by the user\n"
+"* allow to use deferred or electronic checks\n"
+"  * printing is disabled\n"
+"  * check number is set manually by the user\n"
+"* add an optional \"Check Cash-In Date\" for post-dated checks (deferred payments)\n"
+"* add a menu to track own checks\n"
+"\n"
+"Third Party Checks Management\n"
+"-----------------------------\n"
+"\n"
+"Add new \"Third party check Management\" feature.\n"
+"\n"
+"There are 2 main Payment Methods additions:\n"
+"\n"
+"* New Third Party Checks:\n"
+"\n"
+"  * Payments of this payment method represent the check you get from a customer when getting paid (from an invoice or a manual payment)\n"
+"\n"
+"* Existing Third Party check.\n"
+"\n"
+"  * Payments of this payment method are to track moves of the check, for eg:\n"
+"\n"
+"    * Use a check to pay a vendor\n"
+"    * Deposit the check on the bank\n"
+"    * Get the check back from the bank (rejection)\n"
+"    * Get the check back from the vendor (a rejection or return)\n"
+"    * Transfer the check from one third party check journal to the other (one shop to another)\n"
+"\n"
+"  * Those operations can be done with multiple checks at once\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_workorder_plm
@@ -7829,7 +7887,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"活动跟踪音箱上的短信息行销\n"
+"活动专题音箱上的短信息行销\n"
 "=====================================\n"
 "\n"
 "桥接模块增加 UX 要求，以简化事件轨道上的 短信息行销\n"
@@ -7898,7 +7956,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"出售您的活动展位并跟踪销售订单的付款.\n"
+"出售您的活动展位并专题销售订单的付款.\n"
 "    "
 
 #. module: base
@@ -7997,18 +8055,12 @@ msgstr ""
 #: model:ir.module.module,description:base.module_hr_skills
 msgid ""
 "\n"
-"Skills and Resumé for HR\n"
+"Skills and Resume for HR\n"
 "========================\n"
 "\n"
-"This module introduces skills and resumé management for employees.\n"
+"This module introduces skills and resume management for employees.\n"
 "        "
 msgstr ""
-"\n"
-"人力资源技能和履历\n"
-"========================\n"
-"\n"
-"本模块介绍员工的技能和恢复管理.\n"
-" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sk
@@ -8701,11 +8753,20 @@ msgstr ""
 "    * to update the chart of tax template, update tax.xls and run tax2csv.py\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_my
+msgid ""
+"\n"
+"This is the base module to manage the accounting chart for Malaysia in Odoo.\n"
+"==============================================================================\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_ma
 msgid ""
 "\n"
-"This is the base module to manage the accounting chart for Maroc.\n"
-"=================================================================\n"
+"This is the base module to manage the accounting chart for Morocco.\n"
+"====================================================================\n"
 "\n"
 "Ce Module charge le modèle du plan de comptes standard Marocain et permet de\n"
 "générer les états comptables aux normes marocaines (Bilan, CPC (comptes de\n"
@@ -8713,15 +8774,6 @@ msgid ""
 "L'intégration comptable a été validé avec l'aide du Cabinet d'expertise comptable\n"
 "Seddik au cours du troisième trimestre 2010."
 msgstr ""
-"\n"
-"This is the base module to manage the accounting chart for Maroc.\n"
-"=================================================================\n"
-"\n"
-"Ce Module charge le modèle du plan de comptes standard Marocain et permet de\n"
-"générer les états comptables aux normes marocaines (Bilan, CPC (comptes de\n"
-"produits et charges), balance générale à 6 colonnes, Grand livre cumulatif...).\n"
-"L'intégration comptable a été validé avec l'aide du Cabinet d'expertise comptable\n"
-"Seddik au cours du troisième trimestre 2010."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tw
@@ -9146,17 +9198,6 @@ msgstr ""
 "\n"
 " 如果您已安装了crm\n"
 " 模块，我们推荐您安装此模块. "
-
-#. module: base
-#: model:ir.module.module,description:base.module_payment_demo
-msgid ""
-"\n"
-"This module adds a simple payment provider allowing to make demo payments.\n"
-"It should never be used in production environment. Make sure to disable it before going live.\n"
-msgstr ""
-"\n"
-"This module adds a simple payment provider allowing to make demo payments.\n"
-"It should never be used in production environment. Make sure to disable it before going live.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_appraisal_survey
@@ -9629,6 +9670,15 @@ msgstr ""
 "    "
 
 #. module: base
+#: model:ir.module.module,description:base.module_website_sale_subscription
+msgid ""
+"\n"
+"This module allows you to sell subscription products in your eCommerce with\n"
+"appropriate views and selling choices.\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_hr_hourly_cost
 msgid ""
 "\n"
@@ -9813,23 +9863,9 @@ msgid ""
 "\n"
 "    Ivory Coast, Gabon, Guinea, Guinea Bissau, Equatorial Guinea, Mali, Niger,\n"
 "\n"
-"    Replica of Democratic Congo, Senegal, Chad, Togo.\n"
+"    Democratic Republic of the Congo, Senegal, Chad, Togo.\n"
 "    "
 msgstr ""
-"\n"
-"This module implements the accounting chart for OHADA area.\n"
-"===========================================================\n"
-"\n"
-"It allows any company or association to manage its financial accounting.\n"
-"\n"
-"Countries that use OHADA are the following:\n"
-"-------------------------------------------\n"
-"    Benin, Burkina Faso, Cameroon, Central African Republic, Comoros, Congo,\n"
-"\n"
-"    Ivory Coast, Gabon, Guinea, Guinea Bissau, Equatorial Guinea, Mali, Niger,\n"
-"\n"
-"    Replica of Democratic Congo, Senegal, Chad, Togo.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_iban
@@ -9874,7 +9910,7 @@ msgstr ""
 "这是一个与社团协会有关的设置模块.\n"
 "============================================================== \n"
 "\n"
-"安装社团协会的单据，用于管理活动，报名信息，会员信息，\n"
+"安装社团协会的资料，用于管理活动，报名信息，会员信息，\n"
 "隶属产品(方案)等.\n"
 " "
 
@@ -10488,23 +10524,6 @@ msgstr ""
 "    "
 
 #. module: base
-#: model:ir.module.module,description:base.module_payment_sips
-msgid ""
-"\n"
-"Worldline SIPS Payment Provider for online payments\n"
-"\n"
-"Implements the Worldline SIPS API for payment providers.\n"
-"Other SIPS providers may be compatible, though this is\n"
-"not guaranteed."
-msgstr ""
-"\n"
-"Worldline SIPS Payment Provider for online payments\n"
-"\n"
-"Implements the Worldline SIPS API for payment providers.\n"
-"Other SIPS providers may be compatible, though this is\n"
-"not guaranteed."
-
-#. module: base
 #: model:ir.module.module,description:base.module_website_crm_livechat
 msgid ""
 " Adds a stat button on lead form view to access their livechat sessions."
@@ -10576,6 +10595,7 @@ msgstr ""
 "the Pakistan "
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "\"group_by\" value must be a string %(attribute)s=%(value)r"
@@ -10968,30 +10988,35 @@ msgid "# Record Rules"
 msgstr "# 记录规则"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "%(action_name)s is not a valid action on %(model_name)s"
 msgstr "%(action_name)s 不是对 %(model_name)s 的有效动作"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "%(attribute)r value must be an integer (%(value)s)"
 msgstr "%(attribute)r 值必须是整数 (%(value)s)"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_currency.py:0
 #, python-format
 msgid "%(company_currency_name)s per %(rate_currency_name)s"
 msgstr "%(company_currency_name)s 每 %(rate_currency_name)s"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "%(method)s on %(model)s is private and cannot be called from a button"
 msgstr "%(model)s 上的 %(method)s 是私有的，不能通过按钮调用"
 
 #. module: base
+#. odoo-python
 #: code:addons/fields.py:0 code:addons/models.py:0
 #, python-format
 msgid ""
@@ -11004,12 +11029,14 @@ msgstr ""
 "Implicitly accessed through '%(document_kind)s' (%(document_model)s)."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_currency.py:0
 #, python-format
 msgid "%(rate_currency_name)s per %(company_currency_name)s"
 msgstr "%(rate_currency_name)s 每 %(company_currency_name)s"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid ""
@@ -11083,12 +11110,14 @@ msgid "%p - Equivalent of either AM or PM.\""
 msgstr "%p - 等价于 AM 或 PM. \""
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid "%s (Dedicated Outgoing Mail Server):"
 msgstr "%s（专用的出向邮件服务器）："
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_filters.py:0
 #: code:addons/base/models/res_partner.py:0
 #: code:addons/base/models/res_users.py:0
@@ -11099,6 +11128,7 @@ msgid "%s (copy)"
 msgstr "%s (副本)"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_currency.py:0
 #, python-format
 msgid "%s per Unit"
@@ -11126,30 +11156,42 @@ msgid "&amp;nbsp;"
 msgstr "&amp;nbsp;"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "'%s' does not seem to be a number for field '%%(field)s'"
 msgstr "'%s' 不像是用于字段 '%%(field)s' 的数字"
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+#, python-format
+msgid "'%s' does not seem to be a valid JSON for field '%%(field)s'"
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "'%s' does not seem to be a valid date for field '%%(field)s'"
 msgstr "'%s' 不像是用于字段 '%%(field)s'  的正确日期"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "'%s' does not seem to be a valid datetime for field '%%(field)s'"
 msgstr "'%s' 不像是用于字段 '%%(field)s' 的正确日期时间"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "'%s' does not seem to be an integer for field '%%(field)s'"
 msgstr "'%s' 不像是用于字段 '%%(field)s'的整型"
 
 #. module: base
+#. odoo-python
 #: code:addons/fields.py:0
 #, python-format
 msgid "(Record: %s, User: %s)"
@@ -11176,6 +11218,7 @@ msgid ", required"
 msgstr ", 必填"
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid ""
@@ -11201,6 +11244,7 @@ msgstr ""
 "- 其他地址：公司的其他地址（如子公司...…）"
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid ""
@@ -11362,14 +11406,10 @@ msgstr "<b attrs=\"{'invisible': [('is_company', '=', False)]}\">地址</b>"
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code style=\"white-space: pre-wrap\">\n"
-"partner_name = record.name + '_code'\n"
+"partner_name = record.name + '_code' \\n\n"
 "env['res.partner'].create({'name': partner_name})\n"
 "</code>"
 msgstr ""
-"<code style=\"white-space: pre-wrap\">\n"
-"partner_name = record.name + '_code'\n"
-"env['res.partner'].create({'name': partner_name})\n"
-"</code>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -11508,9 +11548,9 @@ msgstr "<span class=\"bg-danger\">归档</span>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
 msgid ""
-"<span class=\"o_form_label\">Click on Update below to start the "
-"process...</span>"
-msgstr "<span class=\"o_form_label\">点选下面的更新 以便 开始 处理...</span>"
+"<span class=\"o_form_label\" colspan=\"2\">Click on Update below to start "
+"the process...</span>"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade_install
@@ -11959,29 +11999,43 @@ msgid "A - AGRICULTURE, FORESTRY AND FISHING"
 msgstr "A - 农业、林业和渔业"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "A <graph> can only contains <field> nodes, found a <%s>"
 msgstr "一个 <graph> 只包含 <field> 节点，找到了一个 <%s>"
 
 #. module: base
-#: model:ir.module.module,summary:base.module_payment_razorpay
-msgid "A Indian online payment provider covering 100+ payment methods."
-msgstr "一家印度在线支付提供商，涵盖 100 多种支付方式。"
+#: model:ir.module.module,summary:base.module_payment_adyen
+msgid "A Dutch payment provider covering Europe and the US."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment_mollie
+msgid "A Dutch payment provider covering several European countries."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment_buckaroo
+msgid "A Dutch payment provider covering several countries in Europe."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment_sips
+msgid "A French payment provider for online payments all over the world."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_flutterwave
-msgid ""
-"A Nigerian online payments provider covering several African countries and "
-"payment methods."
-msgstr "尼日利亚在线支付提供商，覆盖多个非洲国家和支付方式。"
+msgid "A Nigerian payment provider covering several African countries."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_slides_forum
 msgid ""
 "A Slide channel can be linked to forum. Also, profiles from slide and forum "
 "are regrouped together"
-msgstr "滚动频道可以连结到论坛. 此外，幻灯片和论坛中的设置单据重新组合在一起"
+msgstr "滚动频道可以连结到论坛. 此外，幻灯片和论坛中的配置重新组合在一起"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_res_groups
@@ -12098,6 +12152,31 @@ msgid ""
 msgstr "已存在具有相同 <span><span class=\"o_vat_label\">税号</span></span> 的合作伙伴 ("
 
 #. module: base
+#: model:ir.module.module,summary:base.module_payment_razorpay
+msgid "A payment provider covering India."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment_mercado_pago
+msgid "A payment provider covering several countries in Latin America."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment_custom
+msgid "A payment provider for custom flows like wire transfers."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment_sepa_direct_debit
+msgid "A payment provider for enabling Sepa Direct Debit in the EU."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment_demo
+msgid "A payment provider for running fake payment flows for demo purposes."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_contact
 msgid "A user associated to the contact"
 msgstr "与系统用户相关的联系人"
@@ -12118,6 +12197,7 @@ msgid ""
 msgstr "对休假没有任何权利的用户将能够查看应用程序、创建自己的假期并管理他的经理用户的请求。"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "A valid email is required for find_or_create to work properly."
@@ -12179,6 +12259,16 @@ msgid "ABA Credit Transfer"
 msgstr "ABA Credit Transfer"
 
 #. module: base
+#: model:res.country,vat_label:base.au
+msgid "ABN"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_res_users_apikeys_description
+msgid "API Key Description"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_res_users_keys_description
 msgid "API Key: description input wizard"
 msgstr "API Key: 描述输入向导"
@@ -12202,6 +12292,7 @@ msgid ""
 msgstr "API密钥用于将外部工具连接至Odoo，无需密码或双因素身份验证。 "
 
 #. module: base
+#. odoo-python
 #: code:addons/fields.py:0
 #, python-format
 msgid "ASCII characters are required for %s in %s"
@@ -12239,6 +12330,7 @@ msgid "Access Menu"
 msgstr "访问菜单"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_users.py:0
 #: model:ir.actions.act_window,name:base.ir_access_act
 #: model:ir.ui.menu,name:base.menu_ir_access_act
@@ -12272,12 +12364,12 @@ msgstr "访问令牌"
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_hr
 msgid "Access documents from the employee profile"
-msgstr "从员工文档轻松访问您的文档"
+msgstr "从员工资料轻松访问您的文档"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_profile
 msgid "Access the website profile of the users"
-msgstr "访问用户的网站数据"
+msgstr "访问用户的网站资料"
 
 #. module: base
 #: model:res.groups,name:base.group_private_addresses
@@ -12290,10 +12382,16 @@ msgid "Access to export feature"
 msgstr "导出"
 
 #. module: base
+#. odoo-python
 #: code:addons/api.py:0 code:addons/api.py:0
 #, python-format
 msgid "Access to unauthorized or invalid companies."
 msgstr "访问未经授权或无效的公司."
+
+#. module: base
+#: model:ir.module.category,name:base.module_category_account
+msgid "Account"
+msgstr "科目"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_auto_transfer
@@ -12318,7 +12416,7 @@ msgstr "会计银行对帐单导入"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_accountant_batch_payment
 msgid "Account Batch Payment Reconciliation"
-msgstr "会计批量付款对账"
+msgstr "会计批量支付对账"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_account_charts
@@ -12447,6 +12545,16 @@ msgid "Accounting Reports Tax Reminder"
 msgstr "会计报告 税务提醒"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_account_sequence
+msgid "Accounting Sequence"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_latam_account_sequence
+msgid "Accounting Sequence - Latam Documents"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet_account_budget
 msgid "Accounting budget sale timesheet"
 msgstr "会计预算销售工时表"
@@ -12526,6 +12634,7 @@ msgid "Action"
 msgstr "动作"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid ""
@@ -12617,10 +12726,16 @@ msgid "Actions"
 msgstr "动作"
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.module_form
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 #: model_terms:ir.ui.view,arch_db:base.res_lang_tree
 msgid "Activate"
 msgstr "激活"
+
+#. module: base
+#: model:ir.actions.server,name:base.action_server_module_immediate_install
+msgid "Activate Modules"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -12746,13 +12861,13 @@ msgstr "为您的课程增加认证功能"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_skills_survey
-msgid "Add certification to resumé of your employees"
-msgstr "为您的员工履历增加认证"
+msgid "Add certification to resume of your employees"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_skills_slides
-msgid "Add completed courses to resumé of your employees"
-msgstr "将已完成的课程增加到您的员工履历中"
+msgid "Add completed courses to resume of your employees"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_social_crm
@@ -12770,12 +12885,14 @@ msgid "Add delivery costs to online sales"
 msgstr "增加交货成本到线上销售"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Add direction"
 msgstr "增加指引"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Add directional information (not used for digital)"
@@ -12874,6 +12991,7 @@ msgstr ""
 "    IT budget by almost half within the last 2 years."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #: model_terms:ir.ui.view,arch_db:base.contact
 #: model_terms:ir.ui.view,arch_db:base.res_partner_view_form_private
@@ -12901,6 +13019,7 @@ msgid "Address format..."
 msgstr "地址格式..."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Address separator"
@@ -13114,6 +13233,7 @@ msgid "Administrative/Utilities"
 msgstr "行政/公用事业"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0 code:addons/base/models/ir_model.py:0
 #: code:addons/base/models/ir_model.py:0
 #, python-format
@@ -13128,7 +13248,7 @@ msgstr "高级地址格式"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_gantt
 msgid "Advanced Event Track Management"
-msgstr "高级活动跟踪管理"
+msgstr "高级活动专题管理"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track
@@ -13176,12 +13296,6 @@ msgstr "库存会计高级特性"
 #: model:ir.module.module,summary:base.module_mrp_subonctracting_landed_costs
 msgid "Advanced views to manage landed cost for subcontracting orders"
 msgstr "管理分包订单落地成本的高级视图"
-
-#. module: base
-#: model:ir.module.module,description:base.module_payment_adyen
-#: model:ir.module.module,shortdesc:base.module_payment_adyen
-msgid "Adyen Payment Provider"
-msgstr "Adyen Payment Provider"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__agpl-3
@@ -13234,16 +13348,12 @@ msgid "Algeria - Accounting"
 msgstr "Algeria - Accounting"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_payment_alipay
-msgid "Alipay Payment Provider"
-msgstr "Paypal 支付提供商"
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_search
 msgid "All"
 msgstr "全部"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/wizard/base_partner_merge.py:0
 #, python-format
 msgid ""
@@ -13337,7 +13447,7 @@ msgstr "允许地图上的查看这些记录"
 msgid ""
 "Allows to access the website profile of the users and see their statistics "
 "(karma, badges, etc..)"
-msgstr "允许访问用户的网站个人数据并查看他们的统计数据(活跃度、成就等. )"
+msgstr "允许访问用户的网站资料并查看他们的统计数据(活跃度、成就等. )"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_slides_forum
@@ -13376,7 +13486,7 @@ msgstr "允许向有线索的网站访客发送短信息"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_accountant_batch_payment
 msgid "Allows using Reconciliation with the Batch Payment feature."
-msgstr "允许对批量付款功能使用对帐."
+msgstr "允许对批量支付功能使用对帐."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_delivery_fedex
@@ -13389,17 +13499,12 @@ msgid "Amazon Connector"
 msgstr "亚马逊联接器"
 
 #. module: base
-#: model:ir.module.module,summary:base.module_payment_aps
-msgid ""
-"Amazon Payment Services' online payment provider covering the MENA region."
-msgstr "亚马逊支付服务的线上付款提供商，覆盖中东和北非地区"
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_amazon_taxcloud
 msgid "Amazon/TaxCloud Bridge"
 msgstr "亚马逊/税务云 桥接模块"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid ""
@@ -13420,6 +13525,22 @@ msgid ""
 msgstr "以这种货币表示的金额四舍五入到最接近的四舍五入系数的倍数."
 
 #. module: base
+#: model:ir.module.module,summary:base.module_payment_aps
+msgid "An Amazon payment provider covering the MENA region."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment_paypal
+msgid "An American payment provider for online payments all over the world."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment_stripe
+msgid "An Irish-American payment provider covering the US and many others."
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -13430,6 +13551,7 @@ msgstr ""
 " %s"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -13455,26 +13577,14 @@ msgid ""
 msgstr "自动安装模块是指当它的所有依赖满足时系统会自动安装. 如果该模块没有任何依赖，那么系统总是会安装它."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "An email is required for find_or_create to work"
 msgstr "要 find_or_create功能工作，需要一个电子邮件"
 
 #. module: base
-#: model:ir.module.module,summary:base.module_payment_asiapay
-msgid ""
-"An online payments provider based in Hong Kong covering most Asian countries"
-" and many different payment methods."
-msgstr "一家总部设在香港的线上付款提供商，覆盖大多数亚洲国家和许多不同的支付方式"
-
-#. module: base
-#: model:ir.module.module,summary:base.module_payment_mercado_pago
-msgid ""
-"An online payments provider covering several countries, currencies and "
-"payment methods from Latin America."
-msgstr "一个涵盖拉丁美洲多个国家、货币和支付方式的线上付款提供商"
-
-#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -13483,6 +13593,16 @@ msgid ""
 msgstr ""
 "服务器不支持以下选项: \n"
 " %s"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment_asiapay
+msgid "An payment provider based in Hong Kong covering most Asian countries."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment_authorize
+msgid "An payment provider covering the US, Australia, and Canada."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic
@@ -13519,6 +13639,13 @@ msgstr "安哥拉"
 #: model:res.country,name:base.ai
 msgid "Anguilla"
 msgstr "安圭拉"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_partner.py:0
+#, python-format
+msgid "Another user already has this barcode"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.aq
@@ -13567,6 +13694,7 @@ msgid "Apply"
 msgstr "应用"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #: model:ir.actions.act_window,name:base.action_view_base_module_upgrade
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade_install
@@ -13852,6 +13980,7 @@ msgid "Associations Management"
 msgstr "协会管理"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid "At least one language must be active."
@@ -13915,6 +14044,7 @@ msgid "Attract visitors to subscribe to mailing lists"
 msgstr "吸引访问者订阅邮件列表"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Attribute %(attribute)s evaluation expects a boolean, got %(value)s"
@@ -13966,6 +14096,7 @@ msgid "Austrian Standardized Charts & Tax"
 msgstr "Austrian Standardized Charts & Tax"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -14000,12 +14131,6 @@ msgstr "作者"
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "Author Name"
 msgstr "作者名字"
-
-#. module: base
-#: model:ir.module.module,description:base.module_payment_authorize
-#: model:ir.module.module,shortdesc:base.module_payment_authorize
-msgid "Authorize.Net Payment Provider"
-msgstr "Authorize.Net Payment Provider"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_dependency__auto_install_required
@@ -14043,6 +14168,7 @@ msgid "Automatic Vacuum"
 msgstr "自动清空"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid "Automatic install of downloaded Apps is currently disabled."
@@ -14209,6 +14335,7 @@ msgid "Background Image"
 msgstr "背景图像"
 
 #. module: base
+#. odoo-python
 #: code:addons/translate.py:0
 #, python-format
 msgid "Bad file format: %s"
@@ -14307,6 +14434,7 @@ msgid "Barcode"
 msgstr "条码"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Barcode %s"
@@ -14343,12 +14471,14 @@ msgid "Barcode scan in Mobile"
 msgstr "移动端应用中的条码扫瞄"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Barcode symbology"
 msgstr "条码符号"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Barcode type, eg: UPCA, EAN13, Code128"
@@ -14383,15 +14513,11 @@ msgid "Base Field"
 msgstr "基础字段"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid "Base Language 'en_US' can not be deleted."
 msgstr "不能删除基础语言 \"en_US\"."
-
-#. module: base
-#: model:ir.module.module,summary:base.module_payment
-msgid "Base Module for Payment Providers"
-msgstr "付款服务商的基础模块"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model__state__base
@@ -14427,7 +14553,6 @@ msgstr "基本视图"
 #. module: base
 #: model:ir.actions.server,name:base.autovacuum_job_ir_actions_server
 #: model:ir.cron,cron_name:base.autovacuum_job
-#: model:ir.cron,name:base.autovacuum_job
 msgid "Base: Auto-vacuum internal data"
 msgstr "基础:自动清理内部数据"
 
@@ -14459,7 +14584,7 @@ msgstr "支持互联网的基本模型和助手程序."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_batch_payment
 msgid "Batch Payment"
-msgstr "批量付款"
+msgstr "批量支付"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_stock_picking_batch
@@ -14500,6 +14625,7 @@ msgid "Before Amount"
 msgstr "金额前面"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid ""
@@ -14905,7 +15031,7 @@ msgstr "桥接模块向活动参与者推送通知"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_live_quiz
 msgid "Bridge module to support quiz features during \"live\" tracks. "
-msgstr "桥接模块在\"即时\"跟踪期间支持测验功能. "
+msgstr "桥接模块在\"即时\"专题期间支持测验功能. "
 
 #. module: base
 #: model:res.country,name:base.io
@@ -14916,12 +15042,6 @@ msgstr "英属印度洋领地"
 #: model:res.country,name:base.bn
 msgid "Brunei Darussalam"
 msgstr "汶莱"
-
-#. module: base
-#: model:ir.module.module,description:base.module_payment_buckaroo
-#: model:ir.module.module,shortdesc:base.module_payment_buckaroo
-msgid "Buckaroo Payment Provider"
-msgstr "Buckaroo Payment Provider"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_budget
@@ -14974,6 +15094,7 @@ msgid "Burundi"
 msgstr "布隆迪"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Button must have a name"
@@ -14985,6 +15106,8 @@ msgid "By"
 msgstr "由"
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/ir_qweb_fields.py:0
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "By default the widget uses the field information"
@@ -15082,6 +15205,7 @@ msgid "Cameroon"
 msgstr "喀麦隆"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid ""
@@ -15089,18 +15213,21 @@ msgid ""
 msgstr "不能间接创建 M2O (多对一)记录，分别导入字段"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid "Can not upgrade module '%s'. It is not installed."
 msgstr "不能升级模块 \"%s\"，因为它尚未安装."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Can only rename one field at a time!"
 msgstr "字段换名只能一次一个!"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Can't compare more than two views."
@@ -15161,18 +15288,21 @@ msgid "Cancel Upgrade"
 msgstr "取消升级"
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid "Cannot aggregate field %r."
 msgstr "不能聚合字段 %r."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/assetsbundle.py:0
 #, python-format
 msgid "Cannot create %r because the template to inherit %r is not found."
 msgstr "未找到承接%r的模板，无法创建%r。"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid ""
@@ -15181,24 +15311,28 @@ msgid ""
 msgstr "不能仅从名称创建新的 '1%s' 纪录. 请手动创建这些纪录并再次尝试导入."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid "Cannot deactivate a language that is currently used by contacts."
 msgstr "不能停用当前被联系人所使用的语言."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid "Cannot deactivate a language that is currently used by users."
 msgstr "不能撤消当前用户使用的语言."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_config.py:0
 #, python-format
 msgid "Cannot duplicate configuration!"
 msgstr "不能复制配置!"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Cannot rename/delete fields that are still present in views:"
@@ -15298,11 +15432,18 @@ msgid "Change password"
 msgstr "更改密码"
 
 #. module: base
+#: model:ir.module.module,description:base.module_account_sequence
+#: model:ir.module.module,description:base.module_l10n_latam_account_sequence
+msgid "Change the way `sequence.mixin` works to reduce concurrency errors"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_country_form
 msgid "Change the way addresses are displayed in reports"
 msgstr "更改地址在报告中的显示方式"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -15315,18 +15456,27 @@ msgstr ""
 "如果一个已经存在的联系人属于新公司，则在这个新公司里一个新联系人应该被创建，您可以使用「取消」按钮来放弃这个改变."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Changing the model of a field is forbidden!"
 msgstr "改变字段的模型是禁止的!"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid ""
 "Changing the type of a field is not yet supported. Please drop it and create"
 " it again!"
 msgstr "还不支持更改字段的类型，请先删除该字段再重新创建!"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_lang.py:0
+#, python-format
+msgid "Changing to 12-hour clock format instead."
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__char
@@ -15370,6 +15520,11 @@ msgstr "支票打印基础功能"
 #: model:ir.model.fields,help:base.field_res_users__employee
 msgid "Check this box if this contact is an Employee."
 msgstr "勾选此项 如果 这个 联系人 是 一个 员工."
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_latam_check
+msgid "Checks Management"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__checksum
@@ -15656,6 +15811,7 @@ msgid "Comm10E 25  105 x 241 mm, U.S. Common 10 Envelope"
 msgstr "Comm10E25105 x 241毫米，10个美国一般信封"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Comma"
@@ -15705,6 +15861,7 @@ msgid "Companies count"
 msgstr "公司计数"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #: model:ir.model.fields,field_description:base.field_ir_attachment__company_id
 #: model:ir.model.fields,field_description:base.field_ir_default__company_id
@@ -15725,6 +15882,7 @@ msgid "Company"
 msgstr "公司"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid ""
@@ -15806,6 +15964,7 @@ msgid "Company Type"
 msgstr "公司类别"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid ""
@@ -15977,6 +16136,7 @@ msgid "Connect the Web Client to Hardware Peripherals"
 msgstr "连接网站客户端到并行硬件"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -15997,6 +16157,7 @@ msgid "Connection Encryption"
 msgstr "连接加密"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -16007,6 +16168,7 @@ msgstr ""
 "%s"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid "Connection Test Successful!"
@@ -16104,6 +16266,7 @@ msgid "Contact image"
 msgstr "联系人图像"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0 code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "Contact your administrator to request access if necessary."
@@ -16215,6 +16378,7 @@ msgid "Costa Rica - Accounting"
 msgstr "Costa Rica - Accounting"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
@@ -16226,6 +16390,7 @@ msgstr ""
 "%s"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "Couldn't create contact without email address!"
@@ -16359,11 +16524,6 @@ msgstr "创建菜单向导"
 #: model:ir.module.module,summary:base.module_industry_fsm_sale_report
 msgid "Create Reports for Field service workers"
 msgstr "为现场服务工作人员创建报告"
-
-#. module: base
-#: model_terms:ir.ui.view,arch_db:base.view_model_menu_create
-msgid "Create _Menu"
-msgstr "Create _Menu"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_res_bank_form
@@ -16788,6 +16948,7 @@ msgid "Currency sign, to be used when printing amounts."
 msgstr "货币符号，打印金额时使用."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Current Arch"
@@ -16828,11 +16989,6 @@ msgid "Custom Object"
 msgstr "自定对像"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_payment_custom
-msgid "Custom Payment Modes"
-msgstr "自定义付款模式"
-
-#. module: base
 #: model:ir.ui.menu,name:base.menu_administration_shortcut
 msgid "Custom Shortcuts"
 msgstr "自定快捷方式"
@@ -16843,6 +16999,7 @@ msgid "Custom View"
 msgstr "自定视图"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
@@ -16957,6 +17114,7 @@ msgid "DLE 26 110 x 220 mm"
 msgstr "DLE 26 110 x 220 毫米"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Dash"
@@ -17023,6 +17181,7 @@ msgid "Database Structure"
 msgstr "数据库结构"
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid ""
@@ -17031,6 +17190,7 @@ msgid ""
 msgstr "数据库读入不到 ids（%(missing)s），且有extra ids（%(extra)s），可能是因为上个请求的类型不一致所造成的"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #: model:ir.model.fields,field_description:base.field_res_currency__date
 #: model:ir.model.fields,field_description:base.field_res_currency_rate__name
@@ -17048,30 +17208,35 @@ msgid "Date Format"
 msgstr "日期格式"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Date format"
 msgstr "日期格式"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Date to compare with the field value, by default use the current date."
 msgstr "与字段值进行比较的日期，默认情况下使用当前日期."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Date unit"
 msgstr "日期单位"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Date unit used for comparison and formatting"
 msgstr "日期单位用于比较和格式化"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid ""
@@ -17080,6 +17245,7 @@ msgid ""
 msgstr "用于四舍五入的日期单位. 如果您使用数字格式，该值必须小于\"小时\"."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid ""
@@ -17139,6 +17305,7 @@ msgid ""
 msgstr "计算此货币金额的操作时考虑的小数位. 它由舍入系数决定."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Decimalized number"
@@ -17287,11 +17454,6 @@ msgid "Demo Installation Failures"
 msgstr "演示安装失败"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_payment_demo
-msgid "Demo Payment Provider"
-msgstr "演示支付提供商"
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid ""
 "Demo data should only be used on test databases!\n"
@@ -17432,6 +17594,7 @@ msgid "Digital Products"
 msgstr "数字产品"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Digital formatting"
@@ -17463,6 +17626,7 @@ msgid "Disable smart shrinking"
 msgstr "禁用智慧收缩"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_config.py:0
 #, python-format
 msgid ""
@@ -17616,12 +17780,14 @@ msgid "Display an option on related documents to print this report"
 msgstr "在相关文件上显示一个选择来打印这个报告"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Display country image"
 msgstr "显示国家/地区图像"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Display currency"
@@ -17647,36 +17813,42 @@ msgstr ""
 "%(country_code)s:国家代码"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Display only the date"
 msgstr "仅显示日期"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Display only the time"
 msgstr "只显示时间"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Display phone icons"
 msgstr "显示手机图标"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Display the country image if the field is present on the record"
 msgstr "如果记录中存在这个字段，则显示国家或地区的图像"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Display the phone icons even if no_marker is True"
 msgstr "显示电话图标，即使no_marker 设为True"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Displayed fields"
@@ -17709,6 +17881,7 @@ msgid "Document management"
 msgstr "文档管理"
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid "Document type:"
@@ -17815,6 +17988,7 @@ msgid "Domain Value"
 msgstr "域值"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid ""
@@ -17838,6 +18012,7 @@ msgid "Dominican Republic - Accounting"
 msgstr "Dominican Republic - Accounting"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Don't display the font awesome marker"
@@ -17893,6 +18068,7 @@ msgid "Dropship and Subcontracting Management"
 msgstr "直运和外包管理"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid ""
@@ -17901,6 +18077,7 @@ msgid ""
 msgstr "由于安全限制，您不得访问\"%(document_kind)s\"(%(document_model)s) 记录."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid ""
@@ -17909,6 +18086,7 @@ msgid ""
 msgstr "由于安全限制，您不能创建\"%(document_kind)s\"(%(document_model)s) 记录."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid ""
@@ -17917,6 +18095,7 @@ msgid ""
 msgstr "由于安全限制，您不能删除\"%(document_kind)s\"(%(document_model)s) 条记录."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid ""
@@ -17925,6 +18104,7 @@ msgid ""
 msgstr "由于安全限制，您不得修改\"%(document_kind)s\"(%(document_model)s) 记录."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_company.py:0
 #, python-format
 msgid ""
@@ -18047,12 +18227,6 @@ msgid "Egypt - Accounting"
 msgstr "Egypt - Accounting"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_hw_l10n_eg_eta
-#: model:ir.module.module,summary:base.module_hw_l10n_eg_eta
-msgid "Egypt ETA Hardware Driver"
-msgstr "埃及ETA硬件驱动"
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_eg_edi_eta
 msgid "Egyptian E-Invoice Integration"
 msgstr "Egyptian E-Invoice Integration"
@@ -18170,18 +18344,21 @@ msgid "Electronic invoicing for Colombia with Carvajal"
 msgstr "Electronic invoicing for Colombia with Carvajal"
 
 #. module: base
+#. odoo-python
 #: code:addons/template_inheritance.py:0
 #, python-format
 msgid "Element %r cannot be located in parent view"
 msgstr "不能在上级视图中定位元素 %r"
 
 #. module: base
+#. odoo-python
 #: code:addons/template_inheritance.py:0
 #, python-format
 msgid "Element '%s' cannot be located in parent view"
 msgstr "元素 '%s' 在上级视图中没有找到"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__group_by_email
 #: model:ir.model.fields,field_description:base.field_res_bank__email
@@ -18288,6 +18465,7 @@ msgid "Employees time registration on Work Orders"
 msgstr "工单上的员工时间登记"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Empty dependency in %r"
@@ -18303,7 +18481,7 @@ msgstr "允许商品缓存，从而获得较低的POS加载时间."
 msgid ""
 "Enable customers to pay invoices on the portal and post payments when "
 "transactions are processed."
-msgstr "允许客户在门户网站上支付发票，并在处理交易时延期付款。"
+msgstr "允许客户在门户网站上支付发票，并在处理交易时延期支付。"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.enable_profiling_wizard
@@ -18368,7 +18546,7 @@ msgstr "输入密钥的描述和用途."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_gantt
 msgid "Enterprise Event Track"
-msgstr "企业版活动跟踪"
+msgstr "企业版活动专题"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_enterprise_partner_assign
@@ -18457,6 +18635,7 @@ msgid "Error message returned when the constraint is violated."
 msgstr "违反约束时返回的错误消息."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid ""
@@ -18471,6 +18650,7 @@ msgstr ""
 "%(error)s"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid ""
@@ -18483,6 +18663,7 @@ msgstr ""
 "%(error)s"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_menu.py:0
 #, python-format
 msgid "Error! You cannot create recursive menus."
@@ -18492,6 +18673,11 @@ msgstr "错误!不能创建循环引用的菜单."
 #: model:res.country,name:base.ee
 msgid "Estonia"
 msgstr "爱沙尼亚"
+
+#. module: base
+#: model:res.country,name:base.sz
+msgid "Eswatini"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.et
@@ -19072,30 +19258,35 @@ msgid "Field"
 msgstr "字段"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Field \"%(field_name)s\" does not exist in model \"%(model_name)s\""
 msgstr "模型\"%(model_name)s\"中不存在字段\"%(field_name)s\""
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Field \"Model\" cannot be modified on models."
 msgstr "字段\"Model\" 不能在模型上更改 ."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Field \"Transient Model\" cannot be modified on models."
 msgstr "字段\"Transient  Model\" 不能在模型上更改 ."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Field \"Type\" cannot be modified on models."
 msgstr "字段\"Type\" 不能在模型上更改 ."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid ""
@@ -19103,6 +19294,7 @@ msgid ""
 msgstr "%(use)s 中使用的字段 %(name)r 存在于视图中，但位于多选中."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid ""
@@ -19110,12 +19302,14 @@ msgid ""
 msgstr "用于%(use)s的字段%(name)r限于小组%(groups)s。"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Field %(name)r used in %(use)s must be present in view but is missing."
 msgstr "%(use)s 中使用的字段 %(name)r 必须存在于视图中但缺失."
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid ""
@@ -19124,6 +19318,7 @@ msgid ""
 msgstr "字段 %s 不是存储字段，只有存储字段(一般或多对多)对\"groupby\"参数有效"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid ""
@@ -19131,6 +19326,7 @@ msgid ""
 msgstr "在\"groupby\"节点中找到的字段\"%(field)s\"在模型 %(model)s 中不存在"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid ""
@@ -19197,12 +19393,14 @@ msgid "Field Type"
 msgstr "字段类型"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Field `%(name)s` does not exist"
 msgstr "字段\"%(name)s\"不存在"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid ""
@@ -19215,6 +19413,7 @@ msgid "Field names must be unique per model."
 msgstr "每个模型的字段名必须唯一."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Field tag must have a \"name\" attribute defined"
@@ -19252,6 +19451,7 @@ msgid "Fields Selection"
 msgstr "字段选择"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Fields: %s"
@@ -19270,24 +19470,7 @@ msgid "File"
 msgstr "文件"
 
 #. module: base
-#: code:addons/base/wizard/base_import_language.py:0
-#, python-format
-msgid ""
-"File %r not imported due to a malformed file.\n"
-"\n"
-"This issue can be caused by duplicates entries who are referring to the same field. Please check the content of the file you are trying to import.\n"
-"\n"
-"Technical Details:\n"
-"%s"
-msgstr ""
-"由于单据格式错误，单据 %r 未导入.\n"
-"\n"
-"此问题可能是由引用同一字段的重复条目引起的. 请检查您尝试导入的单据的内容.\n"
-"\n"
-"技术细节: \n"
-"%s"
-
-#. module: base
+#. odoo-python
 #: code:addons/base/wizard/base_import_language.py:0
 #, python-format
 msgid ""
@@ -19302,6 +19485,7 @@ msgstr ""
 "%s"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "File Arch"
@@ -19545,6 +19729,7 @@ msgid "For relationship fields, the technical name of the target model"
 msgstr "对于关系字段，目标模型的技术名称"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/wizard/base_partner_merge.py:0
 #, python-format
 msgid ""
@@ -19565,6 +19750,7 @@ msgid "Form"
 msgstr "表单"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Format"
@@ -19583,6 +19769,7 @@ msgid "Formatted Email"
 msgstr "格式化的邮件"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Formatting: long, short, narrow (not used for digital)"
@@ -19599,6 +19786,7 @@ msgid "Forum on Courses"
 msgstr "课程论坛"
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid ""
@@ -19607,6 +19795,7 @@ msgid ""
 msgstr "找到超过10个错误，每10条记录超过1个错误，中断避免显示太多错误."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid ""
@@ -19961,6 +20150,11 @@ msgid "Germany - Certification for Point of Sale of type restaurant"
 msgstr "Germany - Certification for Point of Sale of type restaurant"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_de_datev_reports
+msgid "Germany - DateV Export"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_skr03
 msgid "Germany SKR03 - Accounting"
 msgstr "Germany SKR03 - Accounting"
@@ -20040,12 +20234,14 @@ msgid "Gmail support for incoming / outgoing mail servers"
 msgstr "Gmail support for incoming / outgoing mail servers"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_config.py:0
 #, python-format
 msgid "Go to the configuration panel"
 msgstr "至配置面板"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_partner.py:0
 #: code:addons/base/models/res_partner.py:0
 #, python-format
@@ -20175,6 +20371,7 @@ msgid "Group-specific rules are combined together with a logical OR operator"
 msgstr "指定了群组的规则使用逻辑操作符或(OR)组合在一起"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_users.py:0
 #: model:ir.actions.act_window,name:base.action_res_groups
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__groups_id
@@ -20295,6 +20492,11 @@ msgid "Haiti"
 msgstr "海地"
 
 #. module: base
+#: model:ir.module.module,description:base.module_sale_mrp_margin
+msgid "Handle BoM prices to compute sale margin."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_lunch
 msgid "Handle lunch orders of your employees"
 msgstr "处理员工的工作餐订单"
@@ -20350,6 +20552,7 @@ msgid "Heard Island and McDonald Islands"
 msgstr "赫德岛和麦克唐纳群岛"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Height"
@@ -20589,12 +20792,14 @@ msgstr ""
 "                            您的登录仍然是交互式使用所必需的."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Hide badges"
 msgstr "隐藏徽标"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Hide seconds"
@@ -20689,6 +20894,7 @@ msgid "Hr Recruitment Interview Forms"
 msgstr "HR招聘面试表单"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Human Readable"
@@ -21104,12 +21310,14 @@ msgid "Image Mixin"
 msgstr "图像混合"
 
 #. module: base
+#. odoo-python
 #: code:addons/fields.py:0
 #, python-format
 msgid "Image is not encoded in base64."
 msgstr "图片未在base64中编码。"
 
 #. module: base
+#. odoo-python
 #: code:addons/image.py:0
 #, python-format
 msgid ""
@@ -21160,6 +21368,11 @@ msgid ""
 msgstr "实施注册现金制度，遵守 FPS 财务准则."
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_base_import_language
+msgid "Import"
+msgstr "导入"
+
+#. module: base
 #: model:ir.ui.menu,name:base.menu_translation_export
 msgid "Import / Export"
 msgstr "导入/导出"
@@ -21200,6 +21413,7 @@ msgid "Import QIF Bank Statement"
 msgstr "导入QIF银行对帐单"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "Import Template for Customers"
@@ -21270,12 +21484,14 @@ msgid "Include"
 msgstr "包括"
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid "Incompatible companies on records:"
 msgstr "记录不兼容的公司:"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid ""
@@ -21425,6 +21641,7 @@ msgid "Inherited models"
 msgstr "继承的模型"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid ""
@@ -21458,8 +21675,8 @@ msgid "Input View"
 msgstr "输入视图"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
-#: model_terms:ir.ui.view,arch_db:base.module_form
 #: model_terms:ir.ui.view,arch_db:base.module_tree
 #, python-format
 msgid "Install"
@@ -21474,11 +21691,6 @@ msgstr "安装应用程序"
 #: model:ir.model,name:base.model_base_language_install
 msgid "Install Language"
 msgstr "安装语言"
-
-#. module: base
-#: model:ir.actions.server,name:base.action_server_module_immediate_install
-msgid "Install Modules"
-msgstr "安装模块"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__state__installed
@@ -21505,12 +21717,14 @@ msgid "Instant Messaging Bus allow you to send messages to users, in live."
 msgstr "您可以通过即时消息给用户发送联机即时信息，类似Line，但限于odoo的web框架内."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Insufficient fields for Calendar View!"
 msgstr "日历视图缺少字段!"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid ""
@@ -21653,6 +21867,7 @@ msgid "Introspection report on objects"
 msgstr "对象的自省报告"
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid ""
@@ -21662,30 +21877,35 @@ msgid ""
 msgstr "指定的\"订单\"无效(%s). 有效的\"顺序\"规范是以逗号分隔的有效字段名称列表(可选后跟 升/降 表示顺序)"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "Invalid 'group by' parameter"
 msgstr "无效的「分组」参数"
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
 msgstr "无效聚合函数 %r."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Invalid composed field %(definition)s in %(use)s"
 msgstr "%(use)s 中的组合字段 %(definition)s 无效"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "Invalid database id '%s' for the field '%%(field)s'"
 msgstr "数据库 id号 '%s' 在字段'%%(field)s'无效"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid ""
@@ -21694,24 +21914,28 @@ msgid ""
 msgstr "日期、时间格式不正确. 请引用您的语言设置中的日期/时间格式输入."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Invalid domain format %(expr)s in %(use)s"
 msgstr "%(use)s 中的域格式 %(expr)s 无效"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_default.py:0
 #, python-format
 msgid "Invalid field %s.%s"
 msgstr "无效的字段 %s.%s"
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid field specification %r."
 msgstr "无效字段规范 %r."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/assetsbundle.py:0
 #, python-format
 msgid "Invalid inherit mode. Module %r and template name %r"
@@ -21730,12 +21954,14 @@ msgid "Invalid key: QWeb view should have a key"
 msgstr "无效密钥: QWeb 视图应该有一个密钥"
 
 #. module: base
+#. odoo-python
 #: code:addons/template_inheritance.py:0
 #, python-format
 msgid "Invalid mode attribute:"
 msgstr "无效的模式属性:"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
@@ -21743,24 +21969,28 @@ msgid "Invalid model name %r in action definition."
 msgstr "动作定义中使用了无效的模型名称 %r."
 
 #. module: base
+#. odoo-python
 #: code:addons/template_inheritance.py:0
 #, python-format
 msgid "Invalid position attribute: '%s'"
 msgstr "无效的位置属性: '%s'"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_sequence.py:0
 #, python-format
 msgid "Invalid prefix or suffix for sequence '%s'"
 msgstr "无效的序号 '%s' 前缀或后缀"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "Invalid search criterion"
 msgstr "搜索条件不正确"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -21771,42 +22001,49 @@ msgstr ""
 " %s"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Invalid special '%(value)s' in button"
 msgstr "按钮中的特殊值\"%(value)s\"无效"
 
 #. module: base
+#. odoo-python
 #: code:addons/template_inheritance.py:0
 #, python-format
 msgid "Invalid specification for moved nodes: %r"
 msgstr "移动节点的无效规范: %r"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_config.py:0
 #, python-format
 msgid "Invalid template user. It seems it has been deleted."
 msgstr "无效的模板用户. 它可能已经被删除了."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_property.py:0
 #, python-format
 msgid "Invalid type"
 msgstr "无效的类型"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_default.py:0
 #, python-format
 msgid "Invalid value for %s.%s: %s"
 msgstr "%s.%s: %s 的无效值"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Invalid view %(name)s definition in %(file)s"
 msgstr "%(file)s 中的视图 %(name)s 定义无效"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Invalid xmlid %(xmlid)s for button of type action."
@@ -22022,6 +22259,13 @@ msgid "Journal Items associated to the contact"
 msgstr "与日记帐相关的联系人"
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/ir_qweb_fields.py:0
+#, python-format
+msgid "Json"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__base_onboarding_company_state__just_done
 msgid "Just done"
 msgstr "完成"
@@ -22040,11 +22284,6 @@ msgstr "K.S.A. - Payroll"
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_hr_payroll_account
 msgid "K.S.A. - Payroll with Accounting"
 msgstr "K.S.A. - Payroll with Accounting"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_sa_pos
-msgid "K.S.A. - Point of Sale"
-msgstr "K.S.A. - Point of Sale"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_digest
@@ -22093,6 +22332,11 @@ msgstr "Kenya - Payroll"
 #: model:ir.module.module,shortdesc:base.module_l10n_ke_hr_payroll_account
 msgid "Kenya - Payroll with Accounting"
 msgstr "Kenya - Payroll with Accounting"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ke_edi_tremol
+msgid "Kenya Tremol Device EDI Integration"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_config_parameter__key
@@ -22179,6 +22423,7 @@ msgid "LT - Accounting Reports"
 msgstr "LT - Accounting Reports"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid ""
@@ -22235,6 +22480,7 @@ msgid "Language Name"
 msgstr "语言名称"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid "Language code cannot be modified."
@@ -22701,6 +22947,7 @@ msgid "Line"
 msgstr "行"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Linebreak"
@@ -22774,6 +23021,7 @@ msgid "Link module between pos_sale and pos_loyalty"
 msgstr "pos_sale与pos_loyalty间的连接模块"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "List of contact fields to display in the widget"
@@ -22800,6 +23048,11 @@ msgid "Lithuania - Accounting"
 msgstr "Lithuania - Accounting"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_lt_saft
+msgid "Lithuanian Standard Audit File for Tax"
+msgstr ""
+
+#. module: base
 #: model:ir.module.category,name:base.module_category_website_live_chat
 #: model:ir.module.module,shortdesc:base.module_im_livechat
 msgid "Live Chat"
@@ -22813,7 +23066,7 @@ msgstr "及时汇率"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_live
 msgid "Live Event Tracks"
-msgstr "联机活动跟踪"
+msgstr "联机活动专题"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_language_install
@@ -22872,6 +23125,7 @@ msgid "Logs"
 msgstr "纪录"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Long"
@@ -22990,6 +23244,7 @@ msgid "Madam"
 msgstr "女士"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid "Mail Delivery Failed"
@@ -23048,6 +23303,7 @@ msgid ""
 msgstr "邮件测试: 特定于邮件的所有子模块的性能和测试"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -23103,6 +23359,11 @@ msgstr "马拉威"
 #: model:res.country,name:base.my
 msgid "Malaysia"
 msgstr "马来西亚"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_my
+msgid "Malaysia - Accounting"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.mv
@@ -23331,8 +23592,8 @@ msgstr "在评估过程中管理员工的技能"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_skills
-msgid "Manage skills, knowledge and resumé of your employees"
-msgstr "管理员工的技能、知识和履历"
+msgid "Manage skills, knowledge and resume of your employees"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_country
@@ -23452,6 +23713,7 @@ msgid "Many2One"
 msgstr "多对一"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Many2one %s on model %s does not exist!"
@@ -23496,11 +23758,6 @@ msgstr "营销自动化"
 #: model:ir.module.module,shortdesc:base.module_test_marketing_automation
 msgid "Marketing Automation Tests"
 msgstr "营销自动化测试"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_ma
-msgid "Maroc - Accounting"
-msgstr "Maroc - Accounting"
 
 #. module: base
 #: model:res.country,name:base.mh
@@ -23902,24 +24159,28 @@ msgid "Miss"
 msgstr "小姐"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid "Missing SMTP Server"
 msgstr "缺少 SMTP 服务器"
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid "Missing required value for the field '%s'"
 msgstr "找不到字段 '%s' 所需的值"
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid "Missing required value for the field '%s' (%s)"
 msgstr "找不到字段 '%s' (%s)所需的值"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Missing view architecture."
@@ -23931,6 +24192,7 @@ msgid "Mister"
 msgstr "先生"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #: model:ir.model.fields,field_description:base.field_res_company__mobile
 #: model:ir.model.fields,field_description:base.field_res_partner__mobile
@@ -23973,18 +24235,21 @@ msgid "Model"
 msgstr "模型"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Model %s does not exist"
 msgstr "模型 %s 不存在"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Model %s does not exist!"
 msgstr "模型 %s 不存在!"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Model '%s' contains module data and cannot be removed."
@@ -24050,6 +24315,7 @@ msgid "Model name of the object to open in the view window"
 msgstr "在新窗口打开的对象的模型名称"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
@@ -24093,6 +24359,7 @@ msgid "Module"
 msgstr "模块"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/assetsbundle.py:0
 #, python-format
 msgid ""
@@ -24153,6 +24420,7 @@ msgid "Module exclusion"
 msgstr "模块排除"
 
 #. module: base
+#. odoo-python
 #: code:addons/convert.py:0
 #, python-format
 msgid ""
@@ -24168,6 +24436,7 @@ msgid "Modules"
 msgstr "模块"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid "Modules \"%s\" and \"%s\" are incompatible."
@@ -24177,12 +24446,6 @@ msgstr "模块「%s」和「%s」不兼容."
 #: model:res.country,name:base.md
 msgid "Moldova"
 msgstr "摩尔多瓦"
-
-#. module: base
-#: model:ir.module.module,description:base.module_payment_mollie
-#: model:ir.module.module,shortdesc:base.module_payment_mollie
-msgid "Mollie Payment Provider"
-msgstr "Mollie Payment Provider"
 
 #. module: base
 #: model:res.country,name:base.mc
@@ -24239,6 +24502,11 @@ msgstr "蒙哲腊"
 #: model:res.country,name:base.ma
 msgid "Morocco"
 msgstr "摩洛哥"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ma
+msgid "Morocco - Accounting"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.mz
@@ -24325,6 +24593,7 @@ msgid "NPWP"
 msgstr "NPWP"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__group_by_name
 #: model:ir.model.fields,field_description:base.field_ir_actions_todo__name
@@ -24362,6 +24631,7 @@ msgid "Name"
 msgstr "名称"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid ""
@@ -24384,6 +24654,7 @@ msgid "Namibia"
 msgstr "纳米比亚"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Narrow"
@@ -24430,6 +24701,7 @@ msgid "New Caledonia"
 msgstr "新喀里多尼亚"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/wizard/base_export_language.py:0
 #, python-format
 msgid "New Language (Empty translation template)"
@@ -24466,12 +24738,12 @@ msgstr "New Zealand - Accounting"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_mass_mailing
 msgid "Newsletter Subscribe Button"
-msgstr "通讯简报订阅按钮"
+msgstr "新闻信订阅按钮"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_mass_mailing_sms
 msgid "Newsletter Subscribe SMS Template"
-msgstr "简报订阅SMS模板"
+msgstr "新闻信订阅SMS模板"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__nextcall
@@ -24560,6 +24832,7 @@ msgid "No Country Found!"
 msgstr "未找到国家！"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "No default view of type '%s' could be found !"
@@ -24571,18 +24844,21 @@ msgid "No gap"
 msgstr "无间隔"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "No group currently allows this operation."
 msgstr "当前没有组允许此操作."
 
 #. module: base
+#. odoo-python
 #: code:addons/fields.py:0
 #, python-format
 msgid "No inverse field %r found for %r"
 msgstr "未找到%r对应的字段%r"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid ""
@@ -24591,6 +24867,7 @@ msgid ""
 msgstr "在字段'%%(field)s'中没找到匹配的记录%(field_type)s '%(value)s'"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid ""
@@ -24612,6 +24889,7 @@ msgid "No of Views"
 msgstr "视图号码"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -24622,6 +24900,7 @@ msgstr ""
 "  %s"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "No spaces allowed in view_mode: %r"
@@ -24633,18 +24912,21 @@ msgid "Non Updatable"
 msgstr "不可更新"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Non-relational field %(field)r in path %(field_path)r in %(use)s)"
 msgstr "%(use)s 中路径 %(field_path)r 中的非关系字段 %(field)r)"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Non-relational field %r in dependency %r"
 msgstr "依赖%r中无相关的字段%r"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Non-relational field name '%s' in related field '%s'"
@@ -24676,6 +24958,7 @@ msgid "Norfolk Island"
 msgstr "诺福克岛"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_bank.py:0
 #, python-format
 msgid "Normal"
@@ -24730,12 +25013,14 @@ msgid "Not done"
 msgstr "尚未完成"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Not enough access rights on the external ID:"
 msgstr "外部ID访问权限不足:"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "Note: this might be a multi-company issue."
@@ -24812,6 +25097,11 @@ msgid "OAuth2 Authentication"
 msgstr "OAuth2身份验证"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_syscohada_reports
+msgid "OHADA (révisé) - Accounting Reports"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_syscohada
 msgid "OHADA - Accounting"
 msgstr "OHADA - Accounting"
@@ -24822,6 +25112,7 @@ msgid "Object"
 msgstr "对像"
 
 #. module: base
+#. odoo-python
 #: code:addons/model.py:0
 #, python-format
 msgid "Object %s doesn't exist"
@@ -25661,7 +25952,7 @@ msgstr ""
 "导入潜在客户数据库或筛选现有线索、机会和\n"
 "只需点击几下即可获得客户.\n"
 "\n"
-"定义电子邮件模板以重复使用您的时事通讯的内容或特定设计.\n"
+"定义电子邮件模板以重复使用您的时事新闻信的内容或特定设计.\n"
 "使用自己的 IP/域设置多个电子邮件服务器以提升点阅率.\n"
 "\n"
 "组织营销活动\n"
@@ -26106,7 +26397,7 @@ msgstr ""
 "他们在实体店或上线做出购买决定. \n"
 "\n"
 "使用 Odoo，您可以获得 360° 客户视图，包括跨渠道销售，\n"
-"交互历史、设置单据等. \n"
+"交互历史、配置等. \n"
 "\n"
 
 #. module: base
@@ -26803,6 +27094,7 @@ msgid "Odoo helps you track all activities related to your contacts."
 msgstr "Odoo可帮助您跟踪与您的联系人相关的所有活动。"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -26813,6 +27105,7 @@ msgstr ""
 "此时不能进行模块动作，请稍后重试或联系您的系统管理员."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_actions_report.py:0
 #, python-format
 msgid "Odoo is unable to merge the generated PDFs."
@@ -26839,11 +27132,6 @@ msgstr "即时聊天使用 Odoo机器人"
 #: model:res.partner.category,name:base.res_partner_category_12
 msgid "Office Supplies"
 msgstr "办公共品"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_payment_ogone
-msgid "Ogone Payment Provider"
-msgstr "Ogone支付服务提供商"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
@@ -26894,6 +27182,7 @@ msgid ""
 msgstr "验证交付后，更新 SO 上的成本以进行精确的毛利计算."
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid ""
@@ -26902,6 +27191,7 @@ msgid ""
 msgstr "一个您试图访问的单据已经被删除，请刷新后重试."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -26910,6 +27200,7 @@ msgid ""
 msgstr "一个或多个选定的模块已被卸载，如果您认为这是一个错误，您可以稍后重试或联系客服人员."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -26958,18 +27249,21 @@ msgid "Online Task Submission"
 msgstr "线上任务提交"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_config.py:0
 #, python-format
 msgid "Only administrators can change the settings"
 msgstr "只有管理员能改变设置"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_attachment.py:0
 #, python-format
 msgid "Only administrators can execute this action."
 msgstr "只有系统管理员可以执行此动作."
 
 #. module: base
+#. odoo-python
 #: code:addons/fields.py:0
 #, python-format
 msgid "Only admins can upload SVG files."
@@ -26999,6 +27293,7 @@ msgstr ""
 "实际arch。\n"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "Only internal users can create API keys"
@@ -27015,6 +27310,7 @@ msgid "Only one value can be defined for each given usage!"
 msgstr "每个用途只能定义一个值!"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/wizard/base_partner_merge.py:0
 #, python-format
 msgid ""
@@ -27024,6 +27320,7 @@ msgid ""
 msgstr "只有目标联系人可连结到现有日志项. 如果您需要合并几个联系人连结到现有日志项，请询问管理员."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid ""
@@ -27068,6 +27365,7 @@ msgid "Open a Window"
 msgstr "打开一个窗口"
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid "Operation:"
@@ -27119,6 +27417,7 @@ msgid "Optional password for SMTP authentication"
 msgstr "SMTP身份验证的可选密码"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Optional timezone name"
@@ -27188,7 +27487,7 @@ msgstr ""
 "\n"
 "获得每个活动的额外功能；多个页面、赞助商、多次会谈、会谈提案表、议程、和活动相关的新闻、文件(样例文稿幻灯片)以和活动特定的菜单.\n"
 "\n"
-"组织您的跟踪\n"
+"组织您的专题\n"
 "--------------------\n"
 "\n"
 "### 从会谈提案到发布\n"
@@ -27364,12 +27663,12 @@ msgstr ""
 "\n"
 "通过早鸟价、会员特殊条件或多张门票的额外服务来提高您的销售额.\n"
 "\n"
-"一个干净的谷歌分析集成\n"
+"一个干净的谷专题分析集成\n"
 "---------------------\n"
 "\n"
 "### 使用 Google Analytics 控制您的销售渠道\n"
 "\n"
-"清楚地了解您的销售渠道. Odoo 的 Google Analytics 跟踪器默认设置为跟踪和购物车、号召性用语等相关的所有类型的事件.\n"
+"清楚地了解您的销售渠道. Odoo 的 Google Analytics 专题器默认设置为专题和购物车、号召性用语等相关的所有类型的事件.\n"
 "\n"
 "由于 Odoo 营销工具(群发邮件、活动等)也和 Google Analytics 相关联，您可以全面了解您的业务.\n"
 "\n"
@@ -27394,7 +27693,7 @@ msgstr ""
 "\n"
 "### SEO 工具触手可和\n"
 "\n"
-"SEO 工具随时可用，无需设置. Odoo 根据谷歌搜索最多的词推荐关键词，谷歌分析跟踪您的购物车事件，站点地图是自动创建的.\n"
+"SEO 工具随时可用，无需设置. Odoo 根据谷专题搜索最多的词推荐关键词，谷专题分析专题您的购物车事件，站点地图是自动创建的.\n"
 "\n"
 "我们甚至会自动制作结构化内容，以在 Google 中高效地宣传您的活动和产品.\n"
 "\n"
@@ -27476,6 +27775,7 @@ msgid "Original View"
 msgstr "原始视图"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Original currency"
@@ -27487,6 +27787,7 @@ msgid "Oswald"
 msgstr "Oswald"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_users.py:0
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
@@ -27562,7 +27863,7 @@ msgstr "发信邮件服务器"
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_list
 #: model_terms:ir.ui.view,arch_db:base.view_ir_mail_server_search
 msgid "Outgoing Mail Servers"
-msgstr "外发邮件服务器"
+msgstr "发信邮件服务器"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_microsoft_calendar
@@ -27580,6 +27881,7 @@ msgid "Output DPI"
 msgstr "输出DPI"
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid "Output name %r is used twice."
@@ -27668,6 +27970,7 @@ msgid "POS Stripe"
 msgstr "POS Stripe"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Page direct ancestor must be notebook"
@@ -27879,6 +28182,7 @@ msgid "Partners Geolocation"
 msgstr "合作伙伴地理位置"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "Partners: %(category)s"
@@ -27928,6 +28232,7 @@ msgid "Path (or glob pattern)"
 msgstr "路径(或全局模式)"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Pattern to format"
@@ -27949,24 +28254,24 @@ msgid "Payment - Account"
 msgstr "支付 - 会计"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_payment
+msgid "Payment Engine"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_followup
 msgid "Payment Follow-up Management"
 msgstr "付款催收管理"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_payment
-msgid "Payment Provider"
-msgstr "支付提供商"
+#: model:ir.module.module,shortdesc:base.module_payment_adyen
+msgid "Payment Provider: Adyen"
+msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_payment
-msgid "Payment Provider Base Module"
-msgstr "支付提供商基本模块"
-
-#. module: base
-#: model:ir.module.module,summary:base.module_payment_adyen
-msgid "Payment Provider: Adyen Implementation"
-msgstr "支付提供商：Adyen Implementation"
+#: model:ir.module.module,shortdesc:base.module_payment_alipay
+msgid "Payment Provider: Alipay"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_aps
@@ -27979,54 +28284,79 @@ msgid "Payment Provider: AsiaPay"
 msgstr "支付提供商：Asia Pay"
 
 #. module: base
-#: model:ir.module.module,summary:base.module_payment_authorize
-msgid "Payment Provider: Authorize.net Implementation"
-msgstr "付款提供商：Authorize.net Implementation"
+#: model:ir.module.module,shortdesc:base.module_payment_authorize
+msgid "Payment Provider: Authorize.Net"
+msgstr ""
 
 #. module: base
-#: model:ir.module.module,summary:base.module_payment_buckaroo
-msgid "Payment Provider: Buckaroo Implementation"
-msgstr "付款提供商：Buckaroo Implementation"
+#: model:ir.module.module,shortdesc:base.module_payment_buckaroo
+msgid "Payment Provider: Buckaroo"
+msgstr ""
 
 #. module: base
-#: model:ir.module.module,summary:base.module_payment_custom
-msgid "Payment Provider: Custom payment modes"
-msgstr "付款提供商：Custom payment modes"
+#: model:ir.module.module,shortdesc:base.module_payment_custom
+msgid "Payment Provider: Custom Payment Modes"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_payment_demo
+msgid "Payment Provider: Demo"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_flutterwave
 msgid "Payment Provider: Flutterwave"
-msgstr "付款提供商：Flutterwave"
+msgstr "支付提供商：Flutterwave"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_mercado_pago
 msgid "Payment Provider: Mercado Pago"
-msgstr "付款提供商：Mercado Pago"
+msgstr "支付提供商：Mercado Pago"
 
 #. module: base
-#: model:ir.module.module,summary:base.module_payment_mollie
-msgid "Payment Provider: Mollie Implementation"
-msgstr "付款提供商：Mollie Implementation"
+#: model:ir.module.module,shortdesc:base.module_payment_mollie
+msgid "Payment Provider: Mollie"
+msgstr ""
 
 #. module: base
-#: model:ir.module.module,summary:base.module_payment_paypal
-msgid "Payment Provider: Paypal Implementation"
-msgstr "付款提供商：Paypal Implementation"
+#: model:ir.module.module,shortdesc:base.module_payment_ogone
+msgid "Payment Provider: Ogone"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_payment_payulatam
+msgid "Payment Provider: PayU Latam"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_payment_payumoney
+msgid "Payment Provider: PayUmoney"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_payment_paypal
+msgid "Payment Provider: Paypal"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_razorpay
 msgid "Payment Provider: Razorpay"
-msgstr "付款提供商：Razorpay"
+msgstr "支付提供商：Razorpay"
 
 #. module: base
-#: model:ir.module.module,summary:base.module_payment_sepa_direct_debit
+#: model:ir.module.module,shortdesc:base.module_payment_sepa_direct_debit
 msgid "Payment Provider: Sepa Direct Debit"
-msgstr "付款提供商：Sepa 直接借记"
+msgstr "支付提供商：Sepa 直接借记"
 
 #. module: base
-#: model:ir.module.module,summary:base.module_payment_stripe
-msgid "Payment Provider: Stripe Implementation"
-msgstr "付款提供商：Stripe Implementation"
+#: model:ir.module.module,shortdesc:base.module_payment_stripe
+msgid "Payment Provider: Stripe"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_payment_sips
+msgid "Payment Provider: Worldline SIPS"
+msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_payment_providers
@@ -28036,13 +28366,7 @@ msgstr "支付提供商"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_payment
 msgid "Payment integration with website"
-msgstr "付款与网站集成"
-
-#. module: base
-#: model:ir.module.module,description:base.module_payment_paypal
-#: model:ir.module.module,shortdesc:base.module_payment_paypal
-msgid "Paypal Payment Provider"
-msgstr "Paypal Payment Provider"
+msgstr "支付与网站集成"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_payroll
@@ -28076,16 +28400,6 @@ msgid "Payroll Localization"
 msgstr "工资册本地化"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_payment_payulatam
-msgid "PayuLatam Payment Provider"
-msgstr "PayuLatam 支付提供商"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_payment_payumoney
-msgid "PayuMoney Payment Provider"
-msgstr "PayuMoney 付款提供商"
-
-#. module: base
 #: model:res.country,name:base.pe
 msgid "Peru"
 msgstr "秘鲁"
@@ -28106,6 +28420,12 @@ msgid "Philippines"
 msgstr "菲律宾"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ph
+msgid "Philippines - Accounting"
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #: model:ir.model.fields,field_description:base.field_res_bank__phone
 #: model:ir.model.fields,field_description:base.field_res_company__phone
@@ -28184,6 +28504,7 @@ msgid "Plano de contas SNC para Portugal"
 msgstr "Plano de contas SNC para Portugal"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -28199,6 +28520,7 @@ msgid ""
 msgstr "请确认您要<b>不可逆转地</b>将此数据库设为样例数据库."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -28219,12 +28541,14 @@ msgid "Please set the Model to Create before choosing values"
 msgstr "在选择值之前，请将模型设置为创建"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Please specify a valid model for the object relation"
 msgstr "请为对像关系指定有效的模型"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid ""
@@ -28335,6 +28659,7 @@ msgid "PostgreSQL table name implementing a many2many relation."
 msgstr "实现多对多关系的 PostgreSQL 表名."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Precision Digits"
@@ -28382,6 +28707,7 @@ msgid "Preview pdf src"
 msgstr "预览pdf src"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Previous Arch"
@@ -28456,6 +28782,7 @@ msgid "Private Address Form"
 msgstr "私人地址表单"
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid "Private methods (such as %s) cannot be called remotely."
@@ -28563,6 +28890,7 @@ msgid "Profiling is currently disabled."
 msgstr "性能分析并未启用."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_profile.py:0
 #, python-format
 msgid ""
@@ -29014,6 +29342,7 @@ msgid "Properties"
 msgstr "权益"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0 code:addons/base/models/ir_model.py:0
 #: code:addons/base/models/ir_model.py:0 code:addons/base/models/ir_model.py:0
 #, python-format
@@ -29180,7 +29509,7 @@ msgstr "采购订单，招标和协议"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_social
 msgid "Push notification to track listeners"
-msgstr "推送通知以跟踪监听者"
+msgstr "推送通知以专题监听者"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__code
@@ -29250,7 +29579,7 @@ msgstr "使用 MRP 和 IoT 进行品管"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_iot
 msgid "Quality Steps with IoT"
-msgstr "IOT 的质量步骤"
+msgstr "IOT 质量步骤"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_mrp_workorder_worksheet
@@ -29297,12 +29626,12 @@ msgstr "现场活动测验"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_quiz
 msgid "Quizzes on Tracks"
-msgstr "轨迹测验"
+msgstr "专题测验"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_quiz
 msgid "Quizzes on tracks"
-msgstr "轨迹测验"
+msgstr "专题测验"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_quotation_builder
@@ -29500,6 +29829,7 @@ msgid "Record Rule"
 msgstr "记录规则"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_users.py:0
 #: model:ir.actions.act_window,name:base.action_rule
 #: model:ir.model.fields,field_description:base.field_ir_model__rule_ids
@@ -29514,6 +29844,7 @@ msgid "Record Rules"
 msgstr "记录规则"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_cron.py:0
 #, python-format
 msgid ""
@@ -29522,6 +29853,7 @@ msgid ""
 msgstr "现在不能修改记录:此定时任务当前正在执行，不允许被修改，请在几分钟后重试"
 
 #. module: base
+#. odoo-python
 #: code:addons/fields.py:0
 #, python-format
 msgid "Record does not exist or has been deleted."
@@ -29538,12 +29870,14 @@ msgid "Record time"
 msgstr "记录时间"
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid "Records:"
 msgstr "记录:"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "Records: %s"
@@ -29576,18 +29910,21 @@ msgid "Recruitment resumés and letters from documents"
 msgstr "招聘履历和文档"
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid "Recursion Detected."
 msgstr "检测到递归."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid "Recursion error in modules dependencies !"
 msgstr "模块的依赖包含循环错误!"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "Recursion found in child server actions"
@@ -29603,6 +29940,7 @@ msgid "Reference"
 msgstr "参考"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Reference date"
@@ -29645,12 +29983,14 @@ msgid "Related field"
 msgstr "关联字段"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Related field '%s' does not have comodel '%s'"
 msgstr "关联字段 '%s' 没有共享模块 '%s'"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Related field '%s' does not have type '%s'"
@@ -29888,6 +30228,7 @@ msgid "Reset to file version (hard reset)."
 msgstr "重置为单据版本 (硬重置)."
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid "Resolve other errors first"
@@ -29971,12 +30312,14 @@ msgid "Rounding Factor"
 msgstr "舍入系数"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Rounding precision"
 msgstr "舍入精度"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Rounding unit"
@@ -30003,6 +30346,7 @@ msgid "Rules"
 msgstr "规则"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "Rules can not be applied on the Record Rules model."
@@ -30142,6 +30486,7 @@ msgid "SSL Private Key"
 msgstr "SSL 私密金钥"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid "SSL certificate is missing for %s."
@@ -30153,6 +30498,7 @@ msgid "SSL certificate used for authentication"
 msgstr "用于身份验证的 SSL 证书"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid "SSL private key is missing for %s."
@@ -30272,6 +30618,11 @@ msgstr "销售会员 - 送货"
 #: model:ir.module.module,shortdesc:base.module_sale_product_matrix
 msgid "Sale Matrix"
 msgstr "销售矩阵"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_mrp_margin
+msgid "Sale Mrp Margin"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_planning
@@ -30427,6 +30778,11 @@ msgid "Saudi Arabia - Accounting"
 msgstr "Saudi Arabia - Accounting"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_sa_pos
+msgid "Saudi Arabia - Point of Sale"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Save"
 msgstr "保存"
@@ -30565,12 +30921,14 @@ msgid "Search modules"
 msgstr "搜索模块"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Search tag can only contain one search panel"
 msgstr "搜索标签只能包含一个搜索面板"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Searchpanel item with select multi cannot have a domain."
@@ -30590,18 +30948,21 @@ msgid "Security"
 msgstr "安全"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "Security Control"
 msgstr "安全控制"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "See all possible values"
 msgstr "查看所有的可能值"
 
 #. module: base
+#. odoo-python
 #: code:addons/common.py:0
 #, python-format
 msgid "See http://openerp.com"
@@ -30644,6 +31005,7 @@ msgstr ""
 "您可以从这个列表中删除联系人以避免合并它们."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #: model:ir.model.fields.selection,name:base.selection__base_partner_merge_automatic_wizard__state__selection
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__selection
@@ -30724,6 +31086,11 @@ msgid "Sell rental products on your eCommerce from Wishlist"
 msgstr "在Wishlist销售您电子商务店铺中的租赁产品"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_website_sale_subscription
+msgid "Sell subscription products on your eCommerce"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_website_sale_slides
 msgid "Sell your courses online"
 msgstr "线上销售您的课程"
@@ -30741,7 +31108,7 @@ msgstr "线上销售您的产品"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__allow_out_payment
 msgid "Send Money"
-msgstr "发钱"
+msgstr "付钱"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sms
@@ -30769,7 +31136,7 @@ msgstr "向您的网络访客发送即时通知"
 msgid ""
 "Send reminder push notifications to event attendees based on favorites "
 "tracks."
-msgstr "根据收藏踪迹向活动参与者发送提醒推送通知."
+msgstr "根据收藏专题向活动参与者发送提醒推送通知."
 
 #. module: base
 #: model:ir.module.module,description:base.module_calendar_sms
@@ -30841,17 +31208,12 @@ msgid "Senegal"
 msgstr "塞内加尔"
 
 #. module: base
-#: model:ir.module.module,description:base.module_payment_sepa_direct_debit
-#: model:ir.module.module,shortdesc:base.module_payment_sepa_direct_debit
-msgid "Sepa Direct Debit Payment Provider"
-msgstr "Sepa Direct Debit Payment Provider"
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__grouping
 msgid "Separator Format"
 msgstr "分隔符格式"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Separator use to split the address from the display_name."
@@ -30913,6 +31275,16 @@ msgid "Serbia"
 msgstr "塞尔维亚"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_rs
+msgid "Serbia - Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_rs_reports
+msgid "Serbia - Accounting Reports"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_logging__type__server
 msgid "Server"
 msgstr "服务器"
@@ -30944,6 +31316,7 @@ msgid "Server action"
 msgstr "服务器动作"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -31012,6 +31385,7 @@ msgid ""
 msgstr "设置一个值使得这个动作在给定模型的菜单中可用。"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "Setting empty passwords is not allowed for security reasons!"
@@ -31067,10 +31441,16 @@ msgid "Shopper's Wishlist"
 msgstr "购买愿望清单"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Short"
 msgstr "短"
+
+#. module: base
+#: model:ir.model,name:base.model_res_users_apikeys_show
+msgid "Show API Key"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_uninstall__show_all
@@ -31145,6 +31525,7 @@ msgid "Simple Discounts in the Point of Sale "
 msgstr "POS中的简单折扣 "
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid ""
@@ -31209,6 +31590,7 @@ msgid "Skip these contacts"
 msgstr "跳过这些联系人"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Slash"
@@ -31327,6 +31709,7 @@ msgid "Somalia"
 msgstr "索马里"
 
 #. module: base
+#. odoo-python
 #: code:addons/fields.py:0
 #, python-format
 msgid ""
@@ -31341,18 +31724,21 @@ msgid "Sometimes called BIC or Swift."
 msgstr "有时也叫 BIC 或 Swift。"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_attachment.py:0
 #, python-format
 msgid "Sorry, the syntax 'name:agg(field)' is not available for attachments"
 msgstr "抱歉，语法 'name:agg(field)' 不适用于附件"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_attachment.py:0
 #, python-format
 msgid "Sorry, you are not allowed to access these fields on attachments."
 msgstr "对不起，您没有访问附件中这些字段的权限."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_attachment.py:0
 #: code:addons/base/models/ir_attachment.py:0
 #, python-format
@@ -31360,6 +31746,14 @@ msgid "Sorry, you are not allowed to access this document."
 msgstr "对不起，您没有访问此单据的权限."
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/ir_attachment.py:0
+#, python-format
+msgid "Sorry, you are not allowed to write on this document"
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_attachment.py:0
 #, python-format
 msgid "Sorry, you must provide fields to read on attachments"
@@ -31401,6 +31795,7 @@ msgid "South Sudan"
 msgstr "南苏丹"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Space"
@@ -31483,6 +31878,7 @@ msgstr "赞助商，线索，议程，活动新闻"
 #: model:ir.module.module,description:base.module_spreadsheet_dashboard_purchase
 #: model:ir.module.module,description:base.module_spreadsheet_dashboard_purchase_stock
 #: model:ir.module.module,description:base.module_spreadsheet_dashboard_sale
+#: model:ir.module.module,description:base.module_spreadsheet_dashboard_sale_expense
 #: model:ir.module.module,description:base.module_spreadsheet_dashboard_sale_renting
 #: model:ir.module.module,description:base.module_spreadsheet_dashboard_sale_timesheet
 #: model:ir.module.module,description:base.module_spreadsheet_dashboard_stock
@@ -31508,6 +31904,7 @@ msgstr "赞助商，线索，议程，活动新闻"
 #: model:ir.module.module,summary:base.module_spreadsheet_dashboard_purchase
 #: model:ir.module.module,summary:base.module_spreadsheet_dashboard_purchase_stock
 #: model:ir.module.module,summary:base.module_spreadsheet_dashboard_sale
+#: model:ir.module.module,summary:base.module_spreadsheet_dashboard_sale_expense
 #: model:ir.module.module,summary:base.module_spreadsheet_dashboard_sale_renting
 #: model:ir.module.module,summary:base.module_spreadsheet_dashboard_sale_timesheet
 #: model:ir.module.module,summary:base.module_spreadsheet_dashboard_stock
@@ -31515,7 +31912,7 @@ msgstr "赞助商，线索，议程，活动新闻"
 #: model:ir.module.module,summary:base.module_spreadsheet_dashboard_website_sale_slides
 #: model:ir.module.module,summary:base.module_spreadsheet_edition
 msgid "Spreadsheet"
-msgstr "Spreadsheet"
+msgstr "电子表格"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_account
@@ -31598,6 +31995,11 @@ msgstr "用于活动的电子表格仪表板"
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_hr_expense
 msgid "Spreadsheet dashboard for expenses"
 msgstr "用于费用的电子表格仪表板"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_sale_expense
+msgid "Spreadsheet dashboard for expenses and sales"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_helpdesk
@@ -31745,6 +32147,7 @@ msgid "Step"
 msgstr "跳号"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_sequence.py:0
 #: code:addons/base/models/ir_sequence.py:0
 #, python-format
@@ -31845,12 +32248,6 @@ msgstr "街道..."
 #: model:ir.model.fields,field_description:base.field_res_users__street2
 msgid "Street2"
 msgstr "街道 2"
-
-#. module: base
-#: model:ir.module.module,description:base.module_payment_stripe
-#: model:ir.module.module,shortdesc:base.module_payment_stripe
-msgid "Stripe Payment Provider"
-msgstr "Stripe Payment Provider"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_customizations_studio
@@ -31956,11 +32353,6 @@ msgstr "调查"
 #: model:res.country,name:base.sj
 msgid "Svalbard and Jan Mayen"
 msgstr "斯瓦尔巴特群岛和扬马延岛"
-
-#. module: base
-#: model:res.country,name:base.sz
-msgid "Swaziland"
-msgstr "史瓦济兰"
 
 #. module: base
 #: model:res.country,name:base.se
@@ -32218,6 +32610,7 @@ msgid "Technical guide"
 msgstr "技术指南"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/assetsbundle.py:0
 #, python-format
 msgid "Template %r already exists in module %r"
@@ -32229,6 +32622,7 @@ msgid "Template Name"
 msgstr "模板名称"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/assetsbundle.py:0
 #: code:addons/base/models/assetsbundle.py:0
 #, python-format
@@ -32433,6 +32827,7 @@ msgid "Thailand - Accounting"
 msgstr "Thailand - Accounting"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
@@ -32473,6 +32868,7 @@ msgstr ""
 "表示为1,06,500；[1,2,-1] 将其表示为 106,50,0；[3] 将其表示为 106,500. 在每种情况中将 ',' 做为千位分隔符."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid ""
@@ -32499,6 +32895,7 @@ msgid "The URL code of the language must be unique !"
 msgstr "语言的 URL 代码必须唯一!"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -32507,6 +32904,7 @@ msgid ""
 msgstr "模块`%s`现在可能不能使用，请稍后再试."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid "The `base` module cannot be uninstalled"
@@ -32516,6 +32914,13 @@ msgstr "`base` 模块不能卸载"
 #: model:ir.model.fields,help:base.field_res_partner_category__active
 msgid "The active field allows you to hide the category without removing it."
 msgstr "有效字段允许您隐藏该类别而不是删除它."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment collides with an existing file."
+msgstr ""
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -32545,6 +32950,15 @@ msgstr "国家代码须唯一!"
 #: model:ir.model.constraint,message:base.constraint_res_partner_bank_unique_number
 msgid "The combination Account Number/Partner must be unique."
 msgstr "账户号码/伙伴组合必须唯一。"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_company.py:0
+#, python-format
+msgid ""
+"The company %(company_name)s cannot be archived because it is still used as "
+"the default company of %(active_users)s users."
+msgstr ""
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_company_name_uniq
@@ -32585,6 +32999,7 @@ msgid "The currency rate must be strictly positive."
 msgstr "货币汇率必须严格为正数."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_currency.py:0
 #, python-format
 msgid ""
@@ -32605,6 +33020,7 @@ msgid "The demonstration data of"
 msgstr "这个样例数据"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "The field '%s' cannot be removed because the field '%s' depends on it."
@@ -32663,12 +33079,14 @@ msgstr ""
 "<code>partner_id.company_id.name</code>."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/wizard/base_module_upgrade.py:0
 #, python-format
 msgid "The following modules are not installed or unknown: %s"
 msgstr "以下 模块没有安装 或未知: %s"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "The hour must be between 0 and 23"
@@ -32681,6 +33099,7 @@ msgid "The internal user in charge of this contact."
 msgstr "负责此联系人的内部用户。"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/wizard/base_language_install.py:0
 #, python-format
 msgid ""
@@ -32690,6 +33109,7 @@ msgid ""
 msgstr "您选择的语言已成功安装。                             用户可以在偏好中选择自己喜欢的语言。"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid ""
@@ -32698,6 +33118,7 @@ msgid ""
 msgstr "您选择的语言已成功安装。 用户可以在偏好中选择自己喜欢的语言。"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_country.py:0
 #, python-format
 msgid "The layout contains an invalid format key"
@@ -32709,6 +33130,7 @@ msgid "The list of models that extends the current model."
 msgstr "扩展当前模型的模型清单。"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid ""
@@ -32724,6 +33146,7 @@ msgid ""
 msgstr "这个筛选应用的菜单动作. 如果留空，筛选将应用于这个模型的所有菜单."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -32732,6 +33155,7 @@ msgid ""
 msgstr "init或未加载注册表中无法调用method _button_immediate_install。请使用button_install。"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid ""
@@ -32740,6 +33164,7 @@ msgid ""
 msgstr "模型名称只能包含小写字符、数字、下划线和点."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "The model name must start with 'x_'."
@@ -32751,6 +33176,7 @@ msgid "The model this field belongs to"
 msgstr "该字段所属的模型"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "The modes in view_mode must not be duplicated: %s"
@@ -32762,6 +33188,7 @@ msgid "The name of the country must be unique !"
 msgstr "国家名必须唯一!"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "The name of the group can not start with \"-\""
@@ -32783,12 +33210,14 @@ msgid "The name of the module must be unique!"
 msgstr "模块名称必须唯一!"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "The new password and its confirmation must be identical."
 msgstr "新密码与确认密码必须相同。"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_currency.py:0
 #, python-format
 msgid ""
@@ -32809,6 +33238,7 @@ msgid "The next step depends on the file format:"
 msgstr "下一个步骤取决于单据格式:"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "The ondelete policy %r is not valid for field %r"
@@ -32821,6 +33251,7 @@ msgid "The only predefined variables are"
 msgstr "唯一预定义的变量是"
 
 #. module: base
+#. odoo-python
 #: code:addons/model.py:0
 #, python-format
 msgid ""
@@ -32840,12 +33271,14 @@ msgstr ""
 " \n"
 
 #. module: base
+#. odoo-python
 #: code:addons/model.py:0 code:addons/model.py:0
 #, python-format
 msgid "The operation cannot be completed: %s"
 msgstr "操作无法完成: %s"
 
 #. module: base
+#. odoo-python
 #: code:addons/model.py:0
 #, python-format
 msgid ""
@@ -32877,6 +33310,12 @@ msgid ""
 msgstr "主报告单据的路径(取决于报告类型)，或者如果内容位于其它字段中，则为空"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_payment
+msgid "The payment engine used by payment provider modules."
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/decimal_precision.py:0
 #, python-format
 msgid ""
@@ -32903,6 +33342,7 @@ msgid ""
 msgstr "用整数表示的工作优先级:0表示高优先级，10表示低优先级."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
@@ -32938,6 +33378,7 @@ msgid ""
 msgstr "公司的注册号。 如果它与税号不同，请使用它。 它在同一国家的所有合作伙伴中必须是唯一的"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_actions_report.py:0
 #, python-format
 msgid ""
@@ -32950,6 +33391,7 @@ msgstr ""
 "无法分隔文件以另存为附件，因为报告的模板不包含具有 'article' 类名的 div 上的属性 'data-oe-model' 和 'data-oe-id'。"
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid ""
@@ -32974,12 +33416,14 @@ msgid "The rounding factor must be greater than 0!"
 msgstr "舍入因子必须大于0!"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid "The server \"%s\" cannot be used because it is archived."
 msgstr "无法使用服务器“%s”，因为它已存档。"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -32990,6 +33434,7 @@ msgstr ""
 " %s"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -32997,12 +33442,14 @@ msgid ""
 msgstr "服务器拒绝发送地址 (%(email_from)s)，错误 (%(repl)s)"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid "The server refused the test connection with error %(repl)s"
 msgstr "服务器拒绝测试连接，错误 %(repl)s"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -33015,6 +33462,7 @@ msgid "The state code."
 msgstr "县市代码."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "The table %r if used for other, possibly incompatible fields."
@@ -33037,6 +33485,7 @@ msgstr ""
 "进行呈现并由用户下载."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "The user cannot have more than one user types."
@@ -33058,12 +33507,14 @@ msgid ""
 msgstr "用户的这个筛选是私有的. 留空的话，这个筛选是公开，所有用户都可用."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "The value (%s) passed should be positive"
 msgstr "传递的值 (%s) 应该是正数"
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid ""
@@ -33072,12 +33523,14 @@ msgid ""
 msgstr "字段 '%s' 的值已经存在(可能是当前模型中的 '%s')."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "The value send to monetary field is not a number."
 msgstr "货币字段的值不是数字."
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid ""
@@ -33103,12 +33556,18 @@ msgid "There are no more contacts to merge for this request"
 msgstr "没有更多联系人可以为此请求合并"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_filters.py:0
 #, python-format
 msgid ""
 "There is already a shared filter set as default for %(model)s, delete or "
 "change it before setting a new default"
 msgstr "这是一个%(model)s的共享筛选，请在上处或者修改前设置一个新的默认值"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_latam_check
+msgid "Third Party and Deferred/Electronic Checks Management"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_url,name:base.action_third_party
@@ -33129,9 +33588,10 @@ msgstr "本窗口"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_bank__allow_out_payment
 msgid "This account can be used for outgoing payments"
-msgstr "此帐户可用于付款"
+msgstr "此帐户可用于支付"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "This column contains module data and cannot be removed!"
@@ -33177,6 +33637,7 @@ msgstr ""
 "                                                                         用于（软）重置断开的视图。"
 
 #. module: base
+#. odoo-python
 #: code:addons/image.py:0 code:addons/image.py:0 code:addons/image.py:0
 #, python-format
 msgid "This file could not be decoded as an image file."
@@ -33237,6 +33698,7 @@ msgid "This is your company's currency."
 msgstr "这是贵公司的货币."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "This method can only be accessed over HTTP"
@@ -33441,7 +33903,7 @@ msgid ""
 "This module helps analyzing and organizing event tracks.\n"
 "For that purpose it adds a gantt view on event tracks."
 msgstr ""
-"该模块有助于分析和组织事件轨迹.\n"
+"该模块有助于分析和组织事件专题.\n"
 "为此，它在事件轨道上增加了甘特图."
 
 #. module: base
@@ -33494,6 +33956,7 @@ msgid "This module will trigger the uninstallation of below modules."
 msgstr "该模块将触发以下模块卸载."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid ""
@@ -33504,6 +33967,7 @@ msgstr ""
 "%(groups_list)s"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid ""
@@ -33675,6 +34139,7 @@ msgid "To be upgraded"
 msgstr "将被升级"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -33720,6 +34185,7 @@ msgstr ""
 "                著名管理合伙人."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "Too many login failures, please wait a bit before trying again."
@@ -33850,6 +34316,7 @@ msgid "Tree"
 msgstr "列表"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Tree child can only have one of %(tags)s tag (not %(wrong_tag)s)"
@@ -33994,11 +34461,6 @@ msgid "U - ACTIVITIES OF EXTRATERRITORIAL ORGANISATIONS AND BODIES"
 msgstr "U - 域外组织和机构的活动"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_ae
-msgid "U.A.E. - Accounting"
-msgstr "U.A.E. - Accounting"
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_hr_payroll
 msgid "U.A.E. - Payroll"
 msgstr "U.A.E. - Payroll"
@@ -34007,16 +34469,6 @@ msgstr "U.A.E. - Payroll"
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_hr_payroll_account
 msgid "U.A.E. - Payroll with Accounting"
 msgstr "U.A.E. - Payroll with Accounting"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_ae_pos
-msgid "U.A.E. - Point of Sale"
-msgstr "U.A.E. - Point of Sale"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_uk
-msgid "UK - Accounting"
-msgstr "UK - Accounting"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uk_reports
@@ -34117,6 +34569,7 @@ msgid "Ukraine - Accounting"
 msgstr "Ukraine - Accounting"
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid ""
@@ -34124,12 +34577,14 @@ msgid ""
 msgstr "不能删除该单据，因为它被用作默认属性"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_actions_report.py:0
 #, python-format
 msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
 msgstr "未找到 WKhtmltopdf 系统，不能创建 PDF."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -34138,6 +34593,7 @@ msgid ""
 msgstr "不能安装模块「%s」，因为一个外部依赖没有满足:%s"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid ""
@@ -34146,6 +34602,7 @@ msgid ""
 msgstr "不能按 %s 排序：用于排序的字段必须存在于模型上并已存储."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -34154,6 +34611,7 @@ msgid ""
 msgstr "不能处理模块 \"%s\"，因为找不到外部的依赖:%s"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -34167,6 +34625,7 @@ msgid "Uncategorized"
 msgstr "未归类"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #: model_terms:ir.ui.view,arch_db:base.module_form
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
@@ -34176,6 +34635,7 @@ msgid "Uninstall"
 msgstr "卸载"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 #, python-format
@@ -34197,6 +34657,7 @@ msgid ""
 msgstr "卸载模块可能会有风险，我们建议您先在副本或测试数据库上尝试。"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_currency.py:0
 #, python-format
 msgid "Unit per %s"
@@ -34208,9 +34669,24 @@ msgid "United Arab Emirates"
 msgstr "阿拉伯联合酋长国"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ae
+msgid "United Arab Emirates - Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ae_pos
+msgid "United Arab Emirates - Point of Sale"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.uk
 msgid "United Kingdom"
 msgstr "英国"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_uk
+msgid "United Kingdom - Accounting"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.us
@@ -34233,6 +34709,7 @@ msgid "Units of measure"
 msgstr "计量单位"
 
 #. module: base
+#. odoo-python
 #: code:addons/model.py:0 model:ir.model,name:base.model__unknown
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module_dependency__state__unknown
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module_exclusion__state__unknown
@@ -34241,66 +34718,77 @@ msgid "Unknown"
 msgstr "未知"
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid "Unknown database error: '%s'"
 msgstr "未知的数据库错误: '%s'"
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid "Unknown database identifier '%s'"
 msgstr "未知数据库标识符 '%s'"
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid "Unknown error during import:"
 msgstr "导入时发生未知错误:"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Unknown field \"%(field)s\" in \"group_by\" value in %(attribute)s=%(value)r"
 msgstr "%(attribute)s=%(value)r 中的“group_by”值中的未知字段 \"%(field)s\""
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Unknown field \"%(model)s.%(field)s\" in %(use)s)"
 msgstr "%(use)s) 中的未知字段 \"%(model)s.%(field)s\""
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid "Unknown field %r in 'groupby'"
 msgstr "未知字段 %r 在'分组依据'中"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Unknown field %r in dependency %r"
 msgstr "未知字段 %r 在依赖 %r"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Unknown field name '%s' in related field '%s'"
 msgstr "未知字段名 '%s' 在关系字段 '%s'"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "Unknown sub-field '%s'"
 msgstr "未知的子字段 '%s'"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "Unknown value '%s' for boolean field '%%(field)s'"
 msgstr "布尔字段'%%(field)s'的未知值'%s'"
 
 #. module: base
+#. odoo-python
 #: code:addons/translate.py:0
 #, python-format
 msgid ""
@@ -34308,6 +34796,7 @@ msgid ""
 msgstr "不能标识的扩展名后缀名: 规定为 .csv, 或.po, 或 .tgz格式的后续名扩展名 (公认的 .%s)."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Unsearchable field %(field)r in path %(field_path)r in %(use)s)"
@@ -34395,6 +34884,7 @@ msgid "Usage"
 msgstr "用途"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "Use '1' for yes and '0' for no"
@@ -34431,12 +34921,14 @@ msgid "Use barcode scanners to process logistics operations"
 msgstr "使用条码扫瞄仪处理物流作业"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Use comma"
 msgstr "使用标点"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Use comma instead of the <br> tag to display the address"
@@ -34494,6 +34986,7 @@ msgstr ""
 "收到的徽标显示在用户个人数据中.\n"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
@@ -34625,12 +35118,14 @@ msgid "User-friendly PoS interface for shops and restaurants"
 msgstr "适用于商店和餐厅的用户亲和 PoS 界面"
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid "User:"
 msgstr "用户:"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "User: %s"
@@ -34643,6 +35138,7 @@ msgid "Username"
 msgstr "用户名"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_users.py:0
 #: model:ir.actions.act_window,name:base.action_res_users
 #: model:ir.model.fields,field_description:base.field_change_password_wizard__user_ids
@@ -34667,6 +35163,11 @@ msgid "Users & Companies"
 msgstr "用户 & 公司"
 
 #. module: base
+#: model:ir.model,name:base.model_res_users_apikeys
+msgid "Users API Keys"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_res_users_deletion
 msgid "Users Deletion Request"
 msgstr "用户删除请求"
@@ -34688,11 +35189,19 @@ msgid "Users of this group automatically inherit those groups"
 msgstr "这个群组的用户自动继承那些群组"
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/res_lang.py:0
+#, python-format
+msgid "Using 24-hour clock format with AM/PM can cause issues."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.uz
 msgid "Uzbekistan"
 msgstr "乌兹别克斯坦"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #: code:addons/base/models/ir_qweb_fields.py:0
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__group_by_vat
@@ -34757,6 +35266,7 @@ msgid "Value"
 msgstr "值"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "Value '%s' not found in selection field '%%(field)s'"
@@ -34846,6 +35356,7 @@ msgid "Venezuela - Accounting"
 msgstr "Venezuela - Accounting"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Vertical bar"
@@ -34870,12 +35381,14 @@ msgid "View"
 msgstr "视图"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "View '%(name)s' accessible only to groups %(groups)s "
 msgstr "仅组 %(groups)s 可访问的视图\"%(name)s\" "
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "View '%(name)s' is private"
@@ -34928,6 +35441,7 @@ msgid "View livechat sessions for leads"
 msgstr "视图潜在客户的即时聊天作业阶段"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "View: %s"
@@ -34997,6 +35511,7 @@ msgid "Warehouse Management: Batch Transfer"
 msgstr "仓库管理: 批量调拨"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 #: code:addons/base/models/ir_model.py:0 code:addons/base/models/ir_model.py:0
 #: code:addons/base/models/ir_model.py:0
@@ -35006,6 +35521,7 @@ msgid "Warning"
 msgstr "警告"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/decimal_precision.py:0
 #: code:addons/base/models/res_currency.py:0
 #, python-format
@@ -35013,12 +35529,14 @@ msgid "Warning for %s"
 msgstr "警告 %s"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_config.py:0
 #, python-format
 msgid "Warning!"
 msgstr "警告！"
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid "Warnings"
@@ -35132,7 +35650,7 @@ msgstr "网站"
 #: model:ir.module.module,shortdesc:base.module_website_payment_authorize
 #: model:ir.module.module,summary:base.module_website_payment_authorize
 msgid "Website - Payment Authorize"
-msgstr "网站—付款授权"
+msgstr "网站—支付授权"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_payment_paypal
@@ -35270,7 +35788,7 @@ msgstr "网站访问潜在客户产生企业"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_profile
 msgid "Website profile"
-msgstr "网站概述"
+msgstr "网站资料"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__3
@@ -35377,6 +35895,7 @@ msgid "Wholesale/Retail"
 msgstr "批发/零售"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Width"
@@ -35401,6 +35920,7 @@ msgid "Wizards to be Launched"
 msgstr "要启用的向导"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_actions_report.py:0
 #, python-format
 msgid ""
@@ -35409,6 +35929,7 @@ msgid ""
 msgstr "Wkhtmltpdf 失败(错误代码: %s). 内存限制过低或已达到最大的子行程单据数. 消息:%s"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_actions_report.py:0
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
@@ -35467,11 +35988,6 @@ msgid "Worksheet template when planning an intervention"
 msgstr "计划干预时的工作表模板"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_payment_sips
-msgid "Worldline SIPS"
-msgstr "Worldline SIPS"
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access__perm_write
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
 msgid "Write Access"
@@ -35517,6 +36033,7 @@ msgid "You are inviting a new user."
 msgstr "您正在邀请新用户."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid ""
@@ -35525,6 +36042,7 @@ msgid ""
 msgstr "您并无权限访问 '%(document_kind)s' (%(document_model)s) 记录."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid ""
@@ -35533,6 +36051,7 @@ msgid ""
 msgstr "您并无权限创建 '%(document_kind)s' (%(document_model)s) 记录."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid ""
@@ -35541,6 +36060,7 @@ msgid ""
 msgstr "您并无权限删除 '%(document_kind)s' (%(document_model)s) 记录."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid ""
@@ -35549,12 +36069,14 @@ msgid ""
 msgstr "您并无权限修改 '%(document_kind)s' (%(document_model)s) 记录."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid "You are trying to install incompatible modules in category \"%s\":"
 msgstr "您正尝试在类别「%s」中安装不兼容的模块:"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -35574,6 +36096,7 @@ msgid ""
 msgstr "您可以从您的电脑上传一个文件或者复制/粘贴一个 Internet 链接到您的文件."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "You can not create recursive tags."
@@ -35585,6 +36108,7 @@ msgid "You can not have two users with the same login !"
 msgstr "用户名称必须唯一!"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid ""
@@ -35592,6 +36116,7 @@ msgid ""
 msgstr "您不能删除 API 密钥，除非它们是您的或者您是系统用户"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid ""
@@ -35600,6 +36125,7 @@ msgid ""
 msgstr "您不能删除 admin 用户，因为其由 Odoo 创建并被系统内部使用(更新，模块安装...)"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/report_paperformat.py:0
 #, python-format
 msgid ""
@@ -35608,12 +36134,14 @@ msgid ""
 msgstr "您可以选择页面格式或自定页面宽/高，但是二者只能选其一."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "You cannot activate the superuser."
 msgstr "您不能启用超级用户."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -35630,6 +36158,7 @@ msgstr ""
 "%(names)s"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -35644,6 +36173,7 @@ msgstr ""
 "连结的活跃用户: %(names)s"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -35654,40 +36184,46 @@ msgstr ""
 "%s"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid ""
 "You cannot archive this Outgoing Mail Server (%s) because it is still used in the following case(s):\n"
 "%s"
 msgstr ""
-"您无法存档此外发邮件服务器 (%s)，因为它仍在以下情况下使用：\n"
+"您无法存档此发信邮件服务器 (%s)，因为它仍在以下情况下使用：\n"
 "%s"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "You cannot create recursive Partner hierarchies."
 msgstr "您不能创建递归的合作伙伴层级."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_company.py:0
 #, python-format
 msgid "You cannot create recursive companies."
 msgstr "您不能创建递归的公司."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "You cannot create recursive inherited views."
 msgstr "您不能创建递归继承视图."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "You cannot deactivate the user you're currently logged in as."
 msgstr "您不能停用您当前登录的用户."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -35704,6 +36240,7 @@ msgstr ""
 "%(names)s"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -35718,6 +36255,7 @@ msgstr ""
 "连结的活跃用户: %(names)s"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid ""
@@ -35728,12 +36266,14 @@ msgstr ""
 "请首先取消启用."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid "You cannot delete the language which is the user's preferred language."
 msgstr "不能删除用户的默认语言."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/wizard/base_partner_merge.py:0
 #, python-format
 msgid "You cannot merge a contact with one of his parent."
@@ -35747,6 +36287,7 @@ msgid ""
 msgstr "您不能减少已在会计分录中使用的货币的小数位数."
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid ""
@@ -35759,12 +36300,14 @@ msgstr ""
 "(操作: %(operation)s)"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "You don't have enough access rights to run this action."
 msgstr "您没有足够的访问权限来运行此动作."
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid ""
@@ -35772,6 +36315,7 @@ msgid ""
 msgstr "您没有权限导出数据，请联系系统管理员。"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/wizard/base_partner_merge.py:0
 #, python-format
 msgid "You have to specify a filter for your selection."
@@ -35788,6 +36332,7 @@ msgid "You should update this document to reflect your T&amp;C."
 msgstr "您应该更新此文档以反映您的T &amp; C。"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -35796,6 +36341,7 @@ msgid ""
 msgstr "您要安装的模块'%s'依赖于'%s', 但后者在您系统中不可用."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -35811,6 +36357,7 @@ msgid ""
 msgstr "通过编辑在设置/用户菜单下的新建用户，您将能够定义额外的访问权."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -35827,6 +36374,7 @@ msgid "Your conditions..."
 msgstr "您的条件..."
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -35867,12 +36415,6 @@ msgid "Zip Required"
 msgstr "需要邮递区号"
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.view_base_import_language
-msgid "_Import"
-msgstr "_Import"
-
-#. module: base
-#: model:ir.module.category,name:base.module_category_account
 #: model:ir.module.category,name:base.module_category_services_payroll_account
 msgid "account"
 msgstr "会计"
@@ -35888,18 +36430,21 @@ msgid "active"
 msgstr "启用"
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid "allowed for groups %s"
 msgstr "允许群组 %s"
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid "always forbidden"
 msgstr "总是禁止"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_currency.py:0
 #, python-format
 msgid "and"
@@ -35921,6 +36466,7 @@ msgid "binary"
 msgstr "二进制"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_attachment.py:0
 #, python-format
 msgid "binary_field_real_user should be a res.users record."
@@ -35952,6 +36498,7 @@ msgid "choose"
 msgstr "选择"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "database id"
@@ -35968,6 +36515,7 @@ msgid "datetime"
 msgstr "日期时间"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "day"
@@ -36054,7 +36602,7 @@ msgstr "例如 我的公司"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
 msgid "e.g. My Outgoing Server"
-msgstr "例如：我的外发服务器"
+msgstr "例如：我的发信服务器"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -36126,6 +36674,11 @@ msgid "eCommerce Rental with Wishlist"
 msgstr "带有愿望清单的电子商务租赁"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_website_sale_subscription
+msgid "eCommerce Subscription"
+msgstr ""
+
+#. module: base
 #: model:ir.module.category,name:base.module_category_website_elearning
 #: model:ir.module.module,shortdesc:base.module_website_slides
 msgid "eLearning"
@@ -36137,12 +36690,14 @@ msgid "expenses"
 msgstr "费用"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "external id"
 msgstr "外部 ID"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "false"
@@ -36164,12 +36719,14 @@ msgstr ""
 "        record['size'] = len(record.name)"
 
 #. module: base
+#. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid "forbidden for groups %s"
 msgstr "禁止群组 %s"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid "format() must be given exactly one %char format specifier"
@@ -36190,6 +36747,7 @@ msgstr ""
 "                             用户可以在偏好中选择自己喜欢的语言。"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "hour"
@@ -36236,6 +36794,11 @@ msgid "ir.actions.server"
 msgstr "ir.actions.server"
 
 #. module: base
+#: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__json
+msgid "json"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_stock_ddt
 msgid "l10n_it_stock_ddt"
 msgstr "l10n_it_stock_ddt"
@@ -36251,6 +36814,7 @@ msgid "many2many"
 msgstr "多对多"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "many2many fields cannot be evaluated by reference"
@@ -36267,6 +36831,7 @@ msgid "many2one_reference"
 msgstr "many2one_reference"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "minute"
@@ -36283,6 +36848,7 @@ msgid "monetary"
 msgstr "货币"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "month"
@@ -36294,12 +36860,14 @@ msgid "mrp_subcontracting"
 msgstr "mrp_subcontracting"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "name"
 msgstr "名称"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "no"
@@ -36391,21 +36959,6 @@ msgid "reference"
 msgstr "参考编号"
 
 #. module: base
-#: model:ir.model,name:base.model_res_users_apikeys
-msgid "res.users.apikeys"
-msgstr "res.users.apikeys"
-
-#. module: base
-#: model:ir.model,name:base.model_res_users_apikeys_description
-msgid "res.users.apikeys.description"
-msgstr "res.users.apikeys.description"
-
-#. module: base
-#: model:ir.model,name:base.model_res_users_apikeys_show
-msgid "res.users.apikeys.show"
-msgstr "res.users.apikeys.show"
-
-#. module: base
 #: model:ir.module.category,name:base.module_category_account_budget_sale
 msgid "sale"
 msgstr "销售"
@@ -36416,6 +36969,7 @@ msgid "sales"
 msgstr "销售"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "second"
@@ -36557,6 +37111,7 @@ msgid "title"
 msgstr "标题"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "true"
@@ -36568,18 +37123,21 @@ msgid "website_sale_delivery_mondialrelay"
 msgstr "website_sale_delivery_mondialrelay"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "week"
 msgstr "周"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "year"
 msgstr "年"
 
 #. module: base
+#. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "yes"

@@ -9,7 +9,7 @@ class SurveyUserInput(models.Model):
     _inherit = 'survey.user_input'
 
     def _mark_done(self):
-        """ Will add certification to employee's resumé if
+        """ Will add certification to employee's resume if
         - The survey is a certification
         - The user is linked to an employee
         - The user succeeded the test """

@@ -135,8 +135,9 @@ options.registry.StepsConnector = options.Class.extend({
      * @returns {integer}
      */
     _getStepColSize(stepEl) {
-        const colClass = stepEl.className.split(' ').find(cl => cl.startsWith('col-lg'));
-        return parseInt(colClass[colClass.length - 1]);
+        const classPrefix = 'col-lg-';
+        const colClass = stepEl.className.split(' ').find(cl => cl.startsWith(classPrefix));
+        return parseInt(colClass.replace(classPrefix, ''));
     },
     /**
      * Returns the padding of the step, as a number of bootstrap lg-col.
@@ -146,8 +147,10 @@ options.registry.StepsConnector = options.Class.extend({
      * @returns {integer}
      */
     _getStepColPadding(stepEl) {
-        const paddingClass = stepEl.className.split(' ').find(cl => cl.startsWith('offset-lg'));
-        return paddingClass ? parseInt(paddingClass[paddingClass.length - 1]) : 0;
+        const classPrefix = 'offset-lg-';
+        const paddingClass = stepEl.className.split(' ').find(cl => cl.startsWith(classPrefix));
+        return paddingClass ? parseInt(paddingClass.replace(classPrefix, '')) : 0;
+
     },
     /**
      * Returns the svg path based on the type of connector.
@@ -171,5 +174,6 @@ options.registry.StepsConnector = options.Class.extend({
                 return `M ${0.05 * width} ${hHeight * 1.2} Q ${width / 2} ${hHeight * 1.8}, ${0.95 * width - 6} ${hHeight * 1.2}`;
             }
         }
+        return '';
     },
 });

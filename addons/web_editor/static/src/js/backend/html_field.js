@@ -62,9 +62,7 @@ export class HtmlFieldWysiwygAdapterComponent extends ComponentAdapter {
             !_.isEqual(lastRecordInfo, newRecordInfo) ||
             !_.isEqual(lastCollaborationChannel, newCollaborationChannel))
         {
-            this.widget.resetEditor(newValue, {
-                collaborationChannel: newCollaborationChannel,
-            });
+            this.widget.resetEditor(newValue, newProps.widgetArgs[0]);
             this.env.onWysiwygReset && this.env.onWysiwygReset();
         }
     }
@@ -115,8 +113,8 @@ export class HtmlField extends Component {
             }
 
             const newRecordInfo = {
-                res_model: this.props.record.resModel,
-                res_id: this.props.record.resId,
+                res_model: newProps.record.resModel,
+                res_id: newProps.record.resId,
             };
             if (!_.isEqual(this._lastRecordInfo, newRecordInfo)) {
                 this.currentEditingValue = undefined;
@@ -228,6 +226,7 @@ export class HtmlField extends Component {
                 res_model: this.props.record.resModel,
                 res_id: this.props.record.resId,
             },
+            fieldId: this.props.id,
         };
     }
     /**

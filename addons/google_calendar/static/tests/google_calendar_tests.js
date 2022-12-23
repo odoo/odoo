@@ -23,7 +23,6 @@ QUnit.module('Google Calendar', {
                         partner_id: {string: "user", type: "many2one", relation: 'partner', related: 'user_id.partner_id'},
                         name: {string: "name", type: "char"},
                         start_date: {string: "start date", type: "date"},
-                        start_date: {string: "start date", type: "date"},
                         stop_date: {string: "stop date", type: "date"},
                         start: {string: "start datetime", type: "datetime"},
                         stop: {string: "stop datetime", type: "datetime"},
@@ -127,6 +126,8 @@ QUnit.module('Google Calendar', {
                     assert.step(route);
                 } else if (route === '/web/dataset/call_kw/res.partner/get_attendee_detail') {
                     return Promise.resolve([]);
+                } else if (route === '/web/dataset/call_kw/res.users/has_group') {
+                    return Promise.resolve(true);
                 }
             },
         });

@@ -57,7 +57,7 @@ class StockPicking(models.Model):
             if not production:
                 continue
             if len(production) > 1:
-                raise UserError("It shouldn't happen to have multiple production to record for the same subcontracted move")
+                raise UserError(_("There shouldn't be multiple productions to record for the same subcontracted move."))
             # Manage additional quantities
             quantity_done_move = move.product_uom._compute_quantity(move.quantity_done, production.product_uom_id)
             if float_compare(production.product_qty, quantity_done_move, precision_rounding=production.product_uom_id.rounding) == -1:

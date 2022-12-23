@@ -15,7 +15,7 @@
                 <field name="alias_domain"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div t-attf-class="d-flex flex-column flex-fill #{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
+                        <div t-attf-class="d-flex flex-column flex-fill">
                             <t t-value="JSON.parse(record.kanban_dashboard.raw_value)" t-set="dashboard"/>
                             <t t-value="record.type.raw_value" t-set="journal_type"/>
                             <t t-call="JournalTop"/>
@@ -88,7 +88,7 @@
                                     <a role="menuitem" type="object" name="open_transfer_money">Internal Transfers</a>
                                 </div>
                                 <div>
-                                    <a role="menuitem" type="object" name="open_action" context="{'action_name': 'action_account_moves_all_a'}" groups="base.group_no_one">Journal Items</a>
+                                    <a role="menuitem" type="object" name="open_action" context="{'action_name': 'action_account_moves_all_a'}">Journal Items</a>
                                 </div>
                             </div>
 
@@ -380,7 +380,7 @@
                 This is the accounting dashboard
             </p><p>
                 If you have not installed a chart of account, please install one first.<br/>
-               <a type="action" name="%(open_account_charts_modules)d" tabindex="-1">Browse available countries.</a>
+               <a class="btn-link" type="action" name="%(open_account_charts_modules)d" tabindex="-1">Browse available countries.</a>
             </p>
         </field>
     </record>

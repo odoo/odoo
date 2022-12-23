@@ -139,7 +139,7 @@
             <cbc:TaxExemptionReason
                     t-out="vals.get('tax_exemption_reason')"/>
             <cac:TaxScheme>
-                <cbc:ID t-translation="off">VAT</cbc:ID>
+                <cbc:ID t-translation="off" t-out="vals.get('tax_scheme_id')"/>
             </cac:TaxScheme>
         </t>
     </template>

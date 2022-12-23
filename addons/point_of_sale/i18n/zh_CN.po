@@ -238,7 +238,7 @@ msgid ""
 "                                    in order to install a Payment Terminal and make a fully integrated payment method."
 msgstr ""
 "<strong>&gt; 支付终端</strong>\n"
-"                                    为安装支付终端并创建一个完全集成的付款方式."
+"                                    为安装支付终端并创建一个完全集成的支付方式."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -250,7 +250,7 @@ msgstr "<strong>金额为：</strong>"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "? Clicking \"Confirm\" will validate the payment."
-msgstr "? 点击 \"验证\"  将验证付款."
+msgstr "? 点击 \"验证\"  将验证支付."
 
 #. module: point_of_sale
 #. openerp-web
@@ -368,7 +368,7 @@ msgstr "会计凭证"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__bank_payment_ids
 msgid "Account payments representing aggregated and bank split payments."
-msgstr "帐户付款代表汇总付款和银行拆分付款."
+msgstr "帐户支付代表汇总支付和银行拆分支付."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -474,7 +474,7 @@ msgstr "添加客户"
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_method_form
 msgid "Add a new payment method"
-msgstr "新增一个付款方式"
+msgstr "新增一个支付方式"
 
 #. module: point_of_sale
 #. openerp-web
@@ -662,7 +662,7 @@ msgstr "已归档"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Are you sure that the customer wants to  pay"
-msgstr "请确认客户是否将要付款？"
+msgstr "请确认客户是否将要支付？"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_config__picking_policy__direct
@@ -792,7 +792,7 @@ msgstr "银行"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__bank_payment_ids
 msgid "Bank Payments"
-msgstr "银行付款"
+msgstr "银行支付"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_line
@@ -938,7 +938,7 @@ msgstr "取消"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
 #, python-format
 msgid "Cancel Payment Request"
-msgstr "取消付款申请"
+msgstr "取消支付申请"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order__state__cancel
@@ -1701,7 +1701,7 @@ msgstr "客户屏幕警告"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Customer is required for %s payment method."
-msgstr "客户被要求 %s 付款方式。"
+msgstr "客户被要求 %s 支付方式。"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_customer
@@ -1812,7 +1812,7 @@ msgstr "定义用于通过现金支付的货币的最小硬币"
 msgid ""
 "Defines the name of the payment method that will be displayed in the Point "
 "of Sale when the payments are selected."
-msgstr "定义在付款时将在门店显示的付款方式的名称."
+msgstr "定义在支付时将在门店显示的支付方式的名称."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__delay_validation
@@ -2338,7 +2338,7 @@ msgstr "强制未结账户"
 msgid ""
 "Forces to set a customer when using this payment method and splits the "
 "journal entries for each customer. It could slow down the closing process."
-msgstr "在使用此付款方式时强制设置客户并且分客户拆分日记账录入。这将减慢关闭进程。"
+msgstr "在使用此支付方式时强制设置客户并且分客户拆分日记账录入。这将减慢关闭进程。"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -2730,7 +2730,7 @@ msgstr "结算单日记账"
 #: code:addons/point_of_sale/models/pos_payment.py:0
 #, python-format
 msgid "Invoice payment for %s (%s) using %s"
-msgstr "凭证 %s (%s) 使用 %s 付款方式"
+msgstr "凭证 %s (%s) 使用 %s 支付方式"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__invoiced
@@ -2813,7 +2813,7 @@ msgstr "这是已经提示了吗?"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__is_change
 msgid "Is this payment change?"
-msgstr "这是付款变更吗?"
+msgstr "这是支付变更吗?"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_tax.py:0
@@ -2963,7 +2963,7 @@ msgid ""
 "Account used as outstanding account when creating accounting payment records for bank payments."
 msgstr ""
 "留空以使用公司设置中的默认账户。\n"
-"当创建银行付款的账户付款记录时，账户将用作未结账户。"
+"当创建银行支付的账户支付记录时，账户将用作未结账户。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__receivable_account_id
@@ -2989,9 +2989,9 @@ msgid ""
 "Only cash and bank journals are allowed."
 msgstr ""
 "留空以使用客户的应收账款。\n"
-"定义在结束门店会话后在何处记录累计付款（或个人付款，如果客户正确）的凭证。\n"
+"定义在结束门店会话后在何处记录累计支付（或个人支付，如果客户正确）的凭证。\n"
 "对于现金凭证，我們通过报表行直接写入凭证的的默认账户。\n"
-"对于银行凭证，我们会写入此付款方式中指定的未结账户。\n"
+"对于银行凭证，我们会写入此支付方式中指定的未结账户。\n"
 "只允许现金和银行凭证。"
 
 #. module: point_of_sale
@@ -3111,7 +3111,7 @@ msgstr "主要附件"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment
 msgid "Make Payment"
-msgstr "付款"
+msgstr "支付"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__available_pricelist_ids
@@ -3171,6 +3171,13 @@ msgid "Maximum Exceeded"
 msgstr "超过最大值"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Misc/NumberBuffer.js:0
+#, python-format
+msgid "Maximum value reached"
+msgstr "最大值已达到"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error
 msgid "Message Delivery error"
 msgstr "消息传递错误"
@@ -3183,7 +3190,7 @@ msgstr "消息"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__name
 msgid "Method"
-msgstr "付款方式"
+msgstr "支付方式"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_miscellaneous
@@ -3593,7 +3600,7 @@ msgstr "打开钱箱"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__open_session_ids
 msgid "Open PoS sessions that are using this payment method."
-msgstr "打开使用此付款方式的POS营业点。"
+msgstr "打开使用此支付方式的POS营业点。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -3852,7 +3859,7 @@ msgstr "POS单明细"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__pos_payment_method_id
 msgid "POS Payment Method"
-msgstr "POS付款方式"
+msgstr "POS支付方式"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_product_tree_view
@@ -3940,7 +3947,7 @@ msgstr "支付"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__payment_date
 msgid "Payment Date"
-msgstr "付款日期"
+msgstr "支付日期"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3950,7 +3957,7 @@ msgstr "付款日期"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment_search
 #, python-format
 msgid "Payment Method"
-msgstr "付款方式"
+msgstr "支付方式"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_payment_method_form
@@ -3963,22 +3970,22 @@ msgstr "付款方式"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_tree
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Payment Methods"
-msgstr "付款方式"
+msgstr "支付方式"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__ticket
 msgid "Payment Receipt Info"
-msgstr "付款收据信息"
+msgstr "支付收据信息"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__payment_name
 msgid "Payment Reference"
-msgstr "付款参考"
+msgstr "支付参考"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__payment_status
 msgid "Payment Status"
-msgstr "付款状态"
+msgstr "支付状态"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3999,14 +4006,14 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__transaction_id
 msgid "Payment Transaction ID"
-msgstr "付款交易ID"
+msgstr "支付交易ID"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #, python-format
 msgid "Payment method"
-msgstr "付款方式"
+msgstr "支付方式"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4018,14 +4025,14 @@ msgstr "可用支付方式"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
 #, python-format
 msgid "Payment request pending"
-msgstr "待付款请求"
+msgstr "待支付请求"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
 #, python-format
 msgid "Payment reversed"
-msgstr "付款被撤销"
+msgstr "支付被撤销"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -4054,7 +4061,7 @@ msgstr "付款差异"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_payment_methods_tree
 msgid "Payments Methods"
-msgstr "付款方式"
+msgstr "支付方式"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4113,6 +4120,8 @@ msgid "Picking Type"
 msgstr "拣货类型"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Pickings"
@@ -4238,7 +4247,7 @@ msgstr "请提供业务伙伴。"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenStatus.xml:0
 #, python-format
 msgid "Please select a payment method."
-msgstr "请选择付款方式."
+msgstr "请选择支付方式."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4251,6 +4260,15 @@ msgstr "请选择客户"
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__pos_categ_id
 msgid "PoS Category"
 msgstr "销售点类别"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Please close and validate the following open PoS Sessions before modifying this payment method.\n"
+"Open sessions: %s"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4356,7 +4374,7 @@ msgstr "门店日记账"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Make Payment Wizard"
-msgstr "销售点付款向导"
+msgstr "销售点支付向导"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__group_pos_manager_id
@@ -4389,12 +4407,12 @@ msgstr "销售网点订单报告"
 #: model:ir.model,name:point_of_sale.model_pos_payment_method
 #: model:ir.model.fields,field_description:point_of_sale.field_account_journal__pos_payment_method_ids
 msgid "Point of Sale Payment Methods"
-msgstr "POS付款方式"
+msgstr "POS支付方式"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_payment
 msgid "Point of Sale Payments"
-msgstr "销售点付款"
+msgstr "销售点支付"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_session
@@ -4456,7 +4474,7 @@ msgstr "POS单明细"
 #: model:ir.model.fields,field_description:point_of_sale.field_account_move__pos_payment_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__pos_payment_ids
 msgid "Pos Payment"
-msgstr "POS付款"
+msgstr "POS支付"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
@@ -4900,7 +4918,7 @@ msgstr "票据打印机"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__use_payment_terminal
 msgid "Record payments with a terminal on this journal."
-msgstr "在此日记账上记录终端的付款。"
+msgstr "在此日记账上记录终端的支付。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__rescue
@@ -5139,7 +5157,7 @@ msgstr "舍入方法"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Rounding error in payment lines"
-msgstr "付款明细中的舍入错误"
+msgstr "支付明细中的舍入错误"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5233,7 +5251,7 @@ msgstr "扫描我以请求为您的购买开具发票。"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_scan_via_proxy
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_scan_via_proxy
 msgid "Scan via Proxy"
-msgstr "通过代理浏览"
+msgstr "通过代理扫描"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5299,7 +5317,7 @@ msgstr "选择财政状况"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Select a payment method to validate the order."
-msgstr "选择一种付款方式来验证订单"
+msgstr "选择一种支付方式来验证订单"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5347,7 +5365,7 @@ msgstr "发送"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
 #, python-format
 msgid "Send Payment Request"
-msgstr "发送付款请求"
+msgstr "发送支付请求"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5722,7 +5740,7 @@ msgstr "库存规则"
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Stock input for %s"
-msgstr "%s的库存输入"
+msgstr "%s的库存进货"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -5945,9 +5963,18 @@ msgstr "营业点仅支持“添加舍入明细”舍入策略."
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid ""
+"The amount cannot be higher than the due amount if you don't have a cash "
+"payment method configured."
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid ""
 "The amount of your payment lines must be rounded to validate the "
 "transaction."
-msgstr "您的付款明细金额必须四舍五入以验证交易."
+msgstr "您的支付明细金额必须四舍五入以验证交易."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -6059,7 +6086,7 @@ msgstr "订单已提前同步。请从后台为订单开具结算单吧: "
 #, python-format
 msgid ""
 "The payment method selected is not allowed in the config of the POS session."
-msgstr "POS营业点的配置中不允许选择的付款方式."
+msgstr "POS营业点的配置中不允许选择的支付方式."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -6717,7 +6744,7 @@ msgstr "单价"
 #: model:product.template,uom_name:point_of_sale.whiteboard_pen_product_template
 #: model:product.template,uom_name:point_of_sale.whiteboard_product_template
 msgid "Units"
-msgstr "件"
+msgstr "单位"
 
 #. module: point_of_sale
 #. openerp-web
@@ -6751,7 +6778,7 @@ msgstr "计量单位"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__update_stock_quantities
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Update quantities in stock"
-msgstr "更新库存数量"
+msgstr "更新在库存数量"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_company__point_of_sale_use_ticket_qr_code
@@ -7047,7 +7074,7 @@ msgstr "您已为%s付款方式启用了“识别客户”选项，但订单%s�
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "You have to round your payments lines. is not rounded."
-msgstr "您必须四舍五入您的付款明细. 无法四舍五入."
+msgstr "您必须四舍五入您的支付明细. 无法四舍五入."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0

@@ -24,7 +24,7 @@
             <field name="model">change.password.wizard</field>
             <field name="arch" type="xml">
                 <form string="Change Password">
-                    <field name="user_ids"/>
+                    <field mode="tree" name="user_ids"/>
                     <footer>
                         <button string="Change Password" name="change_password_button" type="object" class="btn-primary" data-hotkey="q"/>
                         <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
@@ -56,7 +56,7 @@
             <field name="model">res.users.identitycheck</field>
             <field name="arch" type="xml">
                 <form string="Password Confirmation">
-                    <sheet clas="bg-primary">
+                    <sheet class="bg-primary">
                         <h3><strong>Please enter your password to confirm you own this account</strong></h3>
                         <br/>
                         <div>

@@ -144,6 +144,7 @@ class PosSession(models.Model):
     def action_stock_picking(self):
         self.ensure_one()
         action = self.env['ir.actions.act_window']._for_xml_id('stock.action_picking_tree_ready')
+        action['display_name'] = _('Pickings')
         action['context'] = {}
         action['domain'] = [('id', 'in', self.picking_ids.ids)]
         return action
@@ -415,6 +416,9 @@ class PosSession(models.Model):
         return {'successful': True}
 
     def update_closing_control_state_session(self, notes):
+        # Prevent closing the session again if it was already closed
+        if self.state == 'closed':
+            raise UserError(_('This session is already closed.'))
         # Prevent the session to be opened again.
         self.write({'state': 'closing_control', 'stop_at': fields.Datetime.now()})
         self._post_cash_details_message('Closing', self.cash_register_difference, notes)

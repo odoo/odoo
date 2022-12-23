@@ -13,6 +13,8 @@ const TableOfContent = publicWidget.Widget.extend({
      */
     async start() {
         await this._super(...arguments);
+        this.$scrollingElement = $().getScrollingElement();
+        this.previousPosition = -1;
         this._updateTableOfContentNavbarPosition();
         this._updateTableOfContentNavbarPositionBound = this._updateTableOfContentNavbarPosition.bind(this);
         extraMenuUpdateCallbacks.push(this._updateTableOfContentNavbarPositionBound);
@@ -25,7 +27,6 @@ const TableOfContent = publicWidget.Widget.extend({
         if (indexCallback >= 0) {
             extraMenuUpdateCallbacks.splice(indexCallback, 1);
         }
-        this._scrollingElement.scrollspy('dispose');
         this.$target.css('top', '');
         this.$target.find('.s_table_of_content_navbar').css('top', '');
         this._super(...arguments);
@@ -39,17 +40,26 @@ const TableOfContent = publicWidget.Widget.extend({
      * @private
      */
     _updateTableOfContentNavbarPosition() {
+        if (!this.$target[0].querySelector('a.table_of_content_link')) {
+            // Do not start the scrollspy if the TOC is empty.
+            return;
+        }
         let position = 0;
         const $fixedElements = $('.o_top_fixed_element');
         _.each($fixedElements, el => position += $(el).outerHeight());
         const isHorizontalNavbar = this.$target.hasClass('s_table_of_content_horizontal_navbar');
         this.$target.css('top', isHorizontalNavbar ? position : '');
         this.$target.find('.s_table_of_content_navbar').css('top', isHorizontalNavbar ? '' : position + 20);
-        const $mainNavBar = $('#oe_main_menu_navbar');
-        position += $mainNavBar.length ? $mainNavBar.outerHeight() : 0;
         position += isHorizontalNavbar ? this.$target.outerHeight() : 0;
-        this._scrollingElement = $().getScrollingElement();
-        this._scrollingElement.scrollspy({target: this.$target.find('.s_table_of_content_navbar'), method: 'offset', offset: position + 100, alwaysKeepFirstActive: true});
+        if (this.previousPosition !== position) {
+            new ScrollSpy(this.$scrollingElement, {
+                target: this.$target.find('.s_table_of_content_navbar'),
+                method: 'offset',
+                offset: position + 100,
+                alwaysKeepFirstActive: true,
+            });
+            this.previousPosition = position;
+        }
     },
 });
 

@@ -4,11 +4,11 @@
 # 
 # Translators:
 # Alexandra Jubert, 2022
-# Martin Trigaux, 2022
 # Malika Berardi, 2022
 # Cécile Collart <cco@odoo.com>, 2022
 # Loïc De Greef, 2022
 # Pierre Delacroix <pde@odoo.com>, 2022
+# Martin Trigaux, 2022
 # Jolien De Paepe, 2022
 # 
 msgid ""
@@ -357,7 +357,7 @@ msgstr "Journal des paiements"
 #: model:ir.model,name:account_payment.model_account_payment_method
 #: model:ir.model,name:account_payment.model_account_payment_method_line
 msgid "Payment Methods"
-msgstr "Méthodes de paiement"
+msgstr "Modes de paiement"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_provider
@@ -478,6 +478,13 @@ msgstr ""
 "Le montant à rembourser doit être positif et ne peut être supérieur à %s."
 
 #. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/payment.py:0
+#, python-format
+msgid "The access token is invalid."
+msgstr "Le jeton d'accès n'est pas valide."
+
+#. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_payment_provider__journal_id
 msgid "The journal in which the successful transactions are posted."
 msgstr "Le journal dans lequel les transactions réussies sont enregistrées."
@@ -550,7 +557,7 @@ msgstr "Type de remboursements pris en charge"
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__use_electronic_payment_method
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__use_electronic_payment_method
 msgid "Use Electronic Payment Method"
-msgstr "Utiliser la méthode de paiement électronique"
+msgstr "Utiliser le mode de paiement électronique"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment

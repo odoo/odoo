@@ -50,42 +50,42 @@
                         <widget name="web_ribbon" title="Won" attrs="{'invisible': [('probability', '&lt;', 100)]}" />
                         <div class="oe_title">
                             <h1><field class="text-break" name="name" placeholder="e.g. Product Pricing"/></h1>
-                            <h2 class="o_row g-0 align-items-end">
-                                <div class="col" attrs="{'invisible': [('type', '=', 'lead')]}">
-                                    <label for="expected_revenue" class="oe_edit_only" />
-                                    <div class="o_row">
+                            <h2 class="d-flex gap-2 g-0 align-items-end pb-3">
+                                <div attrs="{'invisible': [('type', '=', 'lead')]}">
+                                    <label for="expected_revenue" class="oe_edit_only pb-1" />
+                                    <div class="d-flex align-items-end">
                                         <field name="company_currency" invisible="1"/>
-                                        <field name="expected_revenue" class="oe_inline" widget='monetary' options="{'currency_field': 'company_currency'}"/>
+                                        <field name="expected_revenue" class="oe_inline o_input_8ch" widget='monetary' options="{'currency_field': 'company_currency'}"/>
                                         <span class="oe_grey p-2" groups="crm.group_use_recurring_revenues"> + </span>
                                         <span class="oe_grey p-2" groups="!crm.group_use_recurring_revenues"> at </span>
                                     </div>
                                 </div>
-                                <div class="col" attrs="{'invisible': [('type', '=', 'lead')]}" groups="crm.group_use_recurring_revenues">
-                                    <div class="o_row">
-                                        <field name="recurring_revenue" class="pe-2 oe_inline" widget="monetary" options="{'currency_field': 'company_currency'}"/>
-                                    </div>
+                                <div attrs="{'invisible': [('type', '=', 'lead')]}" groups="crm.group_use_recurring_revenues">
+                                    <field name="recurring_revenue" class="oe_inline o_input_10ch" widget="monetary" options="{'currency_field': 'company_currency'}"/>
                                 </div>
-                                <div class="col" attrs="{'invisible': [('type', '=', 'lead')]}" groups="crm.group_use_recurring_revenues">
-                                    <div class="o_row">
-                                        <field name="recurring_plan" class="oe_inline" placeholder="E.g. Monthly"
+                                <div attrs="{'invisible': [('type', '=', 'lead')]}" groups="crm.group_use_recurring_revenues">
+                                    <div class="d-flex align-items-end ps-2">
+                                        <field name="recurring_plan" class="oe_inline o_input_12ch" placeholder="E.g. Monthly"
                                                attrs="{'required': [('recurring_revenue', '!=', 0)]}" options="{'no_create': True, 'no_open': True}"/>
                                         <span class="oe_grey p-2"> at </span>
                                     </div>
                                 </div>
-                                <div class="col">
-                                    <div class="oe_edit_only d-flex align-items-center">
+                                <div>
+                                    <div class="oe_edit_only d-md-flex align-items-center">
                                         <label for="probability"/>
-                                        <button class="btn btn-link" name="action_set_automated_probability" type="object"
-                                                attrs="{'invisible': [('is_automated_probability', '=', True)]}">
-                                            <i class="fa fa-gear" role="img" title="Switch to automatic probability" aria-label="Switch to automatic probability"></i>
-                                        </button>
-                                        <small class="oe_grey h6 mb0" attrs="{'invisible': [('is_automated_probability', '=', True)]}">
-                                            <field class="mb0" name="automated_probability" force_save="1"/> %
-                                        </small>
+                                        <div class="d-flex align-items-center">
+                                            <button class="ps-0 ps-md-2 btn btn-link" name="action_set_automated_probability" type="object"
+                                                    attrs="{'invisible': [('is_automated_probability', '=', True)]}">
+                                                <i class="fa fa-gear" role="img" title="Switch to automatic probability" aria-label="Switch to automatic probability"></i>
+                                            </button>
+                                            <small class="oe_grey h6 mb0 d-flex" attrs="{'invisible': [('is_automated_probability', '=', True)]}">
+                                                <field class="mb0" name="automated_probability" force_save="1"/> %
+                                            </small>
+                                        </div>
                                     </div>
-                                    <div id="probability" class="o_row d-flex">
+                                    <div id="probability" class="d-inline-block">
                                         <field name="is_automated_probability" invisible="1"/>
-                                        <field name="probability" widget="float" class="oe_inline"/>
+                                        <field name="probability" widget="float" class="oe_inline o_input_6ch"/>
                                         <span class="oe_grey"> %</span>
                                     </div>
                                 </div>

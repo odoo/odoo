@@ -6,8 +6,9 @@
 # Duy BQ <duybq86@gmail.com>, 2022
 # Thin Tran <trvathin@gmail.com>, 2022
 # Dao Nguyen <trucdao.uel@gmail.com>, 2022
-# Martin Trigaux, 2022
+# Thi Huong Nguyen, 2022
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,8 +37,8 @@ msgstr ""
 "\n"
 "\n"
 "Bút toán (%s) chưa được cân đối.\n"
-"Tổng nợ đang là %s và tổng có đang là %s.\n"
-"Bạn có thể muốn chỉ định một tài khoản mặc định trên sổ\"%s\" để tự động can đối mỗi bút toán."
+"Tổng nợ là %s và tổng có là %s.\n"
+"Bạn có thể chỉ định một tài khoản mặc định trên sổ \"%s\" để tự động cân đối mỗi bút toán."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -54,26 +55,26 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"    - Nhóm thuế: Thuế được dùng là tập hợp của các loại thuế con.\n"
-"    - Cố định: Số tiền tính thuế luôn bằng nhau dù giá có thay đổi.\n"
-"    - Phần trăm giá: Số tiền tính thuế theo % giá:\n"
-"        e.g 100 * 10% = 110 (chưa bao gồm giá)\n"
-"        e.g 110 / (1 + 10%) = 100 (đã gồm giá)\n"
-"    - Phần trăm của giá đã bao gồm thuế: Tiền thuế là khoản tiền được chia ra từ giá:\n"
-"        e.g 180 / (1 - 10%) = 200 (chưa bao gồm giá)\n"
-"        e.g 200 * (1 - 10%) = 180 (đã gồm giá)\n"
+"    - Nhóm Thuế: Thuế gồm một tập hợp của các loại thuế phụ.\n"
+"    - Cố định: Tiền thuế không đổi dù giá thay đổi.\n"
+"    - Phần trăm Giá: Tiền thuế tính theo % giá:\n"
+"        Ví dụ: 100 * (1 + 10%) = 110 (chưa bao gồm trong giá)\n"
+"        Ví dụ: 100 / (1 + 10%) = 100 (đã bao gồm trong giá)\n"
+"    - Phần trăm của Giá đã Bao gồm Thuế: Tiền thuế là khoản tiền được chia ra từ giá:\n"
+"        Ví dụ: 180 / (1 - 10%) = 200 (chưa bao gồm trong giá)\n"
+"        Ví dụ: 200 * (1 - 10%) = 180 (đã gồm trong giá)\n"
 "        "
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid " The %(lock_type)s lock date is set on %(lock_date)s."
-msgstr " Loại %(lock_type)s có ngày khóa được cài ngày %(lock_date)s."
+msgstr " Loại %(lock_type)s có ngày khóa được cài đặt vào %(lock_date)s."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
 msgid "# Reconciled Bills"
-msgstr "# Đã được đối soát"
+msgstr "# Hóa đơn thanh toán đã đối soát"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
@@ -1339,6 +1340,12 @@ msgstr ""
 msgid "A line cannot have both children and a groupby value (line '%s')."
 msgstr ""
 "Một dòng không được có cả giá trị con và giá trị theo nhóm (line '%s')."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "A line of this move is using a deprecated account, you cannot post it."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -2641,7 +2648,7 @@ msgstr "Mô hình phân bổ phân tích"
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_distribution_stored_char
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__analytic_distribution_stored_char
 msgid "Analytic Distribution Stored Char"
-msgstr "Biểu đồ phân phối phân tích được lưu trữ"
+msgstr "Char Phân bổ Phân tích được Lưu trữ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_analytic
@@ -3705,6 +3712,12 @@ msgstr "Làm tròn tiền"
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Cash Statement"
 msgstr "Sổ tiền mặt"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Cash basis rounding difference"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -7552,7 +7565,7 @@ msgstr "Cài đặt thêm các gói"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Install new module"
-msgstr "Cài đặt mô-đun mới"
+msgstr "Cài đặt module mới"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__integer
@@ -9000,7 +9013,7 @@ msgid ""
 msgstr ""
 "Thủ công: Thanh toán bằng bất kỳ phương thức nào bên ngoài Odoo.\n"
 "Séc: Thanh toán hóa đơn bằng Séc và in từ Odoo.\n"
-"Chuyển khoản tín dụng SEPA: Thanh toán trong khu vực SEPA bằng cách gửi tệp Chuyển khoản tín dụng SEPA cho ngân hàng của bạn. Mô-đun account_sepa là cần thiết.\n"
+"Chuyển khoản tín dụng SEPA: Thanh toán trong khu vực SEPA bằng cách gửi tệp Chuyển khoản tín dụng SEPA cho ngân hàng của bạn. Module account_sepa là cần thiết.\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__payment_method_line_id
@@ -9016,9 +9029,9 @@ msgstr ""
 "Thủ công: Thanh toán hoặc Nhận thanh toán bằng bất kỳ phương thức nào bên ngoài Odoo.\n"
 "Nhà cung cấp dịch vụ thanh toán: Mỗi nhà cung cấp dịch vụ thanh toán có Phương thức thanh toán riêng. Yêu cầu giao dịch trên / vào thẻ nhờ mã thông báo thanh toán do đối tác lưu khi mua hoặc đăng ký trực tuyến.\n"
 "Séc: Thanh toán hóa đơn bằng séc và in nó từ Odoo.\n"
-"Gửi tiền theo đợt: Thu thập nhiều séc của khách hàng cùng một lúc để tạo và gửi một khoản tiền gửi theo đợt cho ngân hàng của bạn. Mô-đun account_batch_payment là cần thiết.\n"
-"Chuyển khoản tín dụng SEPA: Thanh toán trong khu vực SEPA bằng cách gửi tệp Chuyển khoản tín dụng SEPA cho ngân hàng của bạn. Mô-đun account_sepa là cần thiết.\n"
-"Ghi nợ trực tiếp SEPA: Được thanh toán trong khu vực SEPA nhờ vào giấy ủy nhiệm mà đối tác của bạn sẽ cấp cho bạn. Mô-đun account_sepa là cần thiết.\n"
+"Gửi tiền theo đợt: Thu thập nhiều séc của khách hàng cùng một lúc để tạo và gửi một khoản tiền gửi theo đợt cho ngân hàng của bạn. Module account_batch_payment là cần thiết.\n"
+"Chuyển khoản tín dụng SEPA: Thanh toán trong khu vực SEPA bằng cách gửi tệp Chuyển khoản tín dụng SEPA cho ngân hàng của bạn. Module account_sepa là cần thiết.\n"
+"Ghi nợ trực tiếp SEPA: Được thanh toán trong khu vực SEPA nhờ vào giấy ủy nhiệm mà đối tác của bạn sẽ cấp cho bạn. Module account_sepa là cần thiết.\n"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__3
@@ -9531,8 +9544,8 @@ msgid ""
 "No tax template found for this country. Please install the corresponding "
 "localization module."
 msgstr ""
-"Không có mẫu thuế nào được tìm thấy cho quốc gia này. Vui lòng cài đặt mô-"
-"đun địa phương hóa tương ứng."
+"Không có mẫu thuế nào được tìm thấy cho quốc gia này. Vui lòng cài đặt "
+"module địa phương hóa tương ứng."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__tax_lock_date
@@ -13388,7 +13401,7 @@ msgid ""
 "related fields)."
 msgstr ""
 "Trường kỹ thuật chứa các quốc gia mà công ty này đang sử dụng các tính năng "
-"liên quan đến thuế(dó đó các quốc gia mà mô-đun kế toán được dùng liên quan "
+"liên quan đến thuế(dó đó các quốc gia mà module kế toán được dùng liên quan "
 "tới cái thuế đó)."
 
 #. module: account
@@ -13721,11 +13734,9 @@ msgstr "Quốc gia áp dụng thuế này."
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid ""
-"The country set on the the foreign VAT fiscal position must match the one "
-"set on the report."
+"The country set on the foreign VAT fiscal position must match the one set on"
+" the report."
 msgstr ""
-"Quốc gia được đặt trên vị trí tài chính VAT ở nước ngoài phải khớp với quốc "
-"gia được đặt trên báo cáo."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template__country_id
@@ -14629,7 +14640,7 @@ msgid ""
 "-This installs the account_batch_payment module."
 msgstr ""
 "Điều này cho phép bạn nhóm các khoản thanh toán vào một lô duy nhất và giúp giảm bớt quá trình hòa giải.\n"
-"-Điều này cài đặt mô-đun account_batch_payment."
+"-Điều này cài đặt module account_batch_payment."
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -16706,7 +16717,7 @@ msgstr "(các) hóa đơn sẽ không được gửi"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_enabled_tax_country_ids
 msgid "l10n-used countries"
-msgstr "mô-đun kế toán quốc gia được dùng"
+msgstr "module kế toán quốc gia được dùng"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions

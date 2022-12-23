@@ -39,6 +39,14 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
             'address_id': cls.expense_user_employee.partner_id.id,
         })
 
+        cls.product_zero_cost = cls.env['product.product'].create({
+            'name': 'General',
+            'default_code': 'EXP_GEN',
+            'standard_price': 0.0,
+            'can_be_expensed': True,
+        })
+
+
         # Allow the current accounting user to access the expenses.
         cls.env.user.groups_id |= group_expense_manager
 

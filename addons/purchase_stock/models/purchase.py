@@ -189,7 +189,7 @@ class PurchaseOrder(models.Model):
         filtered_documents = {}
         for (parent, responsible), rendering_context in documents.items():
             if parent._name == 'stock.picking':
-                if parent.state == 'cancel':
+                if parent.state in ['cancel', 'done']:
                     continue
             filtered_documents[(parent, responsible)] = rendering_context
         self.env['stock.picking']._log_activity(_render_note_exception_quantity_po, filtered_documents)
@@ -307,7 +307,7 @@ class PurchaseOrderLine(models.Model):
         self.ensure_one()
         moves = self.move_ids.filtered(lambda m: m.product_id == self.product_id)
         if self._context.get('accrual_entry_date'):
-            moves = moves.filtered(lambda r: fields.Date.to_date(r.date) <= self._context['accrual_entry_date'])
+            moves = moves.filtered(lambda r: fields.Date.context_today(r, r.date) <= self._context['accrual_entry_date'])
         return moves
 
     @api.depends('move_ids.state', 'move_ids.product_uom_qty', 'move_ids.product_uom')

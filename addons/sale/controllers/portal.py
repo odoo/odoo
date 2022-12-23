@@ -269,7 +269,7 @@ class CustomerPortal(portal.CustomerPortal):
             return request.redirect('/my')
 
         if order_sudo._has_to_be_signed() and decline_message:
-            order_sudo.action_cancel()
+            order_sudo._action_cancel()
             _message_post_helper(
                 'sale.order',
                 order_sudo.id,
@@ -302,7 +302,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         except MissingError as error:
             raise error
         except AccessError:
-            raise ValidationError("The access token is invalid.")
+            raise ValidationError(_("The access token is invalid."))
 
         kwargs.update({
             'reference_prefix': None,  # Allow the reference to be computed based on the order

@@ -38,7 +38,7 @@
                     </group>
                     <field name="timesheet_ids" mode="tree,kanban"
                           attrs="{'invisible': [('analytic_account_active', '=', False)]}">
-                        <tree string="Timesheet Activities" default_order="date" no_open="1" create="false">
+                        <tree string="Timesheet Activities" default_order="date" no_open="1" create="false" delete="0">
                             <field name="date"/>
                             <field name="employee_id"/>
                             <field name="name"/>
@@ -100,9 +100,13 @@
                                   attrs="{'invisible' : ['|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0)]}" />
                             <span class="o_td_label float-start">
                                 <label class="fw-bold" for="remaining_hours" string="Remaining Hours"
-                                      attrs="{'invisible': ['|', ('planned_hours', '=', 0.0), ('encode_uom_in_days', '=', True)]}"/>
+                                       attrs="{'invisible': ['|', '|', ('planned_hours', '=', 0.0), ('encode_uom_in_days', '=', True), ('remaining_hours', '&lt;', 0)]}"/>
                                 <label class="fw-bold" for="remaining_hours" string="Remaining Days"
-                                      attrs="{'invisible': ['|', ('planned_hours', '=', 0.0), ('encode_uom_in_days', '=', False)]}"/>
+                                       attrs="{'invisible': ['|', '|', ('planned_hours', '=', 0.0), ('encode_uom_in_days', '=', False), ('remaining_hours', '&lt;', 0)]}"/>
+                                <label class="fw-bold text-danger" for="remaining_hours" string="Remaining Hours"
+                                       attrs="{'invisible': ['|', '|', ('planned_hours', '=', 0.0), ('encode_uom_in_days', '=', True), ('remaining_hours', '&gt;=', 0)]}"/>
+                                <label class="fw-bold text-danger" for="remaining_hours" string="Remaining Days"
+                                       attrs="{'invisible': ['|', '|', ('planned_hours', '=', 0.0), ('encode_uom_in_days', '=', False), ('remaining_hours', '&gt;=', 0)]}"/>
                             </span>
                             <field name="remaining_hours" widget="timesheet_uom" class="oe_subtotal_footer_separator"
                                   attrs="{'invisible' : [('planned_hours', '=', 0.0)]}" nolabel="1"/>
@@ -127,9 +131,9 @@
             </templates>
             <div class="oe_kanban_bottom_left" position="inside">
                 <t name="planned_hours" t-if="record.planned_hours.raw_value &gt; 0 and record.allow_timesheets.raw_value">
-                    <t t-set="badge" t-value=""/>
-                    <t t-set="badge" t-value="'text-bg-warning'" t-if="record.progress.raw_value &gt;= 80 and record.progress.raw_value &lt;= 100"/>
-                    <t t-set="badge" t-value="'text-bg-danger'" t-if="record.remaining_hours.raw_value &lt; 0"/>
+                    <t t-set="badge" t-value="'border border-success'"/>
+                    <t t-set="badge" t-value="'border border-warning'" t-if="record.progress.raw_value &gt;= 80 and record.progress.raw_value &lt;= 100"/>
+                    <t t-set="badge" t-value="'border border-danger'" t-if="record.remaining_hours.raw_value &lt; 0"/>
                     <t t-set="title" t-value="'Remaining days'" t-if="record.encode_uom_in_days.raw_value"/>
                     <t t-set="title" t-value="'Remaining hours'" t-else=""/>
                     <div t-attf-class="oe_kanban_align badge {{ badge }}" t-att-title="title">

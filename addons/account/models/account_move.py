@@ -428,6 +428,7 @@ class AccountMove(models.Model):
         compute='_compute_tax_totals',
         inverse='_inverse_tax_totals',
         help='Edit Tax amounts if you encounter rounding issues.',
+        exportable=False,
     )
     payment_state = fields.Selection(
         selection=[
@@ -1561,7 +1562,7 @@ class AccountMove(models.Model):
 
             if (
                 new_format != origin_format
-                or dict(new_format_values, seq=0) != dict(origin_format_values, seq=0)
+                or dict(new_format_values, year=0, month=0, seq=0) != dict(origin_format_values, year=0, month=0, seq=0)
             ):
                 changed = _(
                     "It was previously '%(previous)s' and it is now '%(current)s'.",
@@ -2363,9 +2364,6 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
     # SEQUENCE MIXIN
     # -------------------------------------------------------------------------
-
-    def _must_check_constrains_date_sequence(self):
-        return not self.posted_before and not self.quick_edit_mode
 
     def _get_last_sequence_domain(self, relaxed=False):
         # EXTENDS account sequence.mixin
@@ -3270,6 +3268,9 @@ class AccountMove(models.Model):
                     move.currency_id.name
                 ))
 
+            if move.line_ids.account_id.filtered(lambda account: account.deprecated):
+                raise UserError(_("A line of this move is using a deprecated account, you cannot post it."))
+
             affects_tax_report = move._affect_tax_report()
             lock_dates = move._get_violated_lock_dates(move.date, affects_tax_report)
             if lock_dates:
@@ -3277,10 +3278,6 @@ class AccountMove(models.Model):
 
         # Create the analytic lines in batch is faster as it leads to less cache invalidation.
         to_post.line_ids._create_analytic_lines()
-        to_post.write({
-            'state': 'posted',
-            'posted_before': True,
-        })
 
         # Trigger copying for recurring invoices
         to_post.filtered(lambda m: m.auto_post not in ('no', 'at_date'))._copy_recurring_entries()
@@ -3295,6 +3292,12 @@ class AccountMove(models.Model):
             if wrong_lines:
                 wrong_lines.write({'partner_id': invoice.commercial_partner_id.id})
 
+        to_post.write({
+            'state': 'posted',
+            'posted_before': True,
+        })
+
+        for invoice in to_post:
             invoice.message_subscribe([
                 p.id
                 for p in [invoice.partner_id]
