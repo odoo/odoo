@@ -3,17 +3,17 @@
 # 	* pos_stripe
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
-# Raymond Yu <cl_yu@hotmail.com>, 2022
 # Martin Trigaux, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 14:05+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,12 +22,14 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: pos_stripe
+#. odoo-python
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
 #, python-format
 msgid "Complete the Stripe onboarding."
 msgstr "完成Stripe新手入门"
 
 #. module: pos_stripe
+#. odoo-python
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
@@ -42,21 +44,21 @@ msgid ""
 msgstr "不要忘记在使用这个支付方式前完成Stripe连接"
 
 #. module: pos_stripe
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_stripe/static/src/js/payment_stripe.js:0
 #, python-format
 msgid "Failed to discover: %s"
 msgstr "未能发现：%s"
 
 #. module: pos_stripe
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_stripe/static/src/js/payment_stripe.js:0
 #, python-format
 msgid "No available Stripe readers."
 msgstr "没有可用的Stripe读卡器"
 
 #. module: pos_stripe
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_stripe/static/src/js/payment_stripe.js:0
 #, python-format
 msgid "Payment canceled because not reader connected"
@@ -73,20 +75,21 @@ msgid "Point of Sale Session"
 msgstr "POS会话"
 
 #. module: pos_stripe
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_stripe/static/src/js/payment_stripe.js:0
 #, python-format
 msgid "Reader disconnected"
 msgstr "读卡器已断开连接"
 
 #. module: pos_stripe
+#. odoo-python
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
 #, python-format
 msgid "Stripe"
 msgstr "条纹"
 
 #. module: pos_stripe
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_stripe/static/src/js/payment_stripe.js:0
 #, python-format
 msgid "Stripe Error"
@@ -98,12 +101,21 @@ msgid "Stripe Serial Number"
 msgstr "Stripe序列号码"
 
 #. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/js/payment_stripe.js:0
+#, python-format
+msgid "Stripe readers %s not listed in your account"
+msgstr ""
+
+#. module: pos_stripe
+#. odoo-python
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
 #, python-format
 msgid "Terminal %s is already used on payment method %s."
 msgstr "终端%s已用于支付方式%s。"
 
 #. module: pos_stripe
+#. odoo-python
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
@@ -112,23 +124,6 @@ msgid "There are some issues between us and Stripe, try again later."
 msgstr "我们和Stripe之间存在一些问题，请稍后再试。"
 
 #. module: pos_stripe
-#: code:addons/pos_stripe/models/pos_payment_method.py:0
-#: code:addons/pos_stripe/models/pos_payment_method.py:0
-#: code:addons/pos_stripe/models/pos_payment_method.py:0
-#, python-format
-msgid "Unexpected error between us and Stripe."
-msgstr "我们和Stripe之间出现了意外错误"
-
-#. module: pos_stripe
 #: model:ir.model.fields,help:pos_stripe.field_pos_payment_method__stripe_serial_number
 msgid "[Serial number of the stripe terminal], for example: WSC513105011295"
 msgstr "[Stripe终端的序列号码]，例如。WSC513105011295"
-
-#. module: pos_stripe
-#. openerp-web
-#: code:addons/pos_stripe/static/src/js/payment_stripe.js:0
-#: code:addons/pos_stripe/static/src/js/payment_stripe.js:0
-#: code:addons/pos_stripe/static/src/js/payment_stripe.js:0
-#, python-format
-msgid "error"
-msgstr "错误"

@@ -7,6 +7,7 @@
 # 江口和志 <sandwhale1010@gmail.com>, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2022
 # Martin Trigaux, 2022
+# Andy Yiu, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-16 09:04+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Andy Yiu, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1396,7 +1397,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        このモジュールにより、一連の支払い情報を収集するためにSEPA口座振替（SDD）\n"
+"        このモジュールにより、一連の支払い情報を収集するためにSEPAダイレクトデビット (SDD)\n"
 "        準拠のXMLファイル(Pain.008.001.02と互換性あり）を生成して銀行に送信することが可能になります\n"
 "\n"
 "        このお支払い方法の対象となるには、お客様が最初に\n"
@@ -1417,7 +1418,7 @@ msgstr ""
 "        、それらのXMLコレクションファイルを生成し、それらを好みの形でグループ化できます。\n"
 "\n"
 "        「支払いの登録」ウィザードで銀行口座を選択するときに、\n"
-"        オープンな請求書に対して専用の「SEPA口座振替」支払い方法もご利用いただけます。\n"
+"        オープンな請求書に対して専用の「SEPAダイレクトデビット」支払い方法もご利用いただけます。\n"
 "        委任を有効化し、その人の委任が追加されたら、請求書のSDDの支払いを生成するためにご利用ください。\n"
 "        支払いに委任がない人の請求書に、このメソッドを使用しようとすると、エラーメッセージが表示されます。\n"
 "        \n"
@@ -2918,7 +2919,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Webサイトの訪問者が共同編集者とチャットできるようにします。このモジュールは、ライブチャットとWebページのフィードバックツールを提供して、Webサイトでの評価とともにチャネルを表示します。\n"
+"Webサイトの訪問者が共同編集者とチャットできるようにします。このモジュールは、WebチャットとWebページのフィードバックツールを提供して、Webサイトでの評価とともにチャネルを表示します。\n"
 "    "
 
 #. module: base
@@ -5261,13 +5262,13 @@ msgid ""
 "\n"
 "        "
 msgstr ""
-"ライブチャットサポート\n"
+"Webチャットサポート\n"
 "==========================\n"
 "\n"
 "\n"
 "現在のサーバーと通信して訪問者のリクエストをディスパッチする\n"
 "任意のWebページにインスタントメッセージングウィジェットを\n"
-"ドロップできるようにしますいくつかのライブチャットオペレーター\n"
+"ドロップできるようにしますいくつかのWebチャットオペレーター\n"
 "の間で。このチャットで顧客を支援し、フィードバックを分析します。"
 
 #. module: base
@@ -7134,6 +7135,9 @@ msgid ""
 "This is a bridge module that adds multi-website support for payment providers.\n"
 "    "
 msgstr ""
+"\n"
+"これは決済プロバイダーにマルチサイトサポートを追加するブリッジモジュールです。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_calendar
@@ -7729,6 +7733,7 @@ msgid ""
 "Finally, the module comes with an option to display an attribute summary table in product web pages (available in Customize menu).\n"
 "    "
 msgstr ""
+"\n"
 "モジュールは、eコマースショップに比較ツールを追加して、買い物客が属性に基づいて製品を簡単に比較できるようにします。それは彼らの購入決定をかなり加速するでしょう。\n"
 "\n"
 "製品属性を構成するには、Webサイト設定で*属性とバリアント*をアクティブにします。これにより、製品フォームに専用のセクションが追加されます。構成では、モジュールは、買い物客の比較テーブルを構造化するために、製品属性にカテゴリーフィールドを追加します。\n"
@@ -8242,6 +8247,7 @@ msgid ""
 "On a simple click, your visitors can subscribe to mailing lists managed in the Email Marketing app.\n"
 "    "
 msgstr ""
+"\n"
 "モジュールは、メーリングリストウィジェットを備えた新しいビルディングブロックをもたらし、Webサイトの任意のページにドロップします。\n"
 "訪問者はクリックするだけで、Eメールマーケティングアプリで管理されているメーリングリストに登録できます。"
 
@@ -8953,7 +8959,7 @@ msgstr ""
 "ヘルプデスクモジュールのWebサイトIMLivechat統合\n"
 "=======================================================\n"
 "機能:\n"
-"-顧客の質問に答えるために、チーム関連のライブチャットチャネルを用意します。 \n"
+"-顧客の質問に答えるために、チーム関連のWebチャットチャネルを用意します。 \n"
 "-チャネルのコマンドを使用して、新しいチケットを簡単に作成できます。"
 
 #. module: base
@@ -8985,7 +8991,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_website_crm_livechat
 msgid ""
 " Adds a stat button on lead form view to access their livechat sessions."
-msgstr "リードフォームビューに統計ボタンを追加して、ライブチャットセッションにアクセスします。"
+msgstr "リードフォームビューに統計ボタンを追加して、Webチャットセッションにアクセスします。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_si_reports
@@ -11128,7 +11134,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_im_livechat_mail_bot
 msgid "Add livechat support for OdooBot"
-msgstr "OdooBotのライブチャットサポートを追加します"
+msgstr "OdooBotのWebチャットサポートを追加します"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_social_sale
@@ -11539,7 +11545,7 @@ msgstr "注文ごとのリード作成モードを許可する"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_comparison
 msgid "Allow shoppers to compare products based on their attributes"
-msgstr "特性ごとにプロダクトを比較できるようにする"
+msgstr "顧客が属性を基づいて商品を比較できるようにします"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_wishlist
@@ -11624,7 +11630,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_amazon
 msgid "Amazon Connector"
-msgstr "Amazonコネクタ"
+msgstr "Amazonコネクター"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_amazon_taxcloud
@@ -13264,7 +13270,7 @@ msgstr "CRM ゲーミフィケーション"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_livechat
 msgid "CRM Livechat"
-msgstr "CRMライブチャット"
+msgstr "CRMWebチャット"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_mail_plugin
@@ -13834,7 +13840,7 @@ msgstr "コホートビュー"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_sepa_direct_debit
 msgid "Collect payments from your customers through SEPA direct debit."
-msgstr "SEPA口座振替を通じて顧客から支払いを収集します。"
+msgstr "SEPAダイレクトデビットを通じて顧客から支払いを収集します。"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_28
@@ -14751,7 +14757,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_livechat
 msgid "Create lead from livechat conversation"
-msgstr "ライブチャットの会話からリードを作成する"
+msgstr "Webチャットの会話からリードを作成する"
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_crm
@@ -15533,7 +15539,7 @@ msgstr "配送"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__type__delivery
 msgid "Delivery Address"
-msgstr "配送先"
+msgstr "お届け先"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery
@@ -16164,7 +16170,7 @@ msgstr "Dr."
 #: model:ir.module.module,shortdesc:base.module_stock_dropshipping
 #: model:ir.module.module,summary:base.module_stock_dropshipping
 msgid "Drop Shipping"
-msgstr "直送"
+msgstr "ドロップシッピング"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
@@ -16456,7 +16462,7 @@ msgstr "Eメールアドレス"
 #: model:ir.module.category,name:base.module_category_marketing_email_marketing
 #: model:ir.module.module,shortdesc:base.module_mass_mailing
 msgid "Email Marketing"
-msgstr "Eメールマーケティング"
+msgstr "メールマーケティング"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__signature
@@ -17221,7 +17227,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_fedex
 msgid "Fedex Shipping"
-msgstr "フェデックス配送"
+msgstr "Fedex配送"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_fr_fec
@@ -20888,7 +20894,7 @@ msgstr "ウェブサイト訪問からのリードジェネレーション"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm_livechat
 msgid "Lead Livechat Sessions"
-msgstr "ライブチャットセッションをリードする"
+msgstr "Webチャットセッションをリードする"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_crm
@@ -21114,7 +21120,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_website_live_chat
 #: model:ir.module.module,shortdesc:base.module_im_livechat
 msgid "Live Chat"
-msgstr "ライブチャット"
+msgstr "Webチャット"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_currency_rate_live
@@ -24130,7 +24136,7 @@ msgstr "OdooBot"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_im_livechat_mail_bot
 msgid "OdooBot for livechat"
-msgstr "ライブチャット用のOdooBot"
+msgstr "Webチャット用のOdooBot"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_12
@@ -25222,102 +25228,102 @@ msgstr "支払いフォローアップ管理"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_adyen
 msgid "Payment Provider: Adyen"
-msgstr ""
+msgstr "決済プロバイダー: Adyen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_alipay
 msgid "Payment Provider: Alipay"
-msgstr ""
+msgstr "決済プロバイダー: Alipay"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_aps
 msgid "Payment Provider: Amazon Payment Services"
-msgstr ""
+msgstr "決済プロバイダー: Amazon決済サービス"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_asiapay
 msgid "Payment Provider: AsiaPay"
-msgstr ""
+msgstr "決済プロバイダー: AsiaPay"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_authorize
 msgid "Payment Provider: Authorize.Net"
-msgstr ""
+msgstr "決済プロバイダー: Authorize.Net"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_buckaroo
 msgid "Payment Provider: Buckaroo"
-msgstr ""
+msgstr "決済プロバイダー: Buckaroo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_custom
 msgid "Payment Provider: Custom Payment Modes"
-msgstr ""
+msgstr "決済プロバイダー: カスタム決済モード"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_demo
 msgid "Payment Provider: Demo"
-msgstr ""
+msgstr "決済プロバイダー: デモ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_flutterwave
 msgid "Payment Provider: Flutterwave"
-msgstr ""
+msgstr "決済プロバイダー: Flutterwave"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_mercado_pago
 msgid "Payment Provider: Mercado Pago"
-msgstr ""
+msgstr "決済プロバイダー: Mercado Pago"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_mollie
 msgid "Payment Provider: Mollie"
-msgstr ""
+msgstr "決済プロバイダー: Mollie"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_ogone
 msgid "Payment Provider: Ogone"
-msgstr ""
+msgstr "決済プロバイダー: Ogone"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_payulatam
 msgid "Payment Provider: PayU Latam"
-msgstr ""
+msgstr "決済プロバイダー: PayU Latam"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_payumoney
 msgid "Payment Provider: PayUmoney"
-msgstr ""
+msgstr "決済プロバイダー: PayUmoney"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_paypal
 msgid "Payment Provider: Paypal"
-msgstr ""
+msgstr "決済プロバイダー: Paypal"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_razorpay
 msgid "Payment Provider: Razorpay"
-msgstr ""
+msgstr "決済プロバイダー: Razorpay"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_sepa_direct_debit
 msgid "Payment Provider: Sepa Direct Debit"
-msgstr ""
+msgstr "決済プロバイダー: SEPAダイレクトデビット"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_stripe
 msgid "Payment Provider: Stripe"
-msgstr ""
+msgstr "決済プロバイダー: Stripe"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_sips
 msgid "Payment Provider: Worldline SIPS"
-msgstr ""
+msgstr "決済プロバイダー: Worldline SIPS"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_payment_providers
 msgid "Payment Providers"
-msgstr ""
+msgstr "決済プロバイダー"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_payment
@@ -25763,7 +25769,7 @@ msgstr "製品比較"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_email_template
 msgid "Product Email Template"
-msgstr "プロダクトEメールテンプレート"
+msgstr "商品メールテンプレート"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_images
@@ -25790,7 +25796,7 @@ msgstr "生産性"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product
 msgid "Products & Pricelists"
-msgstr "プロダクトと価格表"
+msgstr "商品・価格表"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_expiry
@@ -27161,7 +27167,7 @@ msgstr "SEPAクレジット移転"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_sepa_direct_debit
 msgid "SEPA Direct Debit"
-msgstr "SEPA口座振替"
+msgstr "SEPAダイレクトデビット"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_account_sepa
@@ -27506,7 +27512,7 @@ msgstr "販売内部機械"
 #: model:ir.model.fields,field_description:base.field_res_users__user_id
 #: model_terms:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Salesperson"
-msgstr "販売担当者"
+msgstr "営業担当者"
 
 #. module: base
 #: model:res.country,name:base.ws
@@ -27934,22 +27940,22 @@ msgstr "Easypostを介して小包を送信し、オンラインで追跡しま�
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_dhl
 msgid "Send your shippings through DHL and track them online"
-msgstr "DHLを介して配送を送信し、オンラインで追跡します"
+msgstr "DHLを通して発送し、オンラインで追跡します"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_fedex
 msgid "Send your shippings through Fedex and track them online"
-msgstr "Fedexを介して配送を送信し、オンラインで追跡します"
+msgstr "Fedexを通して発送し、オンラインで追跡します"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_ups
 msgid "Send your shippings through UPS and track them online"
-msgstr "UPSを介して出荷を送信し、オンラインで追跡します"
+msgstr "UPSを通して発送し、オンラインで追跡します"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_usps
 msgid "Send your shippings through USPS and track them online"
-msgstr "USPSを通してあなたの積荷を送って、それらをオンラインで追跡してください"
+msgstr "USPSを通して発送し、オンラインで追跡します"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_survey
@@ -27959,7 +27965,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_sendcloud
 msgid "Sendcloud Shipping"
-msgstr ""
+msgstr "Sendcloud配送"
 
 #. module: base
 #: model:res.country,name:base.sn
@@ -28452,7 +28458,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_social_media
 msgid "Social media connectors for company settings."
-msgstr "会社の設定用のソーシャルメディアコネクタ。"
+msgstr "会社の設定用のソーシャルメディアコネクター。"
 
 #. module: base
 #: model:res.country,name:base.sb
@@ -30701,7 +30707,7 @@ msgstr "木曜"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_livechat
 msgid "Ticketing, Support, Livechat"
-msgstr "チケット、サポート、ライブチャット"
+msgstr "チケット、サポート、Webチャット"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_slides
@@ -31174,7 +31180,7 @@ msgstr "UNSPSC 製品コード"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups
 msgid "UPS Shipping"
-msgstr "UPS輸送"
+msgstr "UPS配送"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_delivery_ups
@@ -31391,7 +31397,7 @@ msgstr "アメリカ合衆国 - 会計"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_usps
 msgid "United States Postal Service (USPS) Shipping"
-msgstr "米国郵政公社（USPS）の配送"
+msgstr "アメリカ合衆国郵便公社 (USPS)配送"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_uom
@@ -32130,7 +32136,7 @@ msgstr "ビュー継承モード"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_livechat
 msgid "View livechat sessions for leads"
-msgstr "リードのライブチャットセッションを表示する"
+msgstr "リードのWebチャットセッションを表示する"
 
 #. module: base
 #. odoo-python
@@ -32387,7 +32393,7 @@ msgstr "Webサイトのヘルプデスク"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_livechat
 msgid "Website IM Livechat Helpdesk"
-msgstr "WebサイトのIMライブチャットヘルプデスク"
+msgstr "WebサイトのIMWebチャットヘルプデスク"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_jitsi
@@ -32404,7 +32410,7 @@ msgstr "ウェブサイトリンク"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_livechat
 msgid "Website Live Chat"
-msgstr "ウェブサイトライブチャット"
+msgstr "ウェブサイトWebチャット"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_mail
@@ -33315,7 +33321,7 @@ msgstr "例. https://www.odoo.com"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_ebay
 msgid "eBay Connector"
-msgstr "eBayコネクタ"
+msgstr "eBayコネクター"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale
