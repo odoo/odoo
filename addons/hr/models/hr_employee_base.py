@@ -92,7 +92,7 @@ class HrEmployeeBase(models.AbstractModel):
             raise UserError(_('Operation not supported'))
         # Double negation
         if not value:
-            operator = '=' if operator == '!=' else '='
+            operator = '!=' if operator == '=' else '='
         if not self.env.user.employee_id.department_id:
             return [('id', operator, self.env.user.employee_id.id)]
         return (['!'] if operator == '!=' else []) + [('department_id', 'child_of', self.env.user.employee_id.department_id.id)]
