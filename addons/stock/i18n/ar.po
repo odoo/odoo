@@ -7,16 +7,17 @@
 # Cécile Collart <cco@odoo.com>, 2022
 # Shaima Safar <shaima.safar@open-inside.com>, 2022
 # Mustafa Rawi <mustafa@cubexco.com>, 2022
-# Malaz Abuidris <msea@odoo.com>, 2022
 # Martin Trigaux, 2022
+# Malaz Abuidris <msea@odoo.com>, 2022
+# Niyas Raphy, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2022-12-15 12:48+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Niyas Raphy, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,6 +26,7 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -37,6 +39,7 @@ msgstr ""
 "%s --> وحدة قياس المنتج هي %s (%s) - وحدة قياس الحركة هي %s (%s)"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -49,6 +52,7 @@ msgstr ""
 "حجب: %s"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid ""
@@ -61,6 +65,7 @@ msgstr ""
 "الشحنات %s: لا يمكنك تصديق هذه الشحنات إذا لم تكن هناك أي كميات محجوزة أو مكتملة. لفرض نقل هذه الشحنات، قم بالتحويل إلى وضع التحرير وترميز الكميات المنتهية. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid ""
@@ -73,6 +78,7 @@ msgstr ""
 "الشحنات %s: عليك التزويد بالأرقام التسلسلية/أرقام الدفعات للمنتجات %s. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -83,6 +89,7 @@ msgstr ""
 "(%s) موجود في الموقع %s "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -120,6 +127,7 @@ msgstr ""
 " * ملغية: لقد تم إلغاء الشحنة."
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid " - Product: %s, Serial Number: %s"
@@ -136,12 +144,14 @@ msgstr ""
 "هذا الموقع تلقائياً، وبالوتيرة المحددة. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "%(warehouse)s: Supply Product from %(supplier)s"
 msgstr "%(warehouse)s: التزويد بالمنتج من %(supplier)s"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_package_type.py:0
 #: code:addons/stock/models/stock_storage_category.py:0
@@ -150,12 +160,14 @@ msgid "%s (copy)"
 msgstr "%s (نسخة)"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "%s [reverted]"
 msgstr "%s [تم التراجع] "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid ""
@@ -210,6 +222,7 @@ msgstr ""
 "'Picking Operations - %s - %s' % (object.partner_id.name or '', object.name)"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid "(copy of) %s"
@@ -255,6 +268,7 @@ msgstr ""
 "* الموقع الانتقالي: موقع نظير يجب استخدامه في العمليات داخل الشركات أو بين المستودعات "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
@@ -300,6 +314,7 @@ msgid "4 x 12"
 msgstr "4 × 12"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_scrap.py:0
 #, python-format
 msgid ": Insufficient Quantity To Scrap"
@@ -315,6 +330,7 @@ msgstr ""
 "                    <strong>المخزون الحالي: </strong>"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid ""
@@ -323,6 +339,7 @@ msgid ""
 msgstr "<br>توجد حاجة في <b>%s</b> وسيتم تشغيل قاعدة لتلبيتها. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid ""
@@ -728,6 +745,7 @@ msgid "A barcode can only be assigned to one package type !"
 msgstr "يمكن تعيين الباركود لنوع طرد واحد فقط! "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "A done move line should never have a reserved quantity."
@@ -919,7 +937,7 @@ msgid "All Transfers"
 msgstr "كافة الشحنات "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/views/search/stock_report_search_panel.xml:0
 #, python-format
 msgid "All Warehouses"
@@ -989,6 +1007,7 @@ msgstr ""
 " بلا شهر إذا لم يمن هناك مخزون سنوي. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 #, python-format
 msgid ""
@@ -1038,7 +1057,7 @@ msgid "Apply"
 msgstr "تطبيق"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/views/list/inventory_report_list.xml:0
 #, python-format
 msgid "Apply All"
@@ -1084,14 +1103,14 @@ msgid "Ask"
 msgstr "اسأل "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/components/reception_report_line/stock_reception_report_line.xml:0
 #, python-format
 msgid "Assign"
 msgstr "تعيين "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
 #: code:addons/stock/static/src/components/reception_report_table/stock_reception_report_table.xml:0
 #: code:addons/stock/static/src/xml/report_stock_reception.xml:0
@@ -1166,7 +1185,8 @@ msgid "Automatic No Step Added"
 msgstr "تمت إضافة رقم الخطة التلقائي "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__assigned
@@ -1184,11 +1204,13 @@ msgstr "المنتجات المتوفرة "
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__available_quantity
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_tree_view
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "Available Quantity"
 msgstr "الكمية المتوفرة "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Available quantity should be set to zero before changing type"
@@ -1319,7 +1341,6 @@ msgid ""
 msgstr "عند إلغاء تحديد حقل نشط، يمكنك إخفاء الموقع دون حذفه. "
 
 #. module: stock
-#: model:product.product,name:stock.product_cable_management_box
 #: model:product.template,name:stock.product_cable_management_box_product_template
 msgid "Cable Management Box"
 msgstr "صندوق تنظيم الأسلاك الكهربائية "
@@ -1330,12 +1351,14 @@ msgid "Calendar View"
 msgstr "أداة عرض التقويم"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Can't find any customer or supplier location."
 msgstr "لم يتم العثور على أي موقع للعميل أو المورد. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Can't find any generic route %s."
@@ -1377,6 +1400,7 @@ msgid "Cancelled Moves"
 msgstr "الحركات الملغية"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -1452,6 +1476,7 @@ msgid "Change Product Quantity"
 msgstr "تغيير كمية المنتج "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product_strategy.py:0
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_lot.py:0
@@ -1467,12 +1492,14 @@ msgstr ""
 "وإنشاء واحدة جديدة. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Changing the operation type of this record is forbidden at this point."
 msgstr "لا يسمح بتغيير نوع العملية لهذا السجل في هذه المرحلة. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "Changing the product is only allowed in 'Draft' state."
@@ -1509,6 +1536,7 @@ msgstr ""
 " المتضررة. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/wizard/stock_label_type.py:0
 #, python-format
@@ -1516,6 +1544,7 @@ msgid "Choose Labels Layout"
 msgstr "اختر مخطط بطاقات العناوين "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Choose Type of Labels To Print"
@@ -1528,6 +1557,7 @@ msgid "Choose a date to get the inventory at that date"
 msgstr "قم بتحديد تاريخ محدد لتنفيذ عملية الجرد فيه "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Choose destination location"
@@ -1569,7 +1599,7 @@ msgid "Clear quantities"
 msgstr "مسح الكميات "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/xml/stock_traceability_report_backend.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.duplicated_sn_warning
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
@@ -1694,6 +1724,7 @@ msgid "Conflict in Inventory"
 msgstr "التعارض في المخزون "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Conflict in Inventory Adjustment"
@@ -1748,7 +1779,7 @@ msgid "Continue"
 msgstr "استمرار "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
 #, python-format
 msgid "Control panel buttons"
@@ -1772,6 +1803,7 @@ msgid "Corridor (X)"
 msgstr "الممر (X)"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/wizard/stock_immediate_transfer.py:0
 #, python-format
 msgid ""
@@ -1839,6 +1871,7 @@ msgid "Create Backorder"
 msgstr "إنشاء طلب متأخر "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Create Backorder?"
@@ -1998,6 +2031,7 @@ msgid "Created on"
 msgstr "أنشئ في"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid ""
@@ -2017,6 +2051,7 @@ msgid "Creation Date, usually the time of the order"
 msgstr "تاريخ الإنشاء، عادةً ما يكون وقت الطلب "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Cross-Dock"
@@ -2193,6 +2228,7 @@ msgid "Deadline exceed or/and by the scheduled"
 msgstr "يتخطى الموعد النهائي أو/و حسب ما هو مجدول "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "Deadline updated due to delay on %s"
@@ -2297,6 +2333,7 @@ msgid "Delay Alert Date"
 msgstr "تاريخ تنبيه التأخير "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "Delay on %s"
@@ -2308,31 +2345,35 @@ msgid "Deliver goods directly (1 step)"
 msgstr "توصيل البضاعة مباشرة (خطوة واحدة) "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Deliver in 1 step (ship)"
 msgstr "التوصيل على خطوة واحدة (الشحن) "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Deliver in 2 steps (pick + ship)"
 msgstr "التوصيل على خطوتين (الاستلام ثم الشحن) "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Deliver in 3 steps (pick + pack + ship)"
 msgstr "التوصيل على 3 خطوات (الاستلام ثم التعبئة ثم الشحن) "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Delivered Qty"
 msgstr "الكمية التي تم إيصالها "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__outgoing
 #: model:ir.ui.menu,name:stock.menu_delivery
@@ -2351,6 +2392,7 @@ msgid "Delivery Methods"
 msgstr "طرق التوصيل "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #: model:stock.picking.type,name:stock.chi_picking_type_out
 #: model:stock.picking.type,name:stock.picking_type_out
@@ -2389,6 +2431,7 @@ msgid "Delivery order count"
 msgstr "عدد أوامر التوصيل "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid "Delivery orders of %s"
@@ -2479,6 +2522,7 @@ msgid "Destination Address "
 msgstr "عنوان الوجهة "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 #: model:ir.model.fields,field_description:stock.field_stock_move__location_dest_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__location_dest_id
@@ -2528,6 +2572,7 @@ msgid "Destination route"
 msgstr "مسار الوجهة"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #, python-format
@@ -2686,6 +2731,12 @@ msgid "Done"
 msgstr "تم الانتهاء "
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
+#: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree
+msgid "Done By"
+msgstr "منتهي بواسطة"
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_package_level__state__draft
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__state__draft
 #: model:ir.model.fields.selection,name:stock.selection__stock_scrap__state__draft
@@ -2714,12 +2765,14 @@ msgid "Easypost Connector"
 msgstr "موصل Easypost "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
 #, python-format
 msgid "Edit Product"
 msgstr "تحرير المنتج "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -2782,7 +2835,7 @@ msgid "Ensure the traceability of a storable product in your warehouse."
 msgstr "تأكد من إمكانية تتبع المنتج القابل للتخزين في مستودعك. "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/xml/stock_traceability_report_backend.xml:0
 #, python-format
 msgid "Error"
@@ -2814,6 +2867,7 @@ msgid "Exception(s):"
 msgstr "استثناء (الاستثناءات): "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -2823,6 +2877,7 @@ msgstr ""
 "ترميزها. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "Existing Serial numbers. Please correct the serial numbers encoded:"
@@ -2830,13 +2885,14 @@ msgstr ""
 "الأرقام التسلسلية الموجودة. يرجى تصحيح الأرقام التسلسلية التي تم ترميزها: "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #, python-format
 msgid "Exp"
 msgstr "المتوقع "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Exp %s"
@@ -2848,7 +2904,7 @@ msgid "Expected"
 msgstr "المتوقع "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/components/reception_report_table/stock_reception_report_table.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 #, python-format
@@ -2913,7 +2969,7 @@ msgid "Fixed Procurement Group"
 msgstr "مجموعه شراء ثابتة "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/xml/stock_traceability_report_line.xml:0
 #: code:addons/stock/static/src/xml/stock_traceability_report_line.xml:0
 #, python-format
@@ -2994,7 +3050,7 @@ msgstr ""
 "خلاف ذلك، وهذا يشمل البضائع المخزنة في أي موقع مع نوع 'الداخلي'. "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 #, python-format
@@ -3002,7 +3058,7 @@ msgid "Forecasted"
 msgstr "المتوقعة "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "Forecasted Date"
@@ -3019,13 +3075,14 @@ msgid "Forecasted Expected date"
 msgstr "التاريخ المتوقع "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Forecasted Inventory"
 msgstr "المخزون المتوقع "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #: model:ir.model.fields,field_description:stock.field_product_product__virtual_available
 #: model:ir.model.fields,field_description:stock.field_product_template__virtual_available
@@ -3041,9 +3098,10 @@ msgid "Forecasted Receipts"
 msgstr "الإيصالات المتوقعة "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #: model:ir.actions.client,name:stock.stock_replenishment_product_product_action
+#: model:ir.actions.client,name:stock.stock_replenishment_product_template_action
 #, python-format
 msgid "Forecasted Report"
 msgstr "تقرير التوقعات "
@@ -3059,7 +3117,7 @@ msgid "Forecasted Weight"
 msgstr "الوزن المتوقع "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Forecasted with Pending"
@@ -3077,7 +3135,7 @@ msgid "Free Qty"
 msgstr "الكمية المتاحة "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Free Stock"
@@ -3125,24 +3183,28 @@ msgid "Future Activities"
 msgstr "الأنشطة المستقبلية"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Future Deliveries"
 msgstr "التوصيلات القادمة "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Future P&L"
 msgstr "المنتج و المكان الآتي"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Future Productions"
 msgstr "الإنتاجات القادمة "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Future Receipts"
@@ -3265,6 +3327,7 @@ msgid "Hide Reservation Method"
 msgstr "إخفاء طريقة الحجز "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
@@ -3537,6 +3600,7 @@ msgid "Immediate Transfer Lines"
 msgstr "بنود النقل الفوري "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Immediate Transfer?"
@@ -3548,12 +3612,14 @@ msgid "Immediate transfer?"
 msgstr "الشحنة الفورية؟ "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Import"
 msgstr "استيراد"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Import Template for Inventory Adjustments"
@@ -3577,7 +3643,7 @@ msgstr ""
 " البضاعة أو أحكام الخدمات. "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model:ir.model.fields,field_description:stock.field_product_product__incoming_qty
 #: model:ir.model.fields,field_description:stock.field_product_template__incoming_qty
@@ -3593,7 +3659,7 @@ msgid "Incoming Date"
 msgstr "تاريخ الوصول"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Incoming Draft Transfer"
@@ -3622,6 +3688,7 @@ msgid "Initial Demand"
 msgstr "الكمية المبدئية"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Input"
@@ -3633,6 +3700,7 @@ msgid "Input Location"
 msgstr "مكان المدخلات "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/res_company.py:0
 #, python-format
 msgid "Inter-warehouse transit"
@@ -3666,6 +3734,7 @@ msgid "Internal Transfer"
 msgstr "تحويل داخلي "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #: model:stock.picking.type,name:stock.picking_type_internal
 #, python-format
@@ -3697,18 +3766,21 @@ msgstr ""
 "بالمصنّع "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain left operand %s"
 msgstr "Invalid domain left operand %s"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain operator %s"
 msgstr "مشغّل النطاق غير صالح %s "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain right operand %s"
@@ -3756,6 +3828,7 @@ msgid "Inventory Adjustment Warning"
 msgstr "تحذير تعديل المخزون "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #: model:ir.ui.menu,name:stock.menu_action_inventory_tree
 #, python-format
@@ -3795,7 +3868,7 @@ msgid "Inventory Loss"
 msgstr "خسارة المخزون "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
@@ -3829,7 +3902,7 @@ msgid "Inventory Valuation"
 msgstr "تقييم المخزون"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/views/list/inventory_report_list.xml:0
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history__inventory_datetime
 #, python-format
@@ -3892,6 +3965,7 @@ msgid "Is quantity done editable"
 msgstr "هل الكميات المنتهية قابلة للتعديل "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -3899,6 +3973,7 @@ msgid ""
 msgstr "لا يمكن حجز كمية أكبر من المنتج %s مما تملك في مخزونك."
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -3926,7 +4001,7 @@ msgid "Json Lead Days"
 msgstr "مهلة توصيل Json "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.js:0
 #, python-format
 msgid "Json Popup"
@@ -4202,7 +4277,7 @@ msgid "Lead Time"
 msgstr "مهلة التسليم "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "Lead Times"
@@ -4316,6 +4391,7 @@ msgid "Location: When arrives to"
 msgstr "الموقع: عند الوصول إلى "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #: model:ir.actions.act_window,name:stock.action_location_form
 #: model:ir.actions.act_window,name:stock.action_prod_inv_location_form
@@ -4462,6 +4538,7 @@ msgid "Main Attachment"
 msgstr "المرفق الرئيسي"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
@@ -4520,6 +4597,7 @@ msgid "Manual Operation"
 msgstr "العملية اليدوية"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/wizard/product_replenish.py:0
 #: code:addons/stock/wizard/product_replenish.py:0
 #, python-format
@@ -4809,6 +4887,7 @@ msgid "Never"
 msgstr "مطلقًا"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_scrap.py:0
 #: code:addons/stock/models/stock_scrap.py:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__draft
@@ -4818,6 +4897,7 @@ msgid "New"
 msgstr "جديد"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "New Move:"
@@ -4873,6 +4953,7 @@ msgid "Next transfer(s) impacted:"
 msgstr "الشحنة (الشحنات) التالية المتأثرة: "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/report/report_stock_reception.py:0
 #, python-format
 msgid "No %s selected or a delivery order selected"
@@ -4889,6 +4970,7 @@ msgid "No Message"
 msgstr "لا توجد رسالة"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "No Stock On Hand"
@@ -4900,7 +4982,7 @@ msgid "No Tracking"
 msgstr "لا يوجد تتبع"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 #, python-format
@@ -4908,6 +4990,7 @@ msgid "No allocation need found."
 msgstr "لم يتم العثور على حاجة للتخصيص. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "No negative quantities allowed"
@@ -4929,6 +5012,7 @@ msgid "No product found. Let's create one!"
 msgstr "لم يتم العثور على أي منتج. فلنقم بإنشاء واحد! "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid ""
@@ -4949,6 +5033,7 @@ msgid "No reordering rule found"
 msgstr "لم يتم العثور على قاعدة إعادة الطلب "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid ""
@@ -4959,6 +5044,7 @@ msgstr ""
 "قم بتأكيد تهيئة المسارات في المنتج. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "No source location defined on stock rule: %s!"
@@ -4993,7 +5079,8 @@ msgid "Normal"
 msgstr "عادي"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
@@ -5017,6 +5104,7 @@ msgid "Notes"
 msgstr "الملاحظات"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Nothing to check the availability for."
@@ -5084,7 +5172,7 @@ msgid "October"
 msgstr "أكتوبر"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model:ir.model.fields,field_description:stock.field_stock_quant__on_hand
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_on_hand
@@ -5125,12 +5213,14 @@ msgid "One per unit"
 msgstr "واحدة لكل وحدة "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Only a stock manager can validate an inventory adjustment."
 msgstr "وحده مدير المخزون بوسعه تصديق تعديل المخزون. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 #: model:ir.model.fields,field_description:stock.field_stock_move__picking_type_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__picking_type_id
@@ -5156,6 +5246,7 @@ msgid "Operation Types"
 msgstr "أنواع العمليات"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Operation not supported"
@@ -5233,7 +5324,7 @@ msgid "Options"
 msgstr "الخيارات "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/views/stock_orderpoint_list_buttons.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_warning_view
 #, python-format
@@ -5246,12 +5337,14 @@ msgid "Order Once"
 msgstr "الطلب مرة واحدة "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Order signed"
 msgstr "تم التوقيع على الطلب "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Order signed by %s"
@@ -5320,7 +5413,7 @@ msgid "Out Type"
 msgstr "نوع الخارج "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model:ir.model.fields,field_description:stock.field_product_product__outgoing_qty
 #: model:ir.model.fields,field_description:stock.field_product_template__outgoing_qty
@@ -5331,7 +5424,7 @@ msgid "Outgoing"
 msgstr "الصادرة "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Outgoing Draft Transfer"
@@ -5348,6 +5441,7 @@ msgid "Outgoing Shipments"
 msgstr "الشحنات الصادرة"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Output"
@@ -5385,19 +5479,21 @@ msgid "Owner :"
 msgstr "المالك:"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "P&L Qty"
 msgstr "كمية P&L"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/xml/stock_traceability_report_backend.xml:0
 #, python-format
 msgid "PRINT"
 msgstr "طباعة"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Pack"
@@ -5458,6 +5554,7 @@ msgid "Package Capacity"
 msgstr "سعة الطرد "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_package_level.py:0
 #, python-format
 msgid "Package Content"
@@ -5581,6 +5678,7 @@ msgid "Packing Location"
 msgstr "موقع التعبئة"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Packing Zone"
@@ -5625,6 +5723,7 @@ msgid "Partner Address"
 msgstr "عنوان الشريك"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__pick_ids
 #: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer__pick_ids
@@ -5684,7 +5783,7 @@ msgid "Planned Transfer"
 msgstr "الشحنة المخطط لها "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
 #, python-format
 msgid "Planning Issue"
@@ -5696,18 +5795,21 @@ msgid "Planning Issues"
 msgstr "مشاكل التخطيط "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Please add 'Done' quantities to the picking to create a new pack."
 msgstr "يرجى إضافة الكميات \"المنتهية\" إلى الانتقاء لإنشاء طرد جديد. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Please add some items to move."
 msgstr "يرجى إضافة بعض العناصر لنقلها. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid "Please specify at least one non-zero quantity."
@@ -5720,7 +5822,7 @@ msgid "Pre-fill Detailed Operations"
 msgstr "ملء العمليات المفصلة مسبقاً "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
 #, python-format
 msgid "Preceding operations"
@@ -5742,6 +5844,7 @@ msgid "Preferred route"
 msgstr "المسار المفضل "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -5752,7 +5855,7 @@ msgstr ""
 "بيانات التفضيلات "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
 #: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
 #: code:addons/stock/static/src/legacy_web_report/report.xml:0
@@ -5773,7 +5876,7 @@ msgid "Print GS1 Barcodes for Lots & Serial Numbers"
 msgstr "طباعة باركودات GS1 لأرقام المجموعات والأرقام التسلسلية "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/components/reception_report_line/stock_reception_report_line.xml:0
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__print_label
 #, python-format
@@ -5781,7 +5884,7 @@ msgid "Print Label"
 msgstr "طباعة بطاقة العنوان "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
 #: code:addons/stock/static/src/components/reception_report_table/stock_reception_report_table.xml:0
 #: code:addons/stock/static/src/xml/report_stock_reception.xml:0
@@ -5838,7 +5941,6 @@ msgstr "مجموعة الشراء "
 #. module: stock
 #: model:ir.actions.server,name:stock.ir_cron_scheduler_action_ir_actions_server
 #: model:ir.cron,cron_name:stock.ir_cron_scheduler_action
-#: model:ir.cron,name:stock.ir_cron_scheduler_action
 msgid "Procurement: run scheduler"
 msgstr "الشراء: تشغيل المجدوِل "
 
@@ -5848,13 +5950,14 @@ msgid "Produce Line"
 msgstr "بند الإنتاج "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Produced Qty"
 msgstr "الكمية المنتجة"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.model,name:stock.model_product_template
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_id
@@ -5916,6 +6019,7 @@ msgstr "فئات المنتجات"
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__category_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_categ_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_category_id
+#: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "Product Category"
 msgstr "فئة المنتج"
@@ -5967,19 +6071,21 @@ msgid "Product Packagings"
 msgstr "تعبئات المنتج "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Product Quantity Confirmed"
 msgstr "تم تأكيد كمية المنتج "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Product Quantity Updated"
 msgstr "تم تحديث كمية المنتج "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_buttons.js:0
 #: model:ir.model,name:stock.model_product_replenish
 #, python-format
@@ -6035,6 +6141,7 @@ msgid "Product Variants"
 msgstr "متغيرات المنتج "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/report/product_label_report.py:0
 #, python-format
 msgid "Product model not defined, Please contact your administrator."
@@ -6077,6 +6184,7 @@ msgid "Production Locations"
 msgstr "مواقع الإنتاج "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/wizard/stock_quantity_history.py:0
 #: model:ir.actions.act_window,name:stock.act_product_location_open
 #: model:ir.actions.act_window,name:stock.product_template_action_product
@@ -6104,6 +6212,7 @@ msgid ""
 msgstr "سوف يتم حجز المنتجات أولاً للشحنات ذات الأولوية الأعلى. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Products: %(location)s"
@@ -6175,6 +6284,7 @@ msgid "Putaway Rule"
 msgstr "قاعدة التخزين "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #: model:ir.actions.act_window,name:stock.category_open_putaway
 #: model:ir.actions.act_window,name:stock.location_open_putaway
@@ -6215,6 +6325,7 @@ msgid "Quality"
 msgstr "الجودة "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Quality Control"
@@ -6241,24 +6352,28 @@ msgid "Quant"
 msgstr "سجل الكميات "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quant's creation is restricted, you can't do this operation."
 msgstr "إنشاء سجل الكميات عملية مقيدة، ولذلك لا يمكنك تنفيذها. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quant's editing is restricted, you can't do this operation."
 msgstr "تحرير سجل الكميات عملية مقيدة، ولذلك لا يمكنك تنفيذها. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quantities Already Set"
 msgstr "الكميات المعينة بالفعل "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quantities To Reset"
@@ -6317,12 +6432,14 @@ msgid "Quantity Reserved"
 msgstr "الكمية المحجوزة"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/wizard/stock_replenishment_info.py:0
 #, python-format
 msgid "Quantity available too low"
 msgstr "الكمية المتوفرة قليلة جداً "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/wizard/stock_change_product_qty.py:0
 #, python-format
 msgid "Quantity cannot be negative."
@@ -6411,6 +6528,7 @@ msgid "Quants"
 msgstr "سجلات الكميات "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quants cannot be created for consumables or services."
@@ -6435,7 +6553,7 @@ msgid "Real Reserved Quantity"
 msgstr "الكميات المحجوزة الفعلية "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__incoming
 #, python-format
@@ -6448,6 +6566,7 @@ msgid "Receipt Route"
 msgstr "مسار الإيصال "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #: model:stock.picking.type,name:stock.chi_picking_type_in
 #: model:stock.picking.type,name:stock.picking_type_in
@@ -6476,24 +6595,28 @@ msgid "Receive goods in input, then quality and then stock (3 steps)"
 msgstr "قم باستلام المنتجات في المُدخل ثم الجودة ثم المخزون (3 خطوات) "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Receive in 1 step (stock)"
 msgstr "الاستلام على خطوة واحدة (المخزون)"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Receive in 2 steps (input + stock)"
 msgstr "الاستلام في خطوتين 2 (المدخلات + المخزون) "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Receive in 3 steps (input + quality + stock)"
 msgstr "الاستلام في 3 خطوات (المدخلات + الجودة + المخزون) "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Received Qty"
@@ -6575,6 +6698,7 @@ msgid "Removal Strategy"
 msgstr "استراتيجية الإزالة "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Removal strategy %s not implemented."
@@ -6614,7 +6738,7 @@ msgid "Reordering Rules Search"
 msgstr "البحث في قواعد إعادة الطلب "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_buttons.xml:0
 #: code:addons/stock/static/src/stock_forecasted/forecasted_buttons.xml:0
 #: model:ir.actions.act_window,name:stock.action_product_replenish
@@ -6641,7 +6765,7 @@ msgid "Replenish wizard"
 msgstr "معالج نجديد المخزون "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.actions.act_window,name:stock.action_orderpoint_replenish
 #: model:ir.actions.server,name:stock.action_replenishment
@@ -6664,12 +6788,14 @@ msgid "Replenishment Information"
 msgstr "معلومات تجديد المخزون "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
 #, python-format
 msgid "Replenishment Information for %s in %s"
 msgstr "معلومات تجديد المخزون لـ %s في %s "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
 #, python-format
 msgid "Replenishment Report"
@@ -6708,7 +6834,7 @@ msgid "Reservations"
 msgstr "الحجوزات"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Reserve"
@@ -6757,13 +6883,14 @@ msgid "Reserved Quantity"
 msgstr "الكمية المحجوزة"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Reserved from stock"
 msgstr "محجوز من المخزون "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "Reserving a negative quantity is not allowed."
@@ -6825,18 +6952,21 @@ msgid "Return Type"
 msgstr "نوع الإرجاع "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid "Return of %s"
 msgstr "إرجاع %s "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid "Returned Picking"
 msgstr "إرجاع الشحنة المنتقاة "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Returns"
@@ -7000,7 +7130,7 @@ msgid "STANDARD TERMS AND CONDITIONS OF SALE"
 msgstr "الشروط والأحكام القياسية للبيع "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "Sales History"
@@ -7036,6 +7166,7 @@ msgstr ""
 "سيجعل منها تاريخاً متوقعاً لكافة حركات المخزون. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: model:ir.model,name:stock.model_stock_scrap
 #: model:ir.model.fields,field_description:stock.field_stock_move__scrap_ids
@@ -7165,6 +7296,7 @@ msgid "September"
 msgstr "سبتمبر"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/models/stock_picking.py:0
@@ -7187,36 +7319,42 @@ msgid "Sequence Prefix"
 msgstr "بادئة التسلسل "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence in"
 msgstr "التسلسل في "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence internal"
 msgstr "التسلسل الداخلي "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence out"
 msgstr "التسلسل للخارج "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence packing"
 msgstr "تسلسل التعبئة "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence picking"
 msgstr "تسلسل الانتقاء "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence return"
@@ -7228,6 +7366,7 @@ msgid "Serial Numbers"
 msgstr "الأرقام التسلسلية "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -7238,6 +7377,7 @@ msgstr ""
 "التسلسلي الذي قد تم ترميزه. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -7250,6 +7390,7 @@ msgstr ""
 "يرجى تصحيح ذلك لتجنب عدم اتساق البيانات. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -7498,7 +7639,7 @@ msgid "Size: Length × Width × Height"
 msgstr "الحجم: الطول × العرض × الارتفاع "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/views/stock_orderpoint_list_buttons.xml:0
 #: model:ir.actions.act_window,name:stock.action_orderpoint_snooze
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_orderpoint_snooze
@@ -7552,6 +7693,7 @@ msgid "Source Document"
 msgstr "المستند المصدر"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 #: model:ir.model.fields,field_description:stock.field_stock_move__location_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__location_id
@@ -7627,6 +7769,7 @@ msgstr ""
 "المخطط: الأنشطة المستقبلية."
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #: model:ir.actions.act_window,name:stock.action_product_stock_view
 #: model:ir.ui.menu,name:stock.menu_product_stock
@@ -7659,6 +7802,7 @@ msgstr "حركة المخزون"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_move_action
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_ids
+#: model:ir.ui.menu,name:stock.stock_move_menu
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
@@ -7800,6 +7944,7 @@ msgid "Storable Product"
 msgstr "منتج قابل للتخزين"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid ""
@@ -7954,6 +8099,7 @@ msgstr ""
 "\"تلقائي، لم تتم إضافة خطوة\"، سيتم تبديل الموقع في الحركة الأصلية. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -7966,6 +8112,7 @@ msgstr ""
 "هل هذا متوقع؟ على سبيل المثال، يمكن أن يحدث ذلك إذا تم تصديق عملية توصيل قبل أن يتم تصديق عملية الاستلام المقابلة. في هذه الحالة، ستحل المشكلة تلقائياً بمجرد أن قد تم إكمال كافة الخطوات، وإلا، فيجب تصحيح الرقم التسلسلي لتجنب عدم اتساق البيانات. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "The backorder %s has been created."
@@ -7989,6 +8136,7 @@ msgstr ""
 "انتقاص مسبقاً. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid ""
@@ -8004,6 +8152,7 @@ msgid "The company is automatically set from your user preferences."
 msgstr "يتم تعيين الشركة تلقائياً من تفضيلات مستخدمك. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "The deadline has been automatically updated due to a delay on %s."
@@ -8022,19 +8171,21 @@ msgid "The first in the sequence is the default one."
 msgstr "أول قيمة في التسلسل هي القيمة الافتراضية."
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "The forecasted stock on the"
 msgstr "المخزون المتوقع في "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
 #, python-format
 msgid "The inter-warehouse transfers have been generated"
 msgstr "لقد تم إنشاء عمليات النقل ما بين المستودعات "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "The inventory adjustments have been reverted."
@@ -8051,6 +8202,7 @@ msgid "The name of the warehouse must be unique per company!"
 msgstr "يجب أن يكون اسم المستودع فريداً لكل شركة! "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/wizard/stock_assign_serial_numbers.py:0
 #, python-format
 msgid "The number of Serial Numbers to generate must be greater than zero."
@@ -8103,6 +8255,7 @@ msgid "The product's counted quantity."
 msgstr "الكمية المحسوبة من المنتج. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -8114,6 +8267,7 @@ msgstr ""
 "الحساب \"%s\". يرجى تغيير الكمية المنتهية أو دقة التقريب لوحدة قياسك. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -8124,6 +8278,7 @@ msgstr ""
 "`product_qty` مكان الحقل `product_uom_qty`."
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -8134,6 +8289,7 @@ msgstr ""
 "`reserved_qty` مكان الحقل `reserved_uom_qty`. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 #, python-format
 msgid ""
@@ -8142,6 +8298,7 @@ msgid ""
 msgstr "ينشئ تواتر المخزون المحدد (بالأيام) تاريخاً بعيداً جداً في المستقبل. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -8200,6 +8357,7 @@ msgstr ""
 "مستودع آخر) "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "There are no inventory adjustments to revert."
@@ -8216,6 +8374,7 @@ msgid "This SN is already in another location."
 msgstr "هذا الرقم التسلسلي موجود في موقع آخر بالفعل. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -8280,6 +8439,7 @@ msgid ""
 msgstr "هذا الموقع (إذا كان داخلياً) وكافة توابعه، مصفى حسب النوع=داخلي. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 #, python-format
 msgid ""
@@ -8287,6 +8447,7 @@ msgid ""
 msgstr "لا يمكن تغيير اسخدام الموقع للعرض حيث أنه يحتوي على منتجات. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -8354,6 +8515,7 @@ msgstr ""
 "تطبيق القواعد المنطقية مجدداً (والتي قد تقوم بإنشاء عمليات متكررة) "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid ""
@@ -8373,13 +8535,14 @@ msgid ""
 msgstr "يتم التعبير عن هذه الكمية بوحدة القياس الافتراضية للمنتج."
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/views/list/inventory_report_list_controller.js:0
 #, python-format
 msgid "This record already exists."
 msgstr "هذا السجل موجود بالفعل. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/report/report_stock_reception.py:0
 #, python-format
 msgid "This report cannot be used for done and not done %s at the same time"
@@ -8489,7 +8652,7 @@ msgid "To Reorder"
 msgstr "بانتظار إعادة الطلب "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "Today"
@@ -8550,7 +8713,7 @@ msgid "Traceability"
 msgstr "قابلة التتبع "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/js/stock_traceability_report_widgets.js:0
 #: model:ir.actions.client,name:stock.action_stock_report
 #: model:ir.model,name:stock.model_stock_traceability_report
@@ -8594,6 +8757,7 @@ msgid "Track your stock quantities by creating storable products."
 msgstr "تتبع كميات مخزونك عن طريق إنشاء منتجات قابلة للتخزين. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Tracked Products in Inventory Adjustment"
@@ -8648,6 +8812,7 @@ msgid "Transfers"
 msgstr "التحويلات "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Transfers %s: Please add some items to move."
@@ -8711,7 +8876,7 @@ msgid "Trigger Manual"
 msgstr "تشغيل الوضع اليدوي "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/stock_forecasted.js:0
 #, python-format
 msgid "Try to add some incoming or outgoing transfers."
@@ -8756,14 +8921,14 @@ msgid "USPS Connector"
 msgstr "موصل USPS"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/components/reception_report_line/stock_reception_report_line.xml:0
 #, python-format
 msgid "Unassign"
 msgstr "إلغاء التعيين "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/xml/stock_traceability_report_line.xml:0
 #: code:addons/stock/static/src/xml/stock_traceability_report_line.xml:0
 #: code:addons/stock/static/src/xml/stock_traceability_report_line.xml:0
@@ -8817,12 +8982,6 @@ msgid "Unit of Measure Name"
 msgstr "اسم وحدة القياس"
 
 #. module: stock
-#: model:product.product,uom_name:stock.product_cable_management_box
-#: model:product.template,uom_name:stock.product_cable_management_box_product_template
-msgid "Units"
-msgstr "الوحدات"
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Units Of Measure"
 msgstr "وحدات القياس "
@@ -8843,6 +9002,7 @@ msgid "Unity of measure"
 msgstr "وحدة القياس "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Unknown Pack"
@@ -8859,7 +9019,7 @@ msgid "Unpack"
 msgstr "تفريغ "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.actions.server,name:stock.action_unreserve_picking
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -8867,6 +9027,13 @@ msgstr "تفريغ "
 #, python-format
 msgid "Unreserve"
 msgstr "إلغاء الحجز"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "Unsafe unit of measure"
+msgstr "غير آمن وحدة القياس"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_uom
@@ -8888,6 +9055,7 @@ msgid "Update Product Quantity"
 msgstr "تحديث كمية المنتج "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_product_view_form_easy_inherit_stock
@@ -8950,7 +9118,7 @@ msgid "Use your own routes"
 msgstr "استخدم مساراتك الخاصة "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Used by"
@@ -8981,7 +9149,7 @@ msgid "Validate"
 msgstr "تصديق "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/xml/inventory_lines.xml:0
 #, python-format
 msgid "Validate Inventory"
@@ -9128,20 +9296,21 @@ msgid "Warehouse view location"
 msgstr "عرض موقع المستودع "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Warehouse's Routes"
 msgstr "مسارات المستودع "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_warehouse_filter.xml:0
 #, python-format
 msgid "Warehouse:"
 msgstr "المستودع: "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/views/search/stock_report_search_panel.xml:0
 #: model:ir.actions.act_window,name:stock.action_warehouse_form
 #: model:ir.model.fields,field_description:stock.field_stock_route__warehouse_ids
@@ -9164,6 +9333,7 @@ msgid "Warn Insufficient Scrap Quantity"
 msgstr "التحذير عندما تكون كمية مخلفات التصنيع غير كافية "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #: code:addons/stock/models/stock_move.py:0
 #: code:addons/stock/models/stock_move_line.py:0
@@ -9177,6 +9347,7 @@ msgid "Warning"
 msgstr "تحذير"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Warning Duplicated SN"
@@ -9193,6 +9364,7 @@ msgid "Warning on the Picking"
 msgstr "التحذير عند الانتقاء "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
 #, python-format
 msgid "Warning!"
@@ -9293,6 +9465,7 @@ msgid "When product arrives in"
 msgstr "عندما يصل المنتج "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid ""
@@ -9303,6 +9476,7 @@ msgstr ""
 "لتلبية الحاجة."
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid ""
@@ -9415,6 +9589,7 @@ msgid "You are good, no replenishment to perform!"
 msgstr "كل شيء جيد. لا حاجة لتجديد المخزون! "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid ""
@@ -9426,6 +9601,7 @@ msgstr ""
 "إنشاء تحركات مخزون باستخدام هذا الرقم. سيؤدي ذلك إلى عدم اتساق في مخزونك. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid ""
@@ -9444,6 +9620,7 @@ msgid ""
 msgstr "أنت تحاول إدراج منتجات مختلفة الوجهة في نفس الطرد "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -9476,6 +9653,7 @@ msgid "You can either :"
 msgstr "بإمكانك إما: "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid ""
@@ -9487,12 +9665,14 @@ msgstr ""
 "النوع، ينبغي إلغاء حجز حركة المخزون أولًا."
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "You can not change the type of a product that was already used."
 msgstr "لا يمكنك تغيير نوع منتج قد تم استخدامه بالفعل. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -9503,30 +9683,35 @@ msgstr ""
 " المنتهية. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "You can not enter negative quantities."
 msgstr "لا يمكنك إدخال كميات سالبة."
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You can only delete draft moves."
 msgstr "بإمكانك فقط حذف الحركات في حالة المسودة. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_scrap.py:0
 #, python-format
 msgid "You can only enter positive quantities."
 msgstr "يمكنك إدخال كميات موجبة فقط. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr "يمكنك معالجة 1.0 %s فقط من المنتجات برقم تسلسلي فريد. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -9537,12 +9722,14 @@ msgstr ""
 " لكل شركة "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 #, python-format
 msgid "You cannot archive the location %s as it is used by your warehouse %s"
 msgstr "لا يمكنك أرشفة الموقع %s حيث أنه يُستخدم من قِبَل مستودعك %s "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -9553,12 +9740,14 @@ msgstr ""
 "من عكس الحركات التي قد تم تنفيذها من قبل. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "You cannot change the Scheduled Date on a done or cancelled transfer."
 msgstr "لا يمكنك تغيير التاريخ المجدول لشحنة منتهية أو ملغية. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -9566,6 +9755,7 @@ msgid ""
 msgstr "لا يمكنك تغيير وحدة قياس حركة مخزون تم تعيينها كمنتهية. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 #, python-format
 msgid ""
@@ -9576,6 +9766,7 @@ msgstr ""
 "توجد منتجات محجوزة في هذا الموقع. يرجى إلغاء حجز المنتجات أولاً. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid ""
@@ -9586,6 +9777,7 @@ msgstr ""
 "القياس هذه أو أنها محجوزة حالياً. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid ""
@@ -9597,18 +9789,21 @@ msgstr ""
 "المنتج. إذا أردت تغيير وحدة القياس، عليك أرشفة هذا المنتج وإنشاء منتج جديد. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_scrap.py:0
 #, python-format
 msgid "You cannot delete a scrap which is done."
 msgstr "لا يمكنك حذف عملية تحويل إلى مخلفات تصنيع منتهية بالفعل. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "You cannot modify inventory loss quantity"
 msgstr "لا يمكنك تعديل كمية خسارة المخزون "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -9619,6 +9814,7 @@ msgstr ""
 "موقعين. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -9628,6 +9824,7 @@ msgstr ""
 "لا يمكنك إجراء الحركة لأن فئة وحدة القياس تختلف عن فئة وحدة قياس المنتج."
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 #, python-format
 msgid ""
@@ -9638,6 +9835,7 @@ msgstr ""
 "لعميلة نوع التصنيع. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid ""
@@ -9646,18 +9844,21 @@ msgid ""
 msgstr "لا يمكنك تعيين موقع مخلفات التصنيع كموقع الوجهة لعميلة نوع التصنيع. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot split a draft move. It needs to be confirmed first."
 msgstr "لا يمكنك تقسيم حركرةفي حالة المسودة. يجب أن يتم تأكيدها أولاً. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot split a stock move that has been set to 'Done'."
 msgstr "لا يمنكك تقسيم حركة مخزون فى الحالة 'منتهية'."
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -9667,12 +9868,14 @@ msgstr ""
 "لا يمكنك أخذ المنتجات من أو توصيل المنتجات إلى الموقع من نوع \"عرض\" (%s). "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr "لا يمكنك إلغاء حجز حركة مخزون تم تعيينها كمنتهية. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
@@ -9684,6 +9887,7 @@ msgstr ""
 "المرمزة. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid ""
@@ -9694,6 +9898,7 @@ msgstr ""
 "الشحنات، قم بالتحويل إلى وضع التحرير وترميز الكميات المنتهية. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid ""
@@ -9715,6 +9920,7 @@ msgid "You have processed less products than the initial demand."
 msgstr "لقد قمت بمعالجة كمية منتجات أقل من الطلب المبدئي."
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid ""
@@ -9725,6 +9931,7 @@ msgstr ""
 "أرقام دفعات/أرقام تسلسلية عن طريق إجراء تعديل للمخزون. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
 #, python-format
 msgid ""
@@ -9733,18 +9940,21 @@ msgid ""
 msgstr "عليك تحديد وحدة قياس منتج لها نفس فئة وحدة قياس المنتج الافتراضية "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid "You may only return Done pickings."
 msgstr "يمكنك إرجاع عمليات الانتقاء المنتهية فقط. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid "You may only return one picking at a time."
 msgstr "يمكنك إرجاع عملية انتقاء واحدة فقط في المرة. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid ""
@@ -9753,12 +9963,14 @@ msgid ""
 msgstr "عليك تفعيل مواقع التخزين حتى تتمكن من تنفيذ أنواع العمليات الداخلية. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You need to set a Serial Number before generating more."
 msgstr "عليك تعيين رقم تسلسلي قبل إنشاء المزيد. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -9769,6 +9981,7 @@ msgstr ""
 " - "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "You need to supply a Lot/Serial number for products %s."
@@ -9780,12 +9993,14 @@ msgid "You should update this document to reflect your T&amp;C."
 msgstr "عليك تحديث هذا المستند لتطبيق الشروط والأحكام الخاصة بك. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "You still have ongoing operations for picking types %s in warehouse %s"
 msgstr "لا يزال لديك عمليات جارية لأنواع الانتقاء %s في المستودع %s "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid ""
@@ -9796,13 +10011,14 @@ msgstr ""
 "حذفها أولاً. "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 #, python-format
 msgid "You still have some product in locations %s"
 msgstr "لا يزال لديك بعض المنتجات في المواقع %s "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/views/list/inventory_report_list_controller.js:0
 #, python-format
 msgid ""
@@ -9832,6 +10048,7 @@ msgstr ""
 "بالهناء والشفاء! "
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Your stock is currently empty"
@@ -9854,7 +10071,7 @@ msgid "]<br/>min:"
 msgstr "]<br/>الحد الأدنى:"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "below the inventory"
@@ -9937,7 +10154,7 @@ msgid "in"
 msgstr "في"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "is"
@@ -9949,7 +10166,7 @@ msgid "manually to trigger the reordering rules right now."
 msgstr "يدوياً لتشغيل قواعد إعادة الطلب الآن. "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "minimum of"
@@ -9961,7 +10178,7 @@ msgid "of"
 msgstr "من"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
 #, python-format
 msgid "planned on"
@@ -9978,7 +10195,7 @@ msgid "report_stock_quantity_graph"
 msgstr "report_stock_quantity_graph"
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "should be replenished"
@@ -9992,13 +10209,14 @@ msgid ""
 msgstr "المستودع لاعتباره لتحديد المسار في عملية الشراء القادمة (إن وجد). "
 
 #. module: stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "to reach the maximum of"
 msgstr "للوصول إلى الحد الأقصى لـ"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/wizard/stock_replenishment_info.py:0
 #, python-format
 msgid "{0} can only provide {1} {2}, while the quantity to order is {3} {2}."
