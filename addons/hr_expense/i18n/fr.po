@@ -118,6 +118,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('product_has_tax', '=', False)]}\" "
 "class=\"oe_inline o_form_label ml-1 mr-1\"> ( </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('product_has_tax', '=', False)]}\" "
+"class=\"oe_inline o_form_label ml-1 mr-1\"> ( </span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -125,6 +127,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('product_has_tax', '=', False)]}\" "
 "class=\"oe_inline o_form_label ml-1 mr-3\"> ) </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('product_has_tax', '=', False)]}\" "
+"class=\"oe_inline o_form_label ml-1 mr-3\"> ) </span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -141,6 +145,8 @@ msgid ""
 "<span class=\"o_form_label\">Expense Journal</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" role=\"img\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Journal de notes de frais</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" role=\"img\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -517,6 +523,8 @@ msgid ""
 "Create the new expense reports from the expenses submitted by the employees "
 "you manage."
 msgstr ""
+"Créez les nouvelles notes de frais à partir des notes de frais soumises par "
+"les employés que vous gérez."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__create_uid
@@ -629,7 +637,7 @@ msgstr "Brouillon"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 msgid "Draft Expenses"
-msgstr ""
+msgstr "Notes de frais brouillon"
 
 #. module: hr_expense
 #: code:addons/hr_expense/wizard/hr_expense_approve_duplicate.py:0
@@ -785,7 +793,7 @@ msgstr "Notes de frais à Approuver"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_submit
 msgid "Expense Reports to Submit"
-msgstr ""
+msgstr "Notes de frais à soumettre"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_bank_statement_line__expense_sheet_id
@@ -802,7 +810,7 @@ msgstr "Note de Frais Dupliquée"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "Expense products can be reinvoiced to your customers."
-msgstr ""
+msgstr "Les produits de notes de frais peuvent être refacturés à vos clients."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -1415,6 +1423,8 @@ msgid ""
 "Please configure Default Expense account for Category expense: "
 "`property_account_expense_categ_id`."
 msgstr ""
+"Veuillez configurer un compte de notes de frais par défaut pour la catégorie"
+" de notes de frais: `property_account_expense_categ_id`."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
@@ -1432,6 +1442,8 @@ msgid ""
 "Post the journal entries of the new expense reports approved by the "
 "employees' manager."
 msgstr ""
+"Enregistrez les écritures comptables des nouvelles notes de frais approuvées"
+" par le responsable des employés."
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__state__post
@@ -1616,7 +1628,7 @@ msgstr "Notes de frais à Comptabiliser"
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_submit
 msgid "Reports to Submit"
-msgstr ""
+msgstr "Rapports à soumettre"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -1840,6 +1852,8 @@ msgstr "Approbateur de l'Equipe"
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
 msgid "The Default journal for the company used when the expense is done."
 msgstr ""
+"Le journal par défaut utilisé par l'entreprise quand la note de frais est "
+"terminée."
 
 #. module: hr_expense
 #. openerp-web
@@ -2086,6 +2100,12 @@ msgid ""
 "company at fixed cost like allowances for mileage, per diem, accomodation or"
 " meal."
 msgstr ""
+"Lorsque le coût d'un produit de note de frais est différent de 0, alors "
+"l'utilisateur utilisant ce produit ne pourra pas modifier le montant de la "
+"note de frais, seulement la quantité. Utilisez un coût différent de 0 pour "
+"les catégories de notes de frais financées par l'entreprise à coût fixe "
+"comme les indemnités de kilométrage, les indemnités journalières, "
+"l'hébergement ou les repas."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax

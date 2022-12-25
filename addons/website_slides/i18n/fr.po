@@ -226,6 +226,25 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Bonjour<br/><br/>\n"
+"                        <t t-out=\"user.name or ''\">Mitchell Admin</t> a partagé le <t t-out=\"object.slide_category or ''\">document</t> <strong t-out=\"object.name or ''\">Trees</strong> avec vous !\n"
+"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"(object.website_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"(object.website_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">Visualiser <strong t-out=\"object.name or ''\">Trees</strong></a>\n"
+"                        </div>\n"
+"                        <t t-if=\"user.signature\">\n"
+"                            <br/>\n"
+"                            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"                        </t>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -326,7 +345,7 @@ msgstr "<i class=\"fa fa-clock-o mr-2\" aria-label=\"Durée\" role=\"img\" title
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "<i class=\"fa fa-cloud-upload mr-1\"/>Add Content"
-msgstr ""
+msgstr "<i class=\"fa fa-cloud-upload mr-1\"/>Ajouter du contenu"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -377,6 +396,8 @@ msgid ""
 "<i class=\"fa fa-file-code-o mr-2\" aria-label=\"article\" role=\"img\" "
 "title=\"Article\"/>"
 msgstr ""
+"<i class=\"fa fa-file-code-o mr-2\" aria-label=\"article\" role=\"img\" "
+"title=\"Article\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
@@ -675,6 +696,8 @@ msgid ""
 "<span class=\"badge badge-pill badge-success\"><i class=\"fa fa-check\"/> "
 "Done</span>"
 msgstr ""
+"<span class=\"badge badge-pill badge-success\"><i class=\"fa fa-check\"/> "
+"Fait</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
@@ -788,11 +811,14 @@ msgid ""
 "                            Additional Resources\n"
 "                        </span>"
 msgstr ""
+"<span class=\"text-muted font-weight-bold mr-3\">\n"
+"                            Ressources additionnelles\n"
+"                        </span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "<span class=\"text-muted font-weight-bold mr-3\">External sources</span>"
-msgstr ""
+msgstr "<span class=\"text-muted font-weight-bold mr-3\">Sources externes</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -1611,6 +1637,8 @@ msgid ""
 "Click on the \"Edit\" button on the top-right of the screen to edit your "
 "slide content."
 msgstr ""
+"Cliquez sur le bouton \"Modifier\" dans le coin supérieur droit de l'écran "
+"pour modifier le contenu de votre diapositive."
 
 #. module: website_slides
 #. openerp-web
@@ -3271,7 +3299,7 @@ msgstr "Marquez la bonne réponse en cochant la case <b>correcte</b>."
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Member Views"
-msgstr ""
+msgstr "Vues des membres"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__partner_ids
@@ -5822,6 +5850,9 @@ msgid ""
 " this course, you will study those topics with activities about mathematics,"
 " science and logic."
 msgstr ""
+"par exemple, les tâches courantes d'un informaticien consistent à poser les "
+"bonnes questions. Dans ce cours, vous étudierez ces sujets à travers "
+"d'activités sur les mathématiques, les sciences et la logique."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
