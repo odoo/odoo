@@ -3526,7 +3526,7 @@ msgstr "Reporter"
 #: code:addons/account/models/account_tax_report.py:0
 #, python-format
 msgid "Carryover Lines For %s"
-msgstr ""
+msgstr "Lignes de report pour %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__carryover_line_ids
@@ -5293,6 +5293,14 @@ msgid ""
 " 10 with an existing carryover of 50 will create a new carryover line of "
 "-40, so that the total carryover becomes 10."
 msgstr ""
+"Définit la manière dont cette ligne de rapport crée des lignes de report "
+"lors de la clôture des impôts. Si true, les montants reportés seront "
+"toujours ajoutés les uns aux autres : par exemple, une ligne de rapport avec"
+" un solde de 10 et un report existant de 50 ajoutera 10 supplémentaires lors"
+" de la clôture, ce qui donnera un report total de 60. Si false, le montant "
+"total reporté sera forcé au total de cette ligne de rapport : une ligne de "
+"rapport avec un solde de 10 et un report existant de 50 créera une nouvelle "
+"ligne de report de -40, de sorte que le report total devient 10."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_cash_rounding_id
@@ -7496,7 +7504,7 @@ msgstr "Taxe"
 #: model:ir.model.fields,field_description:account.field_account_move__tax_totals_json
 #: model:ir.model.fields,field_description:account.field_account_payment__tax_totals_json
 msgid "Invoice Totals JSON"
-msgstr ""
+msgstr "Totaux de la facture JSON"
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -9124,7 +9132,7 @@ msgstr "Aucune pièce jointe n'a été fournie"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_report_line_form
 msgid "No carryover"
-msgstr ""
+msgstr "Aucun report"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -10446,6 +10454,19 @@ msgstr ""
 "sur la société."
 
 #. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Please check these taxes. They might be outdated. We did not update them. "
+"Indeed, they do not exactly match the taxes of the original version of the "
+"localization module.<br/>You might want to archive or adapt them.<br/><ul>"
+msgstr ""
+"Veuillez vérifier ces taxes. Elles peuvent être obsolètes. Nous ne les avons"
+" pas mises à jour. En effet, elles ne correspondent pas exactement aux taxes"
+" de la version originale du module de localisation.<br/>Vous pourriez "
+"vouloir les archiver ou les adapter.<br/><ul>"
+
+#. module: account
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Please define a payment method line on your payment."
@@ -10507,7 +10528,7 @@ msgstr ""
 #: code:addons/account/models/ir_module_module.py:0
 #, python-format
 msgid "Please update the Invoicing module before continuing."
-msgstr ""
+msgstr "Veuillez mettre à jour le module Facturation avant de continuer."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -10815,6 +10836,9 @@ msgid ""
 "Programmation Error: Can't call _get_writeoff_suggestion_query() for "
 "different rules than 'writeoff_suggestion'"
 msgstr ""
+"Erreur de programmation : Impossible d'appeler "
+"_get_writeoff_suggestion_query() pour des règles différentes de celle de "
+"'writeoff_suggestion'"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_chart_template_form
@@ -11076,6 +11100,8 @@ msgstr "Espaces de réconciliation"
 #, python-format
 msgid "Record cannot be deleted. Partner used in Accounting"
 msgstr ""
+"L'enregistrement ne peut pas être supprimé. Le partenaire est utilisé dans "
+"Comptabilité"
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -11501,7 +11527,7 @@ msgstr "Racine"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_report__root_line_ids
 msgid "Root Report Lines"
-msgstr ""
+msgstr "Lignes de rapport de base"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__tax_calculation_rounding_method__round_globally
@@ -11649,7 +11675,7 @@ msgstr "Même devise"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_report_line_form
 msgid "Same report line"
-msgstr ""
+msgstr "Même ligne de rapport"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -12533,7 +12559,7 @@ msgstr "Relevés"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_statement_ids
 msgid "Statements matched to this payment"
-msgstr ""
+msgstr "Relevés correspondant à ce paiement"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -12964,7 +12990,7 @@ msgstr "Méthode d'arrondi pour le calcul des taxes"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_carryover_line
 msgid "Tax carryover line"
-msgstr ""
+msgstr "Ligne de report de taxe"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_tax_payable_account_id
@@ -13179,7 +13205,7 @@ msgstr "Champ technique utilisé à des fins ergonomiques"
 #: model:ir.model.fields,help:account.field_account_move__posted_before
 #: model:ir.model.fields,help:account.field_account_payment__posted_before
 msgid "Technical field for knowing if the move has been posted before"
-msgstr ""
+msgstr "Champ technique pour savoir si le mouvement a été comptabilisé avant"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__balance
@@ -13195,6 +13221,8 @@ msgstr ""
 msgid ""
 "Technical field indicating if all statement lines are fully reconciled."
 msgstr ""
+"Champ technique indiquant si toutes les lignes de relevé sont entièrement "
+"réconciliées."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__is_matched
@@ -13202,11 +13230,13 @@ msgid ""
 "Technical field indicating if the payment has been matched with a statement "
 "line."
 msgstr ""
+"Champ technique indiquant si le paiement a été mis en correspondance avec "
+"une ligne de relevé."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__is_reconciled
 msgid "Technical field indicating if the payment is already reconciled."
-msgstr ""
+msgstr "Champ technique indiquant si le paiement est déjà réconcilié."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__is_reconciled
@@ -13220,6 +13250,8 @@ msgid ""
 "Technical field to decide if we should show the decimal separator for the "
 "regex matching field."
 msgstr ""
+"Champ technique pour décider si nous devons montrer le séparateur décimal "
+"pour le champ de correspondance regex."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__is_valid_balance_start
@@ -13227,6 +13259,8 @@ msgid ""
 "Technical field to display a warning message in case starting balance is "
 "different than previous ending balance"
 msgstr ""
+"Champ technique pour afficher un message d'avertissement dans le cas où le "
+"solde de départ est différent du solde final précédent"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__tax_country_id
@@ -13255,13 +13289,16 @@ msgid ""
 "always exigible. This happens if the move contains no payable or receivable "
 "line."
 msgstr ""
+"Champ technique utilisé par la comptabilité de trésorerie, indiquant que les"
+" lignes du mouvement sont toujours exigibles. C'est le cas si le mouvement "
+"ne contient aucune ligne client ou fournisseur."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__display_inactive_currency_warning
 #: model:ir.model.fields,help:account.field_account_move__display_inactive_currency_warning
 #: model:ir.model.fields,help:account.field_account_payment__display_inactive_currency_warning
 msgid "Technical field used for tracking the status of the currency"
-msgstr ""
+msgstr "Champ technique utilisé pour suivre le statut de la devise"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__journal_type
@@ -13290,6 +13327,8 @@ msgstr ""
 msgid ""
 "Technical field used to determine label 'invoice' or 'credit note' in view"
 msgstr ""
+"Champ technique utilisé pour déterminer l'étiquette 'facture' ou 'note de "
+"crédit' dans l'affichage"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__foreign_vat_header_mode
@@ -13298,6 +13337,9 @@ msgid ""
 "positions, in order to ease the instantiation of foreign taxes when "
 "possible."
 msgstr ""
+"Champ technique utilisé pour afficher une bannière au-dessus des positions "
+"fiscales de la TVA étrangère, afin de faciliter l'instanciation des taxes "
+"étrangères lorsque cela est possible. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__tax_lock_date_message
@@ -13395,6 +13437,8 @@ msgstr ""
 msgid ""
 "Technical field used to indicate the user can see the 'group_payments' box."
 msgstr ""
+"Champ technique utilisé pour indiquer que l'utilisateur peut voir la case "
+"'group_payments'."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__tax_cash_basis_rec_id
@@ -13425,6 +13469,8 @@ msgid ""
 "Technical field used to know whether the field `partner_bank_id` needs to be"
 " displayed or not in the payments form views"
 msgstr ""
+"Champ technique utilisé pour savoir si le champ 'partner_bank_id' doit être "
+"affiché ou non dans la vue formulaire des paiements"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__require_partner_bank_account
@@ -13456,6 +13502,7 @@ msgstr "Champ technique utilisé pour récupérer la ligne d'arrondi d'espèces.
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__show_force_tax_included
 msgid "Technical field used to show the force tax included button"
 msgstr ""
+"Champ technique utilisé pour afficher le bouton 'Forcer la taxe incluse'"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__account_number
@@ -13472,6 +13519,9 @@ msgid ""
 "Technical field. True if the balance of this move line needs to be inverted "
 "when computing its total for each tag (for sales invoices, for example)."
 msgstr ""
+"Champ technique. True si le solde de cette ligne de mouvement doit être "
+"inversé lors du calcul de son total pour chaque étiquette (pour les factures"
+" par exemple)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__display_currency_helper
@@ -13480,6 +13530,9 @@ msgid ""
 "conversion tooltip. The tooltip informs a currency conversion will be "
 "performed with the transfer."
 msgstr ""
+"Champ technique. Utilisé pour indiquer s'il faut ou non afficher l'infobulle"
+" de conversion de devises. L'infobulle informe qu'une conversion de devise "
+"sera effectuée avec le transfert."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_currency__display_rounding_warning
@@ -13488,11 +13541,14 @@ msgid ""
 "warning. The warning informs a rounding factor change might be dangerous on "
 "res.currency's form view."
 msgstr ""
+"Champ technique. Utilisé pour indiquer s'il faut ou non afficher "
+"l'avertissement d'arrondi. L'avertissement informe qu'un facteur d'arrondi "
+"pourrait être dangereux dans la vue formulaire res.currency."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__amount
 msgid "Technical shortcut to parse the amount to a float"
-msgstr ""
+msgstr "Raccourci technique pour convertir le montant en flottant"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__chart_template_id
@@ -13675,6 +13731,9 @@ msgid ""
 "The accounting date being set prior to the %(lock_type)s lock date "
 "%(lock_date)s, it will be changed to %(accounting_date)s upon posting."
 msgstr ""
+"La date comptable étant fixée avant la %(lock_type)s date de verrouillage "
+"%(lock_date)s, elle sera modifiée en %(accounting_date)s lors de la "
+"comptabilisation."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13683,6 +13742,8 @@ msgid ""
 "The accounting date is set prior to the tax lock date which is set on %s. "
 "Hence, the accounting date will be changed to %s."
 msgstr ""
+"La date comptable est fixée avant la date de verrouillage de l'impôt, qui "
+"est fixée le %s. Par conséquent, la date comptable sera modifiée en %s."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__journal_id
@@ -13735,6 +13796,10 @@ msgid ""
 " its move lines' balance), expressed in its currency. This is a technical "
 "field use to speedup the application of reconciliation models."
 msgstr ""
+"Le montant restant à réconcilier sur cette ligne de relevé (signé selon le "
+"solde de ses lignes de mouvement), exprimé dans sa devise. Il s'agit d'un "
+"champ technique utilisé pour accélérer l'application des modèles de "
+"réconciliation."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -13790,6 +13855,9 @@ msgid ""
 " Sales operations should go to 'sale' journals, and purchase operations to "
 "'purchase' ones."
 msgstr ""
+"Le type de journal sélectionné n'est pas compatible avec votre type de "
+"facture. Les opérations de vente doivent être enregistrées dans les journaux"
+" 'de vente' et les opérations d'achat dans les journaux 'd'achat'."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -13851,6 +13919,8 @@ msgid ""
 "The country of the fiscal position must be this report line's report "
 "country."
 msgstr ""
+"Le pays de la position fiscale doit être le pays de déclaration de cette "
+"ligne de rapport."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template__country_id
@@ -13902,6 +13972,11 @@ msgid ""
 "entries, ready for the reconciliation.- Validated: All lines are reconciled."
 " There is nothing left to process."
 msgstr ""
+"Le statut actuel de votre relevé bancaire :- Nouveau : Entièrement éditable "
+"avec des écritures comptables en brouillon.- En cours de traitement : N'est "
+"plus éditable avec les écritures comptables enregistrées, prêt pour la "
+"réconciliation.- Validé : Toutes les lignes sont réconciliées. Il n'y a plus"
+" rien à traiter."
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -13937,6 +14012,8 @@ msgid ""
 "The ending balance is incorrect !\n"
 "The expected balance (%(real_balance)s) is different from the computed one (%(computed_balance)s)."
 msgstr ""
+"Le solde final est incorrect !\n"
+"Le solde attendu (%(real_balance)s) est différent du solde calculé (%(computed_balance)s)."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14027,6 +14104,10 @@ msgid ""
 "though they don't generate any tag: %s . This probably means you forgot to "
 "set a tag_name on these lines."
 msgstr ""
+"Les lignes de rapport de taxes suivantes sont utilisées dans certains "
+"modèles de répartition de taxes, mais elles ne génèrent aucune étiquette : "
+"%s. Ceci signifie probablement que vous avez oublié de définir un tag_name "
+"sur ces lignes."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -14124,6 +14205,8 @@ msgid ""
 "The journal of a bank statement line must always be the same as the bank "
 "statement one."
 msgstr ""
+"Le journal d'une ligne de relevé bancaire doit toujours être identique à "
+"celui du relevé bancaire."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -14169,6 +14252,8 @@ msgid ""
 "The line to which the value of this line will be carried over to if needed. "
 "If left empty the line will carry over to itself."
 msgstr ""
+"La ligne à laquelle la valeur de cette ligne sera reportée le cas échéant. "
+"Si elle est laissée vide, la ligne se reportera sur elle-même."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__partner_mapping_line_ids
@@ -14187,6 +14272,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_tax_report_line__carry_over_condition_method
 msgid "The method used to determine if this line should be carried over."
 msgstr ""
+"La méthode utilisée pour déterminer si cette ligne doit être reportée."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__move_id
@@ -14254,7 +14340,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_tax_report_line__report_id
 #: model:ir.model.fields,help:account.field_tax_adjustments_wizard__report_id
 msgid "The parent tax report of this line"
-msgstr ""
+msgstr "Le rapport de taxes parent de cette ligne"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__has_unreconciled_entries
@@ -14305,6 +14391,8 @@ msgid ""
 "The product \"%s\" is used in invoices. You cannot change its Unit of "
 "Measure."
 msgstr ""
+"Le produit \"%s\" est utilisé dans les factures. Vous ne pouvez pas changer "
+"son unité de mesure."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14313,6 +14401,8 @@ msgid ""
 "The recipient bank account link to this invoice is archived.\n"
 "So you cannot confirm the invoice."
 msgstr ""
+"Le compta bancaire du destinataire lié à cette facture est archivé. \n"
+"Vous ne pouvez donc pas confirmer la facture."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_category_ids
@@ -14552,6 +14642,8 @@ msgid ""
 "The starting balance <b>doesn't match</b> with the ending balance of the "
 "previous bank statement."
 msgstr ""
+"Le solde initial <b>ne correspond pas</b> au solde final du relevé bancaire "
+"précédent."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -14592,12 +14684,16 @@ msgid ""
 "The tags associated with tax report line objects should all have the same "
 "country set as the tax report containing these lines."
 msgstr ""
+"Les étiquettes associées aux objets de la ligne du rapport de taxes doivent "
+"toutes avoir le même pays que le rapport de taxes contenant ces lignes. "
 
 #. module: account
 #: code:addons/account/models/account_tax_report.py:0
 #, python-format
 msgid "The tags linked to a tax report line should always match its tag name."
 msgstr ""
+"Les étiquettes liées à une ligne de rapport de taxes doit toujours "
+"correspondre à son nom."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__foreign_vat
@@ -14789,6 +14885,8 @@ msgid ""
 "This adds a menu item in the Accounting Configuration menu to import FEC "
 "files."
 msgstr ""
+"Cela ajoute un élément de menu dans le menu de configuration de la "
+"comptabilité pour importer des fichiers FEC."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14857,6 +14955,8 @@ msgid ""
 "This entry has been duplicated from <a href=# data-oe-model=account.move "
 "data-oe-id=%(id)d>%(title)s</a>"
 msgstr ""
+"Cette écriture a été dupliquée à partir de <a href=# data-oe-"
+"model=account.move data-oe-id=%(id)d>%(title)s</a>"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14987,6 +15087,8 @@ msgid ""
 "This payment has been created from <a href=# data-oe-model=account.payment "
 "data-oe-id=%d>%s</a>"
 msgstr ""
+"Ce paiement a été créé à partir de <a href=# data-oe-model=account.payment "
+"data-oe-id=%d>%s</a>"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_supplier_payment_term_id
@@ -15057,7 +15159,7 @@ msgstr "Vers"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "To :"
-msgstr ""
+msgstr "À :"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__to_check
@@ -15561,7 +15663,7 @@ msgstr "utilisé"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__is_carryover_used_in_balance
 msgid "Used in line balance"
-msgstr ""
+msgstr "Utilisé dans le solde de la ligne"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_type__include_initial_balance
@@ -16692,6 +16794,12 @@ msgid "You should update this document to reflect your T&amp;C."
 msgstr "Vous devriez mettre à jour ce document pour refléter vos CGV "
 
 #. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid "Your taxes have been updated !"
+msgstr "Vos taxes ont été mises à jour !"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Zip Range"
 msgstr "Intervalle de code postal"
@@ -17094,3 +17202,5 @@ msgid ""
 "An analytic default requires an analytic account or an analytic tag used for"
 " analytic distribution."
 msgstr ""
+"Une analyse analytique par défaut nécessite un compte analytique ou une "
+"étiquette analytique utilisée pour la distribution analytique."

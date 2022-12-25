@@ -6,6 +6,7 @@
 # Martin Trigaux, 2021
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+# Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1117,6 +1118,16 @@ msgstr "Geldigheidsduur nadat een kortingsbon gegenereerd is"
 #, python-format
 msgid "You can not delete a program in active state"
 msgstr "Je kunt geen programma verwijderen dat zich in de fase actief bevind"
+
+#. module: coupon
+#: code:addons/coupon/models/product_product.py:0
+#, python-format
+msgid ""
+"You cannot delete a product that is linked with Coupon or Promotion program."
+" Archive it instead."
+msgstr ""
+"Je kan een product dat gekoppeld is aan een coupon- of promotieprogramma "
+"niet verwijderen. Archiveer het liever."
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form

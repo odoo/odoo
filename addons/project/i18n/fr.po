@@ -592,6 +592,9 @@ msgid ""
 "                                        <span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible': [('alias_name', '=', False)]}\">Create tasks by sending an email to </span>\n"
 "                                        <span class=\"font-weight-bold oe_edit_only\">Create tasks by sending an email to </span>"
 msgstr ""
+"<span class=\"oe_read_only\" attrs=\"{'invisible': [('alias_name', '!=', False)]}\">Créer des tâches en envoyant un email à </span>\n"
+"                                        <span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible': [('alias_name', '=', False)]}\">Créer des tâches en envoyant un email à </span>\n"
+"                                        <span class=\"font-weight-bold oe_edit_only\">Créer des tâches en envoyant un email à </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -1002,12 +1005,12 @@ msgstr "Me l'assigner"
 #. module: project
 #: model_terms:ir.ui.view,help:project.project_sharing_project_task_view_kanban
 msgid " assignee"
-msgstr ""
+msgstr "assigné"
 
 #. module: project
 #: model_terms:ir.ui.view,help:project.project_sharing_project_task_view_kanban
 msgid " assignees"
-msgstr ""
+msgstr "assignés"
 
 #. module: project
 #. openerp-web
@@ -5510,7 +5513,7 @@ msgstr "ex: fête-au-bureau"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "for customer:"
-msgstr ""
+msgstr "pour le client :"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -5520,7 +5523,7 @@ msgstr "pour le projet:"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "in priority:"
-msgstr ""
+msgstr "en priorité :"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -5530,7 +5533,7 @@ msgstr "dans l'étape:"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "in status:"
-msgstr ""
+msgstr "en statut :"
 
 #. module: project
 #: code:addons/project/models/project.py:0

@@ -27,6 +27,8 @@ msgid ""
 "* Cross-border: For the overseas seller \n"
 "* Express Checkout: For the Chinese Seller"
 msgstr ""
+"* Transfrontalier : Pour les vendeurs d'outre-mer \n"
+"* Paiement rapide : Pour les vendeurs chinois"
 
 #. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_payment_method
@@ -53,12 +55,12 @@ msgstr "Transfrontalier"
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "Expected signature %(sc) but received %(sign)s."
-msgstr ""
+msgstr "Signature attendue %(sc) mais reçu %(sign)s."
 
 #. module: payment_alipay
 #: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__alipay_payment_method__express_checkout
 msgid "Express Checkout (only for Chinese merchants)"
-msgstr ""
+msgstr "Paiement rapide (uniquement pour les marchands chinois)"
 
 #. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_md5_signature_key
@@ -100,7 +102,7 @@ msgstr "Fournisseur"
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing reference %(r)s or txn_id %(t)s."
-msgstr ""
+msgstr "Données reçues avec référence manquante %(r)s ou txn_id %(t)s."
 
 #. module: payment_alipay
 #: code:addons/payment_alipay/controllers/main.py:0
@@ -109,6 +111,8 @@ msgid ""
 "Received notification data not acknowledged by Alipay:\n"
 "%s"
 msgstr ""
+"Données de notification reçues non reconnues par Alipay :\n"
+"%s"
 
 #. module: payment_alipay
 #: code:addons/payment_alipay/controllers/main.py:0
@@ -117,6 +121,8 @@ msgid ""
 "Received notification data with unknown reference:\n"
 "%s"
 msgstr ""
+"Données de notification reçues avec référence inconnue :\n"
+"%s"
 
 #. module: payment_alipay
 #: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__provider
@@ -128,7 +134,7 @@ msgstr ""
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "The amount does not match the total + fees."
-msgstr ""
+msgstr "Le montant ne correspond pas au total + frais."
 
 #. module: payment_alipay
 #: code:addons/payment_alipay/models/payment_transaction.py:0
@@ -137,25 +143,29 @@ msgid ""
 "The currency returned by Alipay %(rc)s does not match the transaction "
 "currency %(tc)s."
 msgstr ""
+"La devise rendue par Alipay %(rc)s ne correspond pas à la devise de la "
+"transaction %(tc)s."
 
 #. module: payment_alipay
 #: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_seller_email
 msgid "The public Alipay partner email"
-msgstr ""
+msgstr "L'email du partenaire public d'Alipay"
 
 #. module: payment_alipay
 #: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_merchant_partner_id
 msgid "The public partner ID solely used to identify the account with Alipay"
 msgstr ""
+"L'ID du partenaire public uniquement utilisé pour identifier le compte avec "
+"Alipay"
 
 #. module: payment_alipay
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "The seller email does not match the configured Alipay account."
-msgstr ""
+msgstr "L'email du vendeur ne correspond pas au compte Alipay configuré."
 
 #. module: payment_alipay
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "received invalid transaction status: %s"
-msgstr ""
+msgstr "Réception d'un statut de transaction invalide : %s"

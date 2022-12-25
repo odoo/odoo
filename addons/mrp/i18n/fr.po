@@ -1115,6 +1115,8 @@ msgid ""
 "Component Lots must be unique for mass production. Please review reservation"
 " for:\n"
 msgstr ""
+"Les lots de composants doivent être uniques pour la production en série. "
+"Veuillez consulter la réservation pour :\n"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__components_availability
@@ -1458,12 +1460,12 @@ msgstr "Date à laquelle vous prévoyez de commencer la production."
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_start
 msgid "Date of the WO"
-msgstr ""
+msgstr "Date de l'OT"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_finished
 msgid "Date when the MO has been close"
-msgstr ""
+msgstr "Date de clôture de l'OT"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_deadline
@@ -1608,7 +1610,7 @@ msgstr "Afficher Nom"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_serial_mass_produce
 msgid "Display the serial mass product wizard action moves"
-msgstr ""
+msgstr "Afficher les mouvements de l'assistant de production en série"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_lot_ids
@@ -2584,6 +2586,8 @@ msgid ""
 "Make sure enough quantities of these components are reserved to carry on "
 "production:\n"
 msgstr ""
+"Assurez-vous que suffisamment de quantités de ces composants sont réservées "
+"pour continuer la production :\n"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -2591,6 +2595,9 @@ msgid ""
 "Makes confirmed manufacturing orders locked rather than unlocked by default."
 " This only applies to new manufacturing orders, not previously created ones."
 msgstr ""
+"Les ordres de fabrication confirmés sont verrouillés plutôt que "
+"déverrouillés par défaut. Cela ne s'applique qu'aux nouveaux ordres de "
+"fabrication, et non aux ordres créés précédemment."
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
@@ -2782,7 +2789,7 @@ msgstr "Marqué comme fait"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Mass Produce"
-msgstr "Fabriquer en masse"
+msgstr "Produire en série"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_mps
@@ -3082,6 +3089,12 @@ msgid ""
 "multiplied by two. However, note that both time before and after production "
 "will only be counted once. "
 msgstr ""
+"Nombre de pièces (dans l'unité de mesure du produit) pouvant être fabriquées"
+" en parallèle (en même temps) sur ce poste de travail. Par exemple, la "
+"capacité est de 5 et vous devez produire 10 unités, alors le temps de "
+"fonctionnement indiqué sur la nomenclature sera multiplié par deux. "
+"Cependant, notez que le temps avant et après la production ne sera compté "
+"qu'une seule fois."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__product_qty
@@ -3090,6 +3103,9 @@ msgid ""
 "If the BOM contains operations, make sure the work center capacity is "
 "accurate. "
 msgstr ""
+"Il doit s'agir de la plus petite quantité dans laquelle ce produit peut être"
+" produit. Si la nomenclature contient des opérations, assurez-vous que la "
+"capacité du poste de travail est précise."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
@@ -3194,7 +3210,7 @@ msgstr "Filtres de recherche d'opérations"
 #. module: mrp
 #: model:ir.actions.report,name:mrp.label_production_order
 msgid "Order Label"
-msgstr ""
+msgstr "Étiquette de l'ordre"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__orderpoint_id
@@ -4091,7 +4107,7 @@ msgstr "Séquence de stockage après fabrication"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
 msgid "Serial Mass Produce"
-msgstr "Serial Mass Produce"
+msgstr "Produire en série"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__manual
@@ -4454,12 +4470,13 @@ msgstr "Champ technique à cocher si nous pouvons annuler la réservation"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_assign_serial__show_apply
 msgid "Technical field to show the Apply button"
-msgstr ""
+msgstr "Champ technique pour afficher le bouton Appliquer"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_assign_serial__show_backorders
 msgid "Technical field to show the Create Backorder and No Backorder buttons"
 msgstr ""
+"Champ technique pour afficher les boutons Créer reliquat et Aucun reliquat"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__costs_hour
@@ -4467,6 +4484,9 @@ msgid ""
 "Technical field to store the hourly cost of workcenter at time of work order"
 " completion (i.e. to keep a consistent cost)."
 msgstr ""
+"Champ technique pour sauvegarder le coût horaire d'un poste de travail au "
+"moment de l'achèvement de l'ordre de travail (afin de conserver un coût "
+"cohérent)."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document__key
@@ -4501,12 +4521,12 @@ msgstr "Texte"
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__note
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__operation_note
 msgid "Text worksheet description"
-msgstr ""
+msgstr "Description du texte de la feuille de travail"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__bom_id
 msgid "The Bill of Material this operation is linked to"
-msgstr ""
+msgstr "La nomenclature à laquelle cette opération est associée"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0 code:addons/mrp/models/mrp_bom.py:0
