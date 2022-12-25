@@ -29,7 +29,7 @@ msgstr ""
 #: code:addons/payment_sips/models/payment_transaction.py:0
 #, python-format
 msgid "Incorrect amount: received %(received).2f, expected %(expected).2f"
-msgstr ""
+msgstr "Montant incorrect : %(received).2f reçu, %(expected).2f attendu"
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_version
@@ -65,7 +65,7 @@ msgstr "Transaction"
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_prod_url
 msgid "Production URL"
-msgstr ""
+msgstr "URL de production"
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__provider
@@ -75,7 +75,7 @@ msgstr "Fournisseur"
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_secret
 msgid "SIPS Secret Key"
-msgstr ""
+msgstr "Clé secrète SIPS"
 
 #. module: payment_sips
 #: model_terms:ir.ui.view,arch_db:payment_sips.payment_acquirer_form
@@ -85,7 +85,7 @@ msgstr "Clé secrète"
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_key_version
 msgid "Secret Key Version"
-msgstr ""
+msgstr "Version de clé secrète"
 
 #. module: payment_sips
 #: model:account.payment.method,name:payment_sips.payment_method_sips
@@ -96,12 +96,14 @@ msgstr "Sips"
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_test_url
 msgid "Test URL"
-msgstr ""
+msgstr "URL de test"
 
 #. module: payment_sips
 #: model:ir.model.fields,help:payment_sips.field_payment_acquirer__sips_merchant_id
 msgid "The ID solely used to identify the merchant account with Sips"
 msgstr ""
+"L'identifiant uniquement utilisé pour identifier le compte marchand avec "
+"Sips"
 
 #. module: payment_sips
 #: model:ir.model.fields,help:payment_sips.field_payment_acquirer__provider
@@ -113,10 +115,10 @@ msgstr ""
 #: code:addons/payment_sips/models/payment_transaction.py:0
 #, python-format
 msgid "This currency is not supported: %s."
-msgstr ""
+msgstr "Cette devise n'est pas pris en charge : %s."
 
 #. module: payment_sips
 #: code:addons/payment_sips/models/payment_transaction.py:0
 #, python-format
 msgid "Unrecognized response received from the payment provider."
-msgstr ""
+msgstr "Réponse non reconnue reçue du fournisseur de paiement."

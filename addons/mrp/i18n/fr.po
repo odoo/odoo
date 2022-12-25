@@ -1537,12 +1537,12 @@ msgstr "Date à laquelle vous prévoyez de commencer la production."
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_start
 msgid "Date of the WO"
-msgstr ""
+msgstr "Date de l'OT"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_finished
 msgid "Date when the MO has been close"
-msgstr ""
+msgstr "Date de clôture de l'OT"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_deadline
@@ -2970,6 +2970,8 @@ msgstr "Nom"
 #: model:ir.model.fields,help:mrp.field_stock_assign_serial__multiple_lot_components_names
 msgid "Names of components with multiple lots, used to show warning"
 msgstr ""
+"Noms des composants avec de lots multiples, utilisés pour montrer "
+"l'avertissement"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -3187,6 +3189,12 @@ msgid ""
 "multiplied by two. However, note that both time before and after production "
 "will only be counted once."
 msgstr ""
+"Nombre de pièces (dans l'unité de mesure du produit) pouvant être fabriquées"
+" en parallèle (en même temps) sur ce poste de travail. Par exemple : la "
+"capacité est de 5 et vous devez produire 10 unités, alors le temps de "
+"fonctionnement indiqué sur la nomenclature sera multiplié par deux. "
+"Cependant, notez que le temps avant et après la production ne sera compté "
+"qu'une seule fois."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
@@ -4554,12 +4562,13 @@ msgstr "Champ technique à cocher si nous pouvons annuler la réservation"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_assign_serial__show_apply
 msgid "Technical field to show the Apply button"
-msgstr ""
+msgstr "Champ technique pour afficher le bouton Appliquer"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_assign_serial__show_backorders
 msgid "Technical field to show the Create Backorder and No Backorder buttons"
 msgstr ""
+"Champ technique pour afficher les boutons Créer reliquat et Aucun reliquat"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__costs_hour
@@ -4567,6 +4576,9 @@ msgid ""
 "Technical field to store the hourly cost of workcenter at time of work order"
 " completion (i.e. to keep a consistent cost)."
 msgstr ""
+"Champ technique pour sauvegarder le coût horaire d'un poste de travail au "
+"moment de l'achèvement de l'ordre de travail (afin de conserver un coût "
+"cohérent)."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document__key
@@ -4601,12 +4613,12 @@ msgstr "Texte"
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__note
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__operation_note
 msgid "Text worksheet description"
-msgstr ""
+msgstr "Description du texte de la feuille de travail"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__bom_id
 msgid "The Bill of Material this operation is linked to"
-msgstr ""
+msgstr "La nomenclature à laquelle cette opération est associée"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0 code:addons/mrp/models/mrp_bom.py:0
@@ -5327,7 +5339,7 @@ msgstr "Très haut"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "View and allocate manufactured quantities."
-msgstr ""
+msgstr "Visualiser et allouer les quantités fabriquées."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__reservation_state__confirmed

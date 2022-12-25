@@ -6,6 +6,7 @@
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Mustafa Rawi <mustafa@cubexco.com>, 2022
+# Niyas Raphy, 2022
 # Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
@@ -296,7 +297,7 @@ msgstr "الحد الأقصى للمبلغ "
 #: model:ir.model.fields,field_description:payment.field_account_move__amount_paid
 #: model:ir.model.fields,field_description:payment.field_account_payment__amount_paid
 msgid "Amount paid"
-msgstr ""
+msgstr "المبلغ المدفوع"
 
 #. module: payment
 #. openerp-web
@@ -2020,7 +2021,7 @@ msgstr "الترميز الآلي مدعوم "
 msgid ""
 "Transaction authorization is not supported by the following payment "
 "acquirers: %s"
-msgstr "الترميز الآلي للمعاملات غير مدعوم من قِبَل بوابات الدفع التالية: %s "
+msgstr "تفويض المعاملات غير مدعوم من قِبَل بوابات الدفع التالية: %s "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_bank_statement_line__transaction_ids
@@ -2349,3 +2350,11 @@ msgstr "إظهار أقل "
 #: model_terms:ir.ui.view,arch_db:payment.icon_list
 msgid "show more"
 msgstr "إظهار المزيد "
+
+#. module: payment
+#: code:addons/payment/models/account_journal.py:0
+#, python-format
+msgid ""
+"You must first deactivate a payment acquirer before deleting its journal.\n"
+"Linked acquirer(s): %s"
+msgstr ""

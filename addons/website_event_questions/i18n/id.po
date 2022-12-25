@@ -35,7 +35,7 @@ msgstr "Jawaban"
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_answer_view_pivot
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_answer_view_tree
 msgid "Answer Breakdown"
-msgstr ""
+msgstr "Menguraikan Jawaban"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__answer_ids
@@ -47,17 +47,17 @@ msgstr "Semua Jawaban"
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__once_per_order
 msgid "Ask once per order"
-msgstr ""
+msgstr "Tanya sekali per order"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration__registration_answer_ids
 msgid "Attendee Answers"
-msgstr ""
+msgstr "Jawaban Peserta"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__partner_id
 msgid "Booked by"
-msgstr ""
+msgstr "Dibook oleh"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__create_uid
@@ -90,12 +90,12 @@ msgstr "Acara"
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_question
 msgid "Event Question"
-msgstr ""
+msgstr "Pertanyaan Acara"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_question_answer
 msgid "Event Question Answer"
-msgstr ""
+msgstr "Jawaban Pertanyaan Acara"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_registration
@@ -105,7 +105,7 @@ msgstr "Pendaftaran acara"
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_registration_answer
 msgid "Event Registration Answer"
-msgstr ""
+msgstr "Jawaban Pendaftaran Acara"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_type
@@ -120,7 +120,7 @@ msgstr "Jenis"
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__general_question_ids
 msgid "General Questions"
-msgstr ""
+msgstr "Pertanyaan Umum"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__id
@@ -136,6 +136,9 @@ msgid ""
 "propagated to every attendees.If not it will be asked for every attendee of "
 "a reservation."
 msgstr ""
+"Jika Betul, pertanyaan ini akan ditanyakan hanya sekali dan value-nya akan "
+"disebarkan ke semua peserta. Jika tidak, pertanyaan ini akan ditanyakan ke "
+"setiap peserta reservasi."
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question____last_update
@@ -175,13 +178,15 @@ msgstr "Pertanyaan"
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__question_type
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__question_type
 msgid "Question Type"
-msgstr ""
+msgstr "Tipe Pertanyaan"
 
 #. module: website_event_questions
 #: code:addons/website_event_questions/models/event_question.py:0
 #, python-format
 msgid "Question cannot belong to both the event category and itself."
 msgstr ""
+"Pertanyaan tidak boleh dimiliki secara sekaligus di kategori acara dan di "
+"pertanyaan tersebut sendiri."
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__question_ids
@@ -200,12 +205,12 @@ msgstr "Registrasi rawat inap"
 #. module: website_event_questions
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_view_tree
 msgid "Selected Answers"
-msgstr ""
+msgstr "Jawaban-Jawaban yang Dipilih"
 
 #. module: website_event_questions
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_answer_view_tree
 msgid "Selected answer"
-msgstr ""
+msgstr "Jawaban-jawaban yang dipilih"
 
 #. module: website_event_questions
 #: model:ir.model.fields.selection,name:website_event_questions.selection__event_question__question_type__simple_choice
@@ -221,7 +226,7 @@ msgstr "Urutan"
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__specific_question_ids
 msgid "Specific Questions"
-msgstr ""
+msgstr "Pertanyaan-Pertanyaan Spesifik"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__value_answer_id
@@ -231,7 +236,7 @@ msgstr "Disarankan jawaban"
 #. module: website_event_questions
 #: model:ir.model.fields.selection,name:website_event_questions.selection__event_question__question_type__text_box
 msgid "Text Input"
-msgstr ""
+msgstr "Input Teks"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__value_text_box
@@ -241,7 +246,7 @@ msgstr "Teks"
 #. module: website_event_questions
 #: model:ir.model.constraint,message:website_event_questions.constraint_event_registration_answer_value_check
 msgid "There must be a suggested value or a text value."
-msgstr ""
+msgstr "Harus terdapat value yang disarankan atau value teks."
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__title
@@ -260,6 +265,8 @@ msgstr "Jenis"
 msgid ""
 "You cannot change the question type of a question that already has answers!"
 msgstr ""
+"Anda tidak dapat mengganti tipe pertanyaan untuk pertanyaan yang sudah "
+"memiliki jawaban!"
 
 #. module: website_event_questions
 #: code:addons/website_event_questions/models/event_question.py:0
@@ -267,16 +274,17 @@ msgstr ""
 msgid ""
 "You cannot delete a question that has already been answered by attendees."
 msgstr ""
+"Anda tidak dapat menghapus pertanyaan yang sudah dijawab oleh peserta."
 
 #. module: website_event_questions
 #: code:addons/website_event_questions/models/event_question.py:0
 #, python-format
 msgid ""
 "You cannot delete an answer that has already been selected by attendees."
-msgstr ""
+msgstr "Anda tidak dapat menghapus jawaban yang sudah dipilih oleh peserta."
 
 #. module: website_event_questions
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_question_view_form
 msgid "e.g. \"Do you have any diet restrictions?\""
-msgstr ""
+msgstr "contohnya \"Apakah Anda memilih larangan makanan apapun?\""

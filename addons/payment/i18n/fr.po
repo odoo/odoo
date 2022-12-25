@@ -195,6 +195,8 @@ msgid ""
 "A refund request of %(amount)s has been sent. The payment will be created "
 "soon. Refund transaction reference: %(ref)s (%(acq_name)s)."
 msgstr ""
+"Une demande de remboursement de %(amount)s a été envoyée. Le paiement sera "
+"créé sous peu. Référence du remboursement : %(ref)s (%(acq_name)s)."
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:0
@@ -208,6 +210,7 @@ msgstr "Un token est requis pour créer une nouvelle transaction de paiement."
 msgid ""
 "A transaction with reference %(ref)s has been initiated (%(acq_name)s)."
 msgstr ""
+"Une transaction avec la référence %(ref)s a été initiée (%(acq_name)s)."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -216,6 +219,8 @@ msgid ""
 "A transaction with reference %(ref)s has been initiated using the payment "
 "method %(token_name)s (%(acq_name)s)."
 msgstr ""
+"Une transaction avec la référence %(ref)s a été initiée en utilisant le mode"
+" de paiement %(token_name)s (%(acq_name)s)."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__access_token
@@ -669,7 +674,7 @@ msgstr "Carte de crédit (fourni par Buckaroo)"
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_ogone
 msgid "Credit Card (powered by Ogone)"
-msgstr ""
+msgstr "Carte de crédit (fourni par Ogone)"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_payulatam
@@ -716,7 +721,7 @@ msgstr "Description"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__display_as
 msgid "Description of the acquirer for customers"
-msgstr ""
+msgstr "Description du fournisseur de vos clients"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__disabled
@@ -848,7 +853,7 @@ msgstr "Routage HTTP"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__has_multiple_acquirers
 msgid "Has Multiple Acquirers"
-msgstr ""
+msgstr "A de multiples fournisseurs"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__has_pending_refund
@@ -1162,6 +1167,8 @@ msgid ""
 "Note that only tokens from acquirers allowing to capture the amount are "
 "available."
 msgstr ""
+"Notez que seuls les jetons des fournisseurs permettant de saisir le montant "
+"sont disponibles."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment_register__payment_token_id
@@ -1490,7 +1497,7 @@ msgstr "Veuillez définir un montant inférieur à %s."
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "Please switch to company '%s' to make this payment."
-msgstr ""
+msgstr "Veuillez passer à la société '%s' pour effectuer ce paiement."
 
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
@@ -1759,6 +1766,8 @@ msgstr "Icônes des méthodes de paiement prises en charge"
 #: model:ir.model.fields,help:payment.field_account_payment_register__use_electronic_payment_method
 msgid "Technical field used to hide or show the payment_token_id if needed."
 msgstr ""
+"Champ technique utilisé pour masquer ou afficher le payment_token_id si "
+"nécessaire."
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_test
@@ -1790,12 +1799,12 @@ msgstr "Le jeton d'accès n'est pas valide."
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__acquirer_ref
 msgid "The acquirer reference of the token of the transaction"
-msgstr ""
+msgstr "La référence du fournisseur du jeton de la transaction"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__acquirer_reference
 msgid "The acquirer reference of the transaction"
-msgstr ""
+msgstr "La référence fournisseur de la transaction"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_bank_statement_line__amount_paid
@@ -1839,12 +1848,14 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__description
 msgid "The description shown in the card in kanban view "
-msgstr ""
+msgstr "La description affichée sur la carte dans la vue kanban"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__fees
 msgid "The fees amount; set by the system as it depends on the acquirer"
 msgstr ""
+"Le montant des frais ; défini par le système comme ils dépendent du "
+"fournisseur"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1860,7 +1871,7 @@ msgstr "La référence interne de la transaction"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__journal_id
 msgid "The journal in which the successful transactions are posted"
-msgstr ""
+msgstr "Le journal dans lequel les transactions réussies sont enregistrées"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__acquirer_ids
@@ -2422,3 +2433,13 @@ msgstr "montrer moins"
 #: model_terms:ir.ui.view,arch_db:payment.icon_list
 msgid "show more"
 msgstr "montrer plus"
+
+#. module: payment
+#: code:addons/payment/models/account_journal.py:0
+#, python-format
+msgid ""
+"You must first deactivate a payment acquirer before deleting its journal.\n"
+"Linked acquirer(s): %s"
+msgstr ""
+"Vous devez désactiver un fournisseur de paiement avant de supprimer son journal. \n"
+"Fournisseur(s) associé(s) : %s"
