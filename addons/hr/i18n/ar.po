@@ -17,11 +17,12 @@
 # Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2019
 # Nisrine Tagri <nta@odoo.com>, 2019
 # Mustafa Rawi <mustafa@cubexco.com>, 2019
-# abdullah alsabi <alsabi.abdullah@gmail.com>, 2019
+# Abdullah Alsabi <alsabi.abdullah@gmail.com>, 2019
 # Noureddine LOUAHEDJ <n.louahedj@gmail.com>, 2019
 # Shaima Safar <shaima.safar@open-inside.com>, 2019
 # Tasneem Sarhan <tsa@odoo.com>, 2020
 # Martin Trigaux, 2020
+# Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -29,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,7 +58,7 @@ msgstr "&amp;nbsp;"
 #. module: hr
 #: model:ir.actions.report,print_report_name:hr.hr_employee_print_badge
 msgid "'Print Badge - %s' % (object.name).replace('/', '')"
-msgstr ""
+msgstr "'طباعة الشارة - %s' % (object.name).replace('/', '')"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -191,17 +192,19 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"ml8 mr-2\">IP Addresses (comma-separated)</span>"
-msgstr ""
+msgstr "<span class=\"ml8 mr-2\">عناوين IP (مفصولة بفاصلة)</span> "
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"ml8 mr-2\">Minimum number of emails to sent </span>"
 msgstr ""
+"<span class=\"ml8 mr-2\">الحد الأدنى لعدد رسائل البريد الإلكتروني لإرسالها "
+"</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Presence Control</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">التحكم في الحضور</span> "
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1266,7 +1269,7 @@ msgstr "الموظفون المعينون"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__hr_presence_state
 #: model:ir.model.fields,field_description:hr.field_res_users__hr_presence_state
 msgid "Hr Presence State"
-msgstr ""
+msgstr "حالة حضور الموارد البشرية "
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -1349,25 +1352,25 @@ msgstr "صورة"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_1024
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_1024
 msgid "Image 1024"
-msgstr ""
+msgstr "صورة 1024"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_128
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_128
 msgid "Image 128"
-msgstr ""
+msgstr "صورة 128"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_256
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_256
 msgid "Image 256"
-msgstr ""
+msgstr "صورة 256"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_512
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_512
 msgid "Image 512"
-msgstr ""
+msgstr "صورة 512"
 
 #. module: hr
 #: code:addons/hr/models/hr_employee.py:0
@@ -1868,7 +1871,7 @@ msgstr "الرمز السري"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "PIN Code"
-msgstr ""
+msgstr "رمز PIN "
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__pin
@@ -1938,12 +1941,12 @@ msgstr "خطة"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_plan_wizard
 msgid "Plan Wizard"
-msgstr ""
+msgstr "تخطيط المعالج "
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_plan_activity_type
 msgid "Plan activity type"
-msgstr ""
+msgstr "تخطيط نوع النشاط "
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_plan_action
@@ -2004,6 +2007,7 @@ msgstr "حضور الموظفين"
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence reporting screen, email and IP address control."
 msgstr ""
+"شاشة إعداد التقارير عن الحضور، والتحكم في البريد الإلكتروني وعنوان IP. "
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__present
@@ -2350,7 +2354,7 @@ msgstr "رقم الضمان الاجتماعي"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_plan_activity_type__responsible_id
 msgid "Specific responsible of activity if not linked to the employee."
-msgstr ""
+msgstr "المسؤول المحدد عن النشاط إذا لم يكن مرتبطاً بالموظف. "
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2582,19 +2586,19 @@ msgstr "المستخدم"
 #: code:addons/hr/models/hr_plan.py:0
 #, python-format
 msgid "User linked to employee %s is required."
-msgstr ""
+msgstr "الحساب المرتبط بالموظف %s مطلوب. "
 
 #. module: hr
 #: code:addons/hr/models/hr_plan.py:0
 #, python-format
 msgid "User of coach of employee %s is not set."
-msgstr ""
+msgstr "لم يتم تعيين حساب المستخدم الخاص بمدرب الموظف %s بعد. "
 
 #. module: hr
 #: code:addons/hr/models/hr_plan.py:0
 #, python-format
 msgid "User of manager of employee %s is not set."
-msgstr ""
+msgstr "لم يتم تعيين حساب المستخدم الخاص بمدير الموظف %s بعد. "
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_partner_id
@@ -2799,7 +2803,7 @@ msgstr ""
 #: code:addons/hr/models/hr_department.py:0
 #, python-format
 msgid "You cannot create recursive departments."
-msgstr "لا يمكنك إنشاء أقسام متكررة."
+msgstr "لا يمكنك إنشاء أقسام متداخلة. "
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
