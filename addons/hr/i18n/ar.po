@@ -13,7 +13,7 @@
 # amrnegm <amrnegm.01@gmail.com>, 2020
 # Martin Trigaux, 2020
 # hoxhe Aits <hoxhe0@gmail.com>, 2020
-# abdullah alsabi <alsabi.abdullah@gmail.com>, 2020
+# Abdullah Alsabi <alsabi.abdullah@gmail.com>, 2020
 # Osoul <baruni@osoul.ly>, 2020
 # Noureddine LOUAHEDJ <n.louahedj@gmail.com>, 2020
 # Mahmood Al Halwachi <mahmood.alhalwachi@gmail.com>, 2020
@@ -26,6 +26,7 @@
 # Talal Albahra <talal.albahra@outlook.com>, 2020
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2021
 # Amr Abd Alkrim <amr@firebits.net>, 2021
+# Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -33,7 +34,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-17 10:35+0000\n"
 "PO-Revision-Date: 2020-09-07 08:12+0000\n"
-"Last-Translator: Amr Abd Alkrim <amr@firebits.net>, 2021\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,7 +62,7 @@ msgstr "&amp;nbsp;"
 #. module: hr
 #: model:ir.actions.report,print_report_name:hr.hr_employee_print_badge
 msgid "'Print Badge - %s' % (object.name).replace('/', '')"
-msgstr ""
+msgstr "'طباعة الشارة - %s' % (object.name).replace('/', '')"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -72,7 +73,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "12 days / year, including <br>6 of your choice."
-msgstr ""
+msgstr "12 يوماً / السنة، من ضمنها <br>6 من اختيارك. "
 
 #. module: hr
 #: code:addons/hr/models/hr_employee.py:0
@@ -96,7 +97,7 @@ msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"إدارة\" tit
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "<small><b>READ</b></small>"
-msgstr ""
+msgstr "<small><b>قراءة</b></small> "
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -105,6 +106,8 @@ msgid ""
 "<span class=\"fa fa-circle text-success\" role=\"img\" aria-label=\"Present\" title=\"Present\" name=\"presence_present\">\n"
 "                                                </span>"
 msgstr ""
+"<span class=\"fa fa-circle text-success\" role=\"img\" aria-label=\"Present\" title=\"تقديم \" name=\"presence_present\">\n"
+"                                                </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -113,6 +116,8 @@ msgid ""
 "<span class=\"fa fa-circle text-warning\" role=\"img\" aria-label=\"To define\" title=\"To define\" name=\"presence_to_define\">\n"
 "                                                </span>"
 msgstr ""
+"<span class=\"fa fa-circle text-warning\" role=\"img\" aria-label=\"To define\" title=\"للتحديد \" name=\"presence_to_define\">\n"
+"                                                </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -121,6 +126,8 @@ msgid ""
 "<span class=\"fa fa-circle-o text-muted\" role=\"img\" aria-label=\"Absent\" title=\"Absent\" name=\"presence_absent\">\n"
 "                                                </span>"
 msgstr ""
+"<span class=\"fa fa-circle-o text-muted\" role=\"img\" aria-label=\"Absent\" title=\"غائب \" name=\"presence_absent\">\n"
+"                                                </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -129,6 +136,8 @@ msgid ""
 "<span class=\"fa fa-circle-o text-success\" role=\"img\" aria-label=\"Present but not active\" title=\"Present but not active\" name=\"presence_absent_active\">\n"
 "                                                </span>"
 msgstr ""
+"<span class=\"fa fa-circle-o text-success\" role=\"img\" aria-label=\"Present but not active\" title=\"حاضر ولكن ليس نشطاً \" name=\"presence_absent_active\">\n"
+"                                                </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -144,17 +153,19 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"ml8 mr-2\">IP Addresses (comma-separated)</span>"
-msgstr ""
+msgstr "<span class=\"ml8 mr-2\">عناوين IP (مفصولة بفاصلة)</span> "
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"ml8 mr-2\">Minimum number of emails to sent </span>"
 msgstr ""
+"<span class=\"ml8 mr-2\">الحد الأدنى لعدد رسائل البريد الإلكتروني لإرسالها "
+"</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Presence Control</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">التحكم في الحضور</span> "
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -171,6 +182,9 @@ msgid ""
 "                                    Not Connected\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    غير متصل\n"
+"                                </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -185,12 +199,12 @@ msgstr "<span class=\"o_stat_text\">حاضر منذ</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<span>Km</span>"
-msgstr ""
+msgstr "<span>كم</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<strong><span>Reporting</span></strong>"
-msgstr ""
+msgstr "<strong><span>إعداد التقارير</span></strong> "
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -201,7 +215,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "A full-time position <br>Attractive salary package."
-msgstr ""
+msgstr "منصب بدوام كامل <br>باقة راتب مغرية. "
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_user_uniq
@@ -227,7 +241,7 @@ msgstr "غائب"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Achieve monthly sales objectives"
-msgstr ""
+msgstr "تحقيق أهداف المبيعات الشهرية "
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_needaction
@@ -328,7 +342,7 @@ msgstr "العنوان"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Administrative Work"
-msgstr ""
+msgstr "العمل الإداري "
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_manager
@@ -367,12 +381,12 @@ msgstr "السماح للموظفين بتحديث بياناتهم الخاصة
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Approvers"
-msgstr ""
+msgstr "المُعتمِدين "
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__archive_private_address
 msgid "Archive Private Address"
-msgstr ""
+msgstr "أرشفة العنوان الخاص "
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -403,6 +417,13 @@ msgid ""
 "                                We expect the candidate to be proactive and have a \"get it done\" spirit. To be successful,\n"
 "                                you will have solid solving problem skills."
 msgstr ""
+"كموظف في شركتنا سوف <b>تتعاون مع كل من الأقسام لإنشاء المنتجات الثورية\n"
+"                                وجعلها متاحة للاستخدام.</b> انضم للعمل في شركة في نمو مستمر، وتمنحك العديد من الفوائد والفرص\n"
+"                                للمضي قدماً والتعلم جنباً إلى جنب قادة الفرق.  نحن نبحث عن موظف متميز ذو خبرة.\n"
+"                                <br><br>\n"
+"                                هذا المنصب <b>مبدع وحازم</b> في آن واحد بطبيعته، بالإضافة إلى القدرة على التفكير خارج الصندوق.\n"
+"                                نتوقع من المُرشح أن يكون سبّاقاً وأن تكون لديه روح مفعمة بالعزم والحيوية.  حتى تكون ناجحاً،\n"
+"                                من المهم أن يكون لديك مهارة حل المشاكل. "
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_attachment_count
@@ -441,7 +462,7 @@ msgstr "اشتراك أعضاء هذه الأقسام بالقناة تلقائ�
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Autonomy"
-msgstr ""
+msgstr "الاستقلالية "
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -469,7 +490,7 @@ msgstr "البكالوريوس"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Bachelor Degree or Higher"
-msgstr ""
+msgstr "شهادة البكالريوس أو ما يفوقها "
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__barcode
@@ -675,7 +696,7 @@ msgstr "إنشاء قسم جديد"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Create content that will help our users on a daily basis"
-msgstr ""
+msgstr "اصنع محتوى سيساعد مستخدمينا بشكل يومي "
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
@@ -721,7 +742,7 @@ msgstr "عدد الموظفين الحالي"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Customer Relationship"
-msgstr ""
+msgstr "علاقة العميل "
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__birthday
@@ -772,7 +793,7 @@ msgstr "مغادرة"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_date
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid "Departure Date"
-msgstr ""
+msgstr "تاريخ المغادرة "
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
@@ -811,7 +832,7 @@ msgstr "المرؤوسون المباشروة"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Discover our products."
-msgstr ""
+msgstr "استكشف منتجاتنا. "
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_channel
@@ -864,6 +885,11 @@ msgid ""
 "                        Several activities are often organized all over the year, such as weekly\n"
 "                        sports sessions, team building events, monthly drink, and much more"
 msgstr ""
+"لدى كل موظف الفرصة لرؤية البصمة التي يتركها عمله.\n"
+"                        بمقدورك أن تساهم بشكل كبير في نجاح الشركة.\n"
+"                        <br>\n"
+"                        يتم تنظيم العديد من الأنشطة على مدار العام، كالتجمعات\n"
+"                        الرياضية الأسبوعية وفعاليات بناء الفِرَق، والمشروبات الشهرية وغير ذلك الكثير "
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -941,7 +967,7 @@ msgstr "دليل الموظف"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_employee_self_edit
 msgid "Employee Editing"
-msgstr ""
+msgstr "تحرير الموظفين "
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
@@ -1048,7 +1074,7 @@ msgstr "أدخل هنا العنوان الخاص بالموظف، لا العن
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Expand your knowledge of various business industries"
-msgstr ""
+msgstr "وسع آفاق معرفتك بمختلف مجالات الأعمال "
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_recruitment
@@ -1070,7 +1096,7 @@ msgstr "عدد الموظفين المتوقع أن يشغلوا هذا المن
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Experience in writing online content"
-msgstr ""
+msgstr "خبرة في كتابة المحتوى عبر الإنترنت "
 
 #. module: hr
 #: model:hr.job,name:hr.job_developer
@@ -1129,7 +1155,7 @@ msgstr "Font awesome icon e.g. fa-tasks"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Fruit, coffee and <br>snacks provided."
-msgstr ""
+msgstr "يتم توفير <br>الفواكه والقهوة والوجبات الخفيفة. "
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -1156,7 +1182,7 @@ msgstr "إنشاء"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Google Adwords experience"
-msgstr ""
+msgstr "خبرة في Google Adwords"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__graduate
@@ -1172,7 +1198,7 @@ msgstr "خريج"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Great team of smart people, in a friendly and open culture"
-msgstr ""
+msgstr "فريق رائع من الأفراد اللامعين، في بيئة ودودة ولطيفة "
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
@@ -1210,7 +1236,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Highly creative and autonomous"
-msgstr ""
+msgstr "الإبداع والاستقلالية "
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_hired_employee
@@ -1221,14 +1247,14 @@ msgstr "الموظفون المعينون"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
 #: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
 msgid "Home-Work Distance"
-msgstr ""
+msgstr "المسافة بين المنزل والعمل "
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_icon_display
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__hr_icon_display
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__hr_icon_display
 msgid "Hr Icon Display"
-msgstr ""
+msgstr "عرض أيقونة الموارد البشرية "
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_presence_state
@@ -1236,7 +1262,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__hr_presence_state
 #: model:ir.model.fields,field_description:hr.field_res_users__hr_presence_state
 msgid "Hr Presence State"
-msgstr ""
+msgstr "حالة حضور الموارد البشرية "
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -1326,25 +1352,25 @@ msgstr "صورة"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_1024
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_1024
 msgid "Image 1024"
-msgstr ""
+msgstr "صورة 1024"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_128
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_128
 msgid "Image 128"
-msgstr ""
+msgstr "صورة 128"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_256
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_256
 msgid "Image 256"
-msgstr ""
+msgstr "صورة 256"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_512
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_512
 msgid "Image 512"
-msgstr ""
+msgstr "صورة 512"
 
 #. module: hr
 #: code:addons/hr/models/hr_employee.py:0
@@ -1500,7 +1526,7 @@ msgstr "خطة الإطلاق"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Lead the entire sales cycle"
-msgstr ""
+msgstr "ترأس دورة المبيعات بأكملها "
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__cohabitant
@@ -1581,7 +1607,7 @@ msgstr "الرئيسي"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Master demos of our software"
-msgstr ""
+msgstr "النسخ التجريبية الرئيسية لبرنامجنا "
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__member_ids
@@ -1641,7 +1667,7 @@ msgstr "الجنسية (البلد)"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Negotiate and contract"
-msgstr ""
+msgstr "فاوض وتعاقد "
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_date_deadline
@@ -1678,13 +1704,13 @@ msgstr "من الجميل أن تكون"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "No dumb managers, no stupid tools to use, no rigid working hours"
-msgstr ""
+msgstr "لا مدراء غير متفهمين، أو أدوات سخيفة، أو ساعات عمل متشددة "
 
 #. module: hr
 #: code:addons/hr/models/hr_plan.py:0
 #, python-format
 msgid "No specific user given on activity %s."
-msgstr ""
+msgstr "لم يتم إعطاء مستخدم محدد للنشاط %s. "
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1697,6 +1723,8 @@ msgstr ""
 msgid ""
 "No waste of time in enterprise processes, real responsibilities and autonomy"
 msgstr ""
+"لن يضيع أي وقت عند القيام بالعمليات المؤسسية والمسؤوليات الحقيقية "
+"والاستقلالية "
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_job__state__open
@@ -1784,6 +1812,9 @@ msgid ""
 "                    related to employees by departments: expenses, timesheets,\n"
 "                    leaves, recruitments, etc."
 msgstr ""
+"يُستخدم هيكل القسم لدى أودو لإدارة كافة المستندات\n"
+"                    المتعلقة بالموظفين حسب الأقسام: النفقات، الجداول الزمنية،\n"
+"                    الإجازات، التوظيف، إلخ. "
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_department_kanban_action
@@ -1792,6 +1823,9 @@ msgid ""
 "                related to employees by departments: expenses, timesheets,\n"
 "                time off, recruitments, etc."
 msgstr ""
+"يُستخدم هيكل القسم لدى أودو لإدارة كافة المستندات\n"
+"                المتعلقة بالموظفين حسب الأقسام: النفقات، الجداول الزمنية،\n"
+"                الإجازات، التوظيف، إلخ. "
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
@@ -1824,7 +1858,7 @@ msgstr "غير ذلك"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Our Product"
-msgstr ""
+msgstr "منتجنا "
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__pin
@@ -1835,7 +1869,7 @@ msgstr "الرمز السري"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "PIN Code"
-msgstr ""
+msgstr "رمز PIN "
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__pin
@@ -1865,7 +1899,7 @@ msgstr "بيانات المستخدم المرتبطة بالشريك"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Passion for software products"
-msgstr ""
+msgstr "الشغف حول منتجات البرامج "
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__passport_id
@@ -1882,7 +1916,7 @@ msgstr "رقم جواز السفر"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Perfect written English"
-msgstr ""
+msgstr "مهارات كتابية ممتازة باللغة الإنجليزية "
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1893,7 +1927,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Perks"
-msgstr ""
+msgstr "المزايا "
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1904,7 +1938,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Personal Evolution"
-msgstr ""
+msgstr "التطور الشخصي "
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1927,12 +1961,12 @@ msgstr "خطة"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_plan_wizard
 msgid "Plan Wizard"
-msgstr ""
+msgstr "تخطيط المعالج "
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_plan_activity_type
 msgid "Plan activity type"
-msgstr ""
+msgstr "تخطيط نوع النشاط "
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_plan_action
@@ -1961,7 +1995,7 @@ msgstr "خطط"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Play any sport with colleagues, <br>the bill is covered."
-msgstr ""
+msgstr "مارس أي رياضة مع زملائك، <br>وسوف نقوم بتغطية التكاليف. "
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
@@ -1987,6 +2021,7 @@ msgstr "حضور الموظفين"
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence reporting screen, email and IP address control."
 msgstr ""
+"شاشة إعداد التقارير عن الحضور، والتحكم في البريد الإلكتروني وعنوان IP. "
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_present
@@ -2003,7 +2038,7 @@ msgstr "الحالي"
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_absent_active
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_absent_active
 msgid "Present but not active"
-msgstr ""
+msgstr "موجود ولكن غير نشط "
 
 #. module: hr
 #: model:ir.actions.report,name:hr.hr_employee_print_badge
@@ -2048,7 +2083,7 @@ msgstr "موظف في القطاع العام"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Qualify the customer needs"
-msgstr ""
+msgstr "قم بتأهيل احتياجات العميل "
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
@@ -2064,7 +2099,7 @@ msgstr "على استعداد لتوظيف أكثر كفاءة؟"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Real responsibilities and challenges in a fast evolving company"
-msgstr ""
+msgstr "مسؤوليات وتحديات حقيقية في شركة سريعة التطور "
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -2202,6 +2237,8 @@ msgid ""
 "Select the \"Employee\" who is the coach of this employee.\n"
 "The \"Coach\" has no specific rights or responsibilities by default."
 msgstr ""
+"قم باختيار \"الموظِّف\" الذي سيكون مدرب هذا الموظَّف. \n"
+"ليس للـ \"مدرب\" أي حقوق محددة أو مسؤوليات افتراضياً. "
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -2243,7 +2280,7 @@ msgstr "رقم الضمان الاجتماعي"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_plan_activity_type__responsible_id
 msgid "Specific responsible of activity if not linked to the employee."
-msgstr ""
+msgstr "المسؤول المحدد عن النشاط إذا لم يكن مرتبطاً بالموظف. "
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2308,7 +2345,7 @@ msgstr "وقف التوظيف"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Strong analytical skills"
-msgstr ""
+msgstr "مهارات تحليلية قوية "
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__summary
@@ -2341,7 +2378,7 @@ msgstr "الوسوم"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Technical Expertise"
-msgstr ""
+msgstr "خبرات تقنية "
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
@@ -2418,7 +2455,7 @@ msgstr "للتعريف"
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_to_define
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_to_define
 msgid "To define"
-msgstr ""
+msgstr "للتحديد "
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -2444,7 +2481,7 @@ msgstr "متدرب"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Trainings"
-msgstr ""
+msgstr "التدريبات "
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_exception_decoration
@@ -2456,7 +2493,7 @@ msgstr "نوع النشاط الاستثنائي المسجل."
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_undetermined
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_undetermined
 msgid "Undetermined"
-msgstr ""
+msgstr "غير محدد "
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_unread
@@ -2487,19 +2524,19 @@ msgstr "المستخدم"
 #: code:addons/hr/models/hr_plan.py:0
 #, python-format
 msgid "User linked to employee %s is required."
-msgstr ""
+msgstr "الحساب المرتبط بالموظف %s مطلوب. "
 
 #. module: hr
 #: code:addons/hr/models/hr_plan.py:0
 #, python-format
 msgid "User of coach of employee %s is not set."
-msgstr ""
+msgstr "لم يتم تعيين حساب المستخدم الخاص بمدرب الموظف %s بعد. "
 
 #. module: hr
 #: code:addons/hr/models/hr_plan.py:0
 #, python-format
 msgid "User of manager of employee %s is not set."
-msgstr ""
+msgstr "لم يتم تعيين حساب المستخدم الخاص بمدير الموظف %s بعد. "
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_partner_id
@@ -2532,7 +2569,7 @@ msgstr "عناوين IP صالحة"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Valid work permit for Belgium"
-msgstr ""
+msgstr "تصريح عمل صالح لبلجيكا "
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
@@ -2555,7 +2592,7 @@ msgstr "رقم التأشيرة"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "What We Offer"
-msgstr ""
+msgstr "ما نسعى إليه "
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2672,19 +2709,21 @@ msgid ""
 "You are only allowed to update your preferences. Please contact a HR officer"
 " to update other information."
 msgstr ""
+"يُسمح لك بتحديث تفضيلاتك فقط. الرجاء التواصل مع موظف الموارد البشرية لتحديث "
+"بقية المعلومات. "
 
 #. module: hr
 #. openerp-web
 #: code:addons/hr/static/src/models/employee/employee.js:0
 #, python-format
 msgid "You can only chat with employees that have a dedicated user."
-msgstr ""
+msgstr "بإنكانك الدردشة مع الموظفين الذين لديهم مستخدم فقط "
 
 #. module: hr
 #: code:addons/hr/models/hr_department.py:0
 #, python-format
 msgid "You cannot create recursive departments."
-msgstr "لا يمكنك إنشاء أقسام متكررة."
+msgstr "لا يمكنك إنشاء أقسام متداخلة. "
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
@@ -2710,4 +2749,4 @@ msgstr "خطة"
 #: code:addons/hr/models/models.py:0
 #, python-format
 msgid "restricted to employees"
-msgstr ""
+msgstr "يقتصر على الموظفين "
