@@ -45,7 +45,7 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
         template_vals = template._get_tax_vals_complete(company)
         chart_template = env["account.chart.template"].with_context(default_company_id=company.id)
         if old_tax:
-            xml_id = old_tax.get_xml_id().get(old_tax.id)
+            xml_id = old_tax.get_external_id().get(old_tax.id)
             if xml_id:
                 _remove_xml_id(xml_id)
         chart_template.create_record_with_xmlid(company, template, "account.tax", template_vals)
@@ -138,7 +138,7 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
         )
 
     env = api.Environment(cr, SUPERUSER_ID, {})
-    chart_template_id = env['ir.model.data'].xmlid_to_res_id(chart_template_xmlid)
+    chart_template_id = env['ir.model.data']._xmlid_to_res_id(chart_template_xmlid)
     companies = env['res.company'].search([('chart_template_id', '=', chart_template_id)])
     outdated_taxes = []
     for company in companies:
