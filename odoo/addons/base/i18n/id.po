@@ -2235,6 +2235,11 @@ msgid ""
 "\n"
 "The wizard to launch the report has several options to help you get the data you need.\n"
 msgstr ""
+"\n"
+"Tambahkan menu pelaporan di produk yang memperhitungkan sale, purchase, margin dan beberapa indikator menarik lainnya berdasarkan faktur.\n"
+"=============================================================================================================================\n"
+"\n"
+"Wizard untuk meluncurkan laporan yang memiliki beberapa pilihan untuk membantu Anda mendapatkan data yang Anda butuhkan.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pad
@@ -2306,6 +2311,20 @@ msgid ""
 "* Supported cards: Visa, MasterCard, American Express, Discover\n"
 "    "
 msgstr ""
+"\n"
+"Izinkan pembayaran POS dengan kartu kredit\n"
+"==============================\n"
+"\n"
+"Modul ini memungkinkan pelanggan untuk membayar pesanan mereka menggunakan\n"
+"kartu. Transaksi akan diproses oleh Vantiv (dikembangkan oleh Wells\n"
+"Fargo Bank). Akun pedagang Vantiv diperlukan. Ini akan memungkinkan hal-hal \n"
+"berikut:\n"
+"\n"
+"* Pembayaran cepat dengan menggesek kartu kredit selagi di layar pembayaran\n"
+"* Mengkombinasikan pembayaran tunai dan kartu kredit\n"
+"* Cashback\n"
+"* Kartu yang dapat digunakan: Visa, MasterCard, American Express, Discover\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_wishlist
@@ -3125,6 +3144,18 @@ msgid ""
 "when you confirm your sales order it will automatically create a registration for\n"
 "this event.\n"
 msgstr ""
+"\n"
+"Buat pendaftaran dengan sale order.\n"
+"========================================\n"
+"\n"
+"Modul ini memungkinkan Anda untuk mengotomatiskan dan menghubungkan pembuatan pendaftaran dengan\n"
+"alur sale utama Anda dan karena itu, memungkinkan fitur faktur pendaftaran.\n"
+"\n"
+"Ini mendefinisikan produk layanan baru yang memberikan kemampuan untuk\n"
+"memilih kategori acara yang terkait dengannya. Saat melakukan encode untuk sales untuk\n"
+"produk tersebut, Anda dapat memilih acara yang tersedia dari kategori dan\n"
+"saat Anda mengonfirmasi sales order Anda itu akan secara otomatis membuat pendaftaran untuk\n"
+"acara ini.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hr
@@ -3157,6 +3188,33 @@ msgid ""
 " https://www.rrif.hr/dok/preuzimanje/rrif-rp2012.rar\n"
 "\n"
 msgstr ""
+"\n"
+"Lokalisasi Croatia.\n"
+"======================\n"
+"\n"
+"Author: Goran Kliska, Slobodni programi d.o.o., Zagreb\n"
+"        https://www.slobodni-programi.hr\n"
+"\n"
+"Kontribusi:\n"
+"  Tomislav Bošnjaković, Storm Computers: tipovi konta\n"
+"  Ivan Vađić, Slobodni programi: tipovi konta\n"
+"\n"
+"Keterangan:\n"
+"\n"
+"Croatian Chart of Accounts (RRIF ver.2012)\n"
+"\n"
+"RRIF-ov računski plan za poduzetnike za 2012.\n"
+"Vrste konta\n"
+"Kontni plan prema RRIF-u, dorađen u smislu kraćenja naziva i dodavanja analitika\n"
+"Porezne grupe prema poreznoj prijavi\n"
+"Porezi PDV obrasca\n"
+"Ostali porezi\n"
+"Osnovne fiskalne pozicije\n"
+"\n"
+"Izvori podataka:\n"
+" https://www.rrif.hr/dok/preuzimanje/rrif-rp2011.rar\n"
+" https://www.rrif.hr/dok/preuzimanje/rrif-rp2012.rar\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_themes
@@ -3238,6 +3296,19 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Lokalisasi EDI Chili\n"
+"========================\n"
+"Kode ini memungkinkan pembuatan dokumen DTE untuk faktur Chili.\n"
+"- Format DTE (Electronic Taxable Document) di XML\n"
+"- Komunikasi Langsung dengan SII (Servicio de Impuestos Internos) untuk mengirimkan faktur dan dokumen pajak lainnya yang terkait ke sales.\n"
+"- Komunikasi dengan Pelanggan untuk mengirimkan DTE penjualan.\n"
+"- Komunikasi dengan Pemasok (vendor) untuk menerima DTE dari mereka.\n"
+"- Komunikasi Langsung dengan SII untuk memberitahukan penerimaan atau penolakan tagihan vendor atau DTE lainnya.\n"
+"\n"
+" Agar dapat melihat barcode pada faktur, Anda harus memiliki pdf417gen library.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi
@@ -3441,6 +3512,25 @@ msgid ""
 "      payslip interface, but not in the payslip report\n"
 "    "
 msgstr ""
+"\n"
+"Peraturan Payroll Prancis\n"
+"=====================\n"
+"\n"
+"    - Konfigurasi hr_payroll untuk lokalisasi Prancis\n"
+"    - Semua kontribusi utama untuk payslip Prancis, untuk 'cadre' dan 'non-cadre'\n"
+"    - Laporan payslip baru\n"
+"\n"
+"TO-DO:\n"
+"-----\n"
+"    - Integrasi dengan modul liburan untuk potongan dan tunjangan\n"
+"    - Integrasi dengan hr_payroll_account untuk pembuatan otomatis account_move_line\n"
+"      dari payslip\n"
+"    - Terus mengintegrasikan kontribusi. Hanya kontribusi utama yang saat\n"
+"      ini diimplementasikan\n"
+"    - Membuat ulang laporan mengenai webkit\n"
+"    - payslip.line dengan appears_in_payslip = False seharusnya muncul di\n"
+"      antarmuka payslip, tapi tidak muncul di laporan payslip\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_mrp_workorder_quality
@@ -3545,6 +3635,24 @@ msgid ""
 "* create the data of the document types that exists for the specific country. The document type has a country field\n"
 "\n"
 msgstr ""
+"\n"
+"Fungsionalitas\n"
+"----------\n"
+"\n"
+"Di beberapa negara Latin Amerika, termasuk Argentina dan Chili, beberapa transaksasi seperti faktur dan tagihan vendor digolongkan berdasarkan tipe dokumen yang didefinisikan oleh lembaga fiskal pemerintah (Di Argentina oleh AFIP, Chili oleh SII).\n"
+"\n"
+"Tujuan modul ini untuk memperpanjang lokalisasi agar bisa mengelola tipe dokumen tersebut dan merupakan informati penting yang dapat ditampilkan di laporan yang dicetak dan gampang diidentifikasi, This module is intended to be extended by localizations in order to manage these document types and is an essential information that needs to be displayed in the printed reports and that needs to be easily identified, dalam kumpulan faktur serta pemindahan akun.\n"
+"\n"
+"Setiap tipe dokumen memiliki peraturan dan nomor urutan sendiri, yang terakhir terintegrasi dengan nomor faktur dan urutan jurnal agar gampang dilihat oleh user lokalisasi. Agar bisa atau tidak bisa mendukung tipe dokumen ini Jurnal memiliki opsi baru yang mengizinkan atau melarang penggunaan dokumen.\n"
+"\n"
+"Teknis\n"
+"---------\n"
+"\n"
+"Jika lokalisasi Anda membutuhkan logic ini maka Anda harus menambahkan modul ini sebagai dependen dan di modul lokalisasi Anda memperpanjang:\n"
+"\n"
+"* perpanjang metode company's _localization_use_documents().\n"
+"* buat data untuk tipe dokumen yang tersedia untuk negara tersebut. Tipe dokumen memiliki kolom negara\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar
@@ -8898,7 +9006,7 @@ msgstr "Aruba"
 #: model_terms:res.partner,website_description:base.res_partner_3
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "As a team, we are happy to contribute to this event."
-msgstr ""
+msgstr "Sebagai tim, kami senang karena bisa berkontribusi untuk acara ini."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal
@@ -10419,7 +10527,7 @@ msgstr ""
 #: model_terms:res.partner,website_description:base.res_partner_3
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Come see us live, we hope to meet you !"
-msgstr ""
+msgstr "Lihat kami secara langsung, kami berharap dapat bertemu Anda !"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__comm10e
@@ -14539,7 +14647,7 @@ msgstr "Menangani pemesanan makan siang dari karyawan Anda"
 #: model_terms:res.partner,website_description:base.res_partner_3
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Happy to be Sponsor"
-msgstr ""
+msgstr "Bahagia untuk menjadi Sponsor"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_escpos

@@ -1915,7 +1915,7 @@ msgstr "خطأ"
 #: code:addons/point_of_sale/models/pos_category.py:0
 #, python-format
 msgid "Error ! You cannot create recursive categories."
-msgstr "خطأ! لا يمكنك إنشاء فئات تكرارية."
+msgstr "خطأ! لا يمكنك إنشاء فئات متداخلة. "
 
 #. module: point_of_sale
 #. openerp-web
@@ -3426,6 +3426,8 @@ msgid "Picking POS"
 msgstr "الانتقاء في نقطة البيع "
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Pickings"

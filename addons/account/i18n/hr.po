@@ -12337,14 +12337,6 @@ msgid "The payment's currency."
 msgstr "Valuta plaćanja"
 
 #. module: account
-#: code:addons/account/models/product.py:0
-#, python-format
-msgid ""
-"The product \"%s\" is used in invoices. You cannot change its Unit of "
-"Measure."
-msgstr ""
-
-#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -12868,6 +12860,14 @@ msgstr ""
 msgid ""
 "This payment term will be used instead of the default one for sales orders "
 "and customer invoices"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/product.py:0
+#, python-format
+msgid ""
+"This product is already being used in posted Journal Entries.\n"
+"If you want to change its Unit of Measure, please archive this product and create a new one."
 msgstr ""
 
 #. module: account
@@ -14441,4 +14441,19 @@ msgstr "→ Prebroji"
 msgid ""
 "An analytic default requires an analytic account or an analytic tag used for"
 " analytic distribution."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid "Your taxes have been updated !"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Please check these taxes. They might be outdated. We did not update them. "
+"Indeed, they do not exactly match the taxes of the original version of the "
+"localization module.<br/>You might want to archive or adapt them.<br/><ul>"
 msgstr ""
