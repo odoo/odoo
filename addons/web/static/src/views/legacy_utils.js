@@ -106,6 +106,10 @@ export function mapActiveFieldsToFieldsInfo(activeFields, fields, viewType, env)
             __WOWL_FIELD_DESCR__: fieldDescr,
         };
 
+        if (fieldDescr.rawAttrs && fieldDescr.rawAttrs.studio_groups) {
+            fieldInfo.studio_groups = fieldDescr.rawAttrs.studio_groups;
+        }
+
         if (FieldComponent && FieldComponent.limit) {
             fieldInfo.limit = FieldComponent.limit;
         }
