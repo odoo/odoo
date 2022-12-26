@@ -699,7 +699,7 @@ export class BaseImportModel {
             float_thousand_separator: {
                 label: _t("Thousands Separator:"),
                 type: "select",
-                value: "",
+                value: ",",
                 options: [
                     { value: ",", label: _t("Comma") },
                     { value: ".", label: _t("Dot") },
@@ -709,7 +709,7 @@ export class BaseImportModel {
             float_decimal_separator: {
                 label: _t("Decimals Separator:"),
                 type: "select",
-                value: "",
+                value: ".",
                 options: [
                     { value: ",", label: _t("Comma") },
                     { value: ".", label: _t("Dot") },
