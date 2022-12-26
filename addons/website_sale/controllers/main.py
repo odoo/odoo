@@ -512,6 +512,7 @@ class WebsiteSale(http.Controller):
         else:
             product_template.product_template_image_ids.unlink()
 
+    # TODO: remove in master as it is not called anymore.
     @http.route(['/shop/product/remove-image'], type='json', auth='user', website=True)
     def remove_product_image(self, image_res_model, image_res_id):
         """
