@@ -139,5 +139,45 @@ QUnit.module("mail", {}, function () {
                 );
             }
         );
+
+        QUnit.test("create channel from sidebar", async function(assert) {
+                assert.expect(1);
+
+                const pyEnv = await startServer();
+                const searchReadDef = makeDeferred();
+                const { click, insertText, openDiscuss, messaging } = await start({
+                     async mockRPC (route, args) {
+                        if (args.method === "search_read") {
+                            searchReadDef.resolve();
+                        }
+                        if (args.method === "channel_create") {
+                            const channel_id = pyEnv["mail.channel"].create({
+                                channel_member_ids: [[0, 0, { partner_id: pyEnv.currentPartnerId }]],
+                                channel_type: "channel",
+                                group_public_id: false,
+                                name: args.args[0],
+                            });
+                            return (await messaging.rpc({
+                                model: "mail.channel",
+                                method: "channel_info",
+                                args: [channel_id],
+                            }))[0];
+                        }
+                    },
+                });
+                await openDiscuss();
+                await click(".o_DiscussSidebarCategory_commandAdd");
+                insertText(".o_DiscussSidebarCategory_addingItemInput", "Test Channel");
+
+                await searchReadDef;
+                await nextAnimationFrame();
+                await click(".o_DiscussSidebarCategory_newChannelAutocompleteSuggestions li");
+                assert.strictEqual(
+                    document.querySelector(".o_ThreadViewTopbar_threadName").innerText,
+                    "Test Channel",
+                    "New channel created from the sidebar should be open in threadview"
+                );
+            }
+        );
     });
 });
