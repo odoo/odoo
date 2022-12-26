@@ -10863,7 +10863,6 @@ QUnit.module("Fields", (hooks) => {
             1: {
                 id: 1,
                 name: "test",
-                res_id: 1,
                 res_model: "partner",
                 type: "ir.actions.act_window",
                 views: [
@@ -10900,7 +10899,7 @@ QUnit.module("Fields", (hooks) => {
             "10",
         ]);
 
-        await click(target.querySelector(".o_data_cell"));
+        await click(target, ".o_data_row:nth-child(3) .o_data_cell");
         assert.containsOnce(target, ".o_form_view");
         assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_data_cell")),
