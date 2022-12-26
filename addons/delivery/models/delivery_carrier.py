@@ -340,8 +340,15 @@ class DeliveryCarrier(models.Model):
 
         package_weights = [max_weight] * total_full_packages + ([last_package_weight] if last_package_weight else [])
         partial_cost = total_cost / len(package_weights)  # separate the cost uniformly
+        order_commodities = self._get_commodities_from_order(order)
+
+        # Split the commodities value uniformly as well
+        for commodity in order_commodities:
+            commodity.monetary_value /= len(package_weights)
+            commodity.qty = max(1, commodity.qty // len(package_weights))
+
         for weight in package_weights:
-            packages.append(DeliveryPackage(None, weight, default_package_type, total_cost=partial_cost, currency=order.company_id.currency_id, order=order))
+            packages.append(DeliveryPackage(order_commodities, weight, default_package_type, total_cost=partial_cost, currency=order.company_id.currency_id, order=order))
         return packages
 
     def _get_packages_from_picking(self, picking, default_package_type):
