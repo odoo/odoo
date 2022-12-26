@@ -2265,7 +2265,7 @@ class Form(object):
                     if modifier in ancestor_modifiers:
                         domain = ancestor_modifiers[modifier]
                         ancestor_domain = ([bool(domain)]) if isinstance(domain, (int, bool)) else normalize_domain(domain)
-                        node_domain = node_modifiers.get(modifier, [])
+                        node_domain = node_modifiers.get(modifier, [False])
                         # Combine the field modifiers with his ancestor modifiers with an OR connector
                         # e.g. A field is invisible if its own invisible modifier is True
                         # OR if one of its ancestor invisible modifier is True

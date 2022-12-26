@@ -120,11 +120,11 @@ class LoyaltyRule(models.Model):
         if self.product_ids:
             domain = [('id', 'in', self.product_ids.ids)]
         if self.product_category_id:
-            domain = expression.OR([domain, [('categ_id', 'child_of', self.product_category_id.id)]])
+            domain = expression.OR([domain or [False], [('categ_id', 'child_of', self.product_category_id.id)]])
         if self.product_tag_id:
-            domain = expression.OR([domain, [('all_product_tag_ids', '=', self.product_tag_id.id)]])
+            domain = expression.OR([domain or [False], [('all_product_tag_ids', '=', self.product_tag_id.id)]])
         if self.product_domain and self.product_domain != '[]':
-            domain = expression.AND([domain, ast.literal_eval(self.product_domain)])
+            domain = expression.AND([domain or [True], ast.literal_eval(self.product_domain)])
         return domain
 
     def _get_valid_products(self):

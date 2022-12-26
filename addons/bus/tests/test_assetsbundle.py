@@ -17,12 +17,9 @@ class BusWebTests(odoo.tests.HttpCase):
         db_name = self.env.registry.db_name
         bundle_xml_ids = ('web.assets_common', 'web.assets_backend')
 
-        domain = []
-        for bundle in bundle_xml_ids:
-            domain = expression.OR([
-                domain,
-                [('name', 'ilike', bundle + '%')]
-            ])
+        domain = expression.OR([
+            [('name', 'ilike', bundle + '%')] for bundle in bundle_xml_ids
+        ])
         # start from a clean slate
         self.env['ir.attachment'].search(domain).unlink()
         self.env.registry._clear_cache()

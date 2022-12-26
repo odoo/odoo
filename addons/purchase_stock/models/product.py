@@ -85,7 +85,7 @@ class ProductProduct(models.Model):
                         ('move_dest_ids', '=', False),
                         ('orderpoint_id.warehouse_id', 'in', warehouse_ids)
             ]])
-            domain = expression.OR([domain, wh_domain])
+            domain = expression.OR([domain or [False], wh_domain])
         return domain
 
 

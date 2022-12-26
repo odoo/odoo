@@ -85,16 +85,14 @@ class ChannelUsersRelation(models.Model):
         Override unlink method :
         Remove attendee from a channel, then also remove slide.slide.partner related to.
         """
-        removed_slide_partner_domain = []
-        for channel_partner in self:
-            # find all slide link to the channel and the partner
-            removed_slide_partner_domain = expression.OR([
-                removed_slide_partner_domain,
-                [('partner_id', '=', channel_partner.partner_id.id),
-                 ('slide_id', 'in', channel_partner.channel_id.slide_ids.ids)]
-            ])
-        if removed_slide_partner_domain:
-            self.env['slide.slide.partner'].search(removed_slide_partner_domain).unlink()
+        # find all slide link to the channel and the partner
+        removed_slide_partner_domains = [
+            [('partner_id', '=', channel_partner.partner_id.id),
+             ('slide_id', 'in', channel_partner.channel_id.slide_ids.ids)]
+            for channel_partner in self
+        ]
+        if removed_slide_partner_domains:
+            self.env['slide.slide.partner'].search(expression.OR(removed_slide_partner_domains)).unlink()
         return super(ChannelUsersRelation, self).unlink()
 
     def _set_as_completed(self, completed=True):
@@ -777,7 +775,7 @@ class Channel(models.Model):
             if earned_karma[user.partner_id.id]:
                 user.add_karma(-1 * earned_karma[user.partner_id.id])
 
-        removed_channel_partner_domain = []
+        removed_channel_partner_domain = [False]
         for channel in self:
             removed_channel_partner_domain = expression.OR([
                 removed_channel_partner_domain,
@@ -786,8 +784,7 @@ class Channel(models.Model):
             ])
         self.message_unsubscribe(partner_ids=partner_ids)
 
-        if removed_channel_partner_domain:
-            self.env['slide.channel.partner'].sudo().search(removed_channel_partner_domain).unlink()
+        self.env['slide.channel.partner'].sudo().search(removed_channel_partner_domain).unlink()
 
     def _send_share_email(self, emails):
         """ Share channel through emails."""

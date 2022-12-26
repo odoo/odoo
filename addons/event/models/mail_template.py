@@ -18,5 +18,5 @@ class MailTemplate(models.Model):
         method to filtrate the mail templates.
         """
         if self.env.context.get('filter_template_on_event'):
-            args = expression.AND([[('model', '=', 'event.registration')], args])
+            args = expression.AND([[('model', '=', 'event.registration')], args or [True]])
         return super(MailTemplate, self)._name_search(name, args, operator, limit, name_get_uid)

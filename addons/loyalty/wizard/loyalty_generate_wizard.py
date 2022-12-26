@@ -36,7 +36,7 @@ class LoyaltyGenerateWizard(models.TransientModel):
         if self.customer_ids:
             domain = [('id', 'in', self.customer_ids.ids)]
         if self.customer_tag_ids:
-            domain = expression.OR([domain, [('category_id', 'in', self.customer_tag_ids.ids)]])
+            domain = expression.OR([domain or [False], [('category_id', 'in', self.customer_tag_ids.ids)]])
         return self.env['res.partner'].search(domain)
 
     @api.depends('customer_ids', 'customer_tag_ids', 'mode')

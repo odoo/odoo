@@ -300,8 +300,8 @@ def AND(domains):
     result = []
     count = 0
     for domain in domains:
-        domain = daomin and normalize_domain(domain)
-        if not domain or domain == [True]:
+        domain = normalize_domain(domain)
+        if domain == [True]:
             continue
         if domain == [False]:
             return [False]
@@ -315,8 +315,8 @@ def OR(domains):
     result = []
     count = 0
     for domain in domains:
-        domain = domain and normalize_domain(domain)
-        if not domain or domain == [False]:
+        domain = normalize_domain(domain)
+        if domain == [False]:
             continue
         if domain == [True]:
             return [True]

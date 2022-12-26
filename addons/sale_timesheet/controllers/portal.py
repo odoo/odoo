@@ -78,13 +78,13 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
     def _get_search_domain(self, search_in, search):
         search_domain = super()._get_search_domain(search_in, search)
         if search_in in ('sol', 'all'):
-            search_domain = expression.OR([search_domain, [('so_line', 'ilike', search)]])
+            search_domain = expression.OR([search_domain or [False], [('so_line', 'ilike', search)]])
         if search_in in ('so', 'all'):
-            search_domain = expression.OR([search_domain, [('so_line.order_id.name', 'ilike', search)]])
+            search_domain = expression.OR([search_domain or [False], [('so_line.order_id.name', 'ilike', search)]])
         if search_in in ('invoice', 'all'):
             invoices = request.env['account.move'].sudo().search([('name', 'ilike', search)])
             domain = request.env['account.analytic.line']._timesheet_get_sale_domain(invoices.mapped('invoice_line_ids.sale_line_ids'), invoices)
-            search_domain = expression.OR([search_domain, domain])
+            search_domain = expression.OR([search_domain or [False], domain])
         return search_domain
 
     def _get_groupby_mapping(self):

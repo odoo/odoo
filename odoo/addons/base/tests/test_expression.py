@@ -819,6 +819,12 @@ class TestExpression(SavepointCaseWithUserDemo):
         false = [False]
         true = [True]
         normal = [('foo', '=', 'bar')]
+        # OR with nothing
+        expr = expression.OR([])
+        self.assertEqual(expr, false)
+        # OR with empty leaf
+        expr = expression.OR([[]])
+        self.assertEqual(expr, true)
         # OR with single FALSE_LEAF
         expr = expression.OR([false])
         self.assertEqual(expr, false)

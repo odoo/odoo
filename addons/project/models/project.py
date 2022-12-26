@@ -2123,8 +2123,8 @@ class Task(models.Model):
         tasks = self
         recurrence_update = vals.pop('recurrence_update', 'this')
         if recurrence_update != 'this':
-            recurrence_domain = []
             if recurrence_update == 'subsequent':
+                recurrence_domain = [False]
                 for task in self:
                     recurrence_domain = expression.OR([recurrence_domain, ['&', ('recurrence_id', '=', task.recurrence_id.id), ('create_date', '>=', task.create_date)]])
             else:

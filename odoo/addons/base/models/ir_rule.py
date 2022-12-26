@@ -81,9 +81,10 @@ class IrRule(models.Model):
         # searching on (records, group_rules) filters out some of the records)
         group_rules = all_rules.filtered(lambda r: r.groups and r.groups & self.env.user.groups_id)
         group_domains = expression.OR([
-            safe_eval(r.domain_force, eval_context) if r.domain_force else []
+            safe_eval(r.domain_force or "[False]", eval_context)
             for r in group_rules
         ])
+
         # if all records get returned, the group rules are not failing
         if Model.search_count(expression.AND([[('id', 'in', for_records.ids)], group_domains])) == len(for_records):
             group_rules = self.browse(())

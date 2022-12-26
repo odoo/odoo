@@ -137,12 +137,12 @@ class LinkTracker(models.Model):
         """Check that the link trackers are unique."""
         # build a query to fetch all needed link trackers at once
         search_query = expression.OR([
-            expression.AND([
-                [('url', '=', tracker.url)],
-                [('campaign_id', '=', tracker.campaign_id.id)],
-                [('medium_id', '=', tracker.medium_id.id)],
-                [('source_id', '=', tracker.source_id.id)],
-            ])
+            [
+                ('url', '=', tracker.url),
+                ('campaign_id', '=', tracker.campaign_id.id),
+                ('medium_id', '=', tracker.medium_id.id),
+                ('source_id', '=', tracker.source_id.id),
+            ]
             for tracker in self
         ])
 

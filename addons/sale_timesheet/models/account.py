@@ -23,7 +23,7 @@ class AccountAnalyticLine(models.Model):
 
     def _default_sale_line_domain(self):
         domain = super(AccountAnalyticLine, self)._default_sale_line_domain()
-        return expression.OR([domain, [('qty_delivered_method', '=', 'timesheet')]])
+        return expression.OR([domain or [False], [('qty_delivered_method', '=', 'timesheet')]])
 
     timesheet_invoice_type = fields.Selection(TIMESHEET_INVOICE_TYPES, string="Billable Type",
             compute='_compute_timesheet_invoice_type', compute_sudo=True, store=True, readonly=True)

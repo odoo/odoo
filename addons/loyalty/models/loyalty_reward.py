@@ -109,11 +109,11 @@ class LoyaltyReward(models.Model):
         if self.discount_product_ids:
             domain = [('id', 'in', self.discount_product_ids.ids)]
         if self.discount_product_category_id:
-            domain = expression.OR([domain, [('categ_id', 'child_of', self.discount_product_category_id.id)]])
+            domain = expression.OR([domain or [False], [('categ_id', 'child_of', self.discount_product_category_id.id)]])
         if self.discount_product_tag_id:
-            domain = expression.OR([domain, [('all_product_tag_ids', '=', self.discount_product_tag_id.id)]])
+            domain = expression.OR([domain or [False], [('all_product_tag_ids', '=', self.discount_product_tag_id.id)]])
         if self.discount_product_domain and self.discount_product_domain != '[]':
-            domain = expression.AND([domain, ast.literal_eval(self.discount_product_domain)])
+            domain = expression.AND([domain or [True], ast.literal_eval(self.discount_product_domain)])
         return domain
 
     @api.depends('discount_product_ids', 'discount_product_category_id', 'discount_product_tag_id', 'discount_product_domain')

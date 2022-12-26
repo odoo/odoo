@@ -182,9 +182,9 @@ class Groups(models.Model):
             else:
                 sub_where = expression.OR([group_domain, category_domain])
             if operator in expression.NEGATIVE_TERM_OPERATORS:
-                where = expression.AND([where, sub_where])
+                where = expression.AND([where or [True], sub_where])
             else:
-                where = expression.OR([where, sub_where])
+                where = expression.OR([where or [False], sub_where])
         return where
 
     @api.model
