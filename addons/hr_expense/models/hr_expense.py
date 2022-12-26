@@ -348,7 +348,7 @@ class HrExpense(models.Model):
 
         product = self.env['product.product'].search([('can_be_expensed', '=', True)])
         if product:
-            product = product.filtered(lambda p: p.default_code == "EXP_GEN")[0] or product[0]
+            product = product.filtered(lambda p: p.default_code == "EXP_GEN")[:1] or product[0]
         else:
             raise UserError(_("You need to have at least one category that can be expensed in your database to proceed!"))
 
