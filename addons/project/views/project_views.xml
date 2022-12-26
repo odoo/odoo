@@ -498,6 +498,7 @@
                             <field name="partner_id" widget="res_partner_many2one"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="company_ids" widget="many2many_tags" groups="base.group_multi_company"/>
                         </group>
                         <group>
                             <field name="active" invisible="1"/>
