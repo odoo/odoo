@@ -293,11 +293,7 @@ class ProductScreen extends ControlButtonsMixin(PosComponent) {
         if (partner) {
             if (this.currentOrder.get_partner() !== partner) {
                 this.currentOrder.set_partner(partner);
-                this.currentOrder.set_pricelist(
-                    _.findWhere(this.env.pos.pricelists, {
-                        id: partner.property_product_pricelist[0],
-                    }) || this.env.pos.default_pricelist
-                );
+                this.currentOrder.updatePricelist(partner);
             }
             return true;
         }
