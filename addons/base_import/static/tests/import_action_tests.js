@@ -456,6 +456,50 @@ QUnit.module("Base Import Tests", (hooks) => {
         );
     });
 
+    QUnit.test("Import view: default import options are correctly", async function (assert) {
+        registerFakeHTTPService();
+        await createImportAction({
+            "base_import.import/parse_preview": async (route, args) => {
+                return parsePreview(args[1]);
+            },
+            "base_import.import/execute_import": (route, args) => {
+                assert.step("execute_import");
+                assert.deepEqual(
+                    args[3],
+                    {
+                        advanced: true,
+                        date_format: "",
+                        datetime_format: "",
+                        encoding: "",
+                        fallback_values: {},
+                        float_decimal_separator: ".",
+                        float_thousand_separator: ",",
+                        has_headers: true,
+                        import_set_empty_fields: [],
+                        import_skip_records: [],
+                        keep_matches: false,
+                        limit: 2000,
+                        name_create_enabled_fields: {},
+                        quoting: '"',
+                        separator: "",
+                        sheet: "Template",
+                        sheets: ["Template", "Template 2"],
+                        skip: 0,
+                        tracking_disable: true,
+                    },
+                    "options are defaulted as expected"
+                );
+                return executeImport(args);
+            },
+        });
+
+        // Set and trigger the change of a file for the input
+        const file = new File(["fake_file"], "fake_file.xls", { type: "text/plain" });
+        await editInput(target, "input[type='file']", file);
+        await click(target.querySelector(".o_control_panel button:first-child"));
+        assert.verifySteps(["execute_import"]);
+    });
+
     QUnit.test("Import view: import a CSV file with one sheet", async function (assert) {
         registerFakeHTTPService((route, params) => {
             assert.strictEqual(route, "/base_import/set_file");
