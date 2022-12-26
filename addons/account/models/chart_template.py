@@ -143,7 +143,7 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
     outdated_taxes = []
     for company in companies:
         template_to_tax = _get_template_to_tax_xmlid_mapping(company)
-        templates = env['account.tax.template'].search([("chart_template_id", "=", chart_template_id)])
+        templates = env['account.tax.template'].with_context(active_test=False).search([("chart_template_id", "=", chart_template_id)])
         for template in templates:
             tax = env["account.tax"].browse(template_to_tax.get(template.id))
             if not tax or not _is_tax_and_template_same(template, tax):
