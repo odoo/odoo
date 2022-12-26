@@ -582,21 +582,25 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("A new form view can be reloaded after a failed one", async function (assert) {
         assert.expect(5);
-        const webClient = await createWebClient({serverData});
+        const webClient = await createWebClient({ serverData });
 
         await doAction(webClient, 3);
         await cpHelpers.switchView(target, "list");
         assert.containsOnce(target, ".o_list_view", "The list view should be displayed");
 
         // Click on the first record
-        await testUtils.dom.click($(target).find(".o_list_view .o_data_row:first .o_data_cell:first"));
+        await testUtils.dom.click(
+            $(target).find(".o_list_view .o_data_row:first .o_data_cell:first")
+        );
         await legacyExtraNextTick();
         assert.containsOnce(target, ".o_form_view", "The form view should be displayed");
 
         // Delete the current record
         await testUtils.controlPanel.toggleActionMenu(target);
         await testUtils.dom.click(
-            Array.from(document.querySelectorAll('.o_menu_item')).find(e => e.textContent === "Delete")
+            Array.from(document.querySelectorAll(".o_menu_item")).find(
+                (e) => e.textContent === "Delete"
+            )
         );
         await legacyExtraNextTick();
         assert.containsOnce(target, ".modal", "a confirm modal should be displayed");
@@ -623,10 +627,15 @@ QUnit.module("ActionManager", (hooks) => {
         await legacyExtraNextTick();
         assert.containsOnce(target, ".o_list_view", "should still display the list view");
 
-        await testUtils.dom.click($(target).find(".o_list_view .o_data_row:first .o_data_cell:first"));
+        await testUtils.dom.click(
+            $(target).find(".o_list_view .o_data_row:first .o_data_cell:first")
+        );
         await legacyExtraNextTick();
-        assert.containsOnce(target, ".o_form_view",
-            "The form view should still load after a previous failed update | reload");
+        assert.containsOnce(
+            target,
+            ".o_form_view",
+            "The form view should still load after a previous failed update | reload"
+        );
     });
 
     QUnit.test("there is no flickering when switching between views", async function (assert) {
@@ -1941,6 +1950,67 @@ QUnit.module("ActionManager", (hooks) => {
             assert.strictEqual(
                 target.querySelector(".o_control_panel .breadcrumb-item").textContent,
                 "Second record"
+            );
+        }
+    );
+
+    QUnit.test(
+        "action with res_id, load another id on current action, do new action, restore previous",
+        async (assert) => {
+            serverData.actions[999] = {
+                id: 999,
+                name: "Partner",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                res_id: 1,
+                views: [[44, "form"]],
+            };
+            serverData.views["partner,44,form"] =
+                '<form><field name="m2o" open_target="current"/></form>';
+            const mockRPC = async (route, { method }) => {
+                if (method === "get_formview_action") {
+                    return Promise.resolve({ ...serverData.actions[999], res_id: 3 });
+                }
+            };
+            const webClient = await createWebClient({ serverData, mockRPC });
+            await doAction(webClient, 999, { props: { resIds: [1, 2] } });
+            assert.containsOnce(target, ".o_form_view .o_form_editable");
+            assert.strictEqual(
+                target.querySelector(".o_control_panel .breadcrumb").textContent,
+                "First record"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_control_panel .o_pager_counter").textContent,
+                "1 / 2"
+            );
+
+            // load another id on current action (through pager)
+            await click(target.querySelector(".o_pager_next"));
+            assert.strictEqual(
+                target.querySelector(".o_control_panel .breadcrumb").textContent,
+                "Second record"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_control_panel .o_pager_counter").textContent,
+                "2 / 2"
+            );
+
+            // push another action in the breadcrumb
+            await click(target, ".o_field_many2one .o_external_button");
+            assert.strictEqual(
+                target.querySelector(".o_control_panel .breadcrumb").textContent,
+                "Second recordThird record"
+            );
+
+            // restore previous action through breadcrumb
+            await click(target.querySelector(".o_control_panel .breadcrumb a"));
+            assert.strictEqual(
+                target.querySelector(".o_control_panel .breadcrumb").textContent,
+                "Second record"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_control_panel .o_pager_counter").textContent,
+                "2 / 2"
             );
         }
     );

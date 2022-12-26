@@ -15,7 +15,16 @@ import { ActionDialog } from "./action_dialog";
 import { CallbackRecorder } from "./action_hook";
 import { ReportAction } from "./reports/report_action";
 
-import { Component, markup, onMounted, onWillUnmount, onError, useChildSubEnv, xml, reactive } from "@odoo/owl";
+import {
+    Component,
+    markup,
+    onMounted,
+    onWillUnmount,
+    onError,
+    useChildSubEnv,
+    xml,
+    reactive,
+} from "@odoo/owl";
 
 const actionHandlersRegistry = registry.category("action_handlers");
 const actionRegistry = registry.category("actions");
@@ -487,7 +496,7 @@ function makeActionManager(env) {
         }
 
         // view specific
-        if (action.res_id) {
+        if (action.res_id && !viewProps.resId) {
             viewProps.resId = action.res_id;
         }
 
