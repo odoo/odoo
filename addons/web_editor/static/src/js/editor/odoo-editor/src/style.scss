@@ -105,7 +105,6 @@
     padding-right: 5px;
     background: #222222;
     color: white;
-    border-radius: 8px;
 
     .toolbar-bottom::before {
         content: '';
@@ -264,35 +263,44 @@
 .oe-tablepicker-size {
     color: white;
 }
-@media only screen and (max-width: 767px) {
+
+@include media-breakpoint-down(md) {
     .oe-toolbar {
         position: relative;
+        overflow-x: auto;
         visibility: visible;
-        width: 100%;
+        width: auto;
+        height: auto;
+        border-bottom: 1px solid $border-color;
         border-radius: 0;
         background-color: white;
-
+        box-shadow: none;
+        
         .btn {
             color: black;
+            padding: 3px 4px !important;
+        }
+
+        .dropdown-menu {
+            position: fixed !important;
         }
     }
 }
 
+@include media-breakpoint-up(md) {
+    .oe-toolbar.oe-floating{
+        box-shadow: $box-shadow;
+    }
+}
 /* Content styling */
 
 .oe-powerbox-wrapper {
-    position: absolute;
     z-index: $zindex-modal;
-    border: black;
     background: var(--oePowerbox__wrapper-bg, $o-white);
     color: $o-main-text-color;
     max-height: 40vh;
     box-sizing: border-box;
-    max-width: 100%;
-    box-shadow: 0px 3px 18px rgba(0, 0, 0, .23);
-    border-radius: 4px;
-    overflow: hidden;
-    display: flex;
+    box-shadow: $box-shadow;
 
     ::-webkit-scrollbar {
         background: transparent;
@@ -308,45 +316,24 @@
         background: var(--oePowerbox__ScrollbarTrack-background-color, #EDECE9);
     }
 }
-.oe-powerbox-mainWrapper {
-    flex: 1 1 auto;
-    overflow: auto;
-    padding: 5px 0;
-    overscroll-behavior: contain;
-}
 
 .oe-powerbox-category, .oe-powerbox-noResult {
-    margin: 10px;
     color: var(--oePowerbox__category-color, $o-gray-600);
     font-size: 11px;
-}
-.oe-powerbox-category {
-    text-transform: uppercase;
-    margin: 5px 12px;
 }
 .oe-powerbox-noResult {
     display: none;
 }
 .oe-powerbox-commandWrapper {
-    display: flex;
-    padding: 6px 12px;
-    cursor: pointer;
-
     &.active {
         background: var(--oePowerbox__commandName-bg, $o-gray-100); 
     }
 }
 i.oe-powerbox-commandImg {
-    display: flex;
-    height: 30px;
-    width: 30px;
-    align-items: center;
-    justify-content: center;
+    height: 35px;
+    width: 35px;
     background: var(--oePowerbox__commandImg-bg, $o-gray-100);
     color: var(--oePowerbox__commandImg-color, $o-gray-800);
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 7px;
-    font-size: 15px;
 }
 .oe-powerbox-commandName {
     font-size: 13px;
@@ -355,9 +342,6 @@ i.oe-powerbox-commandImg {
 .oe-powerbox-commandDescription {
     color: var(--oePowerbox__commandDescription-color, $o-main-color-muted);
     font-size: 12px;
-}
-.oe-powerbox-commandRightCol {
-    margin: 0 10px;
 }
 
 /* Command hints */
