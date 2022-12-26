@@ -194,6 +194,7 @@ export class HtmlField extends Component {
                                             validateCallback: this.onDynamicPlaceholderValidate.bind(this),
                                             closeCallback: this.onDynamicPlaceholderClose.bind(this),
                                             positionCallback: this.positionDynamicPlaceholder.bind(this),
+                                            preventClose: () => document.activeElement.closest(".o_popover"),
                                         }
                                     );
                                 });

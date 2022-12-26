@@ -111,7 +111,8 @@ export class QWebPlugin {
                 }
             });
         };
-        const tElements = subRoot.querySelectorAll('t');
+        const closestDiv = subRoot.closest("DIV")
+        const tElements = closestDiv.querySelectorAll('t');
         // Wait for the content to be on the dom to check checkAllInline
         // otherwise the getComputedStyle will be wrong.
         // todo: remove the setTimeout when the editor will provide a signal
