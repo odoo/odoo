@@ -123,12 +123,12 @@ class TestRunnerLoggingCommon(TransactionCase):
         self.test_result.addError(self, (AssertionError, AssertionError(message), None))
 
     def _clean_message(self, message):
-        root_path = __file__.replace('/odoo/odoo/addons/base/tests/test_test_suite.py', '')
+        root_path = __file__.replace('/odoo/addons/base/tests/test_test_suite.py', '')
         message = re.sub(r'line \d+', 'line $line', message)
         message = re.sub(r'py:\d+', 'py:$line', message)
         message = re.sub(r'decorator-gen-\d+', 'decorator-gen-xxx', message)
         message = re.sub(r'python[\d\.]+', 'python', message)
-        message = message.replace(f'{root_path}', '/root_path')
+        message = message.replace(f'{root_path}', '/root_path/odoo')
         return message
 
 
