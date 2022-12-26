@@ -31,11 +31,12 @@ class TestAccountFrFec(AccountTestInvoicingCommon):
             'amount': 20,
             'invoice_repartition_line_ids': [
                 Command.create({
+                    'factor_percent': 100.0,
                     'repartition_type': 'base',
                 }),
                 Command.create({
                     'repartition_type': 'tax',
-                    'factor': 100,
+                    'factor_percent': 100.0,
                     'account_id': cls.env['account.account'].search([('code', '=', "445710")], limit=1).id,
                 })
             ]
