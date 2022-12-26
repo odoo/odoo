@@ -74,4 +74,13 @@
             }
         }
     }
+
+    @include media-breakpoint-down(lg) {
+        .o_notebook_content .oe-toolbar {
+            @include o-position-sticky($top: 0px);
+            margin-left: var(--notebook-margin-x, $o-horizontal-padding);
+            margin-right: var(--notebook-margin-x, $o-horizontal-padding);
+            width: auto;
+        }
+    }
 }
