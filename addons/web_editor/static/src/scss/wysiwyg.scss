@@ -133,6 +133,12 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
         }
 
         .o_colorpicker_section {
+            &.o_custom_gradient_editor{
+                .o_custom_gradient_btn{
+                    border: 1px solid var(--o-we-toolbar-border);
+                }
+            }
+
             &::after {
                 content: "";
                 display: table;
@@ -154,7 +160,8 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 
 // Toolbar - Generic rules shared among backend & frontend
 .oe-toolbar {
-    display: grid;
+    display: flex;
+    align-items: center;
 
     .btn {
         display: flex;
@@ -182,16 +189,11 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 
 // Floating Toolbar
 .oe-toolbar.oe-floating {
-    gap: 0 $o-we-sidebar-content-field-control-item-spacing * .7;
-    grid-auto-flow: column;
+    gap: $o-we-sidebar-content-field-control-item-spacing * .7;
     align-items: stretch;
-    height: auto;
     min-height: $o-we-toolbar-height;
-    max-width: none;
-    border-radius: $o-we-item-border-radius;
     padding: 0 $o-we-sidebar-content-field-control-item-spacing;
     background-color: var(--o-we-toolbar-bg, #{$o-we-toolbar-bg});
-    box-shadow: 0 0 4px rgba(#000, .1), 0 4px 18px rgba(#000, .25);
     color: var(--o-we-toolbar-color-text, #{$o-we-toolbar-color-text});
     font-family: $o-we-font-family;
 
@@ -276,7 +278,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
         overflow: visible;
         border-top: 1px solid var(--o-we-toolbar-border, #{$o-we-toolbar-border});
         background-color: var(--o-we-toolbar-bg, #{$o-we-toolbar-bg});
-        box-shadow: 0 18px 18px rgba(#000, .23);
+        box-shadow: $box-shadow;
         @include border-top-radius(0);
         @include border-bottom-radius($o-we-item-border-radius);
 
@@ -375,13 +377,19 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 
     .colorpicker {
         background: var(--o-we-toolbar-bg, #{$o-we-toolbar-bg});
-        box-shadow: 0px 3px 9px rgba(0, 0, 0, 0.2);
+        box-shadow: $box-shadow;
     }
 
     .o_image_alt {
         @include o-text-overflow();
         max-width: 150px;
     }
+}
+
+// Toolbar in Sidebar (website editor, mass mailing)
+#oe_snippets > .o_we_customize_panel .oe-toolbar {
+    display: grid;
+    align-items: stretch;
 }
 
 // Floating Table Picker
@@ -403,7 +411,8 @@ body:not(.editor_has_snippets) {
         z-index: 1056;
     }
 }
-@media only screen and (max-width: 767px) {
+
+@include media-breakpoint-down(md) {
     .oe-toolbar {
         background-color: white;
 
@@ -665,7 +674,12 @@ img.o_we_selected_image {
     // Prevent the edited link from being deselected when clicking between
     // buttons in the popover
     user-select: none;
+    box-shadow: $box-shadow;
+    border-color: rgba(0,0,0,0.025);
 
+    .popover-arrow::before {
+        border-right-color: rgba(0, 0, 0, 0.05);
+    }
     // As the popover is displayed both in the frontend and the backend,
     // the font styles need to be uniformized.
     font-size: 12px;
