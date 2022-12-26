@@ -545,25 +545,6 @@ class WebsiteSale(http.Controller):
         else:
             product_template.product_template_image_ids.unlink()
 
-    @http.route(['/shop/product/remove-image'], type='json', auth='user', website=True)
-    def remove_product_image(self, image_res_model, image_res_id):
-        """
-        Delete or clear the product's image.
-        """
-        if (
-            not request.env.user.has_group('website.group_website_restricted_editor')
-            or image_res_model not in ['product.product', 'product.template', 'product.image']
-        ):
-            raise NotFound()
-
-        image_res_id = int(image_res_id)
-        if image_res_model == 'product.product':
-            request.env['product.product'].browse(image_res_id).write({'image_1920': False})
-        elif image_res_model == 'product.template':
-            request.env['product.template'].browse(image_res_id).write({'image_1920': False})
-        else:
-            request.env['product.image'].browse(image_res_id).unlink()
-
     @http.route(['/shop/product/resequence-image'], type='json', auth='user', website=True)
     def resequence_product_image(self, image_res_model, image_res_id, move):
         if (
