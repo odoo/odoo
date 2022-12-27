@@ -71,7 +71,7 @@ class SaleOrderLine(models.Model):
                     }
                     order_qty = order_line.product_uom._compute_quantity(order_line.product_uom_qty, relevant_bom.product_uom_id)
                     qty_delivered = moves._compute_kit_quantities(order_line.product_id, order_qty, relevant_bom, filters)
-                    order_line.qty_delivered = relevant_bom.product_uom_id._compute_quantity(qty_delivered, order_line.product_uom)
+                    order_line.qty_delivered += relevant_bom.product_uom_id._compute_quantity(qty_delivered, order_line.product_uom)
 
                 # If no relevant BOM is found, fall back on the all-or-nothing policy. This happens
                 # when the product sold is made only of kits. In this case, the BOM of the stock moves
@@ -82,6 +82,12 @@ class SaleOrderLine(models.Model):
                         order_line.qty_delivered = order_line.product_uom_qty
                     else:
                         order_line.qty_delivered = 0.0
+
+    def compute_uom_qty(self, new_qty, stock_move, rounding=True):
+        #check if stock move concerns a kit
+        if stock_move.bom_line_id:
+            return new_qty * stock_move.bom_line_id.product_qty
+        return super(SaleOrderLine, self).compute_uom_qty(new_qty, stock_move, rounding)
 
     def _get_bom_component_qty(self, bom):
         bom_quantity = self.product_id.uom_id._compute_quantity(1, bom.product_uom_id, rounding_method='HALF-UP')
