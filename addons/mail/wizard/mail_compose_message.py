@@ -1104,10 +1104,11 @@ class MailComposer(models.TransientModel):
             self._cr.execute("SELECT email FROM mail_blacklist WHERE active=true")
             blacklist = {x[0] for x in self._cr.fetchall()}
             if blacklist:
-                targets = self.env[self.model].browse(mail_values_dict.keys()).read(['email_normalized'])
+                targets = self.env[self.model].browse(mail_values_dict.keys())
+                targets.fetch(['email_normalized'])
                 # First extract email from recipient before comparing with blacklist
-                blacklisted_rec_ids.update(target['id'] for target in targets
-                                           if target['email_normalized'] in blacklist)
+                blacklisted_rec_ids.update(target.id for target in targets
+                                           if target.email_normalized in blacklist)
         return blacklisted_rec_ids
 
     def _get_done_emails(self, mail_values_dict):
