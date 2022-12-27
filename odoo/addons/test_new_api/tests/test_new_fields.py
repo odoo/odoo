@@ -3361,6 +3361,11 @@ class TestParentStore(common.TransactionCase):
         self.assertEqual(self.cats(8).depth, 2)
         self.assertEqual(self.cats(9).depth, 2)
 
+        # add a new node: one query to INSERT, one query to UPDATE parent_path
+        with self.assertQueryCount(2):
+            cat = self.cats().create({'name': '10', 'parent': self.cats(6).id})
+            self.assertEqual(cat.depth, 2)
+
 
 class TestRequiredMany2one(common.TransactionCase):
 
