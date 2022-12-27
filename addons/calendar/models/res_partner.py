@@ -23,7 +23,10 @@ class Partner(models.Model):
 
     def _compute_meeting(self):
         if self.ids:
-            all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
+            # prefetch 'parent_id'
+            all_partners = self.with_context(active_test=False).search_fetch(
+                [('id', 'child_of', self.ids)], ['parent_id'],
+            )
 
             query = self.env['calendar.event']._search([])  # ir.rules will be applied
             query_str, params = query.subselect()
@@ -43,7 +46,6 @@ class Partner(models.Model):
                 meetings[m[0]].add(m[1])
 
             # Add the events linked to the children of the partner
-            all_partners.read(['parent_id'])
             for p in all_partners:
                 partner = p
                 while partner:

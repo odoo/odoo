@@ -742,26 +742,23 @@ class Message(models.Model):
             messages.set_message_done()
             return messages.ids
 
-        notifications = self.env['mail.notification'].sudo().search(notif_domain)
+        notifications = self.env['mail.notification'].sudo().search_fetch(notif_domain, ['mail_message_id'])
         notifications.write({'is_read': True})
 
-        ids = [n['mail_message_id'] for n in notifications.read(['mail_message_id'])]
-
         self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.message/mark_as_read', {
-            'message_ids': [id[0] for id in ids],
+            'message_ids': notifications.mail_message_id.ids,
             'needaction_inbox_counter': self.env.user.partner_id._get_needaction_count(),
         })
-
-        return ids
 
     def set_message_done(self):
         """ Remove the needaction from messages for the current partner. """
         partner_id = self.env.user.partner_id
 
-        notifications = self.env['mail.notification'].sudo().search([
+        notifications = self.env['mail.notification'].sudo().search_fetch([
             ('mail_message_id', 'in', self.ids),
             ('res_partner_id', '=', partner_id.id),
-            ('is_read', '=', False)])
+            ('is_read', '=', False),
+        ], ['mail_message_id'])
 
         if not notifications:
             return
@@ -782,9 +779,8 @@ class Message(models.Model):
         starred_messages = self.search([('starred_partner_ids', 'in', partner_id)])
         starred_messages.write({'starred_partner_ids': [Command.unlink(partner_id)]})
 
-        ids = [m.id for m in starred_messages]
         self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.message/toggle_star', {
-            'message_ids': ids,
+            'message_ids': starred_messages.ids,
             'starred': False,
         })
 

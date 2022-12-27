@@ -513,13 +513,16 @@ class Challenge(models.Model):
 
                 domain.append(('user_id', '=', user.id))
 
-                goal = Goals.search(domain, limit=1)
+                goal = Goals.search_fetch(domain, ['current', 'completeness', 'state'], limit=1)
                 if not goal:
                     continue
 
                 if goal.state != 'reached':
                     return []
-                line_data.update(goal.read(['id', 'current', 'completeness', 'state'])[0])
+                line_data.update({
+                    fname: goal[fname]
+                    for fname in ['id', 'current', 'completeness', 'state']
+                })
                 res_lines.append(line_data)
                 continue
 

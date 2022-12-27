@@ -19,9 +19,10 @@ class ResPartner(models.Model):
 
     def _compute_sale_order_count(self):
         # retrieve all children partners and prefetch 'parent_id' on them
-        all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
-        all_partners.read(['parent_id'])
-
+        all_partners = self.with_context(active_test=False).search_fetch(
+            [('id', 'child_of', self.ids)],
+            ['parent_id'],
+        )
         sale_order_groups = self.env['sale.order']._read_group(
             domain=expression.AND([self._get_sale_order_domain_count(), [('partner_id', 'in', all_partners.ids)]]),
             fields=['partner_id'], groupby=['partner_id']

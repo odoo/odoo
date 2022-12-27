@@ -132,37 +132,34 @@ class MailThread(models.AbstractModel):
         """
         # TOFIX make it work with not in
         assert operator != "not in", "Do not search message_follower_ids with 'not in'"
-        followers = self.env['mail.followers'].sudo().search([
-            ('res_model', '=', self._name),
-            ('partner_id', operator, operand)])
-        # using read() below is much faster than followers.mapped('res_id')
-        return [('id', 'in', [res['res_id'] for res in followers.read(['res_id'])])]
+        # prefetch 'res_id' for the performance of mapped() below
+        followers = self.env['mail.followers'].sudo().search_fetch(
+            [('res_model', '=', self._name), ('partner_id', operator, operand)],
+            ['res_id'],
+        )
+        return [('id', 'in', followers.mapped('res_id'))]
 
     @api.depends('message_follower_ids')
     def _compute_message_is_follower(self):
-        followers = self.env['mail.followers'].sudo().search([
-            ('res_model', '=', self._name),
-            ('res_id', 'in', self.ids),
-            ('partner_id', '=', self.env.user.partner_id.id),
-            ])
-        # using read() below is much faster than followers.mapped('res_id')
-        following_ids = [res['res_id'] for res in followers.read(['res_id'])]
+        followers = self.env['mail.followers'].sudo().search_fetch(
+            [('res_model', '=', self._name), ('res_id', 'in', self.ids), ('partner_id', '=', self.env.user.partner_id.id)],
+            ['res_id'],
+        )
+        following_ids = set(followers.mapped('res_id'))
         for record in self:
             record.message_is_follower = record.id in following_ids
 
     @api.model
     def _search_message_is_follower(self, operator, operand):
-        followers = self.env['mail.followers'].sudo().search([
-            ('res_model', '=', self._name),
-            ('partner_id', '=', self.env.user.partner_id.id),
-            ])
+        followers = self.env['mail.followers'].sudo().search_fetch(
+            [('res_model', '=', self._name), ('partner_id', '=', self.env.user.partner_id.id)],
+            ['res_id'],
+        )
         # Cases ('message_is_follower', '=', True) or  ('message_is_follower', '!=', False)
         if (operator == '=' and operand) or (operator == '!=' and not operand):
-            # using read() below is much faster than followers.mapped('res_id')
-            return [('id', 'in', [res['res_id'] for res in followers.read(['res_id'])])]
+            return [('id', 'in', followers.mapped('res_id'))]
         else:
-            # using read() below is much faster than followers.mapped('res_id')
-            return [('id', 'not in', [res['res_id'] for res in followers.read(['res_id'])])]
+            return [('id', 'not in', followers.mapped('res_id'))]
 
     def _compute_has_message(self):
         self.env['mail.message'].flush_model()
@@ -172,7 +169,7 @@ class MailThread(models.AbstractModel):
              WHERE res_id = any(%s)
                AND mm.model=%s
         """, [self.ids, self._name])
-        channel_ids = [r[0] for r in self.env.cr.fetchall()]
+        channel_ids = {r[0] for r in self.env.cr.fetchall()}
         for record in self:
             record.has_message = record.id in channel_ids
 
