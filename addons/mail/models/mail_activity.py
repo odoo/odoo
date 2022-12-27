@@ -594,11 +594,12 @@ class MailActivity(models.Model):
 
     def activity_format(self):
         activities = self.read()
-        mail_template_ids = set([template_id for activity in activities for template_id in activity["mail_template_ids"]])
-        mail_template_info = self.env["mail.template"].browse(mail_template_ids).read(['id', 'name'])
-        mail_template_dict = dict([(mail_template['id'], mail_template) for mail_template in mail_template_info])
-        for activity in activities:
-            activity['mail_template_ids'] = [mail_template_dict[mail_template_id] for mail_template_id in activity['mail_template_ids']]
+        self.mail_template_ids.fetch(['name'])
+        for record, activity in zip(self, activities):
+            activity['mail_template_ids'] = [
+                {'id': mail_template.id, 'name': mail_template.name}
+                for mail_template in record.mail_template_ids
+            ]
         return activities
 
     @api.model

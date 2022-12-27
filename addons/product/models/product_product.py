@@ -444,23 +444,21 @@ class ProductProduct(models.Model):
 
         result = []
 
-        # Prefetch the fields used by the `name_get`, so `browse` doesn't fetch other fields
-        # Use `load=False` to not call `name_get` for the `product_tmpl_id`
-        self.sudo().read(['name', 'default_code', 'product_tmpl_id'], load=False)
+        # prefetch the fields used by the `name_get`
+        self.sudo().fetch(['name', 'default_code', 'product_tmpl_id'])
 
-        product_template_ids = self.sudo().mapped('product_tmpl_id').ids
+        product_template_ids = self.sudo().product_tmpl_id.ids
 
         if partner_ids:
-            supplier_info = self.env['product.supplierinfo'].sudo().search([
-                ('product_tmpl_id', 'in', product_template_ids),
-                ('partner_id', 'in', partner_ids),
-            ])
-            # Prefetch the fields used by the `name_get`, so `browse` doesn't fetch other fields
-            # Use `load=False` to not call `name_get` for the `product_tmpl_id` and `product_id`
-            supplier_info.sudo().read(['product_tmpl_id', 'product_id', 'product_name', 'product_code'], load=False)
+            # prefetch the fields used by the `name_get`
+            supplier_info = self.env['product.supplierinfo'].sudo().search_fetch(
+                [('product_tmpl_id', 'in', product_template_ids), ('partner_id', 'in', partner_ids)],
+                ['product_tmpl_id', 'product_id', 'company_id', 'product_name', 'product_code'],
+            )
             supplier_info_by_template = {}
             for r in supplier_info:
                 supplier_info_by_template.setdefault(r.product_tmpl_id, []).append(r)
+
         for product in self.sudo():
             variant = product.product_template_attribute_value_ids._get_combination_name()
 
@@ -496,6 +494,7 @@ class ProductProduct(models.Model):
                           'default_code': product.default_code,
                           }
                 result.append(_name_get(mydict))
+
         return result
 
     @api.model

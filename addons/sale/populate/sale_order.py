@@ -83,7 +83,7 @@ class SaleOrderLine(models.Model):
                 ('product_tmpl_id', 'in', self.env.registry.populated_models["product.template"])
             ]).ids
 
-        self.env['product.product'].browse(product_ids).read(['uom_id'])  # prefetch all uom_id
+        self.env['product.product'].browse(product_ids).fetch(['uom_id'])  # prefetch all uom_id
 
         def get_product_uom(values, counter, random):
             return self.env['product.product'].browse(values['product_id']).uom_id.id

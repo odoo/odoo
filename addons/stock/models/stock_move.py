@@ -481,7 +481,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         self.forecast_expected_date = False
 
         # Prefetch product info to avoid fetching all product fields
-        self.product_id.read(['type', 'uom_id'], load=False)
+        self.product_id.fetch(['type', 'uom_id'])
 
         not_product_moves = self.filtered(lambda move: move.product_id.type != 'product')
         for move in not_product_moves:
@@ -2167,17 +2167,24 @@ Please change the quantity done or the rounding precision of your unit of measur
         product_ids = self.product_id
         wh_location_query = self.env['stock.location']._search([('id', 'child_of', warehouse.view_location_id.id)])
 
+        # Prefetch data to avoid future request
         in_domain, out_domain = self.env['stock.forecasted_product_product']._move_confirmed_domain(
             None, product_ids.ids, wh_location_query
         )
-        outs = self.env['stock.move'].search(out_domain, order='reservation_date, priority desc, date, id')
-        reserved_outs = self.env['stock.move'].search(
+        outs = self.env['stock.move'].search_fetch(
+            out_domain,
+            ['product_id', 'product_uom', 'product_qty', 'state'],
+            order='reservation_date, priority desc, date, id',
+        )
+        reserved_outs = self.env['stock.move'].search_fetch(
             out_domain + [('state', 'in', ('partially_available', 'assigned'))],
+            ['product_id', 'product_uom'],
             order='priority desc, date, id')
-        ins = self.env['stock.move'].search(in_domain, order='priority desc, date, id')
-        # Prefetch data to avoid future request
-        (outs - self).read(['product_id', 'product_uom', 'product_qty', 'state'], load=False)  # remove self because data is already fetch
-        ins.read(['product_id', 'product_qty', 'date', 'move_dest_ids'], load=False)
+        ins = self.env['stock.move'].search_fetch(
+            in_domain,
+            ['product_id', 'product_qty', 'date', 'move_dest_ids'],
+            order='priority desc, date, id',
+        )
 
         currents = product_ids.with_context(warehouse=warehouse.id)._get_only_qty_available()
 
