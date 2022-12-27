@@ -20,7 +20,7 @@ patch(Order.prototype, "pos_sale.Order", {
 });
 
 patch(Orderline.prototype, "pos_sale.Orderline", {
-    setup(options) {
+    setup(_defaultObj, options) {
         this._super(...arguments);
         // It is possible that this orderline is initialized using `init_from_JSON`,
         // meaning, it is loaded from localStorage or from export_for_ui. This means
