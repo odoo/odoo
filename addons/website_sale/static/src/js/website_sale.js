@@ -1197,7 +1197,10 @@ publicWidget.registry.multirangePriceSelector = publicWidget.Widget.extend({
         if (parseFloat(range.max) !== range.valueHigh) {
             search['max_price'] = range.valueHigh;
         }
-        this.el.querySelector('.o_wsale_products_grid_table_wrapper').classList.add('opacity-50');
+        const productGrid = this.el.querySelector('.o_wsale_products_grid_table_wrapper');
+        if (productGrid) {
+            productGrid.classList.add('opacity-50');
+        }
         window.location.search = $.param(search);
     },
 });
