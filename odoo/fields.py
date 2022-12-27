@@ -140,8 +140,6 @@ class Field(MetaField('DummyField', (object,), {})):
 
     :param str help: the tooltip of the field seen by users
 
-    :param invisible: whether the field is invisible (boolean, by default ``False``)
-
     :param bool readonly: whether the field is readonly (default: ``False``)
 
         This only has an impact on the UI. Any field assignation in code will work
@@ -539,6 +537,10 @@ class Field(MetaField('DummyField', (object,), {})):
                 self.setup_related(model)
             else:
                 self.setup_nonrelated(model)
+
+            if self.states:
+                warnings.warn(f'"states" property on the field "{self}" is no longer used', DeprecationWarning)
+
             self._setup_done = True
 
     #
@@ -864,7 +866,6 @@ class Field(MetaField('DummyField', (object,), {})):
     _description_company_dependent = property(attrgetter('company_dependent'))
     _description_readonly = property(attrgetter('readonly'))
     _description_required = property(attrgetter('required'))
-    _description_states = property(attrgetter('states'))
     _description_groups = property(attrgetter('groups'))
     _description_change_default = property(attrgetter('change_default'))
     _description_group_operator = property(attrgetter('group_operator'))

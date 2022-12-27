@@ -1186,7 +1186,7 @@ class TestReports(TestReportsCommon):
             move_line.product_id = self.product
             move_line.quantity_done = 3
         delivery_by_date_priority = delivery_form.save()
-        # <field name="priority" attrs="{'invisible': [('name','=','/')]}"/>
+        # <field name="priority" invisible="name == '/'"/>
         # The priority field is not visible until the name is set,
         # which is done after a first save / the `create`
         delivery_form.priority = '1'

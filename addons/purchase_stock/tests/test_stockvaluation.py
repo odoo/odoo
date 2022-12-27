@@ -565,10 +565,10 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         # Not supposed to see/change the purchase order of a refund invoice by default
         # <field name="purchase_id" invisible="1"/>
         # <label for="purchase_vendor_bill_id" string="Auto-Complete" class="oe_edit_only"
-        #         attrs="{'invisible': ['|', ('state','!=','draft'), ('move_type', '!=', 'in_invoice')]}" />
+        #         invisible="state != 'draft' or move_type != 'in_invoice'" />
         # <field name="purchase_vendor_bill_id" nolabel="1"
-        #         attrs="{'invisible': ['|', ('state','!=','draft'), ('move_type', '!=', 'in_invoice')]}"
-        move_form._view['modifiers']['purchase_id']['invisible'] = False
+        #         invisible="state != 'draft' or move_type != 'in_invoice'"
+        move_form._view['modifiers']['purchase_id']['invisible'] = 'False'
         move_form.purchase_id = po2
         with move_form.invoice_line_ids.edit(0) as line_form:
             line_form.quantity = 10
