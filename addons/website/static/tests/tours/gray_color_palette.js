@@ -1,6 +1,25 @@
 /** @odoo-module **/
 import wTourUtils from 'website.tour_utils';
 
+function waitForCSSReload() {
+    return [
+        {
+            // This step is here because the option is applied but triggers a
+            // reloading of the CC value, so if the second value is sent too
+            // soon, it will be ignored. Clicking on the snippet tab and back
+            // will ensure that the mutex is cleared, and therefore we can apply
+            // the saturation step.
+            content: "Click on the blocks tab and back on theme to ensure the changes are applied",
+            trigger: '.o_we_add_snippet_btn',
+        },
+        {
+            content: "Go back to theme options",
+            trigger: '.o_we_customize_theme_btn',
+            extra_trigger: '#o_scroll',
+        },
+    ];
+}
+
 wTourUtils.registerWebsitePreviewTour('website_gray_color_palette', {
     test: true,
     url: '/',
@@ -24,19 +43,7 @@ wTourUtils.registerWebsitePreviewTour('website_gray_color_palette', {
             slider.dispatchEvent(new InputEvent('change', {bubbles: true}));
         },
     },
-    {
-        // This step is here because the option is applied but triggers a reloading of the
-        // css value, so if the second value is sent too soon, it will be ignored.
-        // Clicking on the snippet tab and back will ensure that the mutex is cleared,
-        // and therefore we can apply the saturation step.
-        content: "Click on the blacks tab and back on theme to ensure the changes are applied",
-        trigger: '.o_we_add_snippet_btn',
-    },
-    {
-        content: "Go back to theme options",
-        trigger: '.o_we_customize_theme_btn',
-        extra_trigger: '#o_scroll',
-    },
+    ...waitForCSSReload(),
     {
         content: "Drag the saturation slider",
         trigger: '.o_we_user_value_widget[data-param="gray-extra-saturation"]',
@@ -47,10 +54,10 @@ wTourUtils.registerWebsitePreviewTour('website_gray_color_palette', {
             slider.dispatchEvent(new InputEvent('change', {bubbles: true}));
         }
     },
-    ...wTourUtils.clickOnSave(),
+    ...waitForCSSReload(),
     {
         content: "Wait for the iframe to be loaded",
-        trigger: 'iframe body:not(.editor_enable)',
+        trigger: 'iframe body',
         run: () => {
             const iframeEl = document.querySelector('.o_website_preview .o_iframe');
             const styles = iframeEl.contentWindow.getComputedStyle(iframeEl.contentDocument.documentElement);
