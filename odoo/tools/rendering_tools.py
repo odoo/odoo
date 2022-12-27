@@ -12,12 +12,6 @@ from odoo.tools import safe_eval
 
 INLINE_TEMPLATE_REGEX = re.compile(r"\{\{(.+?)\}\}")
 
-def relativedelta_proxy(*args, **kwargs):
-    # dateutil.relativedelta is an old-style class and cannot be directly
-    # instanciated wihtin a jinja2 expression, so a lambda "proxy" is
-    # is needed, apparently
-    return relativedelta.relativedelta(*args, **kwargs)
-
 template_env_globals = {
     'str': str,
     'quote': urls.url_quote,

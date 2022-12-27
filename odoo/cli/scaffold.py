@@ -6,7 +6,10 @@ import os
 import re
 import sys
 
-import jinja2
+try:
+    import jinja2
+except ImportError:
+    jinja2 = None
 
 from . import Command
 
@@ -31,6 +34,10 @@ class Scaffold(Command):
 
         if not cmdargs:
             sys.exit(parser.print_help())
+
+        if not jinja2:
+            sys.exit("Jinja2 is required to use this command. Run 'pip install jinja2' to install it.")
+
         args = parser.parse_args(args=cmdargs)
 
         args.template.render_to(
@@ -76,9 +83,11 @@ def directory(p, create=False):
         die("%s is not a directory" % p)
     return expanded
 
-env = jinja2.Environment()
-env.filters['snake'] = snake
-env.filters['pascal'] = pascal
+if jinja2:
+    env = jinja2.Environment()
+    env.filters['snake'] = snake
+    env.filters['pascal'] = pascal
+
 class template(object):
     def __init__(self, identifier):
         # TODO: archives (zipfile, tarfile)

@@ -19,4 +19,7 @@ are found in other modules that must be installed separately.
 """,
     'installable': False,
     'license': 'LGPL-3',
+    'external_dependencies': {
+        'python': ['jinja2']
+    },
 }

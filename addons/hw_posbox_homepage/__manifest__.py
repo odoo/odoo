@@ -21,4 +21,7 @@ regular Odoo interface anymore.
 """,
     'installable': False,
     'license': 'LGPL-3',
+    'external_dependencies': {
+        'python': ['jinja2']
+    },
 }
