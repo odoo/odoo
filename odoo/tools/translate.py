@@ -358,7 +358,8 @@ def html_term_converter(value):
 
 def get_text_content(term):
     """ Return the textual content of the given term. """
-    return html.fromstring(term).text_content()
+    content = html.fromstring(term).text_content()
+    return " ".join(content.split())
 
 xml_translate.get_text_content = get_text_content
 html_translate.get_text_content = get_text_content
