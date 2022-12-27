@@ -78,7 +78,7 @@ class PosOrder(models.Model):
                     new_qty = so_line.product_uom_qty - so_line.qty_delivered
                     if float_compare(new_qty, 0, precision_rounding=stock_move.product_uom.rounding) <= 0:
                         new_qty = 0
-                    stock_move.product_uom_qty = so_line.product_uom._compute_quantity(new_qty, stock_move.product_uom, False)
+                    stock_move.product_uom_qty = so_line.compute_uom_qty(new_qty, stock_move, False)
                     waiting_picking_ids.add(picking.id)
 
             def is_product_uom_qty_zero(move):
