@@ -340,7 +340,7 @@ class PosSession(models.Model):
                     'pos_session_id': self.id,
                 }
 
-            if self.cash_register_difference < 0.0:
+            if amount < 0.0:
                 if not self.cash_journal_id.loss_account_id:
                     raise UserError(
                         _('Please go on the %s journal and define a Loss Account. This account will be used to record cash difference.',
