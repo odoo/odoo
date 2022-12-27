@@ -1055,7 +1055,7 @@ class Partner(models.Model):
         """
         States = self.env['res.country.state']
         states_ids = {vals['state_id'] for vals in vals_list if vals.get('state_id')}
-        state_to_country = States.search([('id', 'in', list(states_ids))]).read(['country_id'])
+        state_to_country = States.search_read([('id', 'in', list(states_ids))], ['country_id'])
         for vals in vals_list:
             if vals.get('state_id'):
                 country_id = next(c['country_id'][0] for c in state_to_country if c['id'] == vals.get('state_id'))
