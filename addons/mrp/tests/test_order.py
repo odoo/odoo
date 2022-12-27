@@ -627,7 +627,7 @@ class TestMrpOrder(TestMrpCommon):
         mo, _, p_final, p1, p2 = self.generate_mo(tracking_base_1='lot', qty_base_1=10, qty_final=1)
 
         # Required for `lot_producing_id` to be visible in the view
-        # <field name="lot_producing_id" attrs="{'invisible': [('product_tracking', 'in', ('none', False))]}"/>
+        # <field name="lot_producing_id" invisible="product_tracking in ('none', False)"/>
         p_final.tracking = 'lot'
 
         self.assertEqual(len(mo), 1, 'MO should have been created')

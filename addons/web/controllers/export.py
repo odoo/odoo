@@ -332,10 +332,7 @@ class Export(http.Controller):
                 if exclude and field_name in exclude:
                     continue
                 if field.get('readonly'):
-                    # If none of the field's states unsets readonly, skip the field
-                    if all(dict(attrs).get('readonly', True)
-                           for attrs in field.get('states', {}).values()):
-                        continue
+                    continue
             if not field.get('exportable', True):
                 continue
 

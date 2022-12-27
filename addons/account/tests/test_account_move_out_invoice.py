@@ -3334,7 +3334,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
         # Quick edit total amount not activated yet
         # As quick edit total is not yet activated, it's invisible by default in the view
-        move_form._view['modifiers']['quick_edit_total_amount']['invisible'] = False
+        move_form._view['modifiers']['quick_edit_total_amount']['invisible'] = 'False'
         move_form.quick_edit_total_amount = 100.0
         invoice = move_form.save()
         self.assertEqual(invoice.amount_total, 0.0)

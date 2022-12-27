@@ -212,7 +212,8 @@ def normalize_domain(domain):
         else:
             expected += op_arity.get(token, 0) - 1
         result.append(token)
-    assert expected == 0, 'This domain is syntactically not correct: %s' % (domain)
+    if expected:
+        raise ValueError(f'Domain {domain} is syntactically not correct.')
     return result
 
 

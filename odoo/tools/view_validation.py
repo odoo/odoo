@@ -8,6 +8,7 @@ import re
 
 from lxml import etree
 from odoo import tools
+from odoo.osv.expression import DOMAIN_OPERATORS
 
 _logger = logging.getLogger(__name__)
 
@@ -17,63 +18,242 @@ _relaxng_cache = {}
 
 READONLY = re.compile(r"\breadonly\b")
 
-
-def _get_attrs_symbols():
-    """ Return a set of predefined symbols for evaluating attrs. """
-    return {
-        'True', 'False', 'None',    # those are identifiers in Python 2.7
-        'self',
-        'id',
-        'uid',
-        'context',
-        'context_today',
-        'active_id',
-        'active_ids',
-        'allowed_company_ids',
-        'current_company_id',
-        'active_model',
-        'time',
-        'datetime',
-        'relativedelta',
-        'current_date',
-        'today',
-        'now',
-        'abs',
-        'len',
-        'bool',
-        'float',
-        'str',
-        'unicode',
-    }
+# predefined symbols for evaluating attributes (invisible, readonly...)
+IGNORED_IN_EXPRESSION = {
+    'True', 'False', 'None',    # those are identifiers in Python 2.7
+    'self',
+    'uid',
+    'context',
+    'context_today',
+    'active_id',
+    'active_ids',
+    'allowed_company_ids',
+    'current_company_id',
+    'active_model',
+    'time',
+    'datetime',
+    'relativedelta',
+    'current_date',
+    'today',
+    'now',
+    'abs',
+    'len',
+    'bool',
+    'float',
+    'str',
+    'unicode',
+}
 
 
-def get_variable_names(expr):
-    """ Return the subexpressions of the kind "VARNAME(.ATTNAME)*" in the given
-    string or AST node.
+def get_domain_value_names(domain):
+    """ Return all field name used by this domain
+    eg: [
+            ('id', 'in', [1, 2, 3]),
+            ('field_a', 'in', parent.truc),
+            ('field_b', 'in', context.get('b')),
+            (1, '=', 1),
+            bool(context.get('c')),
+        ]
+        returns {'parent', 'parent.truc', 'context'}
+
+    :param domain: list(tuple) or str
+    :return: set(str)
     """
-    IGNORED = _get_attrs_symbols()
-    names = set()
+    contextual_values = set()
+    field_names = set()
 
-    def get_name_seq(node):
-        if isinstance(node, ast.Name):
-            return [node.id]
-        elif isinstance(node, ast.Attribute):
-            left = get_name_seq(node.value)
-            return left and left + [node.attr]
+    try:
+        if isinstance(domain, list):
+            for leaf in domain:
+                if leaf in DOMAIN_OPERATORS or leaf in (True, False):
+                    # "&", "|", "!", True, False
+                    continue
+                left, _operator, _right = leaf
+                if isinstance(left, str):
+                    field_names.add(left)
+                elif left not in (1, 0):
+                    # deprecate: True leaf and False leaf
+                    raise ValueError()
 
-    def process(node):
-        seq = get_name_seq(node)
-        if seq and seq[0] not in IGNORED:
-            names.add('.'.join(seq))
-        else:
-            for child in ast.iter_child_nodes(node):
-                process(child)
+        elif isinstance(domain, str):
+            def extract_from_domain(ast_domain):
+                if isinstance(ast_domain, ast.IfExp):
+                    # [] if condition else []
+                    extract_from_domain(ast_domain.body)
+                    extract_from_domain(ast_domain.orelse)
+                    return
+                if isinstance(ast_domain, ast.BoolOp):
+                    # condition and []
+                    # this formating don't check returned domain syntax
+                    for value in ast_domain.values:
+                        if isinstance(value, (ast.List, ast.IfExp, ast.BoolOp, ast.BinOp)):
+                            extract_from_domain(value)
+                        else:
+                            contextual_values.update(_get_expression_contextual_values(value))
+                    return
+                if isinstance(ast_domain, ast.BinOp):
+                    # [] + []
+                    # this formating don't check returned domain syntax
+                    if isinstance(ast_domain.left, (ast.List, ast.IfExp, ast.BoolOp, ast.BinOp)):
+                        extract_from_domain(ast_domain.left)
+                    else:
+                        contextual_values.update(_get_expression_contextual_values(ast_domain.left))
 
-    if isinstance(expr, str):
-        expr = ast.parse(expr.strip(), mode='eval').body
-    process(expr)
+                    if isinstance(ast_domain.right, (ast.List, ast.IfExp, ast.BoolOp, ast.BinOp)):
+                        extract_from_domain(ast_domain.right)
+                    else:
+                        contextual_values.update(_get_expression_contextual_values(ast_domain.right))
+                    return
+                for ast_item in ast_domain.elts:
+                    if isinstance(ast_item, ast.Constant):
+                        # "&", "|", "!", True, False
+                        if ast_item.value not in DOMAIN_OPERATORS and ast_item.value not in (True, False):
+                            raise ValueError()
+                    elif isinstance(ast_item, (ast.List, ast.Tuple)):
+                        left, _operator, right = ast_item.elts
+                        contextual_values.update(_get_expression_contextual_values(right))
+                        if isinstance(left, ast.Constant) and isinstance(left.value, str):
+                            field_names.add(left.value)
+                        elif isinstance(left, ast.Constant) and left.value in (1, 0):
+                            # deprecate: True leaf (1, '=', 1) and False leaf (0, '=', 1)
+                            pass
+                        elif isinstance(right, ast.Constant) and right.value == 1:
+                            # deprecate: True/False leaf (py expression, '=', 1)
+                            contextual_values.update(_get_expression_contextual_values(left))
+                        else:
+                            raise ValueError()
+                    else:
+                        raise ValueError()
 
-    return names
+            expr = domain.strip()
+            item_ast = ast.parse(f"({expr})", mode='eval').body
+            if isinstance(item_ast, ast.Name):
+                # domain="other_field_domain"
+                contextual_values.update(_get_expression_contextual_values(item_ast))
+            else:
+                extract_from_domain(item_ast)
+
+    except ValueError:
+        raise ValueError("Wrong domain formatting.") from None
+
+    value_names = set()
+    for name in contextual_values:
+        if name == 'parent':
+            continue
+        root = name.split('.')[0]
+        if root not in IGNORED_IN_EXPRESSION:
+            value_names.add(name if root == 'parent' else root)
+    return field_names, value_names
+
+
+def _get_expression_contextual_values(item_ast):
+    """ Return all contextual value this ast
+
+    eg: ast from '''(
+            id in [1, 2, 3]
+            and field_a in parent.truc
+            and field_b in context.get('b')
+            or (
+                True
+                and bool(context.get('c'))
+            )
+        )
+        returns {'parent', 'parent.truc', 'context', 'bool'}
+
+    :param item_ast: ast
+    :return: set(str)
+    """
+
+    if isinstance(item_ast, ast.Constant):
+        return set()
+    if isinstance(item_ast, ast.Str):
+        return set()
+    if isinstance(item_ast, (ast.List, ast.Tuple)):
+        values = set()
+        for item in item_ast.elts:
+            values |= _get_expression_contextual_values(item)
+        return values
+    if isinstance(item_ast, ast.Name):
+        return {item_ast.id}
+    if isinstance(item_ast, ast.Attribute):
+        values = _get_expression_contextual_values(item_ast.value)
+        if len(values) == 1:
+            path = sorted(list(values)).pop()
+            values = {f"{path}.{item_ast.attr}"}
+            return values
+        return values
+    if isinstance(item_ast, ast.Index): # deprecated python ast class for Subscript key
+        return _get_expression_contextual_values(item_ast.value)
+    if isinstance(item_ast, ast.Subscript):
+        values = _get_expression_contextual_values(item_ast.value)
+        values |= _get_expression_contextual_values(item_ast.slice)
+        return values
+    if isinstance(item_ast, ast.Compare):
+        values = _get_expression_contextual_values(item_ast.left)
+        for sub_ast in item_ast.comparators:
+            values |= _get_expression_contextual_values(sub_ast)
+        return values
+    if isinstance(item_ast, ast.BinOp):
+        values = _get_expression_contextual_values(item_ast.left)
+        values |= _get_expression_contextual_values(item_ast.right)
+        return values
+    if isinstance(item_ast, ast.BoolOp):
+        values = set()
+        for ast_value in item_ast.values:
+            values |= _get_expression_contextual_values(ast_value)
+        return values
+    if isinstance(item_ast, ast.UnaryOp):
+        return _get_expression_contextual_values(item_ast.operand)
+    if isinstance(item_ast, ast.Call):
+        values = _get_expression_contextual_values(item_ast.func)
+        for ast_arg in item_ast.args:
+            values |= _get_expression_contextual_values(ast_arg)
+        return values
+    if isinstance(item_ast, ast.IfExp):
+        values = _get_expression_contextual_values(item_ast.test)
+        values |= _get_expression_contextual_values(item_ast.body)
+        values |= _get_expression_contextual_values(item_ast.orelse)
+        return values
+    if isinstance(item_ast, ast.Dict):
+        values = set()
+        for item in item_ast.keys:
+            values |= _get_expression_contextual_values(item)
+        for item in item_ast.values:
+            values |= _get_expression_contextual_values(item)
+        return values
+
+    raise ValueError(f"Undefined item {item_ast!r}.")
+
+
+def get_expression_field_names(expression):
+    """ Return all field name used by this expression
+
+    eg: expression = '''(
+            id in [1, 2, 3]
+            and field_a in parent.truc.id
+            and field_b in context.get('b')
+            or (True and bool(context.get('c')))
+        )
+        returns {'parent', 'parent.truc', 'parent.truc.id', 'context', 'context.get'}
+
+    :param expression: str
+    :param ignored: set contains the value name to ignore.
+                    Add '.' to ignore attributes (eg: {'parent.'} will
+                    ignore 'parent.truc' and 'parent.truc.id')
+    :return: set(str)
+    """
+    item_ast = ast.parse(expression.strip(), mode='eval').body
+    contextual_values = _get_expression_contextual_values(item_ast)
+
+    value_names = set()
+    for name in contextual_values:
+        if name == 'parent':
+            continue
+        root = name.split('.')[0]
+        if root not in IGNORED_IN_EXPRESSION:
+            value_names.add(name if root == 'parent' else root)
+
+    return value_names
 
 
 def get_dict_asts(expr):
@@ -96,52 +276,14 @@ def _check(condition, explanation):
         raise ValueError("Expression is not a valid domain: %s" % explanation)
 
 
-def get_domain_identifiers(expr):
-    """ Check that the given string or AST node represents a domain expression,
-    and return a pair of sets ``(fields, vars)`` where ``fields`` are the field
-    names on the left-hand side of conditions, and ``vars`` are the variable
-    names on the right-hand side of conditions.
-    """
-    if not expr:  # case of expr=""
-        return (set(), set())
-    if isinstance(expr, str):
-        expr = ast.parse(expr.strip(), mode='eval').body
-
-    fnames = set()
-    vnames = set()
-
-    if isinstance(expr, ast.List):
-        for elem in expr.elts:
-            if isinstance(elem, ast.Str):
-                # note: this doesn't check the and/or structure
-                _check(elem.s in ('&', '|', '!'),
-                       f"logical operators should be '&', '|', or '!', found {elem.s!r}")
-                continue
-
-            if not isinstance(elem, (ast.List, ast.Tuple)):
-                continue
-
-            _check(len(elem.elts) == 3,
-                   f"segments should have 3 elements, found {len(elem.elts)}")
-            lhs, operator, rhs = elem.elts
-            _check(isinstance(operator, ast.Str),
-                   f"operator should be a string, found {type(operator).__name__}")
-            if isinstance(lhs, ast.Str):
-                fnames.add(lhs.s)
-
-    vnames.update(get_variable_names(expr))
-
-    return (fnames, vnames)
-
-
 def valid_view(arch, **kwargs):
     for pred in _validators[arch.tag]:
         check = pred(arch, **kwargs)
         if not check:
-            _logger.error("Invalid XML: %s", pred.__doc__)
+            _logger.error("Invalid XML when check %s: %s", arch.tag, pred.__doc__)
             return False
         if check == "Warning":
-            _logger.warning("Invalid XML: %s", pred.__doc__)
+            _logger.warning("Invalid XML when check %s: %s", arch.tag, pred.__doc__)
             return "Warning"
     return True
 
