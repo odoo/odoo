@@ -99,7 +99,7 @@ class StockQuant(models.Model):
     in_date = fields.Datetime('Incoming Date', readonly=True, required=True, default=fields.Datetime.now)
     tracking = fields.Selection(related='product_id.tracking', readonly=True)
     on_hand = fields.Boolean('On Hand', store=False, search='_search_on_hand')
-    product_categ_id = fields.Many2one(related='product_tmpl_id.categ_id',store=True)
+    product_categ_id = fields.Many2one(related='product_tmpl_id.categ_id', store=True)
 
     # Inventory Fields
     inventory_quantity = fields.Float(
