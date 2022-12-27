@@ -644,11 +644,51 @@ class TestExpression(SavepointCaseWithUserDemo):
         self.assertEqual(users, b2, '(x =? id) failed')
 
     def test_30_normalize_domain(self):
-        norm_domain = domain = ['&', (1, '=', 1), ('a', '=', 'b')]
-        self.assertEqual(norm_domain, expression.normalize_domain(domain), "Normalized domains should be left untouched")
-        domain = [('x', 'in', ['y', 'z']), ('a.v', '=', 'e'), '|', '|', ('a', '=', 'b'), '!', ('c', '>', 'd'), ('e', '!=', 'f'), ('g', '=', 'h')]
-        norm_domain = ['&', '&', '&'] + domain
-        self.assertEqual(norm_domain, expression.normalize_domain(domain), "Non-normalized domains should be properly normalized")
+        normalize_domain = expression.normalize_domain
+
+        self.assertEqual(normalize_domain([]), [expression.TRUE_LEAF])
+        self.assertEqual(normalize_domain([expression.TRUE_LEAF]), [expression.TRUE_LEAF])
+        self.assertEqual(normalize_domain([expression.FALSE_LEAF]), [expression.FALSE_LEAF])
+        self.assertEqual(normalize_domain([('a', '=', 1)]), [('a', '=', 1)])
+        self.assertEqual(
+            normalize_domain([('a', '=', 1), ('b', '=', 2)]),
+            ['&', ('a', '=', 1), ('b', '=', 2)],
+        )
+        self.assertEqual(
+            normalize_domain(['|', ('a', '=', 1), ('b', '=', 2)]),
+            ['|', ('a', '=', 1), ('b', '=', 2)],
+        )
+        self.assertEqual(
+            normalize_domain(['|', ('a', '=', 1), ('b', '=', 2), ('c', '=', 3)]),
+            ['&', '|', ('a', '=', 1), ('b', '=', 2), ('c', '=', 3)],
+        )
+        self.assertEqual(
+            normalize_domain([('a', '=', 1), '|', ('b', '=', 2), ('c', '=', 3)]),
+            ['&', ('a', '=', 1), '|', ('b', '=', 2), ('c', '=', 3)],
+        )
+        self.assertEqual(
+            normalize_domain(['&', expression.TRUE_LEAF, ('a', '=', 1)]),
+            ['&', expression.TRUE_LEAF, ('a', '=', 1)],
+        )
+        domain = [
+            ('a', '=', 1),
+            ('b.z', '=', 2),
+            '|', '|', ('c', '=', 3), '!', ('d', '=', 4), ('e', '=', 5),
+            ('f', '=', 6),
+        ]
+        self.assertEqual(normalize_domain(domain), ['&', '&', '&'] + domain)
+
+        with self.assertRaises(ValueError):
+            normalize_domain(['&'])
+
+        with self.assertRaises(ValueError):
+            normalize_domain(['&', ('a', '=', 1)])
+
+        with self.assertRaises(ValueError):
+            normalize_domain([('a', '=', 1), '&', ('b', '=', 2)])
+
+        with self.assertRaises(ValueError):
+            normalize_domain([('a', '=', 1), '!'])
 
     def test_35_negating_thruty_leafs(self):
         self.assertEqual(expression.distribute_not(['!', '!', expression.TRUE_LEAF]), [expression.TRUE_LEAF], "distribute_not applied wrongly")

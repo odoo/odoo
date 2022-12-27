@@ -25,7 +25,7 @@ from odoo.modules.module import get_resource_from_path, get_resource_path
 from odoo.tools import config, ConstantMapping, get_diff, pycompat, apply_inheritance_specs, locate_node, str2bool
 from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools import safe_eval, lazy, lazy_property, frozendict
-from odoo.tools.view_validation import valid_view, get_variable_names, get_domain_identifiers, get_dict_asts
+from odoo.tools.view_validation import valid_view, get_domain_value_names, get_expression_field_names, get_dict_asts
 from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS
 from odoo.models import check_method_name
 from odoo.osv.expression import expression
@@ -33,6 +33,7 @@ from odoo.osv.expression import expression
 _logger = logging.getLogger(__name__)
 
 MOVABLE_BRANDING = ['data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-xpath', 'data-oe-source-id']
+VIEW_MODIFIERS = ('column_invisible', 'invisible', 'readonly', 'required')
 
 # Some views have a js compiler that generates an owl template from the arch. In that template,
 # `__comp__` is a reserved keyword giving access to the component instance (e.g. the form renderer
@@ -62,87 +63,6 @@ def att_names(name):
     yield name
     yield f"t-att-{name}"
     yield f"t-attf-{name}"
-
-
-def transfer_field_to_modifiers(field, modifiers, attributes):
-    default_values = {}
-    state_exceptions = {}
-    for attr in attributes:
-        state_exceptions[attr] = []
-        default_values[attr] = bool(field.get(attr))
-    for state, modifs in field.get("states", {}).items():
-        for modif in modifs:
-            if modif[0] in attributes and default_values[modif[0]] != modif[1]:
-                state_exceptions[modif[0]].append(state)
-
-    for attr, default_value in default_values.items():
-        if state_exceptions[attr]:
-            modifiers[attr] = [("state", "not in" if default_value else "in", state_exceptions[attr])]
-        else:
-            modifiers[attr] = default_value
-
-
-def transfer_node_to_modifiers(node, modifiers):
-    # Don't deal with groups, it is done by check_group().
-    attrs = node.attrib.pop('attrs', None)
-    if attrs:
-        modifiers.update(ast.literal_eval(attrs.strip()))
-        for a in ('invisible', 'readonly', 'required'):
-            if a in modifiers and isinstance(modifiers[a], int):
-                modifiers[a] = bool(modifiers[a])
-
-    states = node.attrib.pop('states', None)
-    if states:
-        states = states.split(',')
-        if 'invisible' in modifiers and isinstance(modifiers['invisible'], list):
-            # TODO combine with AND or OR, use implicit AND for now.
-            modifiers['invisible'].append(('state', 'not in', states))
-        else:
-            modifiers['invisible'] = [('state', 'not in', states)]
-
-    context_dependent_modifiers = {}
-    for attr in ('invisible', 'readonly', 'required'):
-        value_str = node.attrib.pop(attr, None)
-        if value_str:
-
-            if (attr == 'invisible'
-                    and any(parent.tag == 'tree' for parent in node.iterancestors())
-                    and not any(parent.tag == 'header' for parent in node.iterancestors())):
-                # Invisible in a tree view has a specific meaning, make it a
-                # new key in the modifiers attribute.
-                attr = 'column_invisible'
-
-            # TODO: for invisible="context.get('...')", delegate to the web client.
-            try:
-                # most (~95%) elements are 1/True/0/False
-                value = str2bool(value_str)
-            except ValueError:
-                # if str2bool fails, it means it's something else than 1/True/0/False,
-                # meaning most-likely `context.get('...')`,
-                # which should be evaluated after retrieving the view arch from the cache
-                context_dependent_modifiers[attr] = value_str
-                continue
-
-            if value or (attr not in modifiers or not isinstance(modifiers[attr], list)):
-                # Don't set the attribute to False if a dynamic value was
-                # provided (i.e. a domain from attrs or states).
-                modifiers[attr] = value
-
-    if context_dependent_modifiers:
-        node.set('context-dependent-modifiers', json.dumps(context_dependent_modifiers))
-
-
-def simplify_modifiers(modifiers):
-    for a in ('column_invisible', 'invisible', 'readonly', 'required'):
-        if a in modifiers and not modifiers[a]:
-            del modifiers[a]
-
-
-def transfer_modifiers_to_node(modifiers, node):
-    if modifiers:
-        simplify_modifiers(modifiers)
-        if modifiers:
-            node.set('modifiers', json.dumps(modifiers))
 
 
 @lazy
@@ -451,6 +371,7 @@ actual arch.
                 err = ValidationError(_(
                     "Error while parsing or validating view:\n\n%(error)s",
                     error=tools.ustr(e),
+                    view=self.key or self.id,
                 )).with_traceback(e.__traceback__)
                 err.context = getattr(e, 'context', None)
                 raise err from None
@@ -459,6 +380,15 @@ actual arch.
                 # verify that all fields used are valid, etc.
                 view._validate_view(combined_arch, view.model)
                 combined_archs = [combined_arch]
+
+                if combined_arch.xpath('//*[@attrs]') or combined_arch.xpath('//*[@states]'):
+                    view_name = f'{view.name} ({view.xml_id})' if view.xml_id else view.name
+                    err = ValidationError(_('Since 17.0, the "attrs" and "states" attributes are no longer used.\nView: %(name)s in %(file)s',
+                        name=view_name, file=view.arch_fs
+                    ))
+                    err.context = {'name': 'invalid view'}
+                    raise err
+
                 if combined_archs[0].tag == 'data':
                     # A <data> element is a wrapper for multiple root nodes
                     combined_archs = combined_archs[0]
@@ -467,23 +397,30 @@ actual arch.
                         del node.attrib['__validate__']
                     check = valid_view(view_arch, env=self.env, model=view.model)
                     if not check:
-                        view_name = ('%s (%s)' % (view.name, view.xml_id)) if view.xml_id else view.name
+                        view_name = f'{view.name} ({view.xml_id})' if view.xml_id else view.name
                         raise ValidationError(_(
                             'Invalid view %(name)s definition in %(file)s',
                             name=view_name, file=view.arch_fs
                         ))
                     if check == "Warning":
-                        view_name = ('%s (%s)' % (view.name, view.xml_id)) if view.xml_id else view.name
+                        view_name = f'{view.name} ({view.xml_id})' if view.xml_id else view.name
                         _logger.warning('Invalid view %s definition in %s \n%s', view_name, view.arch_fs, view.arch)
             except ValueError as e:
-                lines = etree.tostring(combined_arch, encoding='unicode').splitlines(keepends=True)
-                fivelines = "".join(lines[max(0, e.context["line"]-3):e.context["line"]+2])
-                err = ValidationError(_(
-                    "Error while validating view near:\n\n%(fivelines)s\n%(error)s",
-                    fivelines=fivelines, error=tools.ustr(e),
-                ))
-                err.context = e.context
-                raise err.with_traceback(e.__traceback__) from None
+                if hasattr(e, 'context'):
+                    lines = etree.tostring(combined_arch, encoding='unicode').splitlines(keepends=True)
+                    fivelines = "".join(lines[max(0, e.context["line"]-3):e.context["line"]+2])
+                    err = ValidationError(_(
+                        "Error while validating view near:\n\n%(fivelines)s\n%(error)s",
+                        fivelines=fivelines, error=tools.ustr(e),
+                    ))
+                    err.context = e.context
+                    raise err.with_traceback(e.__traceback__) from None
+                else:
+                    err = ValidationError(_(
+                        "Error while validating view (%(view)s):\n\n%(error)s", view=self.key or self.id, error=tools.ustr(e.__context__),
+                    ))
+                    err.context = {'name': 'invalid view'}
+                    raise err.with_traceback(e.__context__.__traceback__) from None
 
         return True
 
@@ -1121,31 +1058,6 @@ actual arch.
 
         return tree
 
-    def _postprocess_context_dependent(self, tree):
-        """
-        Evaluate the modifiers which depends on the context after retrieving the view from the cache.
-
-        e.g.
-        <field name="date_approve" invisible="context.get('quotation_only', False)"
-
-        For such modifiers, which cannot be cached, the modifier has been stored under it's non-evaluated expression,
-        along with a temporary technical attribute `context-dependent-modifiers`
-        to tell which modifier should be evaluated after retrieving the view from the cache.
-        e.g.
-        <field
-            name="date_approve"
-            modifiers="{&quot;invisible&quot;: &quot;context.get('quotation_only')&quot;}"
-            context-dependent-modifiers="invisible"/>
-        """
-        for node in tree.xpath('//*[@context-dependent-modifiers]'):
-            modifiers = json.loads(node.attrib.pop('modifiers', '{}'))
-            for attr, value in json.loads(node.attrib.pop('context-dependent-modifiers')).items():
-                value = bool(safe_eval.safe_eval(value, {'context': self._context}))
-                if value or (attr not in modifiers or not isinstance(modifiers[attr], list)):
-                    modifiers[attr] = value
-            transfer_modifiers_to_node(modifiers, node)
-        return tree
-
     def _postprocess_view(self, node, model_name, editable=True, parent_name_manager=None, **options):
         """ Process the given architecture, modifying it in-place to add and
         remove stuff.
@@ -1170,7 +1082,6 @@ actual arch.
         root_info = {
             'view_type': root.tag,
             'view_editable': editable and self._editable_node(root, name_manager),
-            'view_modifiers_from_model': self._modifiers_from_model(root),
             'mobile': options.get('mobile'),
         }
 
@@ -1182,7 +1093,7 @@ actual arch.
             # compute default
             tag = node.tag
             had_parent = node.getparent() is not None
-            node_info = dict(root_info, modifiers={}, editable=editable and self._editable_node(node, name_manager))
+            node_info = dict(root_info, editable=editable and self._editable_node(node, name_manager))
 
             # tag-specific postprocessing
             postprocessor = getattr(self, f"_postprocess_tag_{tag}", None)
@@ -1191,9 +1102,6 @@ actual arch.
                 if had_parent and node.getparent() is None:
                     # the node has been removed, stop processing here
                     continue
-
-            transfer_node_to_modifiers(node, node_info['modifiers'])
-            transfer_modifiers_to_node(node_info['modifiers'], node)
 
             # if present, iterate on node_info['children'] instead of node
             for child in reversed(node_info.get('children', node)):
@@ -1294,7 +1202,7 @@ actual arch.
                     node_info.get('view_type') == 'form'
                     and field.type in ('one2many', 'many2many')
                     and not node.get('widget')
-                    and not node.get('invisible')
+                    and node.get('invisible') not in ('1', 'True')
                     and not name_manager.parent
                 ):
                     # Embed kanban/tree/form views for visible x2many fields in form views
@@ -1314,10 +1222,6 @@ actual arch.
                     node.set('model_access_rights', field.comodel_name)
 
             name_manager.has_field(node, node.get('name'), attrs)
-
-            field_info = name_manager.field_info.get(node.get('name'))
-            if field_info:
-                transfer_field_to_modifiers(field_info, node_info['modifiers'], node_info['view_modifiers_from_model'])
 
     def _postprocess_tag_form(self, node, name_manager, node_info):
         result = name_manager.model.view_header_get(False, node.tag)
@@ -1379,10 +1283,7 @@ actual arch.
 
     def _editable_tag_field(self, node, name_manager):
         field = name_manager.model._fields.get(node.get('name'))
-        return field is None or field.is_editable() and (
-            node.get('readonly') not in ('1', 'True')
-            or get_dict_asts(node.get('attrs') or "{}")
-        )
+        return field is None or field.is_editable() and node.get('readonly') not in ('1', 'True')
 
     def _onchange_able_view(self, node):
         func = getattr(self, f"_onchange_able_view_{node.tag}", None)
@@ -1399,7 +1300,7 @@ actual arch.
         return True
 
     def _modifiers_from_model(self, node):
-        modifier_names = ['invisible']
+        modifier_names = []
         if node.tag in ('kanban', 'tree', 'form'):
             modifier_names += ['readonly', 'required']
         return modifier_names
@@ -1456,7 +1357,7 @@ actual arch.
                 validator(node, name_manager, node_info)
 
             if validate:
-                self._validate_attrs(node, name_manager, node_info)
+                self._validate_attributes(node, name_manager, node_info)
 
             for child in reversed(node):
                 stack.append((child, node_info['editable'], validate))
@@ -1534,11 +1435,14 @@ actual arch.
                     # dynamic domain: in [('foo', '=', bar)], field 'foo' must
                     # exist on the comodel and field 'bar' must be in the view
                     desc = (f'domain of <field name="{name}">' if node.get('domain')
-                            else f"domain of field '{name}'")
-                    fnames, vnames = self._get_domain_identifiers(node, domain, desc)
-                    self._check_field_paths(node, fnames, field.comodel_name, f"{desc} ({domain})")
-                    if vnames:
-                        name_manager.must_have_fields(node, vnames, f"{desc} ({domain})")
+                            else f"domain of python field {name!r}")
+                    try:
+                        self._validate_domain_identifiers(node, name_manager, domain, desc, field.comodel_name)
+                    except ValueError as e:
+                        if 'Modifier must be a domain' in str(e):
+                            warnings.warn(f"Non-domain syntaxes are deprecated for attribute 'domain': {desc}\n{domain!r}", DeprecationWarning, 2)
+                        else:
+                            raise
 
             elif validate and node.get('domain'):
                 msg = _(
@@ -1567,22 +1471,6 @@ actual arch.
 
         name_manager.has_field(node, name, {'id': node.get('id'), 'select': node.get('select')})
 
-        if validate:
-            for attribute in ('invisible', 'readonly', 'required'):
-                val = node.get(attribute)
-                if val:
-                    try:
-                        # most (~95%) elements are 1/True/0/False
-                        res = str2bool(val)
-                    except ValueError:
-                        res = safe_eval.safe_eval(val, {'context': self._context})
-                    if res not in (1, 0, True, False, None):
-                        msg = _(
-                            'Attribute %(attribute)s evaluation expects a boolean, got %(value)s',
-                            attribute=attribute, value=val,
-                        )
-                        self._raise_view_error(msg, node)
-
     def _validate_tag_filter(self, node, name_manager, node_info):
         if not node_info['validate']:
             return
@@ -1590,10 +1478,7 @@ actual arch.
         if domain:
             name = node.get('name')
             desc = f'domain of <filter name="{name}">' if name else 'domain of <filter>'
-            fnames, vnames = self._get_domain_identifiers(node, domain, desc)
-            self._check_field_paths(node, fnames, name_manager.model._name, f"{desc} ({domain})")
-            if vnames:
-                name_manager.must_have_fields(node, vnames, f"{desc} ({domain})")
+            self._validate_domain_identifiers(node, name_manager, domain, desc, name_manager.model._name)
 
     def _validate_tag_button(self, node, name_manager, node_info):
         if not node_info['validate']:
@@ -1656,11 +1541,8 @@ actual arch.
                     self._raise_view_error(msg, node)
                 domain = node_info['editable'] and field._description_domain(self.env)
                 if isinstance(domain, str):
-                    desc = f"domain of field '{name}'"
-                    fnames, vnames = self._get_domain_identifiers(node, domain, desc)
-                    self._check_field_paths(node, fnames, field.comodel_name, f"{desc} ({domain})")
-                    if vnames:
-                        name_manager.must_have_fields(node, vnames, f"{desc} ({domain})")
+                    desc = f"domain of python field '{name}'"
+                    self._validate_domain_identifiers(node, name_manager, domain, desc, field.comodel_name)
 
             # move all children nodes into a new node <groupby>
             groupby_node = E.groupby(*node)
@@ -1756,25 +1638,24 @@ actual arch.
     def _is_qweb_based_view(self, view_type):
         return view_type in ("kanban", "gantt")
 
-    def _validate_attrs(self, node, name_manager, node_info):
-        """ Generic validation of node attrs. """
+    def _validate_attributes(self, node, name_manager, node_info):
+        """ Generic validation of node attributes. """
+
+        # python expression used in for readonly, invisible, ...
+        # and thus are only executed client side
+        for attr in VIEW_MODIFIERS:
+            py_expression = node.attrib.get(attr)
+            if py_expression:
+                self._validate_expression(node, name_manager, py_expression, f"modifier {attr!r}")
+
         for attr, expr in node.items():
             if attr in ('class', 't-att-class', 't-attf-class'):
                 self._validate_classes(node, expr)
 
-            elif attr == 'attrs':
-                for key, val_ast in get_dict_asts(expr).items():
-                    if isinstance(val_ast, ast.List):
-                        # domains in attrs are used for readonly, invisible, ...
-                        # and thus are only executed client side
-                        fnames, vnames = self._get_domain_identifiers(node, val_ast, attr, expr)
-                        name_manager.must_have_fields(node, fnames | vnames, f"attrs ({expr})")
-                    else:
-                        vnames = get_variable_names(val_ast)
-                        if vnames:
-                            name_manager.must_have_fields(node, vnames, f"attrs ({expr})")
-
             elif attr == 'context':
+                vnames = get_expression_field_names(expr) - {'id'}
+                if vnames:
+                    name_manager.must_have_fields(node, vnames, f"context ({expr})")
                 for key, val_ast in get_dict_asts(expr).items():
                     if key == 'group_by':  # only in context
                         if not isinstance(val_ast, ast.Str):
@@ -1791,10 +1672,6 @@ actual arch.
                                 field=fname, attribute=attr, value=expr,
                             )
                             self._raise_view_error(msg, node)
-                    else:
-                        vnames = get_variable_names(val_ast)
-                        if vnames:
-                            name_manager.must_have_fields(node, vnames, f"context ({expr})")
 
             elif attr == 'groups':
                 for group in expr.replace('!', '').split(','):
@@ -1811,9 +1688,9 @@ actual arch.
                     )
 
             elif attr.startswith('decoration-'):
-                vnames = get_variable_names(expr)
+                vnames = get_expression_field_names(expr) - {'id'}
                 if vnames:
-                    name_manager.must_have_fields(node, vnames, f"{attr}={expr}")
+                    name_manager.must_have_fields(node, vnames, f"{attr}={expr!r}")
 
             elif attr == 'data-bs-toggle' and expr == 'tab':
                 if node.get('role') != 'tab':
@@ -1982,12 +1859,30 @@ actual arch.
         if (not next(filter(lambda regex: re.match(regex, directive), allowed_directives), None)):
             self._raise_view_error(_("Forbidden owl directive used in arch (%s).", directive), node)
 
-    def _get_domain_identifiers(self, node, domain, use, expr=None):
+    def _validate_expression(self, node, name_manager, py_expression, use):
         try:
-            return get_domain_identifiers(domain)
-        except ValueError:
-            msg = _("Invalid domain format %(expr)s in %(use)s", expr=expr or domain, use=use)
-            self._raise_view_error(msg, node)
+            if py_expression.lower() in ("0", "false", "1", "true"):
+                # most (~95%) elements are 1/True/0/False
+                return
+            fnames = get_expression_field_names(py_expression) - {"id"}
+        except (SyntaxError, ValueError, AttributeError) as e:
+            msg = _("Invalid %(use)s: %(expr)r\n%(error)s", use=use, expr=py_expression, error=e)
+            self._raise_view_error(msg, node, from_exception=e)
+        name_manager.must_have_fields(node, fnames, f"{use} ({py_expression})")
+
+    def _validate_domain_identifiers(self, node, name_manager, domain, use, model=None):
+        try:
+            fnames, vnames = get_domain_value_names(domain)
+        except (SyntaxError, ValueError, AttributeError) as e:
+            msg = _("Invalid %(use)s: %(expr)r\n%(error)s", use=use, expr=domain, error=e)
+            self._raise_view_error(msg, node, from_exception=e)
+
+        if model:
+            self._check_field_paths(node, fnames, model, f"{use} ({domain})")
+        else:
+            name_manager.must_have_fields(node, fnames, f"{use} ({domain})")
+
+        name_manager.must_have_fields(node, vnames, f"{use} ({domain})")
 
     def _check_field_paths(self, node, field_paths, model_name, use):
         """ Check whether the given field paths (dot-separated field names)
@@ -1996,6 +1891,8 @@ actual arch.
         for field_path in field_paths:
             names = field_path.split('.')
             Model = self.pool[model_name]
+            if names[0] == 'parent':
+                continue
             for index, name in enumerate(names):
                 if Model is None:
                     msg = _(
@@ -2707,7 +2604,6 @@ class Model(models.AbstractModel):
 
         node = etree.fromstring(result['arch'])
         node = self.env['ir.ui.view']._postprocess_access_rights(node)
-        node = self.env['ir.ui.view']._postprocess_context_dependent(node)
         result['arch'] = etree.tostring(node, encoding="unicode").replace('\t', '')
 
         return result
@@ -2860,12 +2756,11 @@ class NameManager:
 
     @lazy_property
     def field_info(self):
-        field_info = self.model.fields_get(attributes=['invisible', 'states', 'readonly', 'required'])
+        field_info = self.model.fields_get(attributes=['readonly', 'required'])
         has_access = functools.partial(self.model.check_access_rights, raise_exception=False)
         if not (has_access('write') or has_access('create')):
             for info in field_info.values():
                 info['readonly'] = True
-                info['states'] = {}
         return field_info
 
     def has_field(self, node, name, info=frozendict()):
@@ -3018,6 +2913,7 @@ class NameManager:
                         in available_combinations
                         for combination in available_combinations
                     )
+                    and ((
                     # For all mandatory combinations, find an available combination
                     # which is included in the mandatory combination
                     # e.g.
@@ -3025,7 +2921,7 @@ class NameManager:
                     # available combination: A B
                     # The above is valid, the field will be available for users having both A and B groups
                     # and the field is mandatory only for users having A B and C groups.
-                    and not all(
+                    not all(
                         any(
                             available_combination.issubset(mandatory_combination)
                             for available_combination in available_combinations
@@ -3060,6 +2956,13 @@ class NameManager:
                             )
                         ) for mandatory_combination in mandatory_combinations
                     )
+                    )
+                    # if 'base.group_no_one' is in available_combinations the group
+                    # must be in mandatory_combinations because depending of session
+                    or (
+                        {'base.group_no_one'} in available_combinations and
+                        not all('base.group_no_one' in combination for combination in mandatory_combinations)
+                    ))
                 ):
                     msg = _(
                         "Field %(name)r used in %(use)s is restricted to the group(s) %(groups)s.",

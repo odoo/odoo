@@ -171,6 +171,22 @@ class O2MSub(models.Model):
         if self.has_parent:
             self.value = self.parent_id.value
 
+class O2MRef(models.Model):
+    _name = 'test_testing_utilities.ref'
+    _description = 'Testing Utilities ref'
+
+    value = fields.Integer(default=1)
+    subs = fields.One2many('test_testing_utilities.ref.sub', 'parent_id')
+
+class O2MRefSub(models.Model):
+    _name = 'test_testing_utilities.ref.sub'
+    _description = 'Testing Utilities Subtraction'
+
+    a = fields.Integer()
+    b = fields.Integer()
+    c = fields.Integer()
+    parent_id = fields.Many2one('test_testing_utilities.ref')
+
 class O2MDefault(models.Model):
     _name = 'test_testing_utilities.default'
     _description = 'Testing Utilities Default'

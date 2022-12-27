@@ -437,8 +437,8 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
                 # <field name="parent_id" groups="base.group_no_one"/>
                 view = self.env.ref('project.view_task_form2').sudo()
                 tree = etree.fromstring(view.arch)
-                for node in tree.xpath('//field[@name="parent_id"][@attrs]'):
-                    node.attrib.pop('attrs')
+                for node in tree.xpath('//field[@name="parent_id"][@invisible]'):
+                    node.attrib.pop('invisible')
                 view.arch = etree.tostring(tree)
                 with self.debug_mode():
                     with Form(self.task_2) as task_form:
@@ -457,8 +457,8 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
         # <field name="parent_id" groups="base.group_no_one"/>
         view = self.env.ref('project.view_task_form2').sudo()
         tree = etree.fromstring(view.arch)
-        for node in tree.xpath('//field[@name="parent_id"][@attrs]'):
-            node.attrib.pop('attrs')
+        for node in tree.xpath('//field[@name="parent_id"][@invisible]'):
+            node.attrib.pop('invisible')
         view.arch = etree.tostring(tree)
 
         with self.sudo('employee-a'):

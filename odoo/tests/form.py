@@ -5,9 +5,8 @@ view for server-side unit tests.
 """
 import ast
 import collections
-import json
+import itertools
 import logging
-import operator
 import time
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
@@ -17,11 +16,11 @@ from lxml import etree
 import odoo
 from odoo.models import BaseModel
 from odoo.fields import Command
-from odoo.osv import expression
-from odoo.osv.expression import normalize_domain, TRUE_LEAF, FALSE_LEAF
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
+
+MODIFIER_ALIASES = {'1': 'True', '0': 'False'}
 
 
 class Form:
@@ -131,7 +130,7 @@ class Form:
         # self._view = {
         #     'tree': view_arch_etree,
         #     'fields': {field_name: field_info},
-        #     'modifiers': {field_name: {modifier: domain}},
+        #     'modifiers': {field_name: {modifier: expression}},
         #     'contexts': {field_name: field_context_str},
         #     'onchange': onchange_spec,
         # }
@@ -147,29 +146,17 @@ class Form:
     def _process_view(self, tree, model, level=2):
         """ Post-processes to augment the view_get with:
         * an id field (may not be present if not in the view but needed)
-        * pre-processed modifiers (map of modifier name to json-loaded domain)
+        * pre-processed modifiers (map of modifier name to json-loaded expresion)
         * pre-processed onchanges list
         """
         fields = {'id': {'type': 'id'}}
-        modifiers = {'id': {'required': [FALSE_LEAF], 'readonly': [TRUE_LEAF]}}
+        modifiers = {'id': {'required': 'False', 'readonly': 'True'}}
         contexts = {}
         view = {
             'tree': tree,
             'fields': fields,
             'modifiers': modifiers,
             'contexts': contexts,
-        }
-        # pre-resolve modifiers & bind to arch toplevel
-        eval_context = {
-            "uid": self._env.user.id,
-            "tz": self._env.user.tz,
-            "lang": self._env.user.lang,
-            "datetime": datetime,
-            "context_today": lambda: odoo.fields.Date.context_today(self._env.user),
-            "relativedelta": relativedelta,
-            "current_date": time.strftime("%Y-%m-%d"),
-            "allowed_company_ids": [self._env.user.company_id.id],
-            "context": {},
         }
         # retrieve <field> nodes at the current level
         flevel = tree.xpath('count(ancestor::field)')
@@ -178,45 +165,47 @@ class Form:
             field_name = node.get('name')
 
             # add field_info into fields
-            field_info = self._models_info[model._name].get(field_name) or {'type': None}
+            field_info = self._models_info.get(model._name, {}).get(field_name) or {'type': None}
             fields[field_name] = field_info
 
             # determine modifiers
             field_modifiers = {}
-            for modifier, domain in json.loads(node.get('modifiers', '{}')).items():
-                if isinstance(domain, int):
-                    domain = [TRUE_LEAF] if domain else [FALSE_LEAF]
-                elif isinstance(domain, str):
-                    domain = safe_eval(domain, eval_context)
-                field_modifiers[modifier] = normalize_domain(domain)
+            for attr in ('required', 'readonly', 'invisible', 'column_invisible'):
+                # use python field attribute as default value
+                default = attr in ('required', 'readonly') and field_info.get(attr, False)
+                expr = node.get(attr) or str(default)
+                field_modifiers[attr] = MODIFIER_ALIASES.get(expr, expr)
 
             # Combine the field modifiers with its ancestor modifiers with an
             # OR: A field is invisible if its own invisible modifier is True OR
             # if one of its ancestor invisible modifier is True
-            for ancestor in node.xpath(f'ancestor::*[@modifiers][count(ancestor::field) = {flevel}]'):
-                ancestor_modifiers = json.loads(ancestor.get('modifiers'))
-                if 'invisible' in ancestor_modifiers:
-                    domain = ancestor_modifiers['invisible']
-                    if isinstance(domain, int):
-                        domain = [TRUE_LEAF] if domain else [FALSE_LEAF]
-                    elif isinstance(domain, str):
-                        domain = safe_eval(domain, eval_context)
-                    domain = normalize_domain(domain)
-                    field_modifiers['invisible'] = expression.OR([
-                        domain,
-                        field_modifiers.get('invisible', [FALSE_LEAF]),
-                    ])
+            for ancestor in node.xpath(f'ancestor::*[@invisible][count(ancestor::field) = {flevel}]'):
+                modifier = 'invisible'
+                expr = ancestor.get(modifier)
+                if expr == 'True' or field_modifiers[modifier] == 'True':
+                    field_modifiers[modifier] = 'True'
+                if expr == 'False':
+                    field_modifiers[modifier] = field_modifiers[modifier]
+                elif field_modifiers[modifier] == 'False':
+                    field_modifiers[modifier] = expr
+                else:
+                    field_modifiers[modifier] = f'({expr}) or ({field_modifiers[modifier]})'
 
             # merge field_modifiers into modifiers[field_name]
             if field_name in modifiers:
                 # The field is several times in the view, combine the modifier
-                # domains with an AND: a field is X if all occurences of the
+                # expression with an AND: a field is X if all occurences of the
                 # field in the view are X.
-                for modifier in field_modifiers.keys() | modifiers[field_name].keys():
-                    field_modifiers[modifier] = expression.AND([
-                        modifiers[field_name].get(modifier, [FALSE_LEAF]),
-                        field_modifiers.get(modifier, [FALSE_LEAF]),
-                    ])
+                for modifier, expr in modifiers[field_name].items():
+                    if expr == 'False' or field_modifiers[modifier] == 'False':
+                        field_modifiers[modifier] = 'False'
+                    if expr == 'True':
+                        field_modifiers[modifier] = field_modifiers[modifier]
+                    elif field_modifiers[modifier] == 'True':
+                        field_modifiers[modifier] = expr
+                    else:
+                        field_modifiers[modifier] = f'({expr}) and ({field_modifiers[modifier]})'
+
 
             modifiers[field_name] = field_modifiers
 
@@ -237,7 +226,7 @@ class Form:
             # determine subview to use for edition
             if field_info['type'] == 'one2many':
                 if level:
-                    field_info['invisible'] = field_modifiers.get('invisible') == [TRUE_LEAF]
+                    field_info['invisible'] = field_modifiers.get('invisible')
                     field_info['edition_view'] = self._get_one2many_edition_view(field_info, node, level)
                 else:
                     # this trick enables the following invariant: every one2many
@@ -262,7 +251,7 @@ class Form:
         for view_type in ['tree', 'form']:
             if view_type in views:
                 continue
-            if field_info['invisible']:
+            if field_info['invisible'] == 'True':
                 # add an empty view
                 views[view_type] = etree.Element(view_type)
                 continue
@@ -349,72 +338,35 @@ class Form:
         if view is None:
             view = self._view
 
-        domain = view['modifiers'][field_name].get(modifier, False)
-        if isinstance(domain, bool):
-            return domain
+        expr = view['modifiers'][field_name].get(modifier, False)
+        if isinstance(expr, bool):
+            return expr
+        if expr in ('True', 'False'):
+            return expr == 'True'
 
         if vals is None:
             vals = self._values
 
-        stack = []
-        for it in reversed(domain):
-            if it == '!':
-                stack.append(not stack.pop())
-            elif it == '&':
-                e1 = stack.pop()
-                e2 = stack.pop()
-                stack.append(e1 and e2)
-            elif it == '|':
-                e1 = stack.pop()
-                e2 = stack.pop()
-                stack.append(e1 or e2)
-            elif isinstance(it, tuple):
-                if it == TRUE_LEAF:
-                    stack.append(True)
-                    continue
-                if it == FALSE_LEAF:
-                    stack.append(False)
-                    continue
-                left, operator, right = it
-                # hack-ish handling of parent.<field> modifiers
-                if left.startswith('parent.'):
-                    left_value = vals['•parent•'][left[7:]]
-                else:
-                    left_value = vals[left]
-                    # apparent artefact of JS data representation: m2m field
-                    # values are assimilated to lists of ids?
-                    # FIXME: SSF should do that internally, but the requirement
-                    #        of recursively post-processing to generate lists of
-                    #        commands on save (e.g. m2m inside an o2m) means the
-                    #        data model needs proper redesign
-                    # we're looking up the "current view" so bits might be
-                    # missing when processing o2ms in the parent (see
-                    # values_to_save:1450 or so)
-                    left_field = view['fields'].get(left, {'type': None})
-                    if left_field['type'] == 'many2many':
-                        # field value should be [(6, _, ids)], we want just the ids
-                        left_value = left_value[0][2] if left_value else []
-                stack.append(self._OPS[operator](left_value, right))
-            else:
-                raise ValueError(f"Unknown domain element {it!r}")
-        assert len(stack) == 1
-        return stack[0]
+        eval_context = self._get_eval_context(vals)
+        for name, desc in self._view['fields'].items():
+            if name in eval_context and desc['type'] in ('one2many', 'many2many'):
+                ids = set()
+                for command in eval_context.get(name):
+                    if command[0] == Command.LINK:
+                        ids.add(command[1])
+                    elif command[0] == Command.CREATE:
+                        ids.add(command[1])
+                    elif command[0] == Command.UPDATE:
+                        ids.add(command[1])
+                    elif command[0] == Command.UNLINK:
+                        ids.remove(command[1])
+                    elif command[0] == Command.CLEAR:
+                        ids.clear()
+                    elif command[0] == Command.SET:
+                        ids = set(command[2])
+                eval_context[name] = list(ids)
 
-    _OPS = {
-        '=': operator.eq,
-        '==': operator.eq,
-        '!=': operator.ne,
-        '<': operator.lt,
-        '<=': operator.le,
-        '>=': operator.ge,
-        '>': operator.gt,
-        'in': lambda a, b: (a in b) if isinstance(b, (tuple, list)) else (b in a),
-        'not in': lambda a, b: (a not in b) if isinstance(b, (tuple, list)) else (b not in a),
-        'like': lambda a, b: a and b and isinstance(a, str) and isinstance(b, str) and a in b,
-        'ilike': lambda a, b: a and b and isinstance(a, str) and isinstance(b, str) and a.lower() in b.lower(),
-        'not like': lambda a, b: a and b and isinstance(a, str) and isinstance(b, str) and a not in b,
-        'not ilike': lambda a, b: a and b and isinstance(a, str) and isinstance(b, str) and a.lower() not in b.lower(),
-    }
+        return bool(safe_eval(expr, eval_context))
 
     def _get_context(self, field_name):
         """ Return the context of a given field. """
@@ -424,7 +376,7 @@ class Form:
         eval_context = self._get_eval_context()
         return safe_eval(context_str, eval_context)
 
-    def _get_eval_context(self):
+    def _get_eval_context(self, values=None):
         """ Return the context dict to eval something. """
         context = {
             'id': self._record.id,
@@ -434,10 +386,12 @@ class Form:
             'current_date': date.today().strftime("%Y-%m-%d"),
             **self._env.context,
         }
+        if values is None:
+            values = self._get_all_values()
         return {
             **context,
             'context': context,
-            **self._get_all_values(),
+            **values,
         }
 
     def _get_all_values(self):
@@ -571,7 +525,7 @@ class Form:
                             vs._changed.update(vs)
                         vs = self._get_values(
                             mode, vs, subview,
-                            modifiers_values={'id': False, **vs, '•parent•': values},
+                            modifiers_values={'id': False, **vs, 'parent': Dotter(values)},
                             # related o2m don't have a relation_field
                             parent_link=field_info.get('relation_field'),
                         )
@@ -675,7 +629,7 @@ class Form:
             # TODO: simplistic, unlikely to work if e.g. there's a 5 inbetween other commands
             for command in value:
                 if command[0] == Command.CREATE:
-                    result.append((Command.CREATE, 0, {
+                    result.append((Command.CREATE, virtual_id(), {
                         key: self._cleanup_onchange(subfields[key], val, None)
                         for key, val in command[2].items()
                         if key in subfields
@@ -754,12 +708,12 @@ class O2MForm(Form):
                 object.__setattr__(self, '_record', model.browse(vals['id']))
 
     def _get_modifier(self, field_name, modifier, *, view=None, vals=None):
-        if vals is None:
-            vals = {**self._values, '•parent•': self._proxy._form._values}
+        if modifier != 'required' and self._proxy._form._get_modifier(self._proxy._field, modifier):
+            return True
         return super()._get_modifier(field_name, modifier, view=view, vals=vals)
 
-    def _get_eval_context(self):
-        eval_context = super()._get_eval_context()
+    def _get_eval_context(self, values=None):
+        eval_context = super()._get_eval_context(values)
         eval_context['parent'] = Dotter(self._proxy._form._values)
         return eval_context
 
@@ -776,7 +730,7 @@ class O2MForm(Form):
         field_value = proxy._form._values[proxy._field]
         values = self._get_save_values()
         if self._index is None:
-            field_value.append((Command.CREATE, 0, values))
+            field_value.append((Command.CREATE, virtual_id(), values))
         else:
             index = proxy._command_index(self._index)
             (cmd, id_, vs) = field_value[index]
@@ -805,6 +759,13 @@ class O2MForm(Form):
                 assert values[field_name] is not False, "{fname!r} is a required field"
 
         return values
+
+
+_virtual_id_counter = itertools.count()
+
+
+def virtual_id():
+    return f'virtual_{next(_virtual_id_counter)}'
 
 
 class UpdateDict(dict):

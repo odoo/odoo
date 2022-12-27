@@ -282,8 +282,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         # 06/16/2022 08:00:00 as date_from and 06/15/2022 17:00:00 as date_to
         # Bug reported to the rd-fun-vidange channel to the dev who introduced the bug
         # https://discord.com/channels/678381219515465750/687337760452902925/986918361768263710
-        leave_form._view['modifiers']['date_from']['invisible'] = False
-        leave_form._view['modifiers']['date_to']['invisible'] = False
+        leave_form._view['modifiers']['date_from']['invisible'] = 'False'
+        leave_form._view['modifiers']['date_to']['invisible'] = 'False'
         leave_form.date_from = datetime(2019, 5, 6, 0, 0, 0)
         leave_form.date_to = datetime(2019, 5, 6, 23, 59, 59)
         leave = leave_form.save()

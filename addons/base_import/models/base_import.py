@@ -285,13 +285,7 @@ class Import(models.TransientModel):
             if field.get('deprecated', False) is not False:
                 continue
             if field.get('readonly'):
-                states = field.get('states')
-                if not states:
-                    continue
-                # states = {state: [(attr, value), (attr2, value2)], state2:...}
-                if not any(attr == 'readonly' and value is False
-                           for attr, value in itertools.chain.from_iterable(states.values())):
-                    continue
+                continue
             field_value = {
                 'id': name,
                 'name': name,

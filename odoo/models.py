@@ -5781,7 +5781,7 @@ class BaseModel(metaclass=MetaModel):
 
                     if comparator == '=':
                         ok = value in data
-                    elif comparator in ('!=', '<>'):
+                    elif comparator == '!=':
                         ok = value not in data
                     elif comparator == '=?':
                         ok = not value or (value in data)
