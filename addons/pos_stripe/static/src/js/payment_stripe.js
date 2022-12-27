@@ -141,7 +141,8 @@ const PaymentStripe = PaymentInterface.extend({
 
     captureAfterPayment: async function (processPayment, line) {
         const capturePayment = await this.capturePayment(processPayment.paymentIntent.id);
-        line.card_type = capturePayment.charges.data[0].payment_method_details.card_present.brand;
+        if (capturePayment.charges)
+            line.card_type = capturePayment.charges.data[0].payment_method_details.card_present.brand;
         line.transaction_id = capturePayment.id;
     },
 
