@@ -1798,14 +1798,17 @@ class _String(Field):
                 continue
             from_lang_value = old_translations.get(lang, old_translations.get('en_US'))
             translation_dictionary = self.get_translation_dictionary(from_lang_value, old_translations)
-            text2term = {self.get_text_content(term): term for term in new_terms}
+            text2terms = defaultdict(list)
+            for term in new_terms:
+                text2terms[self.get_text_content(term)].append(term)
 
             for old_term in list(translation_dictionary.keys()):
                 if old_term not in new_terms:
                     old_term_text = self.get_text_content(old_term)
-                    matches = get_close_matches(old_term_text, text2term, 1, 0.9)
+                    matches = get_close_matches(old_term_text, text2terms, 1, 0.9)
                     if matches:
-                        translation_dictionary[text2term[matches[0]]] = translation_dictionary.pop(old_term)
+                        closest_term = get_close_matches(old_term, text2terms[matches[0]], 1, 0)[0]
+                        translation_dictionary[closest_term] = translation_dictionary.pop(old_term)
             # pylint: disable=not-callable
             new_translations = {
                 l: self.translate(lambda term: translation_dictionary.get(term, {l: None})[l], cache_value)
