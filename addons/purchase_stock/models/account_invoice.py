@@ -42,8 +42,13 @@ class AccountMove(models.Model):
                     continue
 
                 # Retrieve accounts needed to generate the price difference.
-                accounts = line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=move.fiscal_position_id)
-                debit_expense_account = accounts['expense']
+                if line.product_id.cost_method == 'standard':
+                    debit_expense_account = line.product_id.property_account_creditor_price_difference \
+                        or line.product_id.categ_id.property_account_creditor_price_difference_categ
+                    debit_expense_account = line.move_id.fiscal_position_id.map_account(debit_expense_account)
+                else:
+                    accounts = line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=move.fiscal_position_id)
+                    debit_expense_account = accounts['expense']
                 if not debit_expense_account:
                     continue
 
@@ -70,14 +75,21 @@ class AccountMove(models.Model):
                     valuation_price_unit = line.product_id.uom_id._compute_price(valuation_price_unit, line.product_uom_id)
 
                 else:
-                    continue
-
+                    price_unit = line.product_id.uom_id._compute_price(line.product_id.standard_price, line.product_uom_id)
+                    price_unit = -price_unit if line.move_id.move_type == 'in_refund' else price_unit
+                    valuation_price_unit = line.company_currency_id._convert(
+                        price_unit, move.currency_id,
+                        move.company_id, fields.Date.today(), round=False
+                    )
 
                 price_unit = line._get_gross_unit_price()
 
                 price_unit_val_dif = price_unit - valuation_price_unit
                 # If there are some valued moves, we only consider their quantity already used
-                relevant_qty = line._get_out_and_not_invoiced_qty(valuation_stock_moves)
+                if line.product_id.cost_method == 'standard':
+                    relevant_qty = line.quantity
+                else:
+                    relevant_qty = line._get_out_and_not_invoiced_qty(valuation_stock_moves)
                 price_subtotal = relevant_qty * price_unit_val_dif
 
                 # We consider there is a price difference if the subtotal is not zero. In case a
