@@ -58,7 +58,11 @@ class WebsocketController(Controller):
         return {}
 
     @route('/bus/websocket_worker_bundle', type='http', auth='public', cors='*')
-    def get_websocket_worker_bundle(self):
+    def get_websocket_worker_bundle(self, v=None):  # pylint: disable=unused-argument
+        """
+        :param str v: Version of the worker, frontend only argument used to
+            prevent new worker versions to be loaded from the browser cache.
+        """
         bundle = 'bus.websocket_worker_assets'
         files, _ = request.env["ir.qweb"]._get_asset_content(bundle)
         asset = AssetsBundle(bundle, files)
