@@ -672,6 +672,7 @@ class IrActionsReport(models.Model):
         defaults = {
             'width': (600, int),
             'height': (100, int),
+            'format': ('png', lambda x: x in ('png', 'svg') and x or 'png'),
             'humanreadable': (False, lambda x: bool(int(x))),
             'quiet': (True, lambda x: bool(int(x))),
             'mask': (None, lambda x: x),
@@ -711,7 +712,7 @@ class IrActionsReport(models.Model):
             barcode_type = 'Code128'
 
         try:
-            barcode = createBarcodeDrawing(barcode_type, value=value, format='png', **kwargs)
+            barcode = createBarcodeDrawing(barcode_type, value=value, **kwargs)
 
             # If a mask is asked and it is available, call its function to
             # post-process the generated QR-code image
@@ -721,7 +722,11 @@ class IrActionsReport(models.Model):
                 if mask_to_apply:
                     mask_to_apply(kwargs['width'], kwargs['height'], barcode)
 
-            return barcode.asString('png')
+            res = barcode.asString(kwargs['format'])
+            if kwargs['format'] == 'svg' and isinstance(res, str):
+                res = res.encode('utf-8')
+            return res
+
         except (ValueError, AttributeError):
             if barcode_type == 'Code128':
                 raise ValueError("Cannot convert into barcode.")

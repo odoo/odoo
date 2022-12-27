@@ -15,6 +15,7 @@ from lxml import etree, html
 from odoo import api, fields, models, tools
 from odoo.tools import posix_to_ldml, float_utils, format_date, format_duration
 from odoo.tools.mail import safe_attrs
+from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.misc import get_lang, babel_locale_parse
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _, LazyTranslate
@@ -723,7 +724,13 @@ class IrQwebFieldBarcode(models.AbstractModel):
             height=dict(type='integer', string=_('Height'), default_value=100),
             humanreadable=dict(type='integer', string=_('Human Readable'), default_value=0),
             quiet=dict(type='integer', string='Quiet', default_value=1),
-            mask=dict(type='string', string='Mask', default_value='')
+            mask=dict(type='string', string='Mask', default_value=''),
+            format=dict(
+                type="selection",
+                params=[('png', 'PNG'), ('svg', 'SVG')],
+                string=_('Format'),
+                default_value='png'
+            ),
         )
         return options
 
@@ -737,7 +744,7 @@ class IrQwebFieldBarcode(models.AbstractModel):
         barcode = self.env['ir.actions.report'].barcode(
             barcode_symbology,
             value,
-            **{key: value for key, value in options.items() if key in ['width', 'height', 'humanreadable', 'quiet', 'mask']})
+            **{key: value for key, value in options.items() if key in ['width', 'height', 'humanreadable', 'quiet', 'mask', 'format']})
 
         img_element = html.Element('img')
         for k, v in options.items():
@@ -745,7 +752,7 @@ class IrQwebFieldBarcode(models.AbstractModel):
                 img_element.set(k[4:], v)
         if not img_element.get('alt'):
             img_element.set('alt', _('Barcode %s', value))
-        img_element.set('src', 'data:image/png;base64,%s' % base64.b64encode(barcode).decode())
+        img_element.set('src', 'data:%s;base64,%s' % (guess_mimetype(barcode), base64.b64encode(barcode).decode()))
         return Markup(html.tostring(img_element, encoding='unicode'))
 
 
