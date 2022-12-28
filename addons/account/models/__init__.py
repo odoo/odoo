@@ -2,6 +2,7 @@
 
 from . import sequence_mixin
 from . import partner
+from . import ir_http
 from . import res_partner_bank
 from . import account_account_tag
 from . import account_account
