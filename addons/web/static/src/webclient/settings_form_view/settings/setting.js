@@ -6,6 +6,8 @@ import { session } from "@web/session";
 import { FormLabelHighlightText } from "../highlight_text/form_label_highlight_text";
 import { Component, useState } from "@odoo/owl";
 
+
+const LINK_REGEX = new RegExp("^https?://");
 export class Setting extends Component {
     setup() {
         this.state = useState({
@@ -56,7 +58,7 @@ export class Setting extends Component {
     }
 
     get url() {
-        if (this.props.documentation.startsWith("^https?://")) {
+        if (LINK_REGEX.test(this.props.documentation)) {
             return this.props.documentation;
         } else {
             const serverVersion = session.server_version.includes("alpha")
