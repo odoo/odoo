@@ -906,6 +906,19 @@ registerModel({
         },
         /**
          * @private
+         * @param {MediaStream} stream video stream
+         * @param {String} hint 'motion', 'detail' or 'text'
+         */
+        _setVideoTrackContentHints(stream, hint) {
+            const tracks = stream.getVideoTracks();
+            tracks.forEach(track => {
+                if ('contentHint' in track) {
+                    track.contentHint = hint;
+                }
+            });
+        },
+        /**
+         * @private
          * @param {String} type 'user-video' or 'display'
          * @param {boolean} activateVideo true if we want to activate the video
          */
@@ -979,6 +992,7 @@ registerModel({
                     this.messaging.userSetting.update({ useBlur: false });
                 }
             }
+            this._setVideoTrackContentHints(videoStream, type === 'user-video' ? 'motion' : 'text');
             const videoTrack = videoStream ? videoStream.getVideoTracks()[0] : undefined;
             if (videoTrack) {
                 videoTrack.addEventListener('ended', async () => {
