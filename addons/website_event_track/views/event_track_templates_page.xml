@@ -63,7 +63,7 @@
                 </span>
                 <span t-else="">
                     starts on
-                    <span t-field="track.event_id.with_context(tz=track.event_id.date_tz).date_begin"
+                    <span t-field="track.event_id.date_begin"
                         t-options="{'format': 'medium', 'tz_name': track.event_id.date_tz, 'hide_seconds': 'True'}"/>
                     (<span t-out="track.event_id.date_tz"/>)
                 </span>

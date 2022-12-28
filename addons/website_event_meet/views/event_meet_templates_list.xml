@@ -179,8 +179,8 @@
                 <button disabled="disabled" class="btn btn-primary align-self-start">Create a Room</button>
                 Room creation will be available when event starts at 
                 <span>
-                    <span class="fw-bold" t-field="event.with_context(tz=event.date_tz).date_begin"
-                        t-options="{'format': 'medium'}"/>
+                    <span class="fw-bold" t-field="event.date_begin"
+                        t-options="{'format': 'medium', 'tz_name': event.date_tz}"/>
                     <span class="small">(<t t-out="event.date_tz"/>)</span>
                 </span>
             </div>
