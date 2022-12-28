@@ -89,7 +89,7 @@ QUnit.module("SettingsFormView", (hooks) => {
                             </setting>
                         </block>
                         <block title="Title of group Foo">
-                            <setting help="this is foo">
+                            <setting help="this is foo" documentation="https://www.odoo.com/documentation/1.0/applications/technical/web/settings/this_is_another_test.html">
                                 <field name="foo"/>
                             </setting>
                             <setting string="Personalize setting" help="this is full personalize setting">
@@ -139,9 +139,15 @@ QUnit.module("SettingsFormView", (hooks) => {
             target,
             ".app_settings_block:not(.d-none) .app_settings_header .o_setting_box"
         );
+        const docLinks = [...target.querySelectorAll(".o_setting_box a")];
+        assert.strictEqual(docLinks.length, 2);
         assert.strictEqual(
-            target.querySelector(".o_setting_box a").href,
+            docLinks[0].href,
             "https://www.odoo.com/documentation/1.0/applications/technical/web/settings/this_is_a_test.html"
+        );
+        assert.strictEqual(
+            docLinks[1].href,
+            "https://www.odoo.com/documentation/1.0/applications/technical/web/settings/this_is_another_test.html"
         );
 
         await editSearch(target, "Hello there");
