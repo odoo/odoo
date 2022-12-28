@@ -3231,7 +3231,7 @@ class BaseModel(metaclass=MetaModel):
                 self = self.exists()
                 self.check_access_rule('read')
 
-            result = [(id_,) for id_ in self._ids]
+            result = [(id_,) for id_ in self.ids]
 
         fetched = self.browse()
         if result:
