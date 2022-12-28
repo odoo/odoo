@@ -19,4 +19,14 @@
             </xpath>
         </field>
     </record>
+    <record id="change_password_user" model="ir.ui.view">
+        <field name="name">Change Password User</field>
+        <field name="inherit_id" ref="base.change_password_user_form_view"/>
+        <field name="model">change.password.user</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='new_passwd']" position="attributes">
+                <attribute name="widget">password_meter</attribute>
+            </xpath>
+        </field>
+    </record>
 </odoo>

@@ -87,7 +87,7 @@ class TestSelfAccessProfile(TestHrCommon):
         })
         view = self.env.ref('hr.res_users_view_form_profile')
         available_actions = james.get_views([(view.id, 'form')], {'toolbar': True})['views']['form']['toolbar']['action']
-        change_password_action = self.env.ref("base.change_password_wizard_action")
+        change_password_action = self.env.ref("base.change_password_action_server")
 
         self.assertFalse(any(x['id'] == change_password_action.id for x in available_actions))
 
