@@ -2111,7 +2111,7 @@ class MrpProduction(models.Model):
         pd = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for production in self:
             if all(float_is_zero(ml.qty_done, precision_digits=pd) for
-                    ml in production.move_raw_ids.move_line_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
+                    ml in production.move_raw_ids.move_line_ids.filtered(lambda m: m.state not in ('done', 'cancel') and not m.qty_done > 0)
                     ) and float_is_zero(production.qty_producing, precision_digits=pd):
                 immediate_productions |= production
         return immediate_productions

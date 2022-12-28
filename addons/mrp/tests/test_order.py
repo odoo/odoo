@@ -1428,7 +1428,7 @@ class TestMrpOrder(TestMrpCommon):
 
     def test_immediate_validate_2(self):
         """ In a production with a single available move raw, clicking on mark as done after filling quantity
-        for a stock move only will trigger an error as qty_producing is left to 0."""
+        for a stock move only will not trigger an error as we will get the option of filling the quantity automatically."""
         mo, bom, p_final, p1, p2 = self.generate_mo(qty_final=1, qty_base_1=1, qty_base_2=1)
         self.env['stock.quant']._update_available_quantity(p1, self.stock_location_components, 5.0)
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location_components, 5.0)
@@ -1437,8 +1437,7 @@ class TestMrpOrder(TestMrpCommon):
         with details_operation_form.move_line_ids.new() as ml:
             ml.qty_done = 1
         details_operation_form.save()
-        with self.assertRaises(UserError):
-            res_dict = mo.button_mark_done()
+        mo.button_mark_done()
 
     def test_immediate_validate_3(self):
         """ In a production with a serial number tracked product. Check that the immediate production only creates
