@@ -100,6 +100,7 @@
                                 <field name="blocked_by_operation_ids" widget="many2many_tags" context="{'default_bom_id':bom_id}" attrs="{'invisible': [('allow_operation_dependencies', '=', False)]}"/>
                             </group><group name="workorder">
                                 <field name="workorder_count" invisible="1"/>
+                                <field name="time_computed_on" invisible="1"/>
                                 <field name="time_mode" widget="radio"/>
                                 <label for="time_mode_batch" attrs="{'invisible': [('time_mode', '=', 'manual')]}"/>
                                 <div attrs="{'invisible': [('time_mode', '=', 'manual')]}">
