@@ -135,12 +135,17 @@ class Meeting(models.Model):
                 'email': user.partner_id.email,
                 'responseStatus': 'needsAction',
             }]
+        if google_attendees:
+            google_attendees = sorted(google_attendees, key=lambda d: d['email'])
         emails = [a.get('email') for a in google_attendees]
+        emails.sort()
         existing_attendees = self.env['calendar.attendee']
         if google_event.exists(self.env):
             existing_attendees = self.browse(google_event.odoo_id(self.env)).attendee_ids
         attendees_by_emails = {tools.email_normalize(a.email): a for a in existing_attendees}
         partners = self._get_sync_partner(emails)
+        if partners:
+           partners = sorted(partners, key=lambda d: d['email'])
         for attendee in zip(emails, partners, google_attendees):
             email = attendee[0]
             if email in attendees_by_emails:
