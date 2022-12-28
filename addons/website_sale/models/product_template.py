@@ -52,11 +52,26 @@ class ProductTemplate(models.Model):
                                    help="Define a custom unit to display in the price per unit of measure field.")
     base_unit_price = fields.Monetary("Price Per Unit", currency_field="currency_id", compute="_compute_base_unit_price")
     base_unit_name = fields.Char(compute='_compute_base_unit_name', help='Displays the custom unit for the products if defined or the selected unit of measure otherwise.')
+    display_list_price = fields.Float(compute="_compute_display_list_price", inverse="_inverse_display_list_price")
 
     compare_list_price = fields.Monetary(
         'Compare to Price',
         currency_field="currency_id",
         help="The amount will be displayed strikethroughed on the eCommerce product page")
+
+    @api.depends('list_price')
+    def _compute_display_list_price(self):
+        for template in self:
+            template.display_list_price = template._get_combination_info()['price']
+
+    def _inverse_display_list_price(self):
+        display_tax_included = self.user_has_groups('account.group_show_line_subtotals_tax_included')
+
+        for template in self:
+            if display_tax_included and not any(template.taxes_id.mapped('price_include')):
+                template.list_price = template.taxes_id.with_context(force_price_include=True).compute_all(template.display_list_price, product=template, partner=self.env['res.partner'])['total_excluded']
+            else:
+                template.list_price = template.display_list_price
 
     @api.depends('product_variant_ids', 'product_variant_ids.base_unit_count')
     def _compute_base_unit_count(self):

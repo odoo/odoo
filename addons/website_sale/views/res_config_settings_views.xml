@@ -80,6 +80,13 @@
                                 <field name="group_show_line_subtotals_tax_included" invisible="1"/>
                                 <field name="group_show_line_subtotals_tax_excluded" invisible="1"/>
                             </div>
+                            <field name="price_include" invisible="1"/>
+                            <div class="text-muted mt8" attrs="{'invisible': [('group_show_line_subtotals_tax_excluded', '=', True), ('price_include', '=', False)]}">
+                                    To define "all tax included" on your products, update your tax configuration (in the "advanced option" tab).
+                                <div class="mt4">
+                                    <button name="%(account.action_tax_form)d" icon="fa-arrow-right" type="action" string="Taxes" class="btn-link"/>
+                                </div>
+                            </div>
                         </div>
                     </setting>
                     <setting id="pricelists_setting" title="With the first mode you can set several prices in the product config form (from Sales tab). With the second one, you set prices and computation rules from Pricelists." help="Manage pricelists to apply specific prices per country, customer, products, etc">
