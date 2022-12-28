@@ -44,7 +44,7 @@ class GoogleCalendarController(http.Controller):
             need_refresh = request.env.user.sudo()._sync_google_calendar(GoogleCal)
 
             # If synchronization has been stopped
-            if not need_refresh and request.env.user.google_synchronization_stopped:
+            if not need_refresh and (request.env.user.google_synchronization_stopped or not request.env.user.sudo().google_calendar_account_id.is_valid_email):
                 return {
                     "status": "sync_stopped",
                     "url": ''
