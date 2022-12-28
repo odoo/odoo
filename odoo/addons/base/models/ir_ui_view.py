@@ -176,6 +176,11 @@ def _hasclass(context, *cls):
     node_classes = set(context.context_node.attrib.get('class', '').split())
     return node_classes.issuperset(cls)
 
+def _hasattfclass(context, *cls):
+    """ Checks if the context node has all the classes (in t-attf-) passed as arguments
+    """
+    node_classes = set(re.findall(HASATTFCLASS_RE, context.context_node.attrib.get('t-attf-class', '')))
+    return node_classes.issuperset(cls)
 
 def get_view_arch_from_file(filepath, xmlid):
     module, view_id = xmlid.split('.')
@@ -224,9 +229,11 @@ def get_view_arch_from_file(filepath, xmlid):
 
 xpath_utils = etree.FunctionNamespace(None)
 xpath_utils['hasclass'] = _hasclass
+xpath_utils['hasattfclass'] = _hasattfclass
 
 TRANSLATED_ATTRS_RE = re.compile(r"@(%s)\b" % "|".join(TRANSLATED_ATTRS))
 WRONGCLASS = re.compile(r"(@class\s*=|=\s*@class|contains\(@class)")
+HASATTFCLASS_RE = re.compile(r"[^\s]*\{\{.+?\}\}[^\s]*|[^\s]*\#\{.+?\}[^\s]*|[^\s]+")
 
 
 class View(models.Model):

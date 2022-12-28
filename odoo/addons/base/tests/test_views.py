@@ -3283,6 +3283,31 @@ class TestXPathExtentions(common.BaseCase):
             len(tree.xpath('//node[hasclass("foo", "baz")]')),
             1)
 
+    def test_hasattfclass(self):
+        tree = E.node(
+            E.node({'t-attf-class': "foo bar my-#{len(providers) if len(providers) &lt; 3 else 3} baz {{ 'foobar' }} foobaz"}),
+            E.node({'t-attf-class': "foo bar my-#{len(providers) if len(providers) &lt; 3 else 3}"}),
+            {'t-attf-class': "foo"})
+
+        self.assertEqual(
+            len(tree.xpath('//node[hasattfclass("foo")]')),
+            3)
+        self.assertEqual(
+            len(tree.xpath('//node[hasattfclass("bar")]')),
+            2)
+        self.assertEqual(
+            len(tree.xpath('//node[hasattfclass("foobaz")]')),
+            1)
+        self.assertEqual(
+            len(tree.xpath('//node[hasattfclass("foo")][not(hasattfclass("bar"))]')),
+            1)
+        self.assertEqual(
+            len(tree.xpath('//node[hasattfclass("foo", "baz")]')),
+            1)
+        self.assertEqual(
+            len(tree.xpath('//node[hasattfclass("{{ \'foobar\' }}")]')),
+            1)
+
 
 class TestQWebRender(ViewCase):
 
