@@ -8,7 +8,16 @@ import requests
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
+<<<<<<< HEAD:addons/payment_adyen/models/payment_acquirer.py
 from odoo.addons.payment_adyen.const import API_ENDPOINT_VERSIONS
+||||||| parent of 858a6056ccc (temp):addons/payment_adyen_paybylink/models/payment_acquirer.py
+from odoo.addons.payment_adyen_paybylink.const import API_ENDPOINT_VERSIONS
+
+=======
+from odoo.addons.payment_adyen_paybylink import utils as adyen_utils
+from odoo.addons.payment_adyen_paybylink.const import API_ENDPOINT_VERSIONS
+
+>>>>>>> 858a6056ccc (temp):addons/payment_adyen_paybylink/models/payment_acquirer.py
 
 _logger = logging.getLogger(__name__)
 
@@ -61,7 +70,83 @@ class PaymentAcquirer(models.Model):
             if values.get(field_name):  # Test the value in case we're duplicating an acquirer
                 values[field_name] = re.sub(r'[vV]\d+(/.*)?', '', values[field_name])
 
+<<<<<<< HEAD:addons/payment_adyen/models/payment_acquirer.py
     #=== BUSINESS METHODS ===#
+||||||| parent of 858a6056ccc (temp):addons/payment_adyen_paybylink/models/payment_acquirer.py
+    def adyen_form_generate_values(self, values):
+        base_url = self.get_base_url()
+
+        payment_amount = self._adyen_convert_amount(values['amount'], values['currency'])
+        values['adyen_paybylink_data'] = {
+            'reference': values['reference'],
+            'amount': {
+                'value': '%d' % payment_amount,
+                'currency': values['currency'] and values['currency'].name or '',
+            },
+            'merchantAccount': self.adyen_merchant_account,
+            'shopperLocale': values.get('partner_lang', ''),
+            'returnUrl': urls.url_join(base_url, '/payment/process'),
+            'shopperEmail': values.get('partner_email') or values.get('billing_partner_email', ''),
+        }
+
+        return values
+
+    def adyen_get_form_action_url(self):
+        """ Override of adyen_get_form_action_url """
+        form_action_url_values = self._context.get('form_action_url_values')
+        if form_action_url_values:
+            return self._adyen_get_paybylink(form_action_url_values['adyen_paybylink_data'])
+        return False
+
+    def _adyen_get_paybylink(self, data):
+        paybylink_response = self._adyen_make_request(
+            url_field_name='adyen_checkout_api_url',
+            endpoint='/paymentLinks',
+            payload=data,
+        )
+        return paybylink_response['url']
+=======
+    def adyen_form_generate_values(self, values):
+        base_url = self.get_base_url()
+
+        payment_amount = self._adyen_convert_amount(values['amount'], values['currency'])
+        values['adyen_paybylink_data'] = {
+            'reference': values['reference'],
+            'amount': {
+                'value': '%d' % payment_amount,
+                'currency': values['currency'] and values['currency'].name or '',
+            },
+            'merchantAccount': self.adyen_merchant_account,
+            'shopperLocale': values.get('partner_lang', ''),
+            'returnUrl': urls.url_join(base_url, '/payment/process'),
+            'shopperEmail': values.get('partner_email') or values.get('billing_partner_email', ''),
+            'shopperReference': self._adyen_compute_shopper_reference(values.get('partner_id')),
+            'shopperName': {
+                'firstName': values.get('partner_first_name'),
+                'lastName': values.get('partner_last_name'),
+            },
+            'telephoneNumber': values.get('partner_phone'),
+            'billingAddress': adyen_utils.format_partner_address(values.get('billing_partner')),
+            'deliveryAddress': adyen_utils.format_partner_address(values.get('partner')),
+        }
+
+        return values
+
+    def adyen_get_form_action_url(self):
+        """ Override of adyen_get_form_action_url """
+        form_action_url_values = self._context.get('form_action_url_values')
+        if form_action_url_values:
+            return self._adyen_get_paybylink(form_action_url_values['adyen_paybylink_data'])
+        return False
+
+    def _adyen_get_paybylink(self, data):
+        paybylink_response = self._adyen_make_request(
+            url_field_name='adyen_checkout_api_url',
+            endpoint='/paymentLinks',
+            payload=data,
+        )
+        return paybylink_response['url']
+>>>>>>> 858a6056ccc (temp):addons/payment_adyen_paybylink/models/payment_acquirer.py
 
     def _adyen_make_request(
         self, url_field_name, endpoint, endpoint_param=None, payload=None, method='POST'
@@ -116,6 +201,7 @@ class PaymentAcquirer(models.Model):
             )
             raise ValidationError("Adyen: " + _("The communication with the API failed."))
         return response.json()
+<<<<<<< HEAD:addons/payment_adyen/models/payment_acquirer.py
 
     def _adyen_compute_shopper_reference(self, partner_id):
         """ Compute a unique reference of the partner for Adyen.
@@ -134,3 +220,18 @@ class PaymentAcquirer(models.Model):
         if self.provider != 'adyen':
             return super()._get_default_payment_method_id()
         return self.env.ref('payment_adyen.payment_method_adyen').id
+||||||| parent of 858a6056ccc (temp):addons/payment_adyen_paybylink/models/payment_acquirer.py
+=======
+
+    def _adyen_compute_shopper_reference(self, partner_id):
+        """ Compute a unique reference of the partner for Adyen.
+
+        This is used for the `shopperReference` field in communications with Adyen and stored in the
+        `adyen_shopper_reference` field on `payment.token` if the payment method is tokenized.
+
+        :param recordset partner_id: The partner making the transaction, as a `res.partner` id
+        :return: The unique reference for the partner
+        :rtype: str
+        """
+        return 'ODOO_PARTNER_{partner_id}'.format(partner_id=partner_id)
+>>>>>>> 858a6056ccc (temp):addons/payment_adyen_paybylink/models/payment_acquirer.py
