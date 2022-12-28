@@ -152,6 +152,7 @@
             <field name="inherit_id" ref="product.product_template_kanban_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//kanban" position="inside">
+                    <field name="type"/>
                     <field name="show_on_hand_qty_status_button"/>
                 </xpath>
                 <xpath expr="//div[@name='product_lst_price']" position="after">
