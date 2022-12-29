@@ -89,6 +89,19 @@ class AccountInvoiceSend(models.TransientModel):
 
     def _send_email(self):
         if self.is_email:
+            # TODO in master: mail module should provide better API for this
+            # case (mass posting with separate rendering and sending mails via
+            # queue)
+            if self.composer_id.composition_mode == 'mass_mail':
+                for res_id in self._context.get('active_ids'):
+                    wizard = self.with_context(active_ids=[res_id]).copy({
+                        'composition_mode': 'comment',
+                        'invoice_ids': [res_id],
+                        'res_id': res_id,
+                    })
+                    wizard.onchange_template_id()
+                    wizard._send_email()
+                return
             # with_context : we don't want to reimport the file we just exported.
             self.composer_id.with_context(no_new_invoice=True, mail_notify_author=self.env.user.partner_id in self.composer_id.partner_ids).send_mail()
             if self.env.context.get('mark_invoice_as_sent'):
