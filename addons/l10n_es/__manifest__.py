@@ -25,6 +25,8 @@ Spanish charts of accounts (PGCE 2008).
         * Spanish general chart of accounts 2008
         * Spanish general chart of accounts 2008 for small and medium companies
         * Spanish general chart of accounts 2008 for associations
+        * Spanish general chart of accounts 2088 for cooperatives
+        * Spanish general chart of accounts 2008 for small and medium cooperatives
     * Defines templates for sale and purchase VAT
     * Defines tax templates
     * Defines fiscal positions for spanish fiscal legislation
@@ -40,8 +42,10 @@ Spanish charts of accounts (PGCE 2008).
         'data/account_group.xml',
         'data/account.account.template-common.csv',
         'data/account.account.template-pymes.csv',
+        'data/account.account.template-coop-pymes.csv',
         'data/account.account.template-assoc.csv',
         'data/account.account.template-full.csv',
+        'data/account.account.template-coop-full.csv',
         'data/account_chart_template_account_account_link.xml',
         'data/account_data.xml',
         'data/account_tax_data.xml',
