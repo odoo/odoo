@@ -60,7 +60,6 @@ PROJECT_TASK_WRITABLE_FIELDS = {
     'name',
     'description',
     'partner_id',
-    'partner_email',
     'date_deadline',
     'tag_ids',
     'sequence',
