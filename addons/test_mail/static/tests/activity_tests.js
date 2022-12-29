@@ -284,6 +284,27 @@ QUnit.module("test_mail", {}, function () {
         ]);
     });
 
+    QUnit.test("activity view: activity_ids condition in domain", async function (assert) {
+        assert.expect(3);
+        const { openView } = await start({
+            serverData,
+            mockRPC: function (route, args) {
+                if (["get_activity_data", "web_search_read"].includes(args.method)) {
+                    assert.step(JSON.stringify(args.kwargs.domain));
+                }
+            },
+        });
+        await openView({
+            res_model: "mail.test.activity",
+            views: [[false, "activity"]],
+        });
+
+        assert.verifySteps([
+            JSON.stringify([["activity_ids", "!=", false]]),
+            JSON.stringify([["activity_ids", "!=", false]]),
+        ]);
+    });
+
     QUnit.test("activity view: activity widget", async function (assert) {
         assert.expect(16);
 
