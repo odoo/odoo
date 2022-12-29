@@ -21,7 +21,7 @@
         <td t-if="showAvailabilities"/>
         <td t-if="showAvailabilities"/>
         <td t-if="showLeadTimes"/>
-        <td/>
+        <td t-if="showLeadTimes"/>
         <td name="bom_cost" t-if="showCosts" class="text-end">
             <span t-if="props.type == 'operations'" t-esc="formatMonetary(data.operations_cost)"/>
             <span t-elif="props.type == 'byproducts'" t-esc="formatMonetary(data.byproducts_cost)"/>
