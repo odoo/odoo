@@ -653,3 +653,50 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             "The default source location of the merged mo should be the same as the 1st of the original MOs")
         self.assertEqual(picking_type, mo.picking_type_id,
             "The operation type of the merged mo should be the same as the 1st of the original MOs")
+
+    def test_2_steps_merging_stock_move(self):
+        """
+        test that the same component from same bom is grouped in a single 'stock.move'
+        despite being consumed in two different operations
+        Bom:
+            - product: finished_product
+            - components:
+                - C1: 1 unit used in OP1
+                - C1: 1 unit used in OP2
+        MO:
+            - 1 unit of finished_product
+            result after MO confirmation:
+                - Creation of picking with a signal 'stock.move' of 2 unitz of C1
+        """
+        with Form(self.warehouse) as warehouse:
+            warehouse.manufacture_steps = 'pbm'
+        finished_product = self.env['product.product'].create({
+            'name': 'Super Product',
+            'route_ids': [(4, self.ref('mrp.route_warehouse0_manufacture'))],
+            'type': 'product',
+        })
+        component = self.env['product.product'].create({
+            'name': 'C1',
+            'type': 'product',
+        })
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_qty': 1,
+            'bom_line_ids': [
+                (0, 0, {'product_id': component.id, 'product_qty': 1}),
+                (0, 0, {'product_id': component.id, 'product_qty': 1})
+            ],
+            'operation_ids': [
+                (0, 0, {'name': 'op1', 'workcenter_id': self.workcenter_1.id, 'time_cycle_manual': 10, 'sequence': 1}),
+                (0, 0, {'name': 'op2', 'workcenter_id': self.workcenter_2.id, 'time_cycle_manual': 10, 'sequence': 2}),
+            ]
+        })
+        bom.bom_line_ids[0].operation_id = bom.operation_ids[0]
+        bom.bom_line_ids[1].operation_id = bom.operation_ids[1]
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = finished_product
+        mo = mo_form.save()
+        mo.action_confirm()
+        self.assertEqual(len(mo.picking_ids), 1)
+        self.assertEqual(len(mo.picking_ids.move_ids), 1)
+        self.assertEqual(mo.picking_ids.move_ids.product_id.id, component.id)

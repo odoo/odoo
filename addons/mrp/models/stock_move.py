@@ -125,6 +125,7 @@ class StockMove(models.Model):
         'mrp.workorder', 'Work Order To Consume', copy=False, check_company=True)
     # Quantities to process, in normalized UoMs
     bom_line_id = fields.Many2one('mrp.bom.line', 'BoM Line', check_company=True)
+    bom_id = fields.Many2one('mrp.bom', related='bom_line_id.bom_id', store=False)
     byproduct_id = fields.Many2one(
         'mrp.bom.byproduct', 'By-products', check_company=True,
         help="By-product line that generated the move in a manufacturing order")
@@ -489,7 +490,7 @@ class StockMove(models.Model):
 
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
-        return super()._prepare_merge_moves_distinct_fields() + ['created_production_id', 'cost_share', 'bom_line_id']
+        return super()._prepare_merge_moves_distinct_fields() + ['created_production_id', 'cost_share', 'bom_id']
 
     @api.model
     def _prepare_merge_negative_moves_excluded_distinct_fields(self):
