@@ -82,21 +82,21 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('tag_diot_ret')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('cuenta216_10_20'),
+                'plus_report_expression_ids': [ref('tax_report_mx_diot_withheld_tag')],
             }),
         ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('tag_diot_ret')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('cuenta216_10_20'),
+                'minus_report_expression_ids': [ref('tax_report_mx_diot_withheld_tag')],
             }),
         ]"/>
         </record>
@@ -115,21 +115,21 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('tag_diot_ret')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('cuenta216_10_20'),
+                'plus_report_expression_ids': [ref('tax_report_mx_diot_withheld_tag')],
             }),
         ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('tag_diot_ret')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('cuenta216_10_20'),
+                'minus_report_expression_ids': [ref('tax_report_mx_diot_withheld_tag')],
             }),
         ]"/>
         </record>
@@ -206,21 +206,21 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('tag_diot_ret')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('cuenta216_10_20'),
+                'plus_report_expression_ids': [ref('tax_report_mx_diot_withheld_tag')],
             }),
         ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('tag_diot_ret')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('cuenta216_10_20'),
+                'minus_report_expression_ids': [ref('tax_report_mx_diot_withheld_tag')],
             }),
         ]"/>
         </record>
@@ -239,21 +239,21 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('tag_diot_ret')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('cuenta216_10_20'),
+                'plus_report_expression_ids': [ref('tax_report_mx_diot_withheld_tag')],
             }),
         ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('tag_diot_ret')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('cuenta216_10_20'),
+                'minus_report_expression_ids': [ref('tax_report_mx_diot_withheld_tag')],
             }),
         ]"/>
         </record>
@@ -272,7 +272,7 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('tag_diot_0')],
+                'plus_report_expression_ids': [ref('tax_report_mx_diot_paid_0_tag')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
@@ -282,7 +282,7 @@
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('tag_diot_0')],
+                'plus_report_expression_ids': [ref('tax_report_mx_diot_refunds_tag')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
@@ -305,7 +305,7 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('tag_diot_16')],
+                'plus_report_expression_ids': [ref('tax_report_mx_diot_paid_16_tag')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
@@ -315,7 +315,7 @@
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('tag_diot_16')],
+                'plus_report_expression_ids': [ref('tax_report_mx_diot_refunds_tag')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
@@ -338,7 +338,7 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('tag_diot_8')],
+                'plus_report_expression_ids': [ref('tax_report_mx_diot_paid_8_tag')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
@@ -348,7 +348,7 @@
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('tag_diot_8')],
+                'plus_report_expression_ids': [ref('tax_report_mx_diot_refunds_tag')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
