@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="account_invoice_form">
+            <field name="name">Account Invoice</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='invoice_line_ids']//field[@name='tax_ids']" position="after">
+                    <field name="l10n_tr_available_exception_code_ids" invisible="True"/>
+                    <field name="l10n_tr_exception_code_id"
+                           domain="[('id', 'in', l10n_tr_available_exception_code_ids)]"
+                           attrs="{'required': [('parent.country_code', '=', 'TR'), ('l10n_tr_available_exception_code_ids','!=', []),],
+                                   'invisible': [('parent.country_code', '!=', 'TR')]}"
+                    />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
