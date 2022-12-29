@@ -2822,12 +2822,15 @@ const Many2manyUserValueWidget = UserValueWidget.extend({
             return;
         }
         const { model, recordId, m2oField } = this.options;
-        const [record] = await this._rpc({
-            model: model,
-            method: 'read',
-            args: [[parseInt(recordId)], [m2oField]],
-        });
-        const selectedRecordIds = record[m2oField];
+        let selectedRecordIds = [];
+        if (parseInt(recordId)) {
+            const [record] = await this._rpc({
+                model: model,
+                method: 'read',
+                args: [[parseInt(recordId)], [m2oField]],
+            });
+            selectedRecordIds = record[m2oField];
+        }
         // TODO: handle no record
         const modelData = await this._rpc({
             model: model,
@@ -2838,11 +2841,14 @@ const Many2manyUserValueWidget = UserValueWidget.extend({
         this.m2oModel = modelData[m2oField].relation;
         this.m2oName = modelData[m2oField].field_description; // Use as string attr?
 
-        const selectedRecords = await this._rpc({
-            model: this.m2oModel,
-            method: 'read',
-            args: [selectedRecordIds, ['display_name']],
-        });
+        let selectedRecords = []
+        if (selectedRecordIds.length) {
+            selectedRecords = await this._rpc({
+                model: this.m2oModel,
+                method: 'read',
+                args: [selectedRecordIds, ['display_name']],
+            });
+        }
         // TODO: reconcile the fact that this widget sets its own initial value
         // instead of it coming through setValue(_computeWidgetState)
         this._value = JSON.stringify(selectedRecords);
