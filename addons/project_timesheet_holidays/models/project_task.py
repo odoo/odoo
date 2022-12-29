@@ -32,7 +32,7 @@ class Task(models.Model):
             ['timesheet_task_ids:array_agg(timesheet_task_id)'],
             [],
         )
-        timeoff_task_ids = leave_type_read_group[0]['timesheet_task_ids'] if leave_type_read_group else []
+        timeoff_task_ids = leave_type_read_group[0]['timesheet_task_ids'] if leave_type_read_group[0]['timesheet_task_ids'] else []
         if self.env.company.leave_timesheet_task_id:
             timeoff_task_ids.append(self.env.company.leave_timesheet_task_id.id)
         if operator == '!=':
