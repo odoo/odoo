@@ -133,6 +133,35 @@
         </record>
         <menuitem action="ir_action_report" id="menu_ir_action_report" parent="base.next_id_6"/>
 
+        <!-- ir.actions.client -->
+
+        <record id="view_client_action_form" model="ir.ui.view">
+            <field name="name">ir.actions.client.form</field>
+            <field name="model">ir.actions.client</field>
+            <field name="arch" type="xml">
+                <form string="Client Action">
+                    <sheet>
+                        <group>
+                            <group name="main_details">
+                                <field name="name"/>
+                                <field name="xml_id" string="External ID"/>
+                                <field name="binding_type"/>
+                                <field name="tag"/>
+                            </group>
+                            <group name="action_details">
+                                <field name="type" readonly="1"/>
+                                <field name="target"/>
+                                <field name="context"/>
+                            </group>
+                        </group>
+                        <group name="help" string="Help">
+                            <field name="help" colspan="2" nolabel="1" class="oe-bordered-editor"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <!-- ir.actions.act_window -->
 
         <record id="view_window_action_tree" model="ir.ui.view">
