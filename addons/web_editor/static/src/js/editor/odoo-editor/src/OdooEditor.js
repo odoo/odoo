@@ -3252,69 +3252,68 @@ export class OdooEditor extends EventTarget {
         this.deleteRange();
     }
     _onClipboardCopy(clipboardEvent) {
-        if (this.isSelectionInEditable()) {
-            clipboardEvent.preventDefault();
-            const selection = this.document.getSelection();
-            const range = selection.getRangeAt(0);
-            let rangeContent = range.cloneContents();
-
-            // Repair the copied range.
-            if (rangeContent.firstChild.nodeName === 'LI') {
-                const list = range.commonAncestorContainer.cloneNode();
-                list.replaceChildren(...rangeContent.childNodes);
-                rangeContent = list;
-            }
-            if (rangeContent.firstChild.nodeName === 'TR' || rangeContent.firstChild.nodeName === 'TD') {
-                // We enter this case only if selection is within single table.
-                const table = closestElement(range.commonAncestorContainer, 'table');
-                const tableClone = table.cloneNode(true);
-                // A table is considered fully selected if it is nested inside a
-                // cell that is itself selected, or if all its own cells are
-                // selected.
-                const isTableFullySelected =
-                    table.parentElement && closestElement(table.parentElement, 'td.o_selected_td') ||
-                    [...table.querySelectorAll('td')]
-                        .filter(td => closestElement(td, 'table') === table)
-                        .every(td => td.classList.contains('o_selected_td'));
-                if (!isTableFullySelected(table)) {
-                    for (const td of tableClone.querySelectorAll('td:not(.o_selected_td)')) {
-                        if (closestElement(td, 'table') === tableClone) { // ignore nested
-                            td.remove();
-                        }
-                    }
-                    for (const tr of tableClone.querySelectorAll('tr:not(:has(td))')) {
-                        if (closestElement(tr, 'table') === tableClone) { // ignore nested
-                            tr.remove();
-                        }
+        if (!this.isSelectionInEditable()) {
+            return;
+        }
+        clipboardEvent.preventDefault();
+        const selection = this.document.getSelection();
+        const range = selection.getRangeAt(0);
+        let rangeContent = range.cloneContents();
+        if (!rangeContent.hasChildNodes()) {
+            return;
+        }
+        // Repair the copied range.
+        if (rangeContent.firstChild.nodeName === 'LI') {
+            const list = range.commonAncestorContainer.cloneNode();
+            list.replaceChildren(...rangeContent.childNodes);
+            rangeContent = list;
+        }
+        if (rangeContent.firstChild.nodeName === 'TR' || rangeContent.firstChild.nodeName === 'TD') {
+            // We enter this case only if selection is within single table.
+            const table = closestElement(range.commonAncestorContainer, 'table');
+            const tableClone = table.cloneNode(true);
+            // A table is considered fully selected if it is nested inside a
+            // cell that is itself selected, or if all its own cells are
+            // selected.
+            const isTableFullySelected =
+                table.parentElement && closestElement(table.parentElement, 'td.o_selected_td') ||
+                [...table.querySelectorAll('td')]
+                    .filter(td => closestElement(td, 'table') === table)
+                    .every(td => td.classList.contains('o_selected_td'));
+            if (!isTableFullySelected(table)) {
+                for (const td of tableClone.querySelectorAll('td:not(.o_selected_td)')) {
+                    if (closestElement(td, 'table') === tableClone) { // ignore nested
+                        td.remove();
                     }
                 }
-                // If it is fully selected, clone the whole table rather than
-                // just its rows.
-                rangeContent = tableClone;
+                for (const tr of tableClone.querySelectorAll('tr:not(:has(td))')) {
+                    if (closestElement(tr, 'table') === tableClone) { // ignore nested
+                        tr.remove();
+                    }
+                }
             }
-            if (rangeContent.firstChild.nodeName === 'TABLE') {
-                // Make sure the full leading table is copied.
-                rangeContent.firstChild.after(closestElement(range.startContainer, 'table').cloneNode(true));
-                rangeContent.firstChild.remove();
-            }
-            if (rangeContent.lastChild.nodeName === 'TABLE') {
-                // Make sure the full trailing table is copied.
-                rangeContent.lastChild.before(closestElement(range.endContainer, 'table').cloneNode(true));
-                rangeContent.lastChild.remove();
-            }
-
-            const dataHtmlElement = document.createElement('data');
-            dataHtmlElement.append(rangeContent);
-            const odooHtml = dataHtmlElement.innerHTML;
-            const odooText = dataHtmlElement.innerText;
-            if (!clipboardEvent.clipboardData.getData('text/plain')) {
-                clipboardEvent.clipboardData.setData('text/plain', odooText);
-            }
-            if (!clipboardEvent.clipboardData.getData('text/html')) {
-                clipboardEvent.clipboardData.setData('text/html', odooHtml);
-            }
-            clipboardEvent.clipboardData.setData('text/odoo-editor', odooHtml);
+            // If it is fully selected, clone the whole table rather than
+            // just its rows.
+            rangeContent = tableClone;
         }
+        if (rangeContent.firstChild.nodeName === 'TABLE') {
+            // Make sure the full leading table is copied.
+            rangeContent.firstChild.after(closestElement(range.startContainer, 'table').cloneNode(true));
+            rangeContent.firstChild.remove();
+        }
+        if (rangeContent.lastChild.nodeName === 'TABLE') {
+            // Make sure the full trailing table is copied.
+            rangeContent.lastChild.before(closestElement(range.endContainer, 'table').cloneNode(true));
+            rangeContent.lastChild.remove();
+        }
+
+        const dataHtmlElement = document.createElement('data');
+        dataHtmlElement.append(rangeContent);
+        const odooHtml = dataHtmlElement.innerHTML;
+        const odooText = selection.toString();
+        clipboardEvent.clipboardData.setData('text/plain', odooText);
+        clipboardEvent.clipboardData.setData('text/html', odooHtml);
+        clipboardEvent.clipboardData.setData('text/odoo-editor', odooHtml);
     }
     /**
      * @private

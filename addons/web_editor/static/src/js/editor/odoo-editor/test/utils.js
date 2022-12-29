@@ -570,6 +570,7 @@ function getEventConstructor(win, type) {
         'dragend': win.DragEvent,
         'drop': win.DragEvent,
         'beforecut': win.ClipboardEvent,
+        'copy': win.ClipboardEvent,
         'cut': win.ClipboardEvent,
         'paste': win.ClipboardEvent,
         'touchstart': win.TouchEvent,
