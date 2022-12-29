@@ -546,24 +546,20 @@ Model({
                 if (!this.subject || !this.originThread || !this.originThread.name) {
                     return false;
                 }
-                const threadName = this.originThread.name.toLowerCase().trim();
-                const prefixList = ["re:", "fw:", "fwd:"];
-                let cleanedSubject = this.subject.toLowerCase();
-                let wasSubjectCleaned = true;
-                while (wasSubjectCleaned) {
-                    wasSubjectCleaned = false;
-                    if (threadName === cleanedSubject) {
-                        return true;
-                    }
-                    for (const prefix of prefixList) {
-                        if (cleanedSubject.startsWith(prefix)) {
-                            cleanedSubject = cleanedSubject.replace(prefix, "").trim();
-                            wasSubjectCleaned = true;
-                            break;
-                        }
-                    }
+                const cleanedThreadName = this.originThread.name.trim().toLowerCase();
+                const cleanedSubject = this.subject.trim().toLowerCase();
+                if (!cleanedSubject.endsWith(cleanedThreadName)) {
+                    return false;
                 }
-                return false;
+                const indexOfThreadNameInSubject = cleanedSubject.indexOf(cleanedThreadName);
+                const subjectWithoutThreadName = cleanedSubject.slice(
+                    0,
+                    indexOfThreadNameInSubject
+                );
+                const prefixList = ["re", "fw", "fwd"];
+                // match any prefix as many times as possible
+                const prefixesRegexp = new RegExp(`^((${prefixList.join("|")}):\\s*)*$`);
+                return prefixesRegexp.test(subjectWithoutThreadName);
             },
         }),
         isTemporary: attr({ default: false }),
