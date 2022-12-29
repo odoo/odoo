@@ -506,7 +506,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
                 }
             }
         }
-    }
+    },
 });
 
 weSnippetEditor.SnippetEditor.include({
