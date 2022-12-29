@@ -1,0 +1,35 @@
+.o-Typing-dot {
+    animation: o_mail_Typing_animation 1.5s linear infinite;
+
+    &.o-sizeMedium {
+        width: $o-Typing-medium;
+        height: $o-Typing-medium;
+    }
+
+    &.o-sizeSmall {
+        width: $o-Typing-small;
+        height: $o-Typing-small;
+    }
+
+    &.o-Typing-dot2 {
+        animation-delay: -1.35s;
+    }
+
+    &.o-Typing-dot3 {
+        animation-delay: -1.2s;
+    }
+}
+
+@keyframes o_mail_Typing_animation {
+    0%, 40%, 100% {
+        opacity: initial;
+    }
+    20% {
+        opacity: 25%;
+    }
+}
+
+.o-Typing:before {
+    // invisible character so that typing status bar has constant height, regardless of text content.
+    content: "\200b"; /* unicode zero width space character */
+}

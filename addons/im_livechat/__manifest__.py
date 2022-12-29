@@ -46,9 +46,6 @@ Help your customers with this chat, and analyse their feedback.
     'installable': True,
     'application': True,
     'assets': {
-        'mail.assets_discuss_public': [
-            'im_livechat/static/src/components/*/*',
-        ],
         'web._assets_primary_variables': [
             'im_livechat/static/src/primary_variables.scss',
         ],
@@ -59,39 +56,38 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/legacy/public_livechat_chatbot.js',
             'im_livechat/static/src/legacy/public_livechat.scss',
             'im_livechat/static/src/legacy/public_livechat_chatbot.scss',
+            'im_livechat/static/src/legacy/utils/*.js',
             'mail/static/src/utils/*.js',
             'mail/static/src/js/utils.js',
-            'mail/static/src/component_hooks/*.js',
-            'mail/static/src/services/messaging_service.js',
+            'im_livechat/static/src/legacy/component_hooks/*.js',
+            'im_livechat/static/src/legacy/services/messaging_service.js',
         ],
         'web.assets_backend': [
             'im_livechat/static/src/js/colors_reset_button/*',
             'im_livechat/static/src/js/im_livechat_chatbot_steps_one2many.js',
             'im_livechat/static/src/js/im_livechat_chatbot_script_answers_m2m.js',
-            'im_livechat/static/src/components/*/*.js',
+            'im_livechat/static/src/new/**/*',
             'im_livechat/static/src/scss/im_livechat_history.scss',
             'im_livechat/static/src/scss/im_livechat_form.scss',
-            'im_livechat/static/src/components/*/*.xml',
         ],
         'web.tests_assets': [
             'im_livechat/static/tests/helpers/**/*.js',
         ],
         'web.qunit_suite_tests': [
-            'im_livechat/static/tests/qunit_suite_tests/components/**/*.js',
+            'im_livechat/static/tests/new/*.js',
         ],
         'web.assets_tests': [
             'im_livechat/static/tests/tours/**/*',
         ],
-        'mail.assets_messaging': [
-            'im_livechat/static/src/models/*.js',
-        ],
         'im_livechat.assets_public_livechat': [
-            ('include', 'mail.assets_core_messaging'),
+            'im_livechat/static/src/legacy/model.js',
+            'im_livechat/static/src/legacy/model/*',
+            'im_livechat/static/src/legacy/core_models/*',
             'im_livechat/static/src/livechat_data.js',
-            'im_livechat/static/src/legacy/models/*',
+            'im_livechat/static/src/legacy/legacy_models/*',
             'im_livechat/static/src/legacy/widgets/*',
             'im_livechat/static/src/legacy/widgets/*/*',
-            'im_livechat/static/src/public_models/*.js',
+            'im_livechat/static/src/legacy/public_models/*.js',
         ],
         # Bundle of External Librairies of the Livechat (Odoo + required modules)
         'im_livechat.external_lib': [
@@ -188,7 +184,6 @@ Help your customers with this chat, and analyse their feedback.
             'bus/static/src/im_status_service.js',
             'bus/static/src/multi_tab_service.js',
             'bus/static/src/services/bus_service.js',
-            'bus/static/src/services/legacy/make_bus_service_to_legacy_env.js',
             'bus/static/src/workers/websocket_worker.js',
             'bus/static/src/workers/websocket_worker_utils.js',
             'mail/static/src/js/utils.js',
@@ -205,10 +200,11 @@ Help your customers with this chat, and analyse their feedback.
 
             'web/static/src/core/utils/transitions.scss',
 
+            'im_livechat/static/src/legacy/utils/*.js',
             'mail/static/src/utils/*.js',
-            'mail/static/src/component_hooks/*.js',
+            'im_livechat/static/src/legacy/component_hooks/*.js',
             ('include', 'im_livechat.assets_public_livechat'),
-            'mail/static/src/services/messaging_service.js',
+            'im_livechat/static/src/legacy/services/messaging_service.js',
             # Framework JS
             'bus/static/src/*.js',
             'bus/static/src/services/presence_service.js',

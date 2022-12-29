@@ -1,0 +1,38 @@
+.o-AttachmentCard-unlink.o-inComposer {
+    transform: translateX(100%);
+}
+
+.o-AttachmentCard-aside {
+    &:not(.o-hasMultipleActions) {
+        min-width: 50px;
+    }
+
+    &.o-hasMultipleActions {
+        min-width: 30px;
+    }
+}
+
+.o-AttachmentCard-aside:hover .o-AttachmentCard-unlink.o-inComposer {
+    transform: translateX(0);
+}
+
+.o-AttachmentList-in-composer {
+    max-height: 300px;
+
+    &.o-inChatWindow {
+        max-height: 100px;
+    }
+}
+
+.o-AttachmentImage {
+    min-width: 20px;
+    min-height: 20px;
+
+    img {
+        object-fit: contain;
+    }
+}
+
+.o-viewable {
+    cursor: zoom-in;
+}

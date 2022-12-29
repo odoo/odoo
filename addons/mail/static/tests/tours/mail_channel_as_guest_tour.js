@@ -1,24 +1,29 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { createFile, inputFiles } from "web.test_utils_file";
 
-registry.category("web_tour.tours").add(
-    "mail/static/tests/tours/mail_channel_as_guest_tour.js",
-    {
-        test: true,
-        steps: [
+registry.category("web_tour.tours").add("mail/static/tests/tours/mail_channel_as_guest_tour.js", {
+    test: true,
+    steps: [
+        {
+            content: "Channel secret token has been hidden on welcome page",
+            trigger: ".o-WelcomePage",
+            run() {
+                if (!window.location.pathname.startsWith("/discuss/channel")) {
+                    console.error("Channel secret token is still present in URL.");
+                }
+            },
+        },
         {
             content: "Click join",
-            trigger: ".o_WelcomeView_joinButton",
-            extraTrigger: ".o_ThreadView",
+            trigger: "button[title='Join Channel']",
+            extraTrigger: ".o-Thread",
         },
         {
             content: "Check that we are on channel page",
-            trigger: ".o_ThreadView",
+            trigger: ".o-Thread",
             run() {
-                if (!window.location.pathname.startsWith("/discuss/channel")) {
-                    console.error("Clicking on join button did not redirect to channel page");
-                }
                 // Wait for modules to be loaded or failed for the next step
                 odoo.__DEBUG__.didLogInfo.then(() => {
                     const { missing, failed, unloaded } = odoo.__DEBUG__.jsModules;
@@ -37,5 +42,42 @@ registry.category("web_tour.tours").add(
             content: "Wait for all modules loaded check in previous step",
             trigger: ".o_mail_channel_as_guest_tour_modules_loaded",
         },
-    ]
+        {
+            content: "Write something in composer",
+            trigger: ".o-Composer-input",
+            run: "text cheese",
+        },
+        {
+            content: "Add one file in composer",
+            trigger: ".o-Composer button[aria-label='Attach files']",
+            async run() {
+                const file = await createFile({
+                    content: "hello, world",
+                    contentType: "text/plain",
+                    name: "text.txt",
+                });
+                inputFiles(document.querySelector(".o-Composer-coreMain .o_input_file"), [
+                    file,
+                ]);
+            },
+        },
+        {
+            content: "Check the earlier provided attachment is listed",
+            trigger: '.o-AttachmentCard[title="text.txt"]',
+            extra_trigger: ".o-AttachmentCard:not(.o-isUploading)", // waiting the attachment to be uploaded
+            run() {},
+        },
+        {
+            content: "Send message",
+            trigger: ".o-Composer-send",
+        },
+        {
+            content: "Check message is shown",
+            trigger: '.o-Message-body:contains("cheese")',
+        },
+        {
+            content: "Check message contains the attachment",
+            trigger: '.o-Message .o-AttachmentCard:contains("text.txt")',
+        },
+    ],
 });

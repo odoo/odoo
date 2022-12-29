@@ -19,8 +19,11 @@
     'auto_install': True,
     'license': 'LGPL-3',
     'assets': {
-        'mail.assets_messaging': [
-            'crm_livechat/static/src/models/*.js',
+        'mail.assets_backend': {
+            'crm_livechat/static/src/core/*',
+        },
+        'web.qunit_suite_tests': [
+            'crm_livechat/static/tests/**/*.js',
         ],
     },
 }

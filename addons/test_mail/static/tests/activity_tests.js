@@ -5,7 +5,12 @@ import { start, startServer } from "@mail/../tests/helpers/test_utils";
 
 import testUtils from "web.test_utils";
 
-import { legacyExtraNextTick, patchWithCleanup, click } from "@web/../tests/helpers/utils";
+import {
+    editInput,
+    legacyExtraNextTick,
+    patchWithCleanup,
+    click,
+} from "@web/../tests/helpers/utils";
 import { doAction } from "@web/../tests/webclient/helpers";
 import { session } from "@web/session";
 
@@ -174,7 +179,7 @@ QUnit.module("test_mail", {}, function () {
 
         assert.ok(
             $activity.find(
-                "table tbody tr:first td:nth-child(2).today .o_ActivityCellView_closestDeadline:contains(" +
+                "table tbody tr:first td:nth-child(2).today .o-ActivityCell-deadline:contains(" +
                     today +
                     ")"
             ).length,
@@ -351,7 +356,7 @@ QUnit.module("test_mail", {}, function () {
                         {
                             default_model: "mail.test.activity",
                             default_res_ids: [mailTestActivityId2],
-                            default_subtype_xmlid: 'mail.mt_comment',
+                            default_subtype_xmlid: "mail.mt_comment",
                             default_template_id: mailTemplateId1,
                             force_email: true,
                         },
@@ -375,43 +380,53 @@ QUnit.module("test_mail", {}, function () {
             },
         });
 
-        await click(document.querySelector(".today .o_ActivityCellView_closestDeadline"));
-        assert.containsOnce(document.body, ".o_ActivityListView", "dropdown should be displayed");
+        await click(document.querySelector(".today .o-ActivityCell-deadline"));
+        assert.containsOnce(
+            document.body,
+            ".o-ActivityListPopover",
+            "dropdown should be displayed"
+        );
         assert.ok(
-            document.querySelector(".o_ActivityListView_todayTitle").textContent.includes("Today"),
+            document
+                .querySelector(".o-ActivityListPopover-todayTitle")
+                .textContent.includes("Today"),
             "Title should be today"
         );
         assert.ok(
-            [...document.querySelectorAll(".o_MailTemplateView_name")].filter((el) =>
+            [...document.querySelectorAll(".o-ActivityMailTemplate-name")].filter((el) =>
                 el.textContent.includes("Template1")
             ).length,
             "Template1 should be available"
         );
         assert.ok(
-            [...document.querySelectorAll(".o_MailTemplateView_name")].filter((el) =>
+            [...document.querySelectorAll(".o-ActivityMailTemplate-name")].filter((el) =>
                 el.textContent.includes("Template2")
             ).length,
             "Template2 should be available"
         );
 
-        await click(document.querySelector(".o_MailTemplateView_preview"));
-        await click(document.querySelector(".today .o_ActivityCellView_closestDeadline"));
-        await click(document.querySelector(".o_MailTemplateView_send"));
-        await click(document.querySelector(".overdue .o_ActivityCellView_closestDeadline"));
+        await click(document.querySelector(".o-ActivityMailTemplate-preview"));
+        await click(document.querySelector(".today .o-ActivityCell-deadline"));
+        await click(document.querySelector(".o-ActivityMailTemplate-send"));
+        await click(document.querySelector(".overdue .o-ActivityCell-deadline"));
         assert.containsNone(
             document.body,
-            ".o_MailTemplateView_name",
+            ".o-ActivityMailTemplate-name",
             "No template should be available"
         );
 
-        await click(document.querySelector(".o_ActivityListView_addActivityButton"));
-        await click(document.querySelector(".overdue .o_ActivityCellView_closestDeadline"));
-        await click(document.querySelector(".o_ActivityListViewItem_markAsDone"));
-        document.querySelector(".o_ActivityMarkDonePopoverContentView_feedback").value =
-            "feedback2";
-
+        await click($(".o-ActivityListPopover button:contains(Schedule an activity)")[0]);
+        await click(document.querySelector(".overdue .o-ActivityCell-deadline"));
+        await click(document.querySelector(".o-ActivityListPopoverItem-markAsDone"));
+        await editInput(
+            document.body,
+            ".o-ActivityMarkAsDone textarea[placeholder='Write Feedback']",
+            "feedback2"
+        );
         await click(
-            document.querySelector(".o_ActivityMarkDonePopoverContentView_doneScheduleNextButton")
+            document.querySelector(
+                ".o-ActivityMarkAsDone button[aria-label='Done and Schedule Next']"
+            )
         );
         assert.verifySteps([
             "do_action_compose",

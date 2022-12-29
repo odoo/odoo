@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.Avatar" owl="1">
+        <div class="o-Avatar d-flex align-items-center">
+            <img class="rounded-circle me-2"
+                t-attf-src="/web/image/{{props.resModel}}/{{props.resId}}/avatar_128"
+                t-on-click.stop.prevent="onClickAvatar"
+            />
+            <span class="text-truncate w-0 flex-grow-1" t-esc="props.displayName"/>
+        </div>
+    </t>
+
+</templates>

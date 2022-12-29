@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.SuggestedRecipients" owl="1">
+        <div class="o-SuggestedRecipient" t-att-data-partner-id="props.recipient.persona?.id ? props.recipient.persona.id : false" t-att-title="titleText">
+            <div class="form-check">
+                <t t-if="props.recipient.persona">
+                    <input t-attf-id="{{ props.recipient.id }}_checkbox" class="form-check-input" type="checkbox" t-att-checked="props.recipient.checked" t-on-change="onChangeCheckbox"/>
+                    <label class="form-check-label" t-attf-for="{{ props.recipient.id }}_checkbox">
+                        <t t-if="props.recipient.name" t-esc="props.recipient.name"/>
+                        <t t-if="props.recipient.email">
+                            (<t t-esc="props.recipient.email"/>)
+                        </t>
+                    </label>
+                </t>
+                <t t-else="">
+                    <input t-attf-id="{{ props.recipient.id }}_checkbox" class="form-check-input" type="checkbox" disabled="true" t-on-click="onClick"/>
+                    <label class="form-check-label" t-attf-for="{{ props.recipient.id }}_checkbox" t-on-click="onClick">
+                        <t t-if="props.recipient.name" t-esc="props.recipient.name"/>
+                        <t t-if="props.recipient.email">
+                            (<t t-esc="props.recipient.email"/>)
+                        </t>
+                    </label>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

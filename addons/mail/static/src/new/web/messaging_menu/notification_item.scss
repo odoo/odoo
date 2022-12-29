@@ -1,0 +1,26 @@
+$o-NotificationItem-background-color: $o-view-background-color !default;
+$o-NotificationItem-hover-background-color: darken(
+    $o-NotificationItem-background-color,
+    7%
+) !default;
+
+$o-NotificationItem-muted-background-color: $gray-100 !default;
+$o-NotificationItem-muted-hover-background-color:
+    darken($o-NotificationItem-muted-background-color, 7%) !default;
+
+.o-NotificationItem {
+    background-color: $o-NotificationItem-background-color;
+
+    &:hover {
+        background-color: $o-NotificationItem-hover-background-color;
+    }
+
+    &.o-muted {
+        background-color: $o-NotificationItem-muted-background-color;
+
+        &:hover {
+            background-color: $o-NotificationItem-muted-hover-background-color;
+        }
+    }
+}
+

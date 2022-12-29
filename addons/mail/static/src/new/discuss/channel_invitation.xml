@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ChannelInvitation" owl="1">
+        <div class="o-ChannelInvitation d-flex flex-column" t-attf-class="{{ className }}" t-ref="root">
+            <t t-if="store.user">
+                <h3 class="mx-3 mt-3 mb-2">Invite people</h3>
+                <div class="mx-3 my-2">
+                    <input class="o-ChannelInvitation-search form-control" t-ref="input" placeholder="Type the name of a person" t-on-input="onInput"/>
+                </div>
+                <div class="d-flex flex-column flex-grow-1 mx-0 py-2 overflow-auto">
+                    <t t-foreach="state.selectablePartners" t-as="selectablePartner" t-key="selectablePartner.id">
+                        <div class="o-ChannelInvitation-selectable o_object_fit_cover d-flex align-items-center px-3 py-1 btn-light" t-on-click="() => this.onClickSelectablePartner(selectablePartner)">
+                            <div class="d-flex align-items-center p-2">
+                                <div class="o-ChannelInvitation-avatar position-relative d-flex flex-shrink-0 bg-100">
+                                    <img class="w-100 h-100 rounded-circle o_object_fit_cover o_redirect"
+                                        t-att-src="selectablePartner.avatarUrl"/>
+                                    <ImStatus className="'position-absolute bottom-0 end-0'" persona="selectablePartner"/>
+                                </div>
+                            </div>
+                            <span class="flex-grow-1 mx-2 text-truncate fs-6" t-esc="selectablePartner.name"/>
+                            <input class="form-check-input flex-shrink-0" type="checkbox" t-att-checked="state.selectedPartners.includes(selectablePartner) ? 'checked' : undefined"/>
+                        </div>
+                    </t>
+                    <div t-if="state.selectablePartners.length === 0" class="mx-3">No user found that is not already a member of this channel.</div>
+                    <div t-if="state.searchResultCount > state.selectablePartners.length" class="mx-3">
+                        Showing
+                        <t t-esc="state.selectablePartners.length"/>
+                        results out of
+                        <t t-esc="state.searchResultCount"/>
+                        . Narrow your search to see more choices.
+                    </div>
+                </div>
+                <div t-if="state.selectedPartners.length > 0" class="mx-3 mt-3">
+                    <h4>Selected users:</h4>
+                    <div class="o-ChannelInvitation-selectedList overflow-auto">
+                        <t t-foreach="state.selectedPartners" t-as="selectedPartner" t-key="selectedPartner.id">
+                            <button class="btn btn-secondary" t-on-click="() => this.onClickSelectedPartner(selectedPartner)">
+                                <t t-esc="selectedPartner.name"/> <i class="fa fa-times"/>
+                            </button>
+                        </t>
+                    </div>
+                </div>
+                <div class="mx-3 mt-2 mb-3">
+                    <button class="btn btn-primary w-100" t-att-disabled="this.state.selectedPartners.length === 0" t-att-title="invitationButtonText" t-on-click="onClickInvite">
+                        <t t-esc="invitationButtonText"/>
+                    </button>
+                </div>
+            </t>
+            <t t-if="props.thread.invitationLink">
+                <h4 class="mx-3 mt-3 mb-2">Invitation Link</h4>
+                <div class="mx-3 mt-2 mb-3">
+                    <div class="input-group">
+                        <input class="form-control" type="text" t-att-value="props.thread.invitationLink" readonly="" t-on-focus="onFocusInvitationLinkInput"/>
+                        <button class="btn btn-primary" t-on-click="onClickCopy">
+                            <i class="fa fa-copy"/>
+                        </button>
+                    </div>
+                    <div t-if="props.thread.accessRestrictedToGroupText" class="mt-2" t-esc="props.thread.accessRestrictedToGroupText"/>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

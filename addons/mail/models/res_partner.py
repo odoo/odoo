@@ -334,19 +334,22 @@ class Partner(models.Model):
         return list(partners_format.values())
 
     @api.model
-    def im_search(self, name, limit=20):
+    def im_search(self, name, limit=20, excluded_ids=None):
         """ Search partner with a name and return its id, name and im_status.
             Note : the user must be logged
             :param name : the partner name to search
             :param limit : the limit of result to return
+            :param excluded_ids : the ids of excluded partners
         """
         # This method is supposed to be used only in the context of channel creation or
         # extension via an invite. As both of these actions require the 'create' access
         # right, we check this specific ACL.
+        if excluded_ids is None:
+            excluded_ids = []
         users = self.env['res.users'].search([
             ('id', '!=', self.env.user.id),
             ('name', 'ilike', name),
             ('active', '=', True),
             ('share', '=', False),
         ], order='name, id', limit=limit)
-        return list(users.partner_id.mail_partner_format().values())
+        return list(users.filtered(lambda user: user.partner_id.id not in excluded_ids).partner_id.mail_partner_format().values())

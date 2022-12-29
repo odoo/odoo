@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.EmojiPicker" owl="1">
+    <div class="o-EmojiPicker bg-white" t-on-click="onClick" t-on-keydown="onKeydown">
+        <div class="o-EmojiPicker-header d-flex align-items-center border-bottom overflow-auto bg-100" t-on-click="selectCategory">
+            <t t-foreach="categories" t-as="category" t-key="category.sortId">
+                <span class="o-Emoji text-center p-1 cursor-pointer" t-att-class="{'o-isActive bg-white': category.sortId === state.categoryId}" t-att-title="category.name" t-att-data-id="category.sortId">
+                    <t t-esc="category.title"/>
+                </span>
+            </t>
+        </div>
+        <div class="p-1 d-flex flex-column">
+            <div class="d-flex">
+                <input class="form-control border-0 flex-grow-1" t-ref="input" placeholder="Search for an emoji" t-model="state.searchStr"/>
+                <i class="oi oi-search p-2 fs-5" title="Search..." role="img" aria-label="Search..."></i>
+            </div>
+            <hr class="mx-2 my-0 text-muted"/>
+        </div>
+        <div class="o-EmojiPicker-content overflow-auto d-flex flex-wrap align-content-start align-items-center" t-ref="emoji-grid" t-on-click="selectEmoji" t-on-scroll="highlightActiveCategory">
+            <t t-set="current" t-value=""/>
+            <t t-foreach="getEmojis()" t-as="emoji" t-key="emoji_index">
+                <t t-if="!state.searchStr and current !== emoji.category">
+                    <t t-set="current" t-value="emoji.category"/>
+                    <t t-set="categorySortId" t-value="categories.find(c => c.name === current).sortId"/>
+                    <div class="o-EmojiPicker-category w-100 fs-5 p-2" t-att-data-category="categorySortId">
+                        <t t-esc="current"/>
+                    </div>
+                </t>
+                <t t-elif="state.searchStr" t-set="categorySortId" t-value="null"/>
+                <span class="o-Emoji p-1 cursor-pointer" t-att-title="emoji.name" t-att-data-codepoints="emoji.codepoints" t-att-data-index="emoji_index" t-att-data-category="categorySortId">
+                    <t t-esc="emoji.codepoints"/>
+                </span>
+            </t>
+        </div>
+    </div>
+</t>
+
+</templates>

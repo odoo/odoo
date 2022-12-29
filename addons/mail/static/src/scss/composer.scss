@@ -20,28 +20,14 @@
     font-family: emojifont;
 }
 
-@mixin o-viewer-black-btn {
-    background-color: rgba(black, 0.4);
-    color: rgba(map-get($theme-colors, 'light'), 0.7);
-
-    &:hover {
-        background-color: rgba(black, 0.6);
-        color: white;
-    }
-
-    &.disabled {
-        color: map-get($grays, '600');
-        background: none;
-    }
-}
 .o_modal_fullscreen {
-    z-index: $o-mail-thread-window-zindex + 1;
+    z-index: $o-ChatWindow-zindex + 1;
 
     .arrow {
         @include o-position-absolute(50%, $grid-gutter-width*0.5);
         border-radius: 100%;
         padding: 12px 16px 11px 18px;
-        @include o-viewer-black-btn;
+        @include o-AttachmentViewer-arrow;
     }
 
     .arrow-left {

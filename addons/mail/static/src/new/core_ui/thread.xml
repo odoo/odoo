@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.Thread" owl="1">
+    <div class="o-Thread overflow-auto pb-4 flex-grow-1 bg-view" t-ref="messages">
+        <t t-if="!props.thread.isEmpty or props.thread.loadMore or props.thread.hasLoadingFailed" name="content">
+            <div class="d-flex flex-column" t-att-class="{'justify-content-end': !env.inChatter and props.thread.type !== 'mailbox'}" style="min-height:100%">
+                <t t-set="currentDay" t-value="0"/>
+                <t t-set="prevMsg" t-value="0"/>
+                <t t-if="props.order === 'asc'">
+                    <t t-if="props.thread.loadMore and !props.thread.isTransient and !props.thread.hasLoadingFailed" t-call="mail.Thread.loadMore"/>
+                    <t t-if="props.thread.hasLoadingFailed" t-call="mail.Thread.loadingError"/>
+                </t>
+                <t t-foreach="props.order === 'asc' ? props.thread.nonEmptyMessages : [...props.thread.nonEmptyMessages].reverse()" t-as="msg" t-key="msg.id">
+                    <t t-if="msg.dateDay !== currentDay">
+                        <div class="o-Thread-date d-flex align-items-center fw-bolder pt-4">
+                            <hr class="flex-grow-1 border-top"/>
+                            <span class="px-3"><t t-esc="msg.dateDay"/></span>
+                            <hr class="flex-grow-1 border-top"/>
+                        </div>
+                        <t t-set="currentDay" t-value="msg.dateDay"/>
+                    </t>
+                    <t t-if="msg.isNotification">
+                        <t t-call="mail.NotificationMessage"/>
+                    </t>
+                    <Message t-else=""
+                        isInChatWindow="props.isInChatWindow"
+                        message="msg"
+                        messageToReplyTo="props.messageToReplyTo"
+                        squashed="isSquashed(msg, prevMsg)"
+                        highlighted="props.messageHighlight and props.messageHighlight.highlightedMessageId === msg.id"
+                        onParentMessageClick="() => props.messageHighlight and msg.parentMessage and props.messageHighlight.highlightMessage(msg.parentMessage.id)"
+                        thread="props.thread"
+                        messageEdition="props.messageEdition"
+                    />
+                    <Transition visible="threadService.lastSeenBySelfMessageId(props.thread) === msg.id and !msg_last" name="'o-fade'" t-slot-scope="transition">
+                        <div class="o-Thread-newMessage d-flex align-items-center fw-bolder" t-att-class="{ 'opacity-0': transition.className.includes('o-fade-leave') }">
+                            <hr class="flex-grow-1 border opacity-50"/><span class="px-3">New messages</span>
+                        </div>
+                    </Transition>
+                    <t t-set="prevMsg" t-value="msg"/>
+                </t>
+                <t t-if="props.order !== 'asc'">
+                    <t t-if="props.thread.loadMore and !props.thread.isTransient and !props.thread.hasLoadingFailed" t-call="mail.Thread.loadMore"/>
+                    <t t-if="props.thread.hasLoadingFailed" t-call="mail.Thread.loadingError"/>
+                </t>
+            </div>
+        </t>
+        <t t-else="">
+            <div class="d-flex flex-column align-items-center justify-content-center p-4 text-muted fst-italic h-100">
+                <t t-if="props.thread.status !== 'loading'">
+                    <t t-if="props.thread.isEmpty and props.thread.type === 'mailbox'">
+                    <t t-if="props.thread.id === 'inbox'">
+                        <h4 class="mb-3 fw-bolder">
+                            Congratulations, your inbox is empty
+                        </h4>
+                        New messages appear here.
+                    </t>
+                    <t t-if="props.thread.id === 'starred'">
+                        <h4 class="mb-3 fw-bolder">
+                            No starred messages
+                        </h4>
+                        You can mark any message as 'starred', and it shows up in this mailbox.
+                    </t>
+                    <t t-if="props.thread.id === 'history'">
+                        <img src="/web/static/img/neutral_face.svg" alt="History"/>
+                        <h4 class="mb-3 fw-bolder">
+                            No history messages
+                        </h4>
+                        Messages marked as read will appear in the history.
+                    </t>
+                    </t>
+                    <t t-else="">
+                        There are no messages in this conversation.
+                    </t>
+                </t>
+            </div>
+        </t>
+    </div>
+</t>
+
+<t t-name="mail.Thread.loadMore" owl="1">
+    <button class="btn btn-link" t-on-click="onClickLoadMore" t-ref="load-more">Load More</button>
+</t>
+
+<t t-name="mail.Thread.loadingError" owl="1">
+    <div class="d-flex flex-grow-1 align-items-center justify-content-center flex-column">
+        <div class="o-Thread-error">
+            An error occurred while fetching messages.
+        </div>
+        <button class="btn btn-link" t-on-click="onClickLoadMore">
+            Click here to retry
+        </button>
+    </div>
+</t>
+
+<t t-name="mail.NotificationMessage" owl="1">
+    <div class="d-flex justify-content-center text-500 small px-3">
+        <span class="d-inline mx-1" t-esc="msg.author.name"/> <t t-out="msg.body"/>
+    </div>
+</t>
+
+</templates>

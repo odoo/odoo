@@ -1,0 +1,12 @@
+.o-ActivityListPopoverItem-link {
+    @include o-hover-text-color($text-muted, map-get($theme-colors, 'success'));
+    @include o-hover-opacity(0.5, 1);
+}
+
+.o-ActivityListPopoverItem-edit{
+    opacity: 0.5;
+}
+
+.o-ActivityListPopover-item:hover .o-ActivityListPopoverItem-edit{
+    opacity: 1;
+}

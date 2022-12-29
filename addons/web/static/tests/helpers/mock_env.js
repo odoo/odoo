@@ -47,19 +47,24 @@ export function clearServicesMetadataWithCleanup() {
     });
 }
 
+export const registryNamesToCloneWithCleanup = [
+    "actions",
+    "command_provider",
+    "command_setup",
+    "error_handlers",
+    "fields",
+    "fields",
+    "main_components",
+    "view_widgets",
+    "views",
+    "wowlToLegacyServiceMappers",
+];
+
 function prepareRegistriesWithCleanup() {
     // Clone registries
-    cloneRegistryWithCleanup(registry.category("actions"));
-    cloneRegistryWithCleanup(registry.category("views"));
-    cloneRegistryWithCleanup(registry.category("error_handlers"));
-    cloneRegistryWithCleanup(registry.category("command_provider"));
-    cloneRegistryWithCleanup(registry.category("command_setup"));
-    cloneRegistryWithCleanup(registry.category("view_widgets"));
-    cloneRegistryWithCleanup(registry.category("fields"));
-    cloneRegistryWithCleanup(registry.category("wowlToLegacyServiceMappers"));
-
-    cloneRegistryWithCleanup(registry.category("main_components"));
-    cloneRegistryWithCleanup(registry.category("fields"));
+    registryNamesToCloneWithCleanup.forEach((registryName) =>
+        cloneRegistryWithCleanup(registry.category(registryName))
+    );
 
     // Clear registries
     clearRegistryWithCleanup(registry.category("command_categories"));
@@ -67,6 +72,7 @@ function prepareRegistriesWithCleanup() {
     clearRegistryWithCleanup(registry.category("error_dialogs"));
     clearRegistryWithCleanup(registry.category("favoriteMenu"));
     clearRegistryWithCleanup(registry.category("ir.actions.report handlers"));
+    clearRegistryWithCleanup(registry.category("main_components"));
     clearRegistryWithCleanup(registry.category("wowlToLegacyServiceMappers"));
 
     clearRegistryWithCleanup(registry.category("services"));

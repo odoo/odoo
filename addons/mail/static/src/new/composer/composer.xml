@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.Composer" owl="1">
+    <t t-set="compact" t-value="props.mode === 'compact'"/>
+    <t t-set="normal" t-value="props.mode === 'normal'"/>
+    <t t-set="extended" t-value="props.mode === 'extended'"/>
+    <div t-ref="composer">
+        <div class="o-Composer d-grid flex-shrink-0 bg-view"
+                t-att-class="{
+                    'px-3 py-4 o-extended': extended,
+                    'p-3': normal,
+                    'o-hasSelfAvatar px-3': !this.env.inChatWindow and thread,
+                }">
+            <div class="o-Composer-sidebarMain flex-shrink-0" t-if="!compact">
+                <img class="o-Composer-avatar mt-1 rounded-circle" t-att-src="store.self.avatarUrl" alt="Avatar of user"/>
+            </div>
+            <div class="o-Composer-coreHeader text-truncate small p-2" t-if="props.composer.thread and props.messageToReplyTo?.thread === props.composer.thread">
+                <span class="cursor-pointer" t-on-click="() => props.highlightReplyTo and props.highlightReplyTo(props.messageToReplyTo.message.id)">
+                    Replying to <b t-esc="props.messageToReplyTo.message.author.name"/>
+                </span>
+                <span t-if="props.messageToReplyTo.message.originThread !== thread">
+                    on: <b><t t-esc="props.messageToReplyTo.message.originThread.displayName"/></b>
+                </span>
+                <i class="fa fa-lg fa-times-circle rounded-circle p-0 ms-1 cursor-pointer" title="Stop replying" t-on-click="() => props.messageToReplyTo.cancel()"/>
+            </div>
+            <div class="o-Composer-coreMain d-flex flex-nowrap align-items-start flex-grow-1"
+                t-att-class="{ 'flex-column' : extended }"
+            >
+                <div class="d-flex border bg-view flex-grow-1"
+                    t-att-class="{
+                        'border-end-0 rounded-start-3' : normal,
+                        'rounded-3 align-self-stretch flex-column' : extended,
+                    }"
+                >
+                    <div class="position-relative flex-grow-1">
+                        <textarea class="o-Composer-input form-control bg-view px-3 border-0 rounded-3 shadow-none overflow-auto"
+                            t-ref="textarea"
+                            style="height:40px;"
+                            t-on-keydown="onKeydown"
+                            t-on-input="onInput"
+                            t-on-focusin="onFocusin"
+                            t-on-focusout="() => this.props.composer.isFocused = false"
+                            t-on-paste="onPaste"
+                            t-model="props.composer.textInputContent"
+                            t-att-placeholder="placeholder"
+                            t-att-readOnly="!state.active"
+                        />
+                        <!--
+                             This is an invisible textarea used to compute the composer
+                             height based on the text content. We need it to downsize
+                             the textarea properly without flicker.
+                        -->
+                        <textarea
+                            class="o-Composer-fake position-absolute"
+                            t-model="props.composer.textInputContent"
+                            t-ref="fakeTextarea"
+                            disabled="1"
+                        />
+                    </div>
+                    <div class="d-flex mx-3 bg-view"
+                        t-att-class="{
+                            'px-1' : normal,
+                            'border-top p-1' : extended,
+                        }"
+                    >
+                        <div class="d-flex flex-grow-1 align-items-center" >
+                            <button class="btn btn-light border-0 fa fa-smile-o rounded-pill" aria-label="Emojis" t-on-click="onClickAddEmoji" t-ref="emoji-picker"/>
+                            <FileUploader t-if="allowUpload" multiUpload="true" onUploaded="(data) => { attachmentUploader.uploadData(data) }">
+                                <t t-set-slot="toggler">
+                                    <button t-att-disabled="!state.active" class="btn btn-light fa fa-paperclip border-0 rounded-pill" title="Attach files" aria-label="Attach files" type="button" t-on-click="onClickAddAttachment"/>
+                                </t>
+                            </FileUploader>
+                        </div>
+                        <button t-if="thread and thread.type === 'chatter'" class="btn btn-light fa fa-expand mx-1 border-0 rounded-pill" title="Full composer" aria-label="Full composer" type="button" t-on-click="onClickFullComposer"/>
+                    </div>
+                </div>
+                <button t-if="!compact or store.isSmall" class="o-Composer-send btn btn-primary o-last border-start-0"
+                    t-att-class="{'mt-2': extended, 'rounded-0 rounded-end-3': !extended and !compact, 'align-self-stretch': !extended}"
+                    t-on-click="sendMessage"
+                    type="button"
+                    t-att-disabled="isSendButtonDisabled"
+                    aria-label="Send"
+                >
+                    <t t-if="this.store.isSmall"><i class="fa fa-paper-plane-o"/></t>
+                    <t t-else="">Send</t>
+                </button>
+            </div>
+            <div class="o-Composer-footer overflow-auto">
+                <AttachmentList
+                    t-if="allowUpload and props.composer.attachments.length > 0"
+                    attachments="props.composer.attachments"
+                    unlinkAttachment="attachmentUploader.unlink"
+                    imagesHeight="50"/>
+                <div t-if="thread and thread.type !== 'chatter' and !compact">
+                    <Typing channel="thread" size="'medium'"/>
+                </div>
+            </div>
+        </div>
+        <span t-if="props.composer.message" class="text-muted">escape to <a href="#" t-on-click="props.onDiscardCallback">cancel</a>, enter to <a href="#" t-on-click="editMessage">save</a></span>
+    </div>
+    <NavigableList t-if="this.suggestion" class="'o-composer-suggestion-list'" t-props="navigableListProps"/>
+</t>
+
+    <t t-name="mail.Composer.suggestionPartner" owl="1">
+        <t t-set="partner" t-value="option.partner"/>
+        <ImStatus t-if="partner" persona="partner"/>
+        <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
+            <t t-esc="partner.name"/>
+        </strong>
+        <em t-if="partner.email" class="text-600 text-truncate align-self-center">(<t t-esc="partner.email"/>)</em>
+    </t>
+
+    <t t-name="mail.Composer.suggestionThread" owl="1">
+        <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
+            #<t t-esc="option.label"/>
+        </strong>
+    </t>
+
+    <t t-name="mail.Composer.suggestionChannelCommand" owl="1">
+        <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
+            <t t-esc="option.label"/>
+        </strong>
+        <em class="text-600 text-truncate align-self-center">
+            <t t-esc="option.help"/>
+        </em>
+    </t>
+
+    <t t-name="mail.Composer.suggestionCannedResponse" owl="1">
+        <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
+            <t t-esc="option.name"/>
+        </strong>
+        <em class="text-600 text-truncate align-self-center">
+            <t t-esc="option.label"/>
+        </em>
+    </t>
+</templates>

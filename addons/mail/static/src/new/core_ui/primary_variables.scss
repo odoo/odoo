@@ -1,0 +1,34 @@
+$o-Avatar-size: 36px !default;
+$o-Avatar-sizeSmall: 24px !default;
+$o-ChatWindow-bg: #FAFAFA !default;
+$o-ChatWindow-width: 340px !default;
+// Needed because $border-radius variations are all set to 0 in enterprise.
+$o-RoundedRectangle-small: .2rem !default;
+$o-RoundedRectangle-large: 3 * $o-RoundedRectangle-small !default;
+
+$o-LinkPreview-width: 320px !default;
+$o-LinkPreview-height: 240px !default;
+$o-LinkPreviewCard-height: 80px !default;
+
+$o-Typing-medium: 5px !default;
+$o-Typing-small: 3px !default;
+
+$o-Message-sidebarWidth: 48px !default;
+$o-NavigableList-zIndex: 11;
+$o-Chatter-minWidth: 530px !default;
+$o-Discuss-inspector: 250px !default;
+
+@mixin o-AttachmentViewer-arrow {
+    background-color: rgba(black, 0.4);
+    color: rgba(map-get($theme-colors, 'light'), 0.7);
+
+    &:hover {
+        background-color: rgba(black, 0.6);
+        color: white;
+    }
+
+    &.disabled {
+        color: map-get($grays, '600');
+        background: none;
+    }
+}

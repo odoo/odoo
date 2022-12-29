@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Message" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-Message-content')]/*[1]" position="before">
+            <t name="hasTrackingValue" t-if="message.type === 'notification' or message.isTransient or message.trackingValues.length > 0">
+                <t t-if="message.subtypeDescription">
+                    <p class="mb-0">
+                        <t t-esc="message.subtypeDescription"/>
+                    </p>
+                </t>
+                <t t-if="message.trackingValues.length">
+                    <ul class="mb-0 ps-4">
+                        <t name="trackingValues" t-foreach="message.trackingValues" t-as="trackingValue" t-key="trackingValue.id">
+                            <li class="o-Message-tracking mb-1" role="group">
+                                <span class="o-Message-trackingOld me-1 px-1 text-muted fw-bold" t-esc="formatTrackingOrNone(trackingValue.oldValue)"/>
+                                <i class="o-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600"/>
+                                <span class="o-Message-trackingNew me-1 fw-bold text-info" t-esc="formatTrackingOrNone(trackingValue.newValue)"/>
+                                <span class="o-Message-trackingField ms-1 fst-italic text-muted">(<t t-esc="trackingValue.changedField"/>)</span>
+                            </li>
+                        </t>
+                    </ul>
+                </t>
+                <div t-if="message.body" class="o-Message-body text-break mb-0 bg-view w-100">
+                    <t t-out="message.body"/>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>

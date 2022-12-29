@@ -1,0 +1,59 @@
+.o-Message {
+    transition: background-color .2s ease-out, opacity .5s ease-out, box-shadow .5s ease-out, transform .2s ease-out;
+
+    &.o-highlighted {
+        transform: translateY(-#{map-get($spacers, 3)});
+    }
+}
+
+.o-Message-sidebar {
+    flex-basis: $o-Message-sidebarWidth;
+    max-width: $o-Message-sidebarWidth;
+}
+
+.o-Message-avatarContainer {
+    width: $o-Avatar-size;
+    height: $o-Avatar-size;
+}
+
+.o-Message-body > p {
+    margin-bottom: 0;
+}
+
+.o-Message-body {
+    a.o_mail_redirect {
+        padding: map-get($spacers, 1);
+        border-radius: $border-radius;
+        background: rgba($primary, .2);
+    }
+}
+
+.o-Message:not(.o-selfAuthored) .o-Message-bubble {
+    opacity: 0.15;
+}
+
+.o-ChatWindow .o-Message.o-selfAuthored {
+    flex-direction: row-reverse;
+
+    .o-Message-core, .o-Message-content {
+        flex-direction: row-reverse;
+    }
+    .o-Message-header {
+        justify-content: flex-end;
+    }
+    .o-Message-author {
+        display: none;
+    }
+}
+
+.o-Message-actions {
+    z-index: $o-NavigableList-zIndex - 1;
+
+    i:hover {
+        background-color: $o-gray-300;
+    }
+}
+
+.o-Message-starredd {
+    color: $o-main-favorite-color;
+}

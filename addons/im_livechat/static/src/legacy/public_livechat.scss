@@ -2,21 +2,21 @@
 // legacy: mail/public_livechat_window.scss
 //-------------------------------------
 
-$o-mail-thread-window-zindex: $zindex-modal + 1 !default;
+$o-ChatWindow-zindex: $zindex-modal + 1 !default;
 
 .o_thread_window {
     direction: ltr;
     display: flex;
     flex-flow: column nowrap;
     position: fixed;
-    width: $o-mail-thread-window-width;
+    width: $o-ChatWindow-width;
     max-width: 100%;
     height: 460px;
     max-height: 100%;
     font-size: 12px;
-    background-color: $o-mail-thread-window-bg;
+    background-color: $o-ChatWindow-bg;
     border-radius: 6px 6px 0 0;
-    z-index: $o-mail-thread-window-zindex;
+    z-index: $o-ChatWindow-zindex;
     box-shadow: -5px -5px 10px rgba(black, 0.18);
 
     @include media-breakpoint-down(md) {
@@ -37,7 +37,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
         display: flex;
         flex: 0 0 auto;
         color: white;
-        padding: $o-mail-chatter-gap * 0.5 $o-mail-chatter-gap;
+        padding: $o-Chatter-gap * 0.5 $o-Chatter-gap;
         border-radius: 3px 3px 0 0;
         border-bottom: 1px solid map-get($grays, "300");
         background-color: $o-brand-odoo;
@@ -113,7 +113,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
         .o_thread_date_separator {
             margin: 0px 0px 15px 0px;
             .o_thread_date {
-                background-color: $o-mail-thread-window-bg;
+                background-color: $o-ChatWindow-bg;
             }
         }
         .o_thread_message {
@@ -165,7 +165,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
     }
 
     > ul {
-        max-width: $o-mail-thread-window-width;
+        max-width: $o-ChatWindow-width;
         padding: 0;
 
         > li.o_thread_window_header {
@@ -267,17 +267,17 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
         }
 
         .o_thread_message_sidebar {
-            flex: 0 0 $o-mail-thread-avatar-size;
+            flex: 0 0 $o-Avatar-size;
             margin-right: 10px;
             margin-top: 2px;
             text-align: center;
             font-size: smaller;
             .o_thread_message_sidebar_image {
                 position: relative;
-                height: $o-mail-thread-avatar-size;
+                height: $o-Avatar-size;
 
                 .o_updatable_im_status {
-                    width: $o-mail-thread-avatar-size;
+                    width: $o-Avatar-size;
                 }
                 .o_mail_user_status {
                     position: absolute;
@@ -296,8 +296,8 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
             }
 
             .o_thread_message_avatar {
-                width: $o-mail-thread-avatar-size;
-                height: $o-mail-thread-avatar-size;
+                width: $o-Avatar-size;
+                height: $o-Avatar-size;
                 object-fit: cover;
             }
             .o_thread_message_side_date {
@@ -317,7 +317,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
             cursor: pointer;
             opacity: 0;
             &.fa-star {
-                opacity: $o-mail-thread-icon-opacity;
+                opacity: $o-ThreadIcon-opacity;
                 color: gold;
             }
         }
@@ -326,11 +326,11 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
         &.o_thread_selected_message {
             .o_thread_message_side_date {
                 display: inline-block;
-                opacity: $o-mail-thread-side-date-opacity;
+                opacity: 0.6;
             }
             .o_thread_icon {
                 display: inline-block;
-                opacity: $o-mail-thread-icon-opacity;
+                opacity: $o-ThreadIcon-opacity;
                 &:hover {
                     opacity: 1;
                 }
@@ -429,7 +429,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
 
 .o_web_client.o_touch_device {
     .o_mail_thread .o_thread_icon {
-        opacity: $o-mail-thread-icon-opacity;
+        opacity: $o-ThreadIcon-opacity;
     }
 }
 

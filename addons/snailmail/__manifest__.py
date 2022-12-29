@@ -21,11 +21,8 @@ Allows users to send documents by post
     ],
     'auto_install': True,
     'assets': {
-        'mail.assets_messaging': [
-            'snailmail/static/src/models/*.js',
-        ],
-        'mail.assets_discuss_public': [
-            'snailmail/static/src/components/*/*',
+        'mail.assets_backend': [
+            'snailmail/static/src/new/**/*',
         ],
         'snailmail.report_assets_snailmail': [
             ('include', 'web._assets_helpers'),
@@ -34,15 +31,11 @@ Allows users to send documents by post
             'snailmail/static/src/scss/snailmail_external_layout_asset.scss',
             'snailmail/static/src/js/snailmail_external_layout.js',
         ],
-        'web.assets_backend': [
-            'snailmail/static/src/components/*/*.scss',
-            'snailmail/static/src/components/*/*.xml',
-        ],
         'web.tests_assets': [
             'snailmail/static/tests/helpers/**/*.js',
         ],
         'web.qunit_suite_tests': [
-            'snailmail/static/tests/qunit_suite_tests/**/*.js',
+            'snailmail/static/tests/new/**/*',
         ],
     },
     'license': 'LGPL-3',
