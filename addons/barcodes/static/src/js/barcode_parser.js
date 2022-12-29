@@ -19,7 +19,8 @@ var BarcodeParser = Class.extend({
     // only when those data have been loaded
     load: function(){
         if (!this.nomenclature_id) {
-            return this.nomenclature ? Promise.resolve() : Promise.reject();
+            return this.nomenclature ? Promise.resolve() :
+                Promise.reject(new TypeError("The barcode nomenclature is missing"));
         }
         var id = this.nomenclature_id[0];
         return rpc.query({
