@@ -70,15 +70,13 @@
     'installable': True,
     'application': True,
     'assets': {
-        'mail.assets_messaging': [
-            'crm/static/src/models/*.js',
-        ],
         'web.assets_backend': [
             'crm/static/src/views/**/*.js',
             'crm/static/src/views/**/*.xml',
             'crm/static/src/js/tours/crm.js',
             'crm/static/src/scss/crm.scss',
             'crm/static/src/scss/crm_team_member_views.scss',
+            'crm/static/src/new/**/*',
         ],
         'web.assets_tests': [
             'crm/static/tests/tours/**/*',

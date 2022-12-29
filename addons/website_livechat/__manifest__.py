@@ -26,14 +26,8 @@ Allow website visitors to chat with the collaborators. This module also brings a
     ],
     'assets': {
         'im_livechat.assets_public_livechat': [
-            'website_livechat/static/src/public_models/*.js',
+            'website_livechat/static/src/legacy/public_models/*',
             'website_livechat/static/src/legacy/widgets/*/*',
-        ],
-        'mail.assets_messaging': [
-            'website_livechat/static/src/models/*.js',
-        ],
-        'mail.assets_discuss_public': [
-            'website_livechat/static/src/components/*/*',
         ],
         'web.assets_frontend': [
             'website_livechat/static/src/legacy/public_livechat.js',
@@ -46,8 +40,7 @@ Allow website visitors to chat with the collaborators. This module also brings a
             'website_livechat/static/src/js/systray_items/*.js',
         ],
         'web.assets_backend': [
-            'website_livechat/static/src/components/*/*.scss',
-            'website_livechat/static/src/components/*/*.xml',
+            'website_livechat/static/src/new/**/*',
         ],
         'web.assets_tests': [
             'website_livechat/static/tests/tours/**/*',
@@ -56,7 +49,7 @@ Allow website visitors to chat with the collaborators. This module also brings a
             'website_livechat/static/tests/helpers/**/*.js',
         ],
         'web.qunit_suite_tests': [
-            'website_livechat/static/tests/qunit_suite_tests/**/*.js',
+            'website_livechat/static/tests/new/**/*',
         ],
         'im_livechat.external_lib': [
             'website_livechat/static/src/external_lib/livechat_button.js',

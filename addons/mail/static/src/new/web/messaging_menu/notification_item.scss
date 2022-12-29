@@ -1,0 +1,26 @@
+$o-mail-NotificationItem-background-color: $o-view-background-color !default;
+$o-mail-NotificationItem-hover-background-color: darken(
+    $o-mail-NotificationItem-background-color,
+    7%
+) !default;
+
+$o-mail-NotificationItem-muted-background-color: $gray-100 !default;
+$o-mail-NotificationItem-muted-hover-background-color:
+    darken($o-mail-NotificationItem-muted-background-color, 7%) !default;
+
+.o-mail-NotificationItem {
+    background-color: $o-mail-NotificationItem-background-color;
+
+    &:hover {
+        background-color: $o-mail-NotificationItem-hover-background-color;
+    }
+
+    &.o-muted {
+        background-color: $o-mail-NotificationItem-muted-background-color;
+
+        &:hover {
+            background-color: $o-mail-NotificationItem-muted-hover-background-color;
+        }
+    }
+}
+

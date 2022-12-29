@@ -2,18 +2,31 @@
 
 import { getPyEnv, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
+import { loadEmoji } from "@mail/new/emoji_picker/emoji_picker";
 import { nextTick } from "@mail/utils/utils";
 import { getAdvanceTime } from "@mail/../tests/helpers/time_control";
+import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notifications";
 import { getWebClientReady } from "@mail/../tests/helpers/webclient_setup";
 
-import { wowlServicesSymbol } from "@web/legacy/utils";
+import { registry } from "@web/core/registry";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { session as sessionInfo } from "@web/session";
 import { getFixture, makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { doAction, getActionManagerServerData } from "@web/../tests/webclient/helpers";
 
 import { App, EventBus } from "@odoo/owl";
+import {
+    registryNamesToCloneWithCleanup,
+    utils,
+    clearRegistryWithCleanup,
+} from "@web/../tests/helpers/mock_env";
+import { browser } from "@web/core/browser/browser";
+const { prepareRegistriesWithCleanup } = utils;
 const { afterNextRender } = App;
+
+// load emoji data once, when the test suite starts.
+QUnit.begin(loadEmoji);
+registryNamesToCloneWithCleanup.push("mock_server_callbacks");
 
 //------------------------------------------------------------------------------
 // Private
@@ -103,11 +116,11 @@ function getAfterEvent({ messagingBus }) {
     };
 }
 
-function getClick({ afterNextRender }) {
+function getClick({ target, afterNextRender }) {
     return async function click(selector) {
         await afterNextRender(() => {
             if (typeof selector === "string") {
-                $(selector)[0].click();
+                $(target ?? document.body).find(selector)[0].click();
             } else if (selector instanceof HTMLElement) {
                 selector.click();
             } else {
@@ -126,8 +139,8 @@ function getMouseenter({ afterNextRender }) {
     };
 }
 
-function getOpenDiscuss(afterEvent, webClient, { context = {}, params, ...props } = {}) {
-    return async function openDiscuss({ waitUntilMessagesLoaded = true } = {}) {
+function getOpenDiscuss(webClient, { context = {}, params = {}, ...props } = {}) {
+    return async function openDiscuss(pActiveId, { waitUntilMessagesLoaded = true } = {}) {
         const actionOpenDiscuss = {
             // hardcoded actionId, required for discuss_container props validation.
             id: 104,
@@ -136,66 +149,120 @@ function getOpenDiscuss(afterEvent, webClient, { context = {}, params, ...props 
             tag: "mail.action_discuss",
             type: "ir.actions.client",
         };
+        const activeId =
+            pActiveId ?? context.active_id ?? params.default_active_id ?? "mail.box_inbox";
+        let [threadModel, threadId] =
+            typeof activeId === "number" ? ["mail.channel", activeId] : activeId.split("_");
+        if (threadModel === "mail.channel") {
+            threadId = parseInt(threadId, 10);
+        }
+        // TODO-DISCUSS-REFACTORING: remove when activeId will be handled.
+        webClient.env.services["mail.thread"].setDiscussThread(
+            webClient.env.services["mail.thread"].insert({
+                model: threadModel,
+                id: threadId,
+            })
+        );
         if (waitUntilMessagesLoaded) {
-            let threadId = context.active_id;
-            if (typeof threadId === "string") {
-                threadId = parseInt(threadId.split("_")[1]);
+            const messagesLoadedPromise = makeDeferred();
+            let loadMessageRoute = `/mail/${threadId}/messages`;
+            if (Number.isInteger(threadId)) {
+                loadMessageRoute = "/mail/channel/messages";
             }
-            return afterNextRender(() =>
-                afterEvent({
-                    eventName: "o-thread-view-hint-processed",
-                    func: () => doAction(webClient, actionOpenDiscuss, { props }),
-                    message: "should wait until discuss loaded its messages",
-                    predicate: ({ hint, threadViewer }) => {
-                        return (
-                            hint.type === "messages-loaded" &&
-                            (!threadId || threadViewer.thread.id === threadId)
-                        );
-                    },
-                })
+            registry.category("mock_server_callbacks").add(
+                loadMessageRoute,
+                ({ channel_id: channelId = threadId }) => {
+                    if (channelId === threadId) {
+                        messagesLoadedPromise.resolve();
+                    }
+                },
+                { force: true }
             );
+            return afterNextRender(async () => {
+                await doAction(webClient, actionOpenDiscuss, { props });
+                await messagesLoadedPromise;
+            });
         }
         return afterNextRender(() => doAction(webClient, actionOpenDiscuss, { props }));
     };
 }
 
-function getOpenFormView(afterEvent, openView) {
+/**
+ * Wait until the form view corresponding to the given resId/resModel has loaded.
+ *
+ * @param {Function} func Function expected to trigger form view load.
+ * @param {Object} param1
+ */
+export function waitFormViewLoaded(
+    func,
+    { resId = false, resModel, waitUntilMessagesLoaded = true, waitUntilDataLoaded = true } = {}
+) {
+    const waitData = (func) => {
+        const dataLoadedPromise = makeDeferred();
+        registry.category("mock_server_callbacks").add(
+            "/mail/thread/data",
+            ({ thread_id: threadId, thread_model: threadModel }) => {
+                if (threadId === resId && threadModel === resModel) {
+                    dataLoadedPromise.resolve();
+                }
+            },
+            { force: true }
+        );
+        return afterNextRender(async () => {
+            await func();
+            await dataLoadedPromise;
+        });
+    };
+    const waitMessages = (func) => {
+        const messagesLoadedPromise = makeDeferred();
+        registry.category("mock_server_callbacks").add(
+            "/mail/thread/messages",
+            ({ thread_id: threadid, thread_model: threadModel }) => {
+                if (threadid === resId && threadModel === resModel) {
+                    messagesLoadedPromise.resolve();
+                }
+            },
+            { force: true }
+        );
+        return afterNextRender(async () => {
+            await func();
+            await messagesLoadedPromise;
+        });
+    };
+    if (waitUntilDataLoaded && waitUntilMessagesLoaded) {
+        return waitData(() => waitMessages(func));
+    }
+    if (waitUntilDataLoaded) {
+        return waitData(func);
+    }
+    if (waitUntilMessagesLoaded) {
+        return waitMessages(func);
+    }
+}
+
+function getOpenFormView(openView) {
     return async function openFormView(
-        action,
-        { props, waitUntilDataLoaded = true, waitUntilMessagesLoaded = true } = {}
+        res_model,
+        res_id,
+        {
+            props,
+            waitUntilDataLoaded = Boolean(res_id),
+            waitUntilMessagesLoaded = Boolean(res_id),
+        } = {}
     ) {
-        action["views"] = [[false, "form"]];
+        const action = {
+            res_model,
+            res_id,
+            views: [[false, "form"]],
+        };
         const func = () => openView(action, props);
-        const waitData = (func) =>
-            afterNextRender(() =>
-                afterEvent({
-                    eventName: "o-thread-loaded-data",
-                    func,
-                    message: "should wait until chatter loaded its data",
-                    predicate: ({ thread }) => {
-                        return thread.model === action.res_model && thread.id === action.res_id;
-                    },
-                })
-            );
-        const waitMessages = (func) =>
-            afterNextRender(() =>
-                afterEvent({
-                    eventName: "o-thread-loaded-messages",
-                    func,
-                    message: "should wait until chatter loaded its messages",
-                    predicate: ({ thread }) => {
-                        return thread.model === action.res_model && thread.id === action.res_id;
-                    },
-                })
-            );
-        if (waitUntilDataLoaded && waitUntilMessagesLoaded) {
-            return waitData(() => waitMessages(func));
-        }
-        if (waitUntilDataLoaded) {
-            return waitData(func);
-        }
-        if (waitUntilMessagesLoaded) {
-            return waitMessages(func);
+        if (waitUntilDataLoaded || waitUntilMessagesLoaded) {
+            return waitFormViewLoaded(func, {
+                resId: res_id,
+                resModel: res_model,
+                waitUntilDataLoaded,
+                waitUntilMessagesLoaded,
+            });
         }
         return func();
     };
@@ -206,34 +273,86 @@ function getOpenFormView(afterEvent, openView) {
 //------------------------------------------------------------------------------
 
 /**
+ * Reset registries used by the messaging environment. Useful to create multiple
+ * web clients.
+ */
+function resetRegistries() {
+    const categories = [
+        "actions",
+        "main_components",
+        "services",
+        "systray",
+        "wowlToLegacyServiceMappers",
+    ];
+    for (const name of categories) {
+        clearRegistryWithCleanup(registry.category(name));
+    }
+    prepareRegistriesWithCleanup();
+}
+
+let tabs = [];
+registerCleanup(() => (tabs = []));
+/**
+ * Add an item to the "Switch Tab" dropdown. If it doesn't exist, create the
+ * dropdown and add the item afterwards.
+ *
+ * @param {HTMLElement} rootTarget Where to mount the dropdown menu.
+ * @param {HTMLElement} tabTarget Tab to switch to when clicking on the dropdown
+ * item.
+ */
+async function addSwitchTabDropdownItem(rootTarget, tabTarget) {
+    tabs.push(tabTarget);
+    const zIndexMainTab = 100000;
+    let dropdownDiv = rootTarget.querySelector(".o-mail-multi-tab-dropdown");
+    if (!dropdownDiv) {
+        tabTarget.style.zIndex = zIndexMainTab;
+        dropdownDiv = document.createElement("div");
+        dropdownDiv.style.zIndex = zIndexMainTab + 1;
+        dropdownDiv.style.top = "10%";
+        dropdownDiv.style.right = "5%";
+        dropdownDiv.style.position = "absolute";
+        dropdownDiv.classList.add("dropdown");
+        dropdownDiv.classList.add("o-mail-multi-tab-dropdown");
+        dropdownDiv.innerHTML = `
+            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Switch Tab (${tabs.length})
+            </button>
+            <ul class="dropdown-menu"></ul>
+        `;
+        rootTarget.appendChild(dropdownDiv);
+    }
+    const tabIndex = tabs.length;
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    li.appendChild(a);
+    a.classList.add("dropdown-item");
+    a.innerText = `Tab ${tabIndex}`;
+    browser.addEventListener("click", (ev) => {
+        const link = ev.target.closest(".dropdown-item");
+        if (a.isEqualNode(link)) {
+            tabs.forEach((tab) => (tab.style.zIndex = 0));
+            tabTarget.style.zIndex = zIndexMainTab;
+            dropdownDiv.querySelector(".dropdown-toggle").innerText = `Switch Tab (${tabIndex})`;
+        }
+    });
+    dropdownDiv.querySelector(".dropdown-menu").appendChild(li);
+}
+
+/**
  * Main function used to make a mocked environment with mocked messaging env.
  *
  * @param {Object} [param0={}]
+ * @param {boolean} [param0.asTab] Whether or not the resulting WebClient should
+ * be considered as a separate tab.
  * @param {Object} [param0.serverData] The data to pass to the webClient
- * @param {Object} [param0.discuss={}] provide data that is passed to the discuss action.
+ * @param {Object} [param0.discuss={}] provide data that is passed to the
+ * discuss action.
  * @param {Object} [param0.legacyServices]
  * @param {Object} [param0.services]
  * @param {function} [param0.mockRPC]
- * @param {boolean} [param0.hasTimeControl=false] if set, all flow of time
- *   with `messaging.browser.setTimeout` are fully controlled by test itself.
+ * @param {boolean} [param0.hasTimeControl=false] if set, all flow of time with
+ *   `messaging.browser.setTimeout` are fully controlled by test itself.
  * @param {integer} [param0.loadingBaseDelayDuration=0]
- * @param {Deferred|Promise} [param0.messagingBeforeCreationDeferred=Promise.resolve()]
- *   Deferred that let tests block messaging creation and simulate resolution.
- *   Useful for testing working components when messaging is not yet created.
- * @param {string} [param0.waitUntilMessagingCondition='initialized'] Determines
- *   the condition of messaging when this function is resolved.
- *   Supported values: ['none', 'created', 'initialized'].
- *   - 'none': the function resolves regardless of whether messaging is created.
- *   - 'created': the function resolves when messaging is created, but
- *     regardless of whether messaging is initialized.
- *   - 'initialized' (default): the function resolves when messaging is
- *     initialized.
- *   To guarantee messaging is not created, test should pass a pending deferred
- *   as param of `messagingBeforeCreationDeferred`. To make sure messaging is
- *   not initialized, test should mock RPC `mail/init_messaging` and block its
- *   resolution.
- * @throws {Error} in case some provided parameters are wrong, such as
- *   `waitUntilMessagingCondition`.
  * @returns {Object}
  */
 async function start(param0 = {}) {
@@ -242,15 +361,32 @@ async function start(param0 = {}) {
         debounce: (func) => func,
         throttle: (func) => func,
     });
-    const { discuss = {}, hasTimeControl, waitUntilMessagingCondition = "initialized" } = param0;
+    const { discuss = {}, hasTimeControl } = param0;
     const advanceTime = hasTimeControl ? getAdvanceTime() : undefined;
-    const target = param0["target"] || getFixture();
-    param0["target"] = target;
-    if (!["none", "created", "initialized"].includes(waitUntilMessagingCondition)) {
-        throw Error(
-            `Unknown parameter value ${waitUntilMessagingCondition} for 'waitUntilMessaging'.`
-        );
+    let target = param0["target"] || getFixture();
+    if (param0.asTab) {
+        resetRegistries();
+        const rootTarget = target;
+        target = document.createElement("div");
+        target.style.width = "100%";
+        rootTarget.appendChild(target);
+        addSwitchTabDropdownItem(rootTarget, target);
     }
+    // make qunit fixture in visible range,
+    // so that features like IntersectionObserver work as expected
+    target.style.position = "absolute";
+    target.style.top = "0";
+    target.style.left = "0";
+    target.style.height = "100%";
+    target.style.opacity = QUnit.config.debug ? "" : "0";
+    registerCleanup(async () => {
+        target.style.position = "";
+        target.style.top = "";
+        target.style.left = "";
+        target.style.height = "";
+        target.style.opacity = "";
+    });
+    param0["target"] = target;
     const messagingBus = new EventBus();
     const afterEvent = getAfterEvent({ messagingBus });
 
@@ -263,29 +399,19 @@ async function start(param0 = {}) {
         uid: pyEnv.currentUserId,
         partner_id: pyEnv.currentPartnerId,
     });
+    if (browser.Notification && !browser.Notification.isPatched) {
+        patchBrowserNotification("denied");
+    }
     param0.serverData = param0.serverData || getActionManagerServerData();
     param0.serverData.models = { ...pyEnv.getData(), ...param0.serverData.models };
     param0.serverData.views = { ...pyEnv.getViews(), ...param0.serverData.views };
     let webClient;
     await afterNextRender(async () => {
         webClient = await getWebClientReady({ ...param0, messagingBus });
-        if (waitUntilMessagingCondition === "created") {
-            await webClient.env.services.messaging.modelManager.messagingCreatedPromise;
-        }
-        if (waitUntilMessagingCondition === "initialized") {
-            await webClient.env.services.messaging.modelManager.messagingCreatedPromise;
-            await webClient.env.services.messaging.modelManager.messagingInitializedPromise;
-        }
     });
-
-    registerCleanup(async () => {
-        await webClient.env.services.messaging.modelManager.messagingInitializedPromise;
-        webClient.env.services.messaging.modelManager.destroy();
-        delete webClient.env.services.messaging;
-        delete owl.Component.env.services.messaging;
-        delete owl.Component.env[wowlServicesSymbol].messaging;
-        delete owl.Component.env;
-    });
+    if (webClient.env.isSmall) {
+        target.style.width = "100%";
+    }
     const openView = async (action, options) => {
         action["type"] = action["type"] || "ir.actions.act_window";
         await afterNextRender(() => doAction(webClient, action, { props: options }));
@@ -294,15 +420,15 @@ async function start(param0 = {}) {
         advanceTime,
         afterEvent,
         afterNextRender,
-        click: getClick({ afterNextRender }),
+        click: getClick({ target, afterNextRender }),
         env: webClient.env,
         insertText,
-        messaging: webClient.env.services.messaging.modelManager.messaging,
         mouseenter: getMouseenter({ afterNextRender }),
-        openDiscuss: getOpenDiscuss(afterEvent, webClient, discuss),
+        openDiscuss: getOpenDiscuss(webClient, discuss),
         openView,
-        openFormView: getOpenFormView(afterEvent, openView),
+        openFormView: getOpenFormView(openView),
         pyEnv,
+        target,
         webClient,
     };
 }
@@ -310,6 +436,39 @@ async function start(param0 = {}) {
 //------------------------------------------------------------------------------
 // Public: file utilities
 //------------------------------------------------------------------------------
+
+/**
+ * Create a file object, which can be used for drag-and-drop.
+ *
+ * @param {Object} data
+ * @param {string} data.name
+ * @param {string} data.content
+ * @param {string} data.contentType
+ * @returns {Promise<Object>} resolved with file created
+ */
+export function createFile(data) {
+    // Note: this is only supported by Chrome, and does not work in Incognito mode
+    return new Promise(function (resolve, reject) {
+        const requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
+        if (!requestFileSystem) {
+            throw new Error("FileSystem API is not supported");
+        }
+        requestFileSystem(window.TEMPORARY, 1024 * 1024, function (fileSystem) {
+            fileSystem.root.getFile(data.name, { create: true }, function (fileEntry) {
+                fileEntry.createWriter(function (fileWriter) {
+                    fileWriter.onwriteend = function (e) {
+                        fileSystem.root.getFile(data.name, {}, function (fileEntry) {
+                            fileEntry.file(function (file) {
+                                resolve(file);
+                            });
+                        });
+                    };
+                    fileWriter.write(new Blob([data.content], { type: data.contentType }));
+                });
+            });
+        });
+    });
+}
 
 /**
  * Drag some files over a DOM element
@@ -363,9 +522,14 @@ function pasteFiles(el, files) {
 /**
  * @param {string} selector
  * @param {string} content
+ * @param {Object} [param2 = {}]
+ * @param {boolean} [param2.replace = false]
  */
-async function insertText(selector, content) {
+export async function insertText(selector, content, { replace = false } = {}) {
     await afterNextRender(() => {
+        if (replace) {
+            document.querySelector(selector).value = "";
+        }
         document.querySelector(selector).focus();
         for (const char of content) {
             document.execCommand("insertText", false, char);
@@ -396,6 +560,19 @@ function isScrolledToBottom(el) {
     return Math.abs(el.scrollHeight - el.clientHeight - el.scrollTop) <= 1;
 }
 
+/**
+ * Determine if a DOM element is scrolled to the given scroll top position.
+ *
+ * A 1px margin of error is given to accomodate subpixel rounding issues and
+ * Element.scrollHeight value being either int or decimal
+ *
+ * @param {DOM.Element} el
+ * @param {number} scrollTop expected scroll top value.
+ * @returns {boolean}
+ */
+function isScrolledTo(el, scrollTop) {
+    return Math.abs(el.scrollTop - scrollTop) <= 1;
+}
 //------------------------------------------------------------------------------
 // Export
 //------------------------------------------------------------------------------
@@ -404,11 +581,43 @@ export {
     afterNextRender,
     dragenterFiles,
     dropFiles,
-    insertText,
     isScrolledToBottom,
+    isScrolledTo,
     nextAnimationFrame,
     nextTick,
     pasteFiles,
     start,
     startServer,
 };
+
+export const click = getClick({ afterNextRender });
+
+/**
+ * Function that wait until a selector is present in the DOM
+ *
+ * @param {string} selector
+ */
+export function waitUntil(selector, count = 1) {
+    return new Promise((resolve, reject) => {
+        if ($(selector).length === count) {
+            return resolve($(selector));
+        }
+        const timer = setTimeout(() => {
+            observer.disconnect();
+            reject(new Error(`Waited 5 second for ${selector}`));
+            console.error(`Waited 5 second for ${selector}`);
+        }, 5000);
+        const observer = new MutationObserver((mutations) => {
+            if ($(selector).length === count) {
+                resolve($(selector));
+                observer.disconnect();
+                clearTimeout(timer);
+            }
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+        });
+    });
+}

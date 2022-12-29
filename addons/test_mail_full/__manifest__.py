@@ -31,7 +31,7 @@ real applications. """,
     ],
     'assets': {
         'web.qunit_suite_tests': [
-            'test_mail_full/static/tests/qunit_suite_tests/*.js',
+            'test_mail_full/static/tests/new/**/*.js',
         ],
         'web.tests_assets': [
             'test_mail_full/static/tests/helpers/*.js',

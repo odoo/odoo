@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.MessageDeleteDialog" owl="1">
+    <Dialog size="'xl'" title="title">
+        <p class="mx-3 mb-3">Are you sure you want to delete this message?</p>
+        <blockquote class="mx-3 mb-3 fst-normal">
+            <t t-component="props.messageComponent" message="props.message" hasActions="false"/>
+        </blockquote>
+        <t t-set-slot="footer">
+            <button class="btn btn-primary me-2" t-on-click="onClickDelete">Delete</button>
+            <button class="btn btn-secondary me-2" t-on-click="props.close">Cancel</button>
+        </t>
+    </Dialog>
+</t>
+
+</templates>
+

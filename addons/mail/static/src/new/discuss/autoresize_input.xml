@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.AutoresizeInput" owl="1">
+    <input
+        class="o-mail-AutoresizeInput text-truncate px-2 py-1 border-1 bg-transparent border-transparent"
+        t-attf-class="{{ props.className }}"
+        t-attf-placeholder="{{ props.placeholder }}"
+        t-att-disabled="props.disabled"
+        t-att-title="state.value"
+        t-model="state.value"
+        t-on-keydown="onKeydownInput"
+        t-ref="input"
+        type="text"
+    />
+</t>
+
+</templates>

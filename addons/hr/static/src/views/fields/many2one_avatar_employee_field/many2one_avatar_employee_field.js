@@ -6,7 +6,7 @@ import {
     KanbanMany2OneAvatarUserField,
     many2OneAvatarUserField,
     kanbanMany2OneAvatarUserField,
-} from "@mail/views/fields/many2one_avatar_user_field/many2one_avatar_user_field";
+} from "@mail/new/web/fields/many2one_avatar_user_field/many2one_avatar_user_field";
 
 export class Many2OneAvatarEmployeeField extends Many2OneAvatarUserField {}
 

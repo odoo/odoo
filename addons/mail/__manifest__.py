@@ -116,106 +116,34 @@ For more specific needs, you may also assign custom-defined actions
     'installable': True,
     'application': True,
     'assets': {
-        'mail.assets_core_messaging': [
-            'mail/static/src/model.js',
-            'mail/static/src/model/*.js',
-            'mail/static/src/core_models/*.js',
-        ],
-        'mail.assets_messaging': [
-            ('include', 'mail.assets_core_messaging'),
-            'mail/static/src/models/*.js',
-            'mail/static/lib/selfie_segmentation/selfie_segmentation.js',
-        ],
-        'mail.assets_model_data': [
-            'mail/static/src/models_data/*.js',
-        ],
         # Custom bundle in case we want to remove things that are later added to web.assets_common
         'mail.assets_common_discuss_public': [
             ('include', 'web.assets_common'),
         ],
-        'mail.assets_discuss_public': [
-            # SCSS dependencies (the order is important)
-            ('include', 'web._assets_helpers'),
-            'web/static/src/scss/bootstrap_overridden.scss',
-            'web/static/src/scss/pre_variables.scss',
-            'web/static/lib/bootstrap/scss/_variables.scss',
-            'web/static/src/scss/import_bootstrap.scss',
-            'web/static/src/scss/utilities_custom.scss',
-            'web/static/lib/bootstrap/scss/utilities/_api.scss',
-            'web/static/src/scss/bootstrap_review.scss',
-            'web/static/src/webclient/webclient.scss',
-            'web/static/src/core/utils/*.scss',
-            # depends on BS variables, can't be loaded in assets_primary or assets_secondary
-            'mail/static/src/scss/variables/derived_variables.scss',
-            'mail/static/src/scss/composer.scss',
-            # Dependency of notification_group, notification_request, thread_needaction_preview and thread_preview
-            'mail/static/src/components/notification_list/notification_list_item.scss',
-            'mail/static/src/component_hooks/*.js',
-            'mail/static/src/components/*/*',
-            # Unused by guests and depends on ViewDialogs, better to remove it instead of pulling the whole view dependency tree
-            ('remove', 'mail/static/src/components/composer_suggested_recipient/*'),
-            ('remove', 'mail/static/src/components/activity_menu_container/*'),
-            ('remove', 'mail/static/src/components/avatar/*'),
-            'mail/static/src/js/utils.js',
-            ('include', 'mail.assets_messaging'),
-            'mail/static/src/public/*',
-            'mail/static/src/services/*.js',
-            ('remove', 'mail/static/src/services/systray_service.js'),
-            'mail/static/src/utils/*.js',
-            # Framework JS
-            'web/static/lib/luxon/luxon.js',
-            'web/static/src/core/**/*',
-            # FIXME: debug menu currently depends on webclient, once it doesn't we don't need to remove the contents of the debug folder
-            ('remove', 'web/static/src/core/debug/**/*'),
-            'web/static/src/env.js',
-            'web/static/src/legacy/js/core/misc.js',
-            'web/static/src/legacy/js/env.js',
-            'web/static/src/legacy/js/fields/field_utils.js',
-            'web/static/src/legacy/js/owl_compatibility.js',
-            'web/static/src/legacy/js/services/data_manager.js',
-            'web/static/src/legacy/js/services/session.js',
-            'web/static/src/legacy/js/widgets/date_picker.js',
-            'web/static/src/legacy/legacy_load_views.js',
-            'web/static/src/legacy/legacy_promise_error_handler.js',
-            'web/static/src/legacy/legacy_rpc_error_handler.js',
-            'web/static/src/legacy/utils.js',
-            'web/static/src/legacy/xml/base.xml',
-        ],
         'web._assets_primary_variables': [
             'mail/static/src/scss/variables/primary_variables.scss',
+            'mail/static/src/new/core_ui/primary_variables.scss',
         ],
         'web.assets_backend': [
             # depends on BS variables, can't be loaded in assets_primary or assets_secondary
             'mail/static/src/scss/variables/derived_variables.scss',
-            # defines mixins and variables used by multiple components
-            'mail/static/src/components/notification_list/notification_list_item.scss',
             'mail/static/src/js/**/*.js',
             'mail/static/src/utils/*.js',
             'mail/static/src/scss/*.scss',
             'mail/static/src/xml/*.xml',
-            'mail/static/src/component_hooks/*.js',
-            'mail/static/src/backend_components/*/*',
-            'mail/static/src/components/*/*.js',
-            'mail/static/src/components/*/*.scss',
-            'mail/static/src/components/*/*.xml',
             'mail/static/src/views/*/*.xml',
-            ('include', 'mail.assets_messaging'),
-            'mail/static/src/services/*.js',
+            ('include', 'mail.assets_core_messaging'),
             'mail/static/src/views/**/*.js',
-            'mail/static/src/views/**/*.xml',
             'mail/static/src/views/**/*.scss',
-            'mail/static/src/webclient/commands/*.js',
+            'mail/static/src/views/**/*.xml',
 
-            # Don't include dark mode files in light mode
-            ('remove', 'mail/static/src/components/*/*.dark.scss'),
+            ('include', 'mail.assets_backend'),
         ],
         "web.dark_mode_assets_backend": [
-            'mail/static/src/components/*/*.dark.scss',
-        ],
-        'web.assets_backend_prod_only': [
-            'mail/static/src/main.js',
+            ('include', 'mail.assets_dark'),
         ],
         'mail.assets_discuss_public_test_tours': [
+            'web/static/tests/legacy/helpers/test_utils_file.js',
             'mail/static/tests/tours/discuss_public_tour.js',
             'mail/static/tests/tours/mail_channel_as_guest_tour.js',
         ],
@@ -224,14 +152,51 @@ For more specific needs, you may also assign custom-defined actions
         ],
         'web.tests_assets': [
             'mail/static/tests/helpers/**/*.js',
-            'mail/static/tests/models/*.js',
         ],
         'web.qunit_suite_tests': [
-            'mail/static/tests/qunit_suite_tests/**/*.js',
+            'mail/static/tests/new/**/*.js',
         ],
-        'web.qunit_mobile_suite_tests': [
-            'mail/static/tests/qunit_mobile_suite_tests/**/*.js',
+        # new bundles
+        'mail.assets_backend': [
+            'mail/static/src/new/**/*',
+            ('remove', 'mail/static/src/new/public/**/*'),
+            ('remove', 'mail/static/src/new/**/*.dark.scss'),
+            ('remove', 'mail/static/src/new/emoji_picker/emoji_data.js'),
+            'mail/static/lib/selfie_segmentation/selfie_segmentation.js',
         ],
+        'mail.assets_dark': [
+            'mail/static/src/new/**/*.dark.scss',
+        ],
+        'mail.assets_emoji': [
+            'mail/static/src/new/emoji_picker/emoji_data.js',
+        ],
+        'mail.assets_public': [
+            ('include', 'web._assets_helpers'),
+            ('include', 'web._assets_backend_helpers'),
+            ('include', 'web.assets_common'),
+            ('include', 'web._assets_bootstrap'),
+            'web/static/src/scss/bootstrap_overridden.scss',
+            'web/static/src/webclient/webclient.scss',
+            'web/static/src/core/utils/transitions.scss',  # included early because used by other files
+            'web/static/src/core/**/*',
+            'web/static/src/env.js',
+            ('remove', 'web/static/src/legacy/js/services/ajax_service.js'),
+            'web/static/src/views/fields/formatters.js',
+            'web/static/src/views/fields/file_handler.*',
+            'web/static/src/views/fields/many2many_tags/tags_list.*',
+
+            'mail/static/src/new/**/*',
+            'web/static/src/legacy/js/core/misc.js',
+            'web/static/src/legacy/js/env.js',
+            'web/static/src/legacy/js/owl_compatibility.js',
+            'web/static/src/legacy/js/services/data_manager.js',
+            'web/static/src/legacy/js/services/session.js',
+            'web/static/src/legacy/legacy_load_views.js',
+            'web/static/src/legacy/utils.js',
+            ('remove', 'mail/static/src/new/web/**/*'),
+            ('remove', 'mail/static/src/new/emoji_picker/emoji_data.js'),
+            ('remove', 'mail/static/src/new/**/*.dark.scss'),
+        ]
     },
     'license': 'LGPL-3',
 }

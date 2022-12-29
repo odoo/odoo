@@ -1,6 +1,9 @@
 /** @odoo-module */
 
+import { useMessaging } from "@mail/new/core/messaging_hook";
+
 import { Component } from "@odoo/owl";
+
 import { Layout } from "@web/search/layout";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
@@ -34,7 +37,8 @@ export class ActivityController extends Component {
 
         this.dialog = useService("dialog");
         this.action = useService("action");
-        this.messaging = useService("messaging");
+        this.messaging = useMessaging();
+        this.activity = useService("mail.activity");
     }
 
     scheduleActivity() {
@@ -46,12 +50,7 @@ export class ActivityController extends Component {
             multiSelect: false,
             context: this.props.context,
             onSelected: async (resIds) => {
-                const messaging = await this.messaging.get();
-                const thread = messaging.models["Thread"].insert({
-                    id: resIds[0],
-                    model: this.props.resModel,
-                });
-                await messaging.openActivityForm({ thread });
+                await this.activity.schedule(this.props.resModel, resIds[0]);
                 this.model.load();
             },
         });

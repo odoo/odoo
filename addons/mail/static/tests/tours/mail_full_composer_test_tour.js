@@ -10,42 +10,40 @@ import { registry } from "@web/core/registry";
  * an action (action manager) which is not possible to test with QUnit.
  * @see mail/tests/test_mail_full_composer.py
  */
-registry.category("web_tour.tours").add(
-    "mail/static/tests/tours/mail_full_composer_test_tour.js",
-    {
-        test: true,
-        steps: [
+registry.category("web_tour.tours").add("mail/static/tests/tours/mail_full_composer_test_tour.js", {
+    test: true,
+    steps: [
         {
             content: "Click on Send Message",
-            trigger: ".o_ChatterTopbar_buttonSendMessage",
+            trigger: "button:contains(Send message)",
         },
         {
             content: "Write something in composer",
-            trigger: ".o_ComposerTextInputView_textarea",
+            trigger: ".o-mail-Composer-input",
             run: "text blahblah",
         },
         {
             content: "Add one file in composer",
-            trigger: ".o_ComposerView_buttonAttachment",
+            trigger: ".o-mail-Composer button[aria-label='Attach files']",
             async run() {
                 const file = await createFile({
                     content: "hello, world",
                     contentType: "text/plain",
                     name: "text.txt",
                 });
-                const messaging = await odoo.__DEBUG__.messaging;
-                const uploader = messaging.models["ComposerView"].all()[0].fileUploader;
-                inputFiles(uploader.fileInput, [file]);
+                inputFiles(document.querySelector(".o-mail-Composer-coreMain .o_input_file"), [
+                    file,
+                ]);
             },
         },
         {
             content: "Open full composer",
-            trigger: ".o_ComposerView_buttonFullComposer",
-            extra_trigger: ".o_AttachmentCard:not(.o-isUploading)", // waiting the attachment to be uploaded
+            trigger: "button[aria-label='Full composer']",
+            extra_trigger: ".o-mail-AttachmentCard:not(.o-isUploading)", // waiting the attachment to be uploaded
         },
         {
             content: "Check the earlier provided attachment is listed",
-            trigger: '.o_AttachmentCard[title="text.txt"]',
+            trigger: '.o-mail-AttachmentCard[title="text.txt"]',
             run() {},
         },
         {
@@ -64,8 +62,9 @@ registry.category("web_tour.tours").add(
             content: "Check composer content is kept",
             trigger: '.o_field_html[name="body"]',
             run() {
-                const bodyContent = document.querySelector('.o_field_html[name="body"]')
-                    .textContent;
+                const bodyContent = document.querySelector(
+                    '.o_field_html[name="body"]'
+                ).textContent;
                 if (!bodyContent.includes("blahblah")) {
                     console.error(
                         `Full composer should contain text from small composer ("blahblah") in body input (actual: ${bodyContent})`
@@ -89,11 +88,11 @@ registry.category("web_tour.tours").add(
         },
         {
             content: "Check message is shown",
-            trigger: '.o_MessageView:contains("blahblah")',
+            trigger: '.o-mail-Message-body:contains("blahblah")',
         },
         {
             content: "Check message contains the attachment",
-            trigger: '.o_MessageView .o_AttachmentCard_filename:contains("text.txt")',
+            trigger: '.o-mail-Message .o-mail-AttachmentCard:contains("text.txt")',
         },
-    ]
+    ],
 });
