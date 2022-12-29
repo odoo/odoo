@@ -42,6 +42,14 @@ class TestCarrierPropagation(TransactionCase):
             'name': 'Super Product',
             'invoice_policy': 'delivery',
         })
+        mto_route = cls.env.ref('stock.route_warehouse0_mto')
+        mto_route.active = True
+        cls.warehouse.mto_pull_id.procure_method = "make_to_stock"
+        cls.mto_product = cls.ProductProduct.create({
+            'name': 'MTO Product',
+            'invoice_policy': 'delivery',
+            'route_ids': [(6, 0, mto_route.ids)],
+        })
         cls.rule_pack = cls.env["procurement.group"]._get_rule(
             cls.super_product, cls.output_location, {"warehouse_id": cls.warehouse})
 
@@ -88,29 +96,30 @@ class TestCarrierPropagation(TransactionCase):
         """
         self.rule_pack.propagate_carrier = True
 
-        so = self.SaleOrder.create({
-            'name': 'Sale order',
-            'partner_id': self.partner_propagation.id,
-            'partner_invoice_id': self.partner_propagation.id,
-            'order_line': [
-                (0, 0, {'name': self.super_product.name, 'product_id': self.super_product.id, 'product_uom_qty': 1, 'price_unit': 1,}),
-            ]
-        })
-        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
-            'default_order_id': so.id,
-            'default_carrier_id': self.normal_delivery.id,
-        }))
-        choose_delivery_carrier = delivery_wizard.save()
-        choose_delivery_carrier.button_confirm()
-        # Confirm the SO
-        so.action_confirm()
-        move_out = self.StockMove.search([("location_dest_id.usage", "=", "customer"), ("product_id", "=", self.super_product.id)])
-        self.assertEqual(
-            self.normal_delivery,
-            move_out.picking_id.carrier_id,
-        )
-        move_pack = self.StockMove.search([("move_dest_ids", "in", move_out.ids)])
-        self.assertEqual(
-            self.normal_delivery,
-            move_pack.picking_id.carrier_id,
+        for product in [self.super_product, self.mto_product]:
+            so = self.SaleOrder.create({
+                'name': 'Sale order',
+                'partner_id': self.partner_propagation.id,
+                'partner_invoice_id': self.partner_propagation.id,
+                'order_line': [
+                    (0, 0, {'name': product.name, 'product_id': product.id, 'product_uom_qty': 1, 'price_unit': 1,}),
+                ]
+            })
+            delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
+                'default_order_id': so.id,
+                'default_carrier_id': self.normal_delivery.id,
+            }))
+            choose_delivery_carrier = delivery_wizard.save()
+            choose_delivery_carrier.button_confirm()
+            # Confirm the SO
+            so.action_confirm()
+            move_out = self.StockMove.search([("location_dest_id.usage", "=", "customer"), ("product_id", "=", product.id)])
+            self.assertEqual(
+                self.normal_delivery,
+                move_out.picking_id.carrier_id,
+            )
+            move_pack = self.StockMove.search([("move_dest_ids", "in", move_out.ids)])
+            self.assertEqual(
+                self.normal_delivery,
+                move_pack.picking_id.carrier_id,
         )
