@@ -540,7 +540,7 @@ class Field(MetaField('DummyField', (object,), {})):
         values = list(records)
         for name in self.related[:-1]:
             try:
-                values = [first(value[name]) for value in values]
+                values = [value[name] for value in values]
             except AccessError as e:
                 description = records.env['ir.model']._get(records._name).name
                 raise AccessError(
@@ -552,7 +552,11 @@ class Field(MetaField('DummyField', (object,), {})):
                 )
         # assign final values to records
         for record, value in zip(records, values):
-            record[self.name] = self._process_related(value[self.related_field.name])
+            if len(value) == 1 or self.relational:
+                related_value = value[self.related_field.name]
+            else:
+                related_value = False
+            record[self.name] = self._process_related(related_value)
 
     def _process_related(self, value):
         """No transformation by default, but allows override."""
