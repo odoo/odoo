@@ -69,6 +69,7 @@ class DeliveryCarrier(models.Model):
              "E.g. instructions for customers to follow.")
 
     margin = fields.Float(help='This percentage will be added to the shipping price.')
+    fixed_margin = fields.Float(help='This fixed amount will be added to the shipping price.')
     free_over = fields.Boolean('Free if order amount is above', help="If the order total amount (shipping excluded) is above or equal to this value, the customer benefits from a free shipping", default=False)
     amount = fields.Float(string='Amount', help="Amount of the order to benefit from a free shipping, expressed in the company currency")
 
@@ -199,7 +200,7 @@ class DeliveryCarrier(models.Model):
                 product_currency=company.currency_id
             )
             # apply margin on computed price
-            res['price'] = float(res['price']) * (1.0 + (self.margin / 100.0))
+            res['price'] = float(res['price']) * (1.0 + (self.margin / 100.0)) + self.fixed_margin
             # save the real price in case a free_over rule overide it to 0
             res['carrier_price'] = res['price']
             # free when order is large enough
