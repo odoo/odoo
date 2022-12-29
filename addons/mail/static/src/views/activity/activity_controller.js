@@ -41,7 +41,7 @@ export class ActivityController extends Component {
         this.dialog.add(SelectCreateDialog, {
             resModel: this.props.resModel,
             searchViewId: this.env.searchModel.searchViewId,
-            domain: this.props.domain,
+            domain: this.model.originalDomain,
             title: sprintf(this.env._t("Search: %s"), this.props.archInfo.title),
             multiSelect: false,
             context: this.props.context,

@@ -4,6 +4,8 @@ import { RelationalModel } from "@web/views/relational_model";
 
 export class ActivityModel extends RelationalModel {
     async load(params = {}) {
+        this.originalDomain = params.domain ? [...params.domain] : [];
+        params.domain?.push(["activity_ids", "!=", false]);
         this.activityData = await this.fetchActivityData(params);
         await super.load(params);
     }
