@@ -1459,7 +1459,7 @@
                                 <span t-field="line.price_reduce_taxinc" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
                             </t>
                             <t t-if="line.discount">
-                                <del t-attf-class="#{'text-danger mr8'}" style="white-space: nowrap;" t-esc="line.price_unit" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" />
+                                <del t-attf-class="#{'text-danger mr8'}" style="white-space: nowrap;" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" />
                             </t>
                             <small t-if="not line._is_not_sellable_line() and line.product_id.base_unit_price"
                                 class="cart_product_base_unit_price d-block text-muted"
