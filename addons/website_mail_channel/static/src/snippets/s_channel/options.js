@@ -16,12 +16,6 @@ options.registry.Channel = options.Class.extend({
         this.publicChannels = await this._getPublicChannels();
     },
     /**
-     * @override
-     */
-    cleanForSave: function () {
-        this.$target.addClass('d-none');
-    },
-    /**
      * If we have already created channels => select the first one
      * else => modal prompt (create a new channel)
      *
