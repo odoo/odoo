@@ -30,10 +30,8 @@ options.registry.Group = options.Class.extend({
     },
 
     cleanForSave: function () {
-        // Hide the element by default, this class will be removed
-        // if the current user has access to the group
-        this.$target.addClass('d-none');
-
+        // TODO: this should probably be done by the public widget, not the
+        // option code, not important enough to try and fix in stable though.
         const emailInput = this.$target.find('.o_mg_subscribe_email');
         emailInput.val('');
         emailInput.removeAttr('readonly');
