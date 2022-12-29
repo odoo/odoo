@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
+import publicWidget from "@web/legacy/js/public/public_widget";
 import MailGroup from "@mail_group/js/mail_group";
 
 MailGroup.include({
@@ -42,5 +43,41 @@ MailGroup.include({
         }
 
         this.$el.data('isMember', this.isMember);
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this.el.classList.add('d-none');
+        this._super(...arguments);
+    },
+});
+
+// TODO should probably have a better way to handle this, maybe the invisible
+// block system could be extended to handle this kind of things. Here we only
+// do the same as the non-edit mode public widget: showing and hiding the widget
+// but without the rest. Arguably could just enable the whole widget in edit
+// mode but not stable-friendly.
+publicWidget.registry.MailGroupEditMode = publicWidget.Widget.extend({
+    selector: MailGroup.prototype.selector,
+    disabledInEditableMode: false,
+
+    /**
+     * @override
+     */
+    start: function () {
+        if (this.editableMode) {
+            this.el.classList.remove('d-none');
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        if (this.editableMode) {
+            this.el.classList.add('d-none');
+        }
+        this._super(...arguments);
     },
 });
