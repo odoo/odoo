@@ -9,7 +9,7 @@ QUnit.module('im_livechat', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('discuss_sidebar_category_item_tests.js');
 
-QUnit.test('livechat - avatar: should have a smiley face avatar for an anonymous livechat item', async function (assert) {
+QUnit.skipRefactoring('livechat - avatar: should have a smiley face avatar for an anonymous livechat item', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();
@@ -26,7 +26,7 @@ QUnit.test('livechat - avatar: should have a smiley face avatar for an anonymous
     await openDiscuss();
 
     const livechatItem = document.querySelector(`
-        .o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]
+        .o-mail-category-item[data-channel-id="${mailChannelId1}"]
     `);
     assert.containsOnce(
         livechatItem,
@@ -40,7 +40,7 @@ QUnit.test('livechat - avatar: should have a smiley face avatar for an anonymous
     );
 });
 
-QUnit.test('livechat - avatar: should have a partner profile picture for a livechat item linked with a partner', async function (assert) {
+QUnit.skipRefactoring('livechat - avatar: should have a partner profile picture for a livechat item linked with a partner', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();
@@ -59,7 +59,7 @@ QUnit.test('livechat - avatar: should have a partner profile picture for a livec
     await openDiscuss();
 
     const livechatItem = document.querySelector(`
-        .o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]
+        .o-mail-category-item[data-channel-id="${mailChannelId1}"]
     `);
     assert.containsOnce(
         livechatItem,

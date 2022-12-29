@@ -8,64 +8,7 @@ QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
         QUnit.module("thread_needaction_preview_tests.js");
 
-        QUnit.test("mark as read", async function (assert) {
-            assert.expect(5);
-
-            const pyEnv = await startServer();
-            const resPartnerId1 = pyEnv["res.partner"].create({});
-            const mailMessageId1 = pyEnv["mail.message"].create({
-                model: "res.partner",
-                needaction: true,
-                needaction_partner_ids: [pyEnv.currentPartnerId],
-                res_id: resPartnerId1,
-            });
-            pyEnv["mail.notification"].create({
-                mail_message_id: mailMessageId1,
-                notification_status: "sent",
-                notification_type: "inbox",
-                res_partner_id: pyEnv.currentPartnerId,
-            });
-            const { afterEvent, click, messaging } = await start({
-                async mockRPC(route, args) {
-                    if (route.includes("mark_all_as_read")) {
-                        assert.step("mark_all_as_read");
-                        assert.deepEqual(
-                            args.kwargs.domain,
-                            [
-                                ["model", "=", "res.partner"],
-                                ["res_id", "=", resPartnerId1],
-                            ],
-                            "should mark all as read the correct thread"
-                        );
-                    }
-                },
-            });
-            await afterNextRender(() =>
-                afterEvent({
-                    eventName: "o-thread-cache-loaded-messages",
-                    func: () => document.querySelector(".o_MessagingMenu_toggler").click(),
-                    message: "should wait until inbox loaded initial needaction messages",
-                    predicate: ({ threadCache }) => {
-                        return threadCache.thread === messaging.inbox.thread;
-                    },
-                })
-            );
-            assert.containsOnce(
-                document.body,
-                ".o_ThreadNeedactionPreviewView_markAsRead",
-                "should have 1 mark as read button"
-            );
-
-            await click(".o_ThreadNeedactionPreviewView_markAsRead");
-            assert.verifySteps(["mark_all_as_read"], "should have marked the thread as read");
-            assert.containsNone(
-                document.body,
-                ".o_ChatWindow",
-                "should not have opened the thread"
-            );
-        });
-
-        QUnit.test(
+        QUnit.skipRefactoring(
             "click on preview should mark as read and open the thread",
             async function (assert) {
                 assert.expect(4);
@@ -88,7 +31,12 @@ QUnit.module("mail", {}, function () {
                 await afterNextRender(() =>
                     afterEvent({
                         eventName: "o-thread-cache-loaded-messages",
-                        func: () => document.querySelector(".o_MessagingMenu_toggler").click(),
+                        func: () =>
+                            document
+                                .querySelector(
+                                    ".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])"
+                                )
+                                .click(),
                         message: "should wait until inbox loaded initial needaction messages",
                         predicate: ({ threadCache }) => {
                             return threadCache.thread === messaging.inbox.thread;
@@ -102,17 +50,17 @@ QUnit.module("mail", {}, function () {
                 );
                 assert.containsNone(
                     document.body,
-                    ".o_ChatWindow",
+                    ".o-mail-chat-window",
                     "should have no chat window initially"
                 );
 
                 await click(".o_ThreadNeedactionPreviewView");
                 assert.containsOnce(
                     document.body,
-                    ".o_ChatWindow",
+                    ".o-mail-chat-window",
                     "should have opened the thread on clicking on the preview"
                 );
-                await click(".o_MessagingMenu_toggler");
+                await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
                 assert.containsNone(
                     document.body,
                     ".o_ThreadNeedactionPreviewView",
@@ -121,7 +69,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "click on expand from chat window should close the chat window and open the form view",
             async function (assert) {
                 assert.expect(8);
@@ -159,7 +107,12 @@ QUnit.module("mail", {}, function () {
                 await afterNextRender(() =>
                     afterEvent({
                         eventName: "o-thread-cache-loaded-messages",
-                        func: () => document.querySelector(".o_MessagingMenu_toggler").click(),
+                        func: () =>
+                            document
+                                .querySelector(
+                                    ".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])"
+                                )
+                                .click(),
                         message: "should wait until inbox loaded initial needaction messages",
                         predicate: ({ threadCache }) => {
                             return threadCache.thread === messaging.inbox.thread;
@@ -175,7 +128,7 @@ QUnit.module("mail", {}, function () {
                 await click(".o_ThreadNeedactionPreviewView");
                 assert.containsOnce(
                     document.body,
-                    ".o_ChatWindow",
+                    ".o-mail-chat-window",
                     "should have opened the thread on clicking on the preview"
                 );
                 assert.containsOnce(
@@ -187,7 +140,7 @@ QUnit.module("mail", {}, function () {
                 await click(".o_ChatWindowHeaderView_commandExpand");
                 assert.containsNone(
                     document.body,
-                    ".o_ChatWindow",
+                    ".o-mail-chat-window",
                     "should have closed the chat window on clicking expand"
                 );
                 assert.verifySteps(
@@ -197,7 +150,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "[technical] opening a non-channel chat window should not call channel_fold",
             async function (assert) {
                 // channel_fold should not be called when opening non-channels in chat
@@ -232,7 +185,12 @@ QUnit.module("mail", {}, function () {
                 await afterNextRender(() =>
                     afterEvent({
                         eventName: "o-thread-cache-loaded-messages",
-                        func: () => document.querySelector(".o_MessagingMenu_toggler").click(),
+                        func: () =>
+                            document
+                                .querySelector(
+                                    ".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])"
+                                )
+                                .click(),
                         message: "should wait until inbox loaded initial needaction messages",
                         predicate: ({ threadCache }) => {
                             return threadCache.thread === messaging.inbox.thread;
@@ -246,20 +204,20 @@ QUnit.module("mail", {}, function () {
                 );
                 assert.containsNone(
                     document.body,
-                    ".o_ChatWindow",
+                    ".o-mail-chat-window",
                     "should have no chat window initially"
                 );
 
                 await click(".o_ThreadNeedactionPreviewView");
                 assert.containsOnce(
                     document.body,
-                    ".o_ChatWindow",
+                    ".o-mail-chat-window",
                     "should have opened the chat window on clicking on the preview"
                 );
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "preview should display last needaction message preview even if there is a more recent message that is not needaction in the thread",
             async function (assert) {
                 assert.expect(2);
@@ -292,7 +250,12 @@ QUnit.module("mail", {}, function () {
                 await afterNextRender(() =>
                     afterEvent({
                         eventName: "o-thread-cache-loaded-messages",
-                        func: () => document.querySelector(".o_MessagingMenu_toggler").click(),
+                        func: () =>
+                            document
+                                .querySelector(
+                                    ".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])"
+                                )
+                                .click(),
                         message: "should wait until inbox loaded initial needaction messages",
                         predicate: ({ threadCache }) => {
                             return threadCache.thread === messaging.inbox.thread;
@@ -312,7 +275,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "chat window header should not have unread counter for non-channel thread",
             async function (assert) {
                 assert.expect(2);
@@ -337,7 +300,12 @@ QUnit.module("mail", {}, function () {
                 await afterNextRender(() =>
                     afterEvent({
                         eventName: "o-thread-cache-loaded-messages",
-                        func: () => document.querySelector(".o_MessagingMenu_toggler").click(),
+                        func: () =>
+                            document
+                                .querySelector(
+                                    ".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])"
+                                )
+                                .click(),
                         message: "should wait until inbox loaded initial needaction messages",
                         predicate: ({ threadCache }) => {
                             return threadCache.thread === messaging.inbox.thread;
@@ -347,7 +315,7 @@ QUnit.module("mail", {}, function () {
                 await click(".o_ThreadNeedactionPreviewView");
                 assert.containsOnce(
                     document.body,
-                    ".o_ChatWindow",
+                    ".o-mail-chat-window",
                     "should have opened the chat window on clicking on the preview"
                 );
                 assert.containsNone(

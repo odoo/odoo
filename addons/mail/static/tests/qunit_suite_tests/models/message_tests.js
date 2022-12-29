@@ -7,7 +7,7 @@ import { str_to_datetime } from "web.time";
 
 QUnit.module("mail", {}, function () {
     QUnit.module("models", {}, function () {
-        QUnit.module("message_tests.js");
+        QUnit.module.skipRefactoring("message_tests.js");
 
         QUnit.test("create", async function (assert) {
             assert.expect(31);

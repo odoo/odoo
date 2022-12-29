@@ -12,7 +12,6 @@ Patch({
         _willDelete() {
             this.env.services["im_status"].unregisterFromImStatus("res.partner");
             this.env.services["im_status"].unregisterFromImStatus("mail.guest");
-            this.env.bus.removeEventListener("window_focus", this._handleGlobalWindowFocus);
             this._super();
         },
     },
@@ -238,7 +237,6 @@ Patch({
          * @override
          */
         async start() {
-            this.env.bus.addEventListener("window_focus", this._handleGlobalWindowFocus);
             await this.initializer.start();
             if (!this.exists()) {
                 return;
@@ -259,17 +257,9 @@ Patch({
             for (const guest of this.models["Guest"].all()) {
                 guestIds.push(guest.id);
             }
-            this.env.services["im_status"].registerToImStatus("res.partner", partnerIds);
+            // disabled to not affect new discuss code
+            // this.env.services["im_status"].registerToImStatus("res.partner", partnerIds);
             this.env.services["im_status"].registerToImStatus("mail.guest", guestIds);
-        },
-        /**
-         * @private
-         */
-        _handleGlobalWindowFocus() {
-            this.update({ outOfFocusUnreadMessageCounter: 0 });
-            this.env.bus.trigger("set_title_part", {
-                part: "_chat",
-            });
         },
         /**
          * @private

@@ -6,7 +6,7 @@ import { patchDate } from "@web/../tests/helpers/utils";
 
 QUnit.module("mail", {}, function () {
     QUnit.module("models", {}, function () {
-        QUnit.module("clock_tests.js");
+        QUnit.module.skipRefactoring("clock_tests.js");
 
         QUnit.test(
             "Deleting all the watchers of a clock should result in the deletion of the clock itself.",

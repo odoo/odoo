@@ -9,7 +9,7 @@ QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('thread_icon_tests.js');
 
-QUnit.test('thread icon of a chat when correspondent is on leave & online', async function (assert) {
+QUnit.skipRefactoring('thread icon of a chat when correspondent is on leave & online', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();
@@ -39,7 +39,7 @@ QUnit.test('thread icon of a chat when correspondent is on leave & online', asyn
     );
 });
 
-QUnit.test('thread icon of a chat when correspondent is on leave & away', async function (assert) {
+QUnit.skipRefactoring('thread icon of a chat when correspondent is on leave & away', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();
@@ -69,7 +69,7 @@ QUnit.test('thread icon of a chat when correspondent is on leave & away', async 
     );
 });
 
-QUnit.test('thread icon of a chat when correspondent is on leave & offline', async function (assert) {
+QUnit.skipRefactoring('thread icon of a chat when correspondent is on leave & offline', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();

@@ -17,7 +17,7 @@ QUnit.module('hr', {}, function () {
         },
     });
 
-    QUnit.test('many2one_avatar_employee: click on an employee not associated with a user', async function (assert) {
+    QUnit.skipRefactoring('many2one_avatar_employee: click on an employee not associated with a user', async function (assert) {
         assert.expect(6);
 
         const pyEnv = await startServer();
@@ -63,7 +63,7 @@ QUnit.module('hr', {}, function () {
         ]);
     });
 
-    QUnit.test('many2many_avatar_employee widget in form view', async function (assert) {
+    QUnit.skipRefactoring('many2many_avatar_employee widget in form view', async function (assert) {
         assert.expect(8);
 
         const pyEnv = await startServer();
@@ -111,13 +111,13 @@ QUnit.module('hr', {}, function () {
 
         assert.containsN(
             document.body,
-            '.o_ChatWindowHeaderView_name',
+            '.o-mail-chat-window-header-name',
             2,
             "should have 2 chat windows"
         );
     });
 
-    QUnit.test('many2many_avatar_employee: click on an employee not associated with a user', async function (assert) {
+    QUnit.skipRefactoring('many2many_avatar_employee: click on an employee not associated with a user', async function (assert) {
         assert.expect(10);
 
         const pyEnv = await startServer();
@@ -176,7 +176,7 @@ QUnit.module('hr', {}, function () {
             `read hr.employee.public ${hrEmployeePublicId2}`
         ]);
 
-        assert.containsOnce(document.body, '.o_ChatWindowHeaderView_name',
+        assert.containsOnce(document.body, '.o-mail-chat-window-header-name',
             "should have 1 chat window");
     });
 });

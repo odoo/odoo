@@ -9,7 +9,7 @@ QUnit.module("mail", {}, function () {
     QUnit.module("models", {}, function () {
         QUnit.module("messaging_menu_tests.js");
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "messaging menu counter should ignore unread messages in channels that are unpinned",
             async function (assert) {
                 assert.expect(1);

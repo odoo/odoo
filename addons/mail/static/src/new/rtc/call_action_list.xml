@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.call_action_list" owl="1">
+        <div class="o-mail-call-action-list d-flex justify-content-between" t-attf-class="{{ className }}" t-ref="root">
+            <div class="o-mail-call-action-list-buttons d-flex align-items-center flex-wrap">
+                <t t-if="isOfActiveCall and rtc.state.selfSession">
+                    <t t-if="rtc.state?.selfSession.isMute" t-set="micText">Unmute</t>
+                    <t t-else="" t-set="micText">Mute</t>
+                    <button class="o-mail-call-action-list-button btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
+                        t-att-class="{ 'o-isActive': !rtc.state.selfSession.isMute, 'o-isSmall p-2': isSmall, 'p-3': !isSmall }"
+                        t-att-aria-label="micText"
+                        t-att-title="micText"
+                        t-on-click="onClickMicrophone">
+                        <div class="o-mail-call-action-list-buttonIconWrapper fa-stack" t-att-class="{ 'o-isSmall': isSmall }">
+                            <i class="fa fa-stack-1x" t-att-class="{
+                                'fa-lg': !isSmall,
+                                'fa-microphone': !rtc.state.selfSession.isMute,
+                                'fa-microphone-slash': rtc.state.selfSession.isMute,
+                                'text-danger': rtc.state.selfSession.isMute,
+                            }"/>
+                        </div>
+                    </button>
+                    <t t-if="rtc.state?.selfSession.isDeaf" t-set="headphoneText">Undeafen</t>
+                    <t t-else="" t-set="headphoneText">Deafen</t>
+                    <button class="o-mail-call-action-list-button btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
+                        t-att-class="{ 'o-isActive': !rtc.state.selfSession.isDeaf, 'o-isSmall p-2': isSmall, 'p-3': !isSmall }"
+                        t-att-aria-label="headphoneText"
+                        t-att-title="headphoneText"
+                        t-on-click="onClickDeafen">
+                        <div class="o-mail-call-action-list-buttonIconWrapper fa-stack" t-att-class="{ 'o-isSmall': isSmall }">
+                            <i class="fa fa-stack-1x" t-att-class="{
+                                'fa-lg': !isSmall,
+                                'fa-headphones': !rtc.state.selfSession.isDeaf,
+                                'fa-deaf': rtc.state.selfSession.isDeaf,
+                                'text-danger': rtc.state.selfSession.isDeaf,
+                            }"/>
+                        </div>
+                    </button>
+                    <t t-if="rtc.state.sendCamera" t-set="cameraText">Stop camera</t>
+                    <t t-else="" t-set="cameraText">Turn camera on</t>
+                    <button class="o-mail-call-action-list-button o-mail-call-action-list-videoButton btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
+                        t-att-class="{
+                            'o-isActive': rtc.state.sendCamera,
+                            'o-isSmall p-2': isSmall,
+                            'p-3': !isSmall,
+                        }"
+                        t-att-aria-label="cameraText"
+                        t-att-title="cameraText"
+                        t-on-click="() => this.rtc.toggleVideo('camera')">
+                        <div class="o-mail-call-action-list-buttonIconWrapper fa-stack" t-att-class="{ 'o-isSmall': isSmall }">
+                            <i class="fa fa-video-camera fa-stack-1x" t-att-class="{ 'fa-lg': !isSmall, 'text-success': rtc.state.sendCamera }"/>
+                        </div>
+                    </button>
+                    <t t-if="rtc.state.sendScreen" t-set="screenSharingText">Stop screen sharing</t>
+                    <t t-else="" t-set="screenSharingText">Share screen</t>
+                    <button t-if="!isMobileOS" class="o-mail-call-action-list-button o-mail-call-action-list-videoButton btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
+                        t-att-class="{
+                            'o-isActive': rtc.state.sendScreen,
+                            'o-isSmall p-2': isSmall,
+                            'p-3': !isSmall,
+                        }"
+                        t-att-aria-label="screenSharingText"
+                        t-att-title="screenSharingText"
+                        t-on-click="() => this.rtc.toggleVideo('screen')">
+                        <div class="o-mail-call-action-list-buttonIconWrapper fa-stack" t-att-class="{ 'o-isSmall': isSmall }">
+                            <i class="fa fa-desktop fa-stack-1x" t-att-class="{ 'fa-lg': !isSmall, 'text-success': rtc.state.sendScreen }"/>
+                        </div>
+                    </button>
+                    <button t-if="!props.fullscreen.isActive" class="o-mail-call-action-list-button btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
+                        aria-label="Enter Full Screen"
+                        title="Enter Full Screen"
+                        t-att-class="{ 'o-isSmall p-2': isSmall, 'p-3': !isSmall }"
+                        t-on-click="props.fullscreen.enter"
+                    >
+                        <div class="o-mail-call-action-list-buttonIconWrapper fa-stack" t-att-class="{ 'o-isSmall': isSmall }">
+                            <i class="fa fa-arrows-alt fa-stack-1x" t-att-class="{ 'fa-lg': !isSmall }"/>
+                        </div>
+                    </button>
+                    <button t-if="props.fullscreen.isActive" class="o-mail-call-action-list-button btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
+                        aria-label="Exit Full Screen"
+                        title="Exit Full Screen"
+                        t-att-class="{ 'o-isSmall p-2': isSmall, 'p-3': !isSmall }"
+                        t-on-click="props.fullscreen.exit"
+                    >
+                        <div class="o-mail-call-action-list-buttonIconWrapper fa-stack" t-att-class="{ 'o-isSmall': isSmall }">
+                            <i class="fa fa-compress fa-stack-1x" t-att-class="{ 'fa-lg': !isSmall }"/>
+                        </div>
+                    </button>
+                    <button t-if="isDebug" class="o-mail-call-action-list-button btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
+                            aria-label="More"
+                            title="More"
+                            t-att-class="{ 'o-isSmall p-2': isSmall, 'p-3': !isSmall }"
+                            t-on-click="onClickMore"
+                            t-ref="moreButton"
+                    >
+                        <div class="o-mail-call-action-list-buttonIconWrapper fa-stack" t-att-class="{ 'o-isSmall': isSmall }">
+                            <i class="fa fa-ellipsis-h fa-stack-1x" t-att-class="{ 'fa-lg': !isSmall }"/>
+                        </div>
+                    </button>
+                </t>
+                <button t-if="props.thread.rtcInvitingSession and !isOfActiveCall" class="o-mail-call-action-list-button o-mail-call-action-list-callToggle o-isActive btn btn-danger d-flex m-1 border-0 rounded-circle shadow-none"
+                    t-att-class="{ 'o-isSmall p-2': isSmall, 'p-3': !isSmall }"
+                    aria-label="Reject"
+                    title="Reject"
+                    t-att-disabled="rtc.state.hasPendingRequest"
+                    t-on-click="onClickRejectCall">
+                    <div class="o-mail-call-action-list-buttonIconWrapper fa-stack" t-att-class="{ 'o-isSmall': isSmall }">
+                        <i class="fa fa-phone fa-stack-1x" t-att-class="{ 'fa-lg': !isSmall }"/>
+                    </div>
+                </button>
+                <t t-if="props.thread === rtc.state.channel" t-set="callText">Disconnect</t>
+                <t t-else="" t-set="callText">Join Call</t>
+                <button class="o-mail-call-action-list-button o-mail-call-action-list-callToggle btn d-flex m-1 border-0 rounded-circle shadow-none"
+                    t-att-aria-label="callText"
+                    t-att-class="{ 'o-isActive btn-danger': isOfActiveCall, 'o-isSmall p-2': isSmall, 'p-3': !isSmall, 'btn-success': !isOfActiveCall }"
+                    t-att-disabled="rtc.state.hasPendingRequest"
+                    t-att-title="callText"
+                    t-on-click="onClickToggleAudioCall">
+                    <div class="o-mail-call-action-list-buttonIconWrapper fa-stack" t-att-class="{ 'o-isSmall': isSmall }">
+                        <i class="fa fa-phone fa-stack-1x" t-att-class="{ 'fa-lg': !isSmall }"/>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </t>
+
+</templates>

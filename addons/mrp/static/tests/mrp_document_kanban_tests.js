@@ -202,7 +202,7 @@ QUnit.module('MrpDocumentsKanbanView', {
         );
     });
 
-    QUnit.test("mrp: click on image opens attachment viewer", async function (assert) {
+    QUnit.skipRefactoring("mrp: click on image opens attachment viewer", async function (assert) {
         assert.expect(4);
 
         const views = {

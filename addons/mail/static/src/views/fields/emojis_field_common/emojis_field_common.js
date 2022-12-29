@@ -1,5 +1,6 @@
 /** @odoo-module **/
-import { useRef, onMounted, onWillUnmount } from "@odoo/owl";
+
+import { useEmojiPicker } from "@mail/new/emoji_picker/emoji_picker";
 
 /*
  * Common code for EmojisTextField and EmojisCharField
@@ -9,15 +10,31 @@ export const EmojisFieldCommon = {
      * Create an emoji textfield view to enable opening an emoji popover
      */
     _setupOverride() {
-        this.triggerButton = useRef("emojisButton");
-        onWillUnmount(() => this.emojiTextField && this.emojiTextField.delete());
-        onMounted(async () => {
-            const messaging = await this.env.services.messaging.get();
-            this.emojiTextField = await messaging.models["EmojiTextFieldView"].insert({
-                buttonEmojisRef: this.triggerButton,
-                textInputRef: this.targetEditElement,
-                inputModifiedCallback: this._emojiAdded ? this._emojiAdded.bind(this) : null,
-            });
-        });
+        this.emojiPicker = useEmojiPicker(
+            "emojisButton",
+            {
+                onSelect: (codepoints) => {
+                    const originalContent = this.targetEditElement.el.value;
+                    const start = this.targetEditElement.el.selectionStart;
+                    const end = this.targetEditElement.el.selectionEnd;
+                    const left = originalContent.slice(0, start);
+                    const right = originalContent.slice(end, originalContent.length);
+                    this.targetEditElement.el.value = left + codepoints + right;
+                    // trigger onInput from input_field hook to set field as dirty
+                    this.targetEditElement.el.dispatchEvent(new InputEvent("input"));
+                    // keydown serves to both commit the changes in input_field and trigger onchange for some fields
+                    this.targetEditElement.el.dispatchEvent(new KeyboardEvent("keydown"));
+                    this.targetEditElement.el.focus();
+                    const newCursorPos = start + codepoints.length;
+                    this.targetEditElement.el.setSelectionRange(newCursorPos, newCursorPos);
+                    if (this._emojiAdded) {
+                        this._emojiAdded();
+                    }
+                },
+            },
+            {
+                position: "bottom",
+            }
+        );
     },
 };

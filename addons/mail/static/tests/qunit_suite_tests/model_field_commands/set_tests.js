@@ -5,7 +5,7 @@ import { start } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("mail", {}, function () {
     QUnit.module("model_field_commands", {}, function () {
-        QUnit.module("set_tests.js");
+        QUnit.module.skipRefactoring("set_tests.js");
 
         QUnit.test("decrement: should decrease attribute field value", async function (assert) {
             assert.expect(1);

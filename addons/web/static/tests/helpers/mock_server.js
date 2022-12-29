@@ -1928,6 +1928,7 @@ export class MockServer {
                 continue;
             }
             const relatedRecordIds = Array.isArray(record[fname]) ? record[fname] : [record[fname]];
+            const comodel_inverse_field = this.models[comodelName].fields[inverseFieldName];
             // we only want to set a value for comodel inverse field if the model field has a value.
             if (record[fname]) {
                 for (const relatedRecordId of relatedRecordIds) {
@@ -1947,15 +1948,14 @@ export class MockServer {
                     if (Array.isArray(relatedFieldValue)) {
                         inverseFieldNewValue = [...relatedFieldValue, record.id];
                     }
-                    this.writeRecord(
-                        comodelName,
-                        { [inverseFieldName]: inverseFieldNewValue },
-                        relatedRecordId
-                    );
+                    const data = { [inverseFieldName]: inverseFieldNewValue };
+                    if (comodel_inverse_field.type === "many2one_reference") {
+                        data[comodel_inverse_field.model_name_ref_fname] = modelName;
+                    }
+                    this.writeRecord(comodelName, data, relatedRecordId);
                 }
             } else if (field.type === "many2one_reference") {
                 // we need to clean the many2one_field as well.
-                const comodel_inverse_field = this.models[comodelName].fields[inverseFieldName];
                 const model_many2one_field =
                     comodel_inverse_field.inverse_fname_by_model_name[modelName];
                 this.writeRecord(modelName, { [model_many2one_field]: false }, record.id);

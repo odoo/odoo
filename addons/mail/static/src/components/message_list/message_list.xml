@@ -4,7 +4,7 @@
     <t t-name="mail.MessageListView" owl="1">
         <div class="o_MessageListView bg-view d-flex flex-column overflow-auto" t-att-class="{ 'o-empty align-items-center justify-content-center': messageListView.threadViewOwner.messages.length === 0, 'pb-4': messageListView.threadViewOwner.messages.length !== 0 }" t-attf-class="{{ className }}" t-on-scroll="messageListView.onScroll" t-ref="root">
             <!-- No result messages -->
-            <div t-if="messageListView.threadViewOwner.threadCache.orderedNonEmptyMessages.length === 0" class="o_MessageListView_empty o_MessageListView_item d-flex flex-grow-1 flex-column align-items-center justify-content-center align-self-center w-100 h-100 p-4 text-center text-muted fst-italic">
+            <div t-if="messageListView.threadViewOwner.threadCache.orderedNonEmptyMessages.length === 0" class="o_MessageListView_empty d-flex flex-grow-1 flex-column align-items-center justify-content-center align-self-center w-100 h-100 p-4 text-center text-muted fst-italic">
                 <t t-if="messageListView.threadViewOwner.thread === messaging.inbox.thread">
                     <h4 class="o_MessageListView_emptyTitle mb-3 fw-bolder">
                         Congratulations, your inbox is empty
@@ -43,13 +43,13 @@
             <t t-set="current_day" t-value="0"/>
             <t t-foreach="messageListView.messageListViewItems" t-as="messageListViewItem" t-key="messageListViewItem.localId">
                 <Transition visible="messageListViewItem.message === messageListView.threadViewOwner.thread.messageAfterNewMessageSeparator" name="'o-fade'" t-slot-scope="transition">
-                    <div class="o_MessageListView_separator o_MessageListView_separatorNewMessages o_MessageListView_item d-flex flex-shrink-0 align-items-center me-4 p-0 fw-bolder" t-att-class="{ 'o-disable-animation': messaging.disableAnimation, 'opacity-0': transition.className.includes('o-fade-leave') }" t-attf-class="{{transition.className}}">
+                    <div class="o_MessageListView_separator o_MessageListView_separatorNewMessages d-flex flex-shrink-0 align-items-center me-4 p-0 fw-bolder" t-att-class="{ 'o-disable-animation': messaging.disableAnimation, 'opacity-0': transition.className.includes('o-fade-leave') }" t-attf-class="{{transition.className}}">
                         <hr class="o_MessageListView_separatorLine o_MessageListView_separatorLineNewMessages flex-grow-1 w-auto"/><span class="o_MessageListView_separatorLabel o_MessageListView_separatorLabelNewMessages px-3">New messages</span>
                     </div>
                 </Transition>
                 <t t-if="!messageListViewItem.message.isEmpty">
                     <t t-set="message_day" t-value="messageListViewItem.message.dateDay"/>
-                    <div t-if="current_day !== message_day" class="o_MessageListView_separator o_MessageListView_separatorDate o_MessageListView_item d-flex flex-shrink-0 align-items-center pt-4 pb-0 px-0 fw-bolder">
+                    <div t-if="current_day !== message_day" class="o_MessageListView_separator o_MessageListView_separatorDate d-flex flex-shrink-0 align-items-center pt-4 pb-0 px-0 fw-bolder">
                         <hr class="o_MessageListView_separatorLine flex-grow-1 w-auto border-top"/><span class="o_MessageListView_separatorLabel o_MessageListView_separatorLabelDate px-3" t-esc="message_day"/><hr class="o_MessageListView_separatorLine flex-grow-1 w-auto border-top"/>
                         <t t-set="current_day" t-value="message_day"/>
                     </div>
@@ -63,11 +63,11 @@
     </t>
 
     <t t-name="mail.MessageListView.loadMore" owl="1">
-        <div t-if="messageListView.threadViewOwner.threadCache.isLoadingMore" class="o_MessageListView_item o_MessageListView_isLoadingMore align-self-center">
+        <div t-if="messageListView.threadViewOwner.threadCache.isLoadingMore" class="o_MessageListView_isLoadingMore align-self-center">
             <i class="o_MessageListView_isLoadingMoreIcon fa fa-spin fa-circle-o-notch me-1"/>
             Loading...
         </div>
-        <a t-elif="!messageListView.threadViewOwner.threadCache.isAllHistoryLoaded and !messageListView.threadViewOwner.thread.isTemporary" class="o_MessageListView_item o_MessageListView_loadMore align-self-center" href="#" t-on-click="messageListView.onClickLoadMore" t-ref="loadMore">
+        <a t-elif="!messageListView.threadViewOwner.threadCache.isAllHistoryLoaded and !messageListView.threadViewOwner.thread.isTemporary" class="o_MessageListView_loadMore align-self-center" href="#" t-on-click="messageListView.onClickLoadMore" t-ref="loadMore">
             Load more
         </a>
     </t>

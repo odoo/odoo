@@ -6,7 +6,7 @@ QUnit.module('website_slides', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('activity_tests.js');
 
-QUnit.test('grant course access', async function (assert) {
+QUnit.skipRefactoring('grant course access', async function (assert) {
     assert.expect(8);
 
     const pyEnv = await startServer();
@@ -37,14 +37,14 @@ QUnit.test('grant course access', async function (assert) {
         views: [[false, 'form']],
     });
 
-    assert.containsOnce(document.body, '.o_ActivityView', "should have activity component");
+    assert.containsOnce(document.body, '.o-mail-activity', "should have activity component");
     assert.containsOnce(document.body, '.o_ActivityView_grantAccessButton', "should have grant access button");
 
     document.querySelector('.o_ActivityView_grantAccessButton').click();
     assert.verifySteps(['access_grant'], "Grant button should trigger the right rpc call");
 });
 
-QUnit.test('refuse course access', async function (assert) {
+QUnit.skipRefactoring('refuse course access', async function (assert) {
     assert.expect(8);
 
     const pyEnv = await startServer();
@@ -75,7 +75,7 @@ QUnit.test('refuse course access', async function (assert) {
         views: [[false, 'form']],
     });
 
-    assert.containsOnce(document.body, '.o_ActivityView', "should have activity component");
+    assert.containsOnce(document.body, '.o-mail-activity', "should have activity component");
     assert.containsOnce(document.body, '.o_ActivityView_refuseAccessButton', "should have refuse access button");
 
     document.querySelector('.o_ActivityView_refuseAccessButton').click();

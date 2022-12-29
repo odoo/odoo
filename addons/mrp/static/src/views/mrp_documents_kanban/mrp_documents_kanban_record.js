@@ -2,11 +2,13 @@
 
 import { CANCEL_GLOBAL_CLICK, KanbanRecord } from "@web/views/kanban/kanban_record";
 import { useService } from "@web/core/utils/hooks";
+import { useAttachmentViewer } from "@mail/new/attachments/attachment_viewer_hook";
 
 export class MrpDocumentsKanbanRecord extends KanbanRecord {
     setup() {
         super.setup();
-        this.messaging = useService("messaging");
+        this.attachmentService = useService("mail.attachment");
+        this.attachmentViewer = useAttachmentViewer();
     }
     /**
      * @override
@@ -21,19 +23,13 @@ export class MrpDocumentsKanbanRecord extends KanbanRecord {
             window.location = `/web/content/mrp.document/${this.props.record.resId}/datas?download=true`;
             return;
         } else if (ev.target.closest(".o_kanban_previewer")) {
-            this.messaging.get().then((messaging) => {
-                const attachmentList = messaging.models["AttachmentList"].insert({
-                    selectedAttachment: messaging.models["Attachment"].insert({
-                        id: this.props.record.data.ir_attachment_id[0],
-                        filename: this.props.record.data.name,
-                        name: this.props.record.data.name,
-                        mimetype: this.props.record.data.mimetype,
-                    }),
-                });
-                this.dialog = messaging.models["Dialog"].insert({
-                    attachmentListOwnerAsAttachmentView: attachmentList,
-                });
+            const attachment = this.attachmentService.insert({
+                id: this.props.record.data.ir_attachment_id[0],
+                filename: this.props.record.data.name,
+                name: this.props.record.data.name,
+                mimetype: this.props.record.data.mimetype,
             });
+            this.attachmentViewer.open(attachment)
             return;
         }
         return super.onGlobalClick(...arguments);

@@ -13,6 +13,7 @@ patch(MockServer.prototype, "mail/models/mail_link_preview", {
     _mockMailLinkPreviewFormat(linkPreview) {
         return {
             id: linkPreview.id,
+            message: { id: linkPreview.message_id },
             image_mimetype: linkPreview.image_mimetype,
             og_description: linkPreview.og_description,
             og_image: linkPreview.og_image,

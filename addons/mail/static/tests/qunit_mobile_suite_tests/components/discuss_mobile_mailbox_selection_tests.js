@@ -8,7 +8,7 @@ QUnit.module("mail", {}, function () {
         QUnit.module("discuss_mobile_mailbox_selection", {}, function () {
             QUnit.module("discuss_mobile_mailbox_selection_tests.js");
 
-            QUnit.test("select another mailbox", async function (assert) {
+            QUnit.skipRefactoring("select another mailbox", async function (assert) {
                 assert.expect(7);
 
                 patchUiSize({ height: 360, width: 640 });
@@ -16,21 +16,22 @@ QUnit.module("mail", {}, function () {
                 await openDiscuss();
                 assert.containsOnce(
                     document.body,
-                    ".o_DiscussView",
+                    ".o-mail-discuss-content",
                     "should display discuss initially"
                 );
                 assert.hasClass(
-                    document.querySelector(".o_DiscussView"),
+                    document.querySelector(".o-mail-discuss-content"),
                     "o-isDeviceSmall",
                     "discuss should be opened in mobile mode"
                 );
                 assert.containsOnce(
                     document.body,
-                    ".o_DiscussView_thread",
+                    ".o-mail-discuss-content .o-mail-thread",
                     "discuss should display a thread initially"
                 );
                 assert.strictEqual(
-                    document.querySelector(".o_DiscussView_thread").dataset.threadId,
+                    document.querySelector(".o-mail-discuss-content .o-mail-thread").dataset
+                        .threadId,
                     messaging.inbox.thread.id,
                     "inbox mailbox should be opened initially"
                 );
@@ -47,17 +48,18 @@ QUnit.module("mail", {}, function () {
     `);
                 assert.containsOnce(
                     document.body,
-                    ".o_DiscussView_thread",
+                    ".o-mail-discuss-content .o-mail-thread",
                     "discuss should still have a thread after clicking on starred mailbox"
                 );
                 assert.strictEqual(
-                    document.querySelector(".o_DiscussView_thread").dataset.threadId,
+                    document.querySelector(".o-mail-discuss-content .o-mail-thread").dataset
+                        .threadId,
                     messaging.starred.thread.id,
                     "starred mailbox should be opened after clicking on it"
                 );
             });
 
-            QUnit.test(
+            QUnit.skipRefactoring(
                 'auto-select "Inbox" when discuss had channel as active thread',
                 async function (assert) {
                     assert.expect(3);
@@ -73,7 +75,7 @@ QUnit.module("mail", {}, function () {
                             },
                         },
                     });
-                    await openDiscuss({ waitUntilMessagesLoaded: false });
+                    await openDiscuss(mailChannelId1, { waitUntilMessagesLoaded: false });
                     assert.hasClass(
                         document.querySelector(
                             '.o_MobileMessagingNavbarView_tab[data-tab-id="channel"]'

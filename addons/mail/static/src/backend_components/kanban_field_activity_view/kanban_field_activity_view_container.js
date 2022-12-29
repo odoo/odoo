@@ -3,7 +3,6 @@
 // ensure components are registered beforehand.
 import { useMessagingContainer } from "@mail/component_hooks/use_messaging_container";
 
-import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 import { Component, onWillDestroy, onWillUpdateProps } from "@odoo/owl";
@@ -91,5 +90,3 @@ Object.assign(KanbanFieldActivityViewContainer, {
     },
     template: "mail.KanbanFieldActivityViewContainer",
 });
-
-registry.category("fields").add("kanban_activity", KanbanFieldActivityViewContainer);

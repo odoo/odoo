@@ -276,7 +276,9 @@ Model({
             }
             this.message.originThread.update({
                 composer: {
-                    isLog: !this.message.is_discussion && !this.message.is_notification,
+                    isLog:
+                        !this.message.is_discussion &&
+                        this.message.message_type !== "user_notification",
                 },
             });
             this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.update({
@@ -396,18 +398,6 @@ Model({
          * render. Scrolls into view and briefly highlights it.
          */
         doHighlight: attr(),
-        /**
-         * Determines which extra class this message view component should have.
-         */
-        extraClass: attr({
-            default: "",
-            compute() {
-                if (this.messageListViewItemOwner) {
-                    return "o_MessageListView_item o_MessageListView_message";
-                }
-                return clear();
-            },
-        }),
         failureNotificationIconClassName: attr({
             default: "fa fa-envelope",
             compute() {

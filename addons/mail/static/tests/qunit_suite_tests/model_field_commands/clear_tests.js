@@ -5,7 +5,7 @@ import { start } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("mail", {}, function () {
     QUnit.module("model_field_commands", {}, function () {
-        QUnit.module("clear_tests.js");
+        QUnit.module.skipRefactoring("clear_tests.js");
         QUnit.test(
             "clear: should set attribute field undefined if there is no default value",
             async function (assert) {

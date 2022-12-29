@@ -3,9 +3,9 @@
  * TourManager so it can get access to _trigger_up.
  */
 odoo.define("root.widget", function (require) {
-    // need to wait for owl.Component.env to be set by discuss_public_boot before
+    // need to wait for owl.Component.env to be set by new/public/boot before
     // we spawn the component adapter
-    require("@mail/public/discuss_public_boot");
+    require("@mail/new/public/boot");
     const { standaloneAdapter } = require("web.OwlCompatibility");
     const { Component } = require("@odoo/owl");
     return standaloneAdapter({ Component });

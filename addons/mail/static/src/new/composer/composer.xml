@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.composer" owl="1">
+    <t t-set="compact" t-value="props.mode === 'compact'"/>
+    <t t-set="normal" t-value="props.mode === 'normal'"/>
+    <t t-set="extended" t-value="props.mode === 'extended'"/>
+    <NavigableList class="'o-composer-suggestion-list'" t-props="getNavigableListProps()" />
+    <div class="o-mail-composer-container" t-ref="composer">
+        <div class="o-mail-composer d-grid flex-shrink-0"
+                t-att-class="{
+                    'px-3 py-2 o-mail-extended-composer': extended,
+                    'p-3': normal,
+                    'o-has-current-partner-avatar px-3': !this.env.inChatWindow and thread,
+                }">
+            <div class="o-mail-composer-sidebar-main flex-shrink-0" t-if="!compact">
+                <img class="o-mail-composer-avatar mt-1 rounded-circle" t-att-src="store.self.avatarUrl" alt="Avatar of user"/>
+            </div>
+            <div class="o-mail-composer-core-header text-truncate small p-2" t-if="props.composer.thread and props.messageToReplyTo?.thread === props.composer.thread">
+                <span class="cursor-pointer" t-on-click="() => props.highlightReplyTo and props.highlightReplyTo(props.messageToReplyTo.message.id)">
+                    Replying to <b t-esc="props.messageToReplyTo.message.author.name"/>
+                </span>
+                <span t-if="props.messageToReplyTo.message.originThread !== thread" class="o-mail-composer-origin-thread">
+                    on: <b><t t-esc="props.messageToReplyTo.message.originThread.displayName"/></b>
+                </span>
+                <i class="fa fa-lg fa-times-circle rounded-circle p-0 ms-1 cursor-pointer" title="Stop replying" t-on-click="() => props.messageToReplyTo.cancel()"/>
+            </div>
+            <div class="o-mail-composer-core-main d-flex flex-nowrap flex-grow-1"
+                t-att-class="{
+                    'flex-column me-2': extended,
+                    'border-end border-start border-bottom': compact,
+                }"
+            >
+                <div class="position-relative flex-grow-1 align-self-stretch border-top"
+                        t-att-class="{'rounder-start-3 border': !compact, 'border-end-0': !extended, 'border-bottom-0': extended}">
+                    <textarea class="o-mail-composer-textarea form-control bg-view px-3 border-0 shadow-none overflow-auto" t-att-class="{'rounded-0 rounded-start-3': !compact }"
+                        t-ref="textarea"
+                        style="height:40px;"
+                        t-on-keydown="onKeydown"
+                        t-on-input="typing"
+                        t-on-focusin="() => this.props.composer.thread and this.threadService.markAsRead(this.props.composer.thread)"
+                        t-on-paste="onPaste"
+                        t-model="props.composer.textInputContent"
+                        t-att-placeholder="placeholder"/>
+                </div>
+                <div class="d-flex py-1 border-top bg-view" t-att-class="{'border-bottom': normal, 'border': extended }">
+                    <div class="d-flex align-items-center px-2" >
+                        <button class="btn border-0 rounded-pill" t-on-click="onClickAddEmoji" t-ref="emoji-picker">
+                            <i class="fa fa-smile-o" role="img" aria-label="Emojis"/>
+                        </button>
+                        <FileUploader multiUpload="true" onUploaded="(data) => attachmentUploader.uploadData(data)">
+                            <t t-set-slot="toggler">
+                                <button t-att-disabled="!state.active" class="btn fa fa-paperclip border-0 rounded-pill" title="Attach files" aria-label="Attach files" type="button" t-on-click="onClickAddAttachment"/>
+                            </t>
+                        </FileUploader>
+                    </div>
+                </div>
+                <t t-if="!compact" t-call="mail.Composer.actionButtons"/>
+            </div>
+            <div class="o-mail-composer-footer overflow-auto">
+                <AttachmentList
+                    t-if="attachmentUploader.attachments.length > 0"
+                    attachments="attachmentUploader.attachments"
+                    unlinkAttachment="attachmentUploader.unlink"
+                    editable="true"
+                    imagesHeight="50" />
+                <div t-if="thread and !compact" class="o-mail-composer-is-typing">
+                    <Typing channel="thread" size="'medium'" />
+                </div>
+            </div>
+        </div>
+        <span t-if="props.composer.message" class="text-muted">escape to <a href="#" t-on-click="props.onDiscardCallback">cancel</a>, enter to <a href="#" t-on-click="editMessage">save</a></span>
+    </div>
+</t>
+
+    <t t-name="mail.Composer.suggestionPartner" owl="1">
+        <t t-set="partner" t-value="option.partner"/>
+        <PartnerImStatus t-if="option.partner" partner="partner"/>
+        <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
+            <t t-esc="partner.name" />
+        </strong>
+        <em t-if="partner.email" class="text-600 text-truncate align-self-center">(<t t-esc="partner.email" />)</em>
+    </t>
+
+    <t t-name="mail.Composer.suggestionThread" owl="1">
+        <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
+            #<t t-esc="option.label" />
+        </strong>
+    </t>
+
+    <t t-name="mail.Composer.suggestionChannelCommand" owl="1">
+        <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
+            <t t-esc="option.label" />
+        </strong>
+        <em class="text-600 text-truncate align-self-center">
+            <t t-esc="option.help"/>
+        </em>
+    </t>
+
+    <t t-name="mail.Composer.suggestionCannedResponse" owl="1">
+        <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
+            <t t-esc="option.name" />
+        </strong>
+        <em class="text-600 text-truncate align-self-center">
+            <t t-esc="option.label"/>
+        </em>
+    </t>
+
+    <t t-name="mail.Composer.actionButtons" owl="1">
+        <div class="d-flex">
+            <button class="o-mail-composer-send-button btn btn-primary o-last border-start-0"
+                t-att-class="{'mt-2': extended, 'rounded-0 rounded-end-3': !extended}"
+                t-on-click="sendMessage"
+                type="button"
+                data-action="send"
+                t-att-disabled="isSendButtonDisabled"
+            >
+                Send
+            </button>
+        </div>
+    </t>
+
+
+
+</templates>

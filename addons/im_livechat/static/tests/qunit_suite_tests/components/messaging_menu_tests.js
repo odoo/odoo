@@ -10,7 +10,7 @@ QUnit.module('im_livechat', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('messaging_menu_tests.js');
 
-QUnit.test('livechats should be in "chat" filter', async function (assert) {
+QUnit.skipRefactoring('livechats should be in "chat" filter', async function (assert) {
     assert.expect(7);
 
     const pyEnv = await startServer();
@@ -30,7 +30,7 @@ QUnit.test('livechats should be in "chat" filter', async function (assert) {
         "should have messaging menu"
     );
 
-    await afterNextRender(() => document.querySelector('.o_MessagingMenu_toggler').click());
+    await afterNextRender(() => document.querySelector(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])").click());
     assert.containsOnce(
         document.body,
         '.o_MessagingMenuTabView[data-tab-id="all"]',

@@ -5,7 +5,7 @@ import { start } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("mail", {}, function () {
     QUnit.module("model_field_commands", {}, function () {
-        QUnit.module("field_command_link_tests.js");
+        QUnit.module.skipRefactoring("field_command_link_tests.js");
 
         QUnit.test("link: should link a record to an empty x2one field", async function (assert) {
             assert.expect(2);

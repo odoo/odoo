@@ -8,7 +8,8 @@ patch(MockServer.prototype, "mail/models/res_partner", {
         if (args.model === "res.partner" && args.method === "im_search") {
             const name = args.args[0] || args.kwargs.search;
             const limit = args.args[1] || args.kwargs.limit;
-            return this._mockResPartnerImSearch(name, limit);
+            const excluded_ids = args.args[2] || args.kwargs.excluded_ids;
+            return this._mockResPartnerImSearch(name, limit, excluded_ids);
         }
         if (args.model === "res.partner" && args.method === "search_for_channel_invite") {
             const search_term = args.args[0] || args.kwargs.search_term;
@@ -134,7 +135,7 @@ patch(MockServer.prototype, "mail/models/res_partner", {
      * @param {integer} [limit=20]
      * @returns {Object[]}
      */
-    _mockResPartnerImSearch(name = "", limit = 20) {
+    _mockResPartnerImSearch(name = "", limit = 20, excluded_ids = []) {
         name = name.toLowerCase(); // simulates ILIKE
         // simulates domain with relational parts (not supported by mock server)
         const matchingPartners = this.getRecords("res.users", [])
@@ -166,9 +167,12 @@ patch(MockServer.prototype, "mail/models/res_partner", {
             })
             .sort((a, b) => (a.name === b.name ? a.id - b.id : a.name > b.name ? 1 : -1));
         matchingPartners.length = Math.min(matchingPartners.length, limit);
+        const resultPartners = matchingPartners.filter(
+            (partner) => !excluded_ids.includes(partner.id)
+        );
         return [
             ...this._mockResPartnerMailPartnerFormat(
-                matchingPartners.map((partner) => partner.id)
+                resultPartners.map((partner) => partner.id)
             ).values(),
         ];
     },
@@ -223,7 +227,9 @@ patch(MockServer.prototype, "mail/models/res_partner", {
      * @returns {Object[]}
      */
     _mockResPartnerSearchForChannelInvite(search_term, channel_id, limit = 30) {
-        search_term = search_term.toLowerCase(); // simulates ILIKE
+        if (search_term) {
+            search_term = search_term.toLowerCase(); // simulates ILIKE
+        }
         // simulates domain with relational parts (not supported by mock server)
         const matchingPartners = [
             ...this._mockResPartnerMailPartnerFormat(

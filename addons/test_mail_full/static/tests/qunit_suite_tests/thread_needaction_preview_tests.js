@@ -5,7 +5,7 @@ import { afterNextRender, start, startServer } from '@mail/../tests/helpers/test
 QUnit.module('test_mail_full', {}, function () {
 QUnit.module('thread_needaction_preview_tests.js');
 
-QUnit.test('rating value displayed on the thread needaction preview', async function (assert) {
+QUnit.skipRefactoring('rating value displayed on the thread needaction preview', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
@@ -33,7 +33,7 @@ QUnit.test('rating value displayed on the thread needaction preview', async func
     const { afterEvent, messaging } = await start();
     await afterNextRender(() => afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
-        func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
+        func: () => document.querySelector(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])").click(),
         message: "should wait until inbox loaded initial needaction messages",
         predicate: ({ threadCache }) => {
             return threadCache.thread === messaging.inbox.thread;

@@ -6,7 +6,7 @@ import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services
 
 QUnit.module("mail", {}, function () {
     QUnit.module("models", {}, function () {
-        QUnit.module("messaging_tests.js", {}, function () {
+        QUnit.module.skipRefactoring("messaging_tests.js", {}, function () {
             QUnit.test(
                 "openChat: display notification for partner without user",
                 async function (assert) {

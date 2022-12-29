@@ -7,7 +7,7 @@ import { patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
 QUnit.module('calendar', {}, function () {
 QUnit.module('ActivityMenu');
 
-QUnit.test('activity menu widget:today meetings', async function (assert) {
+QUnit.skipRefactoring('activity menu widget:today meetings', async function (assert) {
     assert.expect(6);
 
     patchDate(2018, 3, 20, 6, 0, 0);
@@ -28,9 +28,9 @@ QUnit.test('activity menu widget:today meetings', async function (assert) {
         },
     ]);
     const { click, env } = await start();
-    assert.containsOnce(document.body, '.o_ActivityMenuView', 'should contain an instance of widget');
+    assert.containsOnce(document.body, ".o_menu_systray .dropdown-toggle:has(i[aria-label='Activities'])", 'should contain an instance of widget');
 
-    await click('.dropdown-toggle[title="Activities"]');
+    await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Activities'])");
 
     patchWithCleanup(env.services.action, {
         doAction(action) {
@@ -43,6 +43,6 @@ QUnit.test('activity menu widget:today meetings', async function (assert) {
     assert.hasClass(document.querySelector('.o_meeting_filter'), 'o_meeting_bold', 'this meeting is yet to start');
     assert.doesNotHaveClass(document.querySelectorAll('.o_meeting_filter')[1], 'o_meeting_bold', 'this meeting has been started');
 
-    await click('.o_ActivityMenuView_activityGroup');
+    await click('.o-mail-activity-menu .o-mail-activity');
 });
 });

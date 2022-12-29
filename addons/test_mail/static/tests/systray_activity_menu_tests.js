@@ -48,8 +48,8 @@ QUnit.module("test_mail", {}, function () {
                 }
             },
         });
-        await click(".o_ActivityMenuView_dropdownToggle");
-        assert.containsOnce(document.body, ".o_ActivityMenuView_noActivity");
+        await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Activities'])");
+        assert.containsOnce(document.body, ".o-mail-no-activity");
     });
 
     QUnit.test("activity menu widget: activity menu with 2 models", async function (assert) {
@@ -57,24 +57,21 @@ QUnit.module("test_mail", {}, function () {
 
         const { click, env } = await start();
 
-        await click(".o_ActivityMenuView_dropdownToggle");
         assert.containsOnce(
             document.body,
-            ".o_ActivityMenuView",
+            ".o_menu_systray .dropdown-toggle:has(i[aria-label='Activities'])",
             "should contain an instance of widget"
         );
-        assert.ok(document.querySelectorAll(".o_ActivityMenuView_activityGroup").length);
         assert.containsOnce(
             document.body,
-            ".o_ActivityMenuView_counter",
+            ".o-mail-activity-menu-counter",
             "widget should have notification counter"
         );
         assert.strictEqual(
-            parseInt(document.querySelector(".o_ActivityMenuView_counter").innerText),
+            parseInt(document.querySelector(".o-mail-activity-menu-counter").innerText),
             5,
             "widget should have 5 notification counter"
         );
-
         var context = {};
         patchWithCleanup(env.services.action, {
             doAction(action) {
@@ -87,32 +84,34 @@ QUnit.module("test_mail", {}, function () {
             force_search_count: 1,
             search_default_activities_overdue: 1,
         };
-        assert.containsOnce(
-            document.body,
-            ".o_ActivityMenuView_dropdownMenu.show",
-            "ActivityMenu should be open"
-        );
+        await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Activities'])");
+        assert.containsOnce(document.body, ".o-mail-activity-menu", "ActivityMenu should be open");
+        assert.ok(document.querySelectorAll(".o-mail-activity-menu .o-mail-activity").length);
         await click(
-            '.o_ActivityMenuView_activityGroupFilterButton[data-model_name="mail.test.activity"][data-filter="overdue"]'
+            ".o-mail-activity-menu .o-mail-activity[data-model_name='mail.test.activity'] button:contains('Late')"
         );
-        assert.containsNone(document.body, ".show", "ActivityMenu should be closed");
+        assert.containsNone(
+            document.body,
+            ".o-mail-activity-menu",
+            "ActivityMenu should be closed"
+        );
         // case 2: click on "today"
         context = {
             force_search_count: 1,
             search_default_activities_today: 1,
         };
-        await click('.dropdown-toggle[title="Activities"]');
+        await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Activities'])");
         await click(
-            '.o_ActivityMenuView_activityGroupFilterButton[data-model_name="mail.test.activity"][data-filter="today"]'
+            ".o-mail-activity-menu .o-mail-activity[data-model_name='mail.test.activity'] button:contains('Today')"
         );
         // case 3: click on "future"
         context = {
             force_search_count: 1,
             search_default_activities_upcoming_all: 1,
         };
-        await click('.dropdown-toggle[title="Activities"]');
+        await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Activities'])");
         await click(
-            '.o_ActivityMenuView_activityGroupFilterButton[data-model_name="mail.test.activity"][data-filter="upcoming_all"]'
+            ".o-mail-activity-menu .o-mail-activity[data-model_name='mail.test.activity'] button:contains('Future')"
         );
         // case 4: click anywere else
         context = {
@@ -120,19 +119,17 @@ QUnit.module("test_mail", {}, function () {
             search_default_activities_overdue: 1,
             search_default_activities_today: 1,
         };
-        await click('.dropdown-toggle[title="Activities"]');
-        await click(
-            '.o_ActivityMenuView_activityGroups > div[data-model_name="mail.test.activity"]'
-        );
+        await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Activities'])");
+        await click(".o-mail-activity-menu .o-mail-activity[data-model_name='mail.test.activity']");
     });
 
-    QUnit.test("activity menu widget: activity view icon", async function (assert) {
+    QUnit.skipRefactoring("activity menu widget: activity view icon", async function (assert) {
         assert.expect(14);
 
         patchWithCleanup(session, { uid: 10 });
         const { click, env } = await start();
 
-        await click(".o_ActivityMenuView_dropdownToggle");
+        await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Activities'])");
         assert.containsN(
             document.body,
             ".o_ActivityMenuView_activityGroupActionButton",
@@ -180,7 +177,7 @@ QUnit.module("test_mail", {}, function () {
         assert.containsNone(document.body, ".o-dropdown-menu", "dropdown should be collapsed");
 
         // click on the "res.partner" activity icon
-        await click('.dropdown-toggle[title="Activities"]');
+        await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Activities'])");
         await click('.o_ActivityMenuView_activityGroupActionButton[data-model_name="res.partner"]');
 
         assert.verifySteps(["do_action:mail.test.activity", "do_action:res.partner"]);
@@ -191,17 +188,17 @@ QUnit.module("test_mail", {}, function () {
 
         const { click } = await start();
 
-        await click('.dropdown-toggle[title="Activities"]');
-        assert.hasClass(
-            document.querySelector(".o_ActivityMenuView_dropdownMenu"),
-            "show",
+        await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Activities'])");
+        assert.containsOnce(
+            document.body,
+            ".o-mail-activity-menu",
             "activity menu should be shown after click on itself"
         );
 
-        await click(`.o_MessagingMenu_toggler`);
+        await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
         assert.containsNone(
             document.body,
-            ".o_ActivityMenuView_dropdownMenu",
+            ".o-mail-activity-menu",
             "activity menu should be hidden after click on messaging menu"
         );
     });

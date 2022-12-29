@@ -4,7 +4,7 @@ import { start } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("mail", {}, function () {
     QUnit.module("models", {}, function () {
-        QUnit.module("attachment_tests.js");
+        QUnit.module.skipRefactoring("attachment_tests.js");
 
         QUnit.test("create (txt)", async function (assert) {
             assert.expect(9);

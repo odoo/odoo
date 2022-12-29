@@ -8,7 +8,7 @@ QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
         QUnit.module("call_settings_menu_tests.js");
 
-        QUnit.test("Renders the call settings", async function (assert) {
+        QUnit.skipRefactoring("Renders the call settings", async function (assert) {
             assert.expect(9);
 
             patchWithCleanup(browser, {
@@ -93,7 +93,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test("activate push to talk", async function (assert) {
+        QUnit.skipRefactoring("activate push to talk", async function (assert) {
             assert.expect(3);
 
             patchWithCleanup(browser, {
@@ -135,7 +135,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test("activate blur", async function (assert) {
+        QUnit.skipRefactoring("activate blur", async function (assert) {
             assert.expect(2);
 
             patchWithCleanup(browser, {

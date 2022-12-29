@@ -6,7 +6,7 @@ QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
         QUnit.module("thread_icon_tests.js");
 
-        QUnit.test("chat: correspondent is typing", async function (assert) {
+        QUnit.skipRefactoring("chat: correspondent is typing", async function (assert) {
             assert.expect(5);
 
             const pyEnv = await startServer();
@@ -25,7 +25,7 @@ QUnit.module("mail", {}, function () {
             await openDiscuss();
 
             assert.containsOnce(
-                document.body.querySelector(".o_DiscussSidebarCategoryItem"),
+                document.body.querySelector(".o-mail-category-item"),
                 ".o_ThreadIconView",
                 "should have thread icon in the sidebar"
             );

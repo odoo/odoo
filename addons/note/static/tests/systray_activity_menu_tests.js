@@ -7,18 +7,18 @@ import testUtils from 'web.test_utils';
 QUnit.module('note', {}, function () {
 QUnit.module("ActivityMenu");
 
-QUnit.test('note activity menu widget: create note from activity menu', async function (assert) {
+QUnit.skipRefactoring('note activity menu widget: create note from activity menu', async function (assert) {
     assert.expect(15);
 
     const { click } = await start();
-    assert.containsOnce(document.body, '.o_ActivityMenuView',
+    assert.containsOnce(document.body, ".o_menu_systray .dropdown-toggle:has(i[aria-label='Activities'])",
         'should contain an instance of widget');
-    assert.containsNone(document.body, '.o_ActivityMenuView_counter',
+    assert.containsNone(document.body, '.o-mail-activity-menu-counter',
         "should not have any activity notification initially");
 
     // toggle quick create for note
-    await click('.dropdown-toggle[title="Activities"]');
-    assert.containsOnce(document.body, '.o_ActivityMenuView_noActivity',
+    await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Activities'])");
+    assert.containsOnce(document.body, '.o-mail-no-activity',
         "should not have any activity preview");
     assert.containsOnce(document.body, '.o_note_show',
         'ActivityMenu should have Add new note CTA');
@@ -31,9 +31,9 @@ QUnit.test('note activity menu widget: create note from activity menu', async fu
     // creating quick note without date
     await testUtils.fields.editInput(document.querySelector("input.o_note_input"), "New Note");
     await click('.o_note_save');
-    assert.strictEqual(document.querySelector('.o_ActivityMenuView_counter').innerText, '1',
+    assert.strictEqual(document.querySelector('.o-mail-activity-menu-counter').innerText, '1',
         "should increment activity notification counter after creating a note");
-    assert.containsOnce(document.body, '.o_ActivityMenuView_activityGroup[data-res_model="note.note"]',
+    assert.containsOnce(document.body, '.o-mail-activity-menu .o-mail-activity[data-res_model="note.note"]',
         "should have an activity preview that is a note");
     assert.strictEqual(document.querySelector('.o_ActivityMenuView_activityGroupFilterButton[data-filter="today"]').innerText.trim(),
         "1 Today",
@@ -48,7 +48,7 @@ QUnit.test('note activity menu widget: create note from activity menu', async fu
     await click('.o_note_show');
     document.querySelector('input.o_note_input').value = "New Note";
     await click(".o_note_save");
-    assert.strictEqual(document.querySelector('.o_ActivityMenuView_counter').innerText, '2',
+    assert.strictEqual(document.querySelector('.o-mail-activity-menu-counter').innerText, '2',
         "should increment activity notification counter after creating a second note");
     assert.strictEqual(document.querySelector('.o_ActivityMenuView_activityGroupFilterButton[data-filter="today"]').innerText.trim(),
         "2 Today",

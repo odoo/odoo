@@ -22,7 +22,7 @@ export async function testEmojiButtonHidden(assert, target, emojiComponentSelect
  * @param {HTMLElement} target fixture where the view is displayed
  * @param {string} emojiComponentSelector unique selector to get the component template root (e.g. "o_field_text_emojis")
  */
- export async function testEmojiButtonVisible(assert, target, emojiComponentSelector) {
+export async function testEmojiButtonVisible(assert, target, emojiComponentSelector) {
     assert.containsOnce(target, ".o_form_editable");
     assert.containsOnce(target, emojiComponentSelector);
     assert.containsOnce(target, `${emojiComponentSelector} button`);
@@ -40,22 +40,28 @@ export async function testEmojiButtonHidden(assert, target, emojiComponentSelect
 export async function testEmojiButton(assert, target, input, emojiButton) {
     // emoji picker opens
     await click(emojiButton);
-    assert.containsOnce(target, ".o_EmojiPickerView");
+    assert.containsOnce(target, ".o-mail-emoji-picker");
     // clicking an emoji adds it to the input field
-    const firstEmojiItem = target.querySelector(".o_EmojiGridRowView_item");
+    const firstEmojiItem = target.querySelector(".o-mail-emoji-picker-content .o-emoji");
     const firstEmojiItemCharacter = firstEmojiItem.textContent;
     await click(firstEmojiItem);
-    assert.ok(input.value.endsWith(firstEmojiItemCharacter),
-                  'Should have added the right emoji in the input field');
+    assert.ok(
+        input.value.endsWith(firstEmojiItemCharacter),
+        "Should have added the right emoji in the input field"
+    );
     // add some text at the start and select from the second half of the word to right before the emoji we just inserted
-    input.value = 'test' + input.value;
+    input.value = "test" + input.value;
     const inputTextLength = input.value.length;
     input.setSelectionRange(2, inputTextLength - firstEmojiItemCharacter.length);
     // pick an emoji while the text is selected
     await click(emojiButton);
-    const secondEmojiItem = target.querySelector(".o_EmojiGridRowView_item");
+    const secondEmojiItem = target.querySelector(".o-mail-emoji-picker-content .o-emoji");
     const secondEmojiItemCharacter = secondEmojiItem.textContent;
     await click(secondEmojiItem);
     // the selected region is replaced and the rest stays in place
-    assert.deepEqual(input.value, 'te' + secondEmojiItemCharacter + firstEmojiItemCharacter, "Should have replaced the selection with the emoji");
+    assert.deepEqual(
+        input.value,
+        "te" + secondEmojiItemCharacter + firstEmojiItemCharacter,
+        "Should have replaced the selection with the emoji"
+    );
 }

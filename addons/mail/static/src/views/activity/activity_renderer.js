@@ -1,8 +1,8 @@
 /** @odoo-module */
 
-import { browser } from "@web/core/browser/browser";
-import { ActivityCellViewContainer } from "@mail/backend_components/activity_cell_view/activity_cell_view_container";
+import { ActivityCell } from "@mail/new/web/activity/activity_cell";
 import { Component, useState } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { ColumnProgress } from "@web/views/view_components/column_progress";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -11,9 +11,9 @@ import { ActivityRecord } from "./activity_record";
 
 export class ActivityRenderer extends Component {
     static components = {
+        ActivityCell,
         ActivityRecord,
         ColumnProgress,
-        ActivityCellViewContainer,
         Dropdown,
         DropdownItem,
         CheckBox,

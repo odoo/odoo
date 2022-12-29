@@ -8,11 +8,11 @@ import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
 import { makeTestPromise } from "web.test_utils";
 
-QUnit.module("mail", {}, function () {
+QUnit.module("mail", (hooks) => {
     QUnit.module("components", {}, function () {
         QUnit.module("messaging_menu_tests.js");
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "[technical] messaging not created then becomes created",
             async function (assert) {
                 /**
@@ -46,7 +46,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test("messaging not initialized", async function (assert) {
+        QUnit.skipRefactoring("messaging not initialized", async function (assert) {
             assert.expect(2);
 
             const messaginginitializedDeferred = makeTestPromise();
@@ -64,7 +64,7 @@ QUnit.module("mail", {}, function () {
                 "should display loading icon on messaging menu when messaging not yet initialized"
             );
 
-            await click(`.o_MessagingMenu_toggler`);
+            await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
             assert.strictEqual(
                 document.querySelector(".o_MessagingMenu_dropdownMenu").textContent,
                 "Please wait...",
@@ -73,7 +73,7 @@ QUnit.module("mail", {}, function () {
             messaginginitializedDeferred.resolve(); // ensure proper teardown
         });
 
-        QUnit.test("messaging becomes initialized", async function (assert) {
+        QUnit.skipRefactoring("messaging becomes initialized", async function (assert) {
             assert.expect(2);
 
             const messagingInitializedProm = makeTestPromise();
@@ -86,7 +86,7 @@ QUnit.module("mail", {}, function () {
                 },
                 waitUntilMessagingCondition: "created",
             });
-            await click(`.o_MessagingMenu_toggler`);
+            await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
 
             // simulate messaging becomes initialized
             await afterNextRender(() => messagingInitializedProm.resolve());
@@ -103,7 +103,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test("basic rendering", async function (assert) {
+        QUnit.skipRefactoring("basic rendering", async function (assert) {
             assert.expect(21);
 
             patchWithCleanup(browser, {
@@ -123,12 +123,16 @@ QUnit.module("mail", {}, function () {
                 "should not mark messaging menu item as shown by default"
             );
             assert.strictEqual(
-                document.querySelectorAll(`.o_MessagingMenu_toggler`).length,
+                document.querySelectorAll(
+                    ".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])"
+                ).length,
                 1,
                 "should have clickable element on messaging menu"
             );
             assert.notOk(
-                document.querySelector(`.o_MessagingMenu_toggler`).classList.contains("show"),
+                document
+                    .querySelector(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])")
+                    .classList.contains("show"),
                 "should not mark messaging menu clickable item as shown by default"
             );
             assert.strictEqual(
@@ -146,7 +150,7 @@ QUnit.module("mail", {}, function () {
                 "should not display any messaging menu dropdown by default"
             );
 
-            await click(`.o_MessagingMenu_toggler`);
+            await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
             assert.hasClass(
                 document.querySelector(".o_MessagingMenu"),
                 "show",
@@ -237,7 +241,7 @@ QUnit.module("mail", {}, function () {
                 "should display no conversation in thread preview list"
             );
 
-            await click(`.o_MessagingMenu_toggler`);
+            await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
             assert.doesNotHaveClass(
                 document.querySelector(".o_MessagingMenu"),
                 "show",
@@ -245,54 +249,12 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test("counter is taking into account failure notification", async function (assert) {
-            assert.expect(2);
-
-            patchWithCleanup(browser, {
-                Notification: {
-                    ...browser.Notification,
-                    permission: "denied",
-                },
-            });
-            const pyEnv = await startServer();
-            const mailChannelId1 = pyEnv["mail.channel"].create({});
-            const mailMessageId1 = pyEnv["mail.message"].create({
-                model: "mail.channel",
-                res_id: mailChannelId1,
-            });
-            const [mailChannelMemberId] = pyEnv["mail.channel.member"].search([
-                ["channel_id", "=", mailChannelId1],
-                ["partner_id", "=", pyEnv.currentPartnerId],
-            ]);
-            pyEnv["mail.channel.member"].write([mailChannelMemberId], {
-                seen_message_id: mailMessageId1,
-            });
-            // failure that is expected to be used in the test
-            pyEnv["mail.notification"].create({
-                mail_message_id: mailMessageId1, // id of the related message
-                notification_status: "exception", // necessary value to have a failure
-                notification_type: "email",
-            });
-            await start();
-
-            assert.containsOnce(
-                document.body,
-                ".o_MessagingMenu_counter",
-                "should display a notification counter next to the messaging menu for one notification"
-            );
-            assert.strictEqual(
-                document.querySelector(".o_MessagingMenu_counter").textContent,
-                "1",
-                "should display a counter of '1' next to the messaging menu"
-            );
-        });
-
-        QUnit.test("switch tab", async function (assert) {
+        QUnit.skipRefactoring("switch tab", async function (assert) {
             assert.expect(15);
 
             const { click } = await start();
 
-            await click(`.o_MessagingMenu_toggler`);
+            await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
             assert.strictEqual(
                 document.querySelectorAll(`.o_MessagingMenuTabView[data-tab-id="all"]`).length,
                 1,
@@ -436,61 +398,29 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test("new message", async function (assert) {
+        QUnit.skipRefactoring("new message", async function (assert) {
             assert.expect(3);
 
             const { click } = await start();
-            await click(`.o_MessagingMenu_toggler`);
+            await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
             await click(`.o_MessagingMenu_newMessageButton`);
 
             assert.strictEqual(
-                document.querySelectorAll(`.o_ChatWindow`).length,
+                document.querySelectorAll(`.o-mail-chat-window`).length,
                 1,
                 "should have open a chat window"
             );
             assert.ok(
-                document.querySelector(`.o_ChatWindow`).classList.contains("o-new-message"),
+                document.querySelector(`.o-mail-chat-window`).classList.contains("o-new-message"),
                 "chat window should be for new message"
             );
             assert.ok(
-                document.querySelector(`.o_ChatWindow`).classList.contains("o-focused"),
+                document.querySelector(`.o-mail-chat-window`).classList.contains("o-focused"),
                 "chat window should be focused"
             );
         });
 
-        QUnit.test("no new message when discuss is open", async function (assert) {
-            assert.expect(3);
-
-            const { click, openDiscuss, openView } = await start();
-            await openDiscuss({ waitUntilMessagesLoaded: false });
-
-            await click(`.o_MessagingMenu_toggler`);
-            assert.strictEqual(
-                document.querySelectorAll(`.o_MessagingMenu_newMessageButton`).length,
-                0,
-                "should not have 'new message' when discuss is open"
-            );
-
-            await openView({
-                res_model: "res.partner",
-                views: [[false, "form"]],
-            });
-
-            assert.strictEqual(
-                document.querySelectorAll(`.o_MessagingMenu_newMessageButton`).length,
-                1,
-                "should have 'new message' when discuss is closed"
-            );
-
-            await openDiscuss({ waitUntilMessagesLoaded: false });
-            assert.strictEqual(
-                document.querySelectorAll(`.o_MessagingMenu_newMessageButton`).length,
-                0,
-                "should not have 'new message' when discuss is open again"
-            );
-        });
-
-        QUnit.test("channel preview: basic rendering", async function (assert) {
+        QUnit.skipRefactoring("channel preview: basic rendering", async function (assert) {
             assert.expect(9);
 
             const pyEnv = await startServer();
@@ -504,7 +434,7 @@ QUnit.module("mail", {}, function () {
             });
             const { click } = await start();
 
-            await click(`.o_MessagingMenu_toggler`);
+            await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
             assert.strictEqual(
                 document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu .o_ChannelPreviewView
@@ -586,7 +516,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test("filtered previews", async function (assert) {
+        QUnit.skipRefactoring("filtered previews", async function (assert) {
             assert.expect(12);
 
             const pyEnv = await startServer();
@@ -606,7 +536,7 @@ QUnit.module("mail", {}, function () {
             ]);
             const { click } = await start();
 
-            await click(`.o_MessagingMenu_toggler`);
+            await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
             assert.strictEqual(
                 document.querySelectorAll(`.o_MessagingMenu_dropdownMenu .o_ChannelPreviewView`)
                     .length,
@@ -705,36 +635,35 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test("open chat window from preview", async function (assert) {
+        QUnit.skipRefactoring("open chat window from preview", async function (assert) {
             assert.expect(1);
 
             const pyEnv = await startServer();
             pyEnv["mail.channel"].create({});
             const { click } = await start();
 
-            await click(`.o_MessagingMenu_toggler`);
+            await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
             await click(`.o_MessagingMenu_dropdownMenu .o_ChannelPreviewView`);
             assert.strictEqual(
-                document.querySelectorAll(`.o_ChatWindow`).length,
+                document.querySelectorAll(`.o-mail-chat-window`).length,
                 1,
                 "should have open a chat window"
             );
         });
 
-        QUnit.test("no code injection in message body preview", async function (assert) {
+        QUnit.skipRefactoring("no code injection in message body preview", async function (assert) {
             assert.expect(5);
 
             const pyEnv = await startServer();
             const mailChannelId1 = pyEnv["mail.channel"].create({});
             pyEnv["mail.message"].create({
-                body:
-                    "<p><em>&shoulnotberaised</em><script>throw new Error('CodeInjectionError');</script></p>",
+                body: "<p><em>&shoulnotberaised</em><script>throw new Error('CodeInjectionError');</script></p>",
                 model: "mail.channel",
                 res_id: mailChannelId1,
             });
             const { click } = await start();
 
-            await click(`.o_MessagingMenu_toggler`);
+            await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
             assert.containsOnce(
                 document.body,
                 ".o_MessagingMenu_dropdownMenu .o_ChannelPreviewView",
@@ -764,7 +693,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "no code injection in message body preview from sanitized message",
             async function (assert) {
                 assert.expect(5);
@@ -772,14 +701,13 @@ QUnit.module("mail", {}, function () {
                 const pyEnv = await startServer();
                 const mailChannelId1 = pyEnv["mail.channel"].create({});
                 pyEnv["mail.message"].create({
-                    body:
-                        "<p>&lt;em&gt;&shoulnotberaised&lt;/em&gt;&lt;script&gt;throw new Error('CodeInjectionError');&lt;/script&gt;</p>",
+                    body: "<p>&lt;em&gt;&shoulnotberaised&lt;/em&gt;&lt;script&gt;throw new Error('CodeInjectionError');&lt;/script&gt;</p>",
                     model: "mail.channel",
                     res_id: mailChannelId1,
                 });
                 const { click } = await start();
 
-                await click(`.o_MessagingMenu_toggler`);
+                await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
                 assert.containsOnce(
                     document.body,
                     ".o_MessagingMenu_dropdownMenu .o_ChannelPreviewView",
@@ -810,7 +738,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "<br/> tags in message body preview are transformed in spaces",
             async function (assert) {
                 assert.expect(4);
@@ -824,7 +752,7 @@ QUnit.module("mail", {}, function () {
                 });
                 const { click } = await start();
 
-                await click(`.o_MessagingMenu_toggler`);
+                await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
                 assert.containsOnce(
                     document.body,
                     ".o_MessagingMenu_dropdownMenu .o_ChannelPreviewView",
@@ -848,89 +776,98 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test("rendering with OdooBot has a request (default)", async function (assert) {
-            assert.expect(4);
+        QUnit.skipRefactoring(
+            "rendering with OdooBot has a request (default)",
+            async function (assert) {
+                assert.expect(4);
 
-            patchWithCleanup(browser, {
-                Notification: {
-                    ...browser.Notification,
-                    permission: "default",
-                },
-            });
-            const { click } = await start();
+                patchWithCleanup(browser, {
+                    Notification: {
+                        ...browser.Notification,
+                        permission: "default",
+                    },
+                });
+                const { click } = await start();
 
-            assert.ok(
-                document.querySelector(".o_MessagingMenu_counter"),
-                "should display a notification counter next to the messaging menu for OdooBot request"
-            );
-            assert.strictEqual(
-                document.querySelector(".o_MessagingMenu_counter").textContent,
-                "1",
-                "should display a counter of '1' next to the messaging menu"
-            );
+                assert.ok(
+                    document.querySelector(".o_MessagingMenu_counter"),
+                    "should display a notification counter next to the messaging menu for OdooBot request"
+                );
+                assert.strictEqual(
+                    document.querySelector(".o_MessagingMenu_counter").textContent,
+                    "1",
+                    "should display a counter of '1' next to the messaging menu"
+                );
 
-            await click(".o_MessagingMenu_toggler");
-            assert.containsOnce(
-                document.body,
-                ".o_NotificationRequestView",
-                "should display a notification in the messaging menu"
-            );
-            assert.strictEqual(
-                document.querySelector(".o_NotificationRequestView_name").textContent.trim(),
-                "OdooBot has a request",
-                "notification should display that OdooBot has a request"
-            );
-        });
+                await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
+                assert.containsOnce(
+                    document.body,
+                    ".o_NotificationRequestView",
+                    "should display a notification in the messaging menu"
+                );
+                assert.strictEqual(
+                    document.querySelector(".o_NotificationRequestView_name").textContent.trim(),
+                    "OdooBot has a request",
+                    "notification should display that OdooBot has a request"
+                );
+            }
+        );
 
-        QUnit.test("rendering without OdooBot has a request (denied)", async function (assert) {
-            assert.expect(2);
+        QUnit.skipRefactoring(
+            "rendering without OdooBot has a request (denied)",
+            async function (assert) {
+                assert.expect(2);
 
-            patchWithCleanup(browser, {
-                Notification: {
-                    permission: "denied",
-                },
-            });
-            const { click } = await start();
+                patchWithCleanup(browser, {
+                    Notification: {
+                        permission: "denied",
+                    },
+                });
+                const { click } = await start();
 
-            assert.containsNone(
-                document.body,
-                ".o_MessagingMenu_counter",
-                "should not display a notification counter next to the messaging menu"
-            );
+                assert.containsNone(
+                    document.body,
+                    ".o_MessagingMenu_counter",
+                    "should not display a notification counter next to the messaging menu"
+                );
 
-            await click(".o_MessagingMenu_toggler");
-            assert.containsNone(
-                document.body,
-                ".o_NotificationRequestView",
-                "should display no notification in the messaging menu"
-            );
-        });
+                await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
+                assert.containsNone(
+                    document.body,
+                    ".o_NotificationRequestView",
+                    "should display no notification in the messaging menu"
+                );
+            }
+        );
 
-        QUnit.test("rendering without OdooBot has a request (accepted)", async function (assert) {
-            assert.expect(2);
+        QUnit.skipRefactoring(
+            "rendering without OdooBot has a request (accepted)",
+            async function (assert) {
+                assert.expect(2);
 
-            patchWithCleanup(browser, {
-                Notification: {
-                    permission: "granted",
-                },
-            });
-            const { click } = await start();
+                patchWithCleanup(browser, {
+                    Notification: {
+                        permission: "granted",
+                    },
+                });
+                const { click } = await start();
 
-            assert.containsNone(
-                document.body,
-                ".o_MessagingMenu_counter",
-                "should not display a notification counter next to the messaging menu"
-            );
+                assert.containsNone(
+                    document.body,
+                    ".o_MessagingMenu_counter",
+                    "should not display a notification counter next to the messaging menu"
+                );
 
-            await click(".o_MessagingMenu_toggler");
-            assert.containsNone(
-                document.body,
-                ".o_NotificationRequestView",
-                "should display no notification in the messaging menu"
-            );
-        });
+                await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
+                assert.containsNone(
+                    document.body,
+                    ".o_NotificationRequestView",
+                    "should display no notification in the messaging menu"
+                );
+            }
+        );
 
-        QUnit.test("respond to notification prompt (denied)", async function (assert) {
+        QUnit.skipRefactoring("respond to notification prompt (denied)", async function (assert) {
             assert.expect(4);
 
             patchWithCleanup(browser, {
@@ -952,7 +889,7 @@ QUnit.module("mail", {}, function () {
                 },
             });
 
-            await click(".o_MessagingMenu_toggler");
+            await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
             await click(".o_NotificationRequestView");
             assert.verifySteps(["should display a toast notification with the deny confirmation"]);
 
@@ -962,7 +899,7 @@ QUnit.module("mail", {}, function () {
                 "should not display a notification counter next to the messaging menu"
             );
 
-            await click(".o_MessagingMenu_toggler");
+            await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
             assert.containsNone(
                 document.body,
                 ".o_NotificationRequestView",
@@ -970,7 +907,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "Group chat should be displayed inside the chat section of the messaging menu",
             async function (assert) {
                 assert.expect(1);
@@ -981,7 +918,7 @@ QUnit.module("mail", {}, function () {
                 });
                 const { click } = await start();
 
-                await click(".o_MessagingMenu_toggler");
+                await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
                 await click(`.o_MessagingMenuTabView[data-tab-id="chat"]`);
 
                 assert.strictEqual(

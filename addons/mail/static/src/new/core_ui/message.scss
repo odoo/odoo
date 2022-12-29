@@ -1,0 +1,47 @@
+.o-mail-message {
+    transition: background-color .2s ease-out, opacity .5s ease-out, box-shadow .5s ease-out, transform .2s ease-out;
+
+    &.o-mail-message-highlighted {
+        transform: translateY(-#{map-get($spacers, 3)});
+    }
+}
+
+.o-mail-message-sidebar {
+    flex-basis: 48px;
+    max-width: 48px;
+}
+
+.o-mail-avatar-container {
+    width: 36px;
+    height: 36px;
+}
+
+.o-mail-message-body > p {
+    margin-bottom: 0;
+}
+
+:not(.o-mail-is-author) .o-mail-message-bubble {
+    opacity: 0.15;
+}
+
+.o-mail-chat-window .o-mail-message.o-mail-is-author {
+    flex-direction: row-reverse;
+
+    .o-mail-message-core, .o-mail-message-content {
+        flex-direction: row-reverse;
+    }
+    .o-mail-msg-header {
+        justify-content: flex-end;
+    }
+    .o-mail-own-name {
+        display: none;
+    }
+}
+
+.o-mail-message-actions {
+    z-index: 10;
+}
+
+.o-mail-message-actions-is-starred {
+    color: $o-main-favorite-color;
+}

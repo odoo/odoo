@@ -1,0 +1,16 @@
+.o-activity-list-popover-item-action-link {
+    @include o-hover-text-color($text-muted, map-get($theme-colors, 'success'));
+    @include o-hover-opacity(0.5, 1);
+}
+
+.o-activity-list-popover-item-edit-button {
+    opacity: 0.5;
+}
+
+.o-activity-list-popover-item:hover .o-activity-list-popover-item-edit-button {
+    opacity: 1;
+}
+
+.o-activity-list-popover-item-container {
+    min-width: 0;
+}

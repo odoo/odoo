@@ -7,7 +7,7 @@ QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
         QUnit.module("dialog_manager_tests.js");
 
-        QUnit.test("[technical] messaging not created", async function (assert) {
+        QUnit.skipRefactoring("[technical] messaging not created", async function (assert) {
             /**
              * Creation of messaging in env is async due to generation of models being
              * async. Generation of models is async because it requires parsing of all
@@ -34,7 +34,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test("initial mount", async function (assert) {
+        QUnit.skipRefactoring("initial mount", async function (assert) {
             assert.expect(1);
 
             await start();

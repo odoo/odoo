@@ -26,7 +26,6 @@ const PublicLivechatMessage = Class.extend({
      *   If not provided, use current date time for this message.
      * @param {integer} data.id
      * @param {boolean} [data.is_discussion = false]
-     * @param {boolean} [data.is_notification = false]
      * @param {string} [data.message_type = undefined]
      */
     init(parent, messaging, data) {
@@ -36,7 +35,6 @@ const PublicLivechatMessage = Class.extend({
         this._date = data.date ? moment(time.str_to_datetime(data.date)) : moment();
         this._id = data.id;
         this._isDiscussion = data.is_discussion;
-        this._isNotification = data.is_notification;
         this._serverAuthor = data.author;
         this._type = data.message_type || undefined;
 
@@ -211,7 +209,7 @@ const PublicLivechatMessage = Class.extend({
      * @returns {boolean}
      */
     isNotification() {
-        return this._isNotification;
+        return this._type === "user_notification";
     },
     setChatbotStepAnswerId(chatbotStepAnswerId) {
         this._chatbotStepAnswerId = chatbotStepAnswerId;

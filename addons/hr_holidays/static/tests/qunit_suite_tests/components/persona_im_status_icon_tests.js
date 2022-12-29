@@ -8,7 +8,7 @@ QUnit.module('hr_holidays', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('persona_im_status_icon_tests.js');
 
-QUnit.test('on leave & online', async function (assert) {
+QUnit.skipRefactoring('on leave & online', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();
@@ -42,7 +42,7 @@ QUnit.test('on leave & online', async function (assert) {
     );
 });
 
-QUnit.test('on leave & away', async function (assert) {
+QUnit.skipRefactoring('on leave & away', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();
@@ -76,7 +76,7 @@ QUnit.test('on leave & away', async function (assert) {
     );
 });
 
-QUnit.test('on leave & offline', async function (assert) {
+QUnit.skipRefactoring('on leave & offline', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();

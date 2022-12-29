@@ -48,6 +48,7 @@ If you need to manage your meetings, you should install the CRM module.
             'calendar/static/src/js/services/calendar_notification_service.js',
             'calendar/static/src/views/**/*',
             'calendar/static/src/components/**/*',
+            'calendar/static/src/new/**',
         ],
         'web.qunit_suite_tests': [
             'calendar/static/tests/**/*',

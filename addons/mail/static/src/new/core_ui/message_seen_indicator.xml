@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.message_seen_indicator" owl="1">
+        <span class="o-mail-message-seen-indicator position-relative d-flex opacity-75-hover opacity-50" t-att-class="{ 'o-all-seen text-odoo': hasEveryoneSeen }" t-attf-class="{{ props.className }}" t-att-title="text">
+            <t t-if="!isMessagePreviousToLastSelfMessageSeenByEveryone">
+                <i t-if="hasSomeoneFetched or hasSomeoneSeen" class="o-mail-message-seen-indicator-icon o-first fa fa-check ps-1"/>
+                <i t-if="hasSomeoneSeen" class="o-mail-message-seen-indicator-icon o-second fa fa-check position-absolute"/>
+            </t>
+        </span>
+    </t>
+</templates>

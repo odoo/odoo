@@ -124,9 +124,6 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/models/*.js',
             'mail/static/lib/selfie_segmentation/selfie_segmentation.js',
         ],
-        'mail.assets_model_data': [
-            'mail/static/src/models_data/*.js',
-        ],
         # Custom bundle in case we want to remove things that are later added to web.assets_common
         'mail.assets_common_discuss_public': [
             ('include', 'web.assets_common'),
@@ -180,6 +177,7 @@ For more specific needs, you may also assign custom-defined actions
         ],
         'web._assets_primary_variables': [
             'mail/static/src/scss/variables/primary_variables.scss',
+            'mail/static/src/new/core_ui/primary_variables.scss',
         ],
         'web.assets_backend': [
             # depends on BS variables, can't be loaded in assets_primary or assets_secondary
@@ -199,15 +197,17 @@ For more specific needs, you may also assign custom-defined actions
             ('include', 'mail.assets_messaging'),
             'mail/static/src/services/*.js',
             'mail/static/src/views/**/*.js',
-            'mail/static/src/views/**/*.xml',
             'mail/static/src/views/**/*.scss',
-            'mail/static/src/webclient/commands/*.js',
+            'mail/static/src/views/**/*.xml',
 
             # Don't include dark mode files in light mode
             ('remove', 'mail/static/src/components/*/*.dark.scss'),
+
+            ('include', 'mail.assets_backend'),
         ],
         "web.dark_mode_assets_backend": [
             'mail/static/src/components/*/*.dark.scss',
+            ('include', 'mail.assets_dark'),
         ],
         'web.assets_backend_prod_only': [
             'mail/static/src/main.js',
@@ -225,10 +225,48 @@ For more specific needs, you may also assign custom-defined actions
         ],
         'web.qunit_suite_tests': [
             'mail/static/tests/qunit_suite_tests/**/*.js',
+            'mail/static/tests/new/**/*.js',
         ],
         'web.qunit_mobile_suite_tests': [
             'mail/static/tests/qunit_mobile_suite_tests/**/*.js',
         ],
+        # new bundles
+        'mail.assets_backend': [
+            'mail/static/src/new/**/*',
+            ('remove', 'mail/static/src/new/public/**/*'),
+            ('remove', 'mail/static/src/new/**/*.dark.scss'),
+            ('remove', 'mail/static/src/new/emoji_picker/emoji_data.js'),
+        ],
+        'mail.assets_dark': [
+            'mail/static/src/new/**/*.dark.scss',
+        ],
+        'mail.assets_emoji': [
+            'mail/static/src/new/emoji_picker/emoji_data.js',
+        ],
+        'mail.assets_public': [
+            ('include', 'web._assets_helpers'),
+            ('include', 'web._assets_backend_helpers'),
+            ('include', 'web.assets_common'),
+            ('include', 'web._assets_bootstrap'),
+            'web/static/src/scss/bootstrap_overridden.scss',
+            'web/static/src/webclient/webclient.scss',
+            'web/static/src/core/utils/transitions.scss',  # included early because used by other files
+            'web/static/src/core/**/*',
+            'web/static/src/env.js',
+            ('remove', 'web/static/src/legacy/js/services/ajax_service.js'),
+            ('remove', 'web/static/src/legacy/js/common_env.js'),
+            ('remove', 'web/static/src/legacy/js/widgets/translation_dialog.js'),
+            ('remove', 'web_tour/static/src/js/tour_manager.js'),
+            ('remove', 'web_tour/static/src/js/tour_service.js'),
+            'web/static/src/views/fields/formatters.js',
+            'web/static/src/views/fields/file_handler.*',
+            'web/static/src/views/fields/many2many_tags/tags_list.*',
+
+            'mail/static/src/new/**/*',
+            ('remove', 'mail/static/src/new/web/**/*'),
+            ('remove', 'mail/static/src/new/emoji_picker/emoji_data.js'),
+            ('remove', 'mail/static/src/new/**/*.dark.scss'),
+        ]
     },
     'license': 'LGPL-3',
 }

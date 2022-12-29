@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.typing" owl="1">
+        <div class="o-mail-composer-is-typing-space-holder d-flex">
+            <t t-if="props.channel.hasTypingMembers">
+                <div class="o-mail-typing-icon d-flex align-items-center" t-attf-class="{{ className }}" t-att-title="title">
+                    <span class="o-mail-thread-typing-icon-dot o_ThreadTypingIconView_dot1 d-flex flex-shrink-0 rounded-pill bg-500" t-att-class="{
+                                 'o-sizeMedium': props.size === 'medium',
+                                 'o-sizeSmall': props.size === 'small',
+                                 }"/>
+                    <span class="o-mail-typing-text-separator flex-grow-1 flex-shrink-0"/>
+                    <span class="o-mail-thread-typing-icon-dot o-mail-thread-typing-icon-dot2 d-flex flex-shrink-0 rounded-pill bg-500" t-att-class="{
+                                 'o-sizeMedium': props.size === 'medium',
+                                 'o-sizeSmall': props.size === 'small',
+                                 }"/>
+                    <span class="o-mail-typing-text-separator flex-grow-1 flex-shrink-0"/>
+                    <span class="o-mail-thread-typing-icon-dot o-mail-thread-typing-icon-dot3 d-flex flex-shrink-0 rounded-pill bg-500" t-att-class="{
+                                 'o-sizeMedium': props.size === 'medium',
+                                 'o-sizeSmall': props.size === 'small',
+                                 }"/>
+                </div>
+                <t t-if="props.displayText">
+                    <span class="o-mail-typing-text-separator ms-1"/>
+                    <span class="text-truncate" t-out="text"/>
+                </t>
+            </t>
+        </div>
+    </t>
+
+</templates>

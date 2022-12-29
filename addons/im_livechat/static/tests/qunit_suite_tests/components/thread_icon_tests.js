@@ -10,7 +10,7 @@ QUnit.module('im_livechat', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('thread_icon_tests.js');
 
-QUnit.test('livechat: public website visitor is typing', async function (assert) {
+QUnit.skipRefactoring('livechat: public website visitor is typing', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();

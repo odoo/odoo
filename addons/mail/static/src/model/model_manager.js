@@ -11,6 +11,7 @@ import { Listener } from "@mail/model/model_listener";
 import { followRelations } from "@mail/model/model_utils";
 import { makeDeferred } from "@mail/utils/deferred";
 import {
+    componentRegistry,
     registerMessagingComponent,
     unregisterMessagingComponent,
 } from "@mail/utils/messaging_component";
@@ -408,7 +409,9 @@ export class ModelManager {
                 props: { record: Object },
                 template: definition.get("template"),
             });
-            registerMessagingComponent(ModelComponent);
+            if (!(model.name in componentRegistry)) {
+                registerMessagingComponent(ModelComponent);
+            }
             model.__messagingComponent = ModelComponent;
             model.__fieldAndRefNames = [];
         }

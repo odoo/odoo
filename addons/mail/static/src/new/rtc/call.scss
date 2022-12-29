@@ -1,0 +1,14 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o-mail-call {
+    height: 50%; // ensures that the view returns to the right height when resized
+    min-height: 50%;
+    background: var(--o-mail-call-background-color, #{$dark});
+
+    &.o-minimized {
+        height: 20%; // ensures that the view returns to the right height when resized
+        min-height: #{"max(20%, 130px)"};
+    }
+}

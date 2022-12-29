@@ -262,7 +262,13 @@ patch(MockServer.prototype, "mail/models/mail_thread", {
                 }
             }
         }
-        this.pyEnv["bus.bus"]._sendmany(notifications);
+        const channelMemberOfCurrentUser = this.pyEnv["mail.channel.member"].search([
+            ["channel_id", "=", message.res_id],
+            ["partner_id", "=", this.currentPartnerId],
+        ]);
+        if (channelMemberOfCurrentUser.length === 1) {
+            this.pyEnv["bus.bus"]._sendmany(notifications);
+        }
     },
     /**
      * Simulates `message_unsubscribe` on `mail.thread`.

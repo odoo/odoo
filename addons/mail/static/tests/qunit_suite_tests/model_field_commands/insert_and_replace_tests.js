@@ -4,7 +4,7 @@ import { start } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("mail", {}, function () {
     QUnit.module("model_field_commands", {}, function () {
-        QUnit.module("insert_and_replace_tests.js");
+        QUnit.module.skipRefactoring("insert_and_replace_tests.js");
 
         QUnit.test(
             "insertAndReplace: should create and link a new record for an empty x2one field",

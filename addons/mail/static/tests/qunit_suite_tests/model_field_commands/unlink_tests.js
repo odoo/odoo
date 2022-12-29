@@ -5,7 +5,7 @@ import { start } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("mail", {}, function () {
     QUnit.module("model_field_commands", {}, function () {
-        QUnit.module("unlink_tests.js");
+        QUnit.module.skipRefactoring("unlink_tests.js");
 
         QUnit.test("unlink: should unlink the record for x2one field", async function (assert) {
             assert.expect(2);

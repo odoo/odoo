@@ -19,7 +19,7 @@ QUnit.module("mail", {}, function () {
                 },
             });
 
-            QUnit.test(
+            QUnit.skipRefactoring(
                 "open the chatWindow of a user from the command palette",
                 async function (assert) {
                     assert.expect(1);
@@ -37,11 +37,11 @@ QUnit.module("mail", {}, function () {
                     );
 
                     await afterNextRender(() => click(document.body, ".o_command.focused"));
-                    assert.containsOnce(document.body, ".o_ChatWindow");
+                    assert.containsOnce(document.body, ".o-mail-chat-window");
                 }
             );
 
-            QUnit.test(
+            QUnit.skipRefactoring(
                 "open the chatWindow of a channel from the command palette",
                 async function (assert) {
                     assert.expect(3);
@@ -73,10 +73,11 @@ QUnit.module("mail", {}, function () {
                     );
 
                     await afterNextRender(() => click(document.body, ".o_command.focused"));
-                    assert.containsOnce(document.body, ".o_ChatWindow");
+                    assert.containsOnce(document.body, ".o-mail-chat-window");
                     assert.strictEqual(
-                        document.querySelector(".o_ChatWindow .o_ChatWindowHeaderView_name")
-                            .textContent,
+                        document.querySelector(
+                            ".o-mail-chat-window .o-mail-chat-window-header-name"
+                        ).textContent,
                         "general"
                     );
                 }

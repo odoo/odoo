@@ -73,7 +73,10 @@ class LinkPreview(models.Model):
                 target = guest
             else:
                 target = self.env.user.partner_id
-            notifications.append((target, 'mail.link.preview/delete', {'id': link_preview.id}))
+            notifications.append((target, 'mail.link.preview/delete', {
+                'id': link_preview.id,
+                'message_id': link_preview.message_id.id,
+            }))
         self.env['bus.bus']._sendmany(notifications)
         self.unlink()
 

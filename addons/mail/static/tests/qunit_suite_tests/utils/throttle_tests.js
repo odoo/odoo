@@ -5,7 +5,7 @@ import { nextTick } from "@mail/utils/utils";
 
 QUnit.module("mail", {}, function () {
     QUnit.module("utils", {}, function () {
-        QUnit.module("throttle", {}, function () {
+        QUnit.module.skipRefactoring("throttle", {}, function () {
             QUnit.module("throttle_tests.js", {});
 
             QUnit.test("single call", async function (assert) {

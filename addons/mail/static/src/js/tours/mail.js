@@ -12,7 +12,7 @@ tour.register(
     },
     [
         {
-            trigger: ".o_DiscussSidebarView_categoryChannel .o_DiscussSidebarCategory_commandAdd",
+            trigger: ".o-mail-category-channel .o-mail-category-add-button",
             content: Markup(
                 _t(
                     "<p>Channels make it easy to organize information across different topics and groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, marketing, product XYZ, after work party, etc).</p>"
@@ -21,7 +21,7 @@ tour.register(
             position: "bottom",
         },
         {
-            trigger: ".o_DiscussSidebarCategory_addingItemInput",
+            trigger: ".o-mail-channel-selector .o_input",
             content: Markup(_t("<p>Create a channel here.</p>")),
             position: "bottom",
             auto: true,
@@ -31,7 +31,7 @@ tour.register(
             },
         },
         {
-            trigger: ".o_DiscussSidebarCategory_newChannelAutocompleteSuggestions",
+            trigger: ".o-mail-channel-selector .o-autocomplete--dropdown-menu",
             content: Markup(_t("<p>Create a public or private channel.</p>")),
             position: "right",
             run() {
@@ -39,7 +39,7 @@ tour.register(
             },
         },
         {
-            trigger: ".o_DiscussView_thread .o_ComposerTextInputView_textarea",
+            trigger: ".o-mail-composer-textarea",
             content: Markup(
                 _t(
                     "<p><b>Write a message</b> to the members of the channel here.</p> <p>You can notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. Start your message with <i>'/'</i> to get the list of possible commands.</p>"
@@ -53,31 +53,32 @@ tour.register(
             },
         },
         {
-            trigger: ".o_DiscussView_thread .o_ComposerView_buttonSend",
+            trigger: ".o-mail-composer-send-button",
             content: _t("Post your message on the thread"),
             position: "top",
         },
         {
-            trigger: ".o_DiscussView_thread .o_MessageView",
+            trigger: ".o-mail-message",
             content: _t("Click on your message"),
             position: "top",
         },
+        // TODO race condition to fix here, clicking on star while the message is still pending leads to a crash
         {
-            trigger: ".o_DiscussView_thread .o_MessageActionView_actionToggleStar",
+            trigger: ".o-mail-message-toggle-star",
             content: Markup(
                 _t("Messages can be <b>starred</b> to remind you to check back later.")
             ),
             position: "bottom",
         },
         {
-            trigger: ".o_DiscussSidebarMailboxView.o-starred-box",
+            trigger: ".o-starred-box",
             content: _t(
                 "Once a message has been starred, you can come back and review it at any time here."
             ),
             position: "bottom",
         },
         {
-            trigger: ".o_DiscussSidebarView_categoryChat .o_DiscussSidebarCategory_commandAdd",
+            trigger: ".o-mail-category-chat .o-mail-category-add-button",
             content: Markup(
                 _t(
                     "<p><b>Chat with coworkers</b> in real-time using direct messages.</p><p><i>You might need to invite users from the Settings app first.</i></p>"

@@ -13,7 +13,7 @@ QUnit.module('im_livechat', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('discuss_tests.js');
 
-QUnit.test('livechat in the sidebar: basic rendering', async function (assert) {
+QUnit.skipRefactoring('livechat in the sidebar: basic rendering', async function (assert) {
     assert.expect(5);
 
     const pyEnv = await startServer();
@@ -43,7 +43,7 @@ QUnit.test('livechat in the sidebar: basic rendering', async function (assert) {
         "should have a channel group named 'Livechat'"
     );
     const livechat = groupLivechat.querySelector(`
-        .o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]
+        .o-mail-category-item[data-channel-id="${mailChannelId1}"]
     `);
     assert.ok(
         livechat,
@@ -56,7 +56,7 @@ QUnit.test('livechat in the sidebar: basic rendering', async function (assert) {
     );
 });
 
-QUnit.test('livechat in the sidebar: existing user with country', async function (assert) {
+QUnit.skipRefactoring('livechat in the sidebar: existing user with country', async function (assert) {
     assert.expect(3);
 
     const pyEnv = await startServer();
@@ -84,7 +84,7 @@ QUnit.test('livechat in the sidebar: existing user with country', async function
         '.o_DiscussSidebarView_categoryLivechat',
         "should have a channel group livechat in the side bar"
     );
-    const livechat = document.querySelector('.o_DiscussSidebarView_categoryLivechat .o_DiscussSidebarCategoryItem');
+    const livechat = document.querySelector('.o_DiscussSidebarView_categoryLivechat .o-mail-category-item');
     assert.ok(
         livechat,
         "should have a livechat in sidebar"
@@ -96,7 +96,7 @@ QUnit.test('livechat in the sidebar: existing user with country', async function
     );
 });
 
-QUnit.test('do not add livechat in the sidebar on visitor opening his chat', async function (assert) {
+QUnit.skipRefactoring('do not add livechat in the sidebar on visitor opening his chat', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();
@@ -131,7 +131,7 @@ QUnit.test('do not add livechat in the sidebar on visitor opening his chat', asy
     );
 });
 
-QUnit.test('do not add livechat in the sidebar on visitor typing', async function (assert) {
+QUnit.skipRefactoring('do not add livechat in the sidebar on visitor typing', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();
@@ -180,7 +180,7 @@ QUnit.test('do not add livechat in the sidebar on visitor typing', async functio
     );
 });
 
-QUnit.test('add livechat in the sidebar on visitor sending first message', async function (assert) {
+QUnit.skipRefactoring('add livechat in the sidebar on visitor sending first message', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
@@ -233,17 +233,17 @@ QUnit.test('add livechat in the sidebar on visitor sending first message', async
     );
     assert.containsOnce(
         document.body,
-        '.o_DiscussSidebarView_categoryLivechat .o_DiscussSidebarCategoryItem',
+        '.o_DiscussSidebarView_categoryLivechat .o-mail-category-item',
         "should have a livechat in the sidebar after receiving first message"
     );
     assert.strictEqual(
-        document.querySelector('.o_DiscussSidebarView_categoryLivechat .o_DiscussSidebarCategoryItem .o_DiscussSidebarCategoryItem_name').textContent,
+        document.querySelector('.o_DiscussSidebarView_categoryLivechat .o-mail-category-item .o_DiscussSidebarCategoryItem_name').textContent,
         "Visitor (Belgium)",
         "should have visitor name and country as livechat name"
     );
 });
 
-QUnit.test('livechats are sorted by last activity time in the sidebar: most recent at the top', async function (assert) {
+QUnit.skipRefactoring('livechats are sorted by last activity time in the sidebar: most recent at the top', async function (assert) {
     assert.expect(6);
 
     const pyEnv = await startServer();
@@ -295,7 +295,7 @@ QUnit.test('livechats are sorted by last activity time in the sidebar: most rece
     // post a new message on the last channel
     await afterNextRender(() => initialLivechats[1].click());
     await afterNextRender(() => document.execCommand('insertText', false, "Blabla"));
-    await afterNextRender(() => document.querySelector('.o_ComposerView_buttonSend').click());
+    await afterNextRender(() => document.querySelector('.o-mail-composer-send-button').click());
 
     const newLivechats = document.querySelectorAll('.o_DiscussSidebarView_categoryLivechat .o_DiscussSidebarCategory_item');
     assert.strictEqual(
@@ -315,7 +315,7 @@ QUnit.test('livechats are sorted by last activity time in the sidebar: most rece
     );
 });
 
-QUnit.test('invite button should be present on livechat', async function (assert) {
+QUnit.skipRefactoring('invite button should be present on livechat', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -340,12 +340,12 @@ QUnit.test('invite button should be present on livechat', async function (assert
     await openDiscuss();
     assert.containsOnce(
         document.body,
-        '.o_ThreadViewTopbar_inviteButton',
+        '.o-mail-discuss-actions button[data-action="add-users"]',
         "Invite button should be visible in top bar when livechat is active thread"
     );
 });
 
-QUnit.test('call buttons should not be present on livechat', async function (assert) {
+QUnit.skipRefactoring('call buttons should not be present on livechat', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -375,7 +375,7 @@ QUnit.test('call buttons should not be present on livechat', async function (ass
     );
 });
 
-QUnit.test('reaction button should not be present on livechat', async function (assert) {
+QUnit.skipRefactoring('reaction button should not be present on livechat', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -393,9 +393,9 @@ QUnit.test('reaction button should not be present on livechat', async function (
         },
     });
     await openDiscuss();
-    await insertText('.o_ComposerTextInputView_textarea', "Test");
-    await click('.o_ComposerView_buttonSend');
-    await click('.o_MessageView');
+    await insertText('.o-mail-composer-textarea', "Test");
+    await click('.o-mail-composer-send-button');
+    await click('.o-mail-message');
     assert.containsNone(
         document.body,
         '.o_MessageActionView_actionReaction',
@@ -403,7 +403,7 @@ QUnit.test('reaction button should not be present on livechat', async function (
     );
 });
 
-QUnit.test('reply button should not be present on livechat', async function (assert) {
+QUnit.skipRefactoring('reply button should not be present on livechat', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -421,9 +421,9 @@ QUnit.test('reply button should not be present on livechat', async function (ass
         },
     });
     await openDiscuss();
-    await insertText('.o_ComposerTextInputView_textarea', "Test");
-    await click('.o_ComposerView_buttonSend');
-    await click('.o_MessageView');
+    await insertText('.o-mail-composer-textarea', "Test");
+    await click('.o-mail-composer-send-button');
+    await click('.o-mail-message');
     assert.containsNone(
         document.body,
         '.o_MessageActionView_actionReplyTo',

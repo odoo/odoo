@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="mail.KanbanActivity">
+<t t-name="mail.LegacyKanbanActivity">
     <div class="o_kanban_inline_block dropdown o_mail_activity">
         <!-- Dropdowns are created in JS to avoid some bugs, that's why the <a/> contains no args for the dropdown creation -->
         <a class="dropdown-toggle o-no-caret o_activity_btn" data-boundary="viewport" data-flip="false" data-bs-toggle="dropdown" role="button">
@@ -12,7 +12,7 @@
     </div>
 </t>
 
-<t t-name="mail.ListActivity" t-extend="mail.KanbanActivity">
+<t t-name="mail.LegacyListActivity" t-extend="mail.LegacyKanbanActivity">
     <t t-jquery=".o_mail_activity" t-operation="append">
         <span class="o_activity_summary"/>
     </t>

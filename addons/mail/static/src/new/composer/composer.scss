@@ -1,0 +1,64 @@
+.o-mail-composer {
+    grid-template-areas:
+        "sidebar-header core-header"
+        "sidebar-main core-main"
+        "sidebar-footer core-footer";
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr auto;
+
+    &.o-has-current-partner-avatar {
+        grid-template-columns: $o-mail-message-sidebar-width 1fr;
+    }
+
+    .o-mail-composer-sidebar-main {
+        width: 48px;
+        justify-self: center;
+    }
+
+    .o-mail-composer-core-header {
+        grid-area: core-header;
+    }
+
+    .o-mail-composer-core-main {
+        grid-area: core-main;
+    }
+
+    .o-mail-composer-core-footer {
+        grid-area: core-footer;
+    }
+
+    .o-mail-composer-sidebar-main {
+        grid-area: sidebar-main;
+    }
+
+    .o-mail-composer-footer {
+        grid-area: core-footer;
+    }
+}
+
+.o-mail-composer-textarea {
+    padding-top: 10px; // carefully crafted to have the text in the middle in chat window
+    padding-bottom: 10px;
+    max-height: 100px;
+    resize: none;
+
+    .o-mail-extended-composer & {
+        max-height: 400px;
+    }
+
+    &::placeholder {
+        @include text-truncate();
+    }
+}
+
+.o-mail-composer-avatar {
+    width: $o-mail-thread-avatar-size;
+    height: $o-mail-thread-avatar-size;
+}
+
+.o-fast-popover {
+    animation: 0.02s slide-right !important;
+    animation: 0.02s slide-left !important;
+    animation: 0.02s slide-top !important;
+    animation: 0.02s slide-bottom !important;
+}

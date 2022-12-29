@@ -68,6 +68,7 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/js/colors_reset_button/*',
             'im_livechat/static/src/js/im_livechat_chatbot_steps_one2many.js',
             'im_livechat/static/src/js/im_livechat_chatbot_script_answers_m2m.js',
+            'im_livechat/static/src/new/*/*.js',
             'im_livechat/static/src/components/*/*.js',
             'im_livechat/static/src/scss/im_livechat_history.scss',
             'im_livechat/static/src/scss/im_livechat_form.scss',
@@ -77,6 +78,7 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/tests/helpers/**/*.js',
         ],
         'web.qunit_suite_tests': [
+            'im_livechat/static/tests/new/*.js',
             'im_livechat/static/tests/qunit_suite_tests/components/**/*.js',
         ],
         'web.assets_tests': [

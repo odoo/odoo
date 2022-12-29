@@ -10,7 +10,7 @@ QUnit.module('im_livechat', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('discuss_sidebar_category_tests.js');
 
-QUnit.test('livechat - counter: should not have a counter if the category is unfolded and without unread messages', async function (assert) {
+QUnit.skipRefactoring('livechat - counter: should not have a counter if the category is unfolded and without unread messages', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -32,7 +32,7 @@ QUnit.test('livechat - counter: should not have a counter if the category is unf
     );
 });
 
-QUnit.test('livechat - counter: should not have a counter if the category is unfolded and with unread messages', async function (assert) {
+QUnit.skipRefactoring('livechat - counter: should not have a counter if the category is unfolded and with unread messages', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -57,7 +57,7 @@ QUnit.test('livechat - counter: should not have a counter if the category is unf
     );
 });
 
-QUnit.test('livechat - counter: should not have a counter if category is folded and without unread messages', async function (assert) {
+QUnit.skipRefactoring('livechat - counter: should not have a counter if category is folded and without unread messages', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -84,7 +84,7 @@ QUnit.test('livechat - counter: should not have a counter if category is folded 
     );
 });
 
-QUnit.test('livechat - counter: should have correct value of unread threads if category is folded and with unread messages', async function (assert) {
+QUnit.skipRefactoring('livechat - counter: should have correct value of unread threads if category is folded and with unread messages', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
@@ -114,7 +114,7 @@ QUnit.test('livechat - counter: should have correct value of unread threads if c
     );
 });
 
-QUnit.test('livechat - states: close manually by clicking the title', async function (assert) {
+QUnit.skipRefactoring('livechat - states: close manually by clicking the title', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();
@@ -153,7 +153,7 @@ QUnit.test('livechat - states: close manually by clicking the title', async func
     );
 });
 
-QUnit.test('livechat - states: open manually by clicking the title', async function (assert) {
+QUnit.skipRefactoring('livechat - states: open manually by clicking the title', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();
@@ -192,7 +192,7 @@ QUnit.test('livechat - states: open manually by clicking the title', async funct
     );
 });
 
-QUnit.test('livechat - states: close should update the value on the server', async function (assert) {
+QUnit.skipRefactoring('livechat - states: close should update the value on the server', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();
@@ -242,7 +242,7 @@ QUnit.test('livechat - states: close should update the value on the server', asy
     );
 });
 
-QUnit.test('livechat - states: open should update the value on the server', async function (assert) {
+QUnit.skipRefactoring('livechat - states: open should update the value on the server', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();
@@ -292,7 +292,7 @@ QUnit.test('livechat - states: open should update the value on the server', asyn
     );
 });
 
-QUnit.test('livechat - states: close from the bus', async function (assert) {
+QUnit.skipRefactoring('livechat - states: close from the bus', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();
@@ -332,7 +332,7 @@ QUnit.test('livechat - states: close from the bus', async function (assert) {
     );
 });
 
-QUnit.test('livechat - states: open from the bus', async function (assert) {
+QUnit.skipRefactoring('livechat - states: open from the bus', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();
@@ -373,7 +373,7 @@ QUnit.test('livechat - states: open from the bus', async function (assert) {
 });
 
 
-QUnit.test('livechat - states: category item should be invisible if the category is closed', async function (assert) {
+QUnit.skipRefactoring('livechat - states: category item should be invisible if the category is closed', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();
@@ -408,7 +408,7 @@ QUnit.test('livechat - states: category item should be invisible if the category
     );
 });
 
-QUnit.test('livechat - states: the active category item should be visble even if the category is closed', async function (assert) {
+QUnit.skipRefactoring('livechat - states: the active category item should be visble even if the category is closed', async function (assert) {
     assert.expect(3);
 
     const pyEnv = await startServer();

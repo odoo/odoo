@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.welcome_page" owl="1">
+    <div class="o-mail-welcome-page h-100 w-100 d-flex flex-column justify-content-center align-items-center bg-light">
+        <h1 class="fw-light">
+            <span t-if="thread and thread.defaultDisplayMode === 'video_full_screen'">You've been invited to a meeting!</span>
+            <span t-else="">You've been invited to a chat!</span>
+        </h1>
+        <h2 class="m-5" t-esc="store.companyName"/>
+        <div class="d-flex justify-content-center">
+            <div class="d-flex flex-column justify-content-center">
+                <t t-if="store.guest">
+                    <label class="o-mail-welcome-page-guest-name-input-label text-center fs-4" >What's your name?</label>
+                    <input class="form-control mb-3" type="text" placeholder="Your name" t-model="state.userName" t-on-keydown="onKeydownInput"/>
+                </t>
+                <p t-if="store.user" class="o-mail-welcome-page-user-name fs-4">Logged as <span t-esc="store.user.name"/></p>
+                <button class="o-mail-welcome-page-join-button btn btn-success fa-stack align-self-end p-0 rounded-circle fs-1 shadow" title="Join Channel" t-att-disabled="store.guest and state.userName.trim() === ''" t-on-click="joinChannel">
+                    <i class="fa fa-arrow-right fa-stack"/>
+                </button>
+            </div>
+        </div>
+    </div>
+</t>
+
+</templates>

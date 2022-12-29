@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.discuss" owl="1">
+    <div class="d-flex h-100 flex-grow-1" t-att-class="{ 'o-mail-device-is-small flex-column align-items-center bg-view': env.isSmall }">
+        <Sidebar t-if="!props.public and !env.isSmall"/>
+        <div t-if="env.isSmall" class="o-mail-discuss-mobile-top-bar w-100 border-bottom" t-call="mail.discuss_mobile_top_bar"/>
+        <div t-if="thread" class="o-mail-discuss-content d-flex flex-column h-100 w-100 bg-view overflow-auto" t-att-class="{'o-mail-with-composer': thread.type !== 'mailbox'}" t-ref="content">
+            <div class="px-3 bg-100 border-bottom d-flex flex-shrink-0" style="height:42px;">
+                <ThreadIcon className="'o-mail-discuss-thread-icon me-2 align-self-center'" thread="thread"/>
+                <div class="d-flex flex-grow-1 align-self-center align-items-center h-100 py-2">
+                    <AutoresizeInput
+                        className="'o-mail-discuss-thread-name lead fw-bold flex-shrink-1 text-dark'"
+                        disabled="!thread.isRenameable"
+                        onValidate.bind="renameThread"
+                        value="thread.displayName"
+                    />
+                    <t t-if="thread.isDescriptionChangeable">
+                        <div class="flex-shrink-0 mx-2 py-2 border-start"/>
+                        <t t-set="autogrowDescriptionPlaceholder">Add a description</t>
+                        <AutoresizeInput
+                            className="'o-mail-discuss-thread-description flex-shrink-1'"
+                            onValidate.bind="updateThreadDescription"
+                            placeholder="autogrowDescriptionPlaceholder"
+                            value="thread.description or ''"
+                        />
+                    </t>
+                </div>
+                <div class="o-mail-discuss-actions flex-shrink-0 d-flex align-items-center ms-1">
+                    <button t-if="thread.id === 'inbox'" class="btn btn-secondary" t-att-disabled="thread.isEmpty" data-action="mark-all-read" t-on-click="markAllAsRead">Mark all read</button>
+                    <button t-if="thread.id === 'starred'" class="btn btn-secondary" t-att-disabled="thread.isEmpty" data-action="unstar-all" t-on-click="unstarAll">Unstar all</button>
+                    <button t-if="thread.type !== 'mailbox' and thread !== rtc.state.channel" class="btn" title="Start a Call" t-on-click="() => this.rtc.toggleCall(this.thread)">
+                        <i class="fa fa-lg fa-phone text-700"/>
+                    </button>
+                    <button t-if="thread.model === 'mail.channel'" class="btn" t-ref="addUsers" title="Add Users" data-action="add-users" t-on-click.stop="toggleInviteForm">
+                        <i class="fa fa-lg fa-user-plus text-700"/>
+                    </button>
+                    <button t-if="hasMemberListFeature" class="btn" t-att-title="state.activeMode === 'member-list' ? 'Hide Member List' : 'Show Member List'" t-on-click.stop="toggleMemberList">
+                        <i class="fa fa-lg fa-users text-700"/>
+                    </button>
+                    <button t-if="thread.type !== 'mailbox'" class="btn" t-ref="settings" title="Show Call Settings" t-on-click="toggleSettings">
+                        <i class="fa fa-lg fa-gear text-700"/>
+                    </button>
+                    <div t-if="props.public and !env.isSmall" class="d-flex align-items-center">
+                        <img class="o-mail-discuss-self-avatar mx-1 rounded-circle o_object_fit_cover flex-shrink-0" alt="Avatar" t-att-src="store.self.avatarUrl"/>
+                        <div class="lead fw-bold flex-shrink-1 text-dark">
+                            <t t-if="store.user" t-esc="store.user.name"/>
+                            <t t-else="">
+                                <AutoresizeInput
+                                    onValidate.bind="renameGuest"
+                                    value="store.guest.name"
+                                />
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="overflow-auto d-flex flex-grow-1">
+                <div class="d-flex flex-column flex-grow-1">
+                    <Call t-if="Object.keys(thread.rtcSessions).length > 0" thread="thread"/>
+                    <Thread thread="thread" t-key="thread.localId" messageEdition="messageEdition" messageHighlight="messageHighlight" messageToReplyTo="messageToReplyTo"/>
+                    <Composer t-if="thread.type !== 'mailbox' or messageToReplyTo.thread === thread" t-key="thread.localId" composer="thread.composer" autofocus="true" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" highlightReplyTo="messageHighlight.highlightMessage" onDiscardCallback="() => messageToReplyTo.cancel()" dropzoneRef="contentRef"/>
+                </div>
+                <ChannelMemberList t-if="hasMemberListFeature and state.activeMode === 'member-list'" thread="thread" className="'o-mail-discuss-channel-member-list flex-shrink-0 border-start'"/>
+            </div>
+        </div>
+        <div t-if="!thread" class="o-mail-discuss-no-thread d-flex flex-grow-1 align-items-center justify-content-center w-100 bg-view">
+            <h4 class="text-muted"><b><i>No conversation selected.</i></b></h4>
+        </div>
+    </div>
+</t>
+
+<t t-name="mail.discuss_mobile_top_bar" owl="1">
+    <div class="d-flex w-100 ">
+        <t t-call="mail.discuss_mobile_mailbox" >
+            <t t-set="mailbox" t-value="store.discuss.inbox" />
+        </t>
+        <t t-call="mail.discuss_mobile_mailbox">
+            <t t-set="mailbox" t-value="store.discuss.starred" />
+        </t>
+        <t t-call="mail.discuss_mobile_mailbox">
+            <t t-set="mailbox" t-value="store.discuss.history" />
+        </t>
+    </div>
+</t>
+
+<t t-name="mail.discuss_mobile_mailbox" owl="1">
+    <button class="btn btn-secondary flex-grow-1 p-2"
+        t-att-class="{
+            'active o-active shadow-none': store.discuss.threadLocalId === mailbox.localId,
+        }" t-on-click="() => this.threadService.setDiscussThread(mailbox)" t-att-data-mailbox="mailbox.localId" t-esc="mailbox.name"
+    />
+</t>
+
+</templates>

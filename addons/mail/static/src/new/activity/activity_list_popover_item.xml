@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.ActivityListPopoverItem" owl="1">
+        <div class="o-activity-list-popover-item d-flex flex-column border-bottom py-2">
+            <div class="o-activity-list-popover-item-container d-flex align-items-baseline ms-3 me-1">
+                <i t-if="props.activity.icon" class="fa small me-2" t-attf-class="{{ props.activity.icon }}" role="img"/>
+                <t t-if="props.activity.summary">
+                    <b class="text-900 me-2 text-truncate flex-grow-1 flex-basis-0" t-esc="props.activity.summary"/>
+                </t>
+                <t t-if="!props.activity.summary and props.activity.activity_type_id">
+                    <b class="text-900 me-2 text-truncate flex-grow-1" t-esc="props.activity.activity_type_id[1]"/>
+                </t>
+                <button t-if="hasEditButton" class="o-activity-list-popover-item-edit-button btn btn-sm btn-link" t-on-click="onClickEditActivityButton">
+                    <i class="fa fa-pencil"/>
+                </button>
+                <t t-if="props.activity.can_write">
+                    <FileUploader t-if="hasFileUploader" onUploaded.bind="onFileUploaded">
+                        <t t-set-slot="toggler">
+                            <button class="o-activity-list-popover-item-action-link btn btn-link shadow-none fs-4 fa fa-upload" title="Upload file" aria-label="Upload File"/>
+                        </t>
+                    </FileUploader>
+                    <button t-if="hasMarkDoneButton" class="o-activity-list-popover-item-action-link o-activity-list-popover-item-mark-as-done btn btn-link shadow-none fs-4 fa fa-check-circle" title="Mark as done" aria-label="Mark as done" t-on-click="onClickMarkAsDone" t-ref="markDoneButton"/>
+                </t>
+            </div>
+            <div t-if="props.activity.state !== 'today'" class="d-flex align-items-baseline flex-wrap mx-3">
+                <i class="fa fa-clock-o me-2 text-muted" role="img" aria-label="Deadline" title="Deadline"/>
+                <t t-if="props.activity.user_id[0] and props.activity.user_id[0] !== user.userId">
+                    <small class="text-truncate" t-esc="props.activity.user_id[1]"/>
+                    <small class="mx-1">-</small>
+                </t>
+                <small t-att-title="props.activity.dateDeadline" t-esc="delayLabel"/>
+            </div>
+            <ActivityMarkAsDone t-if="state.hasMarkDoneView" activity="props.activity" close="closeMarkAsDone" onClickDoneAndScheduleNext="props.onClickDoneAndScheduleNext" reload="props.onActivityChanged"/>
+            <div t-if="props.activity.mail_template_ids.length > 0" class="mx-3 mt-2">
+                <ActivityMailTemplate activity="props.activity" onClickButtons="props.onClickEditActivityButton" onUpdate="props.onActivityChanged"/>
+            </div>
+        </div>
+    </t>
+</templates>

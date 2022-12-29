@@ -4,7 +4,7 @@ import { start } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("mail", {}, function () {
     QUnit.module("utils", {}, function () {
-        QUnit.module("timer", {}, function () {
+        QUnit.module.skipRefactoring("timer", {}, function () {
             QUnit.module("timer_tests.js", {});
 
             QUnit.test("timer insert (duration: 0ms)", async function (assert) {

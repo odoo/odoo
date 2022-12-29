@@ -10,7 +10,7 @@ QUnit.module('im_livechat', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('thread_textual_typing_status_tests.js');
 
-QUnit.test('receive visitor typing status "is typing"', async function (assert) {
+QUnit.skipRefactoring('receive visitor typing status "is typing"', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();

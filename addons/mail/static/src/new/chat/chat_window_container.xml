@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.chat_window_container" owl="1">
+    <div class="o-mail-chat-window-container" t-if="!store.discuss.isActive">
+        <t t-if="chatWindowService.hidden.length > 0">
+            <t t-call="mail.chat_window_hidden_menu"/>
+        </t>
+        <t t-foreach="chatWindowService.visible" t-as="chatWindow" t-key="chatWindow.threadLocalId">
+            <ChatWindow chatWindow="chatWindow" right="CHAT_WINDOW_END_GAP_WIDTH + chatWindow_index * (CHAT_WINDOW_WIDTH + CHAT_WINDOW_INBETWEEN_WIDTH * 2)"/>
+        </t>
+    </div>
+</t>
+
+<t t-name="mail.chat_window_hidden_menu" owl="1">
+    <Dropdown position="'top-end'" menuClass="'p-0'" togglerClass="'o-mail-chat-window-hidden-menu btn d-flex align-items-center rounded-top-3 bg-900'">
+        <t t-set-slot="toggler">
+            <div class="me-1 fa fa-comments-o"/>
+            <div class="mx-1 text-truncate" t-esc="chatWindowService.hidden.length"/>
+            <div t-if="unread > 0" class="o-mail-chat-window-hidden-menu-unreadCounter position-absolute end-0 top-0 badge rounded-pill text-bg-primary" t-esc="unread"/>
+        </t>
+        <t t-set-slot="default">
+            <ul class="o-mail-chat-window-hidden-menu-list m-0 p-0 overflow-auto" role="menu" t-ref="list">
+                <li t-foreach="chatWindowService.hidden" t-as="chatWindow" t-key="chatWindow.threadLocalId" class="o-mail-chat-window-hidden-menu-item dropdown-item p-0" t-att-class="{ 'border-bottom' : !chatWindow_last }" role="menuitem">
+                    <ChatWindow chatWindow="chatWindow"/>
+                </li>
+            </ul>
+        </t>
+    </Dropdown>
+</t>
+
+</templates>

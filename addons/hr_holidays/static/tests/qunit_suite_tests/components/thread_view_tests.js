@@ -6,7 +6,7 @@ QUnit.module('hr_holidays', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('thread_view_tests.js');
 
-QUnit.test('out of office message on direct chat with out of office partner', async function (assert) {
+QUnit.skipRefactoring('out of office message on direct chat with out of office partner', async function (assert) {
     assert.expect(2);
 
     // Returning date of the out of office partner, simulates he'll be back in a month

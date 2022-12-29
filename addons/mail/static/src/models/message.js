@@ -51,9 +51,6 @@ Model({
             if ("is_note" in data) {
                 data2.is_note = data.is_note;
             }
-            if ("is_notification" in data) {
-                data2.is_notification = data.is_notification;
-            }
             data2.linkPreviews = data.linkPreviews;
             if ("messageReactionGroups" in data) {
                 data2.messageReactionGroups = data.messageReactionGroups;
@@ -505,7 +502,7 @@ Model({
         isDiscussionOrNotification: attr({
             default: false,
             compute() {
-                if (this.is_discussion || this.is_notification) {
+                if (this.is_discussion || this.message_type === "user_notification") {
                     return true;
                 }
                 return clear();
@@ -591,7 +588,6 @@ Model({
          */
         isNeedaction: attr({ default: false }),
         is_note: attr({ default: false }),
-        is_notification: attr({ default: false }),
         /**
          * Determine whether the current partner is mentioned.
          */
@@ -604,7 +600,7 @@ Model({
         /**
          * Determine whether the message is highlighted.
          */
-        isHighlighted: attr({
+        isHighlightedFromMention: attr({
             compute() {
                 return (
                     this.isCurrentPartnerMentioned &&
@@ -641,7 +637,7 @@ Model({
                 if (this.message_type === "notification") {
                     return this.env._t("System notification");
                 }
-                if (!this.is_discussion && !this.is_notification) {
+                if (!this.is_discussion && this.message_type !== "user_notification") {
                     return this.env._t("Note");
                 }
                 return this.env._t("Message");

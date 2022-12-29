@@ -95,7 +95,7 @@ QUnit.module('SmsWidget', (hooks) => {
 
         // insert an emoji
         await click(target, ".o_field_sms_widget button");
-        let emojiItem = target.querySelector(".o_EmojiGridRowView_item");
+        let emojiItem = target.querySelector(".o-mail-emoji-picker-content .o-emoji");
         let emojiItemCharacter = emojiItem.textContent;
         await click(emojiItem);
 
@@ -107,7 +107,7 @@ QUnit.module('SmsWidget', (hooks) => {
         // check insertion after selection (replacing selection)
         target.querySelector('.o_input').setSelectionRange(0, stringLength);
         await click(target, ".o_field_sms_widget button");
-        emojiItem = target.querySelector(".o_EmojiGridRowView_item");
+        emojiItem = target.querySelector(".o-mail-emoji-picker-content .o-emoji");
         emojiItemCharacter = emojiItem.textContent;
         await click(emojiItem);
         stringLength = emojiItemCharacter.length;

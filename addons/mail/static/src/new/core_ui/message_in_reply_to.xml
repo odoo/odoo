@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.message_in_reply_to" owl="1">
+        <t t-set="message" t-value="props.message" />
+        <div class="o-messsage-in-reply-wrap" t-att-class="{
+                'me-5': store.discuss.isActive or (env.inChatWindow and !props.alignedRight),
+                'd-flex justify-content-end ms-5': env.inChatWindow and props.alignedRight,
+            }">
+            <small class="o-mail-message-in-reply position-relative d-block text-small mb-1" t-attf-class="{{ env.inChatWindow and props.alignedRight ? 'justify-content-end pe-5': 'ps-5' }}" t-on-click="props.onClick">
+                <span class="o-mail-message-in-reply-corner position-absolute bottom-0 top-50 pe-4 border-top text-300" t-attf-class="{{ env.inChatWindow and props.alignedRight ? 'o-isRightAlign border-end' : 'o-isLeftAlign border-start' }}" t-att-class="{ 'ms-n2': store.discuss.isActive }"/>
+                <span t-if="!message.parentMessage.isEmpty" class="o-mail-message-in-reply-wrap-outer cursor-pointer d-flex align-items-center text-muted opacity-75 opacity-100-hover"  t-attf-class="{{ env.inChatWindow and props.alignedRight ? 'pe-3': 'ps-3' }}">
+                    <img class="o-mail-message-in-reply-avatar me-2 rounded-circle" t-att-src="avatarUrl" t-att-title="message.parentMessage.author.name" alt="Avatar"/>
+                    <span class="o-mail-message-in-reply-wrap-inner overflow-hidden">
+                        <b class="o-mail-message-in-reply-author">@<t t-out="message.parentMessage.author.name"/></b>:
+                        <span class="o-mail-message-in-reply-body ms-1 text-break">
+                            <t t-if="!message.parentMessage.isBodyEmpty">
+                                <t t-out="message.parentMessage.body"/>
+                            </t>
+                            <t t-elif="message.parentMessage.attachments.length > 0">
+                                <span class="me-2 fst-italic">Click to see the attachments</span>
+                                <i class="fa fa-image"/>
+                            </t>
+                        </span>
+                    </span>
+                </span>
+                <i t-else="" class="o-mail-message-in-reply-deleted-message text-muted ms-2">Original message was deleted</i>
+            </small>
+        </div>
+    </t>
+</templates>
