@@ -1,16 +1,14 @@
 /** @odoo-module **/
 
-import { makeDeferred } from "@mail/utils/deferred";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import {
     afterNextRender,
     isScrolledToBottom,
-    nextAnimationFrame,
     start,
     startServer,
 } from "@mail/../tests/helpers/test_utils";
 
-import { dom, makeTestPromise } from "web.test_utils";
+import { dom } from "web.test_utils";
 
 const { triggerEvent } = dom;
 
@@ -18,407 +16,7 @@ QUnit.module("mail", {}, function () {
     QUnit.module("widgets", {}, function () {
         QUnit.module("form_renderer_tests.js");
 
-        QUnit.test("[technical] spinner when messaging is not created", async function (assert) {
-            /**
-             * Creation of messaging in env is async due to generation of models being
-             * async. Generation of models is async because it requires parsing of all
-             * JS modules that contain pieces of model definitions.
-             *
-             * Time of having no messaging is very short, almost imperceptible by user
-             * on UI, but the display should not crash during this critical time period.
-             */
-            assert.expect(3);
-
-            const pyEnv = await startServer();
-            const resPartnerId1 = pyEnv["res.partner"].create({
-                display_name: "second partner",
-            });
-            const views = {
-                "res.partner,false,form": `<form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter"></div>
-            </form>`,
-            };
-            const { openView } = await start({
-                messagingBeforeCreationDeferred: makeDeferred(), // block messaging creation
-                serverData: { views },
-                waitUntilMessagingCondition: "none",
-            });
-            await openView({
-                res_model: "res.partner",
-                res_id: resPartnerId1,
-                views: [[false, "form"]],
-            });
-            assert.containsOnce(
-                document.body,
-                ".o_ChatterContainer",
-                "should display chatter container even when messaging is not created yet"
-            );
-            assert.containsOnce(
-                document.body,
-                ".o_ChatterContainer_noChatter",
-                "chatter container should not display any chatter when messaging not created"
-            );
-            assert.strictEqual(
-                document.querySelector(".o_ChatterContainer").textContent,
-                "Please wait...",
-                "chatter container should display spinner when messaging not yet created"
-            );
-        });
-
-        QUnit.test(
-            "[technical] keep spinner on transition from messaging non-created to messaging created (and non-initialized)",
-            async function (assert) {
-                /**
-                 * Creation of messaging in env is async due to generation of models being
-                 * async. Generation of models is async because it requires parsing of all
-                 * JS modules that contain pieces of model definitions.
-                 *
-                 * Time of having no messaging is very short, almost imperceptible by user
-                 * on UI, but the display should not crash during this critical time period.
-                 */
-                assert.expect(4);
-
-                const messaginginitializedDeferred = makeTestPromise();
-                const pyEnv = await startServer();
-                const messagingBeforeCreationDeferred = makeDeferred();
-                const resPartnerId1 = pyEnv["res.partner"].create({
-                    display_name: "second partner",
-                });
-                const views = {
-                    "res.partner,false,form": `<form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter"></div>
-            </form>`,
-                };
-                const { openView } = await start({
-                    messagingBeforeCreationDeferred,
-                    async mockRPC(route, args) {
-                        if (route === "/mail/init_messaging") {
-                            await messaginginitializedDeferred; // simulate messaging never initialized
-                        }
-                    },
-                    serverData: { views },
-                    waitUntilMessagingCondition: "none",
-                });
-                await openView({
-                    res_model: "res.partner",
-                    res_id: resPartnerId1,
-                    views: [[false, "form"]],
-                });
-                assert.strictEqual(
-                    document.querySelector(".o_ChatterContainer").textContent,
-                    "Please wait...",
-                    "chatter container should display spinner when messaging not yet created"
-                );
-                assert.containsOnce(
-                    document.body,
-                    ".o_ChatterContainer_noChatter",
-                    "chatter container should not display any chatter when messaging not created"
-                );
-
-                // simulate messaging become created
-                messagingBeforeCreationDeferred.resolve();
-                await nextAnimationFrame();
-                assert.strictEqual(
-                    document.querySelector(".o_ChatterContainer").textContent,
-                    "Please wait...",
-                    "chatter container should still display spinner when messaging is created but not initialized"
-                );
-                assert.containsOnce(
-                    document.body,
-                    ".o_ChatterContainer_noChatter",
-                    "chatter container should still not display any chatter when messaging not initialized"
-                );
-                messaginginitializedDeferred.resolve(); // ensure proper teardown
-            }
-        );
-
-        QUnit.test(
-            "spinner when messaging is created but not initialized",
-            async function (assert) {
-                assert.expect(3);
-
-                const messaginginitializedDeferred = makeTestPromise();
-                const pyEnv = await startServer();
-                const resPartnerId1 = pyEnv["res.partner"].create({
-                    display_name: "second partner",
-                });
-                const views = {
-                    "res.partner,false,form": `<form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter"></div>
-            </form>`,
-                };
-                const { openView } = await start({
-                    async mockRPC(route, args) {
-                        if (route === "/mail/init_messaging") {
-                            await messaginginitializedDeferred; // simulate messaging never initialized
-                        }
-                    },
-                    serverData: { views },
-                    waitUntilMessagingCondition: "created",
-                });
-                await openView({
-                    res_model: "res.partner",
-                    res_id: resPartnerId1,
-                    views: [[false, "form"]],
-                });
-                assert.containsOnce(
-                    document.body,
-                    ".o_ChatterContainer",
-                    "should display chatter container even when messaging is not fully initialized"
-                );
-                assert.containsOnce(
-                    document.body,
-                    ".o_ChatterContainer_noChatter",
-                    "chatter container should not display any chatter when messaging not initialized"
-                );
-                assert.strictEqual(
-                    document.querySelector(".o_ChatterContainer").textContent,
-                    "Please wait...",
-                    "chatter container should display spinner when messaging not yet initialized"
-                );
-                messaginginitializedDeferred.resolve(); // ensure proper teardown
-            }
-        );
-
-        QUnit.test(
-            "transition non-initialized messaging to initialized messaging: display spinner then chatter",
-            async function (assert) {
-                assert.expect(3);
-
-                const pyEnv = await startServer();
-                const messagingBeforeInitializationDeferred = makeDeferred();
-                const resPartnerId1 = pyEnv["res.partner"].create({
-                    display_name: "second partner",
-                });
-                const views = {
-                    "res.partner,false,form": `<form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter"></div>
-            </form>`,
-                };
-                const { openView } = await start({
-                    async mockRPC(route, args) {
-                        if (route === "/mail/init_messaging") {
-                            await messagingBeforeInitializationDeferred;
-                        }
-                    },
-                    serverData: { views },
-                    waitUntilMessagingCondition: "created",
-                });
-                await openView({
-                    res_model: "res.partner",
-                    res_id: resPartnerId1,
-                    views: [[false, "form"]],
-                });
-                assert.strictEqual(
-                    document.querySelector(".o_ChatterContainer").textContent,
-                    "Please wait...",
-                    "chatter container should display spinner when messaging not yet initialized"
-                );
-                assert.containsOnce(
-                    document.body,
-                    ".o_ChatterContainer_noChatter",
-                    "chatter container should not display any chatter when messaging not initialized"
-                );
-
-                // Simulate messaging becomes initialized
-                await afterNextRender(() => messagingBeforeInitializationDeferred.resolve());
-                assert.containsNone(
-                    document.body,
-                    ".o_ChatterContainer_noChatter",
-                    "chatter container should now display chatter when messaging becomes initialized"
-                );
-            }
-        );
-
-        QUnit.test("basic chatter rendering", async function (assert) {
-            assert.expect(1);
-
-            const pyEnv = await startServer();
-            const resPartnerId1 = pyEnv["res.partner"].create({ display_name: "second partner" });
-            const views = {
-                "res.partner,false,form": `<form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter"></div>
-            </form>`,
-            };
-            const { openView } = await start({
-                serverData: { views },
-            });
-            await openView({
-                res_model: "res.partner",
-                res_id: resPartnerId1,
-                views: [[false, "form"]],
-            });
-            assert.strictEqual(
-                document.querySelectorAll(`.o_Chatter`).length,
-                1,
-                "there should be a chatter"
-            );
-        });
-
-        QUnit.test("basic chatter rendering without followers", async function (assert) {
-            assert.expect(6);
-
-            const pyEnv = await startServer();
-            const resPartnerId1 = pyEnv["res.partner"].create({ display_name: "second partner" });
-            const views = {
-                "res.partner,false,form": `<form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="activity_ids"/>
-                    <field name="message_ids"/>
-                </div>
-            </form>`,
-            };
-            const { openView } = await start({
-                serverData: { views },
-            });
-            await openView({
-                res_model: "res.partner",
-                res_id: resPartnerId1,
-                views: [[false, "form"]],
-            });
-            assert.containsOnce(document.body, ".o_Chatter", "there should be a chatter");
-            assert.containsOnce(
-                document.body,
-                ".o_ChatterTopbar",
-                "there should be a chatter topbar"
-            );
-            assert.containsOnce(
-                document.body,
-                ".o_ChatterTopbar_buttonAddAttachments",
-                "there should be an attachment button"
-            );
-            assert.containsOnce(
-                document.body,
-                ".o_ChatterTopbar_buttonScheduleActivity",
-                "there should be a schedule activity button"
-            );
-            assert.containsNone(
-                document.body,
-                ".o_FollowerListMenuView",
-                "there should be no followers menu because the 'message_follower_ids' field is not present in 'oe_chatter'"
-            );
-            assert.containsOnce(document.body, ".o_Chatter_thread", "there should be a thread");
-        });
-
-        QUnit.test("basic chatter rendering without activities", async function (assert) {
-            assert.expect(6);
-
-            const pyEnv = await startServer();
-            const resPartnerId1 = pyEnv["res.partner"].create({ display_name: "second partner" });
-            const views = {
-                "res.partner,false,form": `<form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="message_ids"/>
-                </div>
-            </form>`,
-            };
-            const { openView } = await start({
-                serverData: { views },
-            });
-            await openView({
-                res_model: "res.partner",
-                res_id: resPartnerId1,
-                views: [[false, "form"]],
-            });
-            assert.containsOnce(document.body, ".o_Chatter", "there should be a chatter");
-            assert.containsOnce(
-                document.body,
-                ".o_ChatterTopbar",
-                "there should be a chatter topbar"
-            );
-            assert.containsOnce(
-                document.body,
-                ".o_ChatterTopbar_buttonAddAttachments",
-                "there should be an attachment button"
-            );
-            assert.containsNone(
-                document.body,
-                ".o_ChatterTopbar_buttonScheduleActivity",
-                "there should be no schedule activity button because the 'activity_ids' field is not present in 'oe_chatter'"
-            );
-            assert.containsOnce(
-                document.body,
-                ".o_FollowerListMenuView",
-                "there should be a followers menu"
-            );
-            assert.containsOnce(document.body, ".o_Chatter_thread", "there should be a thread");
-        });
-
-        QUnit.test("basic chatter rendering without messages", async function (assert) {
-            assert.expect(6);
-
-            const pyEnv = await startServer();
-            const resPartnerId1 = pyEnv["res.partner"].create({ display_name: "second partner" });
-            const views = {
-                "res.partner,false,form": `<form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="activity_ids"/>
-                </div>
-            </form>`,
-            };
-            const { openView } = await start({
-                serverData: { views },
-            });
-            await openView({
-                res_model: "res.partner",
-                res_id: resPartnerId1,
-                views: [[false, "form"]],
-            });
-            assert.containsOnce(document.body, ".o_Chatter", "there should be a chatter");
-            assert.containsOnce(
-                document.body,
-                ".o_ChatterTopbar",
-                "there should be a chatter topbar"
-            );
-            assert.containsOnce(
-                document.body,
-                ".o_ChatterTopbar_buttonAddAttachments",
-                "there should be an attachment button"
-            );
-            assert.containsOnce(
-                document.body,
-                ".o_ChatterTopbar_buttonScheduleActivity",
-                "there should be a schedule activity button"
-            );
-            assert.containsOnce(
-                document.body,
-                ".o_FollowerListMenuView",
-                "there should be a followers menu"
-            );
-            assert.containsNone(
-                document.body,
-                ".o_Chatter_thread",
-                "there should be no thread because the 'message_ids' field is not present in 'oe_chatter'"
-            );
-        });
-
-        QUnit.test("chatter updating", async function (assert) {
+        QUnit.skipRefactoring("chatter updating", async function (assert) {
             assert.expect(1);
 
             const pyEnv = await startServer();
@@ -444,17 +42,11 @@ QUnit.module("mail", {}, function () {
             const { afterEvent, openFormView } = await start({
                 serverData: { views },
             });
-            await openFormView(
-                {
-                    res_model: "res.partner",
-                    res_id: resPartnerId1,
+            await openFormView("res.partner", resPartnerId1, {
+                props: {
+                    resIds: [resPartnerId1, resPartnerId2],
                 },
-                {
-                    props: {
-                        resIds: [resPartnerId1, resPartnerId2],
-                    },
-                }
-            );
+            });
             await afterNextRender(() =>
                 afterEvent({
                     eventName: "o-thread-view-hint-processed",
@@ -472,12 +64,12 @@ QUnit.module("mail", {}, function () {
             );
             assert.containsOnce(
                 document.body,
-                ".o_MessageView",
+                ".o-mail-message",
                 "there should be a message in partner 12 thread"
             );
         });
 
-        QUnit.test("post message on draft record", async function (assert) {
+        QUnit.skipRefactoring("post message on draft record", async function (assert) {
             const views = {
                 "res.partner,false,form": `
                     <form string="Partners">
@@ -489,9 +81,7 @@ QUnit.module("mail", {}, function () {
                         </div>
                     </form>`,
             };
-            const { click, insertText, openView } = await start({
-                serverData: { views },
-            });
+            const { click, insertText, openView } = await start({ serverData: { views } });
             await openView({
                 res_model: "res.partner",
                 views: [[false, "form"]],
@@ -506,7 +96,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "schedule activities on draft record should prompt with scheduling an activity (proceed with action)",
             async function (assert) {
                 const views = {
@@ -526,7 +116,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "read more/less links are not duplicated when switching from read to edit mode",
             async function (assert) {
                 assert.expect(3);
@@ -575,8 +165,8 @@ QUnit.module("mail", {}, function () {
                     message: "should wait until read more/less is inserted initially",
                     predicate: ({ message }) => message.id === mailMessageId1,
                 });
-                assert.containsOnce(document.body, ".o_Chatter", "there should be a chatter");
-                assert.containsOnce(document.body, ".o_MessageView", "there should be a message");
+                assert.containsOnce(document.body, ".o-mail-chatter", "there should be a chatter");
+                assert.containsOnce(document.body, ".o-mail-message", "there should be a message");
                 assert.containsOnce(
                     document.body,
                     ".o_MessageView_readMoreLess",
@@ -585,7 +175,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "read more links becomes read less after being clicked",
             async function (assert) {
                 assert.expect(5);
@@ -636,8 +226,8 @@ QUnit.module("mail", {}, function () {
                     message: "should wait until read more/less is inserted initially",
                     predicate: ({ message }) => message.id === mailMessageId1,
                 });
-                assert.containsOnce(document.body, ".o_Chatter", "there should be a chatter");
-                assert.containsOnce(document.body, ".o_MessageView", "there should be a message");
+                assert.containsOnce(document.body, ".o-mail-chatter", "there should be a chatter");
+                assert.containsOnce(document.body, ".o-mail-message", "there should be a message");
                 assert.containsOnce(
                     document.body,
                     ".o_MessageView_readMoreLess",
@@ -658,29 +248,31 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test("Form view not scrolled when switching record", async function (assert) {
-            assert.expect(6);
+        QUnit.skipRefactoring(
+            "Form view not scrolled when switching record",
+            async function (assert) {
+                assert.expect(6);
 
-            const pyEnv = await startServer();
-            const [resPartnerId1, resPartnerId2] = pyEnv["res.partner"].create([
-                {
-                    description: [...Array(60).keys()].join("\n"),
-                    display_name: "Partner 1",
-                },
-                {
-                    display_name: "Partner 2",
-                },
-            ]);
+                const pyEnv = await startServer();
+                const [resPartnerId1, resPartnerId2] = pyEnv["res.partner"].create([
+                    {
+                        description: [...Array(60).keys()].join("\n"),
+                        display_name: "Partner 1",
+                    },
+                    {
+                        display_name: "Partner 2",
+                    },
+                ]);
 
-            const messages = [...Array(60).keys()].map((id) => {
-                return {
-                    model: "res.partner",
-                    res_id: id % 2 ? resPartnerId1 : resPartnerId2,
-                };
-            });
-            pyEnv["mail.message"].create(messages);
-            const views = {
-                "res.partner,false,form": `<form string="Partners">
+                const messages = [...Array(60).keys()].map((id) => {
+                    return {
+                        model: "res.partner",
+                        res_id: id % 2 ? resPartnerId1 : resPartnerId2,
+                    };
+                });
+                pyEnv["mail.message"].create(messages);
+                const views = {
+                    "res.partner,false,form": `<form string="Partners">
                 <sheet>
                     <field name="name"/>
                     <field name="description"/>
@@ -689,66 +281,67 @@ QUnit.module("mail", {}, function () {
                     <field name="message_ids"/>
                 </div>
             </form>`,
-            };
-            patchUiSize({ size: SIZES.LG });
-            const { click, openView } = await start({
-                serverData: { views },
-            });
-            await openView(
-                {
-                    res_model: "res.partner",
-                    res_id: resPartnerId1,
-                    views: [[false, "form"]],
-                },
-                {
-                    resIds: [resPartnerId1, resPartnerId2],
-                }
-            );
+                };
+                patchUiSize({ size: SIZES.LG });
+                const { click, openView } = await start({
+                    serverData: { views },
+                });
+                await openView(
+                    {
+                        res_model: "res.partner",
+                        res_id: resPartnerId1,
+                        views: [[false, "form"]],
+                    },
+                    {
+                        resIds: [resPartnerId1, resPartnerId2],
+                    }
+                );
 
-            const controllerContentEl = document.querySelector(".o_content");
+                const controllerContentEl = document.querySelector(".o_content");
 
-            assert.strictEqual(
-                document.querySelector(".breadcrumb-item.active").textContent,
-                "Partner 1",
-                "Form view should display partner 'Partner 1'"
-            );
-            assert.strictEqual(
-                controllerContentEl.scrollTop,
-                0,
-                "The top of the form view is visible"
-            );
+                assert.strictEqual(
+                    document.querySelector(".breadcrumb-item.active").textContent,
+                    "Partner 1",
+                    "Form view should display partner 'Partner 1'"
+                );
+                assert.strictEqual(
+                    controllerContentEl.scrollTop,
+                    0,
+                    "The top of the form view is visible"
+                );
 
-            await afterNextRender(async () => {
-                controllerContentEl.scrollTop =
-                    controllerContentEl.scrollHeight - controllerContentEl.clientHeight;
-                await triggerEvent(document.querySelector(".o_ThreadView_messageList"), "scroll");
-            });
-            assert.ok(
-                isScrolledToBottom(controllerContentEl),
-                "The controller container should be scrolled to its bottom"
-            );
+                await afterNextRender(async () => {
+                    controllerContentEl.scrollTop =
+                        controllerContentEl.scrollHeight - controllerContentEl.clientHeight;
+                    await triggerEvent(document.querySelector(".o-mail-thread"), "scroll");
+                });
+                assert.ok(
+                    isScrolledToBottom(controllerContentEl),
+                    "The controller container should be scrolled to its bottom"
+                );
 
-            await click(".o_pager_next");
-            assert.strictEqual(
-                document.querySelector(".breadcrumb-item.active").textContent,
-                "Partner 2",
-                "The form view should display partner 'Partner 2'"
-            );
-            assert.strictEqual(
-                controllerContentEl.scrollTop,
-                0,
-                "The top of the form view should be visible when switching record from pager"
-            );
+                await click(".o_pager_next");
+                assert.strictEqual(
+                    document.querySelector(".breadcrumb-item.active").textContent,
+                    "Partner 2",
+                    "The form view should display partner 'Partner 2'"
+                );
+                assert.strictEqual(
+                    controllerContentEl.scrollTop,
+                    0,
+                    "The top of the form view should be visible when switching record from pager"
+                );
 
-            await click(".o_pager_previous");
-            assert.strictEqual(
-                controllerContentEl.scrollTop,
-                0,
-                "Form view's scroll position should have been reset when switching back to first record"
-            );
-        });
+                await click(".o_pager_previous");
+                assert.strictEqual(
+                    controllerContentEl.scrollTop,
+                    0,
+                    "Form view's scroll position should have been reset when switching back to first record"
+                );
+            }
+        );
 
-        QUnit.test(
+        QUnit.skipRefactoring(
             "Attachments that have been unlinked from server should be visually unlinked from record",
             async function (assert) {
                 // Attachments that have been fetched from a record at certain time and then
@@ -817,47 +410,7 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.test(
-            'chatter just contains "creating a new record" message during the creation of a new record after having displayed a chatter for an existing record',
-            async function (assert) {
-                assert.expect(2);
-
-                const pyEnv = await startServer();
-                const resPartnerId1 = pyEnv["res.partner"].create({});
-                const views = {
-                    "res.partner,false,form": `<form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"/>
-                </div>
-            </form>`,
-                };
-                const { click, openView } = await start({
-                    serverData: { views },
-                });
-                await openView({
-                    res_model: "res.partner",
-                    res_id: resPartnerId1,
-                    views: [[false, "form"]],
-                });
-
-                await click(".o_form_button_create");
-                assert.containsOnce(
-                    document.body,
-                    ".o_MessageView",
-                    "Should have a single message when creating a new record"
-                );
-                assert.strictEqual(
-                    document.querySelector(".o_MessageView_content").textContent,
-                    "Creating a new record...",
-                    "the message content should be in accord to the creation of this record"
-                );
-            }
-        );
-
-        QUnit.test(
+        QUnit.skipRefactoring(
             "[TECHNICAL] unfolded read more/less links should not fold on message click besides those button links",
             async function (assert) {
                 // message click triggers a re-render. Before writing of this test, the
@@ -921,7 +474,7 @@ QUnit.module("mail", {}, function () {
                         "Read More/Less link on message should be unfolded after a click from initial rendering (read less)"
                     );
 
-                await click(".o_MessageView");
+                await click(".o-mail-message");
                 assert.strictEqual(
                     document.querySelector(".o_MessageView_readMoreLess").textContent,
                     "Read Less",

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="im_livechat.thread_icon" t-inherit="mail.thread_icon" t-inherit-mode="extension" owl="1">
+        <xpath expr="//*[contains(@class, 'o-mail-thread-icon')]" position="attributes">
+            <attribute name="t-if">thread.type != 'livechat' or !thread.hasTypingMembers</attribute>
+        </xpath>
+        <xpath expr="//*[contains(@class, 'o-mail-thread-icon')]" position="before">
+            <Typing t-if="thread.type === 'livechat' and thread.hasTypingMembers" channel="thread" displayText="false"/>
+        </xpath>
+    </t>
+</templates>

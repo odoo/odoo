@@ -21,6 +21,9 @@ Allows users to send documents by post
     ],
     'auto_install': True,
     'assets': {
+        'mail.assets_backend': [
+            'snailmail/static/src/new/**/*',
+        ],
         'mail.assets_messaging': [
             'snailmail/static/src/models/*.js',
         ],
@@ -42,7 +45,7 @@ Allows users to send documents by post
             'snailmail/static/tests/helpers/**/*.js',
         ],
         'web.qunit_suite_tests': [
-            'snailmail/static/tests/qunit_suite_tests/**/*.js',
+            'snailmail/static/tests/new/**/*',
         ],
     },
     'license': 'LGPL-3',

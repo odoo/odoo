@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website_livechat.thread" t-inherit="mail.thread" t-inherit-mode="extension" owl="1">
+        <xpath expr="//*[hasclass('o-mail-thread')]" position="before">
+            <t t-set="visitor" t-value="props.thread.visitor"/>
+            <div t-if="visitor and !env.inChatWindow" class="o-mail-visitor-banner py-4 px-2 d-flex border-bottom">
+                <div class="o-mail-visitor-banner-sidebar me-2 d-flex justify-content-center">
+                    <div class="o-mail-visitor-banner-avatar-container mx-1 position-relative">
+                        <img class="o-mail-visitor-banner-avatar w-100 h-100 rounded-circle" t-att-src="visitor.avatarUrl" alt="Avatar"/>
+                        <ImStatus t-if="visitor.isConnected" persona="visitor" className="'bottom-0 end-0 position-absolute'"/>
+                    </div>
+                </div>
+                <div>
+                    <img t-if="visitor.country" class="me-1 o_country_flag" t-att-src="visitor.countryFlagUrl" t-att-alt="visitor.country.code or visitor.country.name"/>
+                    <span class="me-3 fw-bolder" t-esc="visitor.displayName"/>
+                    <span class="me-3">
+                        <i class="me-1 fa fa-comment-o" aria-label="Lang"/>
+                        <t t-esc="visitor.langName"/>
+                    </span>
+                    <span t-if="visitor.websiteName">
+                        <i class="me-1 fa fa-globe" aria-label="Website"/>
+                        <span t-esc="visitor.websiteName"/>
+                    </span>
+                    <div class="mt-1">
+                        <i class="me-1 fa fa-history" aria-label="History"/>
+                        <span t-esc="visitor.history"/>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

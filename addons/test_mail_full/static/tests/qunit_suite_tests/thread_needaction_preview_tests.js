@@ -1,64 +1,47 @@
 /** @odoo-module **/
 
-import { afterNextRender, start, startServer } from '@mail/../tests/helpers/test_utils';
+import { start, startServer } from "@mail/../tests/helpers/test_utils";
+import { getFixture, triggerEvent } from "@web/../tests/helpers/utils";
 
-QUnit.module('test_mail_full', {}, function () {
-QUnit.module('thread_needaction_preview_tests.js');
+let target;
 
-QUnit.test('rating value displayed on the thread needaction preview', async function (assert) {
-    assert.expect(4);
+QUnit.module("thread needaction preview", {
+    async beforeEach() {
+        target = getFixture();
+    },
+});
 
+QUnit.test("rating value displayed on the thread needaction preview", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create({});
-    const mailTestRating1 = pyEnv['mail.test.rating'].create({});
-    const mailMessageId1 = pyEnv['mail.message'].create({
-        model: 'mail.test.rating',
+    const resPartnerId1 = pyEnv["res.partner"].create({});
+    const mailTestRating1 = pyEnv["mail.test.rating"].create({ name: "Test rating" });
+    const mailMessageId1 = pyEnv["mail.message"].create({
+        model: "mail.test.rating",
         needaction: true,
         needaction_partner_ids: [pyEnv.currentPartnerId],
         res_id: mailTestRating1,
     });
-    pyEnv['mail.notification'].create({
+    pyEnv["mail.notification"].create({
         mail_message_id: mailMessageId1,
-        notification_status: 'sent',
-        notification_type: 'inbox',
+        notification_status: "sent",
+        notification_type: "inbox",
         res_partner_id: pyEnv.currentPartnerId,
     });
-    pyEnv['rating.rating'].create([{
-        consumed: true,
-        message_id: mailMessageId1,
-        partner_id: resPartnerId1,
-        rating_image_url: "/rating/static/src/img/rating_5.png",
-        rating_text: "top",
-    }]);
-    const { afterEvent, messaging } = await start();
-    await afterNextRender(() => afterEvent({
-        eventName: 'o-thread-cache-loaded-messages',
-        func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
-        message: "should wait until inbox loaded initial needaction messages",
-        predicate: ({ threadCache }) => {
-            return threadCache.thread === messaging.inbox.thread;
+    pyEnv["rating.rating"].create([
+        {
+            consumed: true,
+            message_id: mailMessageId1,
+            partner_id: resPartnerId1,
+            rating_image_url: "/rating/static/src/img/rating_5.png",
+            rating_text: "top",
         },
-    }));
-    assert.strictEqual(
-        document.querySelector('.o_ThreadNeedactionPreviewView_ratingText').textContent,
-        "Rating:",
-        "should display the correct content (Rating:)"
-    );
+    ]);
+    await start();
+    await triggerEvent(target, ".o_menu_systray i[aria-label='Messages']", "click");
+    assert.containsOnce(target, ".o-mail-notification-item-inlineText:contains(Rating:)");
+    assert.containsOnce(target, ".o-rating-preview-image[data-alt='top']");
     assert.containsOnce(
-        document.body,
-        '.o_ThreadNeedactionPreviewView_ratingImage',
-        "should have a rating image in the body"
+        target,
+        ".o-rating-preview-image[data-src='/rating/static/src/img/rating_5.png']"
     );
-    assert.strictEqual(
-        $('.o_ThreadNeedactionPreviewView_ratingImage').attr('data-src'),
-        "/rating/static/src/img/rating_5.png",
-        "should contain the correct rating image"
-    );
-    assert.strictEqual(
-        $('.o_ThreadNeedactionPreviewView_ratingImage').attr('data-alt'),
-        "top",
-        "should contain the correct rating text"
-    );
-});
-
 });

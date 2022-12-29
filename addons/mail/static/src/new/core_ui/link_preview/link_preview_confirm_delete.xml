@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.link_preview_confirm_delete" owl="1">
+        <Dialog size="'md'" title="'Confirmation'" modalRef="modalRef">
+            <p class="mx-3 mb-3">Do you really want to delete this preview?</p>
+            <t t-component="props.LinkPreview" linkPreview="props.linkPreview" deletable="false"/>
+            <t t-set-slot="footer" owl="1">
+                <button class="btn btn-primary me-2" t-on-click="onClickOk">Ok</button>
+                <button class="btn btn-secondary me-2" t-on-click="onClickCancel">Cancel</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

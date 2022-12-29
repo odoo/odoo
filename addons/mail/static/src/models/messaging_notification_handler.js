@@ -1,13 +1,10 @@
 /** @odoo-module **/
 
 import { decrement, increment, insert, Model } from "@mail/model";
-import { htmlToTextContentInline } from "@mail/js/utils";
 
-import { escape, sprintf } from "@web/core/utils/strings";
+import { sprintf } from "@web/core/utils/strings";
 import { str_to_datetime } from "web.time";
 import { Markup } from "web.utils";
-
-const PREVIEW_MSG_MAX_SIZE = 350; // optimal for native English speakers
 
 Model({
     name: "MessagingNotificationHandler",
@@ -29,7 +26,7 @@ Model({
                 "notification",
                 this._handleNotifications
             );
-            this.env.services['bus_service'].start();
+            this.env.services["bus_service"].start();
         },
         /**
          * @private
@@ -104,8 +101,6 @@ Model({
                             return this._handleNotificationPartnerToggleStar(message.payload);
                         case "mail.channel/transient_message":
                             return this._handleNotificationPartnerTransientMessage(message.payload);
-                        case "mail.channel/leave":
-                            return this._handleNotificationChannelLeave(message.payload);
                         case "res.users/connection":
                             return this._handleNotificationPartnerUserConnection(message.payload);
                         case "mail.activity/updated": {
@@ -121,10 +116,6 @@ Model({
                             }
                             return;
                         }
-                        case "mail.channel/unpin":
-                            return this._handleNotificationChannelUnpin(message.payload);
-                        case "mail.channel/joined":
-                            return this._handleNotificationChannelJoined(message.payload);
                         case "mail.channel/last_interest_dt_changed":
                             return this._handleNotificationChannelLastInterestDateTimeChanged(
                                 message.payload
@@ -313,14 +304,6 @@ Model({
             const isChatWithOdooBot =
                 channel.correspondent && channel.correspondent === this.messaging.partnerRoot;
             if (!isChatWithOdooBot) {
-                const isOdooFocused = this.env.services["presence"].isOdooFocused();
-                // Notify if out of focus
-                if (!isOdooFocused && channel.thread.isChatChannel) {
-                    this._notifyNewChannelMessageWhileOutOfFocus({
-                        channel,
-                        message,
-                    });
-                }
                 if (channel.channel_type !== "channel" && !this.messaging.currentGuest) {
                     // disabled on non-channel threads and
                     // on `channel` channels for performance reasons
@@ -619,57 +602,6 @@ Model({
         /**
          * @private
          * @param {Object} payload
-         * @param {integer} payload.id
-         */
-        _handleNotificationChannelLeave({ id }) {
-            const thread = this.messaging.models["Thread"].findFromIdentifyingData({
-                id,
-                model: "mail.channel",
-            });
-            if (!thread) {
-                return;
-            }
-            const message = sprintf(this.env._t("You unsubscribed from %s."), thread.displayName);
-            this.messaging.notify({ message, type: "info" });
-            // We assume that arriving here the server has effectively
-            // unpinned the channel
-            thread.update({
-                isServerPinned: false,
-            });
-            if (thread.channel && thread.channel.memberOfCurrentUser) {
-                thread.channel.memberOfCurrentUser.delete();
-            }
-        },
-        /**
-         * @private
-         * @param {Object} payload
-         * @param {integer} payload.id
-         */
-        _handleNotificationChannelUnpin({ id }) {
-            const thread = this.messaging.models["Thread"].findFromIdentifyingData({
-                id,
-                model: "mail.channel",
-            });
-            if (!thread) {
-                return;
-            }
-            const message = sprintf(
-                this.env._t("You unpinned your conversation with %s."),
-                thread.displayName
-            );
-            this.messaging.notify({ message, type: "info" });
-            // We assume that arriving here the server has effectively
-            // unpinned the channel
-            thread.update({
-                isServerPinned: false,
-            });
-            if (thread.channel && thread.channel.memberOfCurrentUser) {
-                thread.channel.memberOfCurrentUser.delete();
-            }
-        },
-        /**
-         * @private
-         * @param {Object} payload
          * @param {integer} payload.partnerId
          * @param {string} payload.username
          */
@@ -689,49 +621,6 @@ Model({
                 return;
             }
             this.messaging.chatWindowManager.openThread(chat.thread);
-        },
-        /**
-         * @private
-         * @param {Object} param0
-         * @param {Channel} param0.channel
-         * @param {Message} param0.message
-         */
-        _notifyNewChannelMessageWhileOutOfFocus({ channel, message }) {
-            const author = message.author;
-            const messaging = this.messaging;
-            let notificationTitle;
-            if (!author) {
-                notificationTitle = this.env._t("New message");
-            } else {
-                if (channel.channel_type === "channel") {
-                    notificationTitle = sprintf(
-                        this.env._t("%(author name)s from %(channel name)s"),
-                        {
-                            "author name": author.nameOrDisplayName,
-                            "channel name": channel.displayName,
-                        }
-                    );
-                } else {
-                    notificationTitle = author.nameOrDisplayName;
-                }
-            }
-            const notificationContent = escape(
-                htmlToTextContentInline(message.body).substr(0, PREVIEW_MSG_MAX_SIZE)
-            );
-            this.messaging.userNotificationManager.sendNotification({
-                message: notificationContent,
-                title: notificationTitle,
-                type: "info",
-            });
-            messaging.update({ outOfFocusUnreadMessageCounter: increment() });
-            const titlePattern =
-                messaging.outOfFocusUnreadMessageCounter === 1
-                    ? this.env._t("%s Message")
-                    : this.env._t("%s Messages");
-            this.env.bus.trigger("set_title_part", {
-                part: "_chat",
-                title: sprintf(titlePattern, messaging.outOfFocusUnreadMessageCounter),
-            });
         },
         /**
          * Notifies threadViews about the given message being just received.

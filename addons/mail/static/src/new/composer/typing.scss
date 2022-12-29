@@ -1,0 +1,39 @@
+.o-mail-typing-text-separator {
+    min-width: 1px;
+}
+
+.o-mail-typing-dot {
+    animation: o_ThreadTypingIconView_dot_animation 1.5s linear infinite;
+
+    &.o-sizeMedium {
+        width: $o-mail-thread-typing-icon-size-medium;
+        height: $o-mail-thread-typing-icon-size-medium;
+    }
+
+    &.o-sizeSmall {
+        width: $o-mail-thread-typing-icon-size-small;
+        height: $o-mail-thread-typing-icon-size-small;
+    }
+
+    &.o-mail-typing-dot2 {
+        animation-delay: -1.35s;
+    }
+
+    &.o-mail-typing-dot3 {
+        animation-delay: -1.2s;
+    }
+}
+
+@keyframes o_ThreadTypingIconView_dot_animation {
+    0%, 40%, 100% {
+        opacity: initial;
+    }
+    20% {
+        opacity: 25%;
+    }
+}
+
+.o-mail-typing:before {
+    // invisible character so that typing status bar has constant height, regardless of text content.
+    content: "\200b"; /* unicode zero width space character */
+}

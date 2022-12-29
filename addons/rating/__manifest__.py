@@ -19,6 +19,9 @@ This module allows a customer to give rating.
     ],
     'installable': True,
     'assets': {
+        'mail.assets_backend': [
+            'rating/static/src/new/**/*',
+        ],
         'mail.assets_messaging': [
             'rating/static/src/models/*.js',
         ],

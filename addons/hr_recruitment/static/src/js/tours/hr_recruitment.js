@@ -79,17 +79,17 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     position: "bottom",
     width: 195
 }, {
-    trigger: ".o_Chatter .o_ChatterTopbar_buttonSendMessage",
+    trigger: "button:contains(Send message)",
     extra_trigger: '.o_applicant_form',
     content: Markup(_t("<div><b>Try to send an email</b> to the applicant.</div><div><i>Tips: All emails sent or received are saved in the history here</i>")),
     position: "bottom"
 }, {
-    trigger: ".o_Chatter .o_ComposerView_buttonSend",
+    trigger: ".o-mail-chatter .o-mail-composer button[aria-label='Send']",
     extra_trigger: '.o_applicant_form',
     content: _t("Send your email. Followers will get a copy of the communication."),
     position: "bottom"
 }, {
-    trigger: ".o_Chatter .o_ChatterTopbar_buttonLogNote",
+    trigger: "button:contains(Log note)",
     extra_trigger: '.o_applicant_form',
     content: _t("Or talk about this applicant privately with your colleagues."),
     position: "bottom"

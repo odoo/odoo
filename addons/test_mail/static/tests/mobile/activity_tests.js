@@ -6,7 +6,7 @@ import { prepareTarget } from "web.test_utils";
 QUnit.module("test_mail", () => {
 QUnit.module("activity view mobile");
 
-QUnit.test("horizontal scroll applies only to the content, not to the whole controller", async (assert) => {
+QUnit.skipRefactoring("horizontal scroll applies only to the content, not to the whole controller", async (assert) => {
     const viewPort = prepareTarget();
     viewPort.style.position = "initial";
     viewPort.style.width = "initial";

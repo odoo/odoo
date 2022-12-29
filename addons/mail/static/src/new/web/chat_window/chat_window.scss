@@ -1,0 +1,22 @@
+.o-mail-chat-window {
+    height: 460px;
+    width: $o-mail-thread-window-width;
+    z-index: 999; // messaging menu is dropdown (1000)
+    background-color: $o-mail-thread-window-bg;
+    box-shadow: -5px -5px 10px rgba(#000000, 0.09);
+    outline: none;
+
+    &.o-folded {
+        height: 36px;
+    }
+
+    .o-mail-command:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+}
+
+.o-mail-chat-window-header {
+    background-color: var(--o-mail-chat-window-header-background-color, #{$o-brand-odoo});
+    height: 36px;
+    color: #ffffff;
+}

@@ -63,7 +63,7 @@
 .o_MessageView {
     transition: background-color .2s ease-out, opacity .5s ease-out, box-shadow .5s ease-out, transform .2s ease-out;
 
-    &.o-isReplyHighlighted {
+    &.o-highlighted {
         transform: translateY(-#{map-get($spacers, 3)});
     }
 }
@@ -87,6 +87,6 @@
 }
 
 // Used to hide buttons on rating emails in chatter
-.o_Chatter .o_MessageView_content [summary~="o_mail_notification"] {
+.o-mail-chatter .o_MessageView_content [summary~="o_mail_notification"] {
     display: none;
 }

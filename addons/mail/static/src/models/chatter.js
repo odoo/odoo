@@ -111,14 +111,6 @@ Model({
             }
         },
         /**
-         * Handles click on top bar close button.
-         *
-         * @param {MouseEvent} ev
-         */
-        onClickChatterTopbarClose(ev) {
-            this.component.trigger("o-close-chatter");
-        },
-        /**
          * @param {MouseEvent} ev
          */
         async onClickFollow(ev) {
@@ -524,7 +516,6 @@ Model({
                 );
             },
         }),
-        hasTopbarCloseButton: attr({ default: false }),
         /**
          * States the id of this chatter. This id does not correspond to any
          * specific value, it is just a unique identifier given by the creator

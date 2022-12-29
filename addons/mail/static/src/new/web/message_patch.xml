@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.message" t-inherit-mode="extension">
+        <xpath expr="//*[@name='hasTrackingValue']" position="attributes">
+            <attribute name="t-if">message.type === 'notification' or message.isTransient or message.trackingValues.length > 0</attribute>
+        </xpath>
+    </t>
+
+    <t t-inherit="mail.tracking_values" t-inherit-mode="extension">
+        <xpath expr="//*[@name='trackingValues']" position="inside">
+            <li class="o-mail-message-tracking mb-1" role="group">
+                <span class="o-mail-message-tracking-old me-1 px-1 text-muted fw-bold" t-esc="formatTrackingOrNone(trackingValue.oldValue)"/>
+                <i class="o-mail-message-tracking-separator fa fa-long-arrow-right mx-1 text-600" />
+                <span class="o-mail-message-tracking-new me-1 fw-bold text-info" t-esc="formatTrackingOrNone(trackingValue.newValue)"/>
+                <span class="o-mail-message-tracking-field ms-1 fst-italic text-muted">(<t t-esc="trackingValue.changedField"/>)</span>
+            </li>
+        </xpath>
+    </t>
+</templates>

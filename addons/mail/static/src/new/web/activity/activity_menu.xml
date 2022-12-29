@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.activity_menu" owl="1">
+    <Dropdown position="'bottom-end'" menuClass="'p-0'" beforeOpen.bind="onBeforeOpen">
+        <t t-set-slot="toggler">
+            <i class="fa fa-lg fa-clock-o" role="img" aria-label="Activities"></i>
+            <span t-if="store.activityCounter" class="o-mail-activity-menu-counter badge"><t t-esc="store.activityCounter"/></span>
+        </t>
+        <t t-set-slot="default">
+            <div class="o-mail-activity-menu">
+                <div t-if="store.activityCounter === 0" class="o-mail-no-activity align-items-center text-muted p-2 opacity-50 d-flex justify-content-center">
+                    <span>Congratulations, you're done with your activities.</span>
+                </div>
+                <div class="d-flex flex-column overflow-hidden cursor-pointer" name="activityGroups">
+                    <t t-foreach="store.activityGroups" t-as="group" t-key="group.id" name="activityGroupLoop">
+                        <div class="o-mail-activity-group d-flex p-2 border-bottom" t-att-data-model_name="group.model" t-on-click="() => this.openActivityGroup(group)">
+                            <img class="o-mail-activity-img" alt="Activity" t-att-src="group.icon"/>
+                            <div class="flex-grow-1 overflow-hidden">
+                                <div class="d-flex px-2" name="activityTitle">
+                                    <span class="flex-grow-1"><t t-esc="group.name"/></span>
+                                    <t t-foreach="group.actions or []" t-as="action" t-key="action_index">
+                                        <button class="btn fa p-0" type="button" t-att-title="action.name" t-att-class="action.icon"/>
+                                    </t>
+                                </div>
+                                <div t-if="group.type === 'activity'" class="d-flex">
+                                    <button t-if="group.overdue_count" type="button" class="btn btn-link py-0 px-2" t-on-click.stop="() => this.openActivityGroup(group, 'overdue')"><t t-esc="group.overdue_count"/> Late</button>
+                                    <span t-else="" class="text-muted py-0 px-2">0 Late</span>
+                                    <button t-if="group.today_count" type="button" class="btn btn-link py-0 px-2" t-on-click.stop="() => this.openActivityGroup(group, 'today')"><t t-esc="group.today_count"/> Today</button>
+                                    <span t-else="" class="text-muted py-0 px-2">0 Today</span>
+                                    <span class="flex-grow-1"/>
+                                    <button t-if="group.planned_count" type="button" class="btn btn-link py-0 px-2" t-on-click.stop="() => this.openActivityGroup(group, 'upcoming_all')"><t t-esc="group.planned_count"/> Future</button>
+                                    <span t-else="" class="text-muted py-0 px-2">0 Future</span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </Dropdown>
+</t>
+
+</templates>
