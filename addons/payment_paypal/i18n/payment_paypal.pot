@@ -24,13 +24,15 @@ msgid ""
 msgstr ""
 
 #. module: payment_paypal
-#: code:addons/payment_paypal/models/payment_acquirer.py:0
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_provider.py:0
 #, python-format
 msgid "Add your PayPal account to Odoo"
 msgstr ""
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_email_account
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_email_account
 msgid "Email"
 msgstr ""
 
@@ -46,21 +48,25 @@ msgstr ""
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.payment_acquirer_form
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
 msgid "How to configure your paypal account?"
 msgstr ""
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_seller_account
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_seller_account
 msgid "Merchant Account ID"
 msgstr ""
 
 #. module: payment_paypal
+#. odoo-python
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 #, python-format
 msgid "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s)."
 msgstr ""
 
 #. module: payment_paypal
+#. odoo-python
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
@@ -68,6 +74,7 @@ msgstr ""
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_pdt_token
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_pdt_token
 msgid "PDT Identity Token"
 msgstr ""
 
@@ -94,11 +101,13 @@ msgstr ""
 #. module: payment_paypal
 #: model:account.payment.method,name:payment_paypal.payment_method_paypal
 #: model:ir.model.fields.selection,name:payment_paypal.selection__payment_acquirer__provider__paypal
+#: model:ir.model.fields.selection,name:payment_paypal.selection__payment_provider__code__paypal
 msgid "Paypal"
 msgstr ""
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_use_ipn
+#: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_use_ipn
 msgid "Paypal Instant Payment Notification"
 msgstr ""
 
@@ -108,6 +117,7 @@ msgid "Provider"
 msgstr ""
 
 #. module: payment_paypal
+#. odoo-python
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid payment status: %s"
@@ -125,6 +135,7 @@ msgstr ""
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_email_account
+#: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_email_account
 msgid ""
 "The public business email solely used to identify the account with PayPal"
 msgstr ""
@@ -136,5 +147,6 @@ msgstr ""
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_use_ipn
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_use_ipn
 msgid "Use IPN"
 msgstr ""

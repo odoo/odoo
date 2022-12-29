@@ -551,7 +551,7 @@ msgid "Configuration"
 msgstr ""
 
 #. module: lunch
-#. openerp-web
+#. odoo-javascript
 #: code:addons/lunch/static/src/mixins/lunch_renderer_mixin.js:0
 #, python-format
 msgid "Configure Your Order"
@@ -644,6 +644,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__currency_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__currency_id
 #: model:ir.model.fields,field_description:lunch.field_res_config_settings__currency_id
+#: model:ir.model.fields,field_description:lunch.field_res_config_test__currency_id
 msgid "Currency"
 msgstr ""
 
@@ -706,7 +707,7 @@ msgid "Drinks"
 msgstr ""
 
 #. module: lunch
-#. openerp-web
+#. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 #, python-format
 msgid "Edit order"
@@ -1070,6 +1071,7 @@ msgid "Lunch Alerts"
 msgstr ""
 
 #. module: lunch
+#. odoo-python
 #: code:addons/lunch/models/lunch_cashmove.py:0
 #: code:addons/lunch/report/lunch_cashmove_report.py:0
 #: model:ir.model,name:lunch.model_lunch_cashmove
@@ -1139,6 +1141,7 @@ msgid "Lunch Temaki mix 3pc"
 msgstr ""
 
 #. module: lunch
+#. odoo-python
 #: code:addons/lunch/models/lunch_order.py:0
 #, python-format
 msgid "Lunch notification"
@@ -1146,6 +1149,7 @@ msgstr ""
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_config_settings__company_lunch_notify_message
+#: model:ir.model.fields,field_description:lunch.field_res_config_test__company_lunch_notify_message
 msgid "Lunch notification message"
 msgstr ""
 
@@ -1170,31 +1174,37 @@ msgid "Lunch: Supplier Order"
 msgstr ""
 
 #. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_250
 #: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_426
 msgid "Lunch: alert chat notification (Alert for Office 3)"
 msgstr ""
 
 #. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_251
 #: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_427
 msgid "Lunch: send automatic email to Coin gourmand"
 msgstr ""
 
 #. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_246
 #: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_422
 msgid "Lunch: send automatic email to Lunch Supplier"
 msgstr ""
 
 #. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_252
 #: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_428
 msgid "Lunch: send automatic email to Pizza Inn"
 msgstr ""
 
 #. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_254
 #: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_430
 msgid "Lunch: send automatic email to Sushi Shop"
 msgstr ""
 
 #. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_253
 #: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_429
 msgid "Lunch: send automatic email to The Corner"
 msgstr ""
@@ -1206,6 +1216,7 @@ msgstr ""
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_res_config_settings__currency_id
+#: model:ir.model.fields,help:lunch.field_res_config_test__currency_id
 msgid "Main currency of the company."
 msgstr ""
 
@@ -1216,6 +1227,7 @@ msgstr ""
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_config_settings__company_lunch_minimum_threshold
+#: model:ir.model.fields,field_description:lunch.field_res_config_test__company_lunch_minimum_threshold
 msgid "Maximum Allowed Overdraft"
 msgstr ""
 
@@ -1467,7 +1479,7 @@ msgid "Order Deadline Passed"
 msgstr ""
 
 #. module: lunch
-#. openerp-web
+#. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 #, python-format
 msgid "Order Now"
@@ -1629,6 +1641,7 @@ msgid "Product Search"
 msgstr ""
 
 #. module: lunch
+#. odoo-python
 #: code:addons/lunch/models/lunch_order.py:0
 #, python-format
 msgid "Product is no longer available."
@@ -1881,6 +1894,7 @@ msgid "The Country"
 msgstr ""
 
 #. module: lunch
+#. odoo-python
 #: code:addons/lunch/models/lunch_product.py:0
 #, python-format
 msgid ""
@@ -1889,6 +1903,7 @@ msgid ""
 msgstr ""
 
 #. module: lunch
+#. odoo-python
 #: code:addons/lunch/models/lunch_product.py:0
 #, python-format
 msgid ""
@@ -1907,12 +1922,14 @@ msgid "The orders for this vendor have already been sent."
 msgstr ""
 
 #. module: lunch
+#. odoo-python
 #: code:addons/lunch/models/lunch_supplier.py:0
 #, python-format
 msgid "The orders have been confirmed!"
 msgstr ""
 
 #. module: lunch
+#. odoo-python
 #: code:addons/lunch/models/lunch_supplier.py:0
 #, python-format
 msgid "The orders have been sent!"
@@ -1926,6 +1943,7 @@ msgid ""
 msgstr ""
 
 #. module: lunch
+#. odoo-python
 #: code:addons/lunch/models/lunch_order.py:0
 #: code:addons/lunch/models/lunch_order.py:0
 #, python-format
@@ -2053,7 +2071,7 @@ msgid "Topping Ids 3"
 msgstr ""
 
 #. module: lunch
-#. openerp-web
+#. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_tree
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_tree_2
@@ -2157,6 +2175,7 @@ msgid "Wednesday"
 msgstr ""
 
 #. module: lunch
+#. odoo-python
 #: code:addons/lunch/controllers/main.py:0
 #, python-format
 msgid ""
@@ -2165,39 +2184,42 @@ msgid ""
 msgstr ""
 
 #. module: lunch
+#. odoo-python
 #: code:addons/lunch/models/lunch_order.py:0
 #, python-format
 msgid "You have to order one and only one %s"
 msgstr ""
 
 #. module: lunch
+#. odoo-python
 #: code:addons/lunch/models/lunch_order.py:0
 #, python-format
 msgid "You should order at least one %s"
 msgstr ""
 
 #. module: lunch
-#. openerp-web
+#. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 #, python-format
 msgid "Your Account"
 msgstr ""
 
 #. module: lunch
-#. openerp-web
+#. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 #, python-format
 msgid "Your Cart ("
 msgstr ""
 
 #. module: lunch
-#. openerp-web
+#. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 #, python-format
 msgid "Your Order"
 msgstr ""
 
 #. module: lunch
+#. odoo-python
 #: code:addons/lunch/models/lunch_order.py:0
 #, python-format
 msgid ""

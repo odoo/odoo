@@ -521,6 +521,11 @@ msgid "<span class=\"o_stat_text\">Sub-tasks</span>"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
+msgid "<span class=\"o_stat_text\">Tasks</span>"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">in Recurrence</span>"
 msgstr ""
@@ -1584,7 +1589,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/models/project.py:0
-#: model:ir.model.fields,field_description:project.field_project_project__partner_id
+#: code:addons/project/models/project.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__partner_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__partner_id
@@ -1622,6 +1627,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.rating_rating_action_project_report
 #: model:ir.model.fields,field_description:project.field_project_project__rating_active
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_rating
+#: model:ir.model.fields,field_description:project.field_res_config_test__group_project_rating
 #: model:ir.ui.menu,name:project.rating_rating_menu_project
 msgid "Customer Ratings"
 msgstr ""
@@ -1778,12 +1784,14 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_company__analytic_plan_id
 #: model:ir.model.fields,field_description:project.field_res_config_settings__analytic_plan_id
+#: model:ir.model.fields,field_description:project.field_res_config_test__analytic_plan_id
 msgid "Default Plan"
 msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_res_company__analytic_plan_id
 #: model:ir.model.fields,help:project.field_res_config_settings__analytic_plan_id
+#: model:ir.model.fields,help:project.field_res_config_test__analytic_plan_id
 msgid "Default Plan for a new analytic account for projects"
 msgstr ""
 
@@ -3105,6 +3113,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__allow_milestones
 #: model:ir.model.fields,field_description:project.field_project_task__allow_milestones
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_milestone
+#: model:ir.model.fields,field_description:project.field_res_config_test__group_project_milestone
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #, python-format
 msgid "Milestones"
@@ -3742,6 +3751,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_project_forecast
+#: model:ir.model.fields,field_description:project.field_res_config_test__module_project_forecast
 msgid "Planning"
 msgstr ""
 
@@ -3861,9 +3871,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
+#: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/js/project_rating_graph_view.js:0
 #: code:addons/project/static/src/js/project_rating_pivot_view.js:0
-#: model:ir.model,name:project.model_project_project
 #: model:ir.model.fields,field_description:project.field_project_milestone__project_id
 #: model:ir.model.fields,field_description:project.field_project_task__project_id
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__project_id
@@ -3898,6 +3908,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.project_collaborator_action
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_access_view_tree
 msgid "Project Collaborators"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__project_color
+msgid "Project Color"
 msgstr ""
 
 #. module: project
@@ -3964,6 +3979,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.project_project_stage_configure
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_stages
+#: model:ir.model.fields,field_description:project.field_res_config_test__group_project_stages
 #: model:ir.ui.menu,name:project.menu_project_config_project_stage
 msgid "Project Stages"
 msgstr ""
@@ -3993,11 +4009,6 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__project_privacy_visibility
 msgid "Project Visibility"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task__project_color
-msgid "Project color"
 msgstr ""
 
 #. module: project
@@ -4294,6 +4305,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__allow_recurring_tasks
 #: model:ir.model.fields,field_description:project.field_project_task__allow_recurring_tasks
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_recurring_tasks
+#: model:ir.model.fields,field_description:project.field_res_config_test__group_project_recurring_tasks
 msgid "Recurring Tasks"
 msgstr ""
 
@@ -4885,6 +4897,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__allow_subtasks
 #: model:ir.model.fields,field_description:project.field_project_task__child_ids
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_subtask_project
+#: model:ir.model.fields,field_description:project.field_res_config_test__group_subtask_project
 #: model_terms:ir.ui.view,arch_db:project.portal_layout
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -4949,7 +4962,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/js/project_rating_graph_view.js:0
 #: code:addons/project/static/src/js/project_rating_pivot_view.js:0
-#: model:ir.model,name:project.model_project_task
+#: code:addons/project/static/src/js/project_rating_pivot_view.js:0
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__task_ids
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__task_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__name
@@ -4998,6 +5011,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__allow_task_dependencies
 #: model:ir.model.fields,field_description:project.field_project_task__allow_task_dependencies
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_task_dependencies
+#: model:ir.model.fields,field_description:project.field_res_config_test__group_project_task_dependencies
 msgid "Task Dependencies"
 msgstr ""
 
@@ -5009,6 +5023,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_hr_timesheet
+#: model:ir.model.fields,field_description:project.field_res_config_test__module_hr_timesheet
 msgid "Task Logs"
 msgstr ""
 
@@ -6168,3 +6183,6 @@ msgstr ""
 #: model:mail.template,subject:project.rating_project_request_email_template
 msgid "{{ object.project_id.company_id.name }}: Satisfaction Survey"
 msgstr ""
+
+#~ msgid "Project color"
+#~ msgstr ""

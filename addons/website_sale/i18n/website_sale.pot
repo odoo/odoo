@@ -357,6 +357,13 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
+msgid ""
+"<span>Proceed to Checkout</span>\n"
+"                            <span class=\"fa fa-chevron-right\"/>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
 msgid "<span>Process Checkout</span>"
 msgstr ""
 
@@ -364,7 +371,28 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid ""
 "<span>Process Checkout</span>\n"
+"                                                    <span class=\"fa fa-chevron-right\"/>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid ""
+"<span>Process Checkout</span>\n"
 "                                                <span class=\"fa fa-chevron-right\"/>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid ""
+"<span>Sign In</span>\n"
+"                                                    <span class=\"fa fa-sign-in\"/>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
+msgid ""
+"<span>Sign In</span>\n"
+"                            <span class=\"fa fa-sign-in\"/>"
 msgstr ""
 
 #. module: website_sale
@@ -467,6 +495,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_res_config_settings__terms_url
+#: model:ir.model.fields,help:website_sale.field_res_config_test__terms_url
 msgid "A preview will be available at this URL."
 msgstr ""
 
@@ -522,6 +551,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__send_abandoned_cart_email
+#: model:ir.model.fields,field_description:website_sale.field_res_config_test__send_abandoned_cart_email
 msgid "Abandoned Email"
 msgstr ""
 
@@ -578,6 +608,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__add_to_cart_action
+#: model:ir.model.fields,field_description:website_sale.field_res_config_test__add_to_cart_action
 #: model:ir.model.fields,field_description:website_sale.field_website__add_to_cart_action
 msgid "Add To Cart Action"
 msgstr ""
@@ -642,6 +673,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_autocomplete
+#: model:ir.model.fields,field_description:website_sale.field_res_config_test__module_website_sale_autocomplete
 msgid "Address Autocomplete"
 msgstr ""
 
@@ -763,6 +795,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_show_uom_price
+#: model:ir.model.fields,field_description:website_sale.field_res_config_test__group_show_uom_price
 msgid "Base Unit Price"
 msgstr ""
 
@@ -859,6 +892,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__website_sale_contact_us_button_url
+#: model:ir.model.fields,field_description:website_sale.field_res_config_test__website_sale_contact_us_button_url
 msgid "Button URL"
 msgstr ""
 
@@ -874,6 +908,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__enabled_buy_now_button
+#: model:ir.model.fields,field_description:website_sale.field_res_config_test__enabled_buy_now_button
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart_options
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Buy Now"
@@ -946,6 +981,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__cart_recovery_mail_template
+#: model:ir.model.fields,field_description:website_sale.field_res_config_test__cart_recovery_mail_template
 #: model:ir.model.fields,field_description:website_sale.field_website__cart_recovery_mail_template_id
 msgid "Cart Recovery Email"
 msgstr ""
@@ -1135,6 +1171,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_product_price_comparison
+#: model:ir.model.fields,field_description:website_sale.field_res_config_test__group_product_price_comparison
 #: model:res.groups,name:website_sale.group_product_price_comparison
 msgid "Comparison Price"
 msgstr ""
@@ -1312,6 +1349,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__account_on_checkout
+#: model:ir.model.fields,field_description:website_sale.field_res_config_test__account_on_checkout
 #: model:ir.model.fields,field_description:website_sale.field_website__account_on_checkout
 msgid "Customer Accounts"
 msgstr ""
@@ -1413,11 +1451,13 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_delivery
+#: model:ir.model.fields,field_description:website_sale.field_res_config_test__module_delivery
 msgid "Delivery Methods"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_config_settings__sale_delivery_settings__internal
+#: model:ir.model.fields.selection,name:website_sale.selection__res_config_test__sale_delivery_settings__internal
 msgid ""
 "Delivery methods are only used internally: the customer doesn't pay for "
 "shipping costs"
@@ -1425,6 +1465,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_config_settings__sale_delivery_settings__website
+#: model:ir.model.fields.selection,name:website_sale.selection__res_config_test__sale_delivery_settings__website
 msgid ""
 "Delivery methods are selectable on the website: the customer pays for "
 "shipping costs"
@@ -1459,11 +1500,13 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_digital
+#: model:ir.model.fields,field_description:website_sale.field_res_config_test__module_website_sale_digital
 msgid "Digital Content"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_config_settings__account_on_checkout__disabled
+#: model:ir.model.fields.selection,name:website_sale.selection__res_config_test__account_on_checkout__disabled
 #: model:ir.model.fields.selection,name:website_sale.selection__website__account_on_checkout__disabled
 msgid "Disabled (buy as guest)"
 msgstr ""
@@ -1671,6 +1714,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__enabled_extra_checkout_step
+#: model:ir.model.fields,field_description:website_sale.field_res_config_test__enabled_extra_checkout_step
 msgid "Extra Step During Checkout"
 msgstr ""
 
@@ -1915,6 +1959,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_account
+#: model:ir.model.fields,field_description:website_sale.field_res_config_test__module_account
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Invoicing"
 msgstr ""
@@ -2109,6 +2154,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_config_settings__account_on_checkout__mandatory
+#: model:ir.model.fields.selection,name:website_sale.selection__res_config_test__account_on_checkout__mandatory
 #: model:ir.model.fields.selection,name:website_sale.selection__website__account_on_checkout__mandatory
 msgid "Mandatory (no guest checkout)"
 msgstr ""
@@ -2123,6 +2169,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale.field_res_config_test__module_website_sale_delivery
 msgid "Module Website Sale Delivery"
 msgstr ""
 
@@ -2133,6 +2180,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_delivery_mondialrelay
+#: model:ir.model.fields,field_description:website_sale.field_res_config_test__module_delivery_mondialrelay
 msgid "Mondial Relay Connector"
 msgstr ""
 
@@ -2268,6 +2316,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_config_settings__sale_delivery_settings__none
+#: model:ir.model.fields.selection,name:website_sale.selection__res_config_test__sale_delivery_settings__none
 msgid "No shipping management on website"
 msgstr ""
 
@@ -2304,6 +2353,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_picking
+#: model:ir.model.fields,field_description:website_sale.field_res_config_test__module_website_sale_picking
 msgid "On Site Payments & Picking"
 msgstr ""
 
@@ -2385,6 +2435,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_config_settings__account_on_checkout__optional
+#: model:ir.model.fields.selection,name:website_sale.selection__res_config_test__account_on_checkout__optional
 #: model:ir.model.fields.selection,name:website_sale.selection__website__account_on_checkout__optional
 msgid "Optional"
 msgstr ""
@@ -2559,6 +2610,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__website_sale_prevent_zero_price_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_test__website_sale_prevent_zero_price_sale
 msgid "Prevent Sale of Zero Priced Product"
 msgstr ""
 
@@ -2638,6 +2690,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.website_product_pricelist3
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_product_pricelist
+#: model:ir.model.fields,field_description:website_sale.field_res_config_test__group_product_pricelist
 #: model:ir.ui.menu,name:website_sale.menu_catalog_pricelists
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Pricelists"
@@ -2668,7 +2721,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
-#: model:ir.model,name:website_sale.model_product_template
+#: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #: model:ir.model.fields,field_description:website_sale.field_website_track__product_id
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
@@ -2702,6 +2755,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_comparison
+#: model:ir.model.fields,field_description:website_sale.field_res_config_test__module_website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Product Comparison Tool"
 msgstr ""
@@ -3002,6 +3056,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__website_sale_enabled_portal_reorder_button
+#: model:ir.model.fields,field_description:website_sale.field_res_config_test__website_sale_enabled_portal_reorder_button
 #: model:ir.model.fields,field_description:website_sale.field_website__enabled_portal_reorder_button
 msgid "Re-order From Portal"
 msgstr ""
@@ -3191,6 +3246,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_crm_team
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__salesteam_id
+#: model:ir.model.fields,field_description:website_sale.field_res_config_test__salesteam_id
 #: model:ir.model.fields,field_description:website_sale.field_website__salesteam_id
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Sales Team"
@@ -3198,6 +3254,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__salesperson_id
+#: model:ir.model.fields,field_description:website_sale.field_res_config_test__salesperson_id
 #: model:ir.model.fields,field_description:website_sale.field_website__salesperson_id
 msgid "Salesperson"
 msgstr ""
@@ -3254,6 +3311,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__cart_abandoned_delay
+#: model:ir.model.fields,field_description:website_sale.field_res_config_test__cart_abandoned_delay
 msgid "Send After"
 msgstr ""
 
@@ -3321,6 +3379,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_delivery_invoice_address
+#: model:ir.model.fields,field_description:website_sale.field_res_config_test__group_delivery_invoice_address
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
 msgid "Shipping Address"
@@ -3333,6 +3392,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__sale_delivery_settings
+#: model:ir.model.fields,field_description:website_sale.field_res_config_test__sale_delivery_settings
 msgid "Shipping Management"
 msgstr ""
 
@@ -3819,6 +3879,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__terms_url
+#: model:ir.model.fields,field_description:website_sale.field_res_config_test__terms_url
 msgid "URL"
 msgstr ""
 
@@ -4096,6 +4157,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_wishlist
+#: model:ir.model.fields,field_description:website_sale.field_res_config_test__module_website_sale_wishlist
 msgid "Wishlists"
 msgstr ""
 

@@ -17,21 +17,35 @@ msgstr ""
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_userid
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_userid
 msgid "API User ID"
 msgstr ""
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_password
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_password
 msgid "API User Password"
 msgstr ""
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/payment_acquirer.py:0
+#. odoo-python
+#: code:addons/payment_ogone/models/payment_provider.py:0
 #, python-format
 msgid "Could not establish the connection to the API."
 msgstr ""
 
 #. module: payment_ogone
+#: model:payment.provider,display_as:payment_ogone.payment_provider_ogone
+msgid "Credit Card (powered by Ogone)"
+msgstr ""
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_hash_function
+msgid "Hash function"
+msgstr ""
+
+#. module: payment_ogone
+#. odoo-python
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
@@ -40,11 +54,14 @@ msgstr ""
 #. module: payment_ogone
 #: model:account.payment.method,name:payment_ogone.payment_method_ogone
 #: model:ir.model.fields.selection,name:payment_ogone.selection__payment_acquirer__provider__ogone
+#: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__code__ogone
+#: model:payment.provider,name:payment_ogone.payment_provider_ogone
 msgid "Ogone"
 msgstr ""
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_pspid
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_pspid
 msgid "PSPID"
 msgstr ""
 
@@ -74,6 +91,7 @@ msgid "Provider"
 msgstr ""
 
 #. module: payment_ogone
+#. odoo-python
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid payment status: %s"
@@ -81,12 +99,29 @@ msgstr ""
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_shakey_in
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_shakey_in
 msgid "SHA Key IN"
 msgstr ""
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_shakey_out
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_shakey_out
 msgid "SHA Key OUT"
+msgstr ""
+
+#. module: payment_ogone
+#: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__ogone_hash_function__sha1
+msgid "SHA1"
+msgstr ""
+
+#. module: payment_ogone
+#: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__ogone_hash_function__sha256
+msgid "SHA256"
+msgstr ""
+
+#. module: payment_ogone
+#: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__ogone_hash_function__sha512
+msgid "SHA512"
 msgstr ""
 
 #. module: payment_ogone
@@ -96,6 +131,7 @@ msgid "Saved payment methods cannot be restored once they have been archived."
 msgstr ""
 
 #. module: payment_ogone
+#. odoo-python
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "Storing your payment details is necessary for future use."
@@ -103,11 +139,13 @@ msgstr ""
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_userid
+#: model:ir.model.fields,help:payment_ogone.field_payment_provider__ogone_userid
 msgid "The ID solely used to identify the API user with Ogone"
 msgstr ""
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_pspid
+#: model:ir.model.fields,help:payment_ogone.field_payment_provider__ogone_pspid
 msgid "The ID solely used to identify the account with Ogone"
 msgstr ""
 
@@ -117,19 +155,50 @@ msgid "The Payment Service Provider to use with this acquirer"
 msgstr ""
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/payment_acquirer.py:0
+#. odoo-python
+#: code:addons/payment_ogone/models/payment_provider.py:0
 #, python-format
 msgid "The communication with the API failed."
 msgstr ""
 
 #. module: payment_ogone
+#. odoo-python
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "The payment has been declined: %s"
 msgstr ""
 
 #. module: payment_ogone
+#. odoo-python
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "The transaction is not linked to a token."
+msgstr ""
+
+#. module: payment_ogone
+#: model_terms:ir.ui.view,arch_db:payment_ogone.payment_provider_form
+msgid ""
+"This provider is deprecated.\n"
+"                    Consider disabling it and moving to <strong>Stripe</strong>."
+msgstr ""
+
+#. module: payment_ogone
+#: model_terms:payment.provider,auth_msg:payment_ogone.payment_provider_ogone
+msgid "Your payment has been authorized."
+msgstr ""
+
+#. module: payment_ogone
+#: model_terms:payment.provider,cancel_msg:payment_ogone.payment_provider_ogone
+msgid "Your payment has been cancelled."
+msgstr ""
+
+#. module: payment_ogone
+#: model_terms:payment.provider,pending_msg:payment_ogone.payment_provider_ogone
+msgid ""
+"Your payment has been successfully processed but is waiting for approval."
+msgstr ""
+
+#. module: payment_ogone
+#: model_terms:payment.provider,done_msg:payment_ogone.payment_provider_ogone
+msgid "Your payment has been successfully processed. Thank you!"
 msgstr ""

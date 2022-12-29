@@ -1058,7 +1058,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #: code:addons/mail/static/src/js/views/activity/activity_view.js:0
-#: model:ir.model,name:mail.model_mail_activity
+#: code:addons/mail/static/src/js/views/activity/activity_view.js:0
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_type_id
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_type_id
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_act_window_view__view_mode__activity
@@ -1286,6 +1286,7 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__alias_domain
+#: model:ir.model.fields,field_description:mail.field_res_config_test__alias_domain
 msgid "Alias Domain"
 msgstr ""
 
@@ -1385,8 +1386,8 @@ msgid "Animals & Nature"
 msgstr ""
 
 #. module: mail
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/models/mail_channel.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models/message.js:0
@@ -1850,6 +1851,7 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__secondary_color
+#: model:ir.model.fields,field_description:mail.field_res_config_test__secondary_color
 msgid "Button Color"
 msgstr ""
 
@@ -3565,6 +3567,7 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__fail_counter
+#: model:ir.model.fields,field_description:mail.field_res_config_test__fail_counter
 msgid "Fail Mail"
 msgstr ""
 
@@ -4102,6 +4105,7 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__primary_color
+#: model:ir.model.fields,field_description:mail.field_res_config_test__primary_color
 msgid "Header Color"
 msgstr ""
 
@@ -4410,6 +4414,7 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__alias_domain
+#: model:ir.model.fields,help:mail.field_res_config_test__alias_domain
 msgid ""
 "If you have setup a catch-all email domain redirected to the Odoo server, "
 "enter the domain name here."
@@ -4417,6 +4422,7 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_twilio_rtc_servers
+#: model:ir.model.fields,help:mail.field_res_config_test__use_twilio_rtc_servers
 msgid "If you want to use twilio as TURN/STUN server provider"
 msgstr ""
 
@@ -7704,6 +7710,7 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__restrict_template_rendering
+#: model:ir.model.fields,field_description:mail.field_res_config_test__restrict_template_rendering
 msgid "Restrict Template Rendering"
 msgstr ""
 
@@ -8604,11 +8611,13 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__module_google_gmail
+#: model:ir.model.fields,field_description:mail.field_res_config_test__module_google_gmail
 msgid "Support Gmail Authentication"
 msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__module_microsoft_outlook
+#: model:ir.model.fields,field_description:mail.field_res_config_test__module_microsoft_outlook
 msgid "Support Outlook Authentication"
 msgstr ""
 
@@ -9317,11 +9326,13 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__twilio_account_token
+#: model:ir.model.fields,field_description:mail.field_res_config_test__twilio_account_token
 msgid "Twilio Account Auth Token"
 msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__twilio_account_sid
+#: model:ir.model.fields,field_description:mail.field_res_config_test__twilio_account_sid
 msgid "Twilio Account SID"
 msgstr ""
 
@@ -9585,6 +9596,7 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__use_twilio_rtc_servers
+#: model:ir.model.fields,field_description:mail.field_res_config_test__use_twilio_rtc_servers
 msgid "Use Twilio ICE servers"
 msgstr ""
 
@@ -9715,6 +9727,7 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__restrict_template_rendering
+#: model:ir.model.fields,help:mail.field_res_config_test__restrict_template_rendering
 msgid ""
 "Users will still be able to render templates.\n"
 "However only Mail Template Editors will be able to create new dynamic templates or modify existing ones."
@@ -16033,8 +16046,8 @@ msgid "doctor"
 msgstr ""
 
 #. module: mail
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
