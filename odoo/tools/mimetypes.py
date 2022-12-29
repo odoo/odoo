@@ -106,7 +106,7 @@ def _check_olecf(data):
 
 def _check_svg(data):
     """This simply checks the existence of the opening and ending SVG tags"""
-    if b'<svg' in data and b'/svg>' in data:
+    if b'<svg' in data and b'/svg' in data:
         return 'image/svg+xml'
 
 
