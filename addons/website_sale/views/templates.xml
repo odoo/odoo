@@ -228,7 +228,7 @@
     </template>
 
     <template id="pricelist_list" name="Pricelists Dropdown">
-        <div t-attf-class="o_pricelist_dropdown dropdown #{'' if hasPricelistDropdown else 'd-none'} #{_classes}">
+        <div t-attf-class="o_pricelist_dropdown dropdown #{_classes if hasPricelistDropdown else 'd-none'}">
             <t t-set="curr_pl" t-value="website.pricelist_id" />
 
             <a role="button" href="#" t-attf-class="dropdown-toggle btn btn-{{navClass}}" data-bs-toggle="dropdown">
@@ -1523,10 +1523,19 @@
                                                 <span>Continue<span class="d-none d-md-inline"> Shopping</span></span>
                                             </a>
                                         </div>
-                                        <div class="d-flex flex-column" t-if="website_sale_order and website_sale_order.website_order_line">
-                                            <a role="button" class="btn btn-primary float-end" href="/shop/checkout?express=1">
-                                                <span>Process Checkout</span>
-                                                <span class="fa fa-chevron-right"/>
+                                        <t t-set="redirect_to_sign_in" t-value="website.account_on_checkout == 'mandatory' and website.is_public_user()"/>
+                                        <t t-set="redirect_url" t-value="'/web/login?redirect=/shop/checkout' if redirect_to_sign_in else '/shop/checkout?express=1'"/>
+                                        <div class="d-flex flex-column"
+                                             t-if="website_sale_order and website_sale_order.website_order_line">
+                                            <a class="btn btn-primary float-end" role="button" t-attf-href="{{redirect_url}}">
+                                                <t t-if="redirect_to_sign_in">
+                                                    <span>Sign In</span>
+                                                    <span class="fa fa-sign-in"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <span>Process Checkout</span>
+                                                    <span class="fa fa-chevron-right"/>
+                                                </t>
                                             </a>
                                             <t t-call="payment.express_checkout"/>
                                         </div>
@@ -2042,8 +2051,19 @@
                     <t t-call="website_sale.total">
                         <t t-set="no_rowspan" t-value="1"/>
                     </t>
-                    <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-secondary float-end d-none d-xl-inline-block" href="/shop/checkout?express=1">
-                        <span>Process Checkout</span>
+                    <t t-set="redirect_to_sign_in" t-value="website.account_on_checkout == 'mandatory' and website.is_public_user()"/>
+                    <t t-set="redirect_url" t-value="'/web/login?redirect=/shop/checkout' if redirect_to_sign_in else '/shop/checkout?express=1'"/>
+                    <a role="button" t-if="website_sale_order and website_sale_order.website_order_line"
+                       class="btn btn-secondary float-end d-none d-xl-inline-block"
+                       t-attf-href="{{redirect_url}}">
+                        <t t-if="redirect_to_sign_in">
+                            <span>Sign In</span>
+                            <span class="fa fa-sign-in"/>
+                        </t>
+                        <t t-else="">
+                            <span>Proceed to Checkout</span>
+                            <span class="fa fa-chevron-right"/>
+                        </t>
                     </a>
                 </div>
             </div>

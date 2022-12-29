@@ -874,10 +874,10 @@ class TestMrpOrder(TestMrpCommon):
         mo.move_raw_ids.filtered(lambda m: m.state != 'done')[0].quantity_done = 0
         update_quantity_wizard.change_prod_qty()
 
-        self.assertEqual(len(mo.move_raw_ids), 2)
+        self.assertEqual(len(mo.move_raw_ids), 4)
 
         mo.button_mark_done()
-        self.assertTrue(all(s == 'done' for s in mo.move_raw_ids.mapped('state')))
+        self.assertTrue(all(s in ['done', 'cancel'] for s in mo.move_raw_ids.mapped('state')))
         self.assertEqual(sum(mo.move_raw_ids.mapped('move_line_ids.reserved_uom_qty')), 0)
 
     def test_consumption_strict_1(self):
@@ -3185,3 +3185,32 @@ class TestMrpOrder(TestMrpCommon):
                 raw.product_uom_qty = 1.25
 
         self.assertEqual(mo.move_raw_ids.quantity_done, 1.25)
+
+    def test_compute_picking_type_id(self):
+        """
+        Test that the operation type set on the bom is set in the manufacturing order
+        when selecting the BoM"""
+        self.env.user.groups_id += self.env.ref("stock.group_adv_location")
+        picking_type = self.env['stock.picking.type'].create({
+            'name': 'new_picking_type',
+            'code': 'internal',
+            'sequence_code': 'NPT',
+            'default_location_src_id': self.env.ref('stock.stock_location_stock').id,
+            'default_location_dest_id': self.stock_location_components.id,
+            'warehouse_id': self.warehouse_1.id,
+        })
+        self.bom_1.picking_type_id = picking_type
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_1
+        mo = mo_form.save()
+        self.assertEqual(mo.picking_type_id.id, picking_type.id)
+        # MO_2
+        self.assertFalse(self.bom_2.picking_type_id)
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_2
+        mo_2 = mo_form.save()
+        picking_type_company = self.env['stock.picking.type'].search_read([
+            ('code', '=', 'mrp_operation'),
+            ('warehouse_id.company_id', 'in', mo_2.company_id.ids),
+        ], ['company_id'], load=False, limit=1)
+        self.assertEqual(mo_2.picking_type_id.id, picking_type_company[0]['id'])

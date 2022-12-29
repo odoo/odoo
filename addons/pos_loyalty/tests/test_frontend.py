@@ -670,3 +670,74 @@ class TestUi(TestPointOfSaleHttpCommon):
             "PosLoyaltyTour4",
             login="accountman",
         )
+
+    def test_promotion_program_with_global_discount(self):
+        """
+        - Create a promotion with a discount of 10%
+        - Create a product with no taxes
+        - Enable the global discount feature, and make sure the Discount product
+            has a tax set on it.
+        """
+
+        if not self.env["ir.module.module"].search([("name", "=", "pos_discount"), ("state", "=", "installed")]):
+            self.skipTest("pos_discount module is required for this test")
+
+        tax01 = self.env["account.tax"].create({
+            "name": "C01 Tax",
+            "amount": "0.00"
+        })
+
+        self.discount_product = self.env["product.product"].create(
+            {
+                "name": "Discount Product",
+                "type": "service",
+                "list_price": 0,
+                "available_in_pos": True,
+                "taxes_id": [(6, 0, tax01.ids)],
+            }
+        )
+
+        self.main_pos_config2 = self.main_pos_config.copy()
+        self.main_pos_config2.write({
+            'module_pos_discount': True,
+            'discount_product_id': self.discount_product.id,
+            'discount_pc': 20,
+        })
+
+        self.loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Coupon Program - Pricelist',
+            'program_type': 'coupons',
+            'trigger': 'with_code',
+            'applies_on': 'current',
+            'pos_ok': True,
+            'pos_config_ids': [Command.link(self.main_pos_config2.id)],
+            'rule_ids': [(0, 0, {
+                'reward_point_mode': 'order',
+                'reward_point_amount': 1,
+                'minimum_amount': 0,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'required_points': 1,
+                'discount': 10,
+                'discount_mode': 'percent',
+                'discount_applicability': 'order',
+            })],
+        })
+
+        self.product = self.env["product.product"].create(
+            {
+                "name": "Test Product 1",
+                "type": "product",
+                "list_price": 100,
+                "available_in_pos": True,
+            }
+        )
+
+        self.main_pos_config2.open_ui()
+
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config2.id,
+            "PosLoyaltyTour5",
+            login="accountman",
+        )

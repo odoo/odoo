@@ -34,7 +34,7 @@ export const WEBSOCKET_CLOSE_CODES = Object.freeze({
 });
 // Should be incremented on every worker update in order to force
 // update of the worker in browser cache.
-export const WORKER_VERSION = "1.0.0";
+export const WORKER_VERSION = '1.0.0';
 
 /**
  * This class regroups the logic necessary in order for the
@@ -219,8 +219,9 @@ export class WebsocketWorker {
             if (this.websocket) {
                 this.websocket.close(WEBSOCKET_CLOSE_CODES.CLEAN);
             }
+            this.channelsByClient.forEach((_, key) => this.channelsByClient.set(key, []));
         }
-        this.sendToClient(client, "initialized");
+        this.sendToClient(client, 'initialized');
     }
 
     /**

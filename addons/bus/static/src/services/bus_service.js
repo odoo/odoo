@@ -21,7 +21,6 @@ const { EventBus } = owl;
  */
 export const busService = {
     dependencies: ['localization', 'multi_tab'],
-    async: true,
 
     async start(env, { multi_tab: multiTab }) {
         if (session.dbuuid && multiTab.getSharedValue('dbuuid') !== session.dbuuid) {
@@ -32,6 +31,10 @@ export const busService = {
         const workerClass = 'SharedWorker' in window && !isIosApp() ? browser.SharedWorker : browser.Worker;
         const worker = new workerClass(`/bus/websocket_worker_bundle?v=${WORKER_VERSION}`, {
             name: 'SharedWorker' in window && !isIosApp() ? 'odoo:websocket_shared_worker' : 'odoo:websocket_worker',
+        });
+        worker.addEventListener("error", (e) => {
+            connectionInitializedDeferred.resolve();
+            console.warn("Error while loading 'bus_service' SharedWorker");
         });
         const connectionInitializedDeferred = new Deferred();
 

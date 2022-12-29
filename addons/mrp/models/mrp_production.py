@@ -266,7 +266,7 @@ class MrpProduction(models.Model):
         for production in self:
             production.mrp_production_backorder_count = len(production.procurement_group_id.mrp_production_ids)
 
-    @api.depends('company_id')
+    @api.depends('company_id', 'bom_id')
     def _compute_picking_type_id(self):
         domain = [
             ('code', '=', 'mrp_operation'),
@@ -275,6 +275,9 @@ class MrpProduction(models.Model):
         picking_types = self.env['stock.picking.type'].search_read(domain, ['company_id'], load=False, limit=1)
         picking_type_by_company = {pt['company_id']: pt['id'] for pt in picking_types}
         for mo in self:
+            if mo.bom_id and mo.bom_id.picking_type_id:
+                mo.picking_type_id = mo.bom_id.picking_type_id
+                continue
             if mo.picking_type_id and mo.picking_type_id.company_id == mo.company_id:
                 continue
             mo.picking_type_id = picking_type_by_company.get(mo.company_id.id, False)
@@ -1061,7 +1064,6 @@ class MrpProduction(models.Model):
     def _update_raw_moves(self, factor):
         self.ensure_one()
         update_info = []
-        move_to_unlink = self.env['stock.move']
         moves_to_assign = self.env['stock.move']
         procurements = []
         for move in self.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel')):
@@ -1080,14 +1082,7 @@ class MrpProduction(models.Model):
                         move.product_id, procurement_qty, move.product_uom,
                         move.location_id, move.name, move.origin, move.company_id, values))
                 update_info.append((move, old_qty, new_qty))
-            else:
-                if move.quantity_done > 0:
-                    raise UserError(_('Lines need to be deleted, but can not as you still have some quantities to consume in them. '))
-                move._action_cancel()
-                move_to_unlink |= move
-
         moves_to_assign._action_assign()
-        move_to_unlink.unlink()
         if procurements:
             self.env['procurement.group'].run(procurements)
         return update_info
