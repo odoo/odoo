@@ -14,8 +14,8 @@
     <!-- ########### PURCHASE, Goods (Based on Invoice) ########### -->
     <record model="account.tax.template" id="tva_acq_normale">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 20%</field>
-        <field name="description">TVA 20%</field>
+        <field name="name">VAT 20%</field>
+        <field name="description">VAT 20%</field>
         <field name="amount" eval="20.0"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="9"/>
@@ -54,8 +54,8 @@
     </record>
     <record model="account.tax.template" id="tva_acq_specifique">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 8,5%</field>
-        <field name="description">TVA 8,5%</field>
+        <field name="name">VAT 8.5%</field>
+        <field name="description">VAT 8.5%</field>
         <field name="amount" eval="8.5"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -94,8 +94,8 @@
     </record>
     <record model="account.tax.template" id="tva_acq_intermediaire">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 10%</field>
-        <field name="description">TVA 10%</field>
+        <field name="name">VAT 10%</field>
+        <field name="description">VAT 10%</field>
         <field name="amount" eval="10.0"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -134,8 +134,8 @@
     </record>
     <record model="account.tax.template" id="tva_acq_reduite">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 5,5%</field>
-        <field name="description">TVA 5,5%</field>
+        <field name="name">VAT 5.5%</field>
+        <field name="description">VAT 5.5%</field>
         <field name="amount" eval="5.5"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -174,8 +174,8 @@
     </record>
     <record model="account.tax.template" id="tva_acq_super_reduite">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 2,1%</field>
-        <field name="description">TVA 2,1%</field>
+        <field name="name">VAT 2.1%</field>
+        <field name="description">VAT 2.1%</field>
         <field name="amount" eval="2.1"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -216,8 +216,8 @@
     <!-- CARBURANT -->
     <record model="account.tax.template" id="tva_purchase_good_fuel">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 20% CARBURANT</field>
-        <field name="description">TVA 20%</field>
+        <field name="name">VAT 20% Fuels</field>
+        <field name="description">VAT 20%</field>
         <field name="amount" eval="20.0"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="9"/>
@@ -264,8 +264,8 @@
     </record>
     <record model="account.tax.template" id="tva_purchase_good_fuel_TTC">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 20% CARBURANT TTC</field>
-        <field name="description">TVA 20%</field>
+        <field name="name">VAT 20% fuel tax incl.</field>
+        <field name="description">VAT 20%</field>
         <field name="amount" eval="20.0"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="9"/>
@@ -315,8 +315,8 @@
     <!-- TTC -->
     <record model="account.tax.template" id="tva_acq_normale_TTC">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 20% TTC</field>
-        <field name="description">TVA 20%</field>
+        <field name="name">VAT 20% tax incl.</field>
+        <field name="description">VAT 20%</field>
         <field name="price_include" eval="1"/>
         <field name="amount" eval="20.0"/>
         <field name="amount_type">percent</field>
@@ -355,8 +355,8 @@
     </record>
     <record model="account.tax.template" id="tva_acq_specifique_TTC">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 8,5% TTC</field>
-        <field name="description">TVA 8,5%</field>
+        <field name="name">VAT 8.5% tax incl.</field>
+        <field name="description">VAT 8.5%</field>
         <field name="price_include" eval="1"/>
         <field name="amount" eval="8.5"/>
         <field name="amount_type">percent</field>
@@ -395,8 +395,8 @@
     </record>
     <record model="account.tax.template" id="tva_acq_intermediaire_TTC">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 10% TTC</field>
-        <field name="description">TVA 10%</field>
+        <field name="name">VAT 10% tax incl.</field>
+        <field name="description">VAT 10%</field>
         <field name="price_include" eval="1"/>
         <field name="amount" eval="10.0"/>
         <field name="amount_type">percent</field>
@@ -435,8 +435,8 @@
     </record>
     <record model="account.tax.template" id="tva_acq_reduite_TTC">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 5,5% TTC</field>
-        <field name="description">TVA 5,5%</field>
+        <field name="name">VAT 5.5% tax incl.</field>
+        <field name="description">VAT 5.5%</field>
         <field name="price_include" eval="1"/>
         <field name="amount" eval="5.5"/>
         <field name="amount_type">percent</field>
@@ -475,8 +475,8 @@
     </record>
     <record model="account.tax.template" id="tva_acq_super_reduite_TTC">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 2,1% TTC</field>
-        <field name="description">TVA 2,1%</field>
+        <field name="name">VAT 2.1% tax incl.</field>
+        <field name="description">VAT 2.1%</field>
         <field name="price_include" eval="1"/>
         <field name="amount" eval="2.1"/>
         <field name="amount_type">percent</field>
@@ -517,8 +517,8 @@
     <!-- IMMO -->
     <record model="account.tax.template" id="tva_imm_normale">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 20% IMMO</field>
-        <field name="description">TVA 20%</field>
+        <field name="name">VAT 20% real estate</field>
+        <field name="description">VAT 20%</field>
         <field name="amount" eval="20.0"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -557,8 +557,8 @@
     </record>
     <record model="account.tax.template" id="tva_imm_specifique">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 8,5% IMMO</field>
-        <field name="description">TVA 8,5%</field>
+        <field name="name">VAT 8.5% real estate</field>
+        <field name="description">VAT 8.5%</field>
         <field name="amount" eval="8.5"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -598,8 +598,8 @@
     </record>
     <record model="account.tax.template" id="tva_imm_intermediaire">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 10% IMMO</field>
-        <field name="description">TVA 10%</field>
+        <field name="name">VAT 10% real estate</field>
+        <field name="description">VAT 10%</field>
         <field name="amount" eval="10.0"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -639,8 +639,8 @@
     </record>
     <record model="account.tax.template" id="tva_imm_reduite">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 5,5% IMMO</field>
-        <field name="description">TVA 5,5%</field>
+        <field name="name">VAT 5.5% real estate</field>
+        <field name="description">VAT 5.5%</field>
         <field name="amount" eval="5.5"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -680,8 +680,8 @@
     </record>
     <record model="account.tax.template" id="tva_imm_super_reduite">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 2,1% IMMO</field>
-        <field name="description">TVA 2,1%</field>
+        <field name="name">VAT 2.1% real estate</field>
+        <field name="description">VAT 2.1%</field>
         <field name="amount" eval="2.1"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -723,8 +723,8 @@
     <!-- IMPORT -->
     <record model="account.tax.template" id="tva_import_outside_eu_20">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 20% IMPORT</field>
-        <field name="description">TVA 20%</field>
+        <field name="name">VAT 20% import</field>
+        <field name="description">VAT 20%</field>
         <field name="amount" eval="20.0"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="11"/>
@@ -777,8 +777,8 @@
     </record>
     <record model="account.tax.template" id="tva_import_outside_eu_10">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 10% IMPORT</field>
-        <field name="description">TVA 10%</field>
+        <field name="name">VAT 10% import</field>
+        <field name="description">VAT 10%</field>
         <field name="amount" eval="10.0"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="11"/>
@@ -832,8 +832,8 @@
     </record>
     <record model="account.tax.template" id="tva_import_outside_eu_8_5">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 8,5% IMPORT</field>
-        <field name="description">TVA 8,5%</field>
+        <field name="name">VAT 8.5% import</field>
+        <field name="description">VAT 8.5%</field>
         <field name="amount" eval="8.5"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="11"/>
@@ -887,8 +887,8 @@
     </record>
     <record model="account.tax.template" id="tva_import_outside_eu_5_5">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 5,5% IMPORT</field>
-        <field name="description">TVA 5,5%</field>
+        <field name="name">VAT 5.5% import</field>
+        <field name="description">VAT 5.5%</field>
         <field name="amount" eval="5.5"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="11"/>
@@ -942,8 +942,8 @@
     </record>
     <record model="account.tax.template" id="tva_import_outside_eu_2_1">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 2,1% IMPORT</field>
-        <field name="description">TVA 2,1%</field>
+        <field name="name">VAT 2.1% import</field>
+        <field name="description">VAT 2.1%</field>
         <field name="amount" eval="2.1"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="11"/>
@@ -999,8 +999,8 @@
     <!-- INTRACOM -->
     <record model="account.tax.template" id="tva_intra_normale_biens">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 20% EU M</field>
-        <field name="description">TVA 20%</field>
+        <field name="name">VAT 20% EU G</field>
+        <field name="description">VAT 20%</field>
         <field name="amount" eval="20.0"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -1056,8 +1056,8 @@
     <!-- ########### PURCHASE, Services (Based on Invoice) ########### -->
     <record model="account.tax.template" id="tva_intra_normale_services">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 20% EU S</field>
-        <field name="description">TVA 20%</field>
+        <field name="name">VAT 20% EU S</field>
+        <field name="description">VAT 20%</field>
         <field name="amount" eval="20.0"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -1110,8 +1110,8 @@
     </record>
     <record model="account.tax.template" id="tva_purchase_service_20_import">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 20% IMPORT</field>
-        <field name="description">TVA 20%</field>
+        <field name="name">VAT 20% IMPORT</field>
+        <field name="description">VAT 20%</field>
         <field name="amount" eval="20.0"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -1165,8 +1165,8 @@
 
     <record model="account.tax.template" id="tva_purchase_service_0">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 0% EXO</field>
-        <field name="description">TVA 0%</field>
+        <field name="name">VAT 0% EXO</field>
+        <field name="description">VAT 0%</field>
         <field name="amount" eval="0.00"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -1204,8 +1204,8 @@
     <!-- ########### PURCHASE, Services (Based on Payment) ########### -->
     <record model="account.tax.template" id="tva_acq_encaissement">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 20%</field>
-        <field name="description">TVA 20%</field>
+        <field name="name">VAT 20%</field>
+        <field name="description">VAT 20%</field>
         <field name="amount" eval="20.0"/>
         <field name="amount_type">percent</field>
         <field name="tax_exigibility">on_payment</field>
@@ -1246,8 +1246,8 @@
     </record>
     <record model="account.tax.template" id="tva_acq_intermediaire_encaissement">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 10%</field>
-        <field name="description">TVA 10%</field>
+        <field name="name">VAT 10%</field>
+        <field name="description">VAT 10%</field>
         <field name="amount" eval="10.0"/>
         <field name="amount_type">percent</field>
         <field name="tax_exigibility">on_payment</field>
@@ -1289,8 +1289,8 @@
     </record>
     <record model="account.tax.template" id="tva_acq_encaissement_reduite">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 5,5%</field>
-        <field name="description">TVA 5,5%</field>
+        <field name="name">VAT 5.5%</field>
+        <field name="description">VAT 5.5%</field>
         <field name="amount" eval="5.5"/>
         <field name="amount_type">percent</field>
         <field name="tax_exigibility">on_payment</field>
@@ -1332,8 +1332,8 @@
     </record>
     <record model="account.tax.template" id="tva_acq_encaissement_super_reduite">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 2,1% </field>
-        <field name="description">TVA 2,1%</field>
+        <field name="name">VAT 2.1%</field>
+        <field name="description">VAT 2.1%</field>
         <field name="amount" eval="2.1"/>
         <field name="amount_type">percent</field>
         <field name="tax_exigibility">on_payment</field>
@@ -1377,8 +1377,8 @@
     <!-- TTC -->
     <record model="account.tax.template" id="tva_acq_encaissement_TTC">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 20% TTC</field>
-        <field name="description">TVA 20%</field>
+        <field name="name">VAT 20% tax incl.</field>
+        <field name="description">VAT 20%</field>
         <field name="price_include" eval="1"/>
         <field name="amount" eval="20.0"/>
         <field name="amount_type">percent</field>
@@ -1419,8 +1419,8 @@
     </record>
     <record model="account.tax.template" id="tva_acq_intermediaire_encaissement_TTC">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 10% TTC</field>
-        <field name="description">TVA 10%</field>
+        <field name="name">VAT 10% tax incl.</field>
+        <field name="description">VAT 10%</field>
         <field name="price_include" eval="1"/>
         <field name="amount" eval="10.0"/>
         <field name="amount_type">percent</field>
@@ -1462,8 +1462,8 @@
     </record>
     <record model="account.tax.template" id="tva_acq_encaissement_reduite_TTC">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 5,5% TTC</field>
-        <field name="description">TVA 5,5%</field>
+        <field name="name">VAT 5.5% tax incl.</field>
+        <field name="description">VAT 5.5%</field>
         <field name="price_include" eval="1"/>
         <field name="amount" eval="5.5"/>
         <field name="amount_type">percent</field>
@@ -1505,8 +1505,8 @@
     </record>
     <record model="account.tax.template" id="tva_acq_encaissement_super_reduite_TTC">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 2,1% TTC</field>
-        <field name="description">TVA 2,1%</field>
+        <field name="name">VAT 2.1% tax incl.</field>
+        <field name="description">VAT 2.1%</field>
         <field name="price_include" eval="1"/>
         <field name="amount" eval="2.1"/>
         <field name="amount_type">percent</field>
@@ -1550,8 +1550,8 @@
     <!-- Others -->
     <record model="account.tax.template" id="tva_purchase_imm_normale">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 20% IMMO</field>
-        <field name="description">TVA 20%</field>
+        <field name="name">VAT 20% real estate</field>
+        <field name="description">VAT 20%</field>
         <field name="amount" eval="20.0"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -1595,8 +1595,8 @@
     <!-- ########### SALE, Goods (Based on Invoice) ########### -->
     <record model="account.tax.template" id="tva_normale">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 20%</field>
-        <field name="description">TVA 20%</field>
+        <field name="name">VAT 20%</field>
+        <field name="description">VAT 20%</field>
         <field name="amount" eval="20.0"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -1635,8 +1635,8 @@
     </record>
     <record model="account.tax.template" id="tva_intermediaire">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 10%</field>
-        <field name="description">TVA 10%</field>
+        <field name="name">VAT 10%</field>
+        <field name="description">VAT 10%</field>
         <field name="amount" eval="10.0"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -1676,8 +1676,8 @@
     </record>
     <record model="account.tax.template" id="tva_reduite">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 5,5%</field>
-        <field name="description">TVA 5,5%</field>
+        <field name="name">VAT 5.5%</field>
+        <field name="description">VAT 5.5%</field>
         <field name="amount" eval="5.5"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -1717,8 +1717,8 @@
     </record>
     <record model="account.tax.template" id="tva_specifique">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 8,5%</field>
-        <field name="description">TVA 8,5%</field>
+        <field name="name">VAT 8.5%</field>
+        <field name="description">VAT 8.5%</field>
         <field name="amount" eval="8.5"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -1758,8 +1758,8 @@
     </record>
     <record model="account.tax.template" id="tva_super_reduite">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 2,1%</field>
-        <field name="description">TVA 2,1%</field>
+        <field name="name">VAT 2.1%</field>
+        <field name="description">VAT 2.1%</field>
         <field name="amount" eval="2.1"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -1801,8 +1801,8 @@
     <!-- TTC -->
     <record model="account.tax.template" id="tva_normale_ttc">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 20% TTC</field>
-        <field name="description">TVA 20%</field>
+        <field name="name">VAT 20% tax incl.</field>
+        <field name="description">VAT 20%</field>
         <field name="price_include" eval="1"/>
         <field name="amount" eval="20"/>
         <field name="amount_type">percent</field>
@@ -1842,8 +1842,8 @@
     </record>
     <record model="account.tax.template" id="tva_intermediaire_ttc">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 10% TTC</field>
-        <field name="description">TVA 10%</field>
+        <field name="name">VAT 10% tax incl.</field>
+        <field name="description">VAT 10%</field>
         <field name="price_include" eval="1"/>
         <field name="amount" eval="10"/>
         <field name="amount_type">percent</field>
@@ -1883,8 +1883,8 @@
     </record>
     <record model="account.tax.template" id="tva_specifique_ttc">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 8,5% TTC</field>
-        <field name="description">TVA 8,5%</field>
+        <field name="name">VAT 8.5% tax incl.</field>
+        <field name="description">VAT 8.5%</field>
         <field name="price_include" eval="1"/>
         <field name="amount" eval="8.5"/>
         <field name="amount_type">percent</field>
@@ -1924,8 +1924,8 @@
     </record>
     <record model="account.tax.template" id="tva_reduite_ttc">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 5,5% TTC</field>
-        <field name="description">TVA 5,5%</field>
+        <field name="name">VAT 5.5% tax incl.</field>
+        <field name="description">VAT 5.5%</field>
         <field name="price_include" eval="1"/>
         <field name="amount" eval="5.5"/>
         <field name="amount_type">percent</field>
@@ -1965,8 +1965,8 @@
     </record>
     <record model="account.tax.template" id="tva_super_reduite_ttc">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 2,1% TTC</field>
-        <field name="description">TVA 2,1%</field>
+        <field name="name">VAT 2.1% tax incl.</field>
+        <field name="description">VAT 2.1%</field>
         <field name="price_include" eval="1"/>
         <field name="amount" eval="2.1"/>
         <field name="amount_type">percent</field>
@@ -2008,8 +2008,8 @@
     <!-- Others (EXO, EXPORT, INTRACOM) -->
     <record model="account.tax.template" id="tva_sale_good_0">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 0% EXO</field>
-        <field name="description">TVA 0%</field>
+        <field name="name">VAT 0% EXO</field>
+        <field name="description">VAT 0%</field>
         <field name="amount" eval="0.00"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -2046,8 +2046,8 @@
 
     <record model="account.tax.template" id="tva_sale_good_export_0">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 0% EXPORT</field>
-        <field name="description">TVA 0%</field>
+        <field name="name">VAT 0% EXPORT</field>
+        <field name="description">VAT 0%</field>
         <field name="amount" eval="0.00"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -2084,8 +2084,8 @@
 
     <record model="account.tax.template" id="tva_sale_good_intra_0">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 0% EU M</field>
-        <field name="description">TVA 0%</field>
+        <field name="name">VAT 0% EU G</field>
+        <field name="description">VAT 0%</field>
         <field name="amount" eval="0.00"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -2124,8 +2124,8 @@
     <!-- ########### SALE, Services (Based Payment) ########### -->
     <record model="account.tax.template" id="tva_normale_encaissement">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 20%</field>
-        <field name="description">TVA 20%</field>
+        <field name="name">VAT 20%</field>
+        <field name="description">VAT 20%</field>
         <field name="amount" eval="20.0"/>
         <field name="amount_type">percent</field>
         <field name="tax_exigibility">on_payment</field>
@@ -2166,8 +2166,8 @@
     </record>
     <record model="account.tax.template" id="tva_intermediaire_encaissement">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 10%</field>
-        <field name="description">TVA 10%</field>
+        <field name="name">VAT 10%</field>
+        <field name="description">VAT 10%</field>
         <field name="amount" eval="10.0"/>
         <field name="amount_type">percent</field>
         <field name="tax_exigibility">on_payment</field>
@@ -2209,8 +2209,8 @@
     </record>
     <record model="account.tax.template" id="tva_reduite_encaissement">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 5,5%</field>
-        <field name="description">TVA 5,5%</field>
+        <field name="name">VAT 5.5%</field>
+        <field name="description">VAT 5.5%</field>
         <field name="amount" eval="5.5"/>
         <field name="amount_type">percent</field>
         <field name="tax_exigibility">on_payment</field>
@@ -2252,8 +2252,8 @@
     </record>
     <record model="account.tax.template" id="tva_super_reduite_encaissement">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 2,1%</field>
-        <field name="description">TVA 2,1%</field>
+        <field name="name">VAT 2.1%</field>
+        <field name="description">VAT 2.1%</field>
         <field name="amount" eval="2.1"/>
         <field name="amount_type">percent</field>
         <field name="tax_exigibility">on_payment</field>
@@ -2297,8 +2297,8 @@
     <!-- TTC -->
     <record model="account.tax.template" id="tva_normale_encaissement_ttc">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 20% TTC</field>
-        <field name="description">TVA 20%</field>
+        <field name="name">VAT 20% tax incl.</field>
+        <field name="description">VAT 20%</field>
         <field name="price_include" eval="1"/>
         <field name="amount" eval="20"/>
         <field name="amount_type">percent</field>
@@ -2340,8 +2340,8 @@
     </record>
     <record model="account.tax.template" id="tva_intermediaire_encaissement_ttc">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 10% TTC</field>
-        <field name="description">TVA 10%</field>
+        <field name="name">VAT 10% tax incl.</field>
+        <field name="description">VAT 10%</field>
         <field name="price_include" eval="1"/>
         <field name="amount" eval="10"/>
         <field name="amount_type">percent</field>
@@ -2383,8 +2383,8 @@
     </record>
     <record model="account.tax.template" id="tva_reduite_encaissement_ttc">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 5,5% TTC</field>
-        <field name="description">TVA 5,5%</field>
+        <field name="name">VAT 5.5% tax incl.</field>
+        <field name="description">VAT 5.5%</field>
         <field name="price_include" eval="1"/>
         <field name="amount" eval="5.5"/>
         <field name="amount_type">percent</field>
@@ -2436,8 +2436,8 @@
     </record>
     <record model="account.tax.template" id="tva_super_reduite_encaissement_ttc">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 2,1% TTC</field>
-        <field name="description">TVA 2,1%</field>
+        <field name="name">VAT 2.1% tax incl.</field>
+        <field name="description">VAT 2.1%</field>
         <field name="price_include" eval="1"/>
         <field name="amount" eval="2.1"/>
         <field name="amount_type">percent</field>
@@ -2492,8 +2492,8 @@
 
     <record model="account.tax.template" id="tva_sale_service_0">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 0% EXO</field>
-        <field name="description">TVA 0%</field>
+        <field name="name">VAT 0% EXO</field>
+        <field name="description">VAT 0%</field>
         <field name="amount" eval="0.00"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -2532,8 +2532,8 @@
 
     <record model="account.tax.template" id="tva_sale_service_export_0">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 0% EXPORT</field>
-        <field name="description">TVA 0%</field>
+        <field name="name">VAT 0% EXPORT</field>
+        <field name="description">VAT 0%</field>
         <field name="amount" eval="0.00"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -2571,8 +2571,8 @@
 
     <record model="account.tax.template" id="tva_sale_service_intra_0">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 0% EU S</field>
-        <field name="description">TVA 0%</field>
+        <field name="name">VAT 0% EU S</field>
+        <field name="description">VAT 0%</field>
         <field name="amount" eval="0.00"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -2611,8 +2611,8 @@
     <!-- ACHATS INTRACOMMUNAUTAIRE -->
     <record model="account.tax.template" id="tva_intra_specifique_biens">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 8,5% EU M</field>
-        <field name="description">TVA 8,5%</field>
+        <field name="name">VAT 8.5% EU M</field>
+        <field name="description">VAT 8.5%</field>
         <field name="amount" eval="8.5"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -2666,8 +2666,8 @@
     </record>
     <record model="account.tax.template" id="tva_intra_specifique_services">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 8,5% EU S</field>
-        <field name="description">TVA 8,5%</field>
+        <field name="name">VAT 8.5% EU S</field>
+        <field name="description">VAT 8.5%</field>
         <field name="amount" eval="8.5"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -2721,8 +2721,8 @@
     </record>
     <record model="account.tax.template" id="tva_intra_intermediaire_biens">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 10% EU M</field>
-        <field name="description">TVA 10%</field>
+        <field name="name">VAT 10% EU M</field>
+        <field name="description">VAT 10%</field>
         <field name="amount" eval="10.0"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -2776,8 +2776,8 @@
     </record>
     <record model="account.tax.template" id="tva_intra_intermediaire_services">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 10% EU S</field>
-        <field name="description">TVA 10%</field>
+        <field name="name">VAT 10% EU S</field>
+        <field name="description">VAT 10%</field>
         <field name="amount" eval="10.0"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -2831,8 +2831,8 @@
     </record>
     <record model="account.tax.template" id="tva_intra_reduite_biens">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 5,5% EU M</field>
-        <field name="description">TVA 5,5%</field>
+        <field name="name">VAT 5.5% EU M</field>
+        <field name="description">VAT 5.5%</field>
         <field name="amount" eval="5.5"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -2887,8 +2887,8 @@
     </record>
     <record model="account.tax.template" id="tva_intra_reduite_services">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 5,5% EU S</field>
-        <field name="description">TVA 5,5%</field>
+        <field name="name">VAT 5.5% EU S</field>
+        <field name="description">VAT 5.5%</field>
         <field name="amount" eval="5.5"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -2942,8 +2942,8 @@
     </record>
     <record model="account.tax.template" id="tva_intra_super_reduite_biens">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 2,1% EU M</field>
-        <field name="description">TVA 2,1%</field>
+        <field name="name">VAT 2.1% EU M</field>
+        <field name="description">VAT 2.1%</field>
         <field name="amount" eval="2.1"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
@@ -2997,8 +2997,8 @@
     </record>
     <record model="account.tax.template" id="tva_intra_super_reduite_services">
         <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        <field name="name">TVA 2,1% EU S</field>
-        <field name="description">TVA 2,1%</field>
+        <field name="name">VAT 2.1% EU S</field>
+        <field name="description">VAT 2.1%</field>
         <field name="amount" eval="2.1"/>
         <field name="amount_type">percent</field>
         <field name="sequence" eval="10"/>
