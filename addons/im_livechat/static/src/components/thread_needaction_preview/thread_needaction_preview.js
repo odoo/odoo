@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { ThreadNeedactionPreviewView } from "@mail/components/thread_needaction_preview/thread_needaction_preview";
+import { ThreadNeedactionPreviewView } from "@mail/legacy/components/thread_needaction_preview/thread_needaction_preview";
 
 import { patch } from "web.utils";
 

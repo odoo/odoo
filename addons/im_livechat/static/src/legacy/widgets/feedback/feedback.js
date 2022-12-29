@@ -27,7 +27,7 @@ const Feedback = Widget.extend({
     /**
      * @param {?} parent
      * @param {Messaging} messaging
-     * @param {@im_livechat/legacy/models/public_livechat} livechat
+     * @param {@im_livechat/legacy/legacy)models/public_livechat} livechat
      */
     init(parent, messaging, livechat) {
         this._super(parent);

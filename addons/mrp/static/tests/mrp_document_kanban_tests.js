@@ -11,6 +11,7 @@ import { setupViewRegistries } from "@web/../tests/views/helpers";
 import {
     start,
     startServer,
+    waitUntil,
 } from '@mail/../tests/helpers/test_utils';
 
 import { fileUploadService } from "@web/core/file_upload/file_upload_service";
@@ -49,7 +50,7 @@ QUnit.module('MrpDocumentsKanbanView', {
             name: 'test.png',
         })
         pyEnv['mrp.document'].create([
-            {name: 'test1', priority: 2, ir_attachment_id: irAttachment},
+            {name: 'test1', priority: 2, ir_attachment_id: irAttachment, mimetype: "image/png"},
             {name: 'test2', priority: 1},
             {name: 'test3', priority: 3},
         ]);
@@ -203,42 +204,39 @@ QUnit.module('MrpDocumentsKanbanView', {
     });
 
     QUnit.test("mrp: click on image opens attachment viewer", async function (assert) {
-        assert.expect(4);
-
         const views = {
-            'mrp.document,false,kanban':
-                `<kanban js_class="mrp_documents_kanban" create="false"><templates><t t-name="kanban-box">
-                    <div class="o_kanban_image" t-if="record.ir_attachment_id.raw_value">
-                        <div class="o_kanban_previewer">
-                            <field name="ir_attachment_id" invisible="1"/>
-                            <img t-attf-src="/web/image/#{record.ir_attachment_id.raw_value}" width="100" height="100" alt="Document" class="o_attachment_image"/>
-                        </div>
-                    </div>
-                    <div>
-                        <field name="name"/>
-                    </div>
-                </t></templates></kanban>`
+            "mrp.document,false,kanban": `
+                <kanban js_class="mrp_documents_kanban" create="false">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="o_kanban_image" t-if="record.ir_attachment_id.raw_value">
+                                <div class="o_kanban_previewer">
+                                    <field name="ir_attachment_id" invisible="1"/>
+                                    <img t-attf-src="/web/image/#{record.ir_attachment_id.raw_value}" width="100" height="100" alt="Document" class="o_attachment_image"/>
+                                </div>
+                            </div>
+                            <div>
+                                <field name="name"/>
+                                <field name="mimetype"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`
         };
-        const { openView } = await start({
-            serverData: { views },
-        });
+        const { openView } = await start({ serverData: { views } });
         await openView({
             res_model: 'mrp.document',
             views: [[false, 'kanban']],
         });
-
         assert.containsOnce(target, ".o_kanban_previewer");
+
         await click(target.querySelector(".o_kanban_previewer"));
-        await nextTick();
+        await waitUntil('.o-mail-attachment-viewer');
+        assert.containsOnce(target, '.o-mail-attachment-viewer');
+        assert.containsOnce(target, '.o-mail-attachment-viewer-headerItemButton .fa-times');
 
-        assert.containsOnce(target, '.o_AttachmentViewer',
-            "should have a document preview");
-        assert.containsOnce(target, '.o_AttachmentViewer_headerItemButtonClose',
-            "should have a close button");
-
-        await click(target, '.o_AttachmentViewer_headerItemButtonClose');
-        assert.containsNone(target, '.o_AttachmentViewer',
-            "should not have a document preview");
+        await click(target, '.o-mail-attachment-viewer-headerItemButton .fa-times');
+        assert.containsNone(target, '.o-mail-attachment-viewer');
     });
 });
 

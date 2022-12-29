@@ -87,14 +87,14 @@ registry.category("web_tour.tours").add('project_tour', {
     content: _t("Let's start working on your task."),
     position: "bottom",
 }, {
-    trigger: ".o_ChatterTopbar_buttonSendMessage",
+    trigger: ".o-mail-chatter-topbar button:contains(Send message)",
     extra_trigger: '.o_form_project_tasks',
     content: Markup(_t("Use the chatter to <b>send emails</b> and communicate efficiently with your customers. \
     Add new people to the followers' list to make them aware of the main changes about this task.")),
     width: 350,
     position: "bottom",
 }, {
-    trigger: ".o_ChatterTopbar_buttonLogNote",
+    trigger: "button:contains(Log note)",
     extra_trigger: '.o_form_project_tasks',
     content: Markup(_t("<b>Log notes</b> for internal communications <i>(the people following this task won't be notified \
     of the note you are logging unless you specifically tag them)</i>. Use @ <b>mentions</b> to ping a colleague \
@@ -102,7 +102,7 @@ registry.category("web_tour.tours").add('project_tour', {
     width: 350,
     position: "bottom"
 }, {
-    trigger: ".o_ChatterTopbar_buttonScheduleActivity",
+    trigger: ".o-mail-chatter-topbar button:contains(Activities)",
     extra_trigger: '.o_form_project_tasks',
     content: Markup(_t("Create <b>activities</b> to set yourself to-dos or to schedule meetings.")),
 }, {

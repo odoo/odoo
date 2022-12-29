@@ -78,7 +78,7 @@
     <t t-set="isCellHidden" t-value="activeFilter.resIds.length and !activeFilter.resIds.includes(resId) and activeFilter.activityTypeId === type[0]"/>
     <td t-if="activityGroup.state and !isCellHidden"
         t-attf-class="o_activity_summary_cell p-0 h-100 {{activityGroup.state}} {{ activeFilter.resIds.includes(resId) ? 'o_activity_filter_' + activeFilter.progressValue.active : '' }}">
-        <ActivityCellViewContainer activityIds="activityGroup.ids" activityTypeId="type[0]" closestDeadline="activityGroup.o_closest_deadline" reloadFunc="props.onReloadData" resId="record.resId" resModel="record.resModel"/>
+        <ActivityCell activityIds="activityGroup.ids" activityTypeId="type[0]" closestDeadline="activityGroup.o_closest_deadline" reloadFunc="props.onReloadData" resId="record.resId" resModel="record.resModel"/>
     </td>
     <td t-else=""
         class="o_activity_summary_cell o_activity_empty_cell cursor-pointer"

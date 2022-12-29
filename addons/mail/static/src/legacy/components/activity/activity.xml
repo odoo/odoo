@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ActivityView" owl="1">
+        <div class="o_ActivityView d-flex py-2 px-3" t-attf-class="{{ className }}" t-on-click="onClickActivity" t-ref="root">
+            <div class="o_ActivityView_sidebar me-3">
+                <div class="o_ActivityView_user position-relative h-100 w-100">
+                    <img t-if="activity.assignee" class="o_ActivityView_userAvatar rounded-circle h-100 w-100 o_object_fit_cover" t-attf-src="/web/image/res.users/{{ activity.assignee.id }}/avatar_128" t-att-alt="activity.assignee.nameOrDisplayName"/>
+                    <div class="o_ActivityView_iconContainer d-flex align-items-center justify-content-center rounded-circle w-50 h-50"
+                        t-att-class="{
+                            'text-bg-success': activity.state === 'planned',
+                            'text-bg-warning': activity.state === 'today',
+                            'text-bg-danger': activity.state === 'overdue',
+                        }"
+                    >
+                        <i class="o_ActivityView_icon fa small" t-attf-class="{{ activity.icon }}"/>
+                    </div>
+                </div>
+            </div>
+            <div class="o_ActivityView_core">
+                <div class="o_ActivityView_info d-flex align-items-baseline">
+                    <div class="o_ActivityView_dueDateText me-2"
+                        t-att-class="{
+                            'text-danger': activity.state === 'overdue',
+                            'text-success': activity.state === 'planned',
+                            'text-warning': activity.state === 'today',
+                        }"
+                    >
+                        <b t-esc="delayLabel"/>
+                    </div>
+                    <b t-if="activity.summary" class="o_ActivityView_summary text-900 me-2" t-esc="summary"/>
+                    <b t-elif="activity.type" class="o_ActivityView_summary o_ActivityView_type text-900 me-2" t-esc="activity.type.displayName"/>
+                    <div t-if="activity.assignee" class="o_ActivityView_userName" t-esc="assignedUserText"/>
+                    <a
+                        href="#"
+                        class="o_ActivityView_detailsButton btn py-0"
+                        t-att-class="areDetailsVisible ? 'text-primary' : 'btn-link btn-primary'"
+                        t-att-aria-expanded="areDetailsVisible ? 'true' : 'false'"
+                        t-on-click="onClickDetailsButton"
+                        role="button"
+                    >
+                        <i class="fa fa-info-circle" role="img" title="Info" aria-label="Info"/>
+                    </a>
+                </div>
+                <div t-if="areDetailsVisible" class="o_ActivityView_details">
+                    <div class="d-md-table table table-sm mt-2 mb-3">
+                        <div t-if="activity.type" class="d-md-table-row mb-3">
+                            <div class="d-md-table-cell fw-bold text-md-end m-0 py-md-1 px-md-4">Activity type</div>
+                            <div class="o_ActivityView_type d-md-table-cell py-md-1 pe-4" t-esc="activity.type.displayName"/>
+                        </div>
+                        <div t-if="activity.creator" class="d-md-table-row mb-3">
+                            <div class="d-md-table-cell fw-bold text-md-end m-0 py-md-1 px-md-4">Created</div>
+                            <div class="o_ActivityView_detailsCreation d-md-table-cell py-md-1 pe-4">
+                                <t t-esc="formattedCreateDatetime"/>, <br t-if="messaging.device.isSmall"/>by
+                                <img class="o_ActivityView_detailsUserAvatar o_ActivityView_detailsCreatorAvatar ms-1 me-1 rounded-circle align-text-bottom p-0" t-attf-src="/web/image/res.users/{{ activity.creator.id }}/avatar_128" t-att-title="activity.creator.nameOrDisplayName" t-att-alt="activity.creator.nameOrDisplayName"/>
+                                <b class="o_ActivityView_detailsCreator" t-esc="activity.creator.nameOrDisplayName"/>
+                            </div>
+                        </div>
+                        <div t-if="activity.assignee" class="d-md-table-row mb-3">
+                            <div class="d-md-table-cell fw-bold text-md-end m-0 py-md-1 px-md-4">Assigned to</div>
+                            <div class="o_ActivityView_detailsAssignation d-md-table-cell py-md-1 pe-4">
+                                <img class="o_ActivityView_detailsUserAvatar o_ActivityView_detailsAssignationUserAvatar me-1 rounded-circle align-text-bottom p-0" t-attf-src="/web/image/res.users/{{ activity.assignee.id }}/avatar_128" t-att-title="activity.assignee.nameOrDisplayName" t-att-alt="activity.assignee.nameOrDisplayName"/>
+                                <b t-esc="activity.assignee.nameOrDisplayName"/>
+                            </div>
+                        </div>
+                        <div class="d-md-table-row">
+                            <div class="d-md-table-cell fw-bold text-md-end m-0 py-md-1 px-md-4">Due on</div>
+                            <div class="o_ActivityView_detailsDueDate d-md-table-cell py-md-1 pe-4">
+                                <span class="o_ActivityView_deadlineDateText"
+                                    t-att-class="{
+                                        'text-danger': activity.state === 'overdue',
+                                        'text-success': activity.state === 'planned',
+                                        'text-warning': activity.state === 'today',
+                                    }"
+                                    t-esc="formattedDeadlineDate"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div t-if="activity.note" class="o_ActivityView_note" t-out="activity.noteAsMarkup"/>
+                <div t-if="mailTemplateViews.length > 0" class="o_ActivityView_mailTemplates">
+                    <t t-foreach="mailTemplateViews" t-as="mailTemplateView" t-key="mailTemplateView.localId">
+                        <MailTemplateView
+                            className="'o_ActivityView_mailTemplate'"
+                            record="mailTemplateView"
+                        />
+                    </t>
+                </div>
+                <div t-if="activity.canWrite" name="tools" class="d-flex">
+                    <button class="o_ActivityView_markDoneButton btn btn-link btn-primary pt-0 ps-0" t-att-title="markDoneText" t-ref="markDoneButton" t-on-click="onClickMarkDoneButton">
+                        <i class="fa fa-check"/> Mark Done
+                    </button>
+                    <button t-if="fileUploader" class="o_ActivityView_uploadButton btn btn-link btn-primary pt-0 ps-0" t-on-click="onClickUploadDocument">
+                        <i class="fa fa-upload"/> Upload Document
+                    </button>
+                    <button class="o_ActivityView_editButton btn btn-link btn-primary pt-0" t-on-click="onClickEdit">
+                        <i class="fa fa-pencil"/> Edit
+                    </button>
+                    <button class="o_ActivityView_cancelButton btn btn-link btn-primary pt-0" t-on-click="onClickCancel" >
+                        <i class="fa fa-times"/> Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

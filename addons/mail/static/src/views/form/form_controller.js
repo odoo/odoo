@@ -1,11 +1,7 @@
 /** @odoo-module */
 
-import { useModels } from "@mail/component_hooks/use_models";
-import {
-    ChatterContainer,
-    getChatterNextTemporaryId,
-} from "@mail/components/chatter_container/chatter_container";
-import { WebClientViewAttachmentViewContainer } from "@mail/components/web_client_view_attachment_view_container/web_client_view_attachment_view_container";
+import { AttachmentView } from "@mail/new/attachments/attachment_view";
+import { Chatter } from "@mail/new/web/chatter";
 
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
@@ -19,30 +15,20 @@ import { evalDomain } from "@web/views/utils";
 
 import { MailFormCompiler } from "./form_compiler";
 
-import { onMounted, onWillDestroy, onWillUnmount } from "@odoo/owl";
+import { onMounted, onWillUnmount, useState } from "@odoo/owl";
 
 patch(FormController.prototype, "mail", {
     setup() {
         this._super();
+        this.messagingState = useState({
+            /** @type {import("@mail/new/core/thread_model").Thread} */
+            thread: undefined,
+        });
+        if (this.env.services["mail.thread"]) {
+            this.threadService = useService("mail.thread");
+        }
         this.uiService = useService("ui");
         this.hasAttachmentViewerInArch = false;
-        this.chatter = undefined;
-
-        if (this.env.services.messaging) {
-            useModels();
-            this.env.services.messaging.modelManager.messagingCreatedPromise.then(() => {
-                if (owl.status(this) === "destroyed") {
-                    return;
-                }
-                const messaging = this.env.services.messaging.modelManager.messaging;
-                this.chatter = messaging.models["Chatter"].insert({
-                    id: getChatterNextTemporaryId(),
-                });
-                if (owl.status(this) === "destroyed") {
-                    this.chatter.delete();
-                }
-            });
-        }
 
         const { archInfo } = this.props;
         const { arch, xmlDoc } = archInfo;
@@ -66,35 +52,25 @@ patch(FormController.prototype, "mail", {
         this.onResize = useDebounced(this.render, 200);
         onMounted(() => browser.addEventListener("resize", this.onResize));
         onWillUnmount(() => browser.removeEventListener("resize", this.onResize));
-        onWillDestroy(() => {
-            if (this.chatter && this.chatter.exists()) {
-                this.chatter.delete();
-            }
-        });
-    },
-    /**
-     * @returns {Messaging|undefined}
-     */
-    getMessaging() {
-        return this.env.services.messaging && this.env.services.messaging.modelManager.messaging;
     },
     /**
      * @returns {boolean}
      */
     hasAttachmentViewer() {
         if (
+            !this.threadService ||
             this.uiService.size < SIZES.XXL ||
             !this.hasAttachmentViewerInArch ||
-            !this.getMessaging() ||
             !this.model.root.resId
         ) {
             return false;
         }
-        const thread = this.getMessaging().models["Thread"].insert({
+        this.messagingState.thread = this.threadService.insert({
             id: this.model.root.resId,
             model: this.model.root.resModel,
+            type: "chatter",
         });
-        return thread.attachmentsInWebClientView.length > 0;
+        return this.messagingState.thread.attachmentsInWebClientView.length > 0;
     },
     evalDomainFromRecord(record, expr) {
         return evalDomain(expr, record.evalContext);
@@ -102,6 +78,6 @@ patch(FormController.prototype, "mail", {
 });
 
 Object.assign(FormController.components, {
-    ChatterContainer,
-    WebClientViewAttachmentViewContainer,
+    AttachmentView,
+    Chatter,
 });

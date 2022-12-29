@@ -7,8 +7,8 @@ odoo.define('website_livechat.tour_common', function (require) {
 // execution of this file if @im_livechat/public_models/livechat_button_view is
 // not part of the current assets bundles (as trying to import it will silently
 // crash).
-require('@im_livechat/public_models/livechat_button_view');
-const { Patch } = require('@mail/model');
+require('@im_livechat/legacy/public_models/livechat_button_view');
+const { Patch } = require('@mail/legacy/model');
 
 Patch({
     name: 'LivechatButtonView',

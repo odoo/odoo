@@ -631,7 +631,7 @@ class Channel(models.Model):
             'Message': {
                 'id': message.id,
                 'body': message.body,
-                'attachments': message.attachment_ids._attachment_format(),
+                'attachment_ids': message.attachment_ids._attachment_format(),
             }
         })
         return super()._message_update_content_after_hook(message=message)

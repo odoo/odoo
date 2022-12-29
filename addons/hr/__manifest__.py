@@ -47,9 +47,6 @@
     'application': True,
     'post_init_hook': '_install_hr_localization',
     'assets': {
-        'mail.assets_messaging': [
-            'hr/static/src/models/*.js',
-        ],
         'web.assets_backend': [
             'hr/static/src/views/**/*.js',
             'hr/static/src/components/**/*',
@@ -66,6 +63,9 @@
         'web.assets_tests': [
             'hr/static/tests/tours/hr_employee_flow.js',
             'hr/static/tests/tours/user_modify_own_profile_tour.js',
+        ],
+         'mail.assets_backend': [
+            'hr/static/src/new/**/*',
         ],
     },
     'license': 'LGPL-3',

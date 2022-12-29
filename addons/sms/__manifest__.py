@@ -40,8 +40,8 @@ The service is provided by the In App Purchase Odoo platform.
     'installable': True,
     'auto_install': True,
     'assets': {
-        'mail.assets_messaging': [
-            'sms/static/src/models/*.js',
+        'mail.assets_backend': [
+            'sms/static/src/new/**/*',
         ],
         'mail.assets_discuss_public': [
             'sms/static/src/components/sms_button/*',
@@ -50,7 +50,7 @@ The service is provided by the In App Purchase Odoo platform.
             'sms/static/src/components/*/*',
         ],
         'web.qunit_suite_tests': [
-            'sms/static/tests/qunit_suite_tests/**/*.js',
+            'sms/static/tests/new/**/*',
         ],
     },
     'license': 'LGPL-3',

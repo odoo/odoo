@@ -1,19 +1,18 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { createFile, inputFiles } from "web.test_utils_file";
 
-registry.category("web_tour.tours").add(
-    "mail/static/tests/tours/discuss_public_tour.js",
-    {
-        test: true,
-        steps: [
+registry.category("web_tour.tours").add("mail/static/tests/tours/discuss_public_tour.js", {
+    test: true,
+    steps: [
         {
-            trigger: ".o_DiscussPublicView",
-            extraTrigger: ".o_ThreadView",
+            trigger: ".o-mail-discuss-public",
+            extraTrigger: ".o-mail-thread",
         },
         {
             content: "Check that we are on channel page",
-            trigger: ".o_ThreadView",
+            trigger: ".o-mail-thread",
             run() {
                 if (!window.location.pathname.startsWith("/discuss/channel")) {
                     console.error("Did not automatically redirect to channel page");
@@ -36,5 +35,42 @@ registry.category("web_tour.tours").add(
             content: "Wait for all modules loaded check in previous step",
             trigger: ".o_mail_channel_public_modules_loaded",
         },
-    ]
+        {
+            content: "Write something in composer",
+            trigger: ".o-mail-composer-textarea",
+            run: "text cheese",
+        },
+        {
+            content: "Add one file in composer",
+            trigger: ".o-mail-composer button[aria-label='Attach files']",
+            async run() {
+                const file = await createFile({
+                    content: "hello, world",
+                    contentType: "text/plain",
+                    name: "text.txt",
+                });
+                inputFiles(document.querySelector(".o-mail-composer-core-main .o_input_file"), [
+                    file,
+                ]);
+            },
+        },
+        {
+            content: "Check the earlier provided attachment is listed",
+            trigger: '.o-mail-attachment-card[title="text.txt"]',
+            extra_trigger: ".o-mail-attachment-card:not(.o-mail-is-uploading)", // waiting the attachment to be uploaded
+            run() {},
+        },
+        {
+            content: "Send message",
+            trigger: ".o-mail-composer-send-button",
+        },
+        {
+            content: "Check message is shown",
+            trigger: '.o-mail-message-body:contains("cheese")',
+        },
+        {
+            content: "Check message contains the attachment",
+            trigger: '.o-mail-message .o-mail-attachment-card:contains("text.txt")',
+        },
+    ],
 });

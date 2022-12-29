@@ -8,7 +8,7 @@ import { registry } from "@web/core/registry";
 // execution of this file if @im_livechat/public_models/livechat_button_view is
 // not part of the current assets bundles (as trying to import it will silently
 // crash).
-import "@im_livechat/public_models/livechat_button_view";
+import "@im_livechat/legacy/public_models/livechat_button_view";
 
 const messagesContain = (text) => `div.o_thread_message_content:contains("${text}")`;
 
