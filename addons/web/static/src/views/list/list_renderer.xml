@@ -53,7 +53,7 @@
                                     <i class="o_optional_columns_dropdown_toggle oi oi-fw oi-settings-adjust"/>
                                 </t>
 
-                                <t t-foreach="getOptionalFields" t-as="field" t-key="field_index">
+                                <t t-foreach="getOptionalFields(getNonPropertyColumns(allColumns))" t-as="field" t-key="field_index">
                                     <DropdownItem parentClosingMode="'none'" onSelected="() => this.toggleOptionalField(field.name)">
                                         <CheckBox
                                             onChange="() => this.toggleOptionalField(field.name)"
@@ -63,6 +63,37 @@
                                             <t t-esc="field.label"/> <t t-if="env.debug" t-esc="' (' + field.name + ')'" />
                                         </CheckBox>
                                     </DropdownItem>
+                                </t>
+                                <!--Display dynamic properties at the end, if any-->
+                                <t t-set="propertyColumnGroups" t-value="getPropertyColumnGroups(allColumns)"/>
+                                <t t-foreach="propertyColumnGroups" t-as="definitionGroup" t-key="definitionGroup.definitionModel">
+                                    <t t-if="propertyColumnGroups.length > 1">
+                                        <div class="dropdown-divider border-dark"/>
+                                        <DropdownItem>
+                                            <div class="w-100 text-center fw-bold">Defined on <t t-out="definitionGroup.definitionModel"/></div>
+                                        </DropdownItem>
+                                    </t>
+                                    <t t-set="propertyColumnGroup" t-value="definitionGroup.group"/>
+                                    <t t-foreach="propertyColumnGroup" t-as="columnGroup" t-key="columnGroup.parentId">
+                                        <div class="dropdown-divider"/>
+                                        <t t-if="propertyColumnGroup.length > 1">
+                                            <DropdownItem>
+                                                <div class="w-100 text-center" t-out="columnGroup.parentName"/>
+                                            </DropdownItem>
+                                            <div class="dropdown-divider"/>
+                                        </t>
+                                        <t t-foreach="getOptionalFields(columnGroup.columns)" t-as="field" t-key="field.name">
+                                            <DropdownItem parentClosingMode="'none'" onSelected="() => this.toggleOptionalField(field.name)">
+                                                <CheckBox
+                                                    onChange="() => this.toggleOptionalField(field.name)"
+                                                    value="field.value"
+                                                    name="field.name"
+                                                >
+                                                    <t t-esc="field.label"/> <t t-if="env.debug" t-esc="' (' + field.name + ')'" />
+                                                </CheckBox>
+                                            </DropdownItem>
+                                        </t>
+                                    </t>
                                 </t>
                             </Dropdown>
                         </th>
@@ -232,6 +263,22 @@
                         t-on-click="(ev) => this.onCellClicked(record, column, ev)" tabindex="-1">
                         <t t-if="!evalModifier(column.modifiers.invisible, record)">
                             <t t-if="canUseFormatter(column, record)" t-out="getFormattedValue(column, record)"/>
+                            <t t-elif="column.propertyType">
+                                <PropertyValue t-if="record.data[column.name] and record.data[column.name].value"
+                                    canChangeDefinition="false"
+                                    context="record.context"
+                                    comodel="record.data[column.name].comodel || ''"
+                                    domain="record.data[column.name].domain || '[]'"
+                                    readonly="true"
+                                    selection="record.data[column.name].selection"
+                                    string="column.string"
+                                    tags="record.data[column.name].tags"
+                                    type="column.propertyType"
+                                    value="record.data[column.name].value"
+                                    onChange.bind="() => {}"
+                                    onTagsChange.bind="() => {}"
+                                />
+                            </t>
                             <Field t-else="" name="column.name" record="record" type="column.widget" class="getFieldClass(column)" fieldInfo="props.archInfo.fieldNodes[column.name]" setDirty="(isDirty) => this.setDirty(isDirty)"/>
                         </t>
                     </td>
