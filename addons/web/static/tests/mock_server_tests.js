@@ -33,6 +33,11 @@ QUnit.module("MockServer", (hooks) => {
                                 ["done", "Done"],
                             ],
                         },
+                        foo_ids: {
+                            type: "one2many",
+                            relation: "foo",
+                            inverse_fname_by_model_name: { foo: "res_id" },
+                        },
                         many2one_field: { type: "many2one", relation: "foo" },
                         one2many_field: {
                             type: "one2many",
@@ -123,6 +128,11 @@ QUnit.module("MockServer", (hooks) => {
                             type: "many2one_reference",
                             model_name_ref_fname: "res_model",
                             inverse_fname_by_model_name: { bar: "one2many_field" },
+                        },
+                        res_id: {
+                            type: "many2one_reference",
+                            model_name_ref_fname: "res_model",
+                            inverse_fname_by_model_name: { bar: "foo_ids" },
                         },
                         res_model: { type: "char" },
                     },
@@ -1283,6 +1293,18 @@ QUnit.module("MockServer", (hooks) => {
         mockServer.mockWrite("foo", [[2], { many2one_reference: false }]);
         assert.deepEqual(mockServer.models.bar.records[0].one2many_field, []);
     });
+
+    QUnit.test(
+        "Inverse of many2one_ref should update both many2one_ref and model field",
+        async function (assert) {
+            data.models.foo.records = [{ id: 1 }];
+            data.models.bar.records = [{ id: 2 }];
+            const mockServer = new MockServer(data);
+            mockServer.mockWrite("bar", [[2], { foo_ids: [1] }]);
+            assert.strictEqual(data.models.foo.records[0].res_model, "bar");
+            assert.strictEqual(data.models.foo.records[0].res_id, 2);
+        }
+    );
     QUnit.test("List View: invisible on processed Arch", async function (assert) {
         data.views = {
             "bar,10001,list": `
