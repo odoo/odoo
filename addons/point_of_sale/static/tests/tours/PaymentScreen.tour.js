@@ -1,7 +1,9 @@
 /** @odoo-module */
 
+import { Chrome } from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import { ProductScreen } from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import { PaymentScreen } from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
+import { TicketScreen} from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
 import Tour from "web_tour.tour";
 
@@ -80,3 +82,55 @@ PaymentScreen.check.remainingIs("0.0");
 PaymentScreen.check.changeIs("0.0");
 
 Tour.register("PaymentScreenTour2", { test: true, url: "/pos/ui" }, getSteps());
+
+startSteps();
+
+ProductScreen.do.clickHomeCategory();
+ProductScreen.exec.addOrderline('Product Test', '1');
+ProductScreen.do.clickPayButton();
+
+PaymentScreen.check.totalIs('2.00');
+PaymentScreen.do.clickPaymentMethod('Cash');
+
+PaymentScreen.check.remainingIs('0.0');
+PaymentScreen.check.changeIs('0.0');
+
+Chrome.do.clickTicketButton();
+TicketScreen.do.clickNewTicket();
+
+ProductScreen.exec.addOrderline('Product Test', '-1');
+ProductScreen.do.clickPayButton();
+
+PaymentScreen.check.totalIs('-2.00');
+PaymentScreen.do.clickPaymentMethod('Cash');
+
+PaymentScreen.check.remainingIs('0.0');
+PaymentScreen.check.changeIs('0.0');
+
+Tour.register('PaymentScreenRoundingUp', { test: true, url: '/pos/ui' }, getSteps());
+
+startSteps();
+
+ProductScreen.do.clickHomeCategory();
+ProductScreen.exec.addOrderline('Product Test', '1');
+ProductScreen.do.clickPayButton();
+
+PaymentScreen.check.totalIs('1.95');
+PaymentScreen.do.clickPaymentMethod('Cash');
+
+PaymentScreen.check.remainingIs('0.0');
+PaymentScreen.check.changeIs('0.0');
+
+Chrome.do.clickTicketButton();
+TicketScreen.do.clickNewTicket();
+
+ProductScreen.exec.addOrderline('Product Test', '-1');
+ProductScreen.do.clickPayButton();
+
+PaymentScreen.check.totalIs('-1.95');
+PaymentScreen.do.clickPaymentMethod('Cash');
+
+PaymentScreen.check.remainingIs('0.0');
+PaymentScreen.check.changeIs('0.0');
+
+Tour.register('PaymentScreenRoundingDown', { test: true, url: '/pos/ui' }, getSteps());
