@@ -348,12 +348,14 @@ export class WebsitePreview extends Component {
             const { href, target, classList } = linkEl;
             if (classList.contains('o_add_language')) {
                 ev.preventDefault();
+                // TODO: in master adapt the href in template to only be the
+                // return URL and use it directly here to pass to url_return
                 this.action.doAction('base.action_view_base_language_install', {
                     target: 'new',
                     additionalContext: {
                         params: {
                             website_id: this.websiteId,
-                            url_return: '/[lang]',
+                            url_return: $.deparam(href).url_return || '/[lang]',
                         },
                     },
                 });
