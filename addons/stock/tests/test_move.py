@@ -939,6 +939,82 @@ class StockMove(TransactionCase):
         # check if the putaway was rightly applied
         self.assertEqual(move1.move_line_ids.location_dest_id.id, shelf2_location.id)
 
+    def test_putaway_7(self):
+        """
+        Putaway with one package type and one product
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.reception_steps = 'two_steps'
+        child_loc = self.stock_location.child_ids[0]
+
+        package_type = self.env['stock.package.type'].create({
+            'name': 'Super Package Type',
+        })
+
+        package = self.env['stock.quant.package'].create({'package_type_id': package_type.id})
+
+        self.env['stock.putaway.rule'].create({
+            'product_id': self.product.id,
+            'package_type_ids': [(6, 0, package_type.ids)],
+            'location_in_id': self.stock_location.id,
+            'location_out_id': child_loc.id,
+        })
+
+        move_input = self.env['stock.move'].create({
+            'name': self.product.name,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'warehouse_id': warehouse.id,
+        })
+        move_input._action_confirm()
+        move_input.move_line_ids.qty_done = 1
+        move_input.move_line_ids.result_package_id = package
+        move_input._action_done()
+
+        move_stock = move_input.move_dest_ids
+        self.assertEqual(move_stock.move_line_ids.location_dest_id, child_loc)
+
+    def test_putaway_8(self):
+        """
+        Putaway with product P
+        Receive 1 x P in a package with a specific type
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.reception_steps = 'two_steps'
+        child_loc = self.stock_location.child_ids[0]
+
+        package_type = self.env['stock.package.type'].create({
+            'name': 'Super Package Type',
+        })
+
+        package = self.env['stock.quant.package'].create({'package_type_id': package_type.id})
+
+        self.env['stock.putaway.rule'].create({
+            'product_id': self.product.id,
+            'location_in_id': self.stock_location.id,
+            'location_out_id': child_loc.id,
+        })
+
+        move_input = self.env['stock.move'].create({
+            'name': self.product.name,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'warehouse_id': warehouse.id,
+        })
+        move_input._action_confirm()
+        move_input.move_line_ids.qty_done = 1
+        move_input.move_line_ids.result_package_id = package
+        move_input._action_done()
+
+        move_stock = move_input.move_dest_ids
+        self.assertEqual(move_stock.move_line_ids.location_dest_id, child_loc)
+
     def test_putaway_with_storage_category_1(self):
         """Receive a product. Test the product will be move to a child location
         with correct storage category.
