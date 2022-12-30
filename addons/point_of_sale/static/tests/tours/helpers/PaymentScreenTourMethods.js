@@ -185,6 +185,15 @@ class Check {
             },
         ];
     }
+    totalIs(amount) {
+        return [
+            {
+                content: `total is ${amount}`,
+                trigger: `.total:contains("${amount}")`,
+                run: () => {},
+            },
+        ];
+    }
 }
 
 class Execute {
