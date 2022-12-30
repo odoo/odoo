@@ -43,6 +43,13 @@ weWidgets.LinkTools.include({
     //--------------------------------------------------------------------------
 
     /**
+     * @override
+     */
+    _adaptForm() {
+        this._super.apply(this, arguments);
+        this._adaptPageAnchor();
+    },
+    /**
      * @private
      */
     _adaptPageAnchor: function () {
@@ -77,13 +84,6 @@ weWidgets.LinkTools.include({
      */
     _onAutocompleteClose: function () {
         this._onURLInput();
-    },
-    /**
-     * @override
-     */
-    _onURLInput: function () {
-        this._super.apply(this, arguments);
-        this._adaptPageAnchor();
     },
     /**
      * @override

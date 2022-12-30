@@ -434,7 +434,7 @@ const LinkTools = Link.extend({
     /**
      * @override
      */
-    __onURLInput() {
+    _onURLInput() {
         this._super(...arguments);
         this.options.wysiwyg.odooEditor.historyPauseSteps('_onURLInput');
         this._adaptPreview();

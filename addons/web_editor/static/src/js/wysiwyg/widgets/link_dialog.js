@@ -64,6 +64,13 @@ const _DialogLinkWidget = Link.extend({
     /**
      * @override
      */
+    _adaptForm() {
+        this._super(...arguments);
+        this._adaptPreview();
+    },
+    /**
+     * @override
+     */
     _adaptPreview: function () {
         var data = this._getData();
         if (data === null) {
@@ -166,7 +173,6 @@ const _DialogLinkWidget = Link.extend({
     _onURLInput: function () {
         this._super(...arguments);
         this.$('#o_link_dialog_url_input').closest('.o_url_input').removeClass('o_has_error').find('.form-control, .form-select').removeClass('is-invalid');
-        this._adaptPreview();
     },
 });
 

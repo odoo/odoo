@@ -17,7 +17,7 @@ const Link = Widget.extend({
     events: {
         'input': '_onAnyChange',
         'change': '_onAnyChange',
-        'input input[name="url"]': '__onURLInput',
+        'input input[name="url"]': '_onURLInput',
         'change input[name="url"]': '_onURLInputChange',
     },
 
@@ -144,8 +144,7 @@ const Link = Widget.extend({
         if (this.data.url) {
             var match = /mailto:(.+)/.exec(this.data.url);
             this.$('input[name="url"]').val(match ? match[1] : this.data.url);
-            this._onURLInput();
-            this._savedURLInputOnDestroy = false;
+            this._adaptForm();
         }
 
         if (!this.noFocusUrl) {
@@ -239,6 +238,18 @@ const Link = Widget.extend({
      * @private
      */
     _adaptPreview: function () {},
+    /**
+     * Adapt the link setup form to changes.
+     *
+     * @private
+     */
+    _adaptForm() {
+        const $linkUrlInput = this.$('#o_link_dialog_url_input');
+        const value = $linkUrlInput.val();
+        const isLink = value.indexOf('@') < 0;
+        this._getIsNewWindowFormRow().toggleClass('d-none', !isLink);
+        this.$('.o_strip_domain').toggleClass('d-none', value.indexOf(window.location.origin) !== 0);
+    },
     /**
      * @private
      */
@@ -495,32 +506,11 @@ const Link = Widget.extend({
         }
     },
     /**
-     * @todo Adapt in master: in stable _onURLInput was both used as an event
-     * handler responding to url input events + a private method called at the
-     * widget lifecycle start. Originally both points were to update the link
-     * tools/dialog UI. It was later wanted to actually update the DOM... but
-     * should only be done in event handler part.
-     *
-     * This allows to differentiate the event handler part. In master, we should
-     * take the opportunity to also update the `_updatePreview` concept which
-     * updates the "preview" of the original link dialog but actually updates
-     * the real DOM for the "new" link tools.
-     *
-     * @private
-     */
-    __onURLInput: function () {
-        this._onURLInput(...arguments);
-    },
-    /**
      * @private
      */
     _onURLInput: function () {
         this._savedURLInputOnDestroy = true;
-        var $linkUrlInput = this.$('#o_link_dialog_url_input');
-        let value = $linkUrlInput.val();
-        let isLink = value.indexOf('@') < 0;
-        this._getIsNewWindowFormRow().toggleClass('d-none', !isLink);
-        this.$('.o_strip_domain').toggleClass('d-none', value.indexOf(window.location.origin) !== 0);
+        this._adaptForm();
     },
     /**
      * @private
