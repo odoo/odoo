@@ -6,7 +6,7 @@
 # keecome <7017511@qq.com>, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # Martin Trigaux, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
+"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -751,7 +751,7 @@ msgid ""
 msgstr ""
 "<span>您确定要取消这张订单吗? <br/></span>\n"
 "                        <span id=\"display_invoice_alert\" attrs=\"{'invisible': [('display_invoice_alert', '=', False)]}\">\n"
-"                            此订单的发票草稿将被取消. <br/>\n"
+"                            此订单的结算草稿将被取消. <br/>\n"
 "                        </span>"
 
 #. module: sale
@@ -902,7 +902,7 @@ msgid ""
 "A standard invoice is issued with all the order lines ready for "
 "invoicing,according to their invoicing policy (based on ordered or delivered"
 " quantity)."
-msgstr "根据他们的开票政策，开具包含所有订单行的标准发票（基于订购或交付的数量）."
+msgstr "根据他们的开票政策，开具包含所有订单行的标准结算（基于订购或交付的数量）."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__product_type
@@ -1875,7 +1875,7 @@ msgstr "EMail撰写向导"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__invoice_mail_template_id
 msgid "Email sent to the customer once the invoice is available."
-msgstr "收到发票后发送给客户的电子邮件。"
+msgstr "收到结算后发送给客户的电子邮件。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
@@ -2256,7 +2256,7 @@ msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                    them before validation."
 msgstr ""
-"发票将在草稿中创建，以便您查看\n"
+"结算将在草稿中创建，以便您查看\n"
 "                     他们在验证之前。"
 
 #. module: sale
@@ -3637,7 +3637,7 @@ msgid ""
 "Sales order item to which the time spent will be added in order to be "
 "invoiced to your customer. Remove the sales order item for the timesheet "
 "entry to be non-billable."
-msgstr "销售订单项目，所花费的时间将被添加到其中，以便向客户开具发票。移除销售订单项目，使工时表条目不能开票。"
+msgstr "销售订单项目，所花费的时间将被添加到其中，以便向客户开具结算。移除销售订单项目，使工时表条目不能开票。"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
@@ -4163,9 +4163,9 @@ msgid ""
 "The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment provider.\n"
 "This mode is advised if you issue the final invoice at the order and not after the delivery."
 msgstr ""
-"当交易被支付提供商确认后，发票会自动生成，并在客户门户中可用。\n"
-"发票被标记为已付款，付款被登记在支付提供商配置中定义的支付日志中。\n"
-"如果你在订单上而不是在交货后开具最终发票，建议使用这种模式。"
+"当交易被支付提供商确认后，结算会自动生成，并在客户门户中可用。\n"
+"结算被标记为已付款，付款被登记在支付提供商配置中定义的支付日志中。\n"
+"如果你在订单上而不是在交货后开具最终结算，建议使用这种模式。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form

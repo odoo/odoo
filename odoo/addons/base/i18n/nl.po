@@ -5,8 +5,8 @@
 # Translators:
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2022
 # Dylan Kiss, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # Martin Trigaux, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # Jolien De Paepe, 2022
 # 
 msgid ""
@@ -562,7 +562,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Met deze module kun je de marge van je Kassa verkopen bekijken in het rapport Verkoopmarge.\n"
+"Met deze module kun je de marge van je kassaverkopen bekijken in het rapport verkoopmarge.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant
@@ -697,7 +697,7 @@ msgid ""
 msgstr ""
 "\n"
 "        Boekhoudrapportages voor Duitsland\n"
-"        Bevat Balans, Winst en Verlies, BTW en relatie BTW rapportages\n"
+"        Bevat Balans, Winst en Verlies, BTW en partner BTW rapportages\n"
 "        Voegt ook DATEV export opties toe aan het grootboek\n"
 "    "
 
@@ -1385,7 +1385,7 @@ msgstr ""
 "        Module voor het importeren van FEC-standaardbestanden, handig voor het importeren van boekhoudgeschiedenis.\n"
 "\n"
 "        FEC-bestanden (fichier des écritures comptables) zijn de standaard boekhoudkundige rapportages die Franse bedrijven moeten indienen bij de belastingdienst.\n"
-"        Met deze module kunnen rekeningen, dagboeken, relaties en verhuizingen uit deze bestanden worden geïmporteerd.\n"
+"        Met deze module kunnen rekeningen, dagboeken, partners en verhuizingen uit deze bestanden worden geïmporteerd.\n"
 "\n"
 "        Alleen het CSV-formaat van FEC is geïmplementeerd.\n"
 "        'utf-8', 'utf-8-sig' en 'iso8859_15' zijn de enige toegestane coderingen.\n"
@@ -1893,9 +1893,9 @@ msgid ""
 msgstr ""
 "\n"
 "    * Multi-taal ondersteuning voor grootboekschema's, BTW, BTW-codes, dagboeken,\n"
-"      boekhoudsjablonen, kostenplaatsen en dagboeken.\n"
+"      boekhoudsjablonen, analytisch rekeningschema en analytische dagboeken.\n"
 "    * Installatiewizard veranderingen\n"
-"      - Kopieer vertalingen voor COA, BTW, BTW-codes en fiscale posities van\n"
+"      - Kopieer vertalingen voor rekeningschema, BTW, BTW-codes en fiscale posities van\n"
 "      sjablonen naar doelobjecten.\n"
 "    "
 
@@ -2391,7 +2391,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"        Een BTW die in python-code wordt berekend bestaat uit twee blokken python-code die lokaal worden uitgevoerd, en die gegevens bevatten zoals prijs, product of relatie.\n"
+"        Een BTW die in python-code wordt berekend bestaat uit twee blokken python-code die lokaal worden uitgevoerd, en die gegevens bevatten zoals prijs, product of partner.\n"
 "\n"
 "        \"Code toe te passen\" bepaalt of de BTW al dan niet moet worden toegepast.\n"
 "\n"
@@ -3151,7 +3151,7 @@ msgid ""
 "Add relation information between Sale Orders and Purchase Orders if Make to Order (MTO) is activated on one sold product.\n"
 msgstr ""
 "\n"
-"Voeg relatie-informatie toe tussen verkooporders en inkooporders als Maak op Order (MTO) is geactiveerd voor één verkocht product.\n"
+"Voeg partner-informatie toe tussen verkooporders en inkooporders als Maak op Order (MTO) is geactiveerd voor één verkocht product.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_facturx_chorus_pro
@@ -3546,7 +3546,7 @@ msgid ""
 "* Cost structure report\n"
 msgstr ""
 "\n"
-"Kostenplaatsen in MRP\n"
+"Analytische boekhouding in MRP\n"
 "==========================\n"
 "\n"
 "* Kostenstructuur rapportage\n"
@@ -4609,7 +4609,7 @@ msgstr ""
 "Dit hangt af van antwoorden of beoordelingen van sommige vragen door verschillende gebruikers.\n"
 "Een onderzoek kan meerdere pagina's hebben. Elke pagina mag meerdere vragen bevatten en\n"
 "elke vraag mag meerdere antwoorden hebben. Verschillende gebruikers mogen verschillende\n"
-"antwoorden of vragen geven en afhankelijk hiervan wordt de enquête gedaan.  Relaties krijgen ook\n"
+"antwoorden of vragen geven en afhankelijk hiervan wordt de enquête gedaan. Partners krijgen ook\n"
 "een e-mail toegestuurd met een persoonlijk token en een uitnodiging voor de enquête.\n"
 "    "
 
@@ -6547,20 +6547,20 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Beheer declaraties door werknemers\n"
+"Beheer onkosten door werknemers\n"
 "============================\n"
 "\n"
-"Deze applicatie staat je toe om werknemers hun dagelijkse uitgaven te beheren. Het geeft je toegang tot je werknemers hun kosten opmerkingen en geeft je het recht om deze aan te vullen en te bevestigen of de opmerkingen te weigeren. Na bevestigen wordt een factuur aangemaakt voor de werknemer.\n"
-"De werknemer kan zijn eigen uitgaven coderen en de validatie flow plaatst het automatisch in de boekhouding na bevestigen door de managers.\n"
+"Deze applicatie staat je toe om werknemers hun dagelijkse uitgaven te beheren. Het geeft je toegang tot je werknemers onkosten en geeft je het recht om deze aan te vullen en te bevestigen of de onkosten te weigeren. Na bevestiging wordt een factuur aangemaakt voor de werknemer.\n"
+"De werknemer kan zijn eigen uitgaven coderen en de validatie flow boekt het automatisch in de boekhouding na bevestiging door de managers.\n"
 "\n"
 "\n"
 "De volledige flow is geïmplementeerd als:\n"
 "---------------------------------\n"
 "* Concept uitgave\n"
-"* Ingediend door de werknemer naar zijn manager\n"
-"* Bevestiging door de boekhouder en boekhouding regel creatie\n"
+"* Ingediend door de werknemer voor zijn manager\n"
+"* Bevestiging door de boekhouder en creatie van boeking\n"
 "\n"
-"Deze module gebruikt ook kostenplaatsen en is compatibel met de factuur op de urenstaat module zodat jij automatisch je klanten hun uitgaven kan her-factureren als je werkt met een project."
+"Deze module gebruikt ook de analytische boekhouding en is compatibel met de factuur op de urenstaat module zodat jij automatisch je klanten hun uitgaven kan her-factureren als je werkt met een project."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_management
@@ -6847,11 +6847,11 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Module om kostenplaats boekhoudkundige objecten te definiëren.\n"
+"Module voor het definiëren van een analytisch boekhoudobject.\n"
 "===============================================\n"
 "\n"
-"In Odoo is een kostenplaats rekening gekoppeld aan algemene rekening maar worden\n"
-"totaal afhankelijk behandeld. Je kunt dus verschillende kostenplaatsen ingeven die geen rekening hebben in de algemene grootboekschema."
+"In Odoo zijn analytische rekeningen gekoppeld aan algemene rekeningen, maar worden\n"
+"totaal afhankelijk behandeld. Je kunt dus verschillende analytische handelingen ingeven die geen tegenwaarde hebben in de algemene financiële rekeningen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_resource
@@ -7215,7 +7215,7 @@ msgstr ""
 "andere vormen van automatisering) en maakt het veel moeilijker om\n"
 "kennis over het importeer/exporteer systeem te verzamelen omdat het gespreid is over 3+ verschillende projecten.\n"
 "\n"
-"* In een meer uitbreidbare manier, zodat gebruikers en relaties hun eigen\n"
+"* In een meer uitbreidbare manier, zodat gebruikers en partners hun eigen\n"
 "front-end kunnen bouwen om via andere bestandsformaten te importeren (bijvoorbeeld OpenDocument\n"
 "bestanden) die mogelijk gemakkelijker te verwerken zijn in hun werk flow of vanuit\n"
 "hun data productie bronnen.\n"
@@ -7479,7 +7479,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Relatie Geo lokalisatie\n"
+"Partner Geolokalisatie\n"
 "========================\n"
 "    "
 
@@ -7988,7 +7988,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Toont je bedrijfsadres / relatie adres op Google Maps. Configureer een API sleutel in de website instellingen."
+"Toont je bedrijfsadres / partneradres op Google Maps. Configureer een API sleutel in de website instellingen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sign
@@ -8569,7 +8569,7 @@ msgstr ""
 "    * Lijstprijs\n"
 "    * Leveranciersprijs\n"
 "\n"
-"Prijslijst voorkeuren op product en/of relaties.\n"
+"Prijslijst voorkeuren op product en/of partners.\n"
 "\n"
 "Product labels met barcode afdrukken.\n"
 "    "
@@ -9515,7 +9515,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Met deze module kun je je resellers / relaties op je website publiceren en inkomende leads / verkoopkansen naar hen doorsturen.\n"
+"Met deze module kun je je resellers / partners op je website publiceren en inkomende leads / verkoopkansen naar hen doorsturen.\n"
 "\n"
 "\n"
 "** Publiceer een partner **\n"
@@ -9526,7 +9526,7 @@ msgstr ""
 "\n"
 "Het doorsturen van leads kan voor één of meerdere leads tegelijk worden gedaan. De actie is beschikbaar in de sectie * Toegewezen partner * van de lead- / verkoopkansformulierweergave en in het menu * Actie * van de lijstweergave.\n"
 "\n"
-"De automatische toewijzing wordt berekend op basis van het gewicht van partnerniveaus en de geolokalisatie. Relaties krijgen leads die zich om hen heen bevinden."
+"De automatische toewijzing wordt berekend op basis van het gewicht van partnerniveaus en de geolokalisatie. Partners krijgen leads die zich om hen heen bevinden."
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subonctracting_landed_costs
@@ -9847,15 +9847,13 @@ msgstr ""
 "\n"
 "Deze module implementeert een urenstaten systeem.\n"
 "==========================================\n"
-"Elke werknemer kan zijn verwerkte tijd invoeren en opvolgen op verschillende projecten.\n"
-"Een project is een kostenplaats en de gespendeerde tijd op een project genereert kosten op\n"
-"de kostenplaats.\n"
+"Elke werknemer kan zijn bestede tijd invoeren en opvolgen op verschillende projecten.\n"
 "\n"
 "Er is zijn veel rapportages op tijd en werknemer opvolging mogelijk.\n"
 "\n"
 "Het is volledig geïntegreerd met de kostenrekening module. Het laat je toe\n"
-"een beheer op te zetten\n"
-"voor een aangelegenheid."
+"een beheer op te zetten voor een aangelegenheid.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_syscohada
@@ -10380,10 +10378,10 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"BTW validatie voor relaties BTW nummers.\n"
+"BTW validatie voor partner's BTW nummers.\n"
 "=========================================\n"
 "\n"
-"Na het installeren van deze module worden waardes ingegeven in het BTW veld van de relaties\n"
+"Na het installeren van deze module worden waardes ingegeven in het BTW veld van de partners\n"
 "bevestigd voor alle ondersteunde landen. Het land is de afgeleide van de\n"
 "2-cijferige landcode die een prefix is van het BTW nummer, bijvoorbeeld \"BE0477472701\"\n"
 "wordt bevestigd volgens de belgische regels.\n"
@@ -12249,7 +12247,7 @@ msgid ""
 "A partner with the same <span><span class=\"o_vat_label\">Tax "
 "ID</span></span> already exists ("
 msgstr ""
-"Een relatie met hetzelfde <span><span class=\"o_vat_label\">BTW "
+"Een partner met hetzelfde <span><span class=\"o_vat_label\">BTW "
 "nummer</span></span> bestaat al ("
 
 #. module: base
@@ -13586,7 +13584,7 @@ msgid ""
 "Allows to send sms to website visitor if the visitor is linked to a partner."
 msgstr ""
 "Staat het versturen van SMS naar website bezoeker toe indien de bezoeker "
-"gekoppeld is aan een relatie."
+"gekoppeld is aan een partner."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_sms
@@ -13730,23 +13728,23 @@ msgstr "Een betaalprovider die de VS, Australië en Canada dekt."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic
 msgid "Analytic Accounting"
-msgstr "Kostenplaatsen"
+msgstr "Analytische boekhouding"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic_enterprise
 msgid "Analytic Accounting Enterprise"
-msgstr "Kostenplaatsen enterprise"
+msgstr "Analytische boekhouding Enterprise"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_account
 #: model:ir.module.module,summary:base.module_mrp_account_enterprise
 msgid "Analytic accounting in Manufacturing"
-msgstr "Kostenplaatsen in productie"
+msgstr "Analytische boekhouding in Productie"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder_hr_account
 msgid "Analytic cost of employee work in manufacturing"
-msgstr "Kostenplaats kosten van werknemerswerk in productie"
+msgstr "Analytische kost van werknemerswerk in productie"
 
 #. module: base
 #: model:res.country,name:base.ad
@@ -15691,7 +15689,7 @@ msgstr "Afdrukbasis voor cheques"
 #: model:ir.model.fields,help:base.field_res_partner__is_company
 #: model:ir.model.fields,help:base.field_res_users__is_company
 msgid "Check if the contact is a company, otherwise it is a person"
-msgstr "Controleer of de relatie een bedrijf is, anders is het een persoon."
+msgstr "Controleer of de partner een bedrijf is, anders is het een persoon."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_check_printing
@@ -15806,7 +15804,7 @@ msgid ""
 "Choose a subview of partners that includes only address fields, to change "
 "the way users can input addresses."
 msgstr ""
-"Kies een subweergave van relaties die enkel adres velden toont, om te "
+"Kies een subweergave van partners die enkel adres velden toont, om te "
 "wijzigen hoe gebruikers adressen kunnen ingeven."
 
 #. module: base
@@ -16420,12 +16418,12 @@ msgstr "Contact"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Contact / Address"
-msgstr "Relatie / Adres"
+msgstr "Contact / Adres"
 
 #. module: base
 #: model:res.groups,name:base.group_partner_manager
 msgid "Contact Creation"
-msgstr "Relatie aanmaken"
+msgstr "Contact aanmaken"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm
@@ -18480,7 +18478,7 @@ msgid ""
 "sharing data."
 msgstr ""
 "Ofwel een klant (geen gebruiker), ofwel een gedeelde gebruiker. Aangegeven "
-"dat de huidige relatie een klant is zonder toegang of met een beperkte "
+"dat de huidige partner een klant is zonder toegang of met een beperkte "
 "toegang gemaakt voor het delen van gegevens."
 
 #. module: base
@@ -23971,7 +23969,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_account_accountant
 msgid "Manage financial and analytic accounting"
-msgstr "Beheer een financiële en kostenplaats boekhouding"
+msgstr "Beheer financiële en analytische boekhouding"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_stock
@@ -24318,12 +24316,12 @@ msgstr "Contacten samenvoegen"
 #. module: base
 #: model:ir.model,name:base.model_base_partner_merge_line
 msgid "Merge Partner Line"
-msgstr "Relatieregel samenvoegen"
+msgstr "Partnerregel samenvoegen"
 
 #. module: base
 #: model:ir.model,name:base.model_base_partner_merge_automatic_wizard
 msgid "Merge Partner Wizard"
-msgstr "Relaties samenvoegen wizard"
+msgstr "Partners samenvoegen wizard"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -26037,11 +26035,10 @@ msgstr ""
 "Odoo Personeelszaken\n"
 "--------------------\n"
 "\n"
-"Met Odoo <a href=\"https://www.odoo.com/app/employees\">Human Resources</a>,\n"
-"beheer het belangrijkste kapitaal in je bedrijf: mensen\n"
+"Beheer met Odoo <a href=\"https://www.odoo.com/app/employees\">Personeelszaken</a>, het belangrijkste kapitaal in je bedrijf: mensen\n"
 "\n"
-"Beheer al je HR-activiteiten eenvoudig: kennisdeling, recruitment,\n"
-"beoordelingen, urenstaten, contracten, presentielijsten, salarisadministratie, etc.\n"
+"Beheer al je HR-activiteiten eenvoudig: kennisdeling, werving & selectie,\n"
+"beoordelingen, urenstaten, contracten, aanxezigheden, salarisadministratie, enz.\n"
 "\n"
 "Elke behoefte wordt geleverd door een specifieke app die je op aanvraag activeert.\n"
 "\n"
@@ -26049,47 +26046,46 @@ msgstr ""
 "---------------------\n"
 "\n"
 "Houd alle belangrijke informatie in het adresboek van je bedrijf bij. Sommige\n"
-"informatie is beperkt tot HR-managers, andere zijn openbaar om gemakkelijk te kunnen bekijken\n"
-"collega's.\n"
+"informatie is beperkt tot HR-managers, andere zijn openbaar om gemakkelijk collega's te kunnen opzoeken.\n"
 "\n"
 "Neem werknemerscontracten op en ontvang meldingen wanneer ze moeten worden verlengd.\n"
 "\n"
 "Stroomlijn je wervingsproces\n"
 "-----------------------------------\n"
 "\n"
-"Indexeer cv's, volg sollicitanten, zoek profielen met <a href=\"https://www.odoo.com/app/employees\">Odoo HR</a>.\n"
+"Indexeer cv's, volg sollicitanten, zoek profielen met <a href=\"https://www.odoo.com/app/employees\">Odoo Personeelszaken</a>.\n"
 "\n"
 "Plaats vacatures en houd elke ontvangen sollicitatie bij. Volg sollicitanten\n"
-"in je recruitmentproces met de slimme kanban view.\n"
+"in je wervingsproces dankzij de slimme kanban-weergave.\n"
 "\n"
-"Bespaar tijd door bepaalde communicatie te automatiseren met e-mailsjablonen. CV's zijn:\n"
+"Bespaar tijd door bepaalde communicatie te automatiseren met e-mailsjablonen. Cv's zijn:\n"
 "automatisch geïndexeerd, zodat je gemakkelijk specifieke profielen kunt vinden.\n"
 "\n"
-"Zakelijk sociaal netwerk\n"
+"Enterprise Social Network\n"
 "-------------------------\n"
 "\n"
-"Doorbreek informatiesilo's. Deel kennis en best practices met iedereen\n"
+"Doorbreek informatiesilo's. Deel kennis en best practices met alle\n"
 "werknemers. Volg specifieke mensen of documenten en sluit je aan bij interessegroepen om\n"
 "expertise en documenten delen.\n"
 "\n"
-"Communiceer in realtime met je collega's met de livechat op de website.\n"
+"Communiceer in realtime met je collega's dankzij de livechat op de website.\n"
 "\n"
 "Tijd en aanwezigheid bijhouden\n"
 "--------------------------\n"
 "\n"
-"Houd de bestede tijd bij per project, klant of taak. Het is gemakkelijk om op te nemen\n"
-"urenstaten of controleer de aanwezigheid voor elke werknemer. Krijg je kostenplaats boekhouding\n"
+"Houd de bestede tijd bij per project, klant of taak. Het is gemakkelijk om urenstaten op te nemen\n"
+"of de aanwezigheid voor elke werknemer te controleren. Krijg je analytische boekhouding\n"
 "automatisch gepost op basis van de tijd besteed aan je projecten.\n"
 "\n"
 "Beheer van verlof\n"
 "-----------------\n"
 "\n"
 "Houd de door elke werknemer opgebouwde vakantiedagen bij. Werknemers voeren hun\n"
-"verzoeken (betaald verlof, ziekteverlof, enz.), voor managers om goed te keuren en\n"
-"bevestigen. Het is allemaal gedaan in slechts een paar klikken. De agenda van elke werknemer is:\n"
+"verzoeken (betaald verlof, ziekteverlof, enz.) in en hun managers dienen deze goedkeuren en\n"
+"bevestigen. Het is allemaal gedaan in slechts een paar klikken. De agenda van elke werknemer is\n"
 "dienovereenkomstig bijgewerkt.\n"
 "\n"
-"Houd de personeelskosten bij\n"
+"Houd de personeelsonkosten bij\n"
 "-------------------------------\n"
 "\n"
 "Weg met het papierwerk en volg de onkosten van werknemers direct in Odoo.\n"
@@ -26097,13 +26093,14 @@ msgstr ""
 "terugbetaling van werknemers, boeking in de boekhouding en doorfacturatie aan\n"
 "klanten.\n"
 "\n"
-"Volg periodieke taxaties\n"
+"Volg periodieke evaluaties\n"
 "--------------------------\n"
 "\n"
 "Stel beoordelingsplannen en/of enquêtes op voor je werknemers en bekijk hun\n"
-"evolutie. Definieer stappen voor interviews en Odoo zal managers op de hoogte stellen of\n"
-"ondergeschikten automatisch om beoordelingen voor te bereiden. Blijf op de hoogte van de voortgang van\n"
-"je personeel periodiek.\n"
+"evolutie. Definieer stappen voor interviews en Odoo zal managers of ondergeschikten\n"
+"automatische op de hoogte stellen\n"
+"om beoordelingen voor te bereiden. Blijf periodiek op de hoogte van de voortgang van\n"
+"je personeel.\n"
 "\n"
 "Betrokkenheid vergroten met gamification\n"
 "----------------------------------\n"
@@ -26111,8 +26108,8 @@ msgstr ""
 "### Definieer een duidelijk doel en geef realtime feedback\n"
 "\n"
 "Inspireer prestaties met uitdagingen, doelen en beloningen. Definieer duidelijke doelstellingen\n"
-"en realtime feedback en tastbare resultaten te bieden. Laat de top zien\n"
-"artiesten naar het hele kanaal en publiekelijk erkennen dat ze goed werk hebben geleverd.\n"
+"en geef realtime feedback en tastbare resultaten. Laat de toppresteerders zien\n"
+"aan het hele kanaal en erken publiekelijk dat ze goed werk hebben geleverd.\n"
 "\n"
 "### Leaderboards\n"
 "\n"
@@ -28561,22 +28558,22 @@ msgstr "Barscodes ontleden volgens de GS1-128 specificaties"
 #: model:ir.model.fields,field_description:base.field_res_company__partner_id
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 msgid "Partner"
-msgstr "Relatie"
+msgstr "Partner"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_partner_autocomplete
 msgid "Partner Autocomplete"
-msgstr "Relatie automatisch aanvullen"
+msgstr "Partner automatisch aanvullen"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_category
 msgid "Partner Tags"
-msgstr "Relatie labels"
+msgstr "Partner labels"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_title
 msgid "Partner Title"
-msgstr "Relatie titel"
+msgstr "Partner titel"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_title_form
@@ -28587,12 +28584,12 @@ msgstr "Juridische entiteit"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__active_partner
 msgid "Partner is Active"
-msgstr "Relatie is actief"
+msgstr "Partner is actief"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_partner
 msgid "Partner module for website"
-msgstr "Relatiemodule voor website"
+msgstr "Partnermodule voor website"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__same_company_registry_partner_id
@@ -28604,31 +28601,31 @@ msgstr "Partner met hetzelfde bedrijfsregister"
 #: model:ir.model.fields,field_description:base.field_res_partner__same_vat_partner_id
 #: model:ir.model.fields,field_description:base.field_res_users__same_vat_partner_id
 msgid "Partner with same Tax ID"
-msgstr "Relatie met hetzelfde BTW nummer"
+msgstr "Partner met hetzelfde BTW nummer"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__partner_id
 msgid "Partner-related data of the user"
-msgstr "Relatie gerelateerde gegevens van de gebruiker"
+msgstr "Partner gerelateerde gegevens van de gebruiker"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category__partner_ids
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Partners"
-msgstr "Relaties"
+msgstr "Partners"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_geolocalize
 msgid "Partners Geolocation"
-msgstr "Relatie geolocatie"
+msgstr "Partners geolocatie"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "Partners: %(category)s"
-msgstr "Relaties: %(category)s"
+msgstr "Partners: %(category)s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_pass
@@ -29773,7 +29770,7 @@ msgstr "Publiceer je ledenlijst"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_partner_assign
 msgid "Publish your resellers/partners and forward leads to them"
-msgstr "Publiceer je resellers / relaties en stuur leads naar hen door"
+msgstr "Publiceer je resellers / partners en stuur leads naar hen door"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__published_version
@@ -30313,7 +30310,7 @@ msgstr "Gerelateerd model"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__partner_id
 msgid "Related Partner"
-msgstr "Gekoppelde relatie"
+msgstr "Gekoppelde partner"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_server_object_lines__server_id
@@ -31234,7 +31231,7 @@ msgstr "Zoek bank"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Search Partner"
-msgstr "Zoek relatie"
+msgstr "Zoek partner"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_category_view_search
@@ -31774,7 +31771,7 @@ msgstr "Deel groep"
 #: model:ir.model.fields,field_description:base.field_res_partner__partner_share
 #: model:ir.model.fields,field_description:base.field_res_users__partner_share
 msgid "Share Partner"
-msgstr "Deel relatie"
+msgstr "Deel partner"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__share
@@ -36258,7 +36255,7 @@ msgstr "Website Modules Test"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_partner
 msgid "Website Partner"
-msgstr "Website relatie"
+msgstr "Website partner"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_payment
@@ -36762,7 +36759,7 @@ msgstr ""
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "You cannot create recursive Partner hierarchies."
-msgstr "Het is niet mogelijk een recursieve relatie hiërarchie te maken."
+msgstr "Het is niet mogelijk een recursieve partner hiërarchie te maken."
 
 #. module: base
 #. odoo-python
