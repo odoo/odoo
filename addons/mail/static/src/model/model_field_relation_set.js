@@ -49,93 +49,110 @@ export class RelationSet {
         }
         this.set.add(value);
         if (this.field.sort) {
-            this.sortArray.push(value);
+            const compareDefinition = this.field.sort;
+            const compareFunction = (a, b) => {
+                for (const [compareMethod, relatedPath] of compareDefinition) {
+                    const valA = followRelations(a, relatedPath);
+                    const valB = followRelations(b, relatedPath);
+                    switch (compareMethod) {
+                        case 'truthy-first': {
+                            if (valA === valB) {
+                                break;
+                            }
+                            if (!valA) {
+                                return 1;
+                            }
+                            if (!valB) {
+                                return -1;
+                            }
+                            break;
+                        }
+                        case 'falsy-first': {
+                            if (valA === valB) {
+                                break;
+                            }
+                            if (!valA) {
+                                return -1;
+                            }
+                            if (!valB) {
+                                return 1;
+                            }
+                            break;
+                        }
+                        case 'case-insensitive-asc': {
+                            if (typeof valA !== 'string' || typeof valB !== 'string') {
+                                break;
+                            }
+                            const cleanedValA = cleanSearchTerm(valA);
+                            const cleanedValB = cleanSearchTerm(valB);
+                            if (cleanedValA === cleanedValB) {
+                                break;
+                            }
+                            return cleanedValA < cleanedValB ? -1 : 1;
+                        }
+                        case 'smaller-first':
+                            if (typeof valA !== 'number' || typeof valB !== 'number') {
+                                break;
+                            }
+                            if (valA === valB) {
+                                break;
+                            }
+                            return valA - valB;
+                        case 'greater-first':
+                            if (typeof valA !== 'number' || typeof valB !== 'number') {
+                                break;
+                            }
+                            if (valA === valB) {
+                                break;
+                            }
+                            return valB - valA;
+                        case 'most-recent-first':
+                            if (!(valA instanceof Date) || !(valB instanceof Date)) {
+                                break;
+                            }
+                            if (valA === valB) {
+                                break;
+                            }
+                            return valB - valA;
+                        default:
+                            throw Error(`sort compare method "${compareMethod}" is not supported.`);
+                    }
+                }
+                return 0;
+            };
+            const search = (from, to) => {
+                if (from === to) {
+                    return to;
+                }
+                const m = Math.floor((from + to) / 2);
+                const compare = compareFunction(this.sortArray[m], value);
+                if (compare > 0) {
+                    return search(from, m);
+                }
+                if (compare < 0) {
+                    return search(m + 1, to);
+                }
+                return m;
+            };
+            // insert correct position
+            this.sortArray.splice(search(0, this.sortArray.length), 0, value);
             const listener = new Listener({
                 isPartOfUpdateCycle: true,
                 name: `sort of ${value} in ${this.field} of ${this.record}`,
                 onChange: info => {
                     // access all useful values of current record (and relations) to mark them as dependencies
                     this.record.modelManager.startListening(listener);
-                    const compareDefinition = this.field.sort;
                     for (const relatedPath of this.field.sortedFieldSplittedPaths) {
                         followRelations(value, relatedPath);
                     }
                     this.record.modelManager.stopListening(listener);
                     // sort outside of listening to avoid registering listeners for all other items (they already added their own listeners)
-                    const compareFunction = (a, b) => {
-                        for (const [compareMethod, relatedPath] of compareDefinition) {
-                            const valA = followRelations(a, relatedPath);
-                            const valB = followRelations(b, relatedPath);
-                            switch (compareMethod) {
-                                case 'truthy-first': {
-                                    if (valA === valB) {
-                                        break;
-                                    }
-                                    if (!valA) {
-                                        return 1;
-                                    }
-                                    if (!valB) {
-                                        return -1;
-                                    }
-                                    break;
-                                }
-                                case 'falsy-first': {
-                                    if (valA === valB) {
-                                        break;
-                                    }
-                                    if (!valA) {
-                                        return -1;
-                                    }
-                                    if (!valB) {
-                                        return 1;
-                                    }
-                                    break;
-                                }
-                                case 'case-insensitive-asc': {
-                                    if (typeof valA !== 'string' || typeof valB !== 'string') {
-                                        break;
-                                    }
-                                    const cleanedValA = cleanSearchTerm(valA);
-                                    const cleanedValB = cleanSearchTerm(valB);
-                                    if (cleanedValA === cleanedValB) {
-                                        break;
-                                    }
-                                    return cleanedValA < cleanedValB ? -1 : 1;
-                                }
-                                case 'smaller-first':
-                                    if (typeof valA !== 'number' || typeof valB !== 'number') {
-                                        break;
-                                    }
-                                    if (valA === valB) {
-                                        break;
-                                    }
-                                    return valA - valB;
-                                case 'greater-first':
-                                    if (typeof valA !== 'number' || typeof valB !== 'number') {
-                                        break;
-                                    }
-                                    if (valA === valB) {
-                                        break;
-                                    }
-                                    return valB - valA;
-                                case 'most-recent-first':
-                                    if (!(valA instanceof Date) || !(valB instanceof Date)) {
-                                        break;
-                                    }
-                                    if (valA === valB) {
-                                        break;
-                                    }
-                                    return valB - valA;
-                                default:
-                                    throw Error(`sort compare method "${compareMethod}" is not supported.`);
-                            }
-                        }
-                        return 0;
-                    };
-                    // Naive method: re-sort the complete array every time. Ideally each item should
-                    // be inserted/moved at its correct place immediately, but this can be optimized
-                    // eventually if necessary.
-                    this.sortArray.sort(compareFunction);
+                    if (info.reason !== 'initial call') {
+                        // Naive method: re-sort the complete array every time. Ideally each item should
+                        // be moved at its correct place immediately, but this can be optimized
+                        // eventually if necessary.
+                        this.sortArray.sort(compareFunction);
+                    }
                     // Similarly naive approach: the field is marked as changed even if sort didn't
                     // actually move any record.
                     this.record.modelManager._markRecordFieldAsChanged(this.record, this.field);
