@@ -93,6 +93,15 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         assert.equal(computedDomain[0], "&");
     });
 
+    QUnit.test("Can add a global filter with an empty field matching (no field chain)", async function (assert) {
+        const { model } = await createSpreadsheetWithPivotAndList();
+        assert.equal(model.getters.getGlobalFilters().length, 0);
+        await addGlobalFilter(model, LAST_YEAR_FILTER, { pivot: {1: {}} });
+        assert.equal(model.getters.getGlobalFilters().length, 1);
+        const computedDomain = model.getters.getPivotComputedDomain("1");
+        assert.deepEqual(computedDomain, []);
+    });
+
     QUnit.test("Can delete a global filter", async function (assert) {
         assert.expect(4);
 
@@ -105,7 +114,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         assert.deepEqual(result, DispatchResult.Success);
         assert.equal(model.getters.getGlobalFilters().length, 0);
         const computedDomain = model.getters.getPivotComputedDomain("1");
-        assert.equal(computedDomain.length, 0);
+        assert.deepEqual(computedDomain, []);
     });
 
     QUnit.test("Can edit a global filter", async function (assert) {
