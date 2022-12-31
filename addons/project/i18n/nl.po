@@ -961,7 +961,7 @@ msgstr "Subtaken toestaan"
 #: model:ir.model.fields,field_description:project.field_project_project__analytic_account_id
 #: model:ir.model.fields,field_description:project.field_project_task__analytic_account_id
 msgid "Analytic Account"
-msgstr "Kostenplaats"
+msgstr "Analytische rekening"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__analytic_account_id
@@ -972,10 +972,10 @@ msgid ""
 "This analytic account can be changed on each task individually if necessary.\n"
 "An analytic account is required in order to use timesheets."
 msgstr ""
-"Kostenplaatsen waaraan dit project, zijn taken en zijn urenstaten zijn gekoppeld.\n"
-"Volg de kosten en inkomsten van je project door dit kostenplaats in te stellen op je gerelateerde documenten (bijv. verkooporders, facturen, inkooporders, leveranciersfacturen, declaraties enz.).\n"
-"De kostenplaats kan, indien nodig, voor elke taak afzonderlijk worden gewijzigd.\n"
-"Om gebruik te kunnen maken van urenstaten is een kostenplaats vereist."
+"Analytische rekening waaraan dit project, zijn taken en zijn urenstaten zijn gekoppeld.\n"
+"Volg de kosten en inkomsten van je project door deze analytische rekening in te stellen op je gerelateerde documenten (bijv. verkooporders, facturen, inkooporders, leveranciersfacturen, onkosten, enz.).\n"
+"Deze analytische rekening kan, indien nodig, voor elke taak afzonderlijk worden gewijzigd.\n"
+"Om gebruik te kunnen maken van urenstaten is een analytische rekening vereist."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__analytic_account_id
@@ -984,9 +984,9 @@ msgid ""
 "Track the costs and revenues of your task by setting its analytic account on your related documents (e.g. sales orders, invoices, purchase orders, vendor bills, expenses etc.).\n"
 "By default, the analytic account of the project is set. However, it can be changed on each task individually if necessary."
 msgstr ""
-"Kostenplaats waaraan deze taak en de bijbehorende urenstaten zijn gekoppeld.\n"
-"Houd de kosten en inkomsten van je taak bij door het kostenplaats in te stellen op je gerelateerde documenten (bijv. verkooporders, facturen, inkooporders, leveranciersfacturen, declaraties enz.).\n"
-"Standaard is de kostenplaats van het project ingesteld. Het kan echter indien nodig voor elke taak afzonderlijk worden gewijzigd."
+"Analytische rekening waaraan deze taak en de bijbehorende urenstaten zijn gekoppeld.\n"
+"Houd de kosten en inkomsten van je taak bij door de analytische rekening in te stellen op je gerelateerde documenten (bijv. verkooporders, facturen, inkooporders, leveranciersfacturen, onkosten, enz.).\n"
+"Standaard is de analytische rekening van het project ingesteld. Het kan echter indien nodig voor elke taak afzonderlijk worden gewijzigd."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1376,7 +1376,7 @@ msgstr "Kan veld %r niet agregeren."
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__partner_is_company
 msgid "Check if the contact is a company, otherwise it is a person"
-msgstr "Controleer of de relatie een bedrijf is, anders is het een persoon"
+msgstr "Controleer of de partner een bedrijf is, anders is het een persoon"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__child_text
@@ -1970,7 +1970,7 @@ msgstr "Standaard abonnement"
 #: model:ir.model.fields,help:project.field_res_company__analytic_plan_id
 #: model:ir.model.fields,help:project.field_res_config_settings__analytic_plan_id
 msgid "Default Plan for a new analytic account for projects"
-msgstr "Standaardplan voor een nieuwe kostenplaats voor projecten"
+msgstr "Standaardplan voor een nieuwe analytische rekening voor projecten"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_defaults
@@ -2420,7 +2420,7 @@ msgstr "Volgers"
 #: model:ir.model.fields,field_description:project.field_project_task__message_partner_ids
 #: model:ir.model.fields,field_description:project.field_project_update__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Relaties)"
+msgstr "Volgers (Partners)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__activity_type_icon
@@ -2865,7 +2865,7 @@ msgstr "Gefactureerd"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_analytic_account_id_changed
 msgid "Is Analytic Account Manually Changed"
-msgstr "Is kostenplaats handmatig gewijzigd"
+msgstr "Is handmatig gewijzigde analytische rekening"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_blocked
@@ -4048,7 +4048,7 @@ msgid ""
 msgstr ""
 "Beleid om een bericht te versturen bij een document door gebruik te maken van de mail gateway.\n"
 "-iedereen: iedereen mag versturen\n"
-"-relaties: alleen geautoriseerde relaties\n"
+"-partners: alleen geautoriseerde partners\n"
 "-volgers: allen volgers van een bijbehorend document of volgers van gevolgde kanalen\n"
 
 #. module: project
@@ -4175,7 +4175,7 @@ msgstr "Project"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__project_analytic_account_id
 msgid "Project Analytic Account"
-msgstr "Project kostenplaats"
+msgstr "Analytische rekening project"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_collaborator_action
@@ -5925,7 +5925,7 @@ msgstr "Niet toegewezen"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Unknown Analytic Account"
-msgstr "Onbekende kostenplaats"
+msgstr "Onbekende analytische rekening"
 
 #. module: project
 #. odoo-python
@@ -6253,7 +6253,7 @@ msgid ""
 "You cannot change the company of an analytic account if it is related to a "
 "project."
 msgstr ""
-"Je kunt het bedrijf van een kostenplaats niet wijzigen als deze is "
+"Je kunt het bedrijf van een analytische rekening niet wijzigen als deze is "
 "gerelateerd aan een project."
 
 #. module: project
@@ -6320,7 +6320,7 @@ msgstr ""
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 #, python-format
 msgid "You must be"
-msgstr "Je moet zijn"
+msgstr "Je moet"
 
 #. module: project
 #. odoo-python
@@ -6459,7 +6459,7 @@ msgstr "icoon."
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 #, python-format
 msgid "logged in"
-msgstr "ingelogd"
+msgstr "ingelogd zijn"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1

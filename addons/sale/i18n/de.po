@@ -3,10 +3,11 @@
 # 	* sale
 # 
 # Translators:
-# Jinjiu Liu, 2022
 # Friederike Fasterling-Nesselbosch, 2022
 # Felix Schubert <felix.schubert@go-erp.com>, 2022
 # Martin Trigaux, 2022
+# Michael Hofer, 2022
+# Thomas Drewermann, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Thomas Drewermann, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -332,7 +333,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
+"        <t t-set=\"doc_name\" t-value=\"'Angebot' if object.state in ('draft', 'sent') else 'Auftrag'\"/>\n"
 "        Hallo,\n"
 "        <br/><br/>\n"
 "        Ihre\n"
@@ -1558,7 +1559,7 @@ msgstr "Rabattbetrag"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Discounts, Loyalty & Gift Card"
-msgstr ""
+msgstr "Rabatte, Treue & Geschenkkarten"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_name
@@ -2327,7 +2328,7 @@ msgstr "Hauptanhänge"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage Promotions, coupons, loyalty cards, Gift cards &amp; eWallet"
-msgstr ""
+msgstr "Aktionen, Gutscheine, Treuekarten, Geschenkkarten & eWallet verwalten"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__manual
@@ -2626,7 +2627,7 @@ msgstr "Online-Unterschrift"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Online confirmation"
-msgstr ""
+msgstr "Online-Bestätigung"
 
 #. module: sale
 #. odoo-python
@@ -4272,6 +4273,8 @@ msgstr ""
 msgid ""
 "This will update all taxes based on the currently selected fiscal position."
 msgstr ""
+"Dadurch werden alle Steuern auf der Grundlage der aktuell ausgewählten "
+"Steuerposition aktualisiert."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4480,7 +4483,7 @@ msgstr "Preise aktualisieren"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Taxes"
-msgstr ""
+msgstr "Steuern aktualisieren"
 
 #. module: sale
 #. odoo-python
@@ -4529,7 +4532,7 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "View Quotation"
-msgstr "Ansicht Offerte"
+msgstr "Offerte anzeigen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
