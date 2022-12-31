@@ -777,7 +777,7 @@ msgstr ""
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
 msgid "A warning can be set on a partner (Stock)"
-msgstr "Een waarschuwing kan worden ingesteld op een relatie (voorraad)"
+msgstr "Een waarschuwing kan worden ingesteld op een partner (voorraad)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__action
@@ -2326,7 +2326,7 @@ msgid ""
 msgstr ""
 "Definieer je locaties om je magazijnstructuur en organisatie\n"
 "te reflecteren. Odoo kan fysieke locaties beheren\n"
-"(magazijnen, planken, bakken, enz), relatie locaties (klanten,\n"
+"(magazijnen, planken, bakken, enz), partnerslocaties (klanten,\n"
 "leveranciers) en virtuele locaties die de tegenrekening zijn van de\n"
 "voorraad bewerkingen zoals de productieorder\n"
 "samenstellingen, voorraden enz."
@@ -3011,7 +3011,7 @@ msgstr "Volgers"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_partner_ids
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Relaties)"
+msgstr "Volgers (partners)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__activity_type_icon
@@ -3241,7 +3241,7 @@ msgstr "Krijg een volledige tracering van leveranciers naar klanten"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Get informative or blocking warnings on partners"
-msgstr "Krijg informatieve of blokkerende waarschuwingen op relaties"
+msgstr "Krijg informatieve of blokkerende waarschuwingen op partners"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_putaway_rule__sequence
@@ -5780,12 +5780,12 @@ msgstr "Gedeeltelijk beschikbaar"
 #: model:ir.model.fields,field_description:stock.field_procurement_group__partner_id
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Partner"
-msgstr "Relatie"
+msgstr "Partner"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__partner_address_id
 msgid "Partner Address"
-msgstr "Relatie adres"
+msgstr "Partneradres"
 
 #. module: stock
 #. odoo-python
@@ -7549,7 +7549,7 @@ msgid ""
 "location if you subcontract the manufacturing operations."
 msgstr ""
 "Stel een locatie in als je produceert op een vaste locatie. Dit kan een "
-"relatie locatie zijn als je de productie heeft uitbesteed."
+"partnerlocatie zijn als je de productie heeft uitbesteed."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_config_settings
@@ -8514,7 +8514,7 @@ msgstr ""
 "Dit is de standaard doellocatie wanneer je handmatig een levering aanmaakt "
 "met deze bewerkingssoort. Het is mogelijk om dit te wijzigen of dat routes "
 "het in een andere locatie plaatsen. Indien leeg controleert het de "
-"klantlocatie van de relatie. "
+"klantlocatie van de partner. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_src_id
@@ -8527,7 +8527,7 @@ msgstr ""
 "Dit is de standaard bronlocatie wanneer je handmatig een levering aanmaakt "
 "met deze bewerkingssoort. Het is mogelijk om dit te wijzigen of dat routes "
 "het in een andere locatie plaatsen. Indien leeg controleert het de "
-"leverancierslocatie van de relatie. "
+"leverancierslocatie van de partner. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id

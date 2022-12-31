@@ -14,7 +14,6 @@
 # Fishfur A Banter <fishfurbanter@gmail.com>, 2022
 # Moshe Flam <pashute@gmail.com>, 2022
 # Adi Sharashov <Adi@laylinetech.com>, 2022
-# Sagi Ahiel, 2022
 # david danilov, 2022
 # Jonathan Spier, 2022
 # ExcaliberX <excaliberx@gmail.com>, 2022
@@ -25,12 +24,13 @@
 # Amit Spilman <amit@laylinetech.com>, 2022
 # Martin Trigaux, 2022
 # Yihya Hugirat <hugirat@gmail.com>, 2022
-# hed shefer <hed@laylinetech.com>, 2022
 # Netta Waizer, 2022
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2022
 # NoaFarkash, 2022
 # Ha Ketem <haketem@gmail.com>, 2022
 # Roy Sayag, 2022
+# Sagi Ahiel, 2022
+# hed shefer <hed@laylinetech.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -38,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:48+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Roy Sayag, 2022\n"
+"Last-Translator: hed shefer <hed@laylinetech.com>, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -588,6 +588,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('rule_type', '!=', 'invoice_matching')]}\" "
 "class=\"o_form_label o_td_label\">Match Invoice/bill with</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('rule_type', '!=', 'invoice_matching')]}\" "
+"class=\"o_form_label o_td_label\">התאם חשבונית לקוח/ספק עם</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -946,7 +948,7 @@ msgstr "<span> (DR)</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span> Bill</span>"
-msgstr ""
+msgstr "<span>חשבונית ספק</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -961,7 +963,7 @@ msgstr "<span> עד</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span> Transaction</span>"
-msgstr ""
+msgstr "<span> העברה</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1261,7 +1263,7 @@ msgstr ""
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "A line cannot have both children and a groupby value (line '%s')."
-msgstr ""
+msgstr "שורה לא יכולה להכיל גם ילדים וגם קבוצה לפי ערך (שורה'%s')."
 
 #. module: account
 #. odoo-python
@@ -1775,7 +1777,7 @@ msgstr "הנהלת חשבונות"
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Accounting Date"
-msgstr "תאריך ערך"
+msgstr "תאריך בספרים"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -2172,6 +2174,7 @@ msgid ""
 "Adjusting Entry for {link}: {percent:.2f}% of {amount} recognized on "
 "{new_date}"
 msgstr ""
+"פקודת הפרשה עבור {link}:  {percent:.2f}% של {amount} הוכרה ב {new_date}"
 
 #. module: account
 #. odoo-python
@@ -2550,12 +2553,12 @@ msgstr "עלות אנליטית"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_distribution_model
 msgid "Analytic Distribution Model"
-msgstr ""
+msgstr "חלוקה למודל אנליטי"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_analytic__distribution_model
 msgid "Analytic Distribution Models"
-msgstr ""
+msgstr "חלוקה למודלים אנליטיים"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_analytic
@@ -2585,7 +2588,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_plan_menu
 msgid "Analytic Plans"
-msgstr ""
+msgstr "כללי ברירת מחדל אנליטיים"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_precision
@@ -5802,7 +5805,7 @@ msgstr "עבור סכום של"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #, python-format
 msgid "Due Date"
-msgstr "תאריך יעד"
+msgstr "תאריך פירעון"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -5818,7 +5821,7 @@ msgstr "שכפל"
 #: model:ir.model.fields,field_description:account.field_res_partner__duplicated_bank_account_partners_count
 #: model:ir.model.fields,field_description:account.field_res_users__duplicated_bank_account_partners_count
 msgid "Duplicated Bank Account Partners Count"
-msgstr ""
+msgstr "ספירת שותפי חשבון בנק משוכפלים"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__duplicated_ref_ids
@@ -10745,6 +10748,16 @@ msgstr "השוואת תקופות"
 #, python-format
 msgid "Please create new accounts from the Chart of Accounts menu."
 msgstr "נא ליצור חשבון חדש מתפריט לוח החשבונות."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Please check these taxes. They might be outdated. We did not update them. "
+"Indeed, they do not exactly match the taxes of the original version of the "
+"localization module.<br/>You might want to archive or adapt them.<br/><ul>"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -16300,6 +16313,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
 msgid "You should update this document to reflect your T&amp;C."
 msgstr "עליך לעדכן מסמך זה כך שישקף את התנאים וההגבלות שלך T&C."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid "Your taxes have been updated !"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form

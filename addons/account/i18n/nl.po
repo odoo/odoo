@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Thomas Pot <thomas@open2bizz.nl>, 2022
+# Martin Trigaux, 2022
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2022
 # Dylan Kiss, 2022
-# Martin Trigaux, 2022
 # Jinjiu Liu, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # Jolien De Paepe, 2022
@@ -1466,7 +1466,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_warning_account
 msgid "A warning can be set on a partner (Account)"
-msgstr "Een waarschuwing kan worden ingesteld op een relatie (factuur)"
+msgstr "Een waarschuwing kan worden ingesteld op een partner (factuur)"
 
 #. module: account
 #: model:ir.model,name:account.model_res_groups
@@ -2447,7 +2447,7 @@ msgstr "Hiermee kun je Storno-accounting gebruiken."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Allows you to use the analytic accounting."
-msgstr "Stelt je in staat kostenplaatsen te gebruiken."
+msgstr "Stelt je in staat analytische boekhouding te gebruiken."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__availability_condition__always
@@ -2663,78 +2663,78 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__analytic_distribution
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Analytic"
-msgstr "Kostenplaats"
+msgstr "Analytisch"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "Kostenplaats"
+msgstr "Analytische rekening"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_analytic_accounting
 msgid "Analytic Accounting"
-msgstr "Kostenplaatsen"
+msgstr "Analytische boekhouding"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_def_account
 msgid "Analytic Accounts"
-msgstr "Kostenplaatsen"
+msgstr "Analytische rekeningen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template__analytic
 msgid "Analytic Cost"
-msgstr "Kostenplaats"
+msgstr "Analytische kost"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_distribution_model
 msgid "Analytic Distribution Model"
-msgstr "Kostenplaatsdistributiemodel"
+msgstr "Analytisch distributiemodel"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_analytic__distribution_model
 msgid "Analytic Distribution Models"
-msgstr "Kostenplaatsdistributiemodellen"
+msgstr "Analytische distributiemodellen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_analytic
 msgid "Analytic Filter"
-msgstr "Kostenplaatsfilter"
+msgstr "Analytische filter"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_analytic_lines_tree
 msgid "Analytic Items"
-msgstr "Kostenplaatsenboekingen"
+msgstr "Analytische boekingen"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Kostenplaatsregel"
+msgstr "Analytische regel"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Analytic Lines"
-msgstr "Kostenplaatsregels"
+msgstr "Analytische regels"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr "Toepassingen van kostenplaatsplan"
+msgstr "Toepassingen van analytische plannen"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_plan_menu
 msgid "Analytic Plans"
-msgstr "Kostenplaatsplannen"
+msgstr "Analytische plannen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_precision
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__analytic_precision
 msgid "Analytic Precision"
-msgstr "Kostenplaatsnauwkeurigheid"
+msgstr "Analytische nauwkeurigheid"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_line_ids
 msgid "Analytic lines"
-msgstr "Kostenplaatsregels"
+msgstr "Analytische regels"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2925,7 +2925,7 @@ msgid ""
 " did not match any partner."
 msgstr ""
 "Schrijver van het bericht. Als deze niet ingesteld is, kan email_from een "
-"e-mailadres bevatten wat niet overeenkomt met een relatie."
+"e-mailadres bevatten wat niet overeenkomt met een partner."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
@@ -3013,7 +3013,7 @@ msgstr "Beschikbaar dagboek"
 #: model:ir.model.fields,field_description:account.field_account_payment__available_partner_bank_ids
 #: model:ir.model.fields,field_description:account.field_account_payment_register__available_partner_bank_ids
 msgid "Available Partner Bank"
-msgstr "Beschikbare bank van relatie"
+msgstr "Beschikbare bank van partner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__available_payment_method_ids
@@ -3129,7 +3129,7 @@ msgid ""
 msgstr ""
 "Bankrekeningnummer waarop de factuur wordt betaald. Een bedrijfsbankrekening"
 " als dit een klantfactuur of leveranciers creditfactuur is, anders een "
-"relatie bankrekeningnummer."
+"partner bankrekeningnummer."
 
 #. module: account
 #: model:ir.model,name:account.model_res_partner_bank
@@ -3162,7 +3162,7 @@ msgstr "Bank afgeletterd"
 #: model:ir.model.fields,field_description:account.field_account_move__bank_partner_id
 #: model:ir.model.fields,field_description:account.field_account_payment__bank_partner_id
 msgid "Bank Partner"
-msgstr "Bankrelatie"
+msgstr "Bankpartner"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_tree
@@ -4130,7 +4130,7 @@ msgstr "Bedrijven"
 #: model:ir.model.fields,field_description:account.field_res_partner__ref_company_ids
 #: model:ir.model.fields,field_description:account.field_res_users__ref_company_ids
 msgid "Companies that refers to partner"
-msgstr "Bedrijven die referenen aan relatie"
+msgstr "Bedrijven die referenen aan partner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__company_id
@@ -6134,7 +6134,7 @@ msgid ""
 "found and replaces the author_id field in the chatter."
 msgstr ""
 "E-mailadres van de verzender. Dit veld is ingesteld wanneer er geen "
-"overeenkomende relatie wordt gevonden en vervangt het author_id veld in de "
+"overeenkomende partner wordt gevonden en vervangt het author_id veld in de "
 "chatter."
 
 #. module: account
@@ -6720,7 +6720,7 @@ msgstr "Volgers"
 #: model:ir.model.fields,field_description:account.field_res_company__message_partner_ids
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Relaties)"
+msgstr "Volgers (partners)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__activity_type_icon
@@ -7326,8 +7326,8 @@ msgid ""
 "If set, the amount computed by this tax will be assigned to the same "
 "analytic account as the invoice line (if any)"
 msgstr ""
-"Indien aangevinkt wordt het bedrag berekend door deze BTW aan dezelfde "
-"kostenplaats (indien aanwezig) toegewezen."
+"Indien aangevinkt wordt het bedrag berekend door deze belasting aan dezelfde"
+" analytische rekening (indien aanwezig) toegewezen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__display_on_invoice
@@ -7580,7 +7580,7 @@ msgstr "Inkomende betaalmethodes"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__analytic
 msgid "Include in Analytic Cost"
-msgstr "In kostenplaatsen inbegrijpen"
+msgstr "In de analytische kost inbegrepen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__price_include
@@ -7965,7 +7965,7 @@ msgstr "Factuurwidget voor uitstaande credits en debets"
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_partner_display_name
 #: model:ir.model.fields,field_description:account.field_account_payment__invoice_partner_display_name
 msgid "Invoice Partner Display Name"
-msgstr "Factuurrelatie weergavenaam"
+msgstr "Factuur partner weergavenaam"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_payments_widget
@@ -8418,7 +8418,7 @@ msgid ""
 "share the same partner."
 msgstr ""
 "Boeking %s is niet geldig. Om verder te gaan, moeten de boekingen dezelfde "
-"relatie delen."
+"partner delen."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_reversal__date_mode__entry
@@ -8917,7 +8917,7 @@ msgid ""
 "unreconciled credit or if you click the \"Done\" button."
 msgstr ""
 "De laatste keer dat de aflettering voor facturen en betalingen gebeurde voor"
-" deze relatie. De datum staat ingevuld indien er niet minstens één niet "
+" deze partner. De datum staat ingevuld indien er niet minstens één niet "
 "afgeletterd debet en credit is, of als je op de \"Klaar\"-toets heeft "
 "gedrukt."
 
@@ -10636,13 +10636,13 @@ msgstr "Gedeeltelijk betaald"
 #: model_terms:ir.ui.view,arch_db:account.view_account_various_payment_tree
 #, python-format
 msgid "Partner"
-msgstr "Relatie"
+msgstr "Partner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__contract_ids
 #: model:ir.model.fields,field_description:account.field_res_users__contract_ids
 msgid "Partner Contracts"
-msgstr "Relatie contracten"
+msgstr "Partner contracten"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_credit_warning
@@ -10654,7 +10654,7 @@ msgstr "Partnerkredietwaarschuwing"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_partner
 msgid "Partner Is Set"
-msgstr "Relatie is ingesteld"
+msgstr "Partner is ingesteld"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_ledger_partner
@@ -10670,23 +10670,23 @@ msgstr "Partnerlimiet"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Partner Mapping"
-msgstr "Relatiemapping"
+msgstr "Partnermapping"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__partner_mapping_line_ids
 msgid "Partner Mapping Lines"
-msgstr "Relatiemappingregels"
+msgstr "Partnermappingregels"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_name
 msgid "Partner Name"
-msgstr "Relatienaam"
+msgstr "Partnernaam"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__partner_type
 #: model:ir.model.fields,field_description:account.field_account_payment_register__partner_type
 msgid "Partner Type"
-msgstr "Relatiesoort"
+msgstr "Partnersoort"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner
@@ -10696,7 +10696,7 @@ msgstr "Partner is ingesteld"
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_partner_mapping
 msgid "Partner mapping for reconciliation models"
-msgstr "Relatiemapping voor aflettermodellen"
+msgstr "Partnermapping voor aflettermodellen"
 
 #. module: account
 #. odoo-python
@@ -10705,7 +10705,7 @@ msgstr "Relatiemapping voor aflettermodellen"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 #, python-format
 msgid "Partners"
-msgstr "Relaties"
+msgstr "Partners"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11072,6 +11072,20 @@ msgstr "Maak nieuwe rekeningen aan vanuit het grootboekrekeningen-menu."
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Please check these taxes. They might be outdated. We did not update them. "
+"Indeed, they do not exactly match the taxes of the original version of the "
+"localization module.<br/>You might want to archive or adapt them.<br/><ul>"
+msgstr ""
+"Controleer deze belastingen. Ze kunnen verouderd zijn. We hebben ze niet "
+"bijgewerkt. Ze komen inderdaad niet precies overeen met de belastingen van "
+"de oorspronkelijke versie van de lokalisatiemodule.<br/>Je kan ze misschien "
+"archiveren of aanpassen.<br/><ul>"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Please define a payment method line on your payment."
@@ -11116,7 +11130,7 @@ msgstr "Stel een strikt positieve afrondingswaarde in."
 msgid ""
 "Please set at least one of the match texts to create a partner mapping."
 msgstr ""
-"Stel ten minste één van de afletter-teksten in om een relatiemapping te "
+"Stel ten minste één van de afletter-teksten in om een partnermapping te "
 "maken."
 
 #. module: account
@@ -11909,12 +11923,12 @@ msgstr "Verantwoordelijke gebruiker"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_partner_category_ids
 msgid "Restrict Partner Categories to"
-msgstr "Beperk relatie categorieën naar"
+msgstr "Beperk partnercategorieën naar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_partner_ids
 msgid "Restrict Partners to"
-msgstr "Beperk relaties tot"
+msgstr "Beperk partners tot"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__tax_scope
@@ -12385,10 +12399,10 @@ msgid ""
 "analytic default (e.g. create new customer invoice or Sales order if we "
 "select this product, it will automatically take this as an analytic account)"
 msgstr ""
-"Selecteer een productcategorie die de kostenplaats gebruikt die is ingesteld"
-" in de kostenplaatsstandaard (bijv. maak een nieuwe klantfactuur of "
-"verkooporder als we dit product selecteren, het zal dit automatisch als een "
-"kostenplaats beschouwen)"
+"Selecteer een productcategorie die de analytische rekening gebruikt die is "
+"ingesteld in de analytische standaard (bijv. maak een nieuwe klantfactuur of"
+" verkooporder als we dit product selecteren, het zal dit automatisch als een"
+" analytische rekening beschouwen)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_distribution_model__product_id
@@ -12397,9 +12411,10 @@ msgid ""
 "create new customer invoice or Sales order if we select this product, it "
 "will automatically take this as an analytic account)"
 msgstr ""
-"Selecteer een product waarvoor de kostenplaatsdistributie zal worden "
+"Selecteer een product waarvoor de analytische distributie zal worden "
 "gebruikt (bijv. Maak een nieuwe klantfactuur of verkooporder als we dit "
-"product selecteren, het zal dit automatisch als een kostenplaats beschouwen)"
+"product selecteren, het zal dit automatisch als een analytische rekening "
+"beschouwen)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12411,7 +12426,7 @@ msgstr "Selecteer een leveranciersfactuur"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Select first partner"
-msgstr "Selecteer eerst een relatie"
+msgstr "Selecteer eerst een partner"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__value
@@ -12787,7 +12802,7 @@ msgstr "Toon naam waarschuwing"
 #: model:ir.model.fields,field_description:account.field_account_payment__show_partner_bank_account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__show_partner_bank_account
 msgid "Show Partner Bank Account"
-msgstr "Toon bankrekening relatie"
+msgstr "Toon bankrekening partner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_payment_term_details
@@ -14218,8 +14233,8 @@ msgstr ""
 msgid ""
 "The following regular expression is invalid to create a partner mapping: %s"
 msgstr ""
-"De volgende reguliere expressie is ongeldig om een relatietoewijzing te "
-"maken: %s"
+"De volgende reguliere expressie is ongeldig om een partnermapping te maken: "
+"%s"
 
 #. module: account
 #. odoo-python
@@ -14419,7 +14434,7 @@ msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
 msgstr ""
-"De relatie heeft minstens één niet-afgeletterd debet en credit sinds de "
+"De partner heeft minstens één niet-afgeletterd debet en credit sinds de "
 "laatste aflettering van de facturen en betalingen."
 
 #. module: account
@@ -14429,7 +14444,7 @@ msgstr ""
 msgid ""
 "The partners of the journal's company and the related bank account mismatch."
 msgstr ""
-"De relaties van het dagboek bedrijf en de gerelateerde bankrekeningen komen "
+"De partners van het dagboek bedrijf en de gerelateerde bankrekeningen komen "
 "niet overeen."
 
 #. module: account
@@ -14949,9 +14964,8 @@ msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
 msgstr ""
-"Deze rekening zal gebruikt worden als de crediteurenrekening van de huidige "
-"relatie in plaats van de standaard rekening, zoals ingesteld bij "
-"Instellingen\\Instellingen\\Parameters\\Systeem parameters"
+"Deze rekening wordt gebruikt in plaats van de standaardrekening als "
+"betaalrekening voor de huidige partner"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_receivable_id
@@ -14960,9 +14974,8 @@ msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
 msgstr ""
-"Deze rekening zal gebruikt worden als de debiteurenrekening voor de huidige "
-"relatie, in plaats van de standaard rekening, zoals ingesteld bij "
-"Instellingen\\Instellingen\\Parameters\\Systeem parameters"
+"Deze rekening zal in plaats van de standaardrekening worden gebruikt als "
+"debiteurenrekening voor de huidige partner"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_income_categ_id
@@ -14983,9 +14996,9 @@ msgid ""
 " master budgets and the budgets are defined, the project managers can set "
 "the planned amount on each analytic account."
 msgstr ""
-"Hiermee kunnen boekhouders hun kostenplaatsbudgetten en het overschrijden "
-"ervan beheren. Zodra alle budgetten zijn opgemaakt, kunnen projectmanagers "
-"het geplande budget toewijzen aan de kostenplaats."
+"Hiermee kunnen boekhouders hun analytische en cross-overed budgetten "
+"beheren. Zodra alle budgetten zijn opgemaakt, kunnen projectmanagers het "
+"geplande budget toewijzen aan elke analytische rekening."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__module_account_batch_payment
@@ -17003,6 +17016,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
 msgid "You should update this document to reflect your T&amp;C."
 msgstr "Je moet dit document bijwerken om je T&C weer te geven."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid "Your taxes have been updated !"
+msgstr "Je belastingen zijn bijgewerkt!"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
