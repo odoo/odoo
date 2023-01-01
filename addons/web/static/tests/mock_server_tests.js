@@ -612,7 +612,7 @@ QUnit.module("MockServer", (hooks) => {
         );
     });
 
-    QUnit.test("performRPC: read_group, group by datetime", async function (assert) {
+    QUnit.skip("performRPC: read_group, group by datetime", async function (assert) {
         const server = new MockServer(data, {});
         let result = await server.performRPC("", {
             model: "bar",

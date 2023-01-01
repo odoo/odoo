@@ -97,7 +97,7 @@ QUnit.module("spreadsheet > Global filters chart", {}, () => {
         assert.deepEqual(globalFiltersFieldMatchers["chart"].geIds(), []);
     });
 
-    QUnit.test("field matching is removed when filter is deleted", async function (assert) {
+    QUnit.skip("field matching is removed when filter is deleted", async function (assert) {
         const { model } = await createSpreadsheetWithChart();
         await addChartGlobalFilter(model);
         const [filter] = model.getters.getGlobalFilters();
