@@ -4072,6 +4072,18 @@ msgid ""
 " * Filter and Tag\n"
 " * Statistics\n"
 msgstr ""
+"\n"
+"Створіть онлайн-курси\n"
+"=====================\n"
+"\n"
+"Функціонал\n"
+"\n"
+" * Управління інтегрованими курсами та уроками\n"
+" * Повноекранна навігація\n"
+" * Підтримка Youtube відео, Google документів, PDF, зображень, статей\n"
+" * Тестування знань через вікторини\n"
+" * Фільтри та теги\n"
+" * Статистика\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_industry_fsm_report
@@ -4667,6 +4679,14 @@ msgid ""
 "It is primarily used for EDIs that might need a special city code.\n"
 "        "
 msgstr ""
+"\n"
+"Розширене керування адресами\n"
+"=============================\n"
+"\n"
+"Цей модуль надає можливість вибрати місто зі списку (у певних країнах).\n"
+"\n"
+"Він в основному використовується для EDI, для якого може знадобитися спеціальний код міста.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_snailmail_account_followup
@@ -5540,6 +5560,19 @@ msgid ""
 "For the creation of API username and password please ref this document: <https://service.odoo.co.in/einvoice_create_api_user>\n"
 "    "
 msgstr ""
+"\n"
+"Індія - Електронне виставлення рахунку\n"
+"====================\n"
+"To submit invoicing through API to the government.\n"
+"We use \"Tera Software Limited\" as GSP\n"
+"\n"
+"Step 1: First you need to create an API username and password in the E-invoice portal.\n"
+"Step 2: Switch to company related to that GST number\n"
+"Step 3: Set that username and password in Odoo (Goto: Invoicing/Accounting -> Configration -> Settings -> Customer Invoices or find \"E-invoice\" in search bar)\n"
+"Step 4: Repeat steps 1,2,3 for all GSTIN you have in odoo. If you have a multi-company with the same GST number then perform step 1 for the first company only.\n"
+"\n"
+"For the creation of API username and password please ref this document: <https://service.odoo.co.in/einvoice_create_api_user>\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in
@@ -9299,6 +9332,9 @@ msgid ""
 "This module is intended to test the main crm flows of Odoo, both frontend and\n"
 "backend. It notably includes IAP bridges modules to test their impact. "
 msgstr ""
+"\n"
+"Цей модуль призначений для тестування основних процесів crm Odoo, як інтерфейсу, так\n"
+" і серверу. Він, зокрема, включає модулі з'єднання IAP для перевірки їх впливу."
 
 #. module: base
 #: model:ir.module.module,description:base.module_association
@@ -9327,6 +9363,10 @@ msgid ""
 "\n"
 "Allows to prepare batches depending on their carrier\n"
 msgstr ""
+"\n"
+"Цей модуль забезпечує зв’язок між груповими комплектуваннями і додатками перевізника.\n"
+"\n"
+"Дозволяє готувати групові комплектуванням в залежності від їх перевізника\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_requisition_stock_dropshipping
@@ -9937,6 +9977,14 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Інтеграція модуля Веб-сайт зі Службою підтримки\n"
+"=================================================\n"
+"\n"
+"    Дозвольте своїм командам мати відповідні форуми для відповідей на запитання клієнтів.\n"
+"    Перетворіть заявки на запитання на форумі в один клік.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_helpdesk_livechat
@@ -31130,6 +31178,12 @@ msgstr "Таїланд"
 #: model:ir.module.module,shortdesc:base.module_l10n_th
 msgid "Thailand - Accounting"
 msgstr "Таїланд - Бухоблік"
+
+#. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "The \"%s\" action cannot be selected as home action."
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/res_users.py:0

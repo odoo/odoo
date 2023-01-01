@@ -9,11 +9,12 @@
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
 # dpms <pieter.van.de.wygaert@telenet.be>, 2021
-# Bert Burggraaf, 2021
+# 04a2cd0fd6ee22172c36ea91f27a38c5_60041bf, 2021
 # Cas Vissers <casvissers@brahoo.nl>, 2022
 # Martin Trigaux, 2022
 # Eric Geens <ericgeens@yahoo.com>, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-19 13:57+0000\n"
 "PO-Revision-Date: 2016-08-05 12:58+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -123,6 +124,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('product_has_tax', '=', False)]}\" "
 "class=\"oe_inline o_form_label ml-1 mr-1\"> ( </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('product_has_tax', '=', False)]}\" "
+"class=\"oe_inline o_form_label ml-1 mr-1\"> ( </span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -130,6 +133,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('product_has_tax', '=', False)]}\" "
 "class=\"oe_inline o_form_label ml-1 mr-3\"> ) </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('product_has_tax', '=', False)]}\" "
+"class=\"oe_inline o_form_label ml-1 mr-3\"> ) </span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -146,6 +151,8 @@ msgid ""
 "<span class=\"o_form_label\">Expense Journal</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" role=\"img\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Onkostendagboek</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" role=\"img\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -522,6 +529,8 @@ msgid ""
 "Create the new expense reports from the expenses submitted by the employees "
 "you manage."
 msgstr ""
+"Maak de nieuwe onkostenrapporten aan vanuit de onkosten die zijn ingediend "
+"door de werknemers die je beheert."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__create_uid
@@ -571,7 +580,7 @@ msgstr "Standaard aliasnaam voor declaraties"
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__expense_journal_id
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Default Expense Journal"
-msgstr "Standaard onkostenjournaal"
+msgstr "Standaard onkostendagboek"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -633,7 +642,7 @@ msgstr "Concept"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 msgid "Draft Expenses"
-msgstr ""
+msgstr "Concept onkosten"
 
 #. module: hr_expense
 #: code:addons/hr_expense/wizard/hr_expense_approve_duplicate.py:0
@@ -708,7 +717,7 @@ msgstr "Declaratie digitalisering (OCR)"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__journal_id
 msgid "Expense Journal"
-msgstr "Dagboek declaraties"
+msgstr "Onkostendagboek"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__expense_line_ids
@@ -788,7 +797,7 @@ msgstr "Goed te keuren declaratieformulieren"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_submit
 msgid "Expense Reports to Submit"
-msgstr ""
+msgstr "In te dienen onkostenrapport"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_bank_statement_line__expense_sheet_id
@@ -1613,7 +1622,7 @@ msgstr "Rapporten te boeken"
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_submit
 msgid "Reports to Submit"
-msgstr ""
+msgstr "In te dienen rapporten"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -1835,6 +1844,8 @@ msgstr "Goedkeurder team"
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
 msgid "The Default journal for the company used when the expense is done."
 msgstr ""
+"Het standaard dagboek voor de onderneminge dat wordt gebruikt wanneer de "
+"onkosten worden gemaakt."
 
 #. module: hr_expense
 #. openerp-web

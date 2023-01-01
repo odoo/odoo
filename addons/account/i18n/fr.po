@@ -37,7 +37,6 @@
 # LEONARD Jean-Christophe <jean-christophe.leonard@myceliandre.fr>, 2018
 # bb76cd9ac0cb7e20167a14728edb858b, 2019
 # Frédéric LIETART <stuff@tifred.fr>, 2019
-# Fred Gilson <fgi@odoo.com>, 2019
 # 177f393d62d65d466be50e2d9e91e08d, 2019
 # Christophe CHAUVET <christophe.chauvet@gmail.com>, 2019
 # e2f <projects@e2f.com>, 2019
@@ -660,7 +659,7 @@ msgid ""
 "<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/> Configure Email Servers"
 msgstr ""
 "<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/> Configurer le serveur "
-"d'emails"
+"de messagerie"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -5823,8 +5822,8 @@ msgstr "Répartition de la Taxe sur les Factures"
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"Accès non disponible, ne pas tenir compte de cette donnée dans l'email "
-"digest de l'utilisateur"
+"Accès non disponible, ne pas tenir compte de cette donnée dans le digest "
+"d'emails de l'utilisateur"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__auto_delete_message
@@ -10767,6 +10766,19 @@ msgid "Please check that the field 'Transfer Account' is set on the company."
 msgstr ""
 "SVP, veuillez vérifier que le champ \"Compte de transfert\" est paramétré "
 "sur la société."
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Please check these taxes. They might be outdated. We did not update them. "
+"Indeed, they do not exactly match the taxes of the original version of the "
+"localization module.<br/>You might want to archive or adapt them.<br/><ul>"
+msgstr ""
+"Veuillez vérifier ces taxes. Elles peuvent être obsolètes. Nous ne les avons"
+" pas mises à jour. En effet, elles ne correspondent pas exactement aux taxes"
+" de la version originale du module de localisation.<br/>Vous pourriez "
+"vouloir les archiver ou les adapter.<br/><ul>"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -17138,6 +17150,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
 msgid "You should update this document to reflect your T&amp;C."
 msgstr "Vous devriez mettre à jour ce document pour refléter vos CGV "
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid "Your taxes have been updated !"
+msgstr "Vos taxes ont été mises à jour !"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form

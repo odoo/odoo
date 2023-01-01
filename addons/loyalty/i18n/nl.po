@@ -3,10 +3,11 @@
 # 	* loyalty
 # 
 # Translators:
-# Bert Burggraaf, 2022
+# 04a2cd0fd6ee22172c36ea91f27a38c5_60041bf, 2022
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-19 13:58+0000\n"
 "PO-Revision-Date: 2022-05-30 12:59+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -85,7 +86,7 @@ msgstr "%s per punt aan "
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
 msgid "(or more)"
-msgstr ""
+msgstr "(or meer)"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
@@ -163,7 +164,7 @@ msgstr "<i class=\"fa fa-cube fa-fw\" title=\"Producten\"/>"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "<i class=\"fa fa-cube fa-fw\" title=\"Products\"/> All Products"
-msgstr ""
+msgstr "<i class=\"fa fa-cube fa-fw\" title=\"Producten\"/> Alle producten"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -174,24 +175,24 @@ msgstr "<i class=\"fa fa-cubes fa-fw\" title=\"Productcategorieën\"/>"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "<i class=\"fa fa-gift fa-fw\" title=\"conditions\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-gift fa-fw\" title=\"voorwaarden\"/>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "<i class=\"fa fa-pencil-square-o fa-fw\" title=\"Code\"/>With Code:"
-msgstr ""
+msgstr "<i class=\"fa fa-pencil-square-o fa-fw\" title=\"Code\"/>Met code:"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "<i class=\"fa fa-search fa-fw\" title=\"Product Domain\"/>"
-msgstr "<i class=\"fa fa-search fa-fw\" title=\"Product Domain\"/>"
+msgstr "<i class=\"fa fa-search fa-fw\" title=\"Productdomein\"/>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "<i class=\"fa fa-tags fa-fw\" title=\"Product Tags\"/>"
-msgstr "<i class=\"fa fa-tags fa-fw\" title=\"Product Tags\"/>"
+msgstr "<i class=\"fa fa-tags fa-fw\" title=\"Producttags\"/>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -202,6 +203,11 @@ msgid ""
 "                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'loyalty')]}\">Loyalty Cards</span>\n"
 "                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'promotion')]}\">Promos</span>"
 msgstr ""
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'coupons')]}\">Kortingsbonnen</span>\n"
+"                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'gift_card')]}\">Cadeaubonnen</span>\n"
+"                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'ewallet')]}\">eWallets</span>\n"
+"                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'loyalty')]}\">Klantenkaarten</span>\n"
+"                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'promotion')]}\">Promo's</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -387,7 +393,7 @@ msgstr "Een beloning toevoegen"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Add a trigger"
-msgstr ""
+msgstr "Een trigger toevoegen"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__all_discount_product_ids
@@ -750,6 +756,11 @@ msgid ""
 "                                    <br/>\n"
 "                                    Add triggers for constraints on coupon usage."
 msgstr ""
+"Genereer &amp; deel kortingscodes handmatig.\n"
+"                                    <br/>\n"
+"                                    Beloningen worden gegeven wanneer de gebruiker een kortingscode opgeeft in de e-commerce, kassa of gewone bestellingen.\n"
+"                                    <br/>\n"
+"                                    Voeg triggers toe voor beperkingen op het gebruik van de kortingsbon."
 
 #. module: loyalty
 #: model:ir.actions.act_window,name:loyalty.loyalty_generate_wizard_action
@@ -757,7 +768,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Generate Coupons"
-msgstr "Genereer kortingsbonnen"
+msgstr "Kortingsbonnen genereren"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -767,7 +778,7 @@ msgstr "Cadeaubonnen genereren"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Generate eWallet"
-msgstr "Genereer eWallet"
+msgstr "eWallet genereren"
 
 #. module: loyalty
 #: code:addons/loyalty/models/loyalty_program.py:0
@@ -784,12 +795,12 @@ msgstr "Ontvang een code om 10% korting te krijgen op specifieke producten"
 #: model:product.template,name:loyalty.gift_card_product_50_product_template
 #, python-format
 msgid "Gift Card"
-msgstr "Cadeaukaart"
+msgstr "Cadeaubon"
 
 #. module: loyalty
 #: model:mail.template,name:loyalty.mail_template_gift_card
 msgid "Gift Card: Send by Email"
-msgstr "Cadeaukaart: per e-mail verzenden"
+msgstr "Cadeaubon: per e-mail verzenden"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -798,6 +809,9 @@ msgid ""
 "                                    <br/>\n"
 "                                    Then, Gift Cards can be used to pay orders."
 msgstr ""
+"Cadeaubonnen worden aangemaakt of automatisch per email verzonden wanneer de klant een in je triggers gedefinieerd product bestelt.\n"
+"                                    <br/>\n"
+"                                    Vervolgens kunnen cadeaubonnen worden gebruikt om bestellingen te betalen."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__points_granted
@@ -832,7 +846,7 @@ msgstr "ID"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "If"
-msgstr ""
+msgstr "Indien"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_needaction
@@ -1040,6 +1054,9 @@ msgid ""
 "Once a sale order is validated, the customers get Loyalty Points that can be"
 " used in the current order, or accumulated in future orders."
 msgstr ""
+"Zodra een verkooporder is gevalideerd, krijgen de klanten loyaliteitspunten "
+"die kunnen worden gebruikt in de huidige bestelling of kunnen worden "
+"gecumuleerd in toekomstige bestellingen."
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_reward__discount_applicability__order
@@ -1049,7 +1066,7 @@ msgstr "Order"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "PCE"
-msgstr ""
+msgstr "PCE"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__partner_id
@@ -1060,7 +1077,7 @@ msgstr "Relatie"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Pay With Gift Card"
-msgstr ""
+msgstr "Met een cadeaukaart betalen"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1069,6 +1086,9 @@ msgid ""
 "                                    <br/>\n"
 "                                    Then, eWallets are proposed during the checkout, to pay orders."
 msgstr ""
+"Persoonlijke eWallets worden aangemaakt wanneer de klant een in de triggers gedefinieerd product bestelt.\n"
+"                                    <br/>\n"
+"                                    Vervolgens worden eWallets voorgesteld om bestellingen te betalen tijdens het afrekenen."
 
 #. module: loyalty
 #: code:addons/loyalty/models/loyalty_program.py:0
@@ -1177,7 +1197,7 @@ msgstr "Promoties"
 #. module: loyalty
 #: model:ir.actions.act_window,name:loyalty.loyalty_program_action
 msgid "Promotions, Gift Card, Loyalty"
-msgstr ""
+msgstr "Promoties, cadeaubon, loyaliteit"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__coupon_qty
@@ -1259,11 +1279,13 @@ msgid ""
 "Set up triggers based on a promotional code and/or products purchased, that "
 "give access to reward on the current order."
 msgstr ""
+"Stel triggers in op basis van een promotiecode en/of gekochte producten, die"
+" toegang geven tot beloningen op de huidige bestelling."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Show points"
-msgstr ""
+msgstr "Toon punten"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_reward__discount_applicability__specific
@@ -1366,7 +1388,7 @@ msgstr "Triggers"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Triggers & Rewards"
-msgstr ""
+msgstr "Triggers & Beloningen"
 
 #. module: loyalty
 #: model:product.product,uom_name:loyalty.ewallet_product_50
@@ -1476,7 +1498,7 @@ msgstr "en"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "as"
-msgstr ""
+msgstr "als"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1494,7 +1516,7 @@ msgstr "eWallet"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "minimum"
-msgstr ""
+msgstr "minimum"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report

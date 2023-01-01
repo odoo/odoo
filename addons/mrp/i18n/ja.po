@@ -19,6 +19,7 @@
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2022
 # 江口和志 <sandwhale1010@gmail.com>, 2022
+# Andy Yiu, 2022
 # 
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-02 08:11+0000\n"
 "PO-Revision-Date: 2016-08-05 13:06+0000\n"
-"Last-Translator: 江口和志 <sandwhale1010@gmail.com>, 2022\n"
+"Last-Translator: Andy Yiu, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2098,17 +2099,17 @@ msgstr "アクティブ項目をFalse にセットすると、リソースレコ
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_height
 msgid "Image Height"
-msgstr ""
+msgstr "画像高さ"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_src
 msgid "Image Src"
-msgstr ""
+msgstr "画像Src"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_width
 msgid "Image Width"
-msgstr ""
+msgstr "画像の幅"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
@@ -2962,6 +2963,14 @@ msgid "Note that components"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/models/product.py:0 code:addons/mrp/models/product.py:0
+#, python-format
+msgid ""
+"Note that product(s): '%s' is/are still linked to active Bill of Materials, "
+"which means that the product can still be used on it/them."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_needaction_counter
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__message_needaction_counter
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_needaction_counter
@@ -3146,7 +3155,7 @@ msgstr "オーダ"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__original_id
 msgid "Original (unoptimized, unresized) attachment"
-msgstr ""
+msgstr "元 (最適化・サイズ変更待ち)の添付ファイル"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_production

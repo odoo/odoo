@@ -6,6 +6,7 @@
 # Martin Trigaux, 2022
 # Thomas Pot <thomas@open2bizz.nl>, 2022
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2022
+# Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:34+0000\n"
 "PO-Revision-Date: 2022-02-14 08:09+0000\n"
-"Last-Translator: Gunther Clauwaert <gclauwae@hotmail.com>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,6 +47,9 @@ msgid ""
 "                        Gmail Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', ('server_type', '!=', 'gmail'), ('google_gmail_refresh_token', '=', False)]}\" class=\"badge badge-success\">\n"
+"                        Geldig Gmail Token\n"
+"                    </span>"
 
 #. module: fetchmail_gmail
 #: model:ir.model.fields,field_description:fetchmail_gmail.field_fetchmail_server__google_gmail_access_token

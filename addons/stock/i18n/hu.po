@@ -9,8 +9,8 @@
 # Ákos Nagy <akos.nagy@oregional.hu>, 2021
 # Martin Trigaux, 2021
 # krnkris, 2022
-# Tamás Németh <ntomasz81@gmail.com>, 2022
 # gezza <geza.nagy@oregional.hu>, 2022
+# Tamás Németh <ntomasz81@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-30 06:06+0000\n"
 "PO-Revision-Date: 2016-08-05 13:10+0000\n"
-"Last-Translator: gezza <geza.nagy@oregional.hu>, 2022\n"
+"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2022\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -412,7 +412,7 @@ msgstr "<span class=\"o_stat_text\">Műveletek</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "<span class=\"o_stat_text\">Transfers</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Mozgások</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_mrp_line
@@ -568,7 +568,7 @@ msgstr "<strong>Megrendelt</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "<strong>Pack Date:</strong>"
-msgstr ""
+msgstr "<strong>Csomagolási dátum:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
@@ -963,7 +963,7 @@ msgstr "Amilyen gyorsan csak lehet"
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 #, python-format
 msgid "Assign"
-msgstr ""
+msgstr "Hozzárendelés"
 
 #. module: stock
 #. openerp-web
@@ -999,7 +999,7 @@ msgstr "Hozzárendelve"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__reservation_method__at_confirm
 msgid "At Confirmation"
-msgstr ""
+msgstr "Megerősítéskor"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_attachment_count
@@ -1255,12 +1255,12 @@ msgstr "Kapacitás"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_form
 msgid "Capacity by Package"
-msgstr ""
+msgstr "Kapacitás csomagonként"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_form
 msgid "Capacity by Product"
-msgstr ""
+msgstr "Kapacitás termékenként"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3140,6 +3140,13 @@ msgid "If set, the operations are packed into this package"
 msgstr "Ha beállított, akkor a műveletek be lesznek téve ebbe a csomagba"
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_lot_label_layout__label_quantity
+msgid ""
+"If the UoM of a lot is not 'units', the lot will be considered as a unit and"
+" only one label will be printed for this lot."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__active
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
@@ -4552,7 +4559,7 @@ msgstr "Nincs üzenet"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "No Stock On Hand"
-msgstr ""
+msgstr "Nincs elérhető készlet"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__tracking__none
@@ -5074,7 +5081,7 @@ msgstr "Csomag vonalkód tartalommal"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__package_capacity_ids
 msgid "Package Capacity"
-msgstr ""
+msgstr "Csomag kapacitása"
 
 #. module: stock
 #: code:addons/stock/models/stock_package_level.py:0
@@ -8371,8 +8378,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid ""
 "Use GS1 nomenclature datamatrix whenever barcodes are printed for lots and "
-"serial numbers. Printing datamatrix requires extra software. If software "
-"can't be found then 1D barcodes will be printed."
+"serial numbers."
 msgstr ""
 
 #. module: stock
@@ -8867,6 +8873,12 @@ msgid ""
 "You can not change the type of a product that is currently reserved on a "
 "stock move. If you need to change the type, you should first unreserve the "
 "stock move."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
 msgstr ""
 
 #. module: stock

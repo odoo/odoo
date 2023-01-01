@@ -142,7 +142,7 @@ msgstr "<span class=\"o_stat_text\"> Termékek</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "<span class=\"o_stat_text\">Related Products</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Kapcsolódó termékek</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -533,7 +533,7 @@ msgstr "Szín jegyzék"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__columns
 msgid "Columns"
-msgstr ""
+msgstr "Oszlopok"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__combination_indices
@@ -1458,6 +1458,14 @@ msgid "Next Activity Type"
 msgstr "Következő tevékenységtípus"
 
 #. module: product
+#: code:addons/product/wizard/product_label_layout.py:0
+#, python-format
+msgid ""
+"No product to print, if the product is archived please unarchive it before "
+"printing its label."
+msgstr ""
+
+#. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid "No vendor pricelist found"
 msgstr ""
@@ -1670,13 +1678,13 @@ msgstr "Árlista név"
 #: model:ir.model,name:product.model_report_product_report_pricelist
 #, python-format
 msgid "Pricelist Report"
-msgstr ""
+msgstr "Árlista jelentés"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Pricelist Rule"
-msgstr ""
+msgstr "Árlista szabály"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__item_ids
@@ -1684,7 +1692,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_inherit
 msgid "Pricelist Rules"
-msgstr ""
+msgstr "Árlista szabályok"
 
 #. module: product
 #. openerp-web
@@ -1852,7 +1860,7 @@ msgstr ""
 #: model:ir.model,name:product.model_product_tag
 #: model_terms:ir.ui.view,arch_db:product.product_tag_form_view
 msgid "Product Tag"
-msgstr ""
+msgstr "Termék címke"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_tag_action
@@ -2851,6 +2859,12 @@ msgstr ""
 "nagyobb mint a vállalat fő pénznemének a kerekítési értéke"
 
 #. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "You cannot delete the %s product category."
+msgstr ""
+
+#. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -2941,7 +2955,7 @@ msgstr ""
 #: code:addons/product/wizard/product_label_layout.py:0
 #, python-format
 msgid "You need to set a positive quantity."
-msgstr ""
+msgstr "Pozitív mennyiségek kell beállítani."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
