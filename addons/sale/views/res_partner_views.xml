@@ -52,8 +52,8 @@
                 </button>
             </div>
             <xpath expr="//page[@name='internal_notes']//field[@name='comment']" position="after">
-                <group groups="sale.group_warning_sale,sales_team.group_sale_salesman">
-                    <group col="2">
+                <group groups="sales_team.group_sale_salesman">
+                    <group groups="sale.group_warning_sale" col="2">
                         <separator string="Warning on the Sales Order" colspan="2"/>
                         <field name="sale_warn" nolabel="1" colspan="2" required="1"/>
                         <field name="sale_warn_msg" nolabel="1" string="Message" placeholder="Type a message..." colspan="2"
