@@ -70,7 +70,7 @@ msgstr "Ce salon est privé. Vous devez être invité pour le rejoindre."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "${object.partner_id.lang}"
-msgstr ""
+msgstr "${object.partner_id.lang}"
 
 #. module: mail
 #: code:addons/mail/models/mail_activity.py:0
@@ -230,6 +230,11 @@ msgid ""
 "            Type <b>/command</b> to execute a command.<br>\n"
 "            Type <b>:shortcut</b> to insert a canned response in your message.<br>"
 msgstr ""
+"<br><br>\n"
+"            Tapez <b>@nomutilisateur</b> pour mentionner quelqu'un et attirer son attention.<br>\n"
+"            Tapez <b>#canal</b> pour mentionner un canal.<br>\n"
+"            Tapez <b>/commande</b> pour exécuter une commande.<br>\n"
+"            Tapez <b>:raccourci</b> pour insérer une réponse automatique à votre message.<br>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -2298,7 +2303,7 @@ msgstr "Message de l'email"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_followers__email
 msgid "Email of the related partner (if exist) or False"
-msgstr ""
+msgstr "Email du partenaire connexe (s'il existe) ou False"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_resend_message
@@ -2447,7 +2452,7 @@ msgstr "Echec de rendu du modèle : %s"
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Failed to render template : %s (%d)"
-msgstr ""
+msgstr "Échec de rendu du modèle : %s (%d)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__failure_reason
@@ -2645,6 +2650,8 @@ msgstr "Abonné(e)"
 #, python-format
 msgid "Following invites are invalid as user groups do not match: %s"
 msgstr ""
+"Les invitations suivantes ne sont pas valides puisque les groupes "
+"d'utilisateurs ne correspondent pas : %s"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__icon
@@ -2800,6 +2807,9 @@ msgid ""
 "The following email sent to %s cannot be accepted because this is a private email address.\n"
 "Only allowed people can contact us at this address."
 msgstr ""
+"Bonjour,<br/>\n"
+"L'email suivant envoyé à %s ne peut pas être accepté, puisqu'il s'agit d'une adresse mail privée.\n"
+"Seules les personnes autorisées peuvent nous contacter à cette adresse."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__hidden
@@ -3011,6 +3021,8 @@ msgstr ""
 msgid ""
 "If the related partner is active (if exist) or if related channel exist"
 msgstr ""
+"Si le partenaire connexe est actif (s'il existe) ou si le canal connexe "
+"existe"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__alias_domain
@@ -3907,7 +3919,7 @@ msgstr "Recherche de messages"
 #: code:addons/mail/static/src/components/discuss_sidebar_item/discuss_sidebar_item.xml:0
 #, python-format
 msgid "Messages are sent by email"
-msgstr ""
+msgstr "Les messages sont envoyés par email"
 
 #. module: mail
 #. openerp-web
@@ -3930,7 +3942,7 @@ msgstr "Les messages marqués comme lus apparaîtront dans l'historique."
 #: code:addons/mail/static/src/components/message_list/message_list.xml:0
 #, python-format
 msgid "Messages pending moderation appear here."
-msgstr ""
+msgstr "Les messages en attente de modération apparaissent ici."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__internal
@@ -4022,7 +4034,7 @@ msgstr "Modération"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Moderation List"
-msgstr ""
+msgstr "Liste de modération"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_tree
@@ -4108,7 +4120,7 @@ msgstr "Nom obtenu pour le document relié."
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_followers__name
 msgid "Name of the related partner (if exist) or the related channel"
-msgstr ""
+msgstr "Nom du partenaire connexe (s'il existe) ou du canal connexe"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__report_name
@@ -4616,6 +4628,7 @@ msgstr "Seul les modèles personnalisés peuvent être modifiés."
 #, python-format
 msgid "Only dialog linked to a record is currently supported!"
 msgstr ""
+"Seul le dialogue lié à un enregistrement est à présent pris en charge !"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -4862,7 +4875,7 @@ msgstr "En attente de modération"
 #: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
 msgid "Pending moderation:"
-msgstr ""
+msgstr "En attente de modération :"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__moderation_notify
@@ -5616,7 +5629,7 @@ msgstr "Tout sélectionner"
 #: code:addons/mail/static/src/widgets/discuss/discuss.xml:0
 #, python-format
 msgid "Select all messages"
-msgstr ""
+msgstr "Sélectionner tous les messages"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_render_mixin__model_object_field
@@ -6060,7 +6073,7 @@ msgstr ""
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Template rendering supports only jinja or qweb."
-msgstr ""
+msgstr "Le rendu de modèle prend uniquement jinja ou qweb en charge."
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_email_template_tree_all
@@ -6098,7 +6111,7 @@ msgstr "La valeur de 'date d'échéance dans' ne peut être négative."
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "The e-mail alias is already used. Please enter another one."
-msgstr ""
+msgstr "L'alias d'email est déjà utilisé. Veuillez-en saisir un autre."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_moderation_channel_email_uniq
@@ -6521,7 +6534,7 @@ msgstr "Erreur inconnue"
 #: code:addons/mail/static/src/components/discuss_sidebar_item/discuss_sidebar_item.xml:0
 #, python-format
 msgid "Unpin conversation"
-msgstr ""
+msgstr "Désépingler une conversation"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_unread
@@ -6562,7 +6575,7 @@ msgstr "Tout déselectionner"
 #: code:addons/mail/static/src/widgets/discuss/discuss.xml:0
 #, python-format
 msgid "Unselect all messages"
-msgstr ""
+msgstr "Désélectionner tous les messages"
 
 #. module: mail
 #. openerp-web
@@ -6594,7 +6607,7 @@ msgstr "Filtre de recherche incompatible sur le statut de modération"
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Unsuspected None"
-msgstr ""
+msgstr "Insoupçonné Aucun"
 
 #. module: mail
 #. openerp-web
@@ -6897,28 +6910,28 @@ msgstr "Vous êtes seul dans ce canal."
 #: code:addons/mail/static/src/components/moderation_ban_dialog/moderation_ban_dialog.xml:0
 #, python-format
 msgid "You are going to ban the following user:"
-msgstr ""
+msgstr "Vous êtes sur le point de bannir l'utilisateur suivant :"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/moderation_ban_dialog/moderation_ban_dialog.xml:0
 #, python-format
 msgid "You are going to ban the following users:"
-msgstr ""
+msgstr "Vous êtes sur le point de bannir les utilisateurs suivants :"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/moderation_discard_dialog/moderation_discard_dialog.js:0
 #, python-format
 msgid "You are going to discard %s messages."
-msgstr ""
+msgstr "Vous allez rejeter %s messages."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/moderation_discard_dialog/moderation_discard_dialog.js:0
 #, python-format
 msgid "You are going to discard 1 message."
-msgstr ""
+msgstr "Vous allez rejeter 1 message."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -6965,7 +6978,7 @@ msgstr ""
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "You can not write on this field"
-msgstr ""
+msgstr "Vous ne pouvez pas écrire sur ce champ"
 
 #. module: mail
 #. openerp-web
@@ -7024,6 +7037,8 @@ msgid ""
 "You cannot use anything else than unaccented latin characters in the alias "
 "address."
 msgstr ""
+"Vous ne pouvez utiliser que des caractères latins non accentués dans "
+"l'adresse de l'alias."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread_blacklist.py:0
@@ -7061,7 +7076,7 @@ msgstr "Vous avez été assigné à "
 #: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
 #, python-format
 msgid "You have been invited to: %s"
-msgstr ""
+msgstr "Vous êtes invité à : %s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_notify_moderation
@@ -7073,7 +7088,7 @@ msgstr "Vous avez des messages à modérer"
 #: code:addons/mail/static/src/components/message_list/message_list.xml:0
 #, python-format
 msgid "You have no messages to moderate."
-msgstr ""
+msgstr "Vous n'avez aucun message à modérer."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__attachment_ids
@@ -7116,7 +7131,7 @@ msgstr "Votre"
 #: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
 msgid "Your message is pending moderation."
-msgstr ""
+msgstr "Votre message est en attente de modération."
 
 #. module: mail
 #. openerp-web

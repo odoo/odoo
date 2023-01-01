@@ -201,6 +201,18 @@ msgid ""
 "    % endif\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    Cher(e) ${object.name},<br/>\n"
+"    Merci pour votre demande.<br/>\n"
+"    Voici votre badge pour l'événement ${object.event_id.name}.<br/>\n"
+"    N'hésitez pas à nous contacter si vous avez des questions.\n"
+"    <br/><br/>\n"
+"    Merci,\n"
+"    % if object.event_id.user_id.signature:\n"
+"        <br/>\n"
+"        ${object.event_id.user_id.signature | safe}\n"
+"    % endif\n"
+"</div>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3510,6 +3522,8 @@ msgid ""
 "This pipeline can be customized on the fly to fit your organizational needs."
 " For example, let's create a new stage."
 msgstr ""
+"Ce pipeline peut être personnalisé à la volée pour répondre aux besoins de "
+"votre organisation. Par exemple, créons une nouvelle étape."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -3671,6 +3685,8 @@ msgstr "A venir/En cours"
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Upgrade Sponsors into Exhibitors with virtual conference booths"
 msgstr ""
+"Transformez des sponsors en exposants grâce à des stands de conférence "
+"virtuels."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__use_timezone

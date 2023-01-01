@@ -6502,6 +6502,12 @@ msgid ""
 "transactions will be reconciled with entries on the Outstanding Receipts "
 "Account instead of the receivable account."
 msgstr ""
+"Les paiements entrants déclenchés par des factures/remboursements seront "
+"comptabilisés dans le Compte des paiements entrants et affichés sous forme "
+"de lignes bleues dans le widget de réconciliation bancaire. Pendant le "
+"processus de réconciliation, les transactions concernées seront réconciliées"
+" avec des écritures sur le Compte des paiements entrants au lieu du Compte "
+"débiteur."
 
 #. module: account
 #: code:addons/account/wizard/setup_wizards.py:0
@@ -7044,7 +7050,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "It was previously '%(previous)s' and it is now '%(now)s'."
-msgstr ""
+msgstr "C'était auparavant '%(previous)s' et c'est à présent '%(now)s'."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -8804,7 +8810,7 @@ msgstr "Origine"
 #: model:ir.model.fields,field_description:account.field_account_move__tax_cash_basis_move_id
 #: model:ir.model.fields,field_description:account.field_account_payment__tax_cash_basis_move_id
 msgid "Origin Tax Cash Basis Entry"
-msgstr ""
+msgstr "Écriture pour la taxe sur base des paiements d'origine"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_account_original_vendor_bill
@@ -8890,6 +8896,12 @@ msgid ""
 "transactions will be reconciled with entries on the Outstanding Payments "
 "Account instead of the payable account."
 msgstr ""
+"Les paiements sortants déclenchés par les factures/notes de crédit seront "
+"comptabilisés dans le Compte des paiements sortants et seront affichés sous "
+"forme de lignes bleues dans le widget de réconciliation bancaire. Pendant le"
+" processus de réconciliation, les transactions concernées seront "
+"réconciliées avec des écritures sur le Compte des paiements sortants au lieu"
+" du Compte créditeur."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_stock_account_output_categ_id
@@ -9354,6 +9366,8 @@ msgstr "Pourcentage"
 #, python-format
 msgid "Percentage can only be set for Change Period method"
 msgstr ""
+"Le pourcentage ne peut être défini que pour la méthode de changement de "
+"période"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -12280,6 +12294,8 @@ msgid ""
 "The %(date_field)s (%(date)s) doesn't match the %(sequence_field)s (%(sequence)s).\n"
 "You might want to clear the field %(sequence_field)s before proceeding with the change of the date."
 msgstr ""
+"Le %(date_field)s (%(date)s) ne correspond pas au %(sequence_field)s (%(sequence)s).\n"
+"Vous pourriez vouloir effacer le champ %(sequence_field)s avant de procéder à la modification de la date."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__internal_group
@@ -12347,6 +12363,8 @@ msgid ""
 "The account %(account_name)s can't be shared between multiple journals: "
 "%(journals)s"
 msgstr ""
+"Le compte %(account_name)s ne peut pas être partagé entre plusieurs journaux"
+" : %(journals)s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12394,6 +12412,9 @@ msgid ""
 "Hence, the accounting date will be changed to the next available date when "
 "posting."
 msgstr ""
+"La date comptable est fixée avant la date de verrouillage de l'impôt, qui "
+"est fixée le %s. Par conséquent, la date comptable sera modifiée à la "
+"prochaine date possible lors de la comptabilisation."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__journal_id
@@ -12470,7 +12491,7 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "The amount of a statement line can't be equal to zero."
-msgstr ""
+msgstr "Le montant de la ligne du relevé ne peut pas être égal à zéro."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -12778,6 +12799,12 @@ msgid ""
 "- optional journal items, all sharing the same account.\n"
 "\n"
 msgstr ""
+"L'écriture comptable %s a atteint un statut invalide par rapport à son paiement.\n"
+"Pour être cohérente, l'écriture comptable doit toujours contenir :\n"
+"- une imputation comptable impliquant le compte des paiements entrants/sortants.\n"
+"- une imputation comptable impliquant un compte débiteur/créditeur.\n"
+"- imputations cohérentes optionnelles, partageant toutes le même compte.\n"
+"\n"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12786,6 +12813,8 @@ msgid ""
 "The journal entry %s reached an invalid state relative to its payment.\n"
 "To be consistent, the journal items must share the same currency."
 msgstr ""
+"L'écriture comptable %s a atteint un statut invalide par rapport à son paiement.\n"
+"Pour être cohérentes, les imputations comptables doivent partager la même devise."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12794,6 +12823,8 @@ msgid ""
 "The journal entry %s reached an invalid state relative to its payment.\n"
 "To be consistent, the journal items must share the same partner."
 msgstr ""
+"L'écriture comptable %s a atteint un statut invalide par rapport à son paiement.\n"
+"Pour être cohérentes, les imputations comptables doivent partager le même partenaire."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -13243,6 +13274,8 @@ msgid ""
 "The sum of total residual amount propositions matches the statement line "
 "amount under this percentage."
 msgstr ""
+"La somme des propositions de montant résiduel total correspond au montant "
+"des lignes de relevé sous ce pourcentage."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_total_amount
@@ -13608,6 +13641,8 @@ msgid ""
 "This product is already being used in posted Journal Entries.\n"
 "If you want to change its Unit of Measure, please archive this product and create a new one."
 msgstr ""
+"Ce produit est déjà utilisé dans les écritures comptables comptabilisées.\n"
+"Si vous voulez changer son unité de mesure, veuillez archiver ce produit et en créer un nouveau."
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -13921,6 +13956,8 @@ msgid ""
 "Unable to mix any taxes being price included with taxes affecting the base "
 "amount but not included in price."
 msgstr ""
+"Impossible de mélanger les taxes dont le prix est inclus avec les taxes "
+"affectant le montant de base, mais non incluses dans le prix."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -14149,7 +14186,7 @@ msgstr "Utilisé pour trier les journaux dans la vue du tableau de bord"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_method__sequence
 msgid "Used to order Methods in the form view"
-msgstr ""
+msgstr "Utilisé pour trier des méthodes dans la vue formulaire"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__loss_account_id
@@ -14669,6 +14706,8 @@ msgid ""
 "You can't create a new payment without an outstanding payments/receipts "
 "account set on the %s journal."
 msgstr ""
+"Vous ne pouvez pas créer un nouveau paiement sans définir un compte de "
+"paiements entrants/sortants sur le journal %s."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0

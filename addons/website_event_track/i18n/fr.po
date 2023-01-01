@@ -16,7 +16,6 @@
 # Frédéric LIETART <stuff@tifred.fr>, 2020
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2020
 # Richard Mathot <rim@odoo.com>, 2020
-# Florian Hatat, 2020
 # Vincent Briffaux <vincent.briffaux@gmail.com>, 2020
 # Shark McGnark <peculiarcheese@gmail.com>, 2020
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
@@ -115,6 +114,24 @@ msgid ""
 "    % endif\n"
 "</div>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div>\n"
+"    Cher ${object.partner_name or ''}<br/>\n"
+"    Nous avons le plaisir de vous informer que votre proposition ${object.name} est acceptée et confirmée pour l'événement ${object.event_id.name}.\n"
+"    <br/>\n"
+"    Vous trouverez plus de détails ici :\n"
+"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"        <a href=\"/event/${object.event_id.id}/track/${object.id}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"            Visualiser la présentation\n"
+"        </a>\n"
+"    </div>\n"
+"    <br/><br/>\n"
+"    Merci,\n"
+"    % if user.signature\n"
+"        <br/>\n"
+"        ${user.signature | safe}\n"
+"    % endif\n"
+"</div>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
@@ -134,7 +151,7 @@ msgstr "<b>Proposé par</b> :"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Speakers Biography</b>:"
-msgstr "<b>Biographie des conférenciers</b> :"
+msgstr "<b>Biographie des intervenants</b>:"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
@@ -150,6 +167,8 @@ msgstr "<i class=\"fa fa-ban mr-2\"/>Non publié"
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_search
 msgid "<i class=\"fa fa-bell mr-2 text-muted\"/> Wishlisted Talks"
 msgstr ""
+"<i class=\"fa fa-bell mr-2 text-muted\"/> Présentations sur la liste des "
+"souhaits"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
@@ -163,7 +182,7 @@ msgid ""
 "                                You can add multiple speakers by separating names, emails and phones with commas."
 msgstr ""
 "<i class=\"fa fa-info-circle\"/>\n"
-"                                Vous pouvez ajouter de multiples speakers en séparant les noms, e-mails and téléphone avec des virgules."
+"                                Vous pouvez ajouter de multiples intervenants en séparant les noms, adresses mail et numéros de téléphone avec des virgules."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
@@ -220,7 +239,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_form
 msgid ">e.g. : https://www.odoo.com"
-msgstr ""
+msgstr ">par ex. : https://www.odoo.com"
 
 #. module: website_event_track
 #: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_2
@@ -266,6 +285,8 @@ msgstr "Etape acceptée"
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__is_accepted
 msgid "Accepted tracks are displayed in agenda views but not accessible."
 msgstr ""
+"Les sessions acceptées sont affichées dans le programme, mais ne sont pas "
+"accessibles."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_needaction
@@ -317,7 +338,7 @@ msgstr "Ajoutez une nouvelle session"
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
 msgid "Add a new track visitor"
-msgstr ""
+msgstr "Ajouter un nouveau visiteur de session"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track19
@@ -396,6 +417,9 @@ msgid ""
 "As key track cannot be un-wishlisted, this field store the partner choice to"
 " remove the reminder for key tracks."
 msgstr ""
+"Comme il n'est pas possible d'enlever une session clé de la liste des "
+"souhaits, le champ permet au partenaire de choisir de supprimer le rappel "
+"pour les sessions clés."
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_17
@@ -1152,6 +1176,9 @@ msgid ""
 "If set, the talk will be starred for each attendee registered to the event. "
 "The attendee won't be able to un-star this talk."
 msgstr ""
+"Si cette option est activée, la présentation sera marquée d'une étoile pour "
+"chaque participant inscrit à l'événement. Le participant ne pourra pas "
+"enlever l'étoile de cette présentation."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__image_128
@@ -1222,7 +1249,7 @@ msgstr "Gestion de l'inventaire et de l'entrepôt"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_accepted
 msgid "Is Accepted"
-msgstr ""
+msgstr "est accepté"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_website_cta_live
@@ -1635,7 +1662,7 @@ msgstr "Aucune session trouvée."
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_action_from_visitor
 msgid "No track wishlisted by this visitor"
-msgstr ""
+msgstr "Ce visiteur n'a mis aucune session sur la liste des souhaits"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
@@ -1884,7 +1911,7 @@ msgstr "Ventes et Distribution"
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
 msgid "Schedule some tracks to get started !"
-msgstr ""
+msgstr "Planifiez certaines sessions pour commencer !"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_6
@@ -1935,50 +1962,50 @@ msgstr "Argent"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_id
 msgid "Speaker"
-msgstr "Orateur"
+msgstr "Intervenant"
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/event_track.py:0
 #, python-format
 msgid "Speaker Email"
-msgstr "E-mail du conférencier"
+msgstr "Email de l'intervenant"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__image
 msgid "Speaker Photo"
-msgstr "Photo du conférencier"
+msgstr "Photo de l'intervenant"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Speaker(s) Biography"
-msgstr "Biographie du confériencer"
+msgstr "Biographie de l'intervenant"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Speaker(s) Email"
-msgstr "E-mail du conférencier"
+msgstr "Email de l'intervenant"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Speaker(s) Name"
-msgstr "Nom du conférencier"
+msgstr "Nom de l'intervenant"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Speaker(s) Phone"
-msgstr "Téléphone du conférencier"
+msgstr "Numéro de téléphone de l'intervenant"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Speaker(s) Picture"
-msgstr ""
+msgstr "Photo de l'intervenant"
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/event_track.py:0
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 #, python-format
 msgid "Speakers"
-msgstr "Haut-parleurs"
+msgstr "Intervenants"
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/event_sponsor.py:0
@@ -2077,7 +2104,7 @@ msgstr "Nom de l'étape"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "Starting in"
-msgstr ""
+msgstr "Commence dans"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track28
@@ -2404,6 +2431,8 @@ msgid ""
 "Track Visitors store statistics on track attendance, including\n"
 "              wishlist management."
 msgstr ""
+"Le suivi des visiteurs sauvegarde des statistiques sur la participation aux sessions, y compris\n"
+"la gestion des listes de souhaits."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__is_track_soon
@@ -2462,6 +2491,8 @@ msgid ""
 "Tracks define the schedule of your event.<br>These can be a talk, a round "
 "table, a meeting, etc."
 msgstr ""
+"Les sessions définissent le programme de votre événementiellepeut s'agir "
+"d'une présentation, d'une table ronde, d'une réunion, etc."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__website_track
@@ -2549,6 +2580,7 @@ msgstr "Voix du client"
 #: model_terms:ir.actions.act_window,help:website_event_track.website_visitor_action_from_track
 msgid "Wait for visitors to wishlist your tracks"
 msgstr ""
+"Attendez que les visiteurs ajoutent vos sessions à leur liste de souhaits"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
@@ -2559,7 +2591,9 @@ msgstr "Nous n'avons trouvé aucune sessions qui correspond à votre"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "We require speakers to accept an agreement in which they commit to:"
-msgstr "Nous exigeons des intervenants qu'ils s'engagent à :"
+msgstr ""
+"Nous exigeons des intervenants d'accepter un accord dans lequel ils "
+"s'engagent à :"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -2731,7 +2765,7 @@ msgstr "heures"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "minutes after talk start"
-msgstr ""
+msgstr "minutes après le début de la présentation"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete

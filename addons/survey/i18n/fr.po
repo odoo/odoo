@@ -314,6 +314,30 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Cher ${object.partner_id.name or 'participant'}<br/><br/>\n"
+"        % if object.survey_id.certification:\n"
+"            Vous avez été invité à passer une nouvelle certification.\n"
+"        % else:\n"
+"            Nous menons un sondage et votre réponse serait apppréciée.\n"
+"        % endif\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a href=\"${(object.get_start_url()) | safe}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                % if object.survey_id.certification:\n"
+"                    Démarrer la certification\n"
+"                % else:\n"
+"                    Démarrer le sondage\n"
+"                % endif\n"
+"            </a>\n"
+"        </div>\n"
+"        % if object.deadline:\n"
+"            Veuillez répondre au sondage avant le ${format_date(object.deadline)}.<br/><br/>\n"
+"        % endif\n"
+"        Merci pour votre participation.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -682,6 +706,7 @@ msgid ""
 "<span class=\"text-muted\">The code is found on the screen in front of "
 "you</span>"
 msgstr ""
+"<span class=\"text-muted\">Le code se trouve sur l'écran devant vous</span>"
 
 #. module: survey
 #: model:survey.question,description:survey.survey_demo_quiz_p3_q1
@@ -1168,7 +1193,7 @@ msgstr "Burger Quiz"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
 msgid "CERTIFICATE"
-msgstr ""
+msgstr "CERTIFICAT"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_2_choice_3
@@ -1226,7 +1251,7 @@ msgstr "Certification échouée"
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_modern
 msgid "Certification Seal"
-msgstr ""
+msgstr "Sceau de certification"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
@@ -4064,7 +4089,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_modern
 msgid "This Certificate is Presented to"
-msgstr ""
+msgstr "Ce certificat est présenté à"
 
 #. module: survey
 #: code:addons/survey/models/survey_question.py:0
@@ -4752,13 +4777,13 @@ msgstr "par ex. enquête de satisfaction"
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_modern
 msgid "for graduating"
-msgstr ""
+msgstr "pour l'obtention du diplôme"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_modern
 msgid "is proud to award this certificate to"
-msgstr ""
+msgstr "est fier d'accorder ce certificat à"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_auth_required
