@@ -125,6 +125,10 @@ msgid ""
 "- Kitchen Order Printing: allows you to print orders updates to kitchen or bar printers\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"- Impression des commandes en cuisine : vous permet d'imprimer les mises à jour des commandes sur les imprimantes de la cuisine ou du bar.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -306,6 +310,88 @@ msgid ""
 "Copyright 2018 Odoo House ApS\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Module de localisation pour le Danemark\n"
+"===============================\n"
+"\n"
+"Il s'agit du module de gestion du **plan comptable pour le Danemark**. Couvre à la fois les entreprises individuelles, ainsi que I/S, IVS, ApS et A/S\n"
+"\n"
+"**Modulet opsætter:**\n"
+"\n"
+"- **Dansk kontoplan**\n"
+"\n"
+"- Dansk moms\n"
+"        - 25% moms\n"
+"        - Resturationsmoms 6,25%\n"
+"        - Omvendt betalingspligt\n"
+"        \n"
+"- Konteringsgrupper\n"
+"        - EU (Virksomhed)\n"
+"        - EU (Privat)\n"
+"        - 3.lande\n"
+"\n"
+"- Finans raporter\n"
+"        - Resulttopgørelse\n"
+"        - Balance\n"
+"        - Momsafregning\n"
+"            - Afregning\n"
+"            - Rubrik A, B og C\n"
+"\n"
+"- **Anglo-Saxon regnskabsmetode**\n"
+"\n"
+".\n"
+"\n"
+"Produkt setup:\n"
+"==============\n"
+"\n"
+"**Vare**\n"
+"\n"
+"**Salgsmoms:**      Salgmoms 25%\n"
+"\n"
+"**Salgskonto:**     1010 Salg af vare, m/moms\n"
+"\n"
+"**Købsmoms:**       Købsmoms 25%\n"
+"\n"
+"**Købskonto:**      2010 Direkte omkostninger vare, m/moms\n"
+"\n"
+".\n"
+"\n"
+"**Ydelse**\n"
+"\n"
+"**Salgsmoms:**      Salgmoms 25%, ydelser\n"
+"\n"
+"**Salgskonto:**     1011 Salg af ydelser, m/moms\n"
+"\n"
+"**Købsmoms:**       Købsmoms 25%, ydelser\n"
+"\n"
+"**Købskonto:**      2011 Direkte omkostninger ydelser, m/moms\n"
+"\n"
+".\n"
+"\n"
+"**Vare med omvendt betalingspligt**\n"
+"\n"
+"**Salgsmoms:**      Salg omvendt betalingspligt\n"
+"\n"
+"**Salgskonto:**     1012 Salg af vare, u/moms\n"
+"\n"
+"**Købsmoms:**       Køb omvendt betalingspligt\n"
+"\n"
+"**Købskonto:**      2012 Direkte omkostninger vare, u/moms\n"
+"\n"
+"\n"
+".\n"
+"\n"
+"**Restauration**\n"
+"\n"
+"**Købsmoms:**       Restaurationsmoms 6,25%, købsmoms\n"
+"\n"
+"**Købskonto:**      4010 Restaurationsbesøg\n"
+"\n"
+".\n"
+"\n"
+"Copyright 2018 Odoo House ApS\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do
@@ -994,6 +1080,29 @@ msgid ""
 "        you have not already sent to the government to reuse its number.\n"
 "    "
 msgstr ""
+"\n"
+"        Menu E-Faktur (Indonésie)\n"
+"        Format : 010.000-16.00000001\n"
+"        * 2 (dua) digit pertama adalah Kode Transaksi\n"
+"        * 1 (satu) digit berikutnya adalah Kode Status\n"
+"        * 3 (tiga) digit berikutnya adalah Kode Cabang\n"
+"        * 2 (dua) digit pertama adalah Tahun Penerbitan\n"
+"        * 8 (delapan) digit berikutnya adalah Nomor Urut\n"
+"\n"
+"        Pour pouvoir exporter les factures des clients sous forme d'e-Faktur,\n"
+"        vous devez mettre les intervalles de numéros qui vous ont été attribués\n"
+"        par le gouvernement dans Comptabilité > Clients > e-Faktur\n"
+"\n"
+"        Lorsque vous validez une facture pour laquelle le partenaire a coché le champ ID PKP\n"
+"        , un numéro de taxe sera attribué à cette facture.\n"
+"        Ensuite, vous pouvez filtrer les factures encore à exporter dans \n"
+"        la liste des factures et cliquer sur Action > Télécharger e-Faktur pour télécharger\n"
+"        le csv et le charger sur le site du gouvernement.\n"
+"\n"
+"        Vous pouvez remplacer une facture déjà envoyée par une autre en indiquant\n"
+"        la facture remplacée et la nouvelle et vous pouvez réinitialiser une facture\n"
+"        que vous n'avez pas encore envoyée au gouvernement pour réutiliser son numéro.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports
@@ -1515,6 +1624,13 @@ msgid ""
 "    With Sale coupon delivery, the discount computation does not apply on delivery lines.\n"
 "    "
 msgstr ""
+"\n"
+"Gérez les remises avec les livraisons dans les calculs taxclouds.\n"
+"Ce module suit la même logique que \"Compte Taxcloud - Vente (coupon)\".\n"
+"Vous y trouverez plus d'informations sur la manière dont les calculs de remise sont effectués pour TaxCloud.\n"
+"\n"
+"Il existe une option supplémentaire de remise (livraison gratuite) sur les livraisons.\n"
+"Avec la livraison du bon de réduction, le calcul de la remise ne s'applique pas sur les lignes de livraison."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -2038,6 +2154,17 @@ msgid ""
 "For Vendor Bill support for Default Vendor Specific OCR is added and validation for OCR.\n"
 "    "
 msgstr ""
+"\n"
+"Ajouter une communication structurée aux factures clients et aux factures fournisseurs.\n"
+"------------------------------------------------------------------\n"
+"\n"
+"L'utilisation de la communication structurée OCR simplifie la réconciliation entre les factures et les paiements.\n"
+"\n"
+"Pour la facturation client, la prise en charge de l'OCR de niveau 1 à 4. Le numéro OCR peut être basé sur le partenaire ou\n"
+"la facture.\n"
+"\n"
+"Pour la prise en chambre de la facturation fournisseur, l'OCR par défaut spécifique au fournisseur et la validation de l'OCR sont ajoutés.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_reports
@@ -2049,6 +2176,12 @@ msgid ""
 "\n"
 "\n"
 msgstr ""
+"\n"
+"Ajoute un rapport du Livre TVA qui est une obligation légale en Argentine et enregistre les infos détaillées sur la TVA des ventes et achats effectués durant une période définie.\n"
+"\n"
+"Ajoute également un rapport TVA résumé, utilisé pour analyser la facturation\n"
+"\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_contract_reports
@@ -3891,6 +4024,74 @@ msgid ""
 "For Development information go to http://www.afip.gob.ar/fe/documentos/WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
 "\n"
 msgstr ""
+"\n"
+"Functionnel\n"
+"----------\n"
+"\n"
+"Soyez en mesure de créer des journaux dans Odoo pour créer des factures clients électroniques et les rapporter à l'AFIP (via les services web).\n"
+"Les options disponibles sont :\n"
+"\n"
+"    * Facture électronique - Service web\n"
+"    * Bon d'exportation - Service web\n"
+"    * Bon fiscal électronique - Service web\n"
+"\n"
+"Si vous validez une facture dans les journaux électroniques, elle sera validée dans Odoo et auprès de l'AFIP. Cette validation est\n"
+"immédiate et nous recevons un statut \"approuvé/approuvé sous observation/rejeté\" de la part de l'AFIP. Si la facture a\n"
+"été rejetée par l'AFIP, elle ne figurera pas dans le système et un message pop-up apparaîtra contenant les détails de l'erreur (raisons du rejet)\n"
+"et un ASTUCE de ce que le problème pourrait être.\n"
+"\n"
+"À des fins d'audit et de résolution des problèmes, nous ajoutons également un menu \"Consultez la facture dans AFIP\" qui nous permet de consulter les factures envoyées précédemment\n"
+"à l'AFIP et le dernier numéro utilisé comme assistance pour quelconque problème concernant la synchronisation des séquences entre Odoo et l'AFIP.\n"
+"\n"
+"    REMARQUE : Depuis la vue formulaire du journal, nous pouvons forcer une synchronisation entre les séquences Odoo pour chacun des types de document\n"
+"    avec les derniers numéros enregistrés auprès de l'AFIP.\n"
+"\n"
+"Concernant les factures fournisseurs, nous avons ajouté une fonctionnalité qui peut être configurée dans les paramètres de la comptabilité afin de vérifier\n"
+"si les factures fournisseurs dans l'AFIP sont authentiques (pour plus d'information, veuillez lire la description du paramètre).\n"
+"\n"
+"Configuration :\n"
+"\n"
+"1. Accédez aux paramètres du module Comptabilité > Localisation argentine\n"
+"\n"
+"    1.1. Configurez le mode Services web AFIP :\n"
+"\n"
+"    * Environnement de test qui utilise des certificats de démonstration pour tester l'instance et PAS pour\n"
+"     envoyer des factures authentiques à l'AFIP. Cet environnement ne sert qu'à faire des essais. Les instances de démonstration sont déjà pré-configurées, donc vous n'aurez pas à la configurer\n"
+"      (appelées couramment \"Environnement d'homologation\" dans l'AFIP).\n"
+"    * Environnement de production pour générer des certificats authentiques et des factures légales à envoyer à l'AFIP.\n"
+"\n"
+"    1.2. Configurez votre Certificat AFIP : Si vous êtes dans une instance de démonstration, celle-ci a été configurée par défaut. Si vous êtes\n"
+"         dans une instance de production, vous devez simplement charger votre Certificat AFIP.\n"
+"\n"
+"    1.3. Facultativement, vous pouvez configurer, si vous le souhaitez, la possibilité de vérifier les factures fournisseurs dans l'AFIP.\n"
+"\n"
+"2. Créez des journaux de vente qui représenteront chacun de vos points de vente AFIP (disponible dans le portail AFIP) que vous voulez utiliser dans Odoo.\n"
+"\n"
+"    2.1. Le champ \"Utiliser documents\" est configuré par défaut. Merci de ne pas le modifier.\n"
+"    2.2. Configurez le système PdV AFIP en choisissant un des services électroniques suivants :\n"
+"\n"
+"        * Facture électronique - Service web'\n"
+"        * Bon fiscal électronique - Service web'\n"
+"        * Bon d'exportation - Service web'\n"
+"\n"
+"    2.3. Configurez le numéro et l'adresse du PdV AFIP, compte tenu des configurations de votre portail AFIP.\n"
+"\n"
+"    REMARQUE : Vous pouvez utiliser le bouton \"Vérifier les points de vente AFIP disponibles\" dans le formulaire du journal pour confirmer celui à utiliser dans la création des journaux.\n"
+"\n"
+"Pour plus d'informations sur la facturation électronique argentine, veuillez consulter http://www.afip.gob.ar/fe/ayuda.asp\n"
+"\n"
+"Technique\n"
+"---------\n"
+"\n"
+"Les servies web implémentés sont les plus courants :\n"
+"\n"
+"* wsfev1 - \"Factura Electrónica\" (Facture électronique)\n"
+"* wsbfev1 - \"Bono Fiscal Electrónico\" (Bon fiscal électronique)\n"
+"* wsfexv1 - \"Factura de Exportación Electrónica\" (Facture électronique d'exportation - identique au Bon d'exportation)\n"
+"* wscdc - \"Constatación de Comprobantes\" (Vérification de factures)\n"
+"\n"
+"Pour plus d'informations sur le développement, veuillez consulter http://www.afip.gob.ar/fe/documentos/WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_latam_invoice_document
@@ -3998,6 +4199,67 @@ msgid ""
 "* Unit of measures AFIP codes\n"
 "* Partners: Consumidor Final and AFIP\n"
 msgstr ""
+"\n"
+"Fonctionnel\n"
+"----------\n"
+"\n"
+"Ce module ajoute des fonctionnalités de comptabilité pour la localisation argentine, qui représentent la configuration minimale nécessaire pour qu'une entreprise puisse opérer en Argentine et conformément aux réglementations et directives de l'AFIP (Administración Federal de Ingresos Públicos).\n"
+"\n"
+"Suivez les étapes de configuration suivantes pour la production :\n"
+"\n"
+"1. Accédez à votre entreprise et configurez votre numéro de TVA et votre type de responsabilité AFIP\n"
+"2. Accédez à Comptabilité / Paramètres et définissez le plan comptable que vous souhaitez utiliser.\n"
+"3. Créez vos journaux de vente en tenant compte les informations de votre point de vente AFIP.\n"
+"\n"
+"Données de démonstration pour les essais :\n"
+"\n"
+"* Trois entreprises ont été créées, une pour chaque type de responsabilité AFIP avec le plan comptable respectif installé. Choisissez l'entreprise qui vous représente le mieux afin de faire des tests :\n"
+"\n"
+"* (AR) Responsable Inscription\n"
+"* (AR) Exento\n"
+"* (AR) Monotributo\n"
+"\n"
+"* Journaux de vente configurés pour les factures pré-imprimées et Expo dans toutes les entreprises\n"
+"* Exemples de factures et autres documents déjà validés dans la société « (AR) Responsable Inscripto »\n"
+"* Exemple de partenaires pour les différents types de responsabilité :\n"
+"\n"
+"* ADHOC (IVA Responsable Inscription)\n"
+"* Consejo Municipal Rosario (IVA Sujeto Exento)\n"
+"* Gritti (Monotributo)\n"
+"* Cerro Castor. IVA Liberado en Zona Franca\n"
+"* Expresso (Client de l'Extérieur)\n"
+"* Odoo (Fournisseur de l'extérieur)\n"
+"\n"
+"Points forts :\n"
+"\n"
+"* Le plan comptable (CoA) ne sera pas automatiquement installé, chaque modèle de plan comptable dépend de la responsabilité AFIP de l'entreprise, vous devrez installer le plan comptable répondant à vos besoins.\n"
+"* Aucun journal de vente ne sera généré lors de l'installation d'un plan comptable, vous devrez configurer vos journaux manuellement.\n"
+"* Le type de document sera correctement présélectionné lors de la création d'une facture en fonction de la responsabilité fiscale de l'émetteur et du destinataire du document et du journal associé.\n"
+"* Un type de compte CBU a été ajouté ainsi que la validation CBU\n"
+"\n"
+"\n"
+"Technique\n"
+"---------\n"
+"\n"
+"Ce module ajoute à la fois des modèles et des champs qui seront éventuellement utilisés pour le module de facture électronique. Voici un résumé des principales fonctionnalités :\n"
+"\n"
+"Données de base:\n"
+"\n"
+"* Plan comptable : un pour chaque responsabilité AFIP liée à une entité juridique :\n"
+"\n"
+"* Responsable Inscripto (RI)\n"
+"* Excento (EX)\n"
+"* Monotributo (Mono)\n"
+"\n"
+"* Taxes argentines et groupes de taxes sur les comptes (taxes de TVA avec les aliquotes existantes et autres types)\n"
+"* Types de responsabilité AFIP\n"
+"* Positions fiscales (afin de cartographier les taxes)\n"
+"* Types de documents juridiques en Argentine\n"
+"* Types d'identification valables en Argentine.\n"
+"* Codes AFIP pays et codes TVA pays pour les personnes morales, personnes physiques et autres\n"
+"* Codes AFIP de devise\n"
+"* Unité de mesures codes AFIP\n"
+"* Partenaires : Consumidor Final et AFIP\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_gamification
@@ -6930,6 +7192,14 @@ msgid ""
 " - Israelian taxes\n"
 " "
 msgstr ""
+"\n"
+"Il s'agit de la dernière localisation israélienne de base, nécessaire pour exécuter Odoo en Israël :\n"
+"================================================================================\n"
+"\n"
+"Ce module se compose de :\n"
+"- Plan comptable générique d'Israël\n"
+"- Taxes israéliennes\n"
+" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_za
@@ -7635,6 +7905,8 @@ msgid ""
 "\n"
 "This module enables the pairing of the IoT Box with Odoo through odoo.com.\n"
 msgstr ""
+"\n"
+"Ce module permet de coupler l'IoT Box avec Odoo via odoo.com.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sms
@@ -7703,6 +7975,11 @@ msgid ""
 "a protection to avoid using it in production environment. However, do\n"
 "not use it in production environment.\n"
 msgstr ""
+"\n"
+"Ce module met en oeuvre un simple flux de fournisseur de paiement de test pour permettre\n"
+"de tester les comportements de paiement réussis dans l'eCommerce. Il comprend\n"
+"une protection pour éviter de l'utiliser dans un environnement de production. Cependant, ne l'utilisez\n"
+"pas dans un environnement de production.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet
@@ -7790,6 +8067,12 @@ msgid ""
 "As we don't want existing users to keep adding their personal accounts to remove them later, we add a technical\n"
 "module in order to minimize impact and support.\n"
 msgstr ""
+"\n"
+"Ce module vise à ajouter le support des pages d'entreprise et à supprimer le support des comptes personnels.\n"
+"Ceci est fait pour préparer la prochaine itération du module social_linkedin qui permettra un support complet des \"Streams\",\n"
+"ce qui signifie que vous serez en mesure de lire vos messages (et pas seulement de les publier), mais uniquement pour les comptes d'entreprise.\n"
+"Comme nous ne voulons pas que les utilisateurs existants continuent à ajouter leurs comptes personnels pour les supprimer ensuite, nous ajoutons un module technique\n"
+"afin de minimiser l'impact et le support.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_association
@@ -8776,6 +9059,12 @@ msgid ""
 "… Understanding of commercial and logistical processes in your business and engaging your staff and efficient use of resources.<br><br>\n"
 "Above all, you need a reliable and professional advisors / companions who will listen, your challenges seriously and will implement it in your senses. And without you fool with limit time and on budget, an X for a U. Welcome to Federal"
 msgstr ""
+"3 bonnes raisons de choisir aujourd'hui pour Federal comme partenaires pour la mise en œuvre de votre projet ERP :\n"
+"Premièrement, vous avez un spécialiste des logiciels, deuxièmement, un spécialiste du matériel et des performances ET troisièmement, un économiste d'entreprise avec une expertise en gestion de projet. Et qu'est-ce que cela signifie pour vous ? C'est très simple...<br>\n"
+"... Vos besoins individuels sont intégrés dans le logiciel standard<br>\n"
+"... Une conception professionnelle de la taille optimale pour votre paysage de système<br>\n"
+"... Compréhension des processus commerciaux et logistiques de votre entreprise et engagement de votre personnel et utilisation efficace des ressources<br><br>\n"
+"Avant tout, vous avez besoin d'un conseiller fiable et professionnel / compagnon qui écoutera, prendra vos défis au sérieux et mettra en œuvre dans vos sens. Et sans vous tromper sur la limite de temps et le budget, un X pour un U. Bienvenue à Federal"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_1
@@ -8785,6 +9074,11 @@ msgid ""
 " secondly, a hardware and performance specialist AND thirdly a business "
 "economist with expertise in project management. And..."
 msgstr ""
+"3 bonnes raisons de choisir aujourd'hui pour Federal comme partenaires pour "
+"la mise en œuvre de votre projet ERP : Premièrement, vous disposez d'un "
+"spécialiste des logiciels, deuxièmement, d'un spécialiste du matériel et des"
+" performances ET troisièmement, d'un économiste d'entreprise expert en "
+"gestion de projet. Et..."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -8850,6 +9144,9 @@ msgid ""
 " \n"
 "The Jackson Group’s Odoo consulting services include: <br>"
 msgstr ""
+"<br><br>\n"
+" \n"
+"Les services de consultance Odoo de Jackson Group comprennent : <br>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -9445,7 +9742,7 @@ msgstr ""
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_10
 msgid "A highly-responsive support model"
-msgstr ""
+msgstr "Un modèle d'assistance très réactif"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_posbox_homepage
@@ -9535,6 +9832,8 @@ msgstr ""
 msgid ""
 "A strategy that drives US Localization and adds new capabilities to Odoo"
 msgstr ""
+"Une stratégie qui favorise la localisation américaine et ajoute de nouvelles"
+" capacités à Odoo."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_contact
@@ -10515,7 +10814,7 @@ msgstr "Permet aux acheteurs d'ajouter des articles à une liste"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_cash_rounding
 msgid "Allow specific rounding in pos"
-msgstr ""
+msgstr "Autoriser des arrondis spécifiques dans le point de vente"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_mail_channel
@@ -10531,6 +10830,8 @@ msgstr "Vous permet de référer vos amis à Odoo et d'obtenir des récompenses"
 #: model:ir.module.module,summary:base.module_odoo_referral_portal
 msgid "Allow you to refer your friends to Odoo and get rewards - Deprecated"
 msgstr ""
+"Vous permettre de référer vos amis à ODoo et d'obtenir des récompenses - "
+"Obsolète"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -11035,7 +11336,7 @@ msgstr "Compléter automatiquement les données des sociétés partenaires"
 #. module: base
 #: model:ir.module.module,summary:base.module_partner_autocomplete_address_extended
 msgid "Autocomplete extended addresses"
-msgstr ""
+msgstr "Compléter automatiquement les adresses étendues"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
@@ -11114,6 +11415,8 @@ msgid ""
 "Axelor is a service company specializing in the integration of Open Source ERP. She is co-editor including the web version of Odoo and concentrates all its activities to Odoo integration and implementation of supply Saas (ASP) based on Odoo. Axelor can now claim many references to Odoo implementations in various industries.<br> <br>\n"
 "The company has its own R&amp;D performing many innovations to the continuous improvement of Odoo, such as the new web version, the plug-in MS Office and connectors to other applications. Its main advantages are its integration methodology and rigor to the management of major projects for the audit and design phase up to production and customer support."
 msgstr ""
+"Axelor est une société de services spécialisée dans l'intégration d'ERP Open Source. Elle est co-éditrice notamment de la version web d'Odoo et concentre l'ensemble de ses activités à l'intégration d'Odoo et à la mise en place d'offres Saas (ASP) basées sur Odoo. Axelor peut maintenant revendiquer de nombreuses références d'implémentations d'Odoo dans divers secteurs d'activité.<br> <br> \n"
+"La société dispose de son propre service de recherche et développement, qui réalise de nombreuses innovations pour l'amélioration continue d'Odoo, telles que la nouvelle version web, le plug-in MS Office et les connecteurs vers d'autres applications. Ses principaux atouts sont sa méthodologie d'intégration et sa rigueur dans la gestion des grands projets depuis la phase d'audit et de conception jusqu'à la production et le support client."
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_2
@@ -11122,6 +11425,10 @@ msgid ""
 "ERP. She is co-editor including the web version of Odoo and concentrates all"
 " its activities to Odoo integration and implementation of supply..."
 msgstr ""
+"Axelor est une société de services spécialisée dans l'intégration d'ERP Open"
+" Source. Elle est co-éditrice notamment de la version web d'Odoo et "
+"concentre l'ensemble de ses activités à l'intégration d'Odoo et à la mise en"
+" place d'offres..."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_16
@@ -11132,6 +11439,11 @@ msgid ""
 "                from 1 to 55 employees mostly by reselling services on\n"
 "                Odoo."
 msgstr ""
+"Ayaan travaille dans le secteur informatique <b>depuis 20 ans</b>. Il\n"
+"                développe des logiciels pour aider àl a création de sites web. Il a vendu\n"
+"                sa première société à 30 ans et parvient à faire croître OpenCorp\n"
+"                de 1 à 55 employés principalement en revendant des services sur\n"
+"                Odoo."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_16
@@ -11139,6 +11451,8 @@ msgid ""
 "Ayaan is the <b>author of several books</b>, including Amazon best seller\n"
 "                \"How Odoo will change the business world!\"."
 msgstr ""
+"Ayaan est <b>l'auteur de plusieurs livres</b>, dont le best-seller d'Amazon\n"
+"                \"How Odoo will change the business world!\"."
 
 #. module: base
 #: model:res.country,name:base.az
@@ -11525,6 +11839,11 @@ msgid ""
 "<br><br>\n"
 "Best Designers has now emerged serving the Small and Medium Business – SMB’s with lots of Free and Open Source Software's, Our team is proficient to deliver quick and quality solutions. With a blend of experts with proven track record, our enterprise solution Business Consultants, ERP Consultants, Network Engineers, Software Developers, Web Architects, Software Testers and Search Engine Optimizers makes it possible to offer our clients affordable solutions that are both innovative and highly influential."
 msgstr ""
+"Best Designers est une organisation de services informatiques, établie par 3 experts de l'industrie dont le siège est à Mumbai, en Inde. L'organisation offre à ses clients des applications logicielles d'entreprise Open Source. Nous sommes spécialisés dans <b>l'implémentation d'ERP, l'implémentation de CRM, l'intégration d'eCommerce à ERP, les systèmes de gestion de documents et la formation Open Source</b>. Nos principaux produits sont <b>Odoo, Alfresco et Magento.</b> Notre objectif principal est de fournir <b>des services d'implémentation Odoo</b> de qualité, incorporant une valeur suprême aux entreprises du monde entier, à un prix abordable. Notre expérience dans la gestion de projets, depuis la sélection des outils et des plateformes jusqu'à la mise en œuvre des solutions, a permis de <b>réduire les budgets informatiques des PME et de rendre la technologie abordable.</b> \n"
+" <br> <br>\n"
+"Notre expertise en matière d'ERP remonte à 2005 et nous nous concentrons principalement sur la mise en œuvre d'Odoo à travers le monde. En tant que <b>partenaire de développement off-shore en Inde</b>, nous sommes également associés à d'autres partenaires Odoo à travers le monde pour mettre en œuvre les applications d'entreprise Odoo. Afin de fournir des solutions ERP, eCommerce et d'entreprise de classe mondiale, nous avons conçu des méthodologies et des concepts d'implémentation innovants, qui nous aident à fournir des solutions d'affaires fiables qui répondent aux demandes actuelles et futures.\n"
+"<br><br>\n"
+"Best Designers est désormais au service des petites et moyennes entreprises (PME) avec de nombreux logiciels libres et open source. Notre équipe est compétente pour fournir des solutions rapides et de qualité. Avec un mélange d'experts ayant fait leurs preuves, nos consultants en solutions d'entreprise (Business Consultants, ERP Consultants, Network Engineers, Software Developers, Web Architects, Software Testers et Search Engine Optimizers) permettent d'offrir à nos clients des solutions abordables qui sont à la fois innovantes et très influentes."
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_12
@@ -11533,6 +11852,10 @@ msgid ""
 "experts headquartered at Mumbai, India. The organization serve customers "
 "with Open Source Enterprise Software applications. We are specialized in..."
 msgstr ""
+"Best Designers est une organisation de services informatiques, établie par 3"
+" experts de l'industrie dont le siège est à Mumbai, en Inde. L'organisation "
+"offre à ses clients des applications logicielles d'entreprise Open Source. "
+"Nous sommes spécialisés dans..."
 
 #. module: base
 #: model:res.country,name:base.bt
@@ -13520,7 +13843,7 @@ msgstr "Tableaux de bord"
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_10
 msgid "Data Migration"
-msgstr ""
+msgstr "Migration de données"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_convert
@@ -14325,7 +14648,7 @@ msgstr "Valeur de Domaine"
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_10
 msgid "Domestic US, near-shore and offshore based resources"
-msgstr ""
+msgstr "Ressources nationales américaines, near-shore et offshore"
 
 #. module: base
 #: model:res.country,name:base.dm
@@ -14920,7 +15243,7 @@ msgstr "Notes de frais dans les fiches de paie"
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_10
 msgid "Experienced consulting services"
-msgstr ""
+msgstr "Services de consultance expérimentés"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_report_paperformat__report_ids
@@ -16091,6 +16414,10 @@ msgid ""
 "competitive advantage through Free and Open Source software. Our experienced"
 " team can provide strategic advice, implementation, integration with exis..."
 msgstr ""
+"Global Solutions aide les organisations de toutes formes et de toutes "
+"tailles à acquérir un avantage concurrentiel grâce aux logiciels libres et "
+"open source. Notre équipe expérimentée peut fournir des conseils "
+"stratégiques, la mise en œuvre, l'intégration avec les systèmes existants..."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_4
@@ -16099,6 +16426,9 @@ msgid ""
 " <br> <br>\n"
 "Founded in 2006, our clients range from SMEs to globally recognised brands and public sector organisations."
 msgstr ""
+"Global Solutions aide les organisations de toutes formes et de toutes tailles à acquérir un avantage concurrentiel grâce aux logiciels libres et open source. Notre équipe expérimentée peut fournir des conseils stratégiques, la mise en œuvre, l'intégration avec les systèmes existants, l'hébergement et les services de support pour une large gamme d'applications open source. En collaboration avec nos clients, Global Solutions aide à sélectionner et à fournir les meilleures solutions possibles en utilisant des produits Open Source. Nos compétences et partenariats clés incluent Ubuntu, vtiger CRM, OpenEMM, Alfresco et bien sûr Odoo.\n"
+" <br> <br>\n"
+"Fondée en 2006, Global Solutions compte parmi sa clientèle des PME, des marques mondialement reconnues et des organisations du secteur public."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -17233,6 +17563,7 @@ msgstr "Implémentation"
 msgid ""
 "Implementation and Configuration (on-premise or on-demand environments)"
 msgstr ""
+"Implémentation et configuration (environnements sur serveur ou sur demande)"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_base_sparse_field
@@ -17245,6 +17576,8 @@ msgid ""
 "Implementations of feature rich, extensible, and cost-effective Open Source "
 "software (Odoo)"
 msgstr ""
+"Implémentations d'un logiciel libre (Odoo) riche en fonctionnalités, "
+"extensible et rentable."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_blackbox_be
@@ -17859,12 +18192,12 @@ msgstr "Page d'accueil de l'IoT Box"
 #. module: base
 #: model:ir.module.module,summary:base.module_iot_pairing
 msgid "IoT Box pairing through odoo.com."
-msgstr ""
+msgstr "Couplage de l'IoT Box via odoo.com"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iot_pairing
 msgid "IoT Pairing"
-msgstr ""
+msgstr "Couplage IoT"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_workorder_iot
@@ -18696,7 +19029,7 @@ msgstr "Liez votre configuration PoS avec une IoT Box pour le restaurant"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_linkedin_company_support
 msgid "LinkedIn Company Support"
-msgstr ""
+msgstr "Support aux entreprises sur LinkedIn"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -18860,7 +19193,7 @@ msgstr "Luxembourg - Rapports comptables électroniques"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lu_saft
 msgid "Luxembourg Standard Audit File for Tax"
-msgstr ""
+msgstr "Fichier d'audit standard luxembourgeois pour l'impôt"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_M
@@ -19063,6 +19396,45 @@ msgid ""
 "allowing you to easily find for specific skills and build up a database of\n"
 "profiles.\n"
 msgstr ""
+"Gérer le recrutement et les candidatures\n"
+"---------------------------------------\n"
+"\n"
+"Publiez, promouvez et organisez vos offres d'emploi avec l'\n"
+"<a href=\"https://www.odoo.com/app/recruitment\">Application de Recrutement Open Source d'Odoo</a>.\n"
+"\n"
+"Organisez votre récapitulatif des postes vacants, faites la promotion de vos offres d'emploi et gardez la main sur les\n"
+"candidatures envoyées en toute simplicité. Suivez chaque candidat et constituez une base de données\n"
+"de compétences et de profils avec des documents indexés.\n"
+"\n"
+"Publiez vos offres d'emploi sur les meilleurs sites\n"
+"---------------------------------\n"
+"\n"
+"Connectez-vous automatiquement aux sites d'offres d'emploi les plus connus : linkedIn, Monster,\n"
+"Craigslist, ... Une nouvelle adresse électronique est automatiquement\n"
+"attribuée à chaque poste afin d'acheminer les candidatures vers le bon poste.\n"
+"\n"
+"Que les candidats vous contactent par email ou via un formulaire en ligne, vous obtenez\n"
+"toutes les données indexées automatiquement (CV, lettre de motivation) et vous pouvez répondre\n"
+"en un seul clic, en réutilisant des modèles de réponses.\n"
+"\n"
+"Personnalisez votre processus de recrutement\n"
+"----------------------------------\n"
+"\n"
+"Utilisez la vue kanban et personnalisez les étapes de votre processus de recrutement ;\n"
+"pré-qualification, premier entretien, deuxième entretien, négociation, ...\n"
+"\n"
+"Obtenez des statistiques précises sur votre pipeline de recrutement. Obtenez des rapports pour comparer\n"
+"les performances de vos différents investissements sur les sites d'emploi externes.\n"
+"\n"
+"Rationalisez votre processus de recrutement\n"
+"-----------------------------------\n"
+"\n"
+"Suivez les candidats dans votre processus de recrutement grâce à la vue kanban. Gagnez \n"
+"du temps en automatisant certaines communications grâce à des modèles d'emails.\n"
+"\n"
+"Les documents tels que les CV et les lettres de motivation sont indexés automatiquement,\n"
+"vous permettant de rechercher facilement des compétences spécifiques et de constituer une base de\n"
+"données de profils.\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_forum
@@ -19118,6 +19490,8 @@ msgstr "Gérez les remises dans les calculs taxclouds."
 msgid ""
 "Manage engineering change orders on products, bills of material and routings"
 msgstr ""
+"Gérer les ordres de modification technique sur les produits, les "
+"nomenclatures et les routes"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_accountant
@@ -19217,7 +19591,7 @@ msgstr "Gérez votre stock et vos activités logistiques"
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_10
 msgid "Managed Services"
-msgstr ""
+msgstr "Services gérés"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_manufacturing
@@ -19503,6 +19877,10 @@ msgid ""
 "areas include accounting, CRM, manufacturing, stock, logistics, and supply "
 "chain management.  The company has completed over 15 projects with intric..."
 msgstr ""
+"Millennium Industries est un partenaire Odoo basé à Londres. Ses domaines de"
+" spécialisation comprennent la comptabilité, le CRM, la fabrication, le "
+"stock, la logistique et la gestion de la chaîne d'approvisionnement. La "
+"société a réalisé plus de 15 projets avec des exigences complexes..."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_3
@@ -19514,6 +19892,13 @@ msgid ""
 "Last but not least, Millennium Industries is the only UK partner with their own Europe-based fully staffed development centre, aimed to deliver to the exact client specification projects of any complexity. <br> <br>\n"
 "Please contact Millennium Industries direct to discuss your business requirement and the company would be delighted to help."
 msgstr ""
+"Millennium Industries est un partenaire Odoo basé à Londres. Ses domaines de spécialisation comprennent la comptabilité, le CRM, la fabrication, le stock, la logistique et la gestion de la chaîne d'approvisionnement. La société a réalisé plus de 15 projets avec des exigences complexes en matière de consolidation et de comptabilité des stocks, pour lesquels elle peut fournir des références. \n"
+"<br> <br>\n"
+"\n"
+"Millennium Industries a développé plusieurs modules de comptabilité pour Odoo et sont les principaux experts du Royaume-Uni dans ce domaine. En outre, une de leurs principales réussites est la migration de données au niveau nominal de Sage Line 50 à Odoo, ce qui permet une efficacité sans précédent dans le changement de système. <br> <br> \n"
+"\n"
+"Enfin, Millennium Industries est le seul partenaire britannique à disposer de son propre centre de développement, basé en Europe et doté d'un personnel complet, afin de réaliser des projets de toute complexité selon les spécifications exactes du client. <br> <br> \n"
+"N'hésitez pas à contacter Millennium Industries directement pour discuter des besoins de votre entreprise et la société sera ravie de vous aider."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__mimetype
@@ -19597,6 +19982,74 @@ msgid ""
 "perspectiva contable íntegramente. Por lo tanto, este PCGE no debe ser considerado en ningún aspecto\n"
 "como una guía con propósitos distintos del contable."
 msgstr ""
+"Ensemble minimal de comptes pour commencer à travailler au Pérou.\n"
+"=================================================\n"
+"\n"
+"L'utilisation de ce plan comptable doit se référer à la documentation officielle sur le MEF.\n"
+"\n"
+"https://www.mef.gob.pe/contenidos/conta_publ/documentac/VERSION_MODIFICADA_PCG_EMPRESARIAL.pdf\n"
+"https://www.mef.gob.pe/contenidos/conta_publ/documentac/PCGE_2019.pdf\n"
+"\n"
+"Toutes les références légales se trouvent ici.\n"
+"\n"
+"http://www.sunat.gob.pe/legislacion/general/index.html\n"
+"\n"
+"Considérations.\n"
+"===============\n"
+"\n"
+"Plan comptable :\n"
+"-----------------\n"
+"\n"
+"L'arborescence du plan comptable se fait à l'aide de groupes de comptes, tous les comptes avec mouvement\n"
+"sont disponibles en tant que groupes, mais seuls les plus courants sont disponibles en tant que comptes réels,\n"
+"si vous souhaitez en créer un nouveau, utilisez le groupe de comptes\n"
+"comme référence.\n"
+"\n"
+"# TODO: Image showing what I am talking about.\n"
+"\n"
+"Impôts :\n"
+"------\n"
+"\n"
+"'IGV': {'name': 'VAT', 'code': 'S'},\n"
+"'IVAP': {'name': 'VAT', 'code': ''},\n"
+"'ISC': {'name': 'EXC', 'code': 'S'},\n"
+"'ICBPER': {'name': 'OTH', 'code': ''},\n"
+"'EXP': {'name': 'FRE', 'code': 'G'},\n"
+"'GRA': {'name': 'FRE', 'code': 'Z'},\n"
+"'EXO': {'name': 'VAT', 'code': 'E'},\n"
+"'INA': {'name': 'FRE', 'code': 'O'},\n"
+"'OTROS': {'name': 'OTH', 'code': 'S'},\n"
+"\n"
+"Nous avons ajouté sur ce module les 3 notions en taxes (nécessaires à la \n"
+"signature EDI)\n"
+"\n"
+"# TODO: Describe new fields.\n"
+"\n"
+"Produits :\n"
+"---------\n"
+"\n"
+"Les codes des produits à utiliser dans l'EDI sont disponibles ici, afin de décider\n"
+"quelle utilisation fiscale en raison de quel code suivant cette référence et le code python :\n"
+"\n"
+"https://docs.google.com/spreadsheets/d/1f1fxV8uGhA-Qz9-R1L1-dJirZ8xi3Wfg/edit#gid=662652969\n"
+"\n"
+"**Nota:**\n"
+"---------\n"
+"\n"
+"**RELACIÓN ENTRE EL PCGE Y LA LEGISLACIÓN TRIBUTARIA:**\n"
+"\n"
+"Este PCGE ha sido preparado como una herramienta de carácter contable, para acumular información que\n"
+"requiere ser expuesta en el cuerpo de los estados financieros o en las notas a dichos estados. Esa acumulación se\n"
+"efectúa en los libros o registros contables, cuya denominación y naturaleza depende de las actividades que se\n"
+"efectúen, y que permiten acciones de verificación, control y seguimiento. Las NIIF completas y la NIIF PYMES no\n"
+"contienen prescripciones sobre teneduría de libros, y consecuentemente, sobre los libros y otros registros\n"
+"de naturaleza contable. Por otro lado, si bien es cierto la contabilidad es también un insumo, dentro de otros, para\n"
+"labores de cumplimiento tributario, este PCGE no ha sido elaborado para satisfacer prescripciones tributarias ni su\n"
+"verificación. No obstante ello, donde no hubo oposición entre la contabilidad financiera prescrita por las NIIF y\n"
+"la legislación tributaria, este PCGE ha incluido subcuentas, divisionarias y sub divisionarias, para\n"
+"distinguir componentes con validez tributaria, dentro del conjunto de componentes que corresponden a una\n"
+"perspectiva contable íntegramente. Por lo tanto, este PCGE no debe ser considerado en ningún aspecto\n"
+"como una guía con propósitos distintos del contable."
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_B
@@ -21740,6 +22193,115 @@ msgid ""
 "interaction history, profiles, and more.\n"
 "\n"
 msgstr ""
+"Point de vente Odoo\n"
+"-----------------------------\n"
+"\n"
+"Le <a href=\"https://www.odoo.com/page/point-of-sale\">Point de vente d'Odoo</a>\n"
+"introduit une interface très claire sans installation requise qui s'exécute \n"
+"en ligne et hors ligne sur des équipements modernes.\n"
+"\n"
+"Son intégration complète avec l'inventaire et la comptabilité de l'entreprise vous donne des statistiques \n"
+"et des consolidations en temps réel parmi toutes les boutiques sans avoir à \n"
+"intégrer plusieurs applications.\n"
+"\n"
+"Travaillez avec l'équipement dont vous disposez déjà\n"
+"---------------------------------------\n"
+"\n"
+"### Dans votre navigateur Web\n"
+"\n"
+"Le point de vente d'Odoo est une application web qui peut s'exécuter sur n'importe quel appareil capable d'afficher\n"
+"des sites web avec peu ou pas de configuration requise.\n"
+"\n"
+"### Écran tactile ou clavier ?\n"
+"\n"
+"Le point de vente fonctionne parfaitement sur tout type d'appareil tactile, qu'il s'agisse \n"
+"de tablettes tactiles comme un iPad ou de terminaux à écran tactile \n"
+"résistif sans clavier.\n"
+"\n"
+"### Balances et imprimantes\n"
+"\n"
+"Les scanners et les imprimantes de codes-barres sont pris en charge dès la sortie de l'emballage, sans aucune \n"
+"configuration requise. Les balances, caisses et autres périphériques peuvent être utilisés avec \n"
+"l'API proxy.\n"
+"\n"
+"En ligne et hors ligne\n"
+"------------------\n"
+"\n"
+"### Le point de vente d'Odoo reste fiable même si votre connexion \n"
+"ne l'est pas\n"
+"\n"
+"Déployez de nouvelles boutiques avec une simple connexion Internet : **aucune installation, aucun \n"
+"matériel spécifique requis**. Il fonctionne avec n'importe quel **iPad, Tablet PC, ordinateur portable** ou \n"
+"machine de point de vente industrielle.\n"
+"\n"
+"Bien qu'une connexion internet soit nécessaire pour démarrer le Point de Vente, celui-ci restera \n"
+"opérationnel même après une déconnexion complète.\n"
+"\n"
+"\n"
+"Une interface utilisateur très claire\n"
+"-------------------------------------\n"
+"\n"
+"### Simple et beau\n"
+"\n"
+"Dites adieu aux logiciels de point de vente laids et obsolètes et profitez de l'interface \n"
+"web d'Odoo conçue pour les détaillants modernes.\n"
+"\n"
+"### Conçu pour la productivité\n"
+"\n"
+"Que ce soit pour un restaurant ou une boutique, vous pouvez activer les commandes multiples \n"
+"en parallèle pour ne pas faire attendre vos clients.\n"
+"\n"
+"### Recherche ultra-rapide\n"
+"\n"
+"Scannez les produits, parcourez les catégories hiérarchiques ou obtenez des informations \n"
+"rapides sur les produits grâce au filtre ultra rapide sur tous vos produits.\n"
+"\n"
+"Gestion intégrée des stocks\n"
+"-------------------------------\n"
+"\n"
+"Consolidez toutes vos équipes commerciales en temps réel : magasins, eCommerce, équipes \n"
+"commerciales. Obtenez un contrôle en temps réel de l'inventaire et des prévisions précises pour gérer \n"
+"les approvisionnements.\n"
+"\n"
+"Un système complet de gestion d'entrepôt à portée de main : obtenez des informations sur les disponibilités des \n"
+"produits, déclenchez des demandes d'approvisionnement, etc.\n"
+"\n"
+"Offrir des services à la clientèle en magasin\n"
+"----------------------------------\n"
+"\n"
+"Offrez à votre client une expérience complète en intégrant des services \n"
+"clients en magasin : gérer les réparations, suivre les garanties, suivre les réclamations des clients, planifier \n"
+"les bons de livraison, etc.\n"
+"\n"
+"Intégration de la facturation et de la comptabilité\n"
+"----------------------------------\n"
+"\n"
+"Produisez des factures clients en quelques clics. Contrôlez les ventes et les liquidités en temps \n"
+"réel et utilisez les rapports d'Odoo pour prendre des décisions plus judicieuses afin \n"
+"d'améliorer l'efficacité de votre magasin.\n"
+"\n"
+"Fini les soucis d'avoir à intégrer des logiciels : publiez automatiquement toutes vos opérations de vente \n"
+"et d'inventaire dans votre bilan.\n"
+"\n"
+"Données unifiées parmi toutes les boutiques\n"
+"------------------------------\n"
+"\n"
+"Obtenez de nouveaux produits, des stratégies de prix et des promotions appliquées automatiquement aux \n"
+"boutiques sélectionnées. Travaillez sur une clientèle unifiée. Aucune interface complexe n'est \n"
+"nécessaire pour piloter une stratégie globale auprès de toutes vos boutiques.\n"
+"\n"
+"Avec Odoo comme backend, vous disposez d'un système qui est parfaitement adapté aux \n"
+"petites boutiques ainsi qu'aux grandes multinationales.\n"
+"\n"
+"Connaissez vos clients - en magasin et à l'extérieur\n"
+"--------------------------------------------\n"
+"\n"
+"Les marques qui réussissent intègrent toute leur relation client sur tous leurs \n"
+"canaux pour développer un profil client précis et communiquer avec les acheteurs lorsqu'ils prennent \n"
+"des décisions d'achat, en magasin ou en ligne.\n"
+"\n"
+"Avec Odoo, vous obtenez une vue client à 360°, y compris les ventes multicanales, l'historique des interactions, les profils, etc.\n"
+"\n"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__opl-1
@@ -22474,6 +23036,7 @@ msgstr "Programme de référencement d'Odoo"
 #: model:ir.module.module,shortdesc:base.module_odoo_referral_portal
 msgid "Odoo referral program bridge with portal (Deprecated)"
 msgstr ""
+"Module passerelle du programme de parrainage Odoo avec le portail (Obsolète)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__padding
@@ -22539,7 +23102,7 @@ msgstr ""
 #: code:addons/base/models/ir_actions_report.py:0
 #, python-format
 msgid "One of the documents, you try to merge is encrypted"
-msgstr ""
+msgstr "L'un des documents que vous essayez de fusionner est chiffré"
 
 #. module: base
 #: code:addons/models.py:0
@@ -23733,7 +24296,7 @@ msgstr "Point de vente"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_cash_rounding
 msgid "Point of Sale Cash Rounding"
-msgstr ""
+msgstr "Arrondissement d'espèces du point de vente"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_discount
@@ -23792,12 +24355,14 @@ msgstr "Comptabilité - Portugal"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_kitchen_printer
 msgid "Pos Kitchen Printer"
-msgstr ""
+msgstr "Imprimante de cuisine du point de vente"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_social_linkedin_company_support
 msgid "Post on your LinkedIn company pages instead of you personnal accounts"
 msgstr ""
+"Postez sur les pages LinkedIn de votre entreprise au lieu de vos comptes "
+"personnels"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__definition
@@ -23946,7 +24511,7 @@ msgstr ""
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_10
 msgid "Process Analysis"
-msgstr ""
+msgstr "Analyse des processus"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_stock
@@ -24006,12 +24571,12 @@ msgstr "Professeur"
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_10
 msgid "Program/Project Management"
-msgstr ""
+msgstr "Gestion de programme/projet"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_10
 msgid "Programming and Custom Module Development"
-msgstr ""
+msgstr "Programmation et développement de modules personnalisés"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_operations_project
@@ -25005,6 +25570,7 @@ msgstr "Restaurant"
 #: model:ir.module.module,summary:base.module_pos_kitchen_printer
 msgid "Restaurant Kitchen Printer extensions for the Point of Sale "
 msgstr ""
+"Extensions de l'imprimante de restaurant/cuisine pour le point de vente"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant
@@ -25034,7 +25600,7 @@ msgstr "De droite à gauche"
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_10
 msgid "Roadmap Development"
-msgstr ""
+msgstr "Développement de la feuille de route"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__font__roboto
@@ -25252,7 +25818,7 @@ msgstr "Configurateur de régime de rémunération"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_sale_intrastat
 msgid "Sale BE Intrastat Bridge"
-msgstr ""
+msgstr "Module passerelle vente BE Intrastat"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_coupon
@@ -26940,6 +27506,10 @@ msgid ""
 "Our goal is to help our clients become high-performing, competitive and profitable businesses.\n"
 "We leverage robust model that combines:<br>"
 msgstr ""
+"The Jackson Group est un partenaire actif et de premier plan d'Odoo aux États-Unis.\n"
+"En tant que partenaire américain le plus anciennement actif d'Odoo, nous aidons nos clients à exploiter de nouvelles méthodes, des outils rentables et de nouvelles technologies pour simplifier l'infrastructure, réduire les coûts et améliorer les opérations.<br> <br> \n"
+"Notre objectif est d'aider nos clients à devenir des entreprises performantes, compétitives et rentables.\n"
+"Nous nous appuyons sur un modèle robuste qui combine :<br>"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_10
@@ -26950,6 +27520,9 @@ msgid ""
 "lower cost, and improve operations. Our goal is to help our clients "
 "become..."
 msgstr ""
+"The Jackson Group est un partenaire actif et de premier plan d'Odoo aux États-Unis.\n"
+"En tant que partenaire américain le plus anciennement actif d'Odoo, nous aidons nos clients à exploiter de nouvelles méthodes, des outils rentables et de nouvelles technologies pour simplifier l'infrastructure, réduire les coûts et améliorer les opérations.\n"
+"Notre objectif est d'aider nos clients à..."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__url_code
@@ -27692,6 +28265,10 @@ msgid ""
 "modules build on mail (sms, snailmail, mail_enterprise) are set as dependencies\n"
 "in order to test the whole mail codebase. "
 msgstr ""
+"Ce module contient des tests liés aux mails. Ceux-ci sont\n"
+" présents dans un module séparé car il contient des modèles utilisés uniquement pour effectuer \n"
+"des tests indépendamment des aspects fonctionnels d'autres modèles. De plus, la plupart des \n"
+"modules construits sur le Email Marketing (sms, snailmail, mail_enterprise) sont définis comme des dépendances afin de tester l'ensemble de la base de code d'email."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mass_mailing
@@ -27721,6 +28298,9 @@ msgid ""
 "contained in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
+"Ce module contient des tests liés à la cohorte Web. Ceux-ci sont présents \n"
+"dans un module séparé car il contient des modèles utilisés uniquement pour effectuer \n"
+"des tests indépendamment des aspects fonctionnels d'autres modèles."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_website
@@ -27814,7 +28394,7 @@ msgstr "Congés"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_calendar
 msgid "Time Off - Calendar"
-msgstr ""
+msgstr "Congé - Agenda"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_gantt
@@ -27824,7 +28404,7 @@ msgstr "Gantt Congés"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_gantt_calendar
 msgid "Time off Gantt - Calendar"
-msgstr ""
+msgstr "Congé vue Gantt - Agenda"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_timesheet_grid
@@ -29310,7 +29890,7 @@ msgstr "Site Web Messagerie"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_mail_channel
 msgid "Website Mail Channels"
-msgstr ""
+msgstr "Canaux de messagerie du site web"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_mail
@@ -29672,6 +30252,8 @@ msgstr "Vous ne pouvez pas activer le super-utilisateur."
 #, python-format
 msgid "You cannot archive a contact linked to a portal or internal user."
 msgstr ""
+"Vous ne pouvez pas archiver un contact lié à un utilisateur portail ou "
+"interne."
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0
@@ -29870,12 +30452,12 @@ msgstr "account_ponto"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_lt
 msgid "accounting, Lithuanian"
-msgstr ""
+msgstr "comptabilité, lituanienne"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_lt_reports
 msgid "accounting, report, Lithuanian"
-msgstr ""
+msgstr "comptabilité, rapport, lituanienne"
 
 #. module: base
 #: code:addons/models.py:0
@@ -30340,4 +30922,4 @@ msgstr "Iles Åland"
 #: code:addons/base/models/res_currency.py:0
 #, python-format
 msgid "This currency is set on a company and therefore must be active."
-msgstr ""
+msgstr "La devise est définie sur une entreprise et doit donc être active."

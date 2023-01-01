@@ -10816,6 +10816,9 @@ msgid ""
 "                                   This does not especially correspond to the invoices reconciled with the payment,\n"
 "                                   as it can have been generated first, and reconciled later"
 msgstr ""
+"Champ technique contenant la facture pour laquelle le paiement a été généré. \n"
+"Cela ne correspond pas particulièrement aux factures réconciliées avec  le paiement, \n"
+"car il peut avoir été généré d'abord et réconcilié plus tard"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__display_type
@@ -11130,6 +11133,9 @@ msgid ""
 "The accounting date is prior to the tax lock date which is set on %s. Then, "
 "this will be moved to the next available one during the invoice validation."
 msgstr ""
+"La date comptable est fixée avant la date de verrouillage de l'impôt, qui "
+"est fixée le %s. Par conséquent, la date sera remplacée par la prochaine "
+"date disponible pendant la validation de la facture."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__journal_id
@@ -11208,6 +11214,9 @@ msgid ""
 "                                                                                                       This is useful if you install accounting after having used invoicing for some time and\n"
 "                                                                                                       don't want to reconcile all the past payments with bank statements."
 msgstr ""
+"Le widget de rapprochement bancaire ne demandera pas de réconcilier les paiements antérieurs à cette date. \n"
+"Cette option est utile si vous installez l'application Comptabilité après avoir utilisé l'application Facturation et\n"
+"si vous ne souhaitez pas réconcilier tous les paiements passés avec des relevés bancaires."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_bank_reconciliation_start
@@ -11411,6 +11420,10 @@ msgid ""
 "though they don't generate any tag: %s . This probably means you forgot to "
 "set a tag_name on these lines."
 msgstr ""
+"Les lignes de rapport de taxes suivants sont utilisés dans certains modèles "
+"de répartition de taxes, mais elles ne génèrent aucune étiquette : %s. Ceci "
+"signifie probablement que vous avez oublié de définir un tag_name sur ces "
+"lignes."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -11429,6 +11442,9 @@ msgid ""
 "However, the holder of \"%s\" is \"%s\".\n"
 "Please select another bank account or change the holder of \"%s\"."
 msgstr ""
+"Le titulaire du compte bancaire d'un journal de type \"Banque\" doit être l'entreprise (%s). \n"
+"Toutefois, le titulaire de \"%s\" est \"%s\". \n"
+"Veuillez sélectionner un autre compte bancaire ou modifier le titulaire de \"%s\"."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__code
@@ -11534,6 +11550,11 @@ msgid ""
 "properly, invoice repartition lines should be arranged in the same order as "
 "the credit note repartition lines they correspond to."
 msgstr ""
+"L'ordre dans lequel les lignes de répartition sont affichées et "
+"réconciliées. Pour que les remboursements se fassent correctement, les "
+"lignes de répartition des factures doivent être disposées dans le même ordre"
+" que les lignes de répartition des notes de crédit auxquelles elles "
+"correspondent."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__has_unreconciled_entries
@@ -11577,6 +11598,9 @@ msgid ""
 "The payments which have not been matched with a bank statement will not be "
 "shown in bank reconciliation data if they were made before this date"
 msgstr ""
+"Les paiements qui n'ont pas été réconciliés avec un relevé bancaire ne "
+"seront pas affichés dans les données de rapprochement bancaire s'ils ont été"
+" effectués avant cette date"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_category_ids
@@ -11719,6 +11743,8 @@ msgid ""
 "The sum of total residual amount propositions matches the statement line "
 "amount under this percentage."
 msgstr ""
+"La somme des propositions de montant résiduel total correspond au montant "
+"des lignes de relevé sous ce pourcentage."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_total_amount
@@ -11742,6 +11768,8 @@ msgid ""
 "The tax set to apply this repartition on invoices. Mutually exclusive with "
 "refund_tax_id"
 msgstr ""
+"La taxe définie pour appliquer cette répartition sur les factures. "
+"Mutuellement exclusive avec refund_tax_id"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__refund_tax_id
@@ -11750,6 +11778,8 @@ msgid ""
 "The tax set to apply this repartition on refund invoices. Mutually exclusive"
 " with invoice_tax_id"
 msgstr ""
+"La taxe définie pour appliquer cette répartition sur les factures de "
+"remboursement. Mutuellement exclusive avec invoice_tax_id"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__rounding_method
@@ -11807,6 +11837,8 @@ msgid ""
 "There is no Transfer Account defined in the accounting settings. Please "
 "define one to be able to confirm this transfer."
 msgstr ""
+"Aucun compte de transfert n'est défini dans les paramètres de comptabilité. "
+"Veuillez en définir un pour pouvoir confirmer ce transfert."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__amount_from_label_regex
@@ -11816,6 +11848,10 @@ msgid ""
 "You could enter\n"
 "BRT: ([\\d,]+)"
 msgstr ""
+"Vous n'avez pas besoin de délimiteur de regex, seule la regex est requise. Par exemple, si vous voulez extrait le montant de \n"
+"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+"Vous pouvez écrire\n"
+"BRT: ([\\d,]+)"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12016,6 +12052,8 @@ msgid ""
 "This matching rule is used when the user is not certain of all the "
 "informations of the counterpart."
 msgstr ""
+"Cette règle de réconciliation s'utilise lorsque l'utilisateur n'est pas sûr "
+"de toutes les informations de la partie adverse."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12342,6 +12380,8 @@ msgid ""
 "Unable to mix any taxes being price included with taxes affecting the base "
 "amount but not included in price."
 msgstr ""
+"Impossible de mélanger les taxes dont le prix est inclus avec les taxes "
+"affectant le montant de base, mais non incluses dans le prix."
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -12893,12 +12933,16 @@ msgstr ""
 #, python-format
 msgid "You can only change the period for items in these types of accounts: "
 msgstr ""
+"Vous pouvez uniquement modifier la période pour des éléments dans ces types "
+"de compte :"
 
 #. module: account
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #, python-format
 msgid "You can only change the period for items that are not yet reconciled."
 msgstr ""
+"Vous pouvez uniquement modifier la période pour des éléments qui ne sont pas"
+" encore réconciliés."
 
 #. module: account
 #: code:addons/account/wizard/account_accrual_accounting.py:0
@@ -12915,6 +12959,8 @@ msgid ""
 "You can only register at the same time for payment that are all from the "
 "same company"
 msgstr ""
+"Vous ne pouvez vous inscrire en même temps que pour un paiement provenant de"
+" la même entreprise."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12923,6 +12969,8 @@ msgid ""
 "You can only register at the same time for payment that are all inbound or "
 "all outbound"
 msgstr ""
+"Vous ne pouvez vous inscrire en même temps que pour les paiements qui sont "
+"tous entrants ou tous sortants."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
