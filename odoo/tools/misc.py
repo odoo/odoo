@@ -1729,3 +1729,10 @@ def has_list_types(values, types):
         isinstance(values, (list, tuple)) and len(values) == len(types)
         and all(isinstance(item, type_) for item, type_ in zip(values, types))
     )
+
+def get_flag(country_code: str) -> str:
+    """Get the emoji representing the flag linked to the country code.
+
+    This emoji is composed of the two regional indicator emoji of the country code.
+    """
+    return "".join(chr(int(f"1f1{ord(c)+165:02x}", base=16)) for c in country_code)

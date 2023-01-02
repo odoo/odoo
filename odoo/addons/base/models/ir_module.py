@@ -30,7 +30,7 @@ from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import AccessDenied, UserError
 from odoo.osv import expression
 from odoo.tools.parse_version import parse_version
-from odoo.tools.misc import topological_sort
+from odoo.tools.misc import topological_sort, get_flag
 from odoo.tools.translate import TranslationImporter
 from odoo.http import request
 from odoo.modules import get_module_path, get_module_resource
@@ -239,6 +239,9 @@ class Module(models.Model):
             if path:
                 with tools.file_open(path, 'rb') as image_file:
                     module.icon_image = base64.b64encode(image_file.read())
+            countries = self.get_module_info(module.name).get('countries', [])
+            country_code = len(countries) == 1 and countries[0]
+            module.icon_flag = get_flag(country_code.upper()) if country_code else ''
 
     name = fields.Char('Technical Name', readonly=True, required=True)
     category_id = fields.Many2one('ir.module.category', string='Category', readonly=True, index=True)
@@ -289,6 +292,7 @@ class Module(models.Model):
     application = fields.Boolean('Application', readonly=True)
     icon = fields.Char('Icon URL')
     icon_image = fields.Binary(string='Icon', compute='_get_icon_image')
+    icon_flag = fields.Char(string='Flag', compute='_get_icon_image')
     to_buy = fields.Boolean('Odoo Enterprise Module', default=False)
     has_iap = fields.Boolean(compute='_compute_has_iap')
 

@@ -2,11 +2,7 @@ from importlib import import_module
 from inspect import getmembers, ismodule, isclass, isfunction
 
 from odoo import models, fields
-
-
-def get_flag(country_code):
-    # get the sequence of 2 regional indicator emoji forming the flag linked to the country code
-    return "".join(chr(int(f"1f1{ord(c)+165:02x}", base=16)) for c in country_code)
+from odoo.tools import get_flag
 
 
 def templ(env, code, name=None, country='', **kwargs):

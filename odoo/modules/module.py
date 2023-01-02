@@ -30,6 +30,7 @@ _DEFAULT_MANIFEST = {
     'author': 'Odoo S.A.',
     'auto_install': False,
     'category': 'Uncategorized',
+    'countries': [],
     'data': [],
     'demo': [],
     'demo_xml': [],
