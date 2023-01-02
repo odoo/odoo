@@ -151,9 +151,6 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                              and supplier.country_id.code in economic_area
                              and supplier.country_id != customer.country_id)
 
-        if not intracom_delivery:
-            return []
-
         # [BR-IC-12]-In an Invoice with a VAT breakdown (BG-23) where the VAT category code (BT-118) is
         # "Intra-community supply" the Deliver to country code (BT-80) shall not be blank.
 
@@ -161,17 +158,17 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         # "Intra-community supply" the Actual delivery date (BT-72) or the Invoicing period (BG-14)
         # shall not be blank.
 
-        if 'partner_shipping_id' in invoice._fields:
-            partner_shipping = invoice.partner_shipping_id
-        else:
-            partner_shipping = customer
+        if intracom_delivery:
+            partner_shipping = invoice.partner_shipping_id or customer
 
-        return [{
-            'actual_delivery_date': invoice.invoice_date,
-            'delivery_location_vals': {
-                'delivery_address_vals': self._get_partner_address_vals(partner_shipping),
-            },
-        }]
+            return [{
+                'actual_delivery_date': invoice.invoice_date,
+                'delivery_location_vals': {
+                    'delivery_address_vals': self._get_partner_address_vals(partner_shipping),
+                },
+            }]
+
+        return super()._get_delivery_vals_list(invoice)
 
     def _get_partner_address_vals(self, partner):
         # EXTENDS account.edi.xml.ubl_21
