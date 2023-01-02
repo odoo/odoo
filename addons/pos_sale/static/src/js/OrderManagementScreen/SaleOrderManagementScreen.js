@@ -8,7 +8,7 @@ import NumberBuffer from "@point_of_sale/js/Misc/NumberBuffer";
 import Registries from "@point_of_sale/js/Registries";
 import SaleOrderFetcher from "@pos_sale/js/OrderManagementScreen/SaleOrderFetcher";
 import IndependentToOrderScreen from "@point_of_sale/js/Misc/IndependentToOrderScreen";
-import contexts from "@point_of_sale/js/PosContext";
+import { orderManagement } from "@point_of_sale/js/PosContext";
 import { Orderline } from "@point_of_sale/js/models";
 
 const { onMounted, onWillUnmount, useState } = owl;
@@ -23,7 +23,7 @@ class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderSc
         useListener("search", this._onSearch);
 
         SaleOrderFetcher.setComponent(this);
-        this.orderManagementContext = useState(contexts.orderManagement);
+        this.orderManagementContext = useState(orderManagement);
 
         onMounted(this.onMounted);
         onWillUnmount(this.onWillUnmount);
