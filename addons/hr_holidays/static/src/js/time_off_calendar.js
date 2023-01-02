@@ -295,6 +295,7 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
         config: _.extend({}, CalendarView.prototype.config, {
             Controller: TimeOffCalendarController,
             Renderer: TimeOffPopoverRenderer,
+            Model: TimeOffCalendarModel,
         }),
     });
 
