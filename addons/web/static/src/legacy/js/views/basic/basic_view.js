@@ -20,6 +20,9 @@ var pyUtils = require('web.py_utils');
 var utils = require('web.utils');
 const widgetRegistry = require('web.widget_registry');
 const widgetRegistryOwl = require('web.widgetRegistry');
+const { registry } = require('@web/core/registry')
+
+const viewWidgetRegistry = registry.category("view_widgets");
 
 const { Component } = require("@odoo/owl");
 
@@ -424,7 +427,7 @@ var BasicView = AbstractView.extend({
         }
         // custom widget may have fieldDependencies so add it to fields of fields_view
         if (node.tag === 'widget') {
-            const Widget = widgetRegistryOwl.get(node.attrs.name) || widgetRegistry.get(node.attrs.name);
+            const Widget = widgetRegistryOwl.get(node.attrs.name) || widgetRegistry.get(node.attrs.name) || viewWidgetRegistry.get(node.attrs.name);
             const legacy = !(Widget.prototype instanceof Component);
             let deps;
             if (legacy && Widget.prototype.fieldDependencies) {
