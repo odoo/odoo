@@ -3347,10 +3347,8 @@ const SnippetOptionWidget = Widget.extend({
                 return true;
             }
 
-            const propertyValue = styles.getPropertyValue(cssProp);
-
             // This condition requires extraClass to NOT be set.
-            if (!weUtils.areCssValuesEqual(propertyValue, cssValue, cssProp, this.$target[0])) {
+            if (!weUtils.areCssValuesEqual(styles.getPropertyValue(cssProp), cssValue, cssProp, this.$target[0])) {
                 // Property must be set => extraClass will be enabled.
                 if (params.extraClass) {
                     // The extraClass is temporarily removed during selectStyle
@@ -3363,7 +3361,7 @@ const SnippetOptionWidget = Widget.extend({
                     this.$target[0].classList.add(params.extraClass);
                     // Set inline style only if different from value defined
                     // with extraClass.
-                    if (!weUtils.areCssValuesEqual(propertyValue, cssValue, cssProp, this.$target[0])) {
+                    if (!weUtils.areCssValuesEqual(styles.getPropertyValue(cssProp), cssValue, cssProp, this.$target[0])) {
                         this.$target[0].style.setProperty(cssProp, cssValue);
                     }
                 } else {
@@ -3372,7 +3370,7 @@ const SnippetOptionWidget = Widget.extend({
                 }
                 // If change had no effect then make it important.
                 // This condition requires extraClass to be set.
-                if (!weUtils.areCssValuesEqual(propertyValue, cssValue, cssProp, this.$target[0])) {
+                if (!weUtils.areCssValuesEqual(styles.getPropertyValue(cssProp), cssValue, cssProp, this.$target[0])) {
                     this.$target[0].style.setProperty(cssProp, cssValue, 'important');
                 }
                 if (params.extraClass) {
