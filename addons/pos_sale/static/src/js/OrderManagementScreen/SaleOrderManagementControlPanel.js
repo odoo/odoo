@@ -4,7 +4,7 @@ import { useAutofocus, useListener } from "@web/core/utils/hooks";
 import PosComponent from "@point_of_sale/js/PosComponent";
 import Registries from "@point_of_sale/js/Registries";
 import SaleOrderFetcher from "@pos_sale/js/OrderManagementScreen/SaleOrderFetcher";
-import contexts from "@point_of_sale/js/PosContext";
+import { orderManagement } from "@point_of_sale/js/PosContext";
 
 const { useState } = owl;
 
@@ -29,7 +29,7 @@ const SEARCH_FIELDS = ["name", "partner_id.display_name", "date_order"];
 class SaleOrderManagementControlPanel extends PosComponent {
     setup() {
         super.setup();
-        this.orderManagementContext = useState(contexts.orderManagement);
+        this.orderManagementContext = useState(orderManagement);
         useListener("clear-search", this._onClearSearch);
         useAutofocus();
 
