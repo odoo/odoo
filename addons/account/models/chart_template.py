@@ -61,9 +61,9 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
                 tax_line.write({"tag_ids": [(6, 0, tags_to_add.ids)]})
                 _cleanup_tags(tags_to_unlink)
 
-    def _get_template_to_tax_xmlid_mapping(company):
+    def _get_template_to_real_xmlid_mapping(company, model):
         """
-        This function uses ir_model_data to return a mapping between the tax templates and the taxes, using their xmlid
+        This function uses ir_model_data to return a mapping between the templates and the data, using their xmlid
         :returns: {
             account.tax.template.id: account.tax.id
             }
@@ -72,15 +72,15 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
         env.cr.execute(
             """
             SELECT template.res_id AS template_res_id,
-                   tax.res_id AS tax_res_id
-            FROM ir_model_data tax
+                   data.res_id AS data_res_id
+            FROM ir_model_data data
             JOIN ir_model_data template
-            ON template.name = substr(tax.name, strpos(tax.name, '_') + 1)
-            WHERE tax.model = 'account.tax'
-            AND tax.name LIKE %s
+            ON template.name = substr(data.name, strpos(data.name, '_') + 1)
+            WHERE data.model = %s
+            AND data.name LIKE %s
             -- tax.name is of the form: {company_id}_{account.tax.template.name}
             """,
-            [r"%s\_%%" % company.id],
+            [model, r"%s\_%%" % company.id],
         )
         tuples = env.cr.fetchall()
         return dict(tuples)
@@ -116,6 +116,26 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
             if not (aml_using_tag or tax_using_tag or report_line_using_tag):
                 tag.unlink()
 
+    def _update_fiscal_positions_from_templates(company, chart_template_id, new_taxes_template):
+        chart_template = env["account.chart.template"].browse(chart_template_id)
+        positions = env['account.fiscal.position.template'].search([('chart_template_id', '=', chart_template_id)])
+        tax_template_ref = _get_template_to_real_xmlid_mapping(company, 'account.tax')
+        fp_template_ref = _get_template_to_real_xmlid_mapping(company, 'account.fiscal.position')
+
+        tax_template_vals = []
+        for position_template in positions:
+            fp = env["account.fiscal.position"].browse(fp_template_ref.get(position_template.id))
+            if not fp:
+                continue
+            for position_tax in position_template.tax_ids:
+                if position_tax.tax_src_id in new_taxes_template or position_tax.tax_dest_id in new_taxes_template:
+                    tax_template_vals.append((position_tax, {
+                        'tax_src_id': tax_template_ref[position_tax.tax_src_id.id],
+                        'tax_dest_id': position_tax.tax_dest_id and tax_template_ref[position_tax.tax_dest_id.id] or False,
+                        'position_id': fp.id,
+                    }))
+        chart_template._create_records_with_xmlid('account.fiscal.position.tax', tax_template_vals, company)
+
     def _notify_accountant_managers(taxes_to_check):
         accountant_manager_group = env.ref("account.group_account_manager")
         partner_managers_ids = accountant_manager_group.users.mapped('partner_id')
@@ -142,8 +162,9 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
     chart_template_id = env['ir.model.data']._xmlid_to_res_id(chart_template_xmlid)
     companies = env['res.company'].search([('chart_template_id', '=', chart_template_id)])
     outdated_taxes = []
+    new_taxes_template = []
     for company in companies:
-        template_to_tax = _get_template_to_tax_xmlid_mapping(company)
+        template_to_tax = _get_template_to_real_xmlid_mapping(company, 'account.tax')
         templates = env['account.tax.template'].with_context(active_test=False).search([("chart_template_id", "=", chart_template_id)])
         for template in templates:
             tax = env["account.tax"].browse(template_to_tax.get(template.id))
@@ -151,8 +172,11 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
                 _create_tax_from_template(company, template, old_tax=tax)
                 if tax:
                     outdated_taxes.append(tax)
+                else:
+                    new_taxes_template.append(template)
             else:
                 _update_tax_from_template(template, tax)
+        _update_fiscal_positions_from_templates(company, chart_template_id, new_taxes_template)
     if outdated_taxes:
         _notify_accountant_managers(outdated_taxes)
 
