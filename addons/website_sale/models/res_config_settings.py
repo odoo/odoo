@@ -81,8 +81,8 @@ class ResConfigSettings(models.TransientModel):
 
         res.update(
             sale_delivery_settings=sale_delivery_settings,
-            enabled_extra_checkout_step=self.env.ref('website_sale.extra_info_option').active,
-            enabled_buy_now_button=self.env.ref('website_sale.product_buy_now').active,
+            enabled_extra_checkout_step=self.env.ref('website_sale.extra_info_option').sudo().active,
+            enabled_buy_now_button=self.env.ref('website_sale.product_buy_now').sudo().active,
         )
         return res
 
