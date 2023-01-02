@@ -89,6 +89,7 @@ def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=Fals
         params['autoplay'] = autoplay and 1 or 0
         if autoplay:
             params['muted'] = 1
+            params['autopause'] = 0
         if hide_controls:
             params['controls'] = 0
         if loop:
