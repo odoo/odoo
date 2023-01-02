@@ -59,6 +59,7 @@ export const TimeOffCalendarAllView = CalendarView.extend({
     config: Object.assign({}, CalendarView.prototype.config, {
         Controller: TimeOffCalendarController,
         Renderer: TimeOffPopoverRenderer,
+        Model: TimeOffCalendarModel,
     }),
 });
 
