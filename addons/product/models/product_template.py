@@ -250,8 +250,10 @@ class ProductTemplate(models.Model):
         self._compute_template_field_from_variant_field('barcode')
 
     def _search_barcode(self, operator, value):
-        templates = self.with_context(active_test=False).search([('product_variant_ids.barcode', operator, value)])
-        return [('id', 'in', templates.ids)]
+        subquery = self.with_context(active_test=False)._search([
+            ('product_variant_ids.barcode', operator, value),
+        ])
+        return [('id', 'in', subquery)]
 
     def _set_barcode(self):
         self._set_product_variant_field('barcode')
