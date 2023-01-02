@@ -330,6 +330,14 @@ class AccountBankStatementLine(models.Model):
                 if statement.journal_id:
                     vals['journal_id'] = statement.journal_id.id
 
+            # Avoid having the same foreign_currency_id as currency_id.
+            if vals.get('journal_id') and vals.get('foreign_currency_id'):
+                journal = self.env['account.journal'].browse(vals['journal_id'])
+                journal_currency = journal.currency_id or journal.company_id.currency_id
+                if vals['foreign_currency_id'] == journal_currency.id:
+                    vals['foreign_currency_id'] = None
+                    vals['amount_currency'] = 0.0
+
             # Force the move_type to avoid inconsistency with residual 'default_move_type' inside the context.
             vals['move_type'] = 'entry'
 
