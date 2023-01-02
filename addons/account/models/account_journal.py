@@ -732,7 +732,6 @@ class AccountJournal(models.Model):
 
         invoices = self.env['account.move']
         for attachment in attachments:
-            attachment.write({'res_model': 'mail.compose.message'})
             decoders = self.env['account.move']._get_create_invoice_from_attachment_decoders()
             invoice = False
             for decoder in sorted(decoders, key=lambda d: d[0]):
