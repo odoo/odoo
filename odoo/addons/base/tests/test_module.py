@@ -41,6 +41,7 @@ class TestModuleManifest(BaseCase):
             'auto_install': False,
             'bootstrap': False,
             'category': 'Uncategorized',
+            'countries': [],
             'data': [],
             'demo': [],
             'demo_xml': [],

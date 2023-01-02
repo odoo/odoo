@@ -155,6 +155,7 @@
             <field name="arch" type="xml">
                 <kanban create="false" class="o_modules_kanban">
                   <field name="icon"/>
+                  <field name="icon_flag"/>
                   <field name="to_buy"/>
                   <field name="name"/>
                   <field name="state"/>
@@ -171,7 +172,10 @@
                     <t t-name="kanban-box">
                       <div class="oe_module_vignette">
                         <t t-set="installed" t-value="record.state.raw_value == 'installed'"/>
-                        <img t-attf-src="#{record.icon.value}" class="oe_module_icon" alt="Icon"/>
+                        <div class="oe_module_icon">
+                            <img t-attf-src="#{record.icon.value}" class="w-100" alt="Icon"/>
+                            <span t-if="record.icon_flag" class="oe_module_flag"><t t-out="record.icon_flag.raw_value"/></span>
+                        </div>
                         <div class="oe_module_desc" t-att-title="record.shortdesc.value">
                           <h4 class="o_kanban_record_title">
                             <field name="shortdesc"/>&amp;nbsp;
