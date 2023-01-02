@@ -2567,4 +2567,74 @@ QUnit.module("ActionManager", (hooks) => {
         });
         assert.containsOnce(target, ".o_list_view");
     });
+
+    QUnit.test("sample server: populate groups", async function (assert) {
+        serverData.models.partner.records = [];
+        serverData.models.partner.fields.write_date = {
+            string: "Write Date",
+            type: "date",
+            store: true,
+            sortable: true,
+        };
+        serverData.views = {
+            "partner,false,kanban": `
+                <kanban sample="1" default_group_by="write_date:month">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="display_name"/></div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+            "partner,false,pivot": `
+                <pivot sample="1">
+                    <field name="write_date" type="row"/>
+                </pivot>
+            `,
+            "partner,false,search": `<search/>`,
+        };
+        const webClient = await createWebClient({
+            serverData,
+            mockRPC(_, args) {
+                if (args.method === "web_read_group") {
+                    return {
+                        groups: [
+                            {
+                                date_count: 0,
+                                "write_date:month": "December 2022",
+                                __range: {
+                                    "write_date:month": {
+                                        from: "2022-12-01",
+                                        to: "2023-01-01",
+                                    },
+                                },
+                                __domain: [
+                                    ["write_date", ">=", "2022-12-01"],
+                                    ["write_date", "<", "2023-01-01"],
+                                ],
+                            },
+                        ],
+                        length: 1,
+                    };
+                }
+            },
+        });
+        await doAction(webClient, {
+            res_id: 1,
+            type: "ir.actions.act_window",
+            target: "current",
+            res_model: "partner",
+            views: [
+                [false, "kanban"],
+                [false, "pivot"],
+            ],
+        });
+
+        assert.containsOnce(target, ".o_kanban_view .o_view_sample_data");
+        assert.strictEqual(target.querySelector(".o_column_title").innerText, "December 2022");
+
+        await cpHelpers.switchView(target, "pivot");
+
+        assert.containsOnce(target, ".o_pivot_view .o_view_sample_data");
+    });
 });

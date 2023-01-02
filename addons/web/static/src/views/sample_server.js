@@ -18,6 +18,17 @@ function getSampleFromId(id, sampleTexts) {
     return sampleTexts[(id - 1) % sampleTexts.length];
 }
 
+function serializeGroupValue(value, type) {
+    switch (type) {
+        case "date":
+            return serializeDate(value);
+        case "datetime":
+            return serializeDateTime(value);
+        default:
+            return value;
+    }
+}
+
 /**
  * Helper function returning a regular expression specifically matching
  * a given 'term' in a fieldName. For example `fieldNameRegex('abc')`:
@@ -618,7 +629,7 @@ export class SampleServer {
             }
             for (const r of this.data[params.model].records) {
                 const group = getSampleFromId(r.id, groups);
-                r[groupBy] = group.value;
+                r[groupBy] = serializeGroupValue(group.value, groupByField.type);
             }
             this.existingGroupsPopulated = true;
         }
@@ -681,9 +692,12 @@ export class SampleServer {
         // update count and aggregates for each group
         const fullGroupBy = params.groupBy[0];
         const groupBy = fullGroupBy.split(":")[0];
+        const groupByField = this.data[params.model].fields[groupBy];
         const records = this.data[params.model].records;
         for (const g of groups) {
-            const recordsInGroup = records.filter((r) => r[groupBy] === g.value);
+            const recordsInGroup = records.filter((r) => {
+                return r[groupBy] === serializeGroupValue(g.value, groupByField.type);
+            });
             g[`${groupBy}_count`] = recordsInGroup.length;
             g[fullGroupBy] = g.__rawValue;
             for (const field of params.fields) {
