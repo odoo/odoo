@@ -4,3 +4,8 @@
 # Copyright (C) 2016 Onestein (<http://www.onestein.eu>).
 
 from . import models
+from odoo import api, SUPERUSER_ID
+
+def load_translations(cr, registry):
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    env.ref('l10n_nl.l10nnl_chart_template').process_coa_translations()
