@@ -43,7 +43,7 @@ class GoogleService(models.AbstractModel):
         return ICP.get_param('google_%s_client_id' % service)
 
     @api.model
-    def _get_authorize_uri(self, service, scope, redirect_uri, state=None, approval_prompt=None, access_type=None):
+    def _get_authorize_uri(self, service, scope, redirect_uri, state=None, approval_prompt=None, access_type=None, login_hint=None, prompt=None, hd=None):
         """ This method return the url needed to allow this instance of Odoo to access to the scope
             of gmail specified as parameters
         """
@@ -62,6 +62,15 @@ class GoogleService(models.AbstractModel):
 
         if access_type:
             params['access_type'] = access_type
+
+        if login_hint:
+            params['login_hint'] = login_hint
+
+        if prompt:
+            params['prompt'] = prompt
+
+        if hd:
+            params['hd'] = hd
 
 
         encoded_params = urls.url_encode(params)
