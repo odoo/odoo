@@ -226,8 +226,7 @@ class ProductTemplate(models.Model):
         self._set_product_variant_field('standard_price')
 
     def _search_standard_price(self, operator, value):
-        products = self.env['product.product'].search([('standard_price', operator, value)], limit=None)
-        return [('id', 'in', products.mapped('product_tmpl_id').ids)]
+        return [('product_variant_ids.standard_price', operator, value)]
 
     @api.depends('product_variant_ids.volume')
     def _compute_volume(self):
