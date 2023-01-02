@@ -10,6 +10,7 @@ from odoo.tests.common import TransactionCase, can_import, RecordCapturer
 from odoo.modules.module import get_module_resource
 from odoo.tools import mute_logger, pycompat
 from odoo.addons.base_import.models.base_import import ImportValidationError
+from odoo.addons.test_base_import.models.test_base_import import model as base_import_model
 
 ID_FIELD = {
     'id': 'id',
@@ -56,15 +57,15 @@ class BaseImportCase(TransactionCase):
 class TestBasicFields(BaseImportCase):
 
     def get_fields(self, field):
-        return self.env['base_import.import'].get_fields_tree('base_import.tests.models.' + field)
+        return self.env['base_import.import'].get_fields_tree(base_import_model(field))
 
     def test_base(self):
         """ A basic field is not required """
-        self.assertEqualFields(self.get_fields('char'), make_field(field_type='char', model_name='base_import.tests.models.char'))
+        self.assertEqualFields(self.get_fields('char'), make_field(field_type='char', model_name=base_import_model('char')))
 
     def test_required(self):
         """ Required fields should be flagged (so they can be fill-required) """
-        self.assertEqualFields(self.get_fields('char.required'), make_field(required=True, field_type='char', model_name='base_import.tests.models.char.required'))
+        self.assertEqualFields(self.get_fields('char.required'), make_field(required=True, field_type='char', model_name=base_import_model('char.required')))
 
     def test_readonly(self):
         """ Readonly fields should be filtered out"""
@@ -72,7 +73,7 @@ class TestBasicFields(BaseImportCase):
 
     def test_readonly_states(self):
         """ Readonly fields with states should not be filtered out"""
-        self.assertEqualFields(self.get_fields('char.states'), make_field(field_type='char', model_name='base_import.tests.models.char.states'))
+        self.assertEqualFields(self.get_fields('char.states'), make_field(field_type='char', model_name=base_import_model('char.states')))
 
     def test_readonly_states_noreadonly(self):
         """ Readonly fields with states having nothing to do with
@@ -88,10 +89,10 @@ class TestBasicFields(BaseImportCase):
         """ M2O fields should allow import of themselves (name_get),
         their id and their xid"""
         self.assertEqualFields(self.get_fields('m2o'), make_field(
-            field_type='many2one', comodel_name='base_import.tests.models.m2o.related', model_name='base_import.tests.models.m2o',
+            field_type='many2one', comodel_name=base_import_model('m2o.related'), model_name=base_import_model('m2o'),
             fields=[
-                {'id': 'value', 'name': 'id', 'string': 'External ID', 'required': False, 'fields': [], 'type': 'id', 'model_name': 'base_import.tests.models.m2o'},
-                {'id': 'value', 'name': '.id', 'string': 'Database ID', 'required': False, 'fields': [], 'type': 'id', 'model_name': 'base_import.tests.models.m2o'},
+                {'id': 'value', 'name': 'id', 'string': 'External ID', 'required': False, 'fields': [], 'type': 'id', 'model_name': base_import_model('m2o')},
+                {'id': 'value', 'name': '.id', 'string': 'Database ID', 'required': False, 'fields': [], 'type': 'id', 'model_name': base_import_model('m2o')},
         ]))
 
     def test_m2o_required(self):
@@ -100,42 +101,42 @@ class TestBasicFields(BaseImportCase):
         is id-based)
         """
         self.assertEqualFields(self.get_fields('m2o.required'), make_field(
-            field_type='many2one', required=True, comodel_name='base_import.tests.models.m2o.required.related', model_name='base_import.tests.models.m2o.required',
+            field_type='many2one', required=True, comodel_name=base_import_model('m2o.required.related'), model_name=base_import_model('m2o.required'),
             fields=[
-                {'id': 'value', 'name': 'id', 'string': 'External ID', 'required': True, 'fields': [], 'type': 'id', 'model_name': 'base_import.tests.models.m2o.required'},
-                {'id': 'value', 'name': '.id', 'string': 'Database ID', 'required': True, 'fields': [], 'type': 'id', 'model_name': 'base_import.tests.models.m2o.required'},
+                {'id': 'value', 'name': 'id', 'string': 'External ID', 'required': True, 'fields': [], 'type': 'id', 'model_name': base_import_model('m2o.required')},
+                {'id': 'value', 'name': '.id', 'string': 'Database ID', 'required': True, 'fields': [], 'type': 'id', 'model_name': base_import_model('m2o.required')},
         ]))
 
 
 class TestO2M(BaseImportCase):
 
     def get_fields(self, field):
-        return self.env['base_import.import'].get_fields_tree('base_import.tests.models.' + field)
+        return self.env['base_import.import'].get_fields_tree(base_import_model(field))
 
     def test_shallow(self):
         self.assertEqualFields(
             self.get_fields('o2m'), [
                 ID_FIELD,
-                {'id': 'name', 'name': 'name', 'string': "Name", 'required': False, 'fields': [], 'type': 'char', 'model_name': 'base_import.tests.models.o2m'},
+                {'id': 'name', 'name': 'name', 'string': "Name", 'required': False, 'fields': [], 'type': 'char', 'model_name': base_import_model('o2m')},
                 {
-                    'id': 'value', 'name': 'value', 'string': 'Value', 'model_name': 'base_import.tests.models.o2m',
-                    'required': False, 'type': 'one2many', 'comodel_name': 'base_import.tests.models.o2m.child',
+                    'id': 'value', 'name': 'value', 'string': 'Value', 'model_name': base_import_model('o2m'),
+                    'required': False, 'type': 'one2many', 'comodel_name': base_import_model('o2m.child'),
                     'fields': [
                         ID_FIELD,
                         {
-                            'id': 'parent_id', 'name': 'parent_id', 'model_name': 'base_import.tests.models.o2m.child',
-                            'string': 'Parent', 'type': 'many2one', 'comodel_name': 'base_import.tests.models.o2m',
+                            'id': 'parent_id', 'name': 'parent_id', 'model_name': base_import_model('o2m.child'),
+                            'string': 'Parent', 'type': 'many2one', 'comodel_name': base_import_model('o2m'),
                             'required': False, 'fields': [
-                                {'id': 'parent_id', 'name': 'id', 'model_name': 'base_import.tests.models.o2m.child',
+                                {'id': 'parent_id', 'name': 'id', 'model_name': base_import_model('o2m.child'),
                                  'string': 'External ID', 'required': False,
                                  'fields': [], 'type': 'id'},
-                                {'id': 'parent_id', 'name': '.id', 'model_name': 'base_import.tests.models.o2m.child',
+                                {'id': 'parent_id', 'name': '.id', 'model_name': base_import_model('o2m.child'),
                                  'string': 'Database ID', 'required': False,
                                  'fields': [], 'type': 'id'},
                             ]
                         },
                         {'id': 'value', 'name': 'value', 'string': 'Value',
-                         'required': False, 'fields': [], 'type': 'integer', 'model_name': 'base_import.tests.models.o2m.child',
+                         'required': False, 'fields': [], 'type': 'integer', 'model_name': base_import_model('o2m.child'),
                         },
                     ]
                 }
@@ -252,7 +253,7 @@ class TestColumnMapping(TransactionCase):
 
     def test_column_mapping(self):
         import_record = self.env['base_import.import'].create({
-            'res_model': 'base_import.tests.models.preview',
+            'res_model': base_import_model('preview'),
             'file': u"Name,Some Value,value\n"
                     u"chhagan,10,1\n"
                     u"magan,20,2\n".encode('utf-8'),
@@ -266,7 +267,7 @@ class TestColumnMapping(TransactionCase):
             True
         )
         fields = self.env['base_import.mapping'].search_read(
-            [('res_model', '=', 'base_import.tests.models.preview')],
+            [('res_model', '=', base_import_model('preview'))],
             ['column_name', 'field_name']
         )
         self.assertItemsEqual([f['column_name'] for f in fields], ['Name', 'Some Value', 'value'])
@@ -334,7 +335,7 @@ class TestPreview(TransactionCase):
 
     def test_csv_success(self):
         import_wizard = self.env['base_import.import'].create({
-            'res_model': 'base_import.tests.models.preview',
+            'res_model': base_import_model('preview'),
             'file': b'name,Some Value,Counter\n'
                     b'foo,,\n'
                     b'bar,,4\n'
@@ -353,18 +354,18 @@ class TestPreview(TransactionCase):
         # Order depends on iteration order of fields_get
         self.assertItemsEqual(result['fields'], [
             ID_FIELD,
-            {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char', 'model_name': 'base_import.tests.models.preview'},
-            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer', 'model_name': 'base_import.tests.models.preview'},
-            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer', 'model_name': 'base_import.tests.models.preview'},
+            {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char', 'model_name': base_import_model('preview')},
+            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer', 'model_name': base_import_model('preview')},
+            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer', 'model_name': base_import_model('preview')},
         ])
         self.assertEqual(result['preview'], [['foo', 'bar', 'qux'], ['5'], ['4', '6']])
 
     @unittest.skipUnless(can_import('xlrd'), "XLRD module not available")
     def test_xls_success(self):
-        xls_file_path = get_module_resource('base_import', 'tests', 'test.xls')
+        xls_file_path = get_module_resource('test_base_import', 'data', 'test.xls')
         file_content = open(xls_file_path, 'rb').read()
         import_wizard = self.env['base_import.import'].create({
-            'res_model': 'base_import.tests.models.preview',
+            'res_model': base_import_model('preview'),
             'file': file_content,
             'file_type': 'application/vnd.ms-excel'
         })
@@ -377,18 +378,18 @@ class TestPreview(TransactionCase):
         self.assertEqual(result['headers'], ['name', 'Some Value', 'Counter'])
         self.assertItemsEqual(result['fields'], [
             ID_FIELD,
-            {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char', 'model_name': 'base_import.tests.models.preview'},
-            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer', 'model_name': 'base_import.tests.models.preview'},
-            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer', 'model_name': 'base_import.tests.models.preview'},
+            {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char', 'model_name': base_import_model('preview')},
+            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer', 'model_name': base_import_model('preview')},
+            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer', 'model_name': base_import_model('preview')},
         ])
         self.assertEqual(result['preview'], [['foo', 'bar', 'qux'], ['1', '3', '5'], ['2', '4', '6']])
 
     @unittest.skipUnless(can_import('xlrd.xlsx'), "XLRD/XLSX not available")
     def test_xlsx_success(self):
-        xlsx_file_path = get_module_resource('base_import', 'tests', 'test.xlsx')
+        xlsx_file_path = get_module_resource('test_base_import', 'data', 'test.xlsx')
         file_content = open(xlsx_file_path, 'rb').read()
         import_wizard = self.env['base_import.import'].create({
-            'res_model': 'base_import.tests.models.preview',
+            'res_model': base_import_model('preview'),
             'file': file_content,
             'file_type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         })
@@ -401,18 +402,18 @@ class TestPreview(TransactionCase):
         self.assertEqual(result['headers'], ['name', 'Some Value', 'Counter'])
         self.assertItemsEqual(result['fields'], [
             ID_FIELD,
-            {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char', 'model_name': 'base_import.tests.models.preview'},
-            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer', 'model_name': 'base_import.tests.models.preview'},
-            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer', 'model_name': 'base_import.tests.models.preview'},
+            {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char', 'model_name': base_import_model('preview')},
+            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer', 'model_name': base_import_model('preview')},
+            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer', 'model_name': base_import_model('preview')},
         ])
         self.assertEqual(result['preview'], [['foo', 'bar', 'qux'], ['1', '3', '5'], ['2', '4', '6']])
 
     @unittest.skipUnless(can_import('odf'), "ODFPY not available")
     def test_ods_success(self):
-        ods_file_path = get_module_resource('base_import', 'tests', 'test.ods')
+        ods_file_path = get_module_resource('test_base_import', 'data', 'test.ods')
         file_content = open(ods_file_path, 'rb').read()
         import_wizard = self.env['base_import.import'].create({
-            'res_model': 'base_import.tests.models.preview',
+            'res_model': base_import_model('preview'),
             'file': file_content,
             'file_type': 'application/vnd.oasis.opendocument.spreadsheet'
         })
@@ -425,9 +426,9 @@ class TestPreview(TransactionCase):
         self.assertEqual(result['headers'], ['name', 'Some Value', 'Counter'])
         self.assertItemsEqual(result['fields'], [
             ID_FIELD,
-            {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char', 'model_name': 'base_import.tests.models.preview'},
-            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer', 'model_name': 'base_import.tests.models.preview'},
-            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer', 'model_name': 'base_import.tests.models.preview'},
+            {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char', 'model_name': base_import_model('preview')},
+            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer', 'model_name': base_import_model('preview')},
+            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer', 'model_name': base_import_model('preview')},
         ])
         self.assertEqual(result['preview'], [['foo', 'bar', 'aux'], ['1', '3', '5'], ['2', '4', '6']])
 
@@ -438,7 +439,7 @@ class test_convert_import_data(TransactionCase):
     """
     def test_all(self):
         import_wizard = self.env['base_import.import'].create({
-            'res_model': 'base_import.tests.models.preview',
+            'res_model': base_import_model('preview'),
             'file': b'name,Some Value,Counter\n'
                     b'foo,1,2\n'
                     b'bar,3,4\n'
@@ -536,7 +537,7 @@ class test_convert_import_data(TransactionCase):
         that column should be removed from importable data
         """
         import_wizard = self.env['base_import.import'].create({
-            'res_model': 'base_import.tests.models.preview',
+            'res_model': base_import_model('preview'),
             'file': b'name,Some Value,Counter\n'
                     b'foo,1,2\n'
                     b'bar,3,4\n'
@@ -560,7 +561,7 @@ class test_convert_import_data(TransactionCase):
         filtered out non-empty values from it), it should be removed
         """
         import_wizard = self.env['base_import.import'].create({
-            'res_model': 'base_import.tests.models.preview',
+            'res_model': base_import_model('preview'),
             'file': b'name,Some Value,Counter\n'
                     b'foo,1,2\n'
                     b',3,\n'
@@ -580,7 +581,7 @@ class test_convert_import_data(TransactionCase):
 
     def test_empty_rows(self):
         import_wizard = self.env['base_import.import'].create({
-            'res_model': 'base_import.tests.models.preview',
+            'res_model': base_import_model('preview'),
             'file': b'name,Some Value\n'
                     b'foo,1\n'
                     b'\n'
@@ -602,7 +603,7 @@ class test_convert_import_data(TransactionCase):
 
     def test_nofield(self):
         import_wizard = self.env['base_import.import'].create({
-            'res_model': 'base_import.tests.models.preview',
+            'res_model': base_import_model('preview'),
             'file': b'name,Some Value,Counter\n'
                     b'foo,1,2\n',
             'file_type': 'text/csv'
@@ -612,7 +613,7 @@ class test_convert_import_data(TransactionCase):
 
     def test_falsefields(self):
         import_wizard = self.env['base_import.import'].create({
-            'res_model': 'base_import.tests.models.preview',
+            'res_model': base_import_model('preview'),
             'file': b'name,Some Value,Counter\n'
                     b'foo,1,2\n',
             'file_type': 'text/csv'
@@ -637,7 +638,7 @@ class test_convert_import_data(TransactionCase):
         writer.writerow(data_row)
 
         import_wizard = self.env['base_import.import'].create({
-            'res_model': 'base_import.tests.models.preview',
+            'res_model': base_import_model('preview'),
             'file': output.getvalue(),
             'file_type': 'text/csv',
         })
@@ -768,7 +769,7 @@ class TestBatching(TransactionCase):
 
     def test_recognize_batched(self):
         import_wizard = self.env['base_import.import'].create({
-            'res_model': 'base_import.tests.models.preview',
+            'res_model': base_import_model('preview'),
             'file_type': 'text/csv',
         })
 
@@ -815,7 +816,7 @@ class TestBatching(TransactionCase):
                 writer.writerow(['', str(row)])
 
         import_wizard = self.env['base_import.import'].create({
-            'res_model': 'base_import.tests.models.o2m',
+            'res_model': base_import_model('o2m'),
             'file_type': 'text/csv',
             'file_name': 'things.csv',
             'file': f.getvalue(),
