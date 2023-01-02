@@ -33,7 +33,7 @@
                 </a>
                 <div t-attf-id="collapseDependencies{{ dependency_index }}" class="collapse" aria-expanded="false">
                     <ul>
-                        <li t-foreach="dependency_value" t-as="item" t-key="item">
+                        <li t-foreach="dependency_value" t-as="item" t-key="item_index">
                             <t t-set="link_text">This URL is contained in the '%s' of the following '%s'</t>
                             <a t-att-href="item.link" target="_blank">
                                 <t t-out="sprintf(link_text, item.field_name, item.model_name)"/>: <b t-out="item.record_name"/>
@@ -50,7 +50,7 @@
     <t t-foreach="dependencies" t-as="dependency" t-key="dependency">
         <b><t t-esc="dependency"/></b>
         <ul>
-            <li t-foreach="dependency_value" t-as="item" t-key="item">
+            <li t-foreach="dependency_value" t-as="item" t-key="item_index">
                 <a t-att-href="item.link" t-att-title="item.record_name" class="o_text_overflow" target="_blank">
                     <t t-out="item.record_name"/>
                 </a>
