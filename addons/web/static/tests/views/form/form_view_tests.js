@@ -12766,4 +12766,41 @@ QUnit.module("Views", (hooks) => {
             "Unable to save"
         );
     });
+
+    QUnit.test("reload form view with an empty notebook", async function (assert) {
+        assert.expect(1);
+
+        serverData.views = {
+            "partner,false,form": `
+            <form>
+                <sheet>
+                    <notebook>
+                    </notebook>
+                </sheet>
+            </form>`,
+            "partner,false,list": '<tree><field name="foo"/></tree>',
+            "partner,false,search": "<search></search>",
+        };
+
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "Partner",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [
+                    [false, "list"],
+                    [false, "form"],
+                ],
+            },
+        };
+
+        const target = getFixture();
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, 1);
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        await click(target.querySelector(".o_back_button"));
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        assert.containsOnce(target, ".o_form_view");
+    });
 });
