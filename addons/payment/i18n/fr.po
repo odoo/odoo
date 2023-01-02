@@ -344,6 +344,8 @@ msgstr "Montant maximum"
 msgid ""
 "An acquirer is using this journal. Only bank and cash types are allowed."
 msgstr ""
+"Un fournisseur utilise ce journal. Seuls les types banque et espèces sont "
+"autorisés."
 
 #. module: payment
 #: code:addons/payment/controllers/portal.py:0
@@ -668,7 +670,7 @@ msgstr "Carte de crédit (fourni par Ingenico)"
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_odoo_by_adyen
 msgid "Credit Card (powered by Odoo Payments)"
-msgstr ""
+msgstr "Carte de crédit (généré par Odoo Paiements)"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_payulatam
@@ -801,6 +803,8 @@ msgstr "Activer les codes QR"
 #: model:ir.model.fields,help:payment.field_payment_acquirer__qr_code
 msgid "Enable the use of QR-codes for payments made on this provider."
 msgstr ""
+"Activer l'utilisation des codes QR pour les paiements effectués sur ce "
+"fournisseur."
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__enabled
@@ -1301,6 +1305,7 @@ msgstr "Seul les administrateurs peuvent accéder à ces données."
 #, python-format
 msgid "Only transactions having the authorized status can be captured."
 msgstr ""
+"Seules les transactions ayant le statut autorisé peuvent être saisies."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1857,6 +1862,9 @@ msgid ""
 "The transaction was aborted because you are not the customer of this "
 "invoice. Log in as %s to be able to use this payment method."
 msgstr ""
+"La transaction a été interrompue, car vous n'êtes pas le client de cette "
+"facture. Connectez-vous en tant que %s pour pouvoir utiliser ce mode de "
+"paiement."
 
 #. module: payment
 #: code:addons/payment/wizards/payment_link_wizard.py:0
@@ -1879,7 +1887,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "This card is currently linked to the following records:"
-msgstr ""
+msgstr "Cette carte est actuellement liée aux enregistrements suivants :"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__image

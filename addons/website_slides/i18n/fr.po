@@ -169,6 +169,13 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Bonjour<br/><br/>\n"
+"        Vous avez été invité à rejoindre un nouveau cours : ${object.channel_id.name}.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_shared
@@ -193,6 +200,25 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Bonjour<br/><br/>\n"
+"                        ${user.name} a partagé ${object.slide_type} <strong>${object.name}</strong> avec vous !\n"
+"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"${(object.website_url + '?fullscreen=1') if ctx['fullscreen'] else object.website_url | safe}\">\n"
+"                                <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"${(object.website_url + '?fullscreen=1') if ctx['fullscreen'] else object.website_url | safe}\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">Voir <strong>${object.name}</strong></a>\n"
+"                        </div>\n"
+"                        % if user.signature\n"
+"                            <br/>\n"
+"                            ${user.signature | safe}\n"
+"                        % endif\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -221,6 +247,29 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Bonjour<br/><br/>\n"
+"                        Il y a quelque chose de nouveau dans le cours <strong>${object.channel_id.name}</strong> que vous suivez :<br/><br/>\n"
+"                        <center><strong>${object.name}</strong></center>\n"
+"                        % if object.image_1024\n"
+"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"${object.website_url}\">\n"
+"                                <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        % endif\n"
+"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"${object.website_url}\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">Voir le contenu</a>\n"
+"                        </div>\n"
+"                        Profitez de ce contenu exclusif !\n"
+"                        % if user.signature\n"
+"                            <br/>\n"
+"                            ${user.signature | safe}\n"
+"                        % endif\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
@@ -461,7 +510,7 @@ msgstr "<i class=\"fa fa-plus mr-1\"/><span>Ajouter du contenu</span>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "<i class=\"fa fa-plus mr-1\"/><span>Add Tag</span>"
-msgstr ""
+msgstr "<i class=\"fa fa-plus mr-1\"/><span>Ajouter une étiquette</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_content_quiz_add_buttons
@@ -873,6 +922,8 @@ msgid ""
 "A good course has structure and a table of content. Your first section will "
 "be the <b>Introduction</b>."
 msgstr ""
+"Un bon cours a une structure et une table des matières. Votre première "
+"section sera <b>l'introduction</b>."
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_4
@@ -1578,7 +1629,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid "Click on <b>Save</b> to apply changes."
-msgstr ""
+msgstr "Cliquez sur <b>Sauvegarder</b> pour enregistrer vos changements."
 
 #. module: website_slides
 #. openerp-web
@@ -1616,7 +1667,7 @@ msgstr "Couleur"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_tag__color
 msgid "Color to apply to this tag (including in website)."
-msgstr ""
+msgstr "Couleur à appliquer à cette étiquette (y compris dans le site web)."
 
 #. module: website_slides
 #: model:slide.tag,name:website_slides.slide_tag_demo_colorful
