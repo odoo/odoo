@@ -10,7 +10,7 @@
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # Emily Jia <eji@odoo.com>, 2022
 # Martin Trigaux, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-16 09:04+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
+"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5138,15 +5138,15 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"电子发票模块\n"
+"电子结算模块\n"
 "===========================\n"
 "\n"
 "可以导出/导入以下格式：E-FFF、UBL Bis 3、EHF3、NLCIUS、Factur-X（CII）和XRechnung（UBL）\n"
-"在发票上表单PDF时，PDF将嵌入所有UBL格式的xml中。允许\n"
+"在结算上表单PDF时，PDF将嵌入所有UBL格式的xml中。允许\n"
 "接收方仅使用xml文件检索PDF。请注意，**EHF3由UBL Bis 3**完全执行（参见\n"
 "<https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/#_implementation>`_）。\n"
 "\n"
-"可以从链接至发票的日记账（日记账>高级设置）中选择格式。\n"
+"可以从链接至结算的日记账（日记账>高级设置）中选择格式。\n"
 "\n"
 "请注意，E-FFF、NLCIUS和XRechnung（UBL）分别仅适用于\n"
 "比利时、荷兰和德国公司。UBL Bis 3仅适用于EAS列表中所列国家的公司\n"
@@ -11238,7 +11238,7 @@ msgid ""
 "- Other: Other address for the company (e.g. subsidiary, ...)"
 msgstr ""
 "- 联系人：用于整理给定公司的员工（如CEO和CFO等）。\n"
-"- 发票地址：所有发票的首选地址。当您为此公司的订单开具发票时，默认选中此选项。\n"
+"- 结算地址：所有结算的首选地址。当您为此公司的订单开具结算时，默认选中此选项。\n"
 "- 交货地址：所有交货的首选地址。交付属于此公司的订单时默认选中此选项。\n"
 "- 私人地址：私人地址仅对授权用户可见，且包含敏感信息（员工住址...…）。\n"
 "- 其他地址：公司的其他地址（如子公司...…）"
@@ -11650,7 +11650,7 @@ msgstr "<span>所有送货的首选地址。 当您交付属于该公司的订�
 msgid ""
 "<span>Preferred address for all invoices. Selected by default when you "
 "invoice an order that belongs to this company.</span>"
-msgstr "<span>所有发票的首选地址。 当您为属于该公司的订单开具发票时默认选中。</span>"
+msgstr "<span>所有结算的首选地址。 当您为属于该公司的订单开具结算时默认选中。</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -18481,7 +18481,7 @@ msgstr "允许商品缓存，从而获得较低的POS加载时间."
 msgid ""
 "Enable customers to pay invoices on the portal and post payments when "
 "transactions are processed."
-msgstr "允许客户在门户网站上支付发票，并在处理交易时延期支付。"
+msgstr "允许客户在门户网站上支付结算，并在处理交易时延期支付。"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.enable_profiling_wizard
@@ -21110,7 +21110,7 @@ msgid ""
 "services of a debt recovery company. All legal expenses will be payable by "
 "the client."
 msgstr ""
-"如果在到期付款日后六十 (60) 天仍未付款，My Company (San Francisco) 保留要求债务追偿公司提供服务的权利. "
+"如果在到期付款日后六十 (60) 天仍未完成款，My Company (San Francisco) 保留要求债务追偿公司提供服务的权利. "
 "所有法律费用将由客户支付."
 
 #. module: base
@@ -21439,7 +21439,7 @@ msgstr "从 XML/PDF 导入/导出结算单"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi_ubl_cii
 msgid "Import/Export electronic invoices with UBL/CII"
-msgstr "带有UBL/CII的电子进口/出口发票"
+msgstr "带有UBL/CII的电子进口/出口结算"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_base_import
@@ -22080,7 +22080,7 @@ msgstr "结算地址"
 #. module: base
 #: model:ir.module.module,summary:base.module_account
 msgid "Invoices & Payments"
-msgstr "应收和付款"
+msgstr "结算 & 支付"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_account
