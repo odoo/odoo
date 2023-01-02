@@ -4,12 +4,20 @@ import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useActiveElement } from "../ui/ui_service";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
 
-import { Component, useChildSubEnv, useState } from "@odoo/owl";
+import { Component, useChildSubEnv, useState, onMounted } from "@odoo/owl";
 export class Dialog extends Component {
     setup() {
         this.modalRef = useForwardRefToParent("modalRef");
         useActiveElement("modalRef");
         this.data = useState(this.env.dialogData);
+        this.state = useState({
+            dragging: false,
+            nextX: 0, nextY: 0,
+            prevX: 0, prevY: 0,
+        });
+        onMounted(() => {
+            this.element = $(this.modalRef.el).find('.modal-content')[0];
+        })
         useHotkey("escape", () => {
             this.data.close();
         });
@@ -25,6 +33,27 @@ export class Dialog extends Component {
 
     get isFullscreen() {
         return this.props.fullscreen || this.env.isSmall;
+    }
+
+    onMouseUp() {
+        this.state.dragging = false;
+    }
+
+    onMouseDown(e) {
+        this.state.dragging = true;
+        this.state.prevX = e.clientX;
+        this.state.prevY = e.clientY;
+    }
+
+    onMouseMove(e) {
+        if (this.state.dragging) {
+            this.state.nextX = this.state.prevX - e.clientX;
+            this.state.nextY = this.state.prevY - e.clientY;
+            this.state.prevX = e.clientX;
+            this.state.prevY = e.clientY;
+            this.element.style.left = (this.element.offsetLeft - this.state.nextX) + "px";
+            this.element.style.top = (this.element.offsetTop - this.state.nextY) + "px";
+        }
     }
 }
 Dialog.template = "web.Dialog";

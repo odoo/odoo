@@ -7,10 +7,12 @@
                 tabindex="-1"
                 t-att-class="{ o_technical_modal: props.technical, o_modal_full: isFullscreen }"
                 t-ref="modalRef"
+                t-on-mousemove="onMouseMove"
+                t-on-mouseup="onMouseUp"
                 >
                 <div class="modal-dialog" t-attf-class="modal-{{props.size}}">
                     <div class="modal-content" t-att-class="props.contentClass">
-                        <header t-if="props.header" class="modal-header">
+                        <header t-if="props.header" class="modal-header" t-on-mousedown="onMouseDown">
                             <t t-if="isFullscreen">
                                 <button class="btn fa fa-arrow-left" data-bs-dismiss="modal" aria-label="Close" t-on-click="data.close" />
                             </t>
