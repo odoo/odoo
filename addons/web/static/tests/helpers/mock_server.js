@@ -499,9 +499,9 @@ export class MockServer {
     }
 
     _modifiersFromModel(node) {
-        const modifiersNames = ['invisible'];
-        if (['kanban', 'tree', 'form'].includes(node.tagName)) {
-            modifiersNames.push(...['readonly', 'required']);
+        const modifiersNames = ["invisible"];
+        if (["kanban", "tree", "form"].includes(node.tagName)) {
+            modifiersNames.push(...["readonly", "required"]);
         }
         return modifiersNames;
     }
@@ -1001,7 +1001,9 @@ export class MockServer {
             } else if (type === "datetime") {
                 const date = deserializeDateTime(val);
                 if (aggregateFunction === "hour") {
-                    return date.toFormat("HH:00 dd MMM");
+                    // The year is added to the format because is needed to correctly compute the
+                    // domain and the range (startDate and endDate).
+                    return date.toFormat("HH:00 dd MMM yyyy");
                 } else if (aggregateFunction === "day") {
                     return date.toFormat("yyyy-MM-dd");
                 } else if (aggregateFunction === "week") {
@@ -1093,12 +1095,11 @@ export class MockServer {
                         let startDate, endDate;
                         switch (dateRange) {
                             case "hour": {
-                                try {
-                                    startDate = parseDateTime(value, { format: "HH dd MMM" });
-                                } catch {
-                                    startDate = parseDateTime(value, { format: "HH:00 dd MMM" });
-                                }
+                                startDate = parseDateTime(value, { format: "HH:00 dd MMM yyyy" });
                                 endDate = startDate.plus({ hours: 1 });
+                                // Remove the year from the result value of the group. It was needed
+                                // to compute the startDate and endDate.
+                                group[gbField] = startDate.toFormat("HH:00 dd MMM");
                                 break;
                             }
                             case "day": {
