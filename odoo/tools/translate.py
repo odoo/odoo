@@ -842,6 +842,11 @@ def trans_export(lang, modules, buffer, format, cr):
     writer = TranslationFileWriter(buffer, fileformat=format, lang=lang)
     writer.write_rows(reader)
 
+def trans_record_export(lang, records, field_names, buffer, file_format, cr):
+    reader = TranslationRecordReader(cr, records=records, field_names=field_names, lang=lang)
+    writer = TranslationFileWriter(buffer, fileformat=file_format, lang=lang)
+    writer.write_rows(reader)
+
 def _push(callback, term, source_line):
     """ Sanity check before pushing translation terms """
     term = (term or "").strip()
@@ -966,6 +971,80 @@ def extract_spreadsheet_terms(fileobj, keywords, comment_tags, options):
     )
 
 ImdInfo = namedtuple('ExternalId', ['name', 'model', 'res_id', 'module'])
+
+
+class TranslationRecordReader:
+    def __init__(self, cr, records=None, field_names=None, lang=None):
+        self._cr = cr
+        self._lang = lang or 'en_US'
+        self._records = records
+        self._fields = field_names or list(records._fields.keys())
+        self.env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
+        self._to_translate = []
+
+        self._export_translatable_records()
+
+    def __iter__(self):
+        """ Export ir.translation values for all retrieved records """
+        for module, source, name, res_id, ttype, comments, _record_id, value in self._to_translate:
+            yield (module, ttype, name, res_id, source, encode(odoo.tools.ustr(value)), comments)
+
+    def _push_translation(self, module, ttype, name, res_id, source, comments=None, record_id=None, value=None):
+        """ Insert a translation that will be used in the file generation
+        In po file will create an entry
+        #: <ttype>:<name>:<res_id>
+        #, <comment>
+        msgid "<source>"
+        record_id is the database id of the record being translated
+        """
+        # empty and one-letter terms are ignored, they probably are not meant to be
+        # translated, and would be very hard to translate anyway.
+        sanitized_term = (source or '').strip()
+        # remove non-alphanumeric chars
+        sanitized_term = re.sub(r'\W+', '', sanitized_term)
+        if not sanitized_term or len(sanitized_term) <= 1:
+            return
+        self._to_translate.append((module, source, name, res_id, ttype, tuple(comments or ()), record_id, value))
+
+    def _export_translatable_records(self):
+        """ Export translations of all translated records having an external id """
+
+        model = self._records._name
+        query = """SELECT min(name), res_id, module
+                     FROM ir_model_data
+                    WHERE model = %s
+                      AND res_id = ANY(%s)
+                 GROUP BY res_id, module
+                 ORDER BY module, min(name)"""
+
+        self._cr.execute(query, (model, self._records.ids))
+
+        records_imd = {
+            res_id: ImdInfo(xml_name, model, res_id, module)
+            for xml_name, res_id, module in self._cr.fetchall()
+        }
+
+        records = self._records.browse(records_imd.keys())
+        if not records:
+            return
+
+        for record in records:
+            module = records_imd[record.id].module
+            xml_name = "%s.%s" % (module, records_imd[record.id].name)
+            for field_name in self._fields:
+                field = records._fields[field_name]
+                if callable(field.translate) and field.store:
+                    name = model + "," + field_name
+                    try:
+                        value_en = record.with_context(lang='en_US')[field_name] or ''
+                        value_lang = record[field_name] or ''
+                    except Exception:
+                        continue
+                    trans_type = 'model_terms'
+                    for term_en, term_langs in field.get_translation_dictionary(value_en, {self._lang: value_lang}).items():
+                        term_lang = term_langs.get(self._lang)
+                        self._push_translation(module, trans_type, name, xml_name, term_en, record_id=record.id,
+                                               value=term_lang if term_lang != term_en else '')
 
 
 class TranslationModuleReader:
@@ -1214,15 +1293,17 @@ class TranslationImporter:
     files and import them all at once, which helps speeding up the whole import.
     """
 
-    def __init__(self, cr, verbose=True):
+    def __init__(self, cr, verbose=True, user_id=odoo.SUPERUSER_ID):
         self.cr = cr
         self.verbose = verbose
-        self.env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
+        self.env = odoo.api.Environment(cr, user_id, {})
 
         # {model_name: {field_name: {xmlid: {lang: value}}}}
         self.model_translations = DeepDefaultDict()
         # {model_name: {field_name: {xmlid: {src: {lang: value}}}}}
         self.model_terms_translations = DeepDefaultDict()
+        # {xmlid1, xmlid2, ...}
+        self.xmlids = set()
 
     def load_file(self, filepath, lang, xmlids=None):
         """ Load translations from the given file path.
@@ -1279,6 +1360,7 @@ class TranslationImporter:
             xmlid = module_name + '.' + row['imd_name']
             if xmlids and xmlid not in xmlids:
                 continue
+            self.xmlids.add(xmlid)
             if row.get('type') == 'model':
                 self.model_translations[model_name][field_name][xmlid][lang] = row['value']
             elif row.get('type') == 'model_terms':
@@ -1300,6 +1382,8 @@ class TranslationImporter:
         cr = self.cr
         env = self.env
         env.flush_all()
+
+        self._check_access()
 
         for model_name, model_dictionary in self.model_terms_translations.items():
             Model = env[model_name]
@@ -1393,6 +1477,28 @@ class TranslationImporter:
         env.invalidate_all()
         if self.verbose:
             _logger.info("translations are loaded successfully")
+
+    def _check_access(self):
+        env = self.env
+        cr = env.cr
+        if env.is_superuser():
+            return
+        for sub_xmlids in cr.split_for_in_conditions(self.xmlids):
+            # [module_name, imd_name, module_name, imd_name, ...]
+            params = []
+            for xmlid in sub_xmlids:
+                params.extend(xmlid.split('.'))
+            cr.execute(f'''
+                SELECT model, array_agg(res_id) AS res_ids
+                FROM ir_model_data
+                WHERE ({" OR ".join(["(module = %s AND name = %s)"] * (len(params) // 2))})
+                GROUP BY model
+            ''', params)
+
+            for model_name, res_ids in cr.fetchall():
+                records = env[model_name].browse(res_ids)
+                records.check_access_rights('write')
+                records.check_access_rule('write')
 
 
 def trans_load(cr, filepath, lang, verbose=True, overwrite=False):

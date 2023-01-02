@@ -18,7 +18,7 @@ from odoo.exceptions import UserError
 from odoo.http import content_disposition, request
 from odoo.tools import lazy_property, osutil, pycompat
 from odoo.tools.misc import xlsxwriter
-from odoo.tools.translate import _
+from odoo.tools.translate import _, trans_record_export
 
 
 _logger = logging.getLogger(__name__)
@@ -591,3 +591,58 @@ class ExcelExport(ExportFormat, http.Controller):
                     xlsx_writer.write_cell(row_index + 1, cell_index, cell_value)
 
         return xlsx_writer.value
+
+class TranslationExport(http.Controller):
+
+    @http.route('/web/export/translation', type='http', auth="user")
+    def index(self, data):
+        try:
+            return self.base(data)
+        except Exception as exc:
+            _logger.exception("Exception during request handling.")
+            payload = json.dumps({
+                'code': 200,
+                'message': "Odoo Server Error",
+                'data': http.serialize_exception(exc)
+            })
+            raise InternalServerError(payload) from exc
+
+    def filename(self, base):
+        """ Creates a filename *without extension* for the item / format of
+        model ``base``.
+        """
+        if base not in request.env:
+            return base
+
+        model_description = request.env['ir.model']._get(base).name
+        lang_description = request.env['res.lang']._lang_get(request.env.lang).name
+        return f"{model_description} ({base}) {lang_description}"
+
+    def base(self, data):
+        params = json.loads(data)
+        model, fields, ids, domain, file_format = \
+            operator.itemgetter('model', 'fields', 'ids', 'domain', 'format')(params)
+
+        Model = request.env[model].with_context(**params.get('context', {}))
+        if not Model._is_an_ordinary_table():
+            fields = [field for field in fields if field['name'] != 'id']
+
+        field_names = [f['name'] for f in fields]
+
+        Model = Model.with_context(import_compat=True)
+        records = Model.browse(ids) if ids else Model.search(domain, offset=0, limit=False, order=False)
+        with io.BytesIO() as buf:
+            trans_record_export(request.env.lang or 'en_US', records, field_names, buf, file_format, request.env.cr)
+            response_data = buf.getvalue()
+
+        content_type = {
+            'csv': 'text/csv;charset=utf8',
+            'po': 'text/plain;charset=utf8'
+        }.get(file_format)
+
+        return request.make_response(response_data,
+                                     headers=[('Content-Disposition',
+                                               content_disposition(
+                                                   osutil.clean_filename(f'{self.filename(model)}.{file_format}'))),
+                                              ('Content-Type', content_type)],
+                                     )

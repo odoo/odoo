@@ -39,6 +39,11 @@
                             I want to update data (import-compatible export)
                         </CheckBox>
                     </div>
+                    <div class="o_translation_compat" t-attf-class="{{ state.isCompatible &amp;&amp; props.context.lang !== 'en_US' ? '': 'd-none' }}">
+                        <CheckBox className="'o_translation_compat'" value="state.isTranslatable" onChange.bind="onToggleTranslatableExport">
+                            I want to translate terms
+                        </CheckBox>
+                    </div>
                     <h4 class="mt-3">Available fields</h4>
                     <input t-ref="search" type="search" class="form-control mb-3 o_export_search_input" id="o-export-search-filter" placeholder="Search" t-on-input="onSearch" />
                     <div class="o_left_field_panel h-100 overflow-auto border">
@@ -68,6 +73,15 @@
                             <div class="radio form-check-inline ps-5">
                                 <input t-att-id="'o_radio' + format.tag" type="radio" t-att-checked="format.tag === availableFormats[state.selectedFormat].tag" name="o_export_format_name" t-att-value="format.tag" class="form-check-input" t-on-change="setFormat" />
                                 <label class="form-check-label" t-att-for="'o_radio' + format.tag" t-esc="format.label" />
+                            </div>
+                        </t>
+                    </div>
+                    <div class="o_export_translation_format" t-attf-class="{{ state.isCompatible &amp;&amp; props.context.lang !== 'en_US' ? '': 'd-none' }} {{ state.isTranslatable ? '': 'invisible' }}">
+                        <strong>Translation Format:</strong>
+                        <t t-foreach="translationFormats" t-as="format" t-key="format.tag">
+                            <div class="radio form-check-inline ps-5">
+                                <input t-att-id="'o_radio_translation' + format.tag" type="radio" t-att-checked="format.tag === translationFormats[state.selectedTranslationFormat].tag" name="o_export_translatable_format_name" t-att-value="format.tag" class="form-check-input" t-on-change="setTranslationFormat" />
+                                <label class="form-check-label" t-att-for="'o_radio_translation' + format.tag" t-esc="format.label" />
                             </div>
                         </t>
                     </div>

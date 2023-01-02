@@ -349,6 +349,29 @@ export class ListController extends Component {
         });
     }
 
+    async downloadTranslation(fields, format) {
+        const resIds = await this.getSelectedResIds();
+        const exportedFields = fields.map((field) => ({
+            name: field.name || field.id,
+            label: field.label || field.string,
+            store: field.store,
+            type: field.field_type || field.type,
+        }));
+        await download({
+            data: {
+                data: JSON.stringify({
+                    context: this.props.context,
+                    domain: this.model.root.domain,
+                    fields: exportedFields,
+                    ids: resIds.length > 0 && resIds,
+                    model: this.model.root.resModel,
+                    format: format,
+                }),
+            },
+            url: `/web/export/translation`,
+        });
+    }
+
     async getExportedFields(model, import_compat, parentParams) {
         return await this.rpc("/web/export/get_fields", {
             ...parentParams,
@@ -368,6 +391,7 @@ export class ListController extends Component {
             resIds,
             context: this.props.context,
             download: this.downloadExport.bind(this),
+            downloadTranslation: this.downloadTranslation.bind(this),
             getExportedFields: this.getExportedFields.bind(this),
             root: this.model.root,
         };
