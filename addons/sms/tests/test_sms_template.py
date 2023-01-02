@@ -136,3 +136,28 @@ class TestSMSTemplateReset(TransactionCase):
         self.assertEqual(sms_template.body.strip(), Markup('<div>Hello Odoo</div>'))
         # Name is not there in the data file template, so it should be set to False
         self.assertFalse(sms_template.name, "Name should be set to False")
+
+@tagged("post_install")
+class TestSMSComposer(TransactionCase):
+
+    def test_sending_on_sale_order(self):
+        partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        sale_order = self.env['sale.order'].create({
+            'partner_id': partner.id,
+        })
+
+        sms_composer = self.env['sms.composer'].create({
+            'body': 'Test body',
+            'composition_mode': 'comment',
+            'mass_force_send': False,
+            'mass_keep_log': True,
+            'number_field_name': False,
+            'numbers': False,
+            'recipient_single_number_itf': '+32494670905',
+            'res_id': sale_order.id,
+            'res_model': 'sale.order'
+        })
+        try:
+            sms_composer.action_send_sms()
+        except ValueError as e:
+            self.fail(f"{e}\nThe action must be done despite the empty `number_field_name` field")
