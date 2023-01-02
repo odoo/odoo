@@ -5,12 +5,13 @@ Tests for various autodetection magics for CSV imports
 import codecs
 
 from odoo.tests import common
+from odoo.addons.test_base_import.models.test_base_import import model as base_import_model
 
 
 class ImportCase(common.TransactionCase):
     def _make_import(self, contents):
         return self.env['base_import.import'].create({
-            'res_model': 'base_import.tests.models.complex',
+            'res_model': base_import_model('complex'),
             'file_name': 'f',
             'file_type': 'text/csv',
             'file': contents,
@@ -136,7 +137,7 @@ d|4
 class TestNumberSeparators(common.TransactionCase):
     def test_parse_float(self):
         w = self.env['base_import.import'].create({
-            'res_model': 'base_import.tests.models.float',
+            'res_model': base_import_model('float'),
         })
         data = w._parse_import_data(
             [
