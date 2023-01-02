@@ -204,7 +204,11 @@ export class Chrome extends PosComponent {
                 }
             } else if (error instanceof Error) {
                 title = error.message;
-                body = error.stack;
+                if (error.cause) {
+                    body = error.cause.message;
+                } else {
+                    body = error.stack;
+                }
             }
 
             return this.showPopup("ErrorTracebackPopup", { title, body, exitButtonIsShown: true });
@@ -241,6 +245,12 @@ export class Chrome extends PosComponent {
     }
 
     setupBarcodeParser() {
+        if (!this.env.pos.company.nomenclature_id) {
+            const errorMessage = this.env._t("The barcode nomenclature setting is not configured. " +
+                "Make sure to configure it on your Point of Sale configuration settings");
+            throw new Error(this.env._t("Missing barcode nomenclature"), { cause: { message: errorMessage } });
+
+        }
         const barcode_parser = new BarcodeParser({
             nomenclature_id: this.env.pos.company.nomenclature_id,
         });
