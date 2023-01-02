@@ -53,6 +53,11 @@ class ManifestLinter(BaseCase):
             # todo installable ?
         ]
 
+        if 'countries' in manifest_data and 'l10n' not in module:
+            _logger.warning(
+                "Module %s specific to certain countries %s should contain `l10n` in their name.",
+                module, manifest_data['countries'])
+
         for key in manifest_data:
             value = manifest_data[key]
             if key in _DEFAULT_MANIFEST:
@@ -75,6 +80,9 @@ class ManifestLinter(BaseCase):
                         _logger.warning(
                             "Wrong type for manifest value %s in module %s, expected bool or list",
                             key, module)
+                else:
+                    if key == 'countries':
+                        self._test_manifest_countries_value(module, value)
             elif key == 'icon':
                 self._test_manifest_icon_value(module, value)
 
@@ -103,3 +111,11 @@ class ManifestLinter(BaseCase):
                     "Icon value specified in manifest of module %s wasn't found in given path."
                     " Please specify a correct value or remove this key from the manifest.",
                     module)
+
+    def _test_manifest_countries_value(self, module, values):
+        for value in values:
+            if value and len(value) != 2:
+                _logger.warning(
+                    "Country value %s specified for the icon in manifest of module %s doesn't look like a country code"
+                    "Please specify a correct value or remove this key from the manifest.",
+                    value, module)
