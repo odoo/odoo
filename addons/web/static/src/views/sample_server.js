@@ -685,7 +685,7 @@ export class SampleServer {
         for (const g of groups) {
             const recordsInGroup = records.filter((r) => r[groupBy] === g.value);
             g[`${groupBy}_count`] = recordsInGroup.length;
-            g[fullGroupBy] = [g.value, g.displayName];
+            g[fullGroupBy] = g.__rawValue;
             for (const field of params.fields) {
                 const fieldType = this.data[params.model].fields[field].type;
                 if (["integer, float", "monetary"].includes(fieldType)) {

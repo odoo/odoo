@@ -2429,6 +2429,7 @@ export class DynamicGroupList extends DynamicList {
                 const value = data[key];
                 switch (key) {
                     case this.firstGroupBy: {
+                        groupParams.__rawValue = value;
                         groupParams.value = this._getValueFromGroupData(data, key);
                         if (groupByField.type === "selection") {
                             groupParams.displayName = Object.fromEntries(groupByField.selection)[
@@ -2534,6 +2535,7 @@ DynamicGroupList.DEFAULT_LOAD_LIMIT = 10;
 
 export class Group extends DataPoint {
     setup(params, state) {
+        this.__rawValue = params.__rawValue;
         this.value = params.value;
         this.displayName = params.displayName;
         this.aggregates = params.aggregates;
