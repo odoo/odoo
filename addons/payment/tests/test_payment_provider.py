@@ -104,6 +104,11 @@ class TestPaymentProvider(PaymentCommon):
 
     def test_fees_with_currency_conversion(self):
         """ Test that the conversion of the fees is correctly computed. """
+        # Some modules change the company settings and may make this test useless.
+        if self.currency_euro == self.provider.main_currency_id or (
+            self.country_france == self.provider.company_id.country_id
+        ):
+            return
         self.provider.write({
             'fees_active': True,
             'fees_dom_fixed': 0.,
@@ -114,7 +119,7 @@ class TestPaymentProvider(PaymentCommon):
 
         with patch(
             'odoo.addons.base.models.res_currency.Currency._get_rates',
-            return_value={self.currency_euro.id: 2., self.currency_usd.id: 1.},
+            return_value={self.currency_euro.id: 2., self.provider.main_currency_id.id: 1.},
         ):
             transaction_fees = self.currency.round(
                 self.provider._compute_fees(self.amount, self.currency_euro, self.country_france)
