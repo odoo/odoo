@@ -1901,6 +1901,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         # 3th reconciliation inv1 + pay1
         self.assert_invoice_outstanding_reconciled_widget(inv2, {
             refund1.id: 28.46,
+            res['partials'].exchange_move_id.id: 6.34,
         })
         self.assert_invoice_outstanding_to_reconcile_widget(inv2, {
             pay1.move_id.id: 1907.17,
