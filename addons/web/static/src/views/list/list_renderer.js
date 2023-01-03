@@ -76,6 +76,18 @@ export class ListRenderer extends Component {
         this.longTouchTimer = null;
         this.touchStartMs = 0;
 
+        /**
+         * When resizing, it's possible that the pointer is not above the resize
+         * handle (by some few pixel difference). During this scenario, click event
+         * will be triggered on the column title which will reorder the column.
+         * Column resize that triggers a reorder is not a good UX and we prevent this
+         * using the following state variables: `resizing` and `preventReorder` which
+         * are set during the column's click (onClickSortColumn), mouseup
+         * (onColumnTitleMouseUp) and onStartResize events.
+         */
+        this.resizing = false;
+        this.preventReorder = false;
+
         this.creates = this.props.archInfo.creates.length
             ? this.props.archInfo.creates
             : [{ type: "create", string: this.env._t("Add a line") }];
@@ -848,6 +860,10 @@ export class ListRenderer extends Component {
     }
 
     onClickSortColumn(column) {
+        if (this.preventReorder) {
+            this.preventReorder = false;
+            return;
+        }
         if (this.props.list.editedRecord || this.props.list.model.useSampleModel) {
             return;
         }
@@ -855,6 +871,8 @@ export class ListRenderer extends Component {
         const list = this.props.list;
         if (this.isSortable(column)) {
             list.sortBy(fieldName);
+            // don't resize column when reordering.
+            this.keepColumnWidths = true;
         }
     }
 
@@ -1600,6 +1618,12 @@ export class ListRenderer extends Component {
         }
     }
 
+    onColumnTitleMouseUp() {
+        if (this.resizing) {
+            this.preventReorder = true;
+        }
+    }
+
     /**
      * Handles the resize feature on the column headers
      *
@@ -1607,6 +1631,7 @@ export class ListRenderer extends Component {
      * @param {MouseEvent} ev
      */
     onStartResize(ev) {
+        this.resizing = true;
         const table = this.tableRef.el;
         const th = ev.target.closest("th");
         const handler = th.querySelector(".o_resize");
@@ -1649,6 +1674,7 @@ export class ListRenderer extends Component {
 
         // Mouse or keyboard events : stop resize
         const stopResize = (ev) => {
+            this.resizing = false;
             // Ignores the 'left mouse button down' event as it used to start resizing
             if (ev.type === "mousedown" && ev.which === 1) {
                 return;

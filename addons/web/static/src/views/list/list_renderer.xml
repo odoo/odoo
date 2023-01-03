@@ -24,6 +24,7 @@
                                 t-att-class="getColumnClass(column) + ' opacity-trigger-hover'"
                                 t-on-mouseenter="ev => this.onHoverSortColumn(ev, column)"
                                 t-on-mouseleave="ev => this.onHoverSortColumn(ev, column)"
+                                t-on-mouseup="onColumnTitleMouseUp"
                                 t-on-click="() => this.onClickSortColumn(column)"
                                 t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)"  t-att-data-tooltip-template="isDebugMode ? 'web.FieldTooltip' : false" t-att-data-tooltip-info="isDebugMode ? makeTooltip(column) : false"
                                 tabindex="-1">
@@ -37,7 +38,6 @@
                                     </div>
                                     <span t-if="!isEmpty"
                                           class="o_resize position-absolute top-0 end-0 bottom-0 ps-1 bg-black-25 opacity-0 opacity-50-hover z-index-1"
-                                          t-on-click.stop.prevent=""
                                           t-on-mousedown.stop.prevent="onStartResize"/>
                                 </t>
                             </th>
