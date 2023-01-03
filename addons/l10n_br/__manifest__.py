@@ -44,7 +44,7 @@ accounting SPED, fiscal SPED and PAF ECF that are still missing as September
 come with any additional paid permission for online use of 'private modules'.
 """,
     'author': 'Akretion, Odoo Brasil',
-    'depends': ['account', 'base_vat'],
+    'depends': ['account', 'base_vat', 'l10n_multilang',],
     'data': [
         'data/l10n_br_chart_data.xml',
         'data/account.account.template.csv',
@@ -63,4 +63,5 @@ come with any additional paid permission for online use of 'private modules'.
         'demo/demo_company.xml',
     ],
     'license': 'LGPL-3',
+    'post_init_hook': 'load_translations',
 }
