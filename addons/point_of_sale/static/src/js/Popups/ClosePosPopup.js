@@ -2,8 +2,8 @@
 
 import AbstractAwaitablePopup from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
 import Registries from "@point_of_sale/js/Registries";
-import { identifyError } from "@point_of_sale/js/utils";
-import { ConnectionLostError, ConnectionAbortedError } from "@web/core/network/rpc_service";
+import { identifyError } from "@point_of_sale/app/error_handlers/error_handlers";
+import { ConnectionLostError } from "@web/core/network/rpc_service";
 const { useState } = owl;
 
 class ClosePosPopup extends AbstractAwaitablePopup {
@@ -152,16 +152,14 @@ class ClosePosPopup extends AbstractAwaitablePopup {
                 }
                 window.location = "/web#action=point_of_sale.action_client_pos_menu";
             } catch (error) {
-                const iError = identifyError(error);
-                if (
-                    iError instanceof ConnectionLostError ||
-                    iError instanceof ConnectionAbortedError
-                ) {
-                    await this.showPopup("ErrorPopup", {
-                        title: this.env._t("Network Error"),
-                        body: this.env._t("Cannot close the session when offline."),
-                    });
+                if (identifyError(error) instanceof ConnectionLostError) {
+                    // Cannot redirect to backend when offline, let error handlers show the offline popup
+                    // FIXME POSREF: doing this means closing again when online will redo the beginning of the method
+                    // although it's impossible to close again because this.closeSessionClicked isn't reset to false
+                    // The application state is corrupted.
+                    throw error;
                 } else {
+                    // FIXME POSREF: why are we catching errors here but not anywhere else in this method?
                     await this.showPopup("ErrorPopup", {
                         title: this.env._t("Closing session error"),
                         body: this.env._t(

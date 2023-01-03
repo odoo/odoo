@@ -6,7 +6,6 @@ import { useErrorHandlers } from "@point_of_sale/js/custom_hooks";
 import NumberBuffer from "@point_of_sale/js/Misc/NumberBuffer";
 import { useListener } from "@web/core/utils/hooks";
 import Registries from "@point_of_sale/js/Registries";
-import { isConnectionError } from "@point_of_sale/js/utils";
 import utils from "web.utils";
 
 class PaymentScreen extends PosComponent {
@@ -257,15 +256,7 @@ class PaymentScreen extends PosComponent {
                 // introduce to handle invoicing error logic.
                 await this._handlePushOrderError(error);
             } else {
-                // We don't block for connection error. But we rethrow for any other errors.
-                if (isConnectionError(error)) {
-                    this.showPopup("OfflineErrorPopup", {
-                        title: this.env._t("Connection Error"),
-                        body: this.env._t("Order is not synced. Check your internet connection"),
-                    });
-                } else {
-                    throw error;
-                }
+                throw error;
             }
         } finally {
             // Always show the next screen regardless of error since pos has to
