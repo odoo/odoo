@@ -516,9 +516,10 @@ function makeActionManager(env) {
             });
         }
         // END LEGACY CODE COMPATIBILITY
-
-        viewProps.noBreadcrumbs = action.context.no_breadcrumbs;
-        delete action.context.no_breadcrumbs;
+        if (action.context.no_breadcrumbs){
+            viewProps.noBreadcrumbs = action.context.no_breadcrumbs;
+            delete action.context.no_breadcrumbs;
+        }
         return {
             props: viewProps,
             config: {
