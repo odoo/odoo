@@ -1199,11 +1199,6 @@
     function colorNumberString(color) {
         return toHex(color.toString(16).padStart(6, "0"));
     }
-    let colorIndex = 0;
-    function getNextColor() {
-        colorIndex = ++colorIndex % colors$1.length;
-        return colors$1[colorIndex];
-    }
     /**
      * Converts any CSS color value to a standardized hex6 value.
      * Accepts: hex3, hex6, hex8 and rgb (rgba is not supported)
@@ -4689,7 +4684,7 @@
             const env = component.env;
             const newRect = "getPopoverContainerRect" in env ? env.getPopoverContainerRect() : spreadsheetRect;
             container.x = newRect.x;
-            container.y = newRect.x;
+            container.y = newRect.y;
             container.width = newRect.width;
             container.height = newRect.height;
         }
@@ -12078,6 +12073,7 @@
         descr.maxArgPossible = repeatingArg ? Infinity : countArg;
         descr.nbrArgRepeating = repeatingArg;
         descr.getArgToFocus = argTargeting(countArg, repeatingArg);
+        descr.hidden = addDescr.hidden || false;
         return descr;
     }
     /**
@@ -18634,7 +18630,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         HYPERLINK: HYPERLINK
     });
 
-    const functions$3 = {
+    const functions$2 = {
         database,
         date,
         financial,
@@ -18696,8 +18692,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         return arg === null || arg === void 0 ? void 0 : arg.value;
     }
     const functionRegistry = new FunctionRegistry();
-    for (let category in functions$3) {
-        const fns = functions$3[category];
+    for (let category in functions$2) {
+        const fns = functions$2[category];
         for (let name in fns) {
             const addDescr = fns[name];
             addDescr.category = category;
@@ -18722,7 +18718,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
      * is useful for the composer, which needs to be able to work with incomplete
      * formulas.
      */
-    const functions$2 = functionRegistry.content;
+    const functions$1 = functionRegistry.content;
     const POSTFIX_UNARY_OPERATORS = ["%"];
     const OPERATORS = "+,-,*,/,:,=,<>,>=,>,<=,<,^,&".split(",").concat(POSTFIX_UNARY_OPERATORS);
     function tokenize(str) {
@@ -18851,7 +18847,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         if (result.length) {
             const value = result;
-            const isFunction = value.toUpperCase() in functions$2;
+            const isFunction = value.toUpperCase() in functions$1;
             if (isFunction) {
                 return { type: "FUNCTION", value };
             }
@@ -19303,7 +19299,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         return result;
     }
 
-    const functions$1 = functionRegistry.content;
+    const functions = functionRegistry.content;
     const OPERATOR_MAP = {
         "=": "EQ",
         "+": "ADD",
@@ -19377,7 +19373,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
              * between a cell value and a non cell value.
              */
             function compileFunctionArgs(ast) {
-                const functionDefinition = functions$1[ast.value.toUpperCase()];
+                const functionDefinition = functions[ast.value.toUpperCase()];
                 const currentFunctionArguments = ast.args;
                 // check if arguments are supplied in the correct quantities
                 const nbrArg = currentFunctionArguments.length;
@@ -20037,10 +20033,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         this.resetContent();
                     }
                     if (cmd.sheetIdFrom !== cmd.sheetIdTo) {
+                        const activePosition = this.getters.getActivePosition();
                         const { col, row } = this.getters.getNextVisibleCellPosition({
                             sheetId: cmd.sheetIdTo,
-                            col: 0,
-                            row: 0,
+                            col: activePosition.col,
+                            row: activePosition.row,
                         });
                         const zone = this.getters.expandZone(cmd.sheetIdTo, positionToZone({ col, row }));
                         this.selection.resetAnchor(this, { cell: { col, row }, zone });
@@ -20212,7 +20209,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const zone = positionToZone({ col: this.col, row: this.row });
             this.selection.capture(this, { cell: { col: this.col, row: this.row }, zone }, {
                 handleEvent: this.handleEvent.bind(this),
-                release: () => (this.mode = "inactive"),
+                release: () => {
+                    this.stopEdition();
+                },
             });
         }
         stopEdition() {
@@ -20781,7 +20780,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         argToFocus: Number,
     };
 
-    const functions = functionRegistry.content;
     const ASSISTANT_WIDTH = 300;
     const FunctionColor = "#4a4e4d";
     const OperatorColor = "#3da4ab";
@@ -20899,6 +20897,16 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 return (assistantStyle += `width:${ASSISTANT_WIDTH}px;`);
             }
             return `width:${ASSISTANT_WIDTH}px;`;
+        }
+        get nonHiddenFunctions() {
+            return Object.keys(functionRegistry.content)
+                .filter((key) => {
+                return !functionRegistry.content[key].hidden;
+            })
+                .reduce((prevContent, currentKey) => {
+                prevContent[currentKey] = functionRegistry.content[currentKey];
+                return prevContent;
+            }, {});
         }
         setup() {
             owl.onMounted(() => {
@@ -21059,7 +21067,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         showAutocomplete(searchTerm) {
             this.autoCompleteState.showProvider = true;
-            let values = Object.entries(functionRegistry.content).map(([text, { description }]) => {
+            let values = Object.entries(this.nonHiddenFunctions).map(([text, { description }]) => {
                 return {
                     text,
                     description,
@@ -21219,7 +21227,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         // initialize Formula Assistant
                         const tokenContext = tokenAtCursor.functionContext;
                         const parentFunction = tokenContext.parent.toUpperCase();
-                        const description = functions[parentFunction];
+                        const description = this.nonHiddenFunctions[parentFunction];
+                        if (!description)
+                            return;
                         const argPosition = tokenContext.argPosition;
                         this.functionDescriptionState.functionName = parentFunction;
                         this.functionDescriptionState.functionDescription = description;
@@ -22221,6 +22231,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 this.startMovement(ev);
                 return;
             }
+            if (this.env.model.getters.getEditionMode() === "editing") {
+                this.env.model.selection.getBackToDefault();
+            }
             this.startSelection(ev, index);
         }
         startMovement(ev) {
@@ -23155,6 +23168,18 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         target: this.env.model.getters.getSelectedZones(),
                     });
                 },
+                ESCAPE: () => {
+                    /** TODO: Clean once we introduce proper focus on sub components. Grid should not have to handle all this logic */
+                    if (this.env.model.getters.hasOpenedPopover()) {
+                        this.closeOpenedPopover();
+                    }
+                    else if (this.menuState.isOpen) {
+                        this.closeMenu();
+                    }
+                    else {
+                        this.env.model.dispatch("CLEAN_CLIPBOARD_HIGHLIGHT");
+                    }
+                },
                 "CTRL+A": () => this.env.model.selection.loopSelection(),
                 "CTRL+Z": () => this.env.model.dispatch("REQUEST_UNDO"),
                 "CTRL+Y": () => this.env.model.dispatch("REQUEST_REDO"),
@@ -23276,7 +23301,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     `;
         }
         onClosePopover() {
-            this.closeOpenedPopover();
+            if (this.env.model.getters.hasOpenedPopover()) {
+                this.closeOpenedPopover();
+            }
             this.focus();
         }
         focus() {
@@ -23341,7 +23368,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (ctrlKey) {
                 this.env.model.dispatch("PREPARE_SELECTION_INPUT_EXPANSION");
             }
-            this.closeOpenedPopover();
+            if (this.env.model.getters.hasOpenedPopover()) {
+                this.closeOpenedPopover();
+            }
             if (this.env.model.getters.getEditionMode() === "editing") {
                 this.env.model.dispatch("STOP_EDITION");
             }
@@ -23392,7 +23421,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         processArrows(ev) {
             ev.preventDefault();
             ev.stopPropagation();
-            this.closeOpenedPopover();
+            if (this.env.model.getters.hasOpenedPopover()) {
+                this.closeOpenedPopover();
+            }
             updateSelectionWithArrowKeys(ev, this.env.model.selection);
             if (this.env.model.getters.isPaintingFormat()) {
                 this.env.model.dispatch("PASTE", {
@@ -23455,8 +23486,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const lastZone = zones[zones.length - 1];
             let type = "CELL";
             if (!isInside(col, row, lastZone)) {
-                this.env.model.dispatch("UNFOCUS_SELECTION_INPUT");
-                this.env.model.dispatch("STOP_EDITION");
+                this.env.model.selection.getBackToDefault();
                 this.env.model.selection.selectCell(col, row);
             }
             else {
@@ -23470,7 +23500,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.toggleContextMenu(type, x, y);
         }
         toggleContextMenu(type, x, y) {
-            this.closeOpenedPopover();
+            if (this.env.model.getters.hasOpenedPopover()) {
+                this.closeOpenedPopover();
+            }
             this.menuState.isOpen = true;
             this.menuState.position = { x, y };
             this.menuState.menuItems = registries$1[type]
@@ -30357,7 +30389,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             let sheetName = "";
             let prefixSheet = false;
             if (sheetXC.includes("!")) {
-                [sheetName, sheetXC] = sheetXC.split("!");
+                [sheetXC, sheetName] = sheetXC.split("!").reverse();
                 if (sheetName) {
                     prefixSheet = true;
                 }
@@ -34092,6 +34124,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     anchorRect: this.computePopoverAnchorRect(position),
                 };
         }
+        hasOpenedPopover() {
+            return this.persistentPopover !== undefined;
+        }
         getPersistentPopoverTypeAtPosition({ col, row }) {
             if (this.persistentPopover &&
                 this.persistentPopover.col === col &&
@@ -34109,7 +34144,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return this.getters.getVisibleRect(positionToZone({ col, row }));
         }
     }
-    CellPopoverPlugin.getters = ["getCellPopover", "getPersistentPopoverTypeAtPosition"];
+    CellPopoverPlugin.getters = [
+        "getCellPopover",
+        "getPersistentPopoverTypeAtPosition",
+        "hasOpenedPopover",
+    ];
 
     const BORDER_COLOR = "#8B008B";
     const BACKGROUND_COLOR = "#8B008B33";
@@ -35104,15 +35143,18 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     case "center": {
                         const emptyZone = {
                             ...zone,
-                            right: nextColIndex,
                             left: previousColIndex,
+                            right: nextColIndex,
                         };
-                        const { x, y, width, height } = this.getters.getVisibleRect(emptyZone);
-                        if (width < contentWidth ||
-                            previousColIndex === col ||
-                            nextColIndex === col ||
+                        const { x, y, height, width } = this.getters.getVisibleRect(emptyZone);
+                        const halfContentWidth = contentWidth / 2;
+                        const boxMiddle = box.x + box.width / 2;
+                        if (x + width < boxMiddle + halfContentWidth ||
+                            x > boxMiddle - halfContentWidth ||
                             fontSizePX > height) {
-                            box.clipRect = { x, y, width, height };
+                            const clipX = x > boxMiddle - halfContentWidth ? x : boxMiddle - halfContentWidth;
+                            const clipWidth = x + width - clipX;
+                            box.clipRect = { x: clipX, y, width: clipWidth, height };
                         }
                         break;
                     }
@@ -35321,7 +35363,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.ranges.splice(index, 0, ...values.map((xc, i) => ({
                 xc,
                 id: (this.ranges.length + i + 1).toString(),
-                color: getNextColor(),
+                color: colors$1[(this.ranges.length + i) % colors$1.length],
             })));
         }
         /**
@@ -37284,6 +37326,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     if (this.state.operation === "CUT") {
                         this.state = undefined;
                     }
+                    this.status = "invisible";
+                    break;
+                case "CLEAN_CLIPBOARD_HIGHLIGHT":
                     this.status = "invisible";
                     break;
                 case "DELETE_CELL": {
@@ -40773,6 +40818,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.mainSubscription = this.defaultSubscription;
         }
         /**
+         * Release whichever subscription in charge and get back to the default subscription
+         */
+        getBackToDefault() {
+            var _a, _b, _c;
+            if (this.mainSubscription === this.defaultSubscription) {
+                return;
+            }
+            (_c = (_a = this.mainSubscription) === null || _a === void 0 ? void 0 : (_b = _a.callbacks).release) === null || _c === void 0 ? void 0 : _c.call(_b);
+            this.mainSubscription = this.defaultSubscription;
+        }
+        /**
          * Check if you are currently the main stream consumer
          */
         isListening(owner) {
@@ -40834,6 +40890,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 this.stream.release(owner);
                 this.anchor = this.defaultAnchor;
             }
+        }
+        getBackToDefault() {
+            this.stream.getBackToDefault();
         }
         /**
          * Select a new anchor
@@ -43338,8 +43397,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2022-12-22T13:54:58.664Z';
-    exports.__info__.hash = '4c5002d';
+    exports.__info__.date = '2023-01-03T15:48:39.043Z';
+    exports.__info__.hash = 'fa607cf';
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map
