@@ -1,0 +1,90 @@
+.debug-widget {
+    z-index: 100000;
+    position: fixed;
+    right: 10px;
+    top: 106px;
+    width: 200px;
+    font-size: 10px;
+
+    background: rgba(0, 0, 0, 0.82);
+    color: white;
+    padding-bottom: 10px;
+    cursor: move;
+    -webkit-transform: translate3d(0, 0, 0);
+}
+
+.debug-widget .toggle {
+    position: absolute;
+    font-size: 16px;
+    cursor: pointer;
+    top: 0px;
+    right: 0px;
+    padding: 10px;
+    padding-right: 15px;
+}
+
+.debug-widget .content {
+    overflow: hidden;
+}
+
+.debug-widget header {
+    position: relative;
+}
+
+.debug-widget h1 {
+    background: black;
+    padding-top: 10px;
+    padding-left: 10px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.debug-widget .category {
+    background: black;
+    padding-left: 10px;
+    margin: 0px;
+    font-weight: bold;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+.debug-widget .button {
+    padding: 5px;
+    padding-left: 15px;
+    display: block;
+    cursor: pointer;
+}
+
+.debug-widget .button:active {
+    background: rgba(96, 21, 177, 0.45);
+}
+
+.debug-widget input {
+    margin-left: 10px;
+    margin-top: 7px;
+    padding: 4px;
+    width: 180px;
+    border: none;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    border-radius: 3px;
+}
+
+.debug-widget .status {
+    padding: 5px;
+    padding-left: 15px;
+    display: block;
+    cursor: default;
+}
+
+.debug-widget .status.on {
+    background-color: #6cd11d;
+}
+
+.debug-widget .event {
+    padding: 5px;
+    padding-left: 15px;
+    display: block;
+    cursor: default;
+    background-color: #1E1E1E;
+}
