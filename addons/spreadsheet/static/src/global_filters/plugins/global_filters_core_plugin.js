@@ -27,6 +27,7 @@ import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
 import CommandResult from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { checkFiltersTypeValueCombination } from "@spreadsheet/global_filters/helpers";
 import { _t } from "@web/core/l10n/translation";
+import { escapeRegExp } from "@web/core/utils/strings";
 
 export class GlobalFiltersCorePlugin extends spreadsheet.CorePlugin {
     constructor(config) {
@@ -207,7 +208,7 @@ export class GlobalFiltersCorePlugin extends spreadsheet.CorePlugin {
      */
     _updateFilterLabelInFormulas(currentLabel, newLabel) {
         const sheetIds = this.getters.getSheetIds();
-        currentLabel = currentLabel.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        currentLabel = escapeRegExp(currentLabel);
         for (const sheetId of sheetIds) {
             for (const cell of Object.values(this.getters.getCells(sheetId))) {
                 if (cell.isFormula) {
