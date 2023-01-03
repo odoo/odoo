@@ -10,12 +10,5 @@ class TestSpreadsheetDashboardData(ValidateSpreadsheetData):
         """validate fields and models used in dashboards"""
         dashboards = self.env["spreadsheet.dashboard"].search([])
         for dashboard in dashboards:
-            # this dashboard is skipped because it's currently broken
-            # but I still want to merge this test right now to avoid other broken dashboards
-            if dashboard == self.env.ref(
-                "spreadsheet_dashboard_hr_expense.spreadsheet_dashboard_expense",
-                raise_if_not_found=False,
-            ):
-                continue
             with self.subTest(dashboard.name):
                 self.validate_spreadsheet_data(dashboard.raw, dashboard.name)
