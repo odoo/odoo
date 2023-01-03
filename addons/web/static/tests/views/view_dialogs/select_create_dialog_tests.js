@@ -343,7 +343,7 @@ QUnit.module("ViewDialogs", (hooks) => {
     });
 
     QUnit.test("SelectCreateDialog: save current search", async function (assert) {
-        assert.expect(4);
+        assert.expect(5);
 
         serverData.views = {
             "partner,false,list": `
@@ -385,6 +385,9 @@ QUnit.module("ViewDialogs", (hooks) => {
                     "should save the correct context"
                 );
                 return 7; // fake serverSideId
+            }
+            if (args.method === "get_views") {
+                assert.equal(args.kwargs.options.load_filters, true, "Missing load_filters option");
             }
         };
         patchWithCleanup(browser, { setTimeout: (fn) => fn() });
