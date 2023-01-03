@@ -289,12 +289,21 @@ export async function pickDate(target, date) {
     await click(el);
 }
 
-function findAllDaySlot(target, date) {
-    return target.querySelector(`.fc-day-grid .fc-day[data-date="${date}"]`);
+export function expandCalendarView(target) {
+    // Expends Calendar view and FC too
+    let tmpElement = target.querySelector(".fc");
+    do {
+        tmpElement = tmpElement.parentElement;
+        tmpElement.classList.add("h-100");
+    } while (!tmpElement.classList.contains("o_view_controller"));
+}
+
+export function findAllDaySlot(target, date) {
+    return target.querySelector(`.fc-daygrid-body .fc-day[data-date="${date}"]`);
 }
 
 export function findDateCell(target, date) {
-    return target.querySelector(`.fc-day-top[data-date="${date}"]`);
+    return target.querySelector(`.fc-day[data-date="${date}"]`);
 }
 
 export function findEvent(target, eventId) {
@@ -302,11 +311,11 @@ export function findEvent(target, eventId) {
 }
 
 export function findDateCol(target, date) {
-    return target.querySelector(`.fc-day-header[data-date="${date}"]`);
+    return target.querySelector(`.fc-col-header-cell.fc-day[data-date="${date}"]`);
 }
 
 export function findTimeRow(target, time) {
-    return target.querySelector(`.fc-slats [data-time="${time}"] .fc-widget-content`);
+    return target.querySelector(`.fc-timegrid-slot[data-time="${time}"]`);
 }
 
 export async function triggerEventForCalendar(el, type, position = {}) {
@@ -359,7 +368,7 @@ export async function selectTimeRange(target, startDateTime, endDateTime) {
 
     await triggerEventForCalendar(startRow, "mousedown", {
         x: startColRect.x + startColRect.width / 2,
-        y: startRowRect.y + 1,
+        y: startRowRect.y + 2,
     });
 
     await scrollTo(endRow, false);
@@ -368,11 +377,11 @@ export async function selectTimeRange(target, startDateTime, endDateTime) {
 
     await triggerEventForCalendar(endRow, "mousemove", {
         x: endColRect.x + endColRect.width / 2,
-        y: endRowRect.y - 1,
+        y: endRowRect.y - 2,
     });
     await triggerEventForCalendar(endRow, "mouseup", {
         x: endColRect.x + endColRect.width / 2,
-        y: endRowRect.y - 1,
+        y: endRowRect.y - 2,
     });
     await nextTick();
 }
@@ -480,10 +489,10 @@ export async function resizeEventToTime(target, eventId, dateTime) {
 
     // Find event position
     await scrollTo(event);
-    await triggerEventForCalendar(event, "mouseenter");
+    await triggerEventForCalendar(event, "mouseover");
 
     // Find event resizer
-    const resizer = event.querySelector(".fc-end-resizer");
+    const resizer = event.querySelector(".fc-event-resizer-end");
     resizer.style.display = "block";
     resizer.style.width = "100%";
     resizer.style.height = "1em";

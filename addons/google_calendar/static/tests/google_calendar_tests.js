@@ -128,7 +128,7 @@ QUnit.module('Google Calendar', {
         // select the partner filter
         await click(target.querySelector('.o_calendar_filter_item[data-value=all] input'));
         // sync_data was called a first time without filter, event from google calendar was created twice
-        assert.containsN(target, '.fc-event-container', 4, "should display 4 events on the month");
+        assert.containsN(target, '.fc-event', 4, "should display 4 events on the month");
 
         await click(target.querySelector('.o_datetime_picker_header .o_next'));
         await click(target.querySelector('.o_datetime_picker .o_date_item_cell'));
@@ -149,6 +149,6 @@ QUnit.module('Google Calendar', {
             "/web/dataset/call_kw/calendar.event/search_read",
         ], 'should do a search_read before and after the call to sync_data');
 
-        assert.containsN(target, '.fc-event-container', 7, "should now display 7 events on the month");
+        assert.containsN(target, '.fc-event', 7, "should now display 7 events on the month");
     });
 });
