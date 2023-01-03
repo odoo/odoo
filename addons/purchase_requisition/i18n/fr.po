@@ -7,15 +7,14 @@
 # Cécile Collart <cco@odoo.com>, 2022
 # Caroline Renson <car@odoo.com>, 2022
 # Jolien De Paepe, 2022
-# Damien Bouvy <dbo@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"POT-Creation-Date: 2022-12-15 12:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Damien Bouvy <dbo@odoo.com>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -147,6 +146,7 @@ msgid "Alternative Purchase Order"
 msgstr "Bon de commande alternatif"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
 #, python-format
@@ -169,9 +169,9 @@ msgid "Analytic"
 msgstr "Analytique"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_distribution_stored_char
-msgid "Analytic Distribution Stored Char"
-msgstr "Analytic Distribution Stored Char"
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_precision
+msgid "Analytic Precision"
+msgstr "Précision analytique"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
@@ -220,6 +220,7 @@ msgid "Cancelled"
 msgstr "Annulé"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "Cancelled by the agreement associated to this quotation."
@@ -268,6 +269,7 @@ msgid "Company"
 msgstr "Société"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "Compare Order Lines"
@@ -323,6 +325,7 @@ msgstr ""
 "                            En comparant les lignes de produit, vous pouvez également décider de commander certains produits auprès d'un fournisseur et d'autres produits auprès d'un autre."
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "Create alternative"
@@ -627,6 +630,7 @@ msgid "Next Activity Type"
 msgstr "Type d'activités à venir"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "Nothing to clear"
@@ -921,12 +925,14 @@ msgstr ""
 "actions est pour aujourd'hui ou avant"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "Some not cleared"
 msgstr "Certains ne sont pas supprimés"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid ""
@@ -1004,6 +1010,7 @@ msgstr ""
 "créé."
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
 msgid ""
@@ -1016,12 +1023,14 @@ msgstr ""
 "blocage et ne peut pas être sélectionné pour créer une alternative."
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "There are no quantities to clear."
 msgstr "Il n'y a pas de quantités à effacer."
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid ""
@@ -1033,6 +1042,7 @@ msgstr ""
 "nouvelle."
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
@@ -1092,6 +1102,7 @@ msgid "Warning Messages"
 msgstr "Messages d'avertissement"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
 msgid ""
@@ -1102,6 +1113,7 @@ msgstr ""
 "%(warning_message)s\n"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
 msgid ""
@@ -1112,6 +1124,7 @@ msgstr ""
 "%(warning_message)s\n"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "Warning for %s"
@@ -1150,12 +1163,14 @@ msgstr ""
 "Assistant pour prédéfinir des valeurs pour les bons de commande alternatifs"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You can only delete draft requisitions."
 msgstr "Vous pouvez seulement supprimer les demandes brouillon."
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm agreement '%s' because there is no product line."
@@ -1164,6 +1179,7 @@ msgstr ""
 "d'article."
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
@@ -1174,6 +1190,7 @@ msgstr ""
 "prix."
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm the blanket order without quantity."
@@ -1182,6 +1199,7 @@ msgstr ""
 "quantité."
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid ""

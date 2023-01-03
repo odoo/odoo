@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Andy Yiu, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Andy Yiu, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -105,7 +106,8 @@ msgstr ""
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "All planned operations included"
 msgstr ""
@@ -122,21 +124,24 @@ msgstr "なるべく早く"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/js/qty_at_date_widget.js:0
+#: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.js:0
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Availability"
 msgstr "利用可能"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Available"
 msgstr "処理可能"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Available in stock"
 msgstr ""
@@ -256,7 +261,8 @@ msgstr "予定日"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Expected Delivery"
 msgstr "配送予定"
@@ -273,7 +279,8 @@ msgstr ""
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Forecasted Stock"
 msgstr "予測在庫"
@@ -410,14 +417,21 @@ msgstr "配送予定を早める日数"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #, python-format
 msgid "No enough future availaibility"
 msgstr ""
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+#, python-format
+msgid "No future availability"
+msgstr ""
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #, python-format
 msgid "No future availaibility"
 msgstr ""
@@ -425,6 +439,13 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__pending
 msgid "Not Delivered"
+msgstr ""
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+#, python-format
+msgid "Not enough future availability"
 msgstr ""
 
 #. module: sale_stock
@@ -436,7 +457,8 @@ msgstr "注文確認と顧客への製品の出荷までの日数"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "On"
 msgstr "On"
@@ -473,20 +495,24 @@ msgid "Qty To Deliver"
 msgstr "配送予定数量"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.sale_report_product_product_replenishment
+#. openerp-web
+#: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Quotations"
 msgstr "見積"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Remaining demand available at"
 msgstr ""
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Reserved"
 msgstr "引当済"
@@ -590,7 +616,7 @@ msgstr "プロダクトが利用可能になり次第出荷 (バックオーダ�
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
 msgid "Shipping Policy"
-msgstr "出荷方針"
+msgstr "配送方針"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -625,7 +651,7 @@ msgstr "在庫規則レポート"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
 #, python-format
 msgid "The delivery"
 msgstr ""
@@ -649,7 +675,8 @@ msgstr ""
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "This product is replenished on demand."
 msgstr ""
@@ -671,7 +698,8 @@ msgstr "ユーザ"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "View Forecast"
 msgstr "フォーキャスト照会"
@@ -702,7 +730,7 @@ msgstr "全プロダクトが準備できてから"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to start shipping"
-msgstr "出荷開始タイミング"
+msgstr "配送タイミング"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -732,7 +760,7 @@ msgstr "代わりに処理"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
 #, python-format
 msgid "will be late."
 msgstr ""

@@ -182,8 +182,14 @@ class TestUiTranslate(odoo.tests.HttpCase):
             'language_ids': [(6, 0, [parseltongue.id])],
             'default_lang_id': parseltongue.id,
         })
+        website_2 = self.env['website'].create({
+            'name': 'website en_US',
+            'language_ids': [(6, 0, [self.env.ref('base.lang_en').id, parseltongue.id])],
+            'default_lang_id': parseltongue.id,
+        })
 
         self.start_tour(f"/website/force/{website.id}", 'snippet_translation', login='admin')
+        self.start_tour(f"/website/force/{website_2.id}", 'snippet_translation_changing_lang', login='admin')
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')

@@ -8,32 +8,31 @@
 # Mohamed Sallam, 2022
 # Susanna Pujol, 2022
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2022
+# eriiikgt, 2022
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
 # Harcogourmet, 2022
 # RGB Consulting <odoo@rgbconsulting.com>, 2022
 # Eugeni Chafer <eugeni@chafer.cat>, 2022
+# Arnau Ros, 2022
+# Jonatan Gk, 2022
 # Sandra Franch <sandra.franch@upc.edu>, 2022
 # marcescu, 2022
 # Carles Antoli <carlesantoli@hotmail.com>, 2022
 # Josep Anton Belchi, 2022
+# Quim - eccit <quim@eccit.com>, 2022
 # Martin Trigaux, 2022
 # Cristian Cruz, 2022
 # Guspy12, 2022
 # CristianCruzParra, 2022
-# Ivan Espinola, 2022
-# eriiikgt, 2022
-# Quim - eccit <quim@eccit.com>, 2022
-# Jonatan Gk, 2022
-# José Cabrera Lozano <jose.cabrera@edukative.es>, 2022
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2022
-# Arnau Ros, 2022
+# Ivan Espinola, 2022
 # Farouk Jabiri, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"POT-Creation-Date: 2022-12-15 12:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Farouk Jabiri, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
@@ -64,18 +63,21 @@ msgid "# of Sales Orders"
 msgstr "# d'ordres de vendes"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "%(amount)s due %(date)s"
 msgstr "%(amount)s vençut %(date)s"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "%(line_description)s (Canceled)"
 msgstr "%(line_description)s (cancel·lat)"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "%(line_description)s (Draft)"
@@ -101,13 +103,7 @@ msgstr ""
 " 'Comanda - %s' % (object.name)"
 
 #. module: sale
-#: model:product.product,description_sale:sale.product_product_4e
-#: model:product.product,description_sale:sale.product_product_4f
-msgid "160x80cm, with large legs."
-msgstr "160x80cm, amb cames grans."
-
-#. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid ""
@@ -118,7 +114,7 @@ msgstr ""
 "correu electrònic per validar la cita."
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid ""
@@ -126,7 +122,7 @@ msgid ""
 msgstr "<b>Envieu-vos el pressupost</b> i comproveu el que rebrà el client. "
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "<b>Set a price</b>."
@@ -959,12 +955,14 @@ msgstr ""
 " una quantitat que sigui múltiple del nombre de unitats per paquet"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Pay Quotation"
 msgstr "Accepta el pressupost de pagament"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Sign Quotation"
@@ -1112,11 +1110,6 @@ msgid "Analytic Account"
 msgstr "Compte analític"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution_stored_char
-msgid "Analytic Distribution Stored Char"
-msgstr "Caràcter emmagatzemat de la distribució analítica"
-
-#. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__analytic
 msgid "Analytic From Expenses"
 msgstr "Analítiques de les despeses"
@@ -1130,6 +1123,11 @@ msgstr "Línia analítica"
 #: model:ir.model,name:sale.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
 msgstr "Aplicabilitats del plan analític"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_precision
+msgid "Analytic Precision"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_line_ids
@@ -1262,6 +1260,7 @@ msgid "Cancel"
 msgstr "Cancel·lar"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Cancel %s"
@@ -1303,14 +1302,14 @@ msgid "Choose how to confirm quotations"
 msgstr "Escolliu com confirmar pressupostos"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Click here to add some products or services to your quotation."
 msgstr "Cliqueu aquí per a afegir productes o serveis al pressupost"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
 #, python-format
 msgid "Click to define an invoicing target"
@@ -1345,6 +1344,13 @@ msgstr "Empreses"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Company"
 msgstr "Empresa"
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/tours/sale.js:0
+#, python-format
+msgid "Complete your company's data"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1411,12 +1417,6 @@ msgstr "Connectors"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Contact"
 msgstr "Contacte"
-
-#. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid "Contact Us"
-msgstr "Contacta'ns"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__body
@@ -1545,7 +1545,6 @@ msgstr "Taxa monetària"
 
 #. module: sale
 #: model:product.attribute.value,name:sale.product_attribute_value_7
-#: model:product.template.attribute.value,name:sale.product_4_attribute_1_value_3
 msgid "Custom"
 msgstr "Personalitzat"
 
@@ -1611,12 +1610,6 @@ msgid "Customers"
 msgstr "Clients"
 
 #. module: sale
-#: model:product.product,name:sale.product_product_4e
-#: model:product.product,name:sale.product_product_4f
-msgid "Customizable Desk"
-msgstr "Escriptori personalitzable"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
 msgid "Customize"
 msgstr "Personalitzar"
@@ -1627,7 +1620,7 @@ msgid "Customize the look of your quotations."
 msgstr "Personalitzeu l'aspecte dels pressupostos."
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Customize your quotes and orders."
@@ -1685,6 +1678,7 @@ msgid "Delivered"
 msgstr "Lliurat"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Delivered Quantity: %s"
@@ -1730,7 +1724,6 @@ msgstr ""
 "servir el mínim o el màxim \"lead time\" de les línies de comanda."
 
 #. module: sale
-#: model:product.product,name:sale.advance_product_0
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Deposit"
 msgstr "Dipòsit"
@@ -1748,7 +1741,7 @@ msgid "Description"
 msgstr "Descripció"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/product_discount_field.js:0
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
@@ -1796,7 +1789,7 @@ msgid "Display Type"
 msgstr "Tipus de visualització"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/product_discount_field.js:0
 #, python-format
 msgid "Do you want to apply this value to all lines ?"
@@ -1820,6 +1813,7 @@ msgid "Done"
 msgstr "Fet"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down Payment"
@@ -1841,12 +1835,14 @@ msgid "Down Payment Product"
 msgstr "Producte en Dipòsit "
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down Payment: %s (Draft)"
 msgstr "Pagament: %s (esborrany)"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
@@ -1854,6 +1850,7 @@ msgid "Down Payments"
 msgstr "Dipòsits"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down payment"
@@ -1870,6 +1867,7 @@ msgid "Down payment (percentage)"
 msgstr "Dipòsit (percentatge) "
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down payment of %s%%"
@@ -1900,7 +1898,7 @@ msgid "Easypost Connector"
 msgstr "Connector EasyPost"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/sale_product_field.js:0
 #, python-format
 msgid "Edit Configuration"
@@ -1926,12 +1924,6 @@ msgstr "Assistent de redacció de correu electrònic"
 msgid "Email sent to the customer once the invoice is available."
 msgstr ""
 "Correu electrònic enviat al client un cop la factura estigui disponible."
-
-#. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid "Ergonomic"
-msgstr "Ergonòmic"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
@@ -1971,6 +1963,7 @@ msgid "Extra Values"
 msgstr "Valor extra"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Extra line with %s"
@@ -2068,7 +2061,7 @@ msgid "Get warnings in orders for products or customers"
 msgstr "Rebre avisos en comandes per productes o clients"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Good job, let's continue."
@@ -2173,6 +2166,7 @@ msgid "Import Amazon orders and sync deliveries"
 msgstr "Importar comandes d'Amazon i sincronitzar lliuraments"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid "Import Template for Products"
@@ -2189,18 +2183,21 @@ msgid "Income Account"
 msgstr "Compte d'ingressos"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Invalid order."
 msgstr "Comanda no vàlida."
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Invalid signature data."
 msgstr "Data de signatura no vàlida."
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/account_move.py:0
 #, python-format
 msgid "Invoice %s paid"
@@ -2291,6 +2288,7 @@ msgid "Invoiced Quantity"
 msgstr "Quantitat facturada"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Invoiced Quantity: %s"
@@ -2402,6 +2400,7 @@ msgstr ""
 "proveïdor"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid ""
@@ -2412,6 +2411,7 @@ msgstr ""
 "%s"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "It is not allowed to confirm an order in the following states: %s"
@@ -2483,24 +2483,18 @@ msgid "Let your customers log in to see their documents"
 msgstr "Deixar als clients entrar a veure els seus documents "
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Let's send the quote."
 msgstr "Enviem la cita."
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Lets keep electronic signature for now."
 msgstr "Mantinguem la signatura electrònica per ara."
-
-#. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid "Locally handmade"
-msgstr "Fet a mà localment"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
@@ -2519,17 +2513,7 @@ msgid "Locked"
 msgstr "Bloquejat"
 
 #. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid ""
-"Looking for a custom bamboo stain to match existing furniture? Contact us "
-"for a quote."
-msgstr ""
-"Buscant una taca de bambú personalitzada per a trobar mobles existents? "
-"Contacte amb nosaltres per citar-nos."
-
-#. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Looks good. Let's continue."
@@ -2677,6 +2661,7 @@ msgid "My Sales Order Lines"
 msgstr "Les meves línies de comandes de venda"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order.py:0
@@ -2737,7 +2722,7 @@ msgid "No orders to upsell found."
 msgstr "No s'ha trobat cap ordre per pujar."
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/variant_mixin.js:0
 #, python-format
 msgid "Not available with %s"
@@ -2763,7 +2748,7 @@ msgid "Nothing to Invoice"
 msgstr "Res a facturar"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Now, we'll create a sample quote."
@@ -2856,6 +2841,7 @@ msgid "Online confirmation"
 msgstr "Confirmació en línia"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Only draft orders can be marked as sent directly."
@@ -2871,7 +2857,7 @@ msgstr ""
 "comandes de vendes."
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
@@ -2916,6 +2902,7 @@ msgid "Order Count"
 msgstr "Comptador de comandes"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #: model:ir.model.fields,field_description:sale.field_sale_order__date_order
 #: model:ir.model.fields,field_description:sale.field_sale_report__date
@@ -2958,6 +2945,7 @@ msgid "Order Upsell"
 msgstr "Demanar una venda addicional"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Order signed by %s"
@@ -2969,6 +2957,7 @@ msgid "Order to Invoice"
 msgstr "Comanda a facturar"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Ordered Quantity: %(old_qty)s -> %(new_qty)s"
@@ -3110,16 +3099,6 @@ msgid "Portal Access URL"
 msgstr "L'URL del portal d'accés"
 
 #. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid ""
-"Press a button and watch your desk glide effortlessly from sitting to "
-"standing height in seconds."
-msgstr ""
-"Premi un botó i vegi com el seu escriptori es llisca sense esforç de la "
-"posició asseguda a la dempeus en qüestió de segons."
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce
 msgid "Price Reduce"
 msgstr "Preu reduït "
@@ -3241,6 +3220,7 @@ msgid "Product Variants"
 msgstr "Variants de producte"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Product prices have been recomputed according to pricelist %s."
@@ -3248,6 +3228,7 @@ msgstr ""
 "Els preus del producte s'han tornat a calcular segons la llista de preus %s."
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Product taxes have been recomputed according to fiscal position %s."
@@ -3328,6 +3309,7 @@ msgid "Quantity:"
 msgstr "Quantitat:"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__draft
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
@@ -3375,6 +3357,7 @@ msgid "Quotation Sent"
 msgstr "Pressupost enviat"
 
 #. module: sale
+#: code:addons/sale/models/res_config_settings.py:0
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
 msgid "Quotation Validity is required and must be greater than 0."
 msgstr "La validesa del Pressupost és necessària i ha de ser superior a 0."
@@ -3392,6 +3375,7 @@ msgid "Quotation sent"
 msgstr "Pressupost enviat"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Quotation viewed by customer %s"
@@ -3457,6 +3441,7 @@ msgid "Recompute all taxes based on this fiscal position"
 msgstr "Recalcula tots els impostos en funció d'aquesta posició fiscal"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Reference"
@@ -3514,6 +3499,7 @@ msgid "Request an online signature to confirm orders"
 msgstr "Demana una signatura en línia per confirmar les comandes"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Requested date is too soon."
@@ -3591,7 +3577,6 @@ msgstr "Incorporació  de la venta de la forma de pagament seleccionada"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_packaging__sales
-#: model:ir.ui.menu,name:sale.menu_report_product_all
 #: model:ir.ui.menu,name:sale.sale_menu_root
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3606,6 +3591,7 @@ msgid "Sales Advance Payment Invoice"
 msgstr "Vendes. Bestreta pagament factura"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/crm_team.py:0
 #: model:ir.actions.act_window,name:sale.action_order_report_all
 #: model:ir.actions.act_window,name:sale.action_order_report_so_salesteam
@@ -3629,6 +3615,7 @@ msgid "Sales Done"
 msgstr "Vendes realitzades"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #: model:ir.model,name:sale.model_sale_order
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_order_ids
@@ -3684,6 +3671,7 @@ msgstr ""
 "Línies de comandes de vendes relacionades com una comanda de venda meva"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/payment_transaction.py:0
 #: model_terms:ir.ui.view,arch_db:sale.transaction_form_inherit_sale
 #, python-format
@@ -3769,6 +3757,7 @@ msgid "Sales: Send Quotation"
 msgstr "Vendes: envia un pressupost"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/crm_team.py:0
 #, python-format
 msgid "Sales: Untaxed Total"
@@ -3785,12 +3774,14 @@ msgid "Salesperson"
 msgstr "Comercial"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/res_company.py:0
 #, python-format
 msgid "Sample Order Line"
 msgstr "Línia de comanda de mostra"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/res_company.py:0
 #, python-format
 msgid "Sample Product"
@@ -3823,7 +3814,7 @@ msgid "Security Token"
 msgstr "Token de Seguretat"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Select a product, or create a new one on the fly."
@@ -3972,6 +3963,7 @@ msgid "Show margins on orders"
 msgstr "Mostra marges en comandes"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Sign & Pay Quotation"
@@ -3994,6 +3986,7 @@ msgid "Signature"
 msgstr "Signatura"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Signature is missing."
@@ -4041,13 +4034,14 @@ msgid "Specific Email"
 msgstr "Correu específic"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Stage"
 msgstr "Etapa"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Start by checking your company's data."
@@ -4149,6 +4143,7 @@ msgid "Taxes used for deposits"
 msgstr "Impost utilitzat per als dipòsits "
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/crm_team.py:0
 #, python-format
 msgid ""
@@ -4173,6 +4168,7 @@ msgid "Terms & Conditions format"
 msgstr "Format de termes i condicions"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Terms & Conditions: %s"
@@ -4208,6 +4204,7 @@ msgstr ""
 "Podeu utilitzar aquest camp per la cerca ràpida."
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -4218,6 +4215,7 @@ msgstr ""
 "podeu registrar una despesa en una ordre de vendes cancel·lada."
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -4230,6 +4228,7 @@ msgstr ""
 " Si us plau, creu un nou SO vinculat a aquest compte analític."
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -4240,6 +4239,14 @@ msgstr ""
 "de registrar les despeses."
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/controllers/portal.py:0
+#, python-format
+msgid "The access token is invalid."
+msgstr "El testimoni d'accés no és vàlid."
+
+#. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -4255,6 +4262,7 @@ msgid "The fixed amount to be invoiced in advance, taxes excluded."
 msgstr "L'import fix a facturar per endavant, els impostos exclosos."
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
@@ -4287,16 +4295,7 @@ msgstr ""
 "cost fixat en el formulari de detall"
 
 #. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid ""
-"The minimum height is 65 cm, and for standing work the maximum height "
-"position is 125 cm."
-msgstr ""
-"L'alçada mínima és 65 cm, i per treballar en la posició màxima d'alçada és "
-"125 cm."
-
-#. module: sale
+#. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The order is not in a state requiring customer signature."
@@ -4304,12 +4303,6 @@ msgstr "La comanda no està en un estat que requereix la signatura del client."
 
 #. module: sale
 #. odoo-python
-#: code:addons/sale/controllers/portal.py:0
-#, python-format
-msgid "The access token is invalid."
-msgstr "El testimoni d'accés no és vàlid."
-
-#. module: sale
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "The ordered quantity has been updated."
@@ -4327,6 +4320,7 @@ msgstr ""
 "El percentatge de l'import a facturar per endavant, els impostos exclosos."
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid ""
@@ -4337,6 +4331,7 @@ msgstr ""
 " 'Servei'. Si us plau utilitzeu un altre producte o actualitzeu-lo."
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid ""
@@ -4349,6 +4344,7 @@ msgstr ""
 "producte de dipòsit per poder crear una factura de dipòsit."
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
@@ -4356,6 +4352,7 @@ msgid "The provided parameters are invalid."
 msgstr "Els paràmetres proporcionats no són vàlids"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
@@ -4373,6 +4370,7 @@ msgid "There are currently no quotations for your account."
 msgstr "No hi ha pressupostos en el teu compte"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -4442,6 +4440,7 @@ msgstr ""
 "domini, o el nom de la llista de correu electrònic"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid ""
@@ -4540,7 +4539,7 @@ msgstr ""
 " *Acció*"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid ""
@@ -4631,6 +4630,7 @@ msgid "UTM Campaign"
 msgstr "Campanya UTM"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/wizard/sale_order_cancel.py:0
 #, python-format
 msgid "Unable to post message, please configure the sender's email address."
@@ -4656,14 +4656,6 @@ msgstr "Preu unitari:"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Unit of Measure"
 msgstr "Unitat de mesura"
-
-#. module: sale
-#: model:product.product,uom_name:sale.advance_product_0
-#: model:product.product,uom_name:sale.product_product_4e
-#: model:product.product,uom_name:sale.product_product_4f
-#: model:product.template,uom_name:sale.advance_product_0_product_template
-msgid "Units"
-msgstr "Unitats"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_form_action
@@ -4724,6 +4716,7 @@ msgid "Update Taxes"
 msgstr "Actualitzar impostos"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Upsell %(order)s for customer %(customer)s"
@@ -4756,12 +4749,14 @@ msgid "Variant Grid Entry"
 msgstr "Graella d'entrada de variants"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "View Order"
 msgstr "Veure comanda"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order.py:0
@@ -4780,18 +4775,20 @@ msgid "Volume"
 msgstr "Volum"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/product_product.py:0
 #: code:addons/sale/models/product_template.py:0
+#: code:addons/sale/models/res_config_settings.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 #: model:ir.model.fields.selection,name:sale.selection__product_template__sale_line_warn__warning
 #: model:ir.model.fields.selection,name:sale.selection__res_partner__sale_warn__warning
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
-#: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 #, python-format
 msgid "Warning"
 msgstr "Avís"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
@@ -4810,16 +4807,6 @@ msgid "Warning when Selling this Product"
 msgstr "Avís quan ven aquest producte"
 
 #. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid ""
-"We pay special attention to detail, which is why our desks are of a superior"
-" quality."
-msgstr ""
-"Prestem especial atenció als detalls, per això els nostres escriptoris són "
-"de qualitat superior."
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__website_message_ids
 msgid "Website Messages"
 msgstr "Missatges del lloc web"
@@ -4830,7 +4817,7 @@ msgid "Website communication history"
 msgstr "Historial de comunicacions del lloc web"
 
 #. module: sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Write a company name to create one, or see suggestions."
@@ -4843,6 +4830,7 @@ msgid "You can invoice them before they are delivered."
 msgstr "Podeu facturar-los abans de ser lliurats."
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -4853,6 +4841,7 @@ msgstr ""
 " cancel·lar-los."
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid ""
@@ -4882,6 +4871,7 @@ msgstr ""
 " venda. La comunicació es lliurarà al client quan triï la forma de pagament."
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/product_product.py:0
 #: code:addons/sale/models/product_template.py:0
 #, python-format
@@ -4893,6 +4883,7 @@ msgstr ""
 "venda."
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid ""
@@ -4938,6 +4929,7 @@ msgid "Your order is not in a state to be rejected."
 msgstr "La comanda no està en un estat per a ésser rebutjada"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -4950,7 +4942,6 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.server,name:sale.send_invoice_cron_ir_actions_server
 #: model:ir.cron,cron_name:sale.send_invoice_cron
-#: model:ir.cron,name:sale.send_invoice_cron
 msgid "automatic invoicing: send ready invoice"
 msgstr "factura automàtica: envia la factura preparada"
 
@@ -4971,6 +4962,7 @@ msgid "days"
 msgstr "dies"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "sale order"

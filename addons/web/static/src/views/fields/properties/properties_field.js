@@ -83,6 +83,21 @@ export class PropertiesField extends Component {
     }
 
     /**
+     * Return the current properties value splitted in multiple groups/columns.
+     *
+     * @returns {Array<Array>}
+     */
+    get groupedPropertiesList() {
+        const columns = this.env.isSmall ? 1 : this.props.columns;
+        // If no properties, assure that the "Add Property" button is shown.
+        const res = [...Array(columns)].map(col => []);
+        this.propertiesList.forEach((val, index) => {
+            res[index % columns].push(val);
+        });
+        return res;
+    }
+
+    /**
      * Return false if we should not close the popover containing the
      * properties definition based on the event received.
      *

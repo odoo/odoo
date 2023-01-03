@@ -44,8 +44,9 @@ class WebSocketMock extends EventTarget {
     }
 }
 
-class SharedWorkerMock {
+class SharedWorkerMock extends EventTarget {
     constructor(websocketWorker) {
+        super();
         this._websocketWorker = websocketWorker;
         this._messageChannel = new MessageChannel();
         this.port = this._messageChannel.port1;

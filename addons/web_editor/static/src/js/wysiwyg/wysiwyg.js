@@ -307,7 +307,14 @@ const Wysiwyg = Widget.extend({
                 $el.selectElement();
 
                 if (!$el.parent().hasClass('o_stars')) {
-                    self.openMediaDialog(params);
+                    // Waiting for all the options to be initialized before
+                    // opening the media dialog and only if the media has not
+                    // been deleted in the meantime.
+                    self.waitForEmptyMutexAction().then(() => {
+                        if ($el[0].parentElement) {
+                            self.openMediaDialog(params);
+                        }
+                    });
                 }
             }
         });
@@ -703,9 +710,7 @@ const Wysiwyg = Widget.extend({
             Wysiwyg.activeCollaborationChannelNames.delete(this._collaborationChannelName);
         }
 
-        if (this.ptp) {
-            this.ptp.stop();
-        }
+        this._stopPeerToPeer();
         document.removeEventListener("mousemove", this._signalOnline, true);
         document.removeEventListener("keydown", this._signalOnline, true);
         document.removeEventListener("keyup", this._signalOnline, true);
@@ -1403,6 +1408,18 @@ const Wysiwyg = Widget.extend({
     },
     getInSelection(selector) {
         return getInSelection(this.odooEditor.document, selector);
+    },
+    /**
+     * Adds an empty action in the mutex. Can be used to wait for some options
+     * to be initialized before doing something else.
+     *
+     * @returns {Promise}
+     */
+    waitForEmptyMutexAction() {
+        if (this.snippetsMenu) {
+            return this.snippetsMenu.execWithLoadingEffect(() => null, false);
+        }
+        return Promise.resolve();
     },
 
     //--------------------------------------------------------------------------
@@ -2482,19 +2499,21 @@ const Wysiwyg = Widget.extend({
         // No need for secure random number.
         return Math.floor(Math.random() * Math.pow(2, 52)).toString();
     },
+    _stopPeerToPeer: function () {
+        this.ptp && this.ptp.stop();
+        this._collaborationStopBus && this._collaborationStopBus();
+    },
     resetEditor: function (value, options) {
         this.options = this._getEditorOptions(options);
         const {collaborationChannel} = options;
-        if (!this.ptp) {
+        this._stopPeerToPeer();
+        // If there is no collaborationResId, the record has been deleted.
+        if (!collaborationChannel || !collaborationChannel.collaborationResId) {
             this.setValue(value);
             this.odooEditor.historyReset();
             return;
         }
-        this.ptp.stop();
-        if (collaborationChannel) {
-            this._collaborationStopBus();
-            this.setupCollaboration(collaborationChannel);
-        }
+        this.setupCollaboration(collaborationChannel);
         this._currentClientId = this._generateClientId();
         this._startCollaborationTime = new Date().getTime();
         this.ptp = this._getNewPtp();

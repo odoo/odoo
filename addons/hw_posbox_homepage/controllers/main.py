@@ -211,7 +211,7 @@ class IoTboxHomepage(Home):
         else:
             url = helpers.get_odoo_server_url()
             token = helpers.get_token()
-        if iotname:
+        if iotname and platform.system() == 'Linux':
             subprocess.check_call([get_resource_path('point_of_sale', 'tools/posbox/configuration/rename_iot.sh'), iotname])
         else:
             helpers.odoo_restart(3)

@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2022-12-15 12:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
@@ -103,15 +103,6 @@ msgid "Extra Unit Cost"
 msgstr ""
 
 #. module: mrp_account
-#: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__costs_hour_account_id
-msgid ""
-"Fill this only if you want automatic analytic accounting entries on "
-"production orders."
-msgstr ""
-"Chỉ điền nó nếu bạn muốn bút toán kế toán quản trị tự động trên lệnh sản "
-"xuất."
-
-#. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_move_line
 msgid "Journal Item"
 msgstr "Bút toán"
@@ -136,6 +127,13 @@ msgstr "Số đơn sản xuất"
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__mo_analytic_account_line_id
 msgid "Mo Analytic Account Line"
 msgstr "Dòng tài khoản phân tích MO"
+
+#. module: mrp_account
+#: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__costs_hour_account_id
+msgid ""
+"Posts analytical accounting entries in real time for both component and "
+"operational costs."
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_template
@@ -183,6 +181,11 @@ msgid "Work Center"
 msgstr "Khu vực sản xuất"
 
 #. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_routing_workcenter
+msgid "Work Center Usage"
+msgstr "Sử dụng Năng lực sản xuất"
+
+#. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workorder
 msgid "Work Order"
 msgstr "Lệnh làm việc"
@@ -203,12 +206,14 @@ msgid "Workcenters"
 msgstr "Xưởng"
 
 #. module: mrp_account
+#. odoo-python
 #: code:addons/mrp_account/models/stock_move.py:0
 #, python-format
 msgid "[Raw] %s"
 msgstr "[Thô] %s"
 
 #. module: mrp_account
+#. odoo-python
 #: code:addons/mrp_account/models/mrp_production.py:0
 #: code:addons/mrp_account/models/mrp_workorder.py:0
 #, python-format

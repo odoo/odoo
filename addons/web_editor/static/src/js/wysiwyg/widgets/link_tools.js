@@ -107,6 +107,12 @@ const LinkTools = Link.extend({
     /**
      * @override
      */
+    _getIsNewWindowFormRow() {
+        return this.$('we-checkbox[name="is_new_window"]').closest('we-row');
+    },
+    /**
+     * @override
+     */
     _getLinkOptions: function () {
         const options = [
             'we-selection-items[name="link_style_color"] > we-button',
@@ -420,6 +426,15 @@ const LinkTools = Link.extend({
             $target.siblings('we-button').removeClass("active");
             this.options.wysiwyg.odooEditor.historyStep();
         }
+    },
+    /**
+     * @override
+     */
+    __onURLInput() {
+        this._super(...arguments);
+        this.options.wysiwyg.odooEditor.historyPauseSteps('_onURLInput');
+        this._adaptPreview();
+        this.options.wysiwyg.odooEditor.historyUnpauseSteps('_onURLInput');
     },
 });
 

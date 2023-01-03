@@ -35,3 +35,12 @@ class TestWebsiteControllerArgs(odoo.tests.HttpCase):
         req = self.url_open('/test_website/country/whatever-999999')
         self.assertEqual(req.status_code, 404,
                          "Model converter record does not exist, return a 404.")
+
+
+@odoo.tests.common.tagged('post_install', '-at_install')
+class TestWebsiteControllers(odoo.tests.TransactionCase):
+
+    def test_01_sitemap(self):
+        website = self.env['website'].browse(1)
+        locs = website.with_user(website.user_id)._enumerate_pages(query_string='test_website_sitemap')
+        self.assertEqual(len(list(locs)), 1, "The same URL should only be shown once")

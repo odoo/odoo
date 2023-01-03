@@ -316,6 +316,7 @@ class StockMove(models.Model):
 
     def _action_confirm(self, merge=True, merge_into=False):
         moves = self.action_explode()
+        merge_into = merge_into and merge_into.action_explode()
         # we go further with the list of ids potentially changed by action_explode
         return super(StockMove, moves)._action_confirm(merge=merge, merge_into=merge_into)
 
@@ -335,20 +336,23 @@ class StockMove(models.Model):
             if not bom:
                 moves_ids_to_return.add(move.id)
                 continue
-            if move.picking_id.immediate_transfer:
+            if move.picking_id.immediate_transfer or float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
                 factor = move.product_uom._compute_quantity(move.quantity_done, bom.product_uom_id) / bom.product_qty
             else:
                 factor = move.product_uom._compute_quantity(move.product_uom_qty, bom.product_uom_id) / bom.product_qty
             boms, lines = bom.sudo().explode(move.product_id, factor, picking_type=bom.picking_type_id)
             for bom_line, line_data in lines:
-                if move.picking_id.immediate_transfer:
+                if move.picking_id.immediate_transfer or float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
                     phantom_moves_vals_list += move._generate_move_phantom(bom_line, 0, line_data['qty'])
                 else:
                     phantom_moves_vals_list += move._generate_move_phantom(bom_line, line_data['qty'], 0)
             # delete the move with original product which is not relevant anymore
             moves_ids_to_unlink.add(move.id)
 
-        self.env['stock.move'].browse(moves_ids_to_unlink).sudo().unlink()
+        move_to_unlink = self.env['stock.move'].browse(moves_ids_to_unlink).sudo()
+        move_to_unlink.quantity_done = 0
+        move_to_unlink._action_cancel()
+        move_to_unlink.unlink()
         if phantom_moves_vals_list:
             phantom_moves = self.env['stock.move'].create(phantom_moves_vals_list)
             phantom_moves._adjust_procure_method()
@@ -404,7 +408,8 @@ class StockMove(models.Model):
         if bom_line.product_id.type in ['product', 'consu']:
             vals = self.copy_data(default=self._prepare_phantom_move_values(bom_line, product_qty, quantity_done))
             if self.state == 'assigned':
-                vals['state'] = 'assigned'
+                for v in vals:
+                    v['state'] = 'assigned'
         return vals
 
     def _is_consuming(self):

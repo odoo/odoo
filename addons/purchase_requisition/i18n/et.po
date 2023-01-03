@@ -20,9 +20,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"POT-Creation-Date: 2022-12-15 12:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Jana Jaakson, 2022\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
@@ -156,6 +156,7 @@ msgid "Alternative Purchase Order"
 msgstr "Alternatiivne ostutellimus"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
 #, python-format
@@ -178,8 +179,8 @@ msgid "Analytic"
 msgstr "Analüütiline"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_distribution_stored_char
-msgid "Analytic Distribution Stored Char"
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_precision
+msgid "Analytic Precision"
 msgstr ""
 
 #. module: purchase_requisition
@@ -229,6 +230,7 @@ msgid "Cancelled"
 msgstr "Tühistatud"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "Cancelled by the agreement associated to this quotation."
@@ -277,6 +279,7 @@ msgid "Company"
 msgstr "Ettevõte"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "Compare Order Lines"
@@ -331,6 +334,7 @@ msgstr ""
 "                            Tooteid on võimalus tellida samal ajal ka erinevatelt tarnijatelt."
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "Create alternative"
@@ -632,6 +636,7 @@ msgid "Next Activity Type"
 msgstr "Järgmise tegevuse tüüp"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "Nothing to clear"
@@ -925,12 +930,14 @@ msgstr ""
 "Näita kõiki andmeid, mille järgmise tegevuse kuupäev on enne tänast kuupäeva"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "Some not cleared"
 msgstr "Mõned on kustutamata"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid ""
@@ -1006,6 +1013,7 @@ msgid "The original PO that this alternative PO is being created for."
 msgstr "Algne ostutellimus, millele see alternatiivne ostutellimus luuakse"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
 msgid ""
@@ -1018,12 +1026,14 @@ msgstr ""
 " tootega ei saa alternatiivset hinnapakkumist luua."
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "There are no quantities to clear."
 msgstr "Ühikud kustutamiseks puuduvad"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid ""
@@ -1034,6 +1044,7 @@ msgstr ""
 "tellimuse loomise asemel lõpetada avatud kokkulepe."
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
@@ -1093,6 +1104,7 @@ msgid "Warning Messages"
 msgstr "Hoiatavad sõnumid"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
 msgid ""
@@ -1103,6 +1115,7 @@ msgstr ""
 "%(warning_message)s\n"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
 msgid ""
@@ -1113,6 +1126,7 @@ msgstr ""
 "%(warning_message)s\n"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "Warning for %s"
@@ -1148,18 +1162,21 @@ msgid "Wizard to preset values for alternative PO"
 msgstr "Soovitused alternatiivse ostutellimuse eelseadistatud väärtustele"
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You can only delete draft requisitions."
 msgstr "Saate kustutada ainult mustand taotluseid."
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm agreement '%s' because there is no product line."
 msgstr "Te ei saa kinnitada lepingut '%s' kuna puudub toote rida. "
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
@@ -1168,12 +1185,14 @@ msgid "You cannot confirm the blanket order without price."
 msgstr "Te ei saa kinnitada üldist ostukokkulepet ilma hinnata."
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm the blanket order without quantity."
 msgstr "Te ei saa kinnitada üldist ostukokkulepet ilma koguseta. "
 
 #. module: purchase_requisition
+#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid ""

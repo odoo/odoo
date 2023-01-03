@@ -50,6 +50,10 @@
                 <xpath expr="//field[@name='journal_id']" position="after">
                     <field name="l10n_ke_cu_invoice_number" string="Kenya CU Invoice Number" filter_domain="[('l10n_ke_cu_invoice_number', 'ilike', self')]" />
                 </xpath>
+                <xpath expr="//filter[@name='cancel']" position="after">
+                    <separator/>
+                    <filter name="l10n_ke_edi_to_send" string="To Send to TIMS" domain="[('l10n_ke_cu_invoice_number', '=', False), ('state', '=', 'posted'), ('move_type', 'in', ['out_invoice', 'out_refund']), ('country_code', '=', 'KE')]"/>
+                </xpath>
             </field>
         </record>
     </data>

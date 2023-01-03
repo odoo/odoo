@@ -10,9 +10,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"POT-Creation-Date: 2022-12-15 12:50+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
@@ -48,36 +48,42 @@ msgid ""
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid " (Max %s)"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "%g%% on "
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "%s per order"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "%s per order on "
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "%s per point"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "%s per point on "
@@ -110,6 +116,7 @@ msgid "10% on your order"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
@@ -128,29 +135,31 @@ msgstr ""
 #. module: loyalty
 #: model:mail.template,body_html:loyalty.mail_template_gift_card
 msgid ""
-"<div style=\"margin:0px; font-size:24px; font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:36px; color:#333333; text-align: center\">\n"
-"                Here is your gift card!\n"
-"            </div>\n"
-"            <div style=\"padding-top:20px; padding-bottom:20px\">\n"
-"                <img src=\"/loyalty/static/img/gift_card.png\" style=\"display:block; border:0; outline:none; text-decoration:none; margin:auto;\" width=\"300\"/>\n"
-"            </div>\n"
-"            <div style=\"padding:0; margin:0px; padding-top:35px; padding-bottom:35px; text-align:center;\">\n"
-"                <h3 style=\"margin:0px; line-height:48px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:40px; font-style:normal; font-weight:normal; color:#333333; text-align:center\">\n"
-"                    <strong t-out=\"format_amount(object.points, object.currency_id) or ''\">$ 150.00</strong></h3>\n"
-"            </div>\n"
-"            <div style=\"padding:0; margin:0px; padding-top:35px; padding-bottom:35px; background-color:#efefef; text-align:center;\">\n"
-"                <p style=\"margin:0px; font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:21px; color:#333333\">\n"
-"                    <strong>Gift Card Code</strong>\n"
-"                </p>\n"
-"                <p style=\"margin:0px; font-size:25px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:38px; color:#A9A9A9\" t-out=\"object.code or ''\">4f10-15d6-41b7-b04c-7b3e</p>\n"
-"            </div>\n"
-"            <div t-if=\"object.expiration_date\" style=\"padding:0; margin:0px; padding-top:10px; padding-bottom:10px; text-align:center;\">\n"
-"                <h3 style=\"margin:0px; line-height:17px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:14px; font-style:normal; font-weight:normal; color:#A9A9A9; text-align:center\">Card expires <t t-out=\"format_date(object.expiration_date) or ''\">05/05/2021</t></h3>\n"
-"            </div>\n"
-"            <div style=\"padding:20px; margin:0px; text-align:center;\">\n"
-"                <span style=\"background-color:#999999; display:inline-block; width:auto; border-radius:5px;\">\n"
-"                    <a t-attf-href=\"{{ object.get_base_url() }}/shop\" target=\"_blank\" style=\"text-decoration:none; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:22px; color:#FFFFFF; border-style:solid; border-color:#999999; border-width:20px 30px; display:inline-block; background-color:#999999; border-radius:5px; font-weight:bold; font-style:normal; line-height:26px; width:auto; text-align:center\">Use it right now!</a>\n"
-"                </span>\n"
+"<div style=\"background: #ffffff\">\n"
+"                <div style=\"margin:0px; font-size:24px; font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:36px; color:#333333; text-align: center\">\n"
+"                    Here is your gift card!\n"
+"                </div>\n"
+"                <div style=\"padding-top:20px; padding-bottom:20px\">\n"
+"                    <img src=\"/loyalty/static/img/gift_card.png\" style=\"display:block; border:0; outline:none; text-decoration:none; margin:auto;\" width=\"300\"/>\n"
+"                </div>\n"
+"                <div style=\"padding:0; margin:0px; padding-top:35px; padding-bottom:35px; text-align:center;\">\n"
+"                    <h3 style=\"margin:0px; line-height:48px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:40px; font-style:normal; font-weight:normal; color:#333333; text-align:center\">\n"
+"                        <strong t-out=\"format_amount(object.points, object.currency_id) or ''\">$ 150.00</strong></h3>\n"
+"                </div>\n"
+"                <div style=\"padding:0; margin:0px; padding-top:35px; padding-bottom:35px; background-color:#efefef; text-align:center;\">\n"
+"                    <p style=\"margin:0px; font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:21px; color:#333333\">\n"
+"                        <strong>Gift Card Code</strong>\n"
+"                    </p>\n"
+"                    <p style=\"margin:0px; font-size:25px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:38px; color:#A9A9A9\" t-out=\"object.code or ''\">4f10-15d6-41b7-b04c-7b3e</p>\n"
+"                </div>\n"
+"                <div t-if=\"object.expiration_date\" style=\"padding:0; margin:0px; padding-top:10px; padding-bottom:10px; text-align:center;\">\n"
+"                    <h3 style=\"margin:0px; line-height:17px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:14px; font-style:normal; font-weight:normal; color:#A9A9A9; text-align:center\">Card expires <t t-out=\"format_date(object.expiration_date) or ''\">05/05/2021</t></h3>\n"
+"                </div>\n"
+"                <div style=\"padding:20px; margin:0px; text-align:center;\">\n"
+"                    <span style=\"background-color:#999999; display:inline-block; width:auto; border-radius:5px;\">\n"
+"                        <a t-attf-href=\"{{ object.get_base_url() }}/shop\" target=\"_blank\" style=\"text-decoration:none; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:22px; color:#FFFFFF; border-style:solid; border-color:#999999; border-width:20px 30px; display:inline-block; background-color:#999999; border-radius:5px; font-weight:bold; font-style:normal; line-height:26px; width:auto; text-align:center\">Use it right now!</a>\n"
+"                    </span>\n"
+"                </div>\n"
 "            </div>\n"
 "        "
 msgstr ""
@@ -300,7 +309,7 @@ msgstr "<strong>โค้ดบัตรของขวัญ</strong>"
 #. module: loyalty
 #: model:mail.template,body_html:loyalty.mail_template_loyalty_card
 msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; margin:0px auto;\"><tbody>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; margin:0px auto; background:#ffffff; color:#333333;\"><tbody>\n"
 "<tr>\n"
 "    <td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
 "        <t t-if=\"object._get_mail_partner().name\">\n"
@@ -351,6 +360,7 @@ msgid ""
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
 #, python-format
 msgid "A coupon with the same code was found."
@@ -362,12 +372,14 @@ msgid "A coupon/loyalty card must have a unique code."
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "A program must have at least one reward."
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_card.py:0
 #, python-format
 msgid "A trigger with the same code as one of your coupon already exists."
@@ -388,7 +400,7 @@ msgid "Active"
 msgstr "เปิดใช้งาน"
 
 #. module: loyalty
-#. openerp-web
+#. odoo-javascript
 #: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
 #, python-format
 msgid "Add"
@@ -453,6 +465,7 @@ msgid "Automatic"
 msgstr "โดยอัตโนมัติ"
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Automatic promotion: 10% discount on orders higher than $50"
@@ -476,12 +489,14 @@ msgid "Barcode"
 msgstr "บาร์โค้ด"
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Buy 10 products, and get 10$ discount on the 11th one"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Buy 2 products and get a third one for free"
@@ -498,6 +513,7 @@ msgid "Buy X Get Y"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/wizard/loyalty_generate_wizard.py:0
 #, python-format
 msgid "Can not generate coupon, no program is set."
@@ -562,6 +578,7 @@ msgid "Company"
 msgstr "บริษัทเดียว"
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_card.py:0
 #, python-format
 msgid "Compose Email"
@@ -583,7 +600,7 @@ msgid "Congratulations"
 msgstr "ยินดีด้วย"
 
 #. module: loyalty
-#. openerp-web
+#. odoo-javascript
 #: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
 #, python-format
 msgid "Control panel buttons"
@@ -605,6 +622,7 @@ msgid "Coupon Count"
 msgstr "จำนวนคูปอง"
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
@@ -613,8 +631,6 @@ msgstr ""
 
 #. module: loyalty
 #: model:loyalty.program,portal_point_name:loyalty.10_percent_coupon
-#: model:loyalty.reward,point_name:loyalty.10_percent_coupon_reward
-#: model:loyalty.rule,reward_point_name:loyalty.10_percent_coupon_rule
 msgid "Coupon points"
 msgstr ""
 
@@ -629,6 +645,7 @@ msgid "Coupon: Coupon Information"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: code:addons/loyalty/models/loyalty_program.py:0
@@ -647,7 +664,7 @@ msgid "Create a new one from scratch, or use one of the templates below."
 msgstr ""
 
 #. module: loyalty
-#. openerp-web
+#. odoo-javascript
 #: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
 #, python-format
 msgid "Create record"
@@ -674,10 +691,9 @@ msgid "Created on"
 msgstr "สร้างเมื่อ"
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: model:loyalty.program,portal_point_name:loyalty.3_cabinets_plus_1_free
-#: model:loyalty.reward,point_name:loyalty.3_cabinets_plus_1_free_reward
-#: model:loyalty.rule,reward_point_name:loyalty.3_cabinets_plus_1_free_rule
 #, python-format
 msgid "Credit(s)"
 msgstr ""
@@ -771,6 +787,7 @@ msgid "Discount Product Domain"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__code
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
@@ -779,10 +796,9 @@ msgid "Discount code"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: model:loyalty.program,portal_point_name:loyalty.10_percent_with_code
-#: model:loyalty.reward,point_name:loyalty.10_percent_with_code_reward
-#: model:loyalty.rule,reward_point_name:loyalty.10_percent_with_code_rule
 #, python-format
 msgid "Discount point(s)"
 msgstr ""
@@ -803,6 +819,7 @@ msgid "Discounted Products"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Discounts"
@@ -858,6 +875,7 @@ msgid "Expiration Date"
 msgstr "วันหมดอายุ"
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
@@ -865,6 +883,7 @@ msgid "Fidelity Cards"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Fill in your eWallet, and use it to pay future orders"
@@ -886,6 +905,7 @@ msgid "For"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_reward__reward_type__product
 #, python-format
@@ -893,6 +913,7 @@ msgid "Free Product"
 msgstr "สินค้าฟรี"
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "Free Product - %s"
@@ -904,6 +925,7 @@ msgid "Free Product - Large Cabinet"
 msgstr "สินค้าฟรี - ตู้ขนาดใหญ่"
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "Free Product - [%s]"
@@ -920,7 +942,7 @@ msgid "Future orders"
 msgstr ""
 
 #. module: loyalty
-#. openerp-web
+#. odoo-javascript
 #: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
 #: model:ir.actions.act_window,name:loyalty.loyalty_generate_wizard_action
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
@@ -953,6 +975,7 @@ msgid "Generate eWallet"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Get a code to receive 10% discount on specific products"
@@ -964,6 +987,7 @@ msgid "Gift &amp; Ewallet"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: code:addons/loyalty/models/loyalty_program.py:0
@@ -971,7 +995,6 @@ msgstr ""
 #: model:ir.actions.report,name:loyalty.report_gift_card
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__gift_card
 #: model:loyalty.reward,description:loyalty.gift_card_program_reward
-#: model:product.product,name:loyalty.gift_card_product_50
 #: model:product.template,name:loyalty.gift_card_product_50_product_template
 #, python-format
 msgid "Gift Card"
@@ -993,6 +1016,7 @@ msgid "Gift Card: Gift Card Information"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: model:loyalty.program,name:loyalty.gift_card_program
 #, python-format
@@ -1082,6 +1106,7 @@ msgid "Included"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/wizard/loyalty_generate_wizard.py:0
 #, python-format
 msgid "Invalid quantity."
@@ -1159,6 +1184,7 @@ msgid "Logo"
 msgstr "โลโก้"
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: code:addons/loyalty/models/loyalty_program.py:0
@@ -1193,6 +1219,7 @@ msgid "Loyalty Rule"
 msgstr "กฎลูกค้าสมาชิก"
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Loyalty point(s)"
@@ -1249,6 +1276,7 @@ msgid "Multi Product"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__next_order_coupons
@@ -1406,18 +1434,21 @@ msgid "Program trigger"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Promo Code"
 msgstr "รหัสโปรโมชั่น"
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Promo point(s)"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
@@ -1425,6 +1456,7 @@ msgid "Promos"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
@@ -1508,6 +1540,7 @@ msgid "Selected Customers"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Sell Gift Cards, that can be used to purchase products"
@@ -1519,12 +1552,14 @@ msgid "Send"
 msgstr "ส่ง"
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Send unique coupons that give access to rewards"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Send unique, single-use coupon code for the next purchase"
@@ -1568,6 +1603,7 @@ msgid "Split per unit"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
 #, python-format
 msgid "Split per unit is not allowed for Loyalty and eWallet programs."
@@ -1589,6 +1625,7 @@ msgid "The discount must be strictly positive."
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
 #, python-format
 msgid "The promo code must be unique."
@@ -1621,6 +1658,7 @@ msgid ""
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/product_product.py:0
 #, python-format
 msgid ""
@@ -1629,7 +1667,6 @@ msgid ""
 msgstr ""
 
 #. module: loyalty
-#: model:product.product,name:loyalty.ewallet_product_50
 #: model:product.template,name:loyalty.ewallet_product_50_product_template
 msgid "Top-up eWallet"
 msgstr ""
@@ -1643,14 +1680,6 @@ msgstr "จำนวนคำสั่งทั้งหมด"
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__trigger
 msgid "Trigger"
 msgstr "เปิดใช้งาน"
-
-#. module: loyalty
-#: model:product.product,uom_name:loyalty.ewallet_product_50
-#: model:product.product,uom_name:loyalty.gift_card_product_50
-#: model:product.template,uom_name:loyalty.ewallet_product_50_product_template
-#: model:product.template,uom_name:loyalty.gift_card_product_50_product_template
-msgid "Units"
-msgstr "หน่วย"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__use_count
@@ -1735,6 +1764,7 @@ msgid "Will Send Mail"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Win points with each purchases, and use points to get gifts"
@@ -1746,6 +1776,7 @@ msgid "With a promotion code"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "You can not delete a program in an active state"
@@ -1787,6 +1818,7 @@ msgid "e.g. 10% discount on laptops"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: code:addons/loyalty/models/loyalty_program.py:0
@@ -1807,6 +1839,7 @@ msgid "eWallet value"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "eWallets"
@@ -1845,24 +1878,28 @@ msgid ""
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
 #, python-format
 msgid "per %s spent"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
 #, python-format
 msgid "per order"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
 #, python-format
 msgid "per unit paid"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "specific products"
@@ -1874,6 +1911,7 @@ msgid "spent"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "the cheapest product"
@@ -1890,6 +1928,7 @@ msgid "usages"
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "your order"

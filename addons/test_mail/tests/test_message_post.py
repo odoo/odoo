@@ -294,6 +294,10 @@ class TestMessageNotify(TestMessagePostCommon):
         )
         self.assertNotIn(new_notification, self.test_record.message_ids)
 
+        # notified_partner_ids should be empty after copying the message
+        copy = new_notification.copy()
+        self.assertFalse(copy.notified_partner_ids)
+
         admin_mails = [mail for mail in self._mails if self.partner_admin.name in mail.get('email_to')[0]]
         self.assertEqual(len(admin_mails), 1, 'There should be exactly one email sent to admin')
         admin_mail_body = admin_mails[0].get('body')
