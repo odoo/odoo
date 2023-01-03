@@ -58,6 +58,11 @@ class Http(models.AbstractModel):
         super()._pre_dispatch(rule, args)
         cls._handle_debug()
 
+    @classmethod
+    def _post_logout(cls):
+        super()._post_logout()
+        request.future_response.set_cookie('cids', max_age=0)
+
     def webclient_rendering_context(self):
         return {
             'menu_data': request.env['ir.ui.menu'].load_menus(request.session.debug),

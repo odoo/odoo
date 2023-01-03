@@ -1002,6 +1002,9 @@ class Session(collections.abc.MutableMapping):
         self.context['lang'] = request.default_lang() if request else DEFAULT_LANG
         self.should_rotate = True
 
+        if request and request.env:
+            request.env['ir.http']._post_logout()
+
     def touch(self):
         self.is_dirty = True
 
