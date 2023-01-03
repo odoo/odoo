@@ -10,16 +10,11 @@ registry
 
 class SoundContainer extends Component {
     static template = xml`<t t-foreach="props.sounds" t-as="sound" t-key="sound">
-        <audio autoplay="true" t-att-src="sound_value.src" t-on-ended="sound_value.cleanup" t-on-error="() => onError(sound_value)"/>
+        <audio autoplay="true" t-att-src="sound_value.src" t-on-ended="sound_value.cleanup" t-on-error="sound_value.cleanup"/>
     </t>`;
     static props = {
         sounds: Object,
     };
-    onError(sound) {
-        sound.cleanup();
-        const err = new Error(`Couldn't load sound at "${sound.src}"`);
-        throw err;
-    }
 }
 
 export const soundService = {

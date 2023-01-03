@@ -6,7 +6,6 @@ import NumberBuffer from "@point_of_sale/js/Misc/NumberBuffer";
 import { useListener } from "@web/core/utils/hooks";
 import Registries from "@point_of_sale/js/Registries";
 import { useBarcodeReader } from "@point_of_sale/js/custom_hooks";
-import { isConnectionError } from "@point_of_sale/js/utils";
 import { parse } from "web.field_utils";
 
 const { onMounted, useState } = owl;
@@ -233,25 +232,12 @@ class ProductScreen extends ControlButtonsMixin(PosComponent) {
         if (!product) {
             // find the barcode in the backend
             let foundProductIds = [];
-            try {
-                foundProductIds = await this.rpc({
-                    model: "product.product",
-                    method: "search",
-                    args: [[["barcode", "=", code.base_code]]],
-                    context: this.env.session.user_context,
-                });
-            } catch (error) {
-                if (isConnectionError(error)) {
-                    return this.showPopup("OfflineErrorPopup", {
-                        title: this.env._t("Network Error"),
-                        body: this.env._t(
-                            "Product is not loaded. Tried loading the product from the server but there is a network error."
-                        ),
-                    });
-                } else {
-                    throw error;
-                }
-            }
+            foundProductIds = await this.rpc({
+                model: "product.product",
+                method: "search",
+                args: [[["barcode", "=", code.base_code]]],
+                context: this.env.session.user_context,
+            });
             if (foundProductIds.length) {
                 await this.env.pos._addProducts(foundProductIds);
                 // assume that the result is unique.

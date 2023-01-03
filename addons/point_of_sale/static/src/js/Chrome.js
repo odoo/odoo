@@ -7,13 +7,7 @@ import PosComponent from "@point_of_sale/js/PosComponent";
 import NumberBuffer from "@point_of_sale/js/Misc/NumberBuffer";
 import Registries from "@point_of_sale/js/Registries";
 import IndependentToOrderScreen from "@point_of_sale/js/Misc/IndependentToOrderScreen";
-import { identifyError, batched } from "@point_of_sale/js/utils";
-import { odooExceptionTitleMap } from "@web/core/errors/error_dialogs";
-import {
-    ConnectionLostError,
-    ConnectionAbortedError,
-    RPCError,
-} from "@web/core/network/rpc_service";
+import { batched } from "@point_of_sale/js/utils";
 import { debounce } from "@web/core/utils/timing";
 import { Transition } from "@web/core/transition";
 import { MainComponentsContainer } from "@web/core/main_components_container";
@@ -164,17 +158,11 @@ export class Chrome extends PosComponent {
      * This will load pos and assign it to the environment.
      */
     async start() {
-        registry.category("error_handlers").add(
-            "posErrorHandler",
-            (env, ...noEnvArgs) => {
-                return this.errorHandler(this.env, ...noEnvArgs);
-            },
-            { sequence: 0 }
-        );
         // Little trick to avoid displaying the block ui during the POS models loading
+        // FIXME POSREF: use a silent RPC instead
         const BlockUiFromRegistry = registry.category("main_components").get("BlockUI");
         registry.category("main_components").remove("BlockUI");
-        configureGui({ component: this }); // FIXME POSREF
+        configureGui({ component: this }); // FIXME POSREF: move Gui functions to services
 
         try {
             await this.env.pos.load_server_data();
@@ -198,8 +186,8 @@ export class Chrome extends PosComponent {
             this._showStartScreen();
             setTimeout(() => this._runBackgroundTasks());
         } catch (error) {
-            let title = "Unknown Error",
-                body;
+            let title = "Unknown Error";
+            let body;
 
             if (error.message && [100, 200, 404, -32098].includes(error.message.code)) {
                 // this is the signature of rpc error
@@ -219,11 +207,7 @@ export class Chrome extends PosComponent {
                 body = error.stack;
             }
 
-            await this.showPopup("ErrorTracebackPopup", {
-                title,
-                body,
-                exitButtonIsShown: true,
-            });
+            return this.showPopup("ErrorTracebackPopup", { title, body, exitButtonIsShown: true });
         }
         registry.category("main_components").add("BlockUI", BlockUiFromRegistry);
 
@@ -271,7 +255,7 @@ export class Chrome extends PosComponent {
             this.env.proxy
                 .autoconnect({
                     force_ip: this.env.pos.config.proxy_ip || undefined,
-                    progress: function (prog) { },
+                    progress: function (prog) {},
                 })
                 .then(
                     () => {
@@ -383,24 +367,25 @@ export class Chrome extends PosComponent {
                 console.warn(error);
                 const reason = this.env.pos.failed
                     ? this.env._t(
-                        "Some orders could not be submitted to " +
-                        "the server due to configuration errors. " +
-                        "You can exit the Point of Sale, but do " +
-                        "not close the session before the issue " +
-                        "has been resolved."
-                    )
+                          "Some orders could not be submitted to " +
+                              "the server due to configuration errors. " +
+                              "You can exit the Point of Sale, but do " +
+                              "not close the session before the issue " +
+                              "has been resolved."
+                      )
                     : this.env._t(
-                        "Some orders could not be submitted to " +
-                        "the server due to internet connection issues. " +
-                        "You can exit the Point of Sale, but do " +
-                        "not close the session before the issue " +
-                        "has been resolved."
-                    );
+                          "Some orders could not be submitted to " +
+                              "the server due to internet connection issues. " +
+                              "You can exit the Point of Sale, but do " +
+                              "not close the session before the issue " +
+                              "has been resolved."
+                      );
                 const { confirmed } = await this.showPopup("ConfirmPopup", {
                     title: this.env._t("Offline Orders"),
                     body: reason,
                 });
                 if (confirmed) {
+                    // FIXME POSREF setting the location prevents the next render, the loading screen never shows
                     this.state.uiState = "CLOSING";
                     this.state.loadingSkipButtonIsShown = false;
                     window.location = "/web#action=point_of_sale.action_client_pos_menu";
@@ -496,75 +481,6 @@ export class Chrome extends PosComponent {
     }
     get showCashMoveButton() {
         return this.env.pos && this.env.pos.config && this.env.pos.config.cash_control;
-    }
-
-    // UNEXPECTED ERROR HANDLING //
-
-    /**
-     * This method is used to handle unexpected errors. It is registered to
-     * the `error_handlers` service when this component is properly mounted.
-     * See `onMounted` hook of the `ChromeAdapter` component.
-     * @param {*} env
-     * @param {UncaughtClientError | UncaughtPromiseError} error
-     * @param {*} originalError
-     * @returns {boolean}
-     */
-    errorHandler(env, error, originalError) {
-        if (!env.pos) {
-            return false;
-        }
-        const errorToHandle = identifyError(originalError);
-        // Assume that the unhandled falsey rejections can be ignored.
-        if (errorToHandle) {
-            this._errorHandler(error, errorToHandle);
-        }
-        return true;
-    }
-
-    _errorHandler(error, errorToHandle) {
-        if (errorToHandle instanceof RPCError) {
-            const { message, data } = errorToHandle;
-            if (odooExceptionTitleMap.has(errorToHandle.exceptionName)) {
-                const title = odooExceptionTitleMap.get(errorToHandle.exceptionName).toString();
-                this.showPopup("ErrorPopup", { title, body: data.message });
-            } else {
-                this.showPopup("ErrorTracebackPopup", {
-                    title: message,
-                    body: data.message + "\n" + data.debug + "\n",
-                });
-            }
-        } else if (errorToHandle instanceof ConnectionLostError) {
-            this.showPopup("OfflineErrorPopup", {
-                title: this.env._t("Connection is lost"),
-                body: this.env._t("Check the internet connection then try again."),
-            });
-        } else if (errorToHandle instanceof ConnectionAbortedError) {
-            this.showPopup("OfflineErrorPopup", {
-                title: this.env._t("Connection is aborted"),
-                body: this.env._t("Check the internet connection then try again."),
-            });
-        } else if (errorToHandle instanceof Error) {
-            // If `errorToHandle` is a normal Error (such as TypeError),
-            // the annotated traceback can be found from `error`.
-            this.showPopup("ErrorTracebackPopup", {
-                // Hopefully the message is translated.
-                title: `${errorToHandle.name}: ${errorToHandle.message}`,
-                body: error.traceback,
-            });
-        } else {
-            // Hey developer. It's your fault that the error reach here.
-            // Please, throw an Error object in order to get stack trace of the error.
-            // At least we can find the file that throws the error when you look
-            // at the console.
-            this.showPopup("ErrorPopup", {
-                title: this.env._t("Unknown Error"),
-                body: this.env._t("Unable to show information about this error."),
-            });
-            console.error(
-                "Unknown error. Unable to show information about this error.",
-                errorToHandle
-            );
-        }
     }
 }
 Chrome.template = "Chrome";

@@ -2,7 +2,6 @@
 
 import PosComponent from "@point_of_sale/js/PosComponent";
 import Registries from "@point_of_sale/js/Registries";
-import { isConnectionError } from "@point_of_sale/js/utils";
 
 import { debounce } from "@web/core/utils/timing";
 import { useListener } from "@web/core/utils/hooks";
@@ -162,25 +161,14 @@ class PartnerListScreen extends PosComponent {
         this.activateEditMode();
     }
     async saveChanges(event) {
-        try {
-            const partnerId = await this.rpc({
-                model: "res.partner",
-                method: "create_from_ui",
-                args: [event.detail.processedChanges],
-            });
-            await this.env.pos.load_new_partners();
-            this.state.selectedPartner = this.env.pos.db.get_partner_by_id(partnerId);
-            this.confirm();
-        } catch (error) {
-            if (isConnectionError(error)) {
-                await this.showPopup("OfflineErrorPopup", {
-                    title: this.env._t("Offline"),
-                    body: this.env._t("Unable to save changes."),
-                });
-            } else {
-                throw error;
-            }
-        }
+        const partnerId = await this.rpc({
+            model: "res.partner",
+            method: "create_from_ui",
+            args: [event.detail.processedChanges],
+        });
+        await this.env.pos.load_new_partners();
+        this.state.selectedPartner = this.env.pos.db.get_partner_by_id(partnerId);
+        this.confirm();
     }
     async searchPartner() {
         const result = await this.getNewPartners();

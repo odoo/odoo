@@ -1,6 +1,4 @@
 /** @odoo-module */
-import { ConnectionAbortedError, ConnectionLostError } from "@web/core/network/rpc_service";
-
 export function getFileAsText(file) {
     return new Promise((resolve, reject) => {
         if (!file) {
@@ -34,32 +32,6 @@ export const nextFrame = () => {
         });
     });
 };
-
-export function isConnectionError(error) {
-    const _error = identifyError(error);
-    return _error instanceof ConnectionAbortedError || _error instanceof ConnectionLostError;
-}
-
-export function identifyError(error) {
-    if (!error) {
-        return error;
-    }
-    let errorToHandle;
-    if (error.legacy) {
-        // error.message is either RPCError or ConnectionLostError
-        errorToHandle = error.message;
-    } else if (error.event && error.event.type == "abort") {
-        // Check if there is event and if the event type is abort.
-        // If so, then it's supposed to be a ConnectionAbortedError,
-        // however, it was stripped in the patch of rpc in `mapLegacyEnvToWowlEnv`.
-        // We recreate the error object here so that in the actual handler,
-        // ConnectionAbortedError and ConnectionLostError are handled properly.
-        errorToHandle = new ConnectionAbortedError(error.message);
-    } else if (error instanceof Error) {
-        errorToHandle = error;
-    }
-    return errorToHandle || error;
-}
 
 /**
  * Creates a batched version of a callback so that all calls to it in the same
