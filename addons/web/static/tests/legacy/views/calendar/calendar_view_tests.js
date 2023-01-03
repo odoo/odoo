@@ -35,6 +35,9 @@ import {
     toggleFilter,
     toggleSectionFilter,
     clickAllDaySlot,
+    findAllDaySlot,
+    findDateCell,
+    expandCalendarView,
 } from "../../views/calendar/helpers";
 import { makeView, setupViewRegistries } from "../../views/helpers";
 import { patchUserWithCleanup } from "@web/../tests/helpers/mock_services";
@@ -59,6 +62,19 @@ let serverData;
 const uid = 6;
 
 QUnit.module("Views", ({ beforeEach }) => {
+    function assertEventOverRightCells(assert, event, startDateCell, endDateCell) {
+        const minX = startDateCell.getBoundingClientRect().left;
+        const maxX = endDateCell.getBoundingClientRect().right;
+        const eventBoundingClientRect = event.getBoundingClientRect();
+        function isBetween(min, max, value) {
+            return value >= min && value <= max;
+        }
+        const eventOverRightCell =
+            isBetween(minX, maxX, eventBoundingClientRect.left) &&
+            isBetween(minX, maxX, eventBoundingClientRect.right);
+        assert.ok(eventOverRightCell, "the event should be over the right days cells");
+    }
+
     beforeEach(() => {
         // 2016-12-12 08:00:00
         patchDate(2016, 11, 12, 8, 0, 0);
@@ -344,7 +360,7 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         assert.containsOnce(
             target,
-            ".o_calendar_renderer .fc-view-container",
+            ".o_calendar_renderer .fc-view",
             "should instance of fullcalendar"
         );
 
@@ -824,10 +840,9 @@ QUnit.module("Views", ({ beforeEach }) => {
             "new event in quick create",
             "should display the new record after quick create"
         );
-        assert.containsN(
+        assert.containsOnce(
             target,
-            "td.fc-event-container[colspan]",
-            2,
+            '.fc-daygrid-event-harness:not(.fc-daygrid-event-harness-abs):contains("new event in quick create")',
             "should the new record have only one day"
         );
 
@@ -881,7 +896,9 @@ QUnit.module("Views", ({ beforeEach }) => {
         );
 
         // create a new event with 2 days
-        await selectDateRange(target, "2016-12-20", "2016-12-21");
+        const startDate = "2016-12-20";
+        const endDate = "2016-12-21";
+        await selectDateRange(target, startDate, endDate);
         await editInput(target, ".o-calendar-quick-create--input", "new event in quick create 2");
 
         await click(target, ".o-calendar-quick-create--edit-btn");
@@ -900,12 +917,9 @@ QUnit.module("Views", ({ beforeEach }) => {
             "new event in quick create 2",
             "should display the 2 days new record"
         );
-        assert.hasAttrValue(
-            newEvent.closest(".fc-event-container"),
-            "colspan",
-            "2",
-            "the new record should have 2 days"
-        );
+        const startDateCell = findDateCell(target, startDate);
+        const endDateCell = findDateCell(target, endDate);
+        assertEventOverRightCells(assert, newEvent, startDateCell, endDateCell);
 
         await clickEvent(target, 11);
         const popoverDescription = target.querySelector(".o_cw_popover .list-group-item");
@@ -933,14 +947,14 @@ QUnit.module("Views", ({ beforeEach }) => {
         await click(target, ".modal-footer button.btn-primary");
         assert.notOk(findEvent(target, 4), "the record should be deleted");
 
-        assert.containsN(target, ".fc-event-container .fc-event", 10, "should display 10 events");
+        assert.containsN(target, ".fc-event", 10, "should display 10 events");
         // move to next month
         await navigate(target, "next");
-        assert.containsN(target, ".fc-event-container .fc-event", 0, "should display 0 events");
+        assert.containsN(target, ".fc-event", 0, "should display 0 events");
         await pickDate(target, "2017-01-01");
 
         await changeScale(target, "month");
-        assert.containsNone(target, ".fc-event-container .fc-event", "should display 0 events");
+        assert.containsNone(target, ".fc-event", "should display 0 events");
 
         await navigate(target, "prev");
         await pickDate(target, "2016-12-27");
@@ -1128,7 +1142,7 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         await selectTimeRange(target, "2016-12-13 08:00:00", "2016-12-13 10:00:00");
         assert.strictEqual(
-            target.querySelector(".fc-content .fc-time").textContent,
+            target.querySelector(".fc-event-main .fc-event-time").textContent,
             "8:00 - 10:00",
             "should display the time in the calendar sticker"
         );
@@ -1136,7 +1150,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         await editInput(target, ".o-calendar-quick-create--input", "new event");
         await click(target, ".o-calendar-quick-create--create-btn");
         assert.strictEqual(
-            target.querySelector(".fc-event .o_event_title").textContent,
+            target.querySelector(".fc-event-main .o_event_title").textContent,
             "new event",
             "should display the new event with title"
         );
@@ -1145,7 +1159,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         await clickEvent(target, 1);
         await click(target, ".o_cw_popover .o_cw_popover_delete");
         await click(target, ".modal button.btn-primary");
-        assert.containsNone(target, ".fc-content", "should delete the record");
+        assert.containsNone(target, ".fc-event-main", "should delete the record");
     });
 
     QUnit.test(`default week start (US)`, async (assert) => {
@@ -1173,7 +1187,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             },
         });
 
-        const dayHeaders = target.querySelectorAll(".fc-day-header .o_cw_day_name");
+        const dayHeaders = target.querySelectorAll(".fc-col-header-cell .o_cw_day_name");
         assert.strictEqual(
             dayHeaders[0].textContent,
             "Sun",
@@ -1214,7 +1228,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             },
         });
 
-        const dayHeaders = target.querySelectorAll(".fc-day-header .o_cw_day_name");
+        const dayHeaders = target.querySelectorAll(".fc-col-header-cell .o_cw_day_name");
         assert.strictEqual(
             dayHeaders[0].textContent,
             "Mon",
@@ -1242,7 +1256,10 @@ QUnit.module("Views", ({ beforeEach }) => {
             `,
         });
 
-        assert.strictEqual(target.querySelector(".fc-week-number").textContent, "Week 50");
+        assert.strictEqual(
+            target.querySelector(".fc-timegrid-axis-cushion").textContent,
+            "Week 50"
+        );
     });
 
     QUnit.test(`render popover`, async (assert) => {
@@ -1415,19 +1432,19 @@ QUnit.module("Views", ({ beforeEach }) => {
             },
         });
 
-        const visibleEventsSelector = ":not(.fc-limited) > :not(.fc-limited) > .fc-event";
+        const visibleEventsSelector = ":not(.fc-daygrid-event-harness-abs) > .fc-event";
         assert.containsN(target, visibleEventsSelector, 4);
 
-        assert.containsOnce(target, ".fc-more");
-        assert.strictEqual(target.querySelector(".fc-more").textContent, "+6 more");
+        assert.containsOnce(target, ".fc-more-link");
+        assert.strictEqual(target.querySelector(".fc-more-link").textContent, "+6 more");
 
         assert.containsNone(target, ".fc-popover");
-        await click(target, ".fc-more");
+        await click(target, ".fc-more-link");
         assert.containsOnce(target, ".fc-popover");
         assert.containsN(target, `.fc-popover ${visibleEventsSelector}`, 10);
 
         assert.containsNone(target, ".o_cw_popover");
-        await click(target, ".fc-popover .fc-event:nth-child(1)");
+        await click(target, ".fc-popover .fc-daygrid-event-harness:nth-child(1) .fc-event");
         assert.containsOnce(target, ".o_cw_popover");
 
         await triggerEvent(target, ".o_cw_popover .o_cw_popover_edit", "mousedown");
@@ -1517,6 +1534,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                     }
                 },
             });
+            expandCalendarView(target);
 
             await selectTimeRange(target, "2016-12-13 08:00:00", "2016-12-13 10:00:00");
             await editInput(target, ".o-calendar-quick-create--input", "new event");
@@ -1607,6 +1625,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                 }
             },
         });
+        expandCalendarView(target);
 
         await selectTimeRange(target, "2016-12-13 06:00:00", "2016-12-13 08:00:00");
         await editInput(target, ".o-calendar-quick-create--input", "new event");
@@ -1621,7 +1640,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         await clickEvent(target, 1);
         await click(target, ".o_cw_popover .o_cw_popover_delete");
         await click(target, ".modal button.btn-primary");
-        assert.containsNone(target, ".fc-content", "should delete the record");
+        assert.containsNone(target, ".fc-event-main", "should delete the record");
     });
 
     QUnit.test(`fetch event when being in timezone`, async (assert) => {
@@ -1654,7 +1673,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             },
         });
 
-        const headers = target.querySelectorAll(".fc-day-header .o_cw_day_number");
+        const headers = target.querySelectorAll(".fc-col-header-cell .o_cw_day_number");
         assert.strictEqual(
             headers[0].textContent,
             "11",
@@ -1719,6 +1738,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                     }
                 },
             });
+            expandCalendarView(target);
 
             await selectTimeRange(target, "2016-12-13 08:00:00", "2016-12-13 10:00:00");
             await editInput(target, ".o-calendar-quick-create--input", "new event");
@@ -1828,7 +1848,9 @@ QUnit.module("Views", ({ beforeEach }) => {
             },
         });
 
-        await selectAllDayRange(target, "2016-12-14", "2016-12-15");
+        const startDate = "2016-12-14";
+        const endDate = "2016-12-15";
+        await selectAllDayRange(target, startDate, endDate);
         await editInput(target, ".o-calendar-quick-create--input", "new event");
         await click(target, ".o-calendar-quick-create--create-btn");
 
@@ -1838,7 +1860,9 @@ QUnit.module("Views", ({ beforeEach }) => {
             "newevent",
             "should display the new event with time and title"
         );
-        assert.hasAttrValue(event.parentElement, "colspan", "2", "should appear over two days.");
+        const startDateCell = findAllDaySlot(target, startDate);
+        const endDateCell = findAllDaySlot(target, endDate);
+        assertEventOverRightCells(assert, event, startDateCell, endDateCell);
     });
 
     QUnit.test("create all day event in month mode: utc-11", async (assert) => {
@@ -2089,7 +2113,9 @@ QUnit.module("Views", ({ beforeEach }) => {
             },
         });
 
-        await selectDateRange(target, "2016-12-14", "2016-12-15");
+        const startDate = "2016-12-14";
+        const endDate = "2016-12-15";
+        await selectDateRange(target, startDate, endDate);
         await editInput(target, ".o-calendar-quick-create--input", "new event");
         await click(target, ".o-calendar-quick-create--create-btn");
 
@@ -2099,7 +2125,9 @@ QUnit.module("Views", ({ beforeEach }) => {
             "newevent",
             "should display the new event with time and title"
         );
-        assert.hasAttrValue(event.parentElement, "colspan", "2", "should appear over two days.");
+        const startDateCell = findAllDaySlot(target, startDate);
+        const endDateCell = findAllDaySlot(target, endDate);
+        assertEventOverRightCells(assert, event, startDateCell, endDateCell);
     });
 
     QUnit.test(`use mini calendar`, async (assert) => {
@@ -2333,18 +2361,18 @@ QUnit.module("Views", ({ beforeEach }) => {
         });
 
         assert.strictEqual(
-            findEvent(target, 2).querySelector(".fc-content .fc-time").textContent,
+            findEvent(target, 2).querySelector(".fc-event-main .fc-time").textContent,
             "06:55",
             "should have a correct time 06:55 AM in month mode"
         );
         assert.containsNone(
             findEvent(target, 4),
-            ".fc-content .fc-time",
+            ".fc-event-main .fc-time",
             "should not display a time for all day event"
         );
         assert.containsNone(
             findEvent(target, 5),
-            ".fc-content .fc-time",
+            ".fc-event-main .fc-time",
             "should not display a time for multiple days event"
         );
 
@@ -2352,7 +2380,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         await changeScale(target, "week");
         assert.containsNone(
             findEvent(target, 2),
-            ".fc-content .fc-time",
+            ".fc-event-main .fc-time",
             "should not show time in week mode as week mode already have time on y-axis"
         );
     });
@@ -2373,7 +2401,7 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         assert.containsNone(
             findEvent(target, 2),
-            ".fc-content .fc-time",
+            ".fc-event-main .fc-time",
             "should not show time for date type field"
         );
     });
@@ -2392,7 +2420,7 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         assert.containsNone(
             findEvent(target, 2),
-            ".fc-content .fc-time",
+            ".fc-event-main .fc-time",
             "should not show time for hide_time attribute"
         );
     });
@@ -3448,7 +3476,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         await toggleFilter(target, "partner_ids", 1);
         assert.containsOnce(
             target,
-            ".fc-day-grid .fc-event-container",
+            ".fc-daygrid-day-events .fc-event",
             "should be one event in the all day row"
         );
         await clickEvent(target, 1);
@@ -3476,7 +3504,7 @@ QUnit.module("Views", ({ beforeEach }) => {
 
             assert.containsOnce(
                 target,
-                ".fc-day-grid .fc-event-container",
+                ".fc-daygrid-day-events .fc-event",
                 "should be one event in the all day row"
             );
         }
@@ -3950,7 +3978,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             arch: `<calendar date_start="start" date_stop="stop" mode="week"/>`,
         });
         assert.deepEqual(
-            [...target.querySelectorAll(".fc-day-header")].map((el) =>
+            [...target.querySelectorAll(".fc-col-header-cell")].map((el) =>
                 [
                     el.querySelector(".o_cw_day_name").textContent,
                     el.querySelector(".o_cw_day_number").textContent,
@@ -3985,12 +4013,13 @@ QUnit.module("Views", ({ beforeEach }) => {
             "should display name passed in the context"
         );
         assert.strictEqual(
-            target.querySelector(".o_calendar_renderer .fc-day-header .o_cw_day_name").textContent,
+            target.querySelector(".o_calendar_renderer .fc-col-header-cell .o_cw_day_name")
+                .textContent,
             "Saturday",
             "should display day passed in the context"
         );
         assert.strictEqual(
-            target.querySelector(".o_calendar_renderer .fc-day-header .o_cw_day_number")
+            target.querySelector(".o_calendar_renderer .fc-col-header-cell .o_cw_day_number")
                 .textContent,
             "30",
             "should display day passed in the context"
@@ -4025,7 +4054,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             },
         });
 
-        const dayHeaders = target.querySelectorAll(".fc-day-header .o_cw_day_name");
+        const dayHeaders = target.querySelectorAll(".fc-col-header-cell .o_cw_day_name");
         assert.strictEqual(
             dayHeaders[0].textContent,
             "Sun",
@@ -4037,19 +4066,19 @@ QUnit.module("Views", ({ beforeEach }) => {
             "The last day of the week should be Saturday"
         );
 
-        const dayTops = target.querySelectorAll(".fc-day-top");
+        const dayGrids = target.querySelectorAll(".fc-daygrid-day");
         assert.strictEqual(
-            dayTops[0].querySelector(".fc-week-number").textContent,
+            dayGrids[0].querySelector(".fc-daygrid-week-number").textContent,
             "36",
             "The number of the week should be correct"
         );
-        assert.strictEqual(dayTops[0].querySelector(".fc-day-number").textContent, "1");
-        assert.strictEqual(dayTops[0].dataset.date, "2019-09-01");
+        assert.strictEqual(dayGrids[0].querySelector(".fc-daygrid-day-number").textContent, "1");
+        assert.strictEqual(dayGrids[0].dataset.date, "2019-09-01");
         assert.strictEqual(
-            dayTops[dayTops.length - 1].querySelector(".fc-day-number").textContent,
+            dayGrids[dayGrids.length - 1].querySelector(".fc-daygrid-day-number").textContent,
             "12"
         );
-        assert.strictEqual(dayTops[dayTops.length - 1].dataset.date, "2019-10-12");
+        assert.strictEqual(dayGrids[dayGrids.length - 1].dataset.date, "2019-10-12");
     });
 
     QUnit.test(`European week start month mode`, async (assert) => {
@@ -4080,7 +4109,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             },
         });
 
-        const dayHeaders = target.querySelectorAll(".fc-day-header .o_cw_day_name");
+        const dayHeaders = target.querySelectorAll(".fc-col-header-cell .o_cw_day_name");
         assert.strictEqual(
             dayHeaders[0].textContent,
             "Mon",
@@ -4092,19 +4121,19 @@ QUnit.module("Views", ({ beforeEach }) => {
             "The last day of the week should be Sunday"
         );
 
-        const dayTops = target.querySelectorAll(".fc-day-top");
+        const dayGrids = target.querySelectorAll(".fc-daygrid-day");
         assert.strictEqual(
-            dayTops[0].querySelector(".fc-week-number").textContent,
+            dayGrids[0].querySelector(".fc-daygrid-week-number").textContent,
             "35",
             "The number of the week should be correct"
         );
-        assert.strictEqual(dayTops[0].querySelector(".fc-day-number").textContent, "26");
-        assert.strictEqual(dayTops[0].dataset.date, "2019-08-26");
+        assert.strictEqual(dayGrids[0].querySelector(".fc-daygrid-day-number").textContent, "26");
+        assert.strictEqual(dayGrids[0].dataset.date, "2019-08-26");
         assert.strictEqual(
-            dayTops[dayTops.length - 1].querySelector(".fc-day-number").textContent,
+            dayGrids[dayGrids.length - 1].querySelector(".fc-daygrid-day-number").textContent,
             "6"
         );
-        assert.strictEqual(dayTops[dayTops.length - 1].dataset.date, "2019-10-06");
+        assert.strictEqual(dayGrids[dayGrids.length - 1].dataset.date, "2019-10-06");
     });
 
     QUnit.test(`Monday week start week mode`, async (assert) => {
@@ -4135,8 +4164,8 @@ QUnit.module("Views", ({ beforeEach }) => {
             },
         });
 
-        const dayNameHeaders = target.querySelectorAll(".fc-day-header .o_cw_day_name");
-        const dayNumberHeaders = target.querySelectorAll(".fc-day-header .o_cw_day_number");
+        const dayNameHeaders = target.querySelectorAll(".fc-col-header-cell .o_cw_day_name");
+        const dayNumberHeaders = target.querySelectorAll(".fc-col-header-cell .o_cw_day_number");
         assert.strictEqual(
             `${dayNameHeaders[0].textContent} ${dayNumberHeaders[0].textContent}`,
             "Mon 9",
@@ -4150,7 +4179,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             "The last day of the week should be Sunday the 15th"
         );
         assert.strictEqual(
-            target.querySelector(".fc-head .fc-week-number").textContent,
+            target.querySelector(".fc-timegrid-axis-cushion").textContent,
             "Week 37",
             "The number of the week should be correct"
         );
@@ -4185,8 +4214,8 @@ QUnit.module("Views", ({ beforeEach }) => {
             },
         });
 
-        const dayNameHeaders = target.querySelectorAll(".fc-day-header .o_cw_day_name");
-        const dayNumberHeaders = target.querySelectorAll(".fc-day-header .o_cw_day_number");
+        const dayNameHeaders = target.querySelectorAll(".fc-col-header-cell .o_cw_day_name");
+        const dayNumberHeaders = target.querySelectorAll(".fc-col-header-cell .o_cw_day_number");
         assert.strictEqual(
             `${dayNameHeaders[0].textContent} ${dayNumberHeaders[0].textContent}`,
             "Sat 7",
@@ -4200,7 +4229,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             "The last day of the week should be Friday the 13th"
         );
         assert.strictEqual(
-            target.querySelector(".fc-head .fc-week-number").textContent,
+            target.querySelector(".fc-timegrid-axis-cushion").textContent,
             "Week 36",
             "The number of the week should be correct"
         );
@@ -4240,8 +4269,8 @@ QUnit.module("Views", ({ beforeEach }) => {
             },
         });
 
-        const weekRow = target.querySelector(".fc-day-top.fc-today").closest("tr");
-        const weekDays = weekRow.querySelectorAll(".fc-day-top");
+        const weekRow = target.querySelector(".fc-day-today").closest("tr");
+        const weekDays = weekRow.querySelectorAll(".fc-daygrid-day-top");
         assert.strictEqual(
             weekDays[0].textContent,
             "9",
@@ -4253,7 +4282,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             "The last day of the week should be Sunday the 15th"
         );
         assert.strictEqual(
-            weekRow.querySelector(".fc-week-number").textContent,
+            weekRow.querySelector(".fc-daygrid-week-number").textContent,
             "37",
             "The number of the week should be correct"
         );
@@ -4294,8 +4323,8 @@ QUnit.module("Views", ({ beforeEach }) => {
             },
         });
 
-        const weekRow = target.querySelector(".fc-day-top.fc-today").closest("tr");
-        const weekDays = weekRow.querySelectorAll(".fc-day-top");
+        const weekRow = target.querySelector(".fc-day-today").closest("tr");
+        const weekDays = weekRow.querySelectorAll(".fc-daygrid-day-top");
         assert.strictEqual(
             weekDays[0].textContent,
             "15",
@@ -4307,7 +4336,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             "The last day of the week should be Saturday the 21st"
         );
         assert.strictEqual(
-            weekRow.querySelector(".fc-week-number").textContent,
+            weekRow.querySelector(".fc-daygrid-week-number").textContent,
             "38",
             "The number of the week should be correct"
         );
@@ -4443,7 +4472,7 @@ QUnit.module("Views", ({ beforeEach }) => {
 
             assert.containsOnce(
                 target,
-                ".o_calendar_renderer .fc-view-container",
+                ".o_calendar_renderer .fc-view",
                 "should display in the calendar"
             );
 
@@ -4488,13 +4517,14 @@ QUnit.module("Views", ({ beforeEach }) => {
                 }
             },
         });
+        expandCalendarView(target);
         await selectTimeRange(target, "2016-12-13 08:00:00", "2016-12-13 16:00:00");
         await editInput(target, ".modal [name=name] input", "foobar");
         await click(target, ".modal .o_form_button_save");
         await resizeEventToTime(target, 8, "2016-12-14 08:00:00");
         const event = findEvent(target, 8);
         assert.strictEqual(event.textContent, "foobar");
-        assert.ok(event.closest(".fc-day-grid"), "event should be in the all day slots");
+        assert.ok(event.closest(".fc-daygrid-day"), "event should be in the all day slots");
     });
 
     QUnit.test(`correctly display year view`, async (assert) => {
@@ -4523,7 +4553,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         );
         assert.containsN(
             target,
-            ".fc-bgevent",
+            ".fc-bg-event",
             7,
             "There should be 6 events displayed but there is 1 split on 2 weeks"
         );
@@ -4599,7 +4629,7 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         function checkEvents(countMap) {
             for (const [id, count] of Object.entries(countMap)) {
-                assert.containsN(target, `.fc-bgevent[data-event-id="${id}"]`, count);
+                assert.containsN(target, `.fc-bg-event[data-event-id="${id}"]`, count);
             }
         }
 
@@ -4714,26 +4744,26 @@ QUnit.module("Views", ({ beforeEach }) => {
         });
 
         assert.containsN(target, ".fc-dayGridMonth-view", 12, "should display in year mode");
-        await selectDateRange(target, "2016-11-13", "2016-11-19");
+        const startDate = "2016-11-13";
+        const endDate = "2016-11-19";
+        await selectDateRange(target, startDate, endDate);
         assert.containsOnce(
             target,
             ".o-calendar-quick-create",
             "should open the form view in dialog when select multiple days"
         );
 
-        assert.hasAttrValue(
-            target.querySelector(".fc-highlight"),
-            "colspan",
-            "7",
-            "should highlight 7 days"
-        );
+        const event = target.querySelector(".fc-highlight");
+        const startDateCell = findDateCell(target, startDate);
+        const endDateCell = findDateCell(target, endDate);
+        assertEventOverRightCells(assert, event, startDateCell, endDateCell);
 
         await click(target, ".o-calendar-quick-create--cancel-btn");
         assert.containsNone(target, ".fc-highlight", "should not highlight days");
     });
 
     QUnit.test(`create event in year view`, async (assert) => {
-        assert.expect(6);
+        assert.expect(15);
         let expectedEvent;
         await makeView({
             type: "calendar",
@@ -4763,11 +4793,20 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         // get all rows for event 8
         assert.containsN(target, ".o_event[data-event-id='8']", 6);
-        assert.deepEqual(
-            [...target.querySelectorAll(".o_event[data-event-id='8']")].map((cell) => cell.colSpan),
-            [2, 7, 7, 7, 7, 1],
-            "rows should highlight multiple days"
-        );
+        const allPartsEvent8 = target.querySelectorAll(".o_event[data-event-id='8']");
+        const splitEvent8 = [
+            ["2016-07-01", "2016-07-02"],
+            ["2016-07-03", "2016-07-09"],
+            ["2016-07-10", "2016-07-16"],
+            ["2016-07-17", "2016-07-23"],
+            ["2016-07-24", "2016-07-30"],
+            ["2016-07-31", "2016-07-31"],
+        ];
+        splitEvent8.forEach(([start, end], index) => {
+            const startEvent = findAllDaySlot(target, start);
+            const endEvent = findAllDaySlot(target, end);
+            assertEventOverRightCells(assert, allPartsEvent8[index], startEvent, endEvent);
+        });
 
         // Select the whole month of November
         expectedEvent = {
@@ -4782,11 +4821,19 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         // get all rows for event 9
         assert.containsN(target, ".o_event[data-event-id='9']", 5);
-        assert.deepEqual(
-            [...target.querySelectorAll(".o_event[data-event-id='9']")].map((cell) => cell.colSpan),
-            [5, 7, 7, 7, 4],
-            "rows should highlight multiple days"
-        );
+        const allPartsEvent9 = target.querySelectorAll(".o_event[data-event-id='9']");
+        const splitEvent9 = [
+            ["2016-11-01", "2016-11-05"],
+            ["2016-11-06", "2016-11-12"],
+            ["2016-11-13", "2016-11-19"],
+            ["2016-11-20", "2016-11-26"],
+            ["2016-11-27", "2016-11-30"],
+        ];
+        splitEvent9.forEach(([start, end], index) => {
+            const startEvent = findAllDaySlot(target, start);
+            const endEvent = findAllDaySlot(target, end);
+            assertEventOverRightCells(assert, allPartsEvent9[index], startEvent, endEvent);
+        });
     });
 
     QUnit.test(`popover ignores readonly field modifier`, async (assert) => {
@@ -4844,7 +4891,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                 </calendar>
             `,
         });
-        const date = target.querySelector(".fc-day-grid td");
+        const date = target.querySelector("td.fc-daygrid-day");
         await clickAllDaySlot(target, date.dataset.date);
     });
 

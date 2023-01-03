@@ -29,7 +29,9 @@ QUnit.module("CalendarView - YearRenderer", ({ beforeEach }) => {
         await start({});
 
         assert.containsN(target, ".fc-month-container", 12);
-        const monthHeaders = target.querySelectorAll(".fc-header-toolbar .fc-center");
+        const monthHeaders = target.querySelectorAll(
+            ".fc-toolbar-chunk:nth-child(2) .fc-toolbar-title"
+        );
 
         // check "title format"
         assert.strictEqual(monthHeaders.length, 12);
@@ -51,8 +53,8 @@ QUnit.module("CalendarView - YearRenderer", ({ beforeEach }) => {
             assert.strictEqual(monthHeaders[i].textContent, monthTitles[i]);
         }
         const dayHeaders = target
-            .querySelector(".fc-month-container")
-            .querySelectorAll(".fc-day-header");
+            .querySelector(".fc-month")
+            .querySelectorAll(".fc-col-header-cell");
 
         // check day header format
         assert.strictEqual(dayHeaders.length, 7);
@@ -62,7 +64,7 @@ QUnit.module("CalendarView - YearRenderer", ({ beforeEach }) => {
         }
 
         // check showNonCurrentDates
-        assert.containsN(target, ".fc-day-number", 365);
+        assert.containsN(target, ":not(.fc-day-disabled) > * > * > .fc-daygrid-day-number", 365);
     });
 
     QUnit.test("display events", async (assert) => {
@@ -148,8 +150,8 @@ QUnit.module("CalendarView - YearRenderer", ({ beforeEach }) => {
             await start({});
 
             const dayHeaders = target
-                .querySelector(".fc-month-container")
-                .querySelectorAll(".fc-day-header");
+                .querySelector(".fc-month")
+                .querySelectorAll(".fc-col-header-cell");
 
             assert.deepEqual(
                 [...dayHeaders].map((el) => el.textContent),

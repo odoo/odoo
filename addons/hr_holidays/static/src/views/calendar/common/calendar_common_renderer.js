@@ -16,8 +16,7 @@ export class TimeOffCalendarCommonRenderer extends CalendarCommonRenderer {
         this.mandatoryDays = useMandatoryDays(this.props);
     }
 
-    onDayRender(info) {
-        super.onDayRender(info);
-        this.mandatoryDays(info);
+    getDayCellClassNames(info) {
+        return [...super.getDayCellClassNames(info), ...this.mandatoryDays(info)];
     }
 }

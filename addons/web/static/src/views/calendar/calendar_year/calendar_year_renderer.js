@@ -3,6 +3,7 @@ import { useDebounced } from "@web/core/utils/timing";
 import { getColor } from "../colors";
 import { useCalendarPopover, useFullCalendar } from "../hooks";
 import { CalendarYearPopover } from "./calendar_year_popover";
+import { makeWeekColumn } from "@web/views/calendar/calendar_common/calendar_common_week_column";
 
 import { Component, useEffect, useRef } from "@odoo/owl";
 
@@ -41,27 +42,25 @@ export class CalendarYearRenderer extends Component {
 
     get options() {
         return {
-            columnHeaderFormat: "EEEEE",
-            contentHeight: 0,
+            dayHeaderFormat: "EEEEE",
             dateClick: this.onDateClick,
-            dayRender: this.onDayRender,
-            defaultDate: this.props.model.date.toISO(),
-            defaultView: "dayGridMonth",
-            dir: localization.direction,
+            dayCellClassNames: this.getDayCellClassNames,
+            initialDate: this.props.model.date.toISO(),
+            initialView: "dayGridMonth",
+            direction: localization.direction,
             droppable: true,
             editable: this.props.model.canEdit,
-            eventLimit: this.props.model.eventLimit,
-            eventRender: this.onEventRender,
+            dayMaxEventRows: this.props.model.eventLimit,
+            eventDidMount: this.onEventDidMount,
             eventResizableFromStart: true,
             events: (_, successCb) => successCb(this.mapRecordsToEvents()),
             firstDay: this.props.model.firstDayOfWeek,
-            header: { left: false, center: "title", right: false },
-            height: 0,
+            headerToolbar: { start: false, center: "title", end: false },
+            height: "auto",
             locale: luxon.Settings.defaultLocale,
             longPressDelay: 500,
             navLinks: false,
             nowIndicator: true,
-            plugins: ["dayGrid", "interaction", "luxon"],
             select: this.onSelect,
             selectMinDistance: 5, // needed to not trigger select when click
             selectMirror: true,
@@ -72,8 +71,26 @@ export class CalendarYearRenderer extends Component {
             unselectAuto: false,
             weekNumberCalculation: "ISO",
             weekNumbers: false,
+            weekNumberFormat: { week: "numeric" },
             windowResize: this.onWindowResizeDebounced,
+            eventContent: this.onEventContent,
+            viewDidMount: this.viewDidMount,
         };
+    }
+
+    get customOptions() {
+        return {
+            weekNumbersWithinDays: true,
+        };
+    }
+
+    viewDidMount({ el, view }) {
+        const showWeek = view.calendar.currentData.options.weekNumbers;
+        const weekText = view.calendar.currentData.options.weekText;
+        const weekColumn = !this.customOptions.weekNumbersWithinDays;
+        if (showWeek && weekColumn) {
+            makeWeekColumn({ el, weekText });
+        }
     }
 
     mapRecordsToEvents() {
@@ -86,7 +103,7 @@ export class CalendarYearRenderer extends Component {
             start: record.start.toISO(),
             end: record.end.plus({ day: 1 }).toISO(),
             allDay: true,
-            rendering: "background",
+            display: "background",
         };
     }
     getDateWithMonth(month) {
@@ -95,7 +112,7 @@ export class CalendarYearRenderer extends Component {
     getOptionsForMonth(month) {
         return {
             ...this.options,
-            defaultDate: this.getDateWithMonth(month),
+            initialDate: this.getDateWithMonth(month),
         };
     }
     getPopoverProps(date, records) {
@@ -148,13 +165,14 @@ export class CalendarYearRenderer extends Component {
             });
         }
     }
-    onDayRender(info) {
+    getDayCellClassNames(info) {
         const date = luxon.DateTime.fromJSDate(info.date).toISODate();
         if (this.props.model.unusualDays.includes(date)) {
-            info.el.classList.add("o_calendar_disabled");
+            return ["o_calendar_disabled"];
         }
+        return [];
     }
-    onEventRender(info) {
+    onEventDidMount(info) {
         const { el, event } = info;
         el.dataset.eventId = event.id;
         el.classList.add("o_event");
@@ -189,5 +207,12 @@ export class CalendarYearRenderer extends Component {
     }
     onWindowResize() {
         this.updateSize();
+    }
+
+    onEventContent(info) {
+        // Remove the title on the background event like in FCv4
+        if (info.event.display?.includes("background")) {
+            return null;
+        }
     }
 }

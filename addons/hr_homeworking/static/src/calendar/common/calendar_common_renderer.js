@@ -5,10 +5,20 @@ import { AttendeeCalendarRenderer } from "@calendar/views/attendee_calendar/atte
 import { user } from "@web/core/user";
 import { patch } from "@web/core/utils/patch";
 import { renderToString } from "@web/core/utils/render";
+import { onPatched } from "@odoo/owl";
 
 const { DateTime } = luxon;
 
 patch(AttendeeCalendarCommonRenderer.prototype, {
+    setup() {
+        super.setup()
+
+        onPatched(() => {
+            // Force to rerender the FC.
+            // As it doesn't redraw the header when the event's data changes
+            this.fc.api.render();
+        });
+    },
     get options(){
         return {
             ...super.options,
@@ -23,6 +33,9 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
                     }
                 }
             },
+            dayCellDidMount: this.onDayCellDidMount,
+            dayHeaderDidMount: this.onDayHeaderDidMount,
+            dayHeaderWillUnmount: this.onDayHeaderWillUnmount,
         };
     },
     handleWorkLocationClick(target, date) {
@@ -43,21 +56,39 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
         }
         return this.props.openWorkLocationWizard(date);
     },
-    onDayRender(info){
-        const date = DateTime.fromJSDate(info.date);
-        const parsedDate = date.toISODate();
-        if (this.props.model.scale === 'week' || this.props.model.scale === 'day'){
-            const header = info.view.context.calendar.el.querySelector(`.fc-day-header[data-date='${parsedDate}'] .o_worklocation_btn`);
-            header.onclick = (e) => this.handleWorkLocationClick(e.target, date);
+    onDayHeaderDidMount(info) {
+        if (this.props.model.scale === 'week' || this.props.model.scale === 'day') {
+            const date = DateTime.fromJSDate(info.date);
+            const handler = (event) => {
+                if (event.target.closest(".o_worklocation_btn")) {
+                    this.handleWorkLocationClick(event.target, date);
+                }
+            };
+            this.customListeners = {
+                ...this.customListeners,
+                [date]: handler,
+            };
+            info.el.addEventListener("click", handler);
         }
+    },
+    onDayHeaderWillUnmount(info) {
+        if (this.props.model.scale === 'week' || this.props.model.scale === 'day') {
+            const date = DateTime.fromJSDate(info.date);
+            const customListener = {...this.customListeners}[date];
+            if (customListener) {
+                info.el.removeEventListener("click", customListener);
+                delete this.customListeners[date];
+            }
+        }
+    },
+    onDayCellDidMount(info){
         if (this.props.model.scale === 'month'){
-            const box = info.view.el.querySelector(`.fc-day-top[data-date='${parsedDate}']`)
+            const box = info.el.querySelector(`.fc-daygrid-day-top`);
             if (!box)
                 return;
             const content = renderToString(this.constructor.ButtonWorklocationTemplate, this.headerTemplateProps(info.date));
             box.insertAdjacentHTML("beforeend", content);
         }
-        super.onDayRender(...arguments);
     },
     onDateClick(info){
         if (info.jsEvent && info.jsEvent.target.closest(".o_worklocation_btn")) {
@@ -68,11 +99,14 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
         }
     },
     headerTemplateProps(date) {
+        if (this.props.model.scale === "month") {
+            return super.headerTemplateProps(date);
+        }
         const parsedDate = DateTime.fromJSDate(date).toISODate();
         const multiCalendar = this.props.model.multiCalendar;
         const showLine = ["week", "month"].includes(this.props.model.scale);
         const worklocation = this.props.model.worklocations[parsedDate];
-        const workLocationSetForCurrentUser = 
+        const workLocationSetForCurrentUser =
             multiCalendar ?
             Object.keys(worklocation).some(key => worklocation[key].some(wlItem => wlItem.userId === user.userId)
             ) : worklocation?.userId === user.userId;

@@ -2,13 +2,12 @@ import { _t } from "@web/core/l10n/translation";
 import { is24HourFormat } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { renderToString } from "@web/core/utils/render";
-import { useDebounced } from "@web/core/utils/timing";
 import { getColor } from "../colors";
 import { useCalendarPopover, useClickHandler, useFullCalendar } from "../hooks";
 import { CalendarCommonPopover } from "./calendar_common_popover";
-import { browser } from "@web/core/browser/browser";
+import { makeWeekColumn } from "./calendar_common_week_column";
 
-import { Component, onMounted, useEffect } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 const SCALE_TO_FC_VIEW = {
     day: "timeGridDay",
@@ -62,59 +61,42 @@ export class CalendarCommonRenderer extends Component {
         this.fc = useFullCalendar("fullCalendar", this.options);
         this.click = useClickHandler(this.onClick, this.onDblClick);
         this.popover = useCalendarPopover(this.constructor.components.Popover);
-        this.onWindowResizeDebounced = useDebounced(this.onWindowResize, 200);
-
-        onMounted(() => {
-            if (this.props.model.scale === "day" || this.props.model.scale === "week") {
-                //Need to wait React
-                browser.setTimeout(() => {
-                    if (this.fc.api.view) {
-                        this.fc.api.scrollToTime("06:00:00");
-                    }
-                }, 0);
-            }
-        });
-
-        useEffect(() => {
-            this.updateSize();
-        });
     }
 
     get options() {
         return {
             allDaySlot: this.props.model.hasAllDaySlot,
-            allDayText: _t(""),
-            columnHeaderFormat: this.env.isSmall
+            allDayContent: _t(""),
+            dayHeaderFormat: this.env.isSmall
                 ? SHORT_SCALE_TO_HEADER_FORMAT[this.props.model.scale]
                 : SCALE_TO_HEADER_FORMAT[this.props.model.scale],
             dateClick: this.onDateClick,
-            dayRender: this.onDayRender,
-            defaultDate: this.props.model.date.toISO(),
-            defaultView: SCALE_TO_FC_VIEW[this.props.model.scale],
-            dir: localization.direction,
+            dayCellClassNames: this.getDayCellClassNames,
+            initialDate: this.props.model.date.toISO(),
+            initialView: SCALE_TO_FC_VIEW[this.props.model.scale],
+            direction: localization.direction,
             droppable: true,
             editable: this.props.model.canEdit,
             eventClick: this.onEventClick,
             eventDragStart: this.onEventDragStart,
             eventDrop: this.onEventDrop,
-            eventLimit: this.props.model.eventLimit,
-            eventLimitClick: this.onEventLimitClick,
-            eventLimitText: this.env.isSmall ? "" : "more",
+            dayMaxEventRows: this.props.model.eventLimit,
+            moreLinkClick: this.onEventLimitClick,
             eventMouseEnter: this.onEventMouseEnter,
             eventMouseLeave: this.onEventMouseLeave,
-            eventRender: this.onEventRender,
+            eventDidMount: this.onEventDidMount,
+            eventContent: this.onEventContent,
             eventResizableFromStart: true,
             eventResize: this.onEventResize,
             eventResizeStart: this.onEventResizeStart,
             events: (_, successCb) => successCb(this.mapRecordsToEvents()),
             firstDay: this.props.model.firstDayOfWeek,
-            header: false,
-            height: "parent",
+            headerToolbar: false,
+            height: "100%",
             locale: luxon.Settings.defaultLocale,
             longPressDelay: 500,
             navLinks: false,
             nowIndicator: true,
-            plugins: ["dayGrid", "interaction", "timeGrid", "luxon"],
             select: this.onSelect,
             selectAllow: this.isSelectionAllowed,
             selectMinDistance: 5, // needed to not trigger select when click
@@ -124,14 +106,32 @@ export class CalendarCommonRenderer extends Component {
             snapDuration: { minutes: 15 },
             timeZone: luxon.Settings.defaultZone.name,
             unselectAuto: false,
-            weekLabel: this.props.model.scale === "month" && this.env.isSmall ? "" : _t("Week"),
+            weekNumberFormat: {
+                week: this.props.model.scale === "month" || this.env.isSmall ? "numeric" : "long",
+            },
             weekends: this.props.isWeekendVisible,
             weekNumberCalculation: "ISO",
             weekNumbers: true,
-            weekNumbersWithinDays: !this.env.isSmall,
-            windowResize: this.onWindowResizeDebounced,
-            columnHeaderHtml: this.getHeaderHtml,
+            dayHeaderContent: this.getHeaderHtml,
+            eventDisplay: "block", // Restore old render in daygrid view for single-day timed events
+            viewDidMount: this.viewDidMount,
+            moreLinkDidMount: this.wrapMoreLink,
         };
+    }
+
+    get customOptions() {
+        return {
+            weekNumbersWithinDays: !this.env.isSmall,
+        };
+    }
+
+    viewDidMount({ el, view }) {
+        const showWeek = view.calendar.currentData.options.weekNumbers;
+        const weekText = view.calendar.currentData.options.weekText;
+        const weekColumn = !this.customOptions.weekNumbersWithinDays;
+        if (showWeek && weekColumn) {
+            makeWeekColumn({ el, weekText });
+        }
     }
 
     getStartTime(record) {
@@ -192,16 +192,6 @@ export class CalendarCommonRenderer extends Component {
             `o_cw_popover o_calendar_color_${typeof color === "number" ? color : 0}`
         );
     }
-    updateSize() {
-        let headerHeight = 0;
-        if (!this.env.isSmall) {
-            headerHeight =
-                document.querySelector(".o_calendar_header")?.getBoundingClientRect()?.height ?? 0;
-        }
-        const height = window.innerHeight - this.fc.el.getBoundingClientRect().top - headerHeight;
-        this.fc.el.style.height = `${height}px`;
-        this.fc.api.updateSize();
-    }
 
     onClick(info) {
         this.openPopover(info.el, this.props.model.records[info.event.id]);
@@ -210,11 +200,12 @@ export class CalendarCommonRenderer extends Component {
     onDateClick(info) {
         this.props.createRecord(this.fcEventToRecord(info));
     }
-    onDayRender(info) {
+    getDayCellClassNames(info) {
         const date = luxon.DateTime.fromJSDate(info.date).toISODate();
         if (this.props.model.unusualDays.includes(date)) {
-            info.el.classList.add("o_calendar_disabled");
+            return ["o_calendar_disabled"];
         }
+        return [];
     }
     onDblClick(info) {
         this.props.editRecord(this.props.model.records[info.event.id]);
@@ -222,12 +213,8 @@ export class CalendarCommonRenderer extends Component {
     onEventClick(info) {
         this.click(info);
     }
-    onEventRender(info) {
-        const { el, event } = info;
-        el.dataset.eventId = event.id;
-        el.classList.add("o_event");
+    onEventContent({ event }) {
         const record = this.props.model.records[event.id];
-
         if (record) {
             // This is needed in order to give the possibility to change the event template.
             const injectedContentStr = renderToString(this.constructor.eventTemplate, {
@@ -237,8 +224,23 @@ export class CalendarCommonRenderer extends Component {
             });
             const domParser = new DOMParser();
             const { children } = domParser.parseFromString(injectedContentStr, "text/html").body;
-            el.querySelector(".fc-content").replaceWith(...children);
+            return { domNodes: children };
+        }
+        return true;
+    }
+    onEventDidMount({ el, event }) {
+        el.dataset.eventId = event.id;
+        el.classList.add("o_event");
+        const record = this.props.model.records[event.id];
 
+        if (record) {
+            if (record.isMonth) {
+                el.querySelector(".fc-event-main").classList.add(
+                    "d-flex",
+                    "gap-1",
+                    "text-truncate"
+                );
+            }
             const color = getColor(record.colorIndex);
             if (typeof color === "string") {
                 el.style.backgroundColor = color;
@@ -333,8 +335,10 @@ export class CalendarCommonRenderer extends Component {
         this.updateSize();
     }
 
-    getHeaderHtml(date) {
-        return renderToString(this.constructor.headerTemplate, this.headerTemplateProps(date));
+    getHeaderHtml({ date }) {
+        return {
+            html: renderToString(this.constructor.headerTemplate, this.headerTemplateProps(date)),
+        };
     }
 
     headerTemplateProps(date) {
@@ -346,5 +350,13 @@ export class CalendarCommonRenderer extends Component {
             day,
             scale,
         };
+    }
+
+    wrapMoreLink({ el }) {
+        const wrapper = document.createElement("div");
+        wrapper.classList.add("fc-more-cell");
+        el.classList.remove("fc-daygrid-more-link");
+        el.parentNode.insertBefore(wrapper, el);
+        wrapper.appendChild(el);
     }
 }

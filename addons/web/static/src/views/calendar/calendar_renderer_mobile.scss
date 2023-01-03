@@ -1,15 +1,19 @@
 @include media-breakpoint-down(md) {
 
     .o_calendar_renderer {
+        .o_actionswiper, .o_actionswiper_overflow_container, .o_actionswiper_target_container {
+            height: 100%;
+        }
         .fc-view {
             &.fc-timeGrid-view {
                 .fc-axis {
                     padding-left: 0;
                 }
             }
-
-            &.fc-timeGrid-view .fc-axis.fc-time span {
-                max-width: 5ch;
+            &.fc-timeGridDay-view, &.fc-timeGridWeek-view  {
+                colgroup > col {
+                    width: 5ch !important;
+                }
             }
 
             .fc-body > tr > .fc-widget-content {
