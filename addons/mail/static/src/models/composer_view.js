@@ -291,6 +291,9 @@ Model({
             if (!this.exists()) {
                 return;
             }
+            if (!this.messaging.emojiRegistry.isLoaded && !this.messaging.emojiRegistry.isLoading) {
+                this.messaging.emojiRegistry.loadEmojiData();
+            }
             this.update({ isFocused: true });
         },
         onFocusoutTextarea() {
