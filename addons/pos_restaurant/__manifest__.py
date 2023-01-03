@@ -34,6 +34,7 @@ This module adds several features to the Point of Sale that are specific to rest
             'pos_restaurant/static/src/js/**/*.js',
             ('after', 'point_of_sale/static/src/scss/pos.scss', 'pos_restaurant/static/src/scss/restaurant.scss'),
             'pos_restaurant/static/src/xml/**/*',
+            'pos_restaurant/static/src/app/**/*',
         ],
         'web.assets_backend': [
             'point_of_sale/static/src/scss/pos_dashboard.scss',

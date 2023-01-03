@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.Navbar" owl="1">
+        <div class="pos-topheader">
+            <div class="pos-branding">
+                <img t-if="!env.isMobile" class="pos-logo" t-on-click="() => pos.toggleDebugWidget()" src="/point_of_sale/static/src/img/logo.png" alt="Logo" />
+                <CashMoveButton t-if="props.showCashMoveButton" />
+                <TicketButton />
+            </div>
+            <div class="pos-rightheader">
+                <div class="status-buttons">
+                    <CashierName />
+                    <SaleDetailsButton t-if="env.proxy.printer" isHeaderButton="true"/>
+                    <ProxyStatus t-if="env.pos.config.use_proxy" />
+                    <CustomerFacingDisplayButton t-if="customerFacingDisplayButtonIsShown" />
+                    <SyncNotification />
+                    <HeaderButton />
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

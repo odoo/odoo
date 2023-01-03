@@ -5,13 +5,13 @@
         <div class="products-widget-control">
             <div class="rightpane-header">
                 <div class="search-bar-container sb-product">
-                    <span t-if="env.isMobile" class="oe_status oe_icon icon" t-on-click="_toggleMobileSearchbar">
-                        <i t-attf-class="fa {{props.mobileSearchBarIsShown ? 'fa-arrow-left' : 'fa-search'}}"/>
+                    <span t-if="env.isMobile" class="oe_status oe_icon icon" t-on-click="toggleMobileSearchBar">
+                        <i t-attf-class="fa {{state.mobileSearchBarIsShown ? 'fa-arrow-left' : 'fa-search'}}"/>
                     </span>
-                    <t t-if="!env.isMobile || props.mobileSearchBarIsShown">
+                    <t t-if="!env.isMobile || state.mobileSearchBarIsShown">
                         <div class="pos-search-bar">
                             <i class="fa fa-search" t-on-click="_onPressEnterKey"/>
-                            <input t-model="state.searchInput" placeholder="Search Products..." type="text" autofocus="autofocus" t-on-keyup="updateSearch" />
+                            <input t-model="this.state.searchInput" placeholder="Search Products..." type="text" autofocus="autofocus" t-on-keyup="updateSearch" />
                             <i t-if="state.searchInput" class="fa fa-times" t-on-click="_clearSearch"/>
                         </div>
                     </t>

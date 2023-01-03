@@ -9,7 +9,7 @@ const PosResTicketButton = (TicketButton) =>
         async onClick() {
             if (
                 this.env.pos.config.iface_floorplan &&
-                !this.props.isTicketScreenShown &&
+                !this.isTicketScreenShown &&
                 !this.env.pos.table
             ) {
                 try {
